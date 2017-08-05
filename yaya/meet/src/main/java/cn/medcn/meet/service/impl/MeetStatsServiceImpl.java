@@ -14,6 +14,7 @@ import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.*;
@@ -21,7 +22,7 @@ import java.util.*;
 /**
  * Created by Liuchangling on 2017/9/5.
  */
-
+@Service
 public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements MeetStatsService {
     @Autowired
     private MeetAttendDAO meetAttendDAO;
@@ -91,10 +92,6 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
         } else {
             mtsticDto.setMonthReprintCount(0);
         }
-
-
-        // 查询公众号分享的所有会议数 和当月分享的会议数
-
         return mtsticDto;
     }
 
@@ -119,19 +116,8 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
      * @return
      */
     @Override
-    public List<MeetAttendCountDTO> findAttendCountByTag(Map<String, Object> params) {
-        Integer tagNum = (Integer) params.get("tagNum");
-        if (tagNum == null) tagNum = 0;
-
-        List<MeetAttendCountDTO> attendList = meetAttendDAO.findAttendCountByTag(params);
-        if (!CheckUtils.isEmpty(attendList)) {
-            for (MeetAttendCountDTO attendCountDTO : attendList) {
-                attendCountDTO.setTagNum(tagNum);
-            }
-            return attendList;
-        } else {
-            return null;
-        }
+    public List<MeetAttendCountDTO> findAttendCountByTime(Map<String, Object> params) {
+        return meetAttendDAO.findAttendCountByTime(params);
     }
 
     /**
@@ -142,8 +128,7 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
      */
     @Override
     public Integer findTotalCount(Map<String, Object> params) {
-        Integer totalCount = meetAttendDAO.findTotalCount(params);
-        return totalCount;
+        return meetAttendDAO.findTotalCount(params);
     }
 
     /**
@@ -154,14 +139,12 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
      */
     @Override
     public List<UserDataDetailDTO> findDataByPro(Map<String, Object> params) {
-        List<UserDataDetailDTO> prolist = meetAttendDAO.findDataByPro(params);
-        return prolist;
+        return meetAttendDAO.findDataByPro(params);
     }
 
     @Override
     public List<UserDataDetailDTO> findCityDataByPro(Map<String, Object> params) {
-        List<UserDataDetailDTO> ctylist = meetAttendDAO.findCityDataByPro(params);
-        return ctylist;
+        return meetAttendDAO.findCityDataByPro(params);
     }
 
     /**
@@ -172,8 +155,7 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
      */
     @Override
     public List<UserDataDetailDTO> findDataByHos(Map<String, Object> params) {
-        List<UserDataDetailDTO> hoslist = meetAttendDAO.findDataByHos(params);
-        return hoslist;
+        return meetAttendDAO.findDataByHos(params);
     }
 
     /**
@@ -184,8 +166,7 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
      */
     @Override
     public List<UserDataDetailDTO> findDataByTitle(Map<String, Object> params) {
-        List<UserDataDetailDTO> titlist = meetAttendDAO.findDataByTitle(params);
-        return titlist;
+        return meetAttendDAO.findDataByTitle(params);
     }
 
     /**
@@ -196,20 +177,20 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
      */
     @Override
     public List<UserDataDetailDTO> findDataByDepart(Map<String, Object> params) {
-        List<UserDataDetailDTO> deptlist = meetAttendDAO.findDataByDepart(params);
-        return deptlist;
+        return meetAttendDAO.findDataByDepart(params);
     }
 
     @Override
     public List<UserDataDetailDTO> findUserDataList(Map<String,Object> params){
-        Integer propNum = (Integer) params.get("propNum");
+        List<UserDataDetailDTO> list = null;
+        /*Integer propNum = (Integer) params.get("propNum");
         if (propNum == null) {
-            propNum = UserDataDetailDTO.conditionNumber.PRO_OR_CITY;
+            propNum = UserDataDetailDTO.conditionNumber.REGION;
         }
         String province = (String)params.get("province");
         List<UserDataDetailDTO> list;
-        if (propNum == UserDataDetailDTO.conditionNumber.PRO_OR_CITY) {
-            if (province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_CITY)) {
+        if (propNum == UserDataDetailDTO.conditionNumber.REGION) {
+            if (province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_PROVIMCE)) {
                 list = meetAttendDAO.findDataByPro(params);
             } else {
                 list = meetAttendDAO.findCityDataByPro(params);
@@ -220,7 +201,7 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
             list = meetAttendDAO.findDataByTitle(params);
         } else {
             list = meetAttendDAO.findDataByDepart(params);
-        }
+        }*/
         return list;
     }
 
@@ -229,7 +210,6 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
         List<MeetDTO> mtlist = meetAttendDAO.findMeet(meetId);
         String modName = "";
         List<MeetDTO> list = new ArrayList<MeetDTO>();
-        ;
         MeetDTO mdto;
         for (MeetDTO m : mtlist) {
             mdto = new MeetDTO();
@@ -260,8 +240,7 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
         Map<String, Object> map = new HashMap();
         map.put("meetId", meetId);
         map.put("userId", userId);
-        List<MeetAttendUserDTO> list = meetAttendDAO.findAttendUserExcel(map);
-        return list;
+        return meetAttendDAO.findAttendUserExcel(map);
     }
 
     /**
@@ -277,8 +256,7 @@ public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements
         Map<String, Object> conditionMap = new HashMap<String, Object>();
         conditionMap.put("meetId", meetId);
         conditionMap.put("userId", userId);
-        List<AttendMeetUserDetailDTO> list = meetAttendDAO.findAttendUserDetailExcel(conditionMap);
-        return list;
+        return meetAttendDAO.findAttendUserDetailExcel(conditionMap);
     }
 
     /**
