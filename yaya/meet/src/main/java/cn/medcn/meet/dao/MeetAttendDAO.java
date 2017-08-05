@@ -28,7 +28,7 @@ public interface MeetAttendDAO extends Mapper<MeetAttend> {
 
     List<MeetDataDTO> findMeetListByPage(Map<String, Object> params);
 
-    List<MeetAttendCountDTO> findAttendCountByTag(Map<String, Object> params);
+    List<MeetAttendCountDTO> findAttendCountByTime(Map<String, Object> params);
 
     Integer findTotalCount(Map<String,Object> params);
 
