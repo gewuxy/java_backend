@@ -37,7 +37,7 @@ public interface MeetStatsService extends BaseService<MeetAttend> {
      * @param params
      * @return
      */
-    List<MeetAttendCountDTO> findAttendCountByTag(Map<String, Object> params);
+    List<MeetAttendCountDTO> findAttendCountByTime(Map<String, Object> params);
 
     /**
      * 查询某会议的所有参会人数 、某会议特定的省份下的参会人数
