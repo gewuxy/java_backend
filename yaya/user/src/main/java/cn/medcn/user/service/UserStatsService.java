@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Created by Liuchangling on 2017/5/18.
  */
-public interface UserStasticService extends BaseService<AppAttention>{
+public interface UserStatsService extends BaseService<AppAttention>{
 
     /**
      * 查询本周、本月、所有 关注公众号的用户数
