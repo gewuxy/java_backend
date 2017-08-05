@@ -15,8 +15,8 @@ import java.util.Calendar;
 @NoArgsConstructor
 public class MeetAttendCountDTO implements Serializable {
 
-    // 统计标记 （全部=0 ，本月=1，本周=2，自定义=3 ）
-    private Integer tagNum;
+    // 统计方式 （全部=0 ，本月=1，本周=2，自定义=3 ）
+    private Integer dateType;
 
     // 关注日期
     private String attendDate;
@@ -33,7 +33,7 @@ public class MeetAttendCountDTO implements Serializable {
     // 下标名称
     private String attendIndexName;
 
-    public interface dateTypeNumber {
+    public interface DateTypeNumber {
         Integer ALL = 0; // 全部
         Integer MONTH = 1; // 本月
         Integer WEEK = 2; // 本周
@@ -42,12 +42,12 @@ public class MeetAttendCountDTO implements Serializable {
 
     public String getAttendIndexName() {
         String indexName = null;
-        if (tagNum == dateTypeNumber.ALL
-                || tagNum == dateTypeNumber.CUSTOM_TIME) {
+        if (dateType == DateTypeNumber.ALL
+                || dateType == DateTypeNumber.CUSTOM_TIME) {
             indexName = attendDate;
-        } else if (tagNum == dateTypeNumber.MONTH) {
+        } else if (dateType == DateTypeNumber.MONTH) {
             indexName = attendDate.substring(attendDate.lastIndexOf("-") + 1);
-        } else if (tagNum == dateTypeNumber.WEEK) {
+        } else if (dateType == DateTypeNumber.WEEK) {
             indexName = CalendarUtils.getWeekNameByDay(Integer.parseInt(attendDate.substring(attendDate.lastIndexOf("-") + 1)));
         }
         return indexName;
@@ -57,11 +57,11 @@ public class MeetAttendCountDTO implements Serializable {
     public String getStartTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String stTime = null;
-        if (tagNum == dateTypeNumber.ALL) {
+        if (dateType == DateTypeNumber.ALL) {
             stTime = format.format(CalendarUtils.getCurrYearFirstDay());
-        } else if (tagNum == dateTypeNumber.MONTH) {
+        } else if (dateType == DateTypeNumber.MONTH) {
             stTime = format.format(CalendarUtils.getMonthFirstDay());
-        } else if (tagNum == dateTypeNumber.WEEK) {
+        } else if (dateType == DateTypeNumber.WEEK) {
             stTime = format.format(CalendarUtils.getWeekFirstDay());
         }
         return stTime;
@@ -71,11 +71,11 @@ public class MeetAttendCountDTO implements Serializable {
     public String getEndTime() {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String edTime = null;
-        if (tagNum == dateTypeNumber.ALL) {
+        if (dateType == DateTypeNumber.ALL) {
             edTime = format.format(CalendarUtils.getYearCurrentDay());
-        } else if (tagNum == dateTypeNumber.MONTH) {
+        } else if (dateType == DateTypeNumber.MONTH) {
             edTime = format.format(CalendarUtils.getMonthLastDay());
-        } else if (tagNum == dateTypeNumber.WEEK) {
+        } else if (dateType == DateTypeNumber.WEEK) {
             edTime = format.format(CalendarUtils.getWeekLastDay());
         }
         return edTime;
