@@ -113,13 +113,15 @@ public class MeetStatsController extends BaseController {
     @ResponseBody
     public String attendMeetStatistics(Integer tagNum,String startTime, String endTime, String meetId) {
         Integer userId = SubjectUtils.getCurrentUserid();
+        if (tagNum == null) { // 如果tagNum为空，则设置默认值(全部)
+            tagNum = MeetAttendCountDTO.DateTypeNumber.ALL;
+        }
         Map<String, Object> conditionMap = new HashMap<String, Object>();
         conditionMap.put("userId", userId);
-        conditionMap.put("tagNum", tagNum);
 
-        Integer customNum = MeetAttendCountDTO.dateTypeNumber.CUSTOM_TIME;
         MeetAttendCountDTO attendCountDTO = new MeetAttendCountDTO();
-        attendCountDTO.setTagNum(tagNum);
+        attendCountDTO.setDateType(tagNum);
+        Integer customNum = MeetAttendCountDTO.DateTypeNumber.CUSTOM_TIME;
         if (tagNum < customNum) { // 不等于自定义时间
             startTime = attendCountDTO.getStartTime();
             endTime = attendCountDTO.getEndTime();
@@ -134,7 +136,15 @@ public class MeetStatsController extends BaseController {
         if (!StringUtils.isBlank(meetId)) {
             conditionMap.put("meetId", meetId);
         }
-        List<MeetAttendCountDTO> attendList = meetStatsService.findAttendCountByTag(conditionMap);
+
+        // 查询会议参与人数
+        List<MeetAttendCountDTO> attendList = meetStatsService.findAttendCountByTime(conditionMap);
+        if (!CheckUtils.isEmpty(attendList)) {
+            for (MeetAttendCountDTO attendDTO : attendList) {
+                // 设置统计方式，获取下标值
+                attendDTO.setDateType(tagNum);
+            }
+        }
 
         Map<String, Object> attendMap = new HashMap<String, Object>();
         if (!CheckUtils.isEmpty(attendList)) {
@@ -143,7 +153,6 @@ public class MeetStatsController extends BaseController {
         attendMap.put("startTime", startTime);
         attendMap.put("endTime", endTime);
         return APIUtils.success(attendMap);
-
     }
 
 
@@ -158,12 +167,30 @@ public class MeetStatsController extends BaseController {
     @RequestMapping(value = "/user/distribution")
     @ResponseBody
     public String userDataDistribution(Integer propNum, String meetId, String province) throws UnsupportedEncodingException {
+        if (propNum == null) {
+            propNum = UserDataDetailDTO.conditionNumber.REGION;
+        }
         Map<String, Object> params = new HashMap<String, Object>();
-        params.put("propNum",propNum);
         params.put("meetId", meetId);
         params.put("province", province);
-        List<UserDataDetailDTO> list = meetStatsService.findUserDataList(params);
+
+        List<UserDataDetailDTO> list = null;
+        if (propNum == UserDataDetailDTO.conditionNumber.REGION) { // 地区
+            if (province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_PROVINCE)) {
+                list = meetStatsService.findDataByPro(params);
+            } else {
+                list = meetStatsService.findCityDataByPro(params);
+            }
+        } else if (propNum == UserDataDetailDTO.conditionNumber.HOSPITAL) { // 医院
+            list = meetStatsService.findDataByHos(params);
+        } else if (propNum == UserDataDetailDTO.conditionNumber.USER_TITLE) { // 职称
+            list = meetStatsService.findDataByTitle(params);
+        } else { // 科室
+            list = meetStatsService.findDataByDepart(params);
+        }
+
         Integer totalCount = meetStatsService.findTotalCount(params);
+
         Float percent;
         Integer userCount;
         if (!CheckUtils.isEmpty(list)) {
