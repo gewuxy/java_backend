@@ -2,7 +2,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.user.dto.UserAttendDTO;
 import cn.medcn.user.dto.UserDataDetailDTO;
-import cn.medcn.user.service.UserStasticService;
+import cn.medcn.user.service.UserStatsService;
 import org.apache.commons.lang.StringUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
@@ -19,11 +20,11 @@ import java.text.NumberFormat;
 @ContextConfiguration(locations = {"classpath*:spring-context-*.xml"})
 public class UserStasticTest {
     @Autowired
-    private UserStasticService userStasticService;
+    private UserStatsService userStatsService;
 
     @Test
     public void testFindAttendCount(){
-        UserAttendDTO attendDTO = userStasticService.findAttendCount(8);
+        UserAttendDTO attendDTO = userStatsService.findAttendCount(8);
         if(attendDTO!=null){
             System.out.println("get week count: " + attendDTO.getWeekAttendCount()+
                             " get month count: " + attendDTO.getMonthAttendCount()+
@@ -38,8 +39,8 @@ public class UserStasticTest {
         pageable.getParams().put("province","全国");
 
         MyPage<UserDataDetailDTO> page = new MyPage<UserDataDetailDTO>();
-        page = userStasticService.findUserDataByCity(pageable);
-        MyPage<UserDataDetailDTO> page2 = userStasticService.findUserDataByProvince(pageable);
+        page = userStatsService.findUserDataByCity(pageable);
+        MyPage<UserDataDetailDTO> page2 = userStatsService.findUserDataByProvince(pageable);
         Integer totalCount = page2.getDataList().get(0).getUserCount();
         System.out.println("get total count: "+totalCount);
 
@@ -68,9 +69,9 @@ public class UserStasticTest {
 
     @Test
     public void testFindattendCountByPro(){
-        Integer totalCount = userStasticService.findTotalAttendCount(14);
+        Integer totalCount = userStatsService.findTotalAttendCount(14);
         Pageable pageable = new Pageable(1,5);
-        MyPage<UserDataDetailDTO> page = userStasticService.findUserDataByProvince(pageable);
+        MyPage<UserDataDetailDTO> page = userStatsService.findUserDataByProvince(pageable);
         for (UserDataDetailDTO detailDTO : page.getDataList()){
             if(StringUtils.isEmpty(detailDTO.getPropName())){
                 detailDTO.setPropName("其他");
@@ -87,20 +88,22 @@ public class UserStasticTest {
 
     @Test
     public void  test(){
-        String str = "";
-        String str1 = "  ";
-        String str2 = "null";
-        String str3 = null;
+        // 用户选择的选项
+       /* String s = "B";
+        int selCount = 0;
+        String selAnswer = "ABC";
+        // 遍历题目所有选项
+        for (int i = 0; i < selAnswer.length(); i++) {
+            char select = selAnswer.charAt(i);
+            if (s.equals(String.valueOf(select))) {
+                selCount++;
+                break;
+            }
+        }
+        System.out.println("--selCount--"+selCount);*/
 
-        System.out.println("--str--"+StringUtils.isBlank(str));
-        System.out.println("--str1--"+StringUtils.isBlank(str1));
-        System.out.println("--str2--"+StringUtils.isBlank(str2));
-        System.out.println("--str3--"+StringUtils.isBlank(str3));
-
-        System.out.println("--empty str--"+StringUtils.isEmpty(str));
-        System.out.println("--empty str1--"+StringUtils.isEmpty(str1));
-        System.out.println("--empty str2--"+StringUtils.isEmpty(str2));
-        System.out.println("--empty str3--"+StringUtils.isEmpty(str3));
+        DecimalFormat dft = new DecimalFormat("0%");
+        System.out.println(dft.format((float)3/7));
     }
 
 }

@@ -53,7 +53,7 @@ public class MeetStasticTest {
         params.put("tagNo",0);
         params.put("startTime","2017-05-21 00:00:00");
         params.put("endTime","2017-05-21 23:00:00");
-        List<MeetAttendCountDTO> attendList = meetStatsService.findAttendCountByTag(params);
+        List<MeetAttendCountDTO> attendList = meetStatsService.findAttendCountByTime(params);
         APIUtils.success(attendList);
         if (attendList!=null && attendList.size()!=0){
             for (MeetAttendCountDTO attendCountDTO : attendList) {
