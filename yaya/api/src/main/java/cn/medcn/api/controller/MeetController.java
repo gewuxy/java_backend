@@ -443,7 +443,7 @@ public class MeetController extends BaseController {
         Integer userViewCount = audioService.findUserViewPPTCount(meetId, userId);
         Integer completeCount = 0;
         if (pptTotalCount > 0) {
-            completeCount = Math.round((float) userViewCount / (float) pptTotalCount * 100);
+            completeCount = Math.round((float) userViewCount / pptTotalCount * 100);
         }
         return completeCount;
     }
