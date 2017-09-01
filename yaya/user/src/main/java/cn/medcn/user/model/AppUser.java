@@ -53,6 +53,8 @@ public class AppUser {
 
     private String token;
 
+    protected Boolean testFlag;//测试标记 标识该用户未测试用户 主要用于单位号的会议不会被选择到
+
     /**省份*/
     protected String province;
     /**城市*/
