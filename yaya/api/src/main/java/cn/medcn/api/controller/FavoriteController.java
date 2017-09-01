@@ -64,7 +64,7 @@ public class FavoriteController extends BaseController{
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
         pageable.getParams().put("userId",userId);
         //会议
-        if(type == Constants.NUMBER_ZERO){
+        if(type == DataFile.DataType.MEET.getType()){
             pageable.getParams().put("resourceType",Constants.NUMBER_ZERO);
             MyPage<MeetInfoDTO> myPage =  meetService.findMyFavorite(pageable);
             for(MeetInfoDTO dto:myPage.getDataList()){
@@ -73,13 +73,7 @@ public class FavoriteController extends BaseController{
             return success(myPage.getDataList());
         }else {
             MyPage<FileCategoryDTO> myPage = null;
-            if(type ==  Constants.NUMBER_ONE){ //汤森
-                pageable.getParams().put("resourceType",Constants.NUMBER_ONE);
-            }else if(type ==  Constants.NUMBER_TWO){ //药品
-                pageable.getParams().put("resourceType",Constants.NUMBER_TWO);
-            }else{//临床
-                pageable.getParams().put("resourceType",Constants.NUMBER_THREE);
-            }
+            pageable.getParams().put("resourceType",type);
             myPage = dataFileService.findFavorite(pageable);
             List<FileCategoryDTO> list = myPage.getDataList();
             list = addIsFileAndOpenType(list,null);
@@ -118,23 +112,19 @@ public class FavoriteController extends BaseController{
         if(resourceId == null){
             return error("resourceId不能为空");
         }
-        if(type != null && type != Constants.NUMBER_ZERO && type != Constants.NUMBER_ONE
+        if(type == null){
+            type = Constants.NUMBER_ZERO;
+        }
+        if(type != Constants.NUMBER_ZERO && type != Constants.NUMBER_ONE
                 && type != Constants.NUMBER_TWO && type != Constants.NUMBER_THREE){
             return error("typeId不正确");
         }
+
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
         Favorite dataFavorite = new Favorite();
         dataFavorite.setUserId(userId);
         dataFavorite.setResourceId(resourceId);
-        if(type == null || type == Constants.NUMBER_ZERO){  //会议
-            dataFavorite.setResourceType(Constants.NUMBER_ZERO);
-        }else if(type == Constants.NUMBER_ONE){ //汤森
-            dataFavorite.setResourceType(Constants.NUMBER_ONE);
-        }else if(type == Constants.NUMBER_TWO){  //药品目录
-            dataFavorite.setResourceType(Constants.NUMBER_TWO);
-        }else if(type == Constants.NUMBER_THREE){
-            dataFavorite.setResourceType(Constants.NUMBER_THREE);
-        }
+        dataFavorite.setResourceType(type);
         meetService.updateFavoriteStatus(dataFavorite);
         return success();
     }
@@ -146,14 +136,15 @@ public class FavoriteController extends BaseController{
                 if(isFile != null){
                     dto.setIsFile(isFile);
                 }
+                //首选html打开方式
                 if(StringUtils.isEmpty(dto.getHtmlPath())){
                     if(!StringUtils.isEmpty(dto.getFilePath())){
                         dto.setFilePath(appFileBase+dto.getFilePath());
                     }
-                    dto.setOpenType(Constants.NUMBER_ONE);
+                    dto.setOpenType(DataFile.OpenType.BY_PDF.getType());
                 }else{
                     //有htmlPath,用html的方式打开
-                    dto.setOpenType(Constants.NUMBER_THREE);
+                    dto.setOpenType(DataFile.OpenType.BY_HTML.getType());
                     dto.setHtmlPath(appFileBase + dto.getHtmlPath());
                 }
             }

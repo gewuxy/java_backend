@@ -116,17 +116,36 @@ public class MeetFloderServiceImpl extends BaseServiceImpl<InfinityTree> impleme
 
 
     /**
-     * 删除文件夹和文件
+     * 删除文件夹
      * @param id
      * @return
      */
     @Override
-    public Integer deleteFolderAndSDetail(String id) {
+    public Integer deleteFolder(String id) {
         Integer count1 = deleteByPrimaryKey(id);
         InfinityTreeDetail detail = new InfinityTreeDetail();
         detail.setInfinityId(id);
-        meetFolderDetailDAO.delete(detail);//移除文件夹里的会议
+        meetFolderDetailDAO.delete(detail);
         return count1 ;
+    }
+
+    /**
+     * 递归删除文件夹
+     * @param folderId
+     */
+    @Override
+    public void recursiveDeleteFolder(String folderId) {
+        InfinityTree tree = new InfinityTree();
+        tree.setPreid(folderId);
+        List<InfinityTree> list = select(tree);
+        if (CheckUtils.isEmpty(list)) { //没有子文件夹
+            deleteFolder(folderId);
+        } else {
+            for (InfinityTree tree1 : list) {
+                recursiveDeleteFolder(tree1.getId());
+            }
+            deleteFolder(folderId);
+        }
     }
 
     /**

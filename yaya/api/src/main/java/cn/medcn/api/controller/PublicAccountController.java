@@ -120,7 +120,7 @@ public class PublicAccountController {
      */
     @RequestMapping("/subscribe")
     @ResponseBody
-    public String SubscribeOrNot(Integer masterId, Integer status) {
+    public String subscribeOrNot(Integer masterId, Integer status) {
         Integer slaverId = SecurityUtils.getCurrentUserInfo().getId();
         if (masterId == null || status != Constants.NUMBER_ZERO && status != Constants.NUMBER_ONE) {
             return APIUtils.error(SpringUtils.getMessage("user.subscribe.paramError"));

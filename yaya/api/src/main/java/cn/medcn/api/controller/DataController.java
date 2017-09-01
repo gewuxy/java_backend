@@ -63,26 +63,26 @@ public class DataController extends BaseController{
     public String getDataCategory(String preId,Integer type,Boolean leaf,Pageable pageable){
 
         if( type != Constants.NUMBER_ONE  && type != Constants.NUMBER_TWO && type != Constants.NUMBER_THREE ){
-            return error("type不正确");
+            return error("数据类型不正确");
         }
 
         MyPage<FileCategoryDTO> myPage = null;
 
-        if(type == Constants.NUMBER_ONE){//汤森
+        if(type == DataFile.DataType.THOMSON.getType()){//汤森
             preId = THOMSON_CATEGORY_ID;
         }
-        if(type == Constants.NUMBER_TWO && StringUtils.isEmpty(preId)) {  //药品一级
+        if(type == DataFile.DataType.MEDICINE.getType() && StringUtils.isEmpty(preId)) {  //药品一级
             preId = MEDICINE_CATEGORY_ID;
         }
-        if(type == Constants.NUMBER_THREE && StringUtils.isEmpty(preId)){ //临床一级
+        if(type == DataFile.DataType.CLINICAL.getType() && StringUtils.isEmpty(preId)){ //临床一级
             preId = CLINICAL_CATEGORY_ID;
         }
 
         pageable.put("preId",preId);
-        if(leaf == true || type == Constants.NUMBER_ONE){ //下一级为文件
+        if(leaf == true || type == DataFile.DataType.THOMSON.getType()){ //下一级为文件
             myPage = dataFileService.findFile(pageable);
             List<FileCategoryDTO> list = myPage.getDataList();
-             //添加打开方式和判断是否为文件
+            //添加打开方式和判断是否为文件
             list = addIsFileAndOpenType(list,true);
 
             return success(list);
@@ -90,7 +90,7 @@ public class DataController extends BaseController{
             myPage = dataFileService.findCategory(pageable);
             return success(myPage.getDataList());
         }else {
-            return error("leaf错误");
+            return error("参数错误");
         }
     }
 
@@ -187,18 +187,19 @@ public class DataController extends BaseController{
         }
         MyPage<FileCategoryDTO> myPage = null;
         pageable.put("keyword",keyword);
-        if(type == Constants.NUMBER_TWO){  //查询药品
+        if(type == DataFile.DataType.MEDICINE.getType()){  //查询药品
             pageable.put("rootCategory",MEDICINE_CATEGORY_ID);
-        }else if(type == Constants.NUMBER_THREE){ //查询临床指南
+        }else if(type == DataFile.DataType.CLINICAL.getType()){ //查询临床指南
             pageable.put("rootCategory",CLINICAL_CATEGORY_ID);
         }else{
-            return error("请传递正确的type");
+            return error("查找类型不正确");
         }
         myPage  = dataFileService.selectMedicineListByKeyword(pageable);
         List<FileCategoryDTO> list = myPage.getDataList();
         list = addIsFileAndOpenType(list,true);
 
         return success(list);
+
 
     }
 
@@ -213,16 +214,16 @@ public class DataController extends BaseController{
                     dto.setIsFile(isFile);
                 }
                 //首选html打开方式
-               if(StringUtils.isEmpty(dto.getHtmlPath())){
-                   if(!StringUtils.isEmpty(dto.getFilePath())){
-                       dto.setFilePath(appFileBase+dto.getFilePath());
-                   }
-                    dto.setOpenType(Constants.NUMBER_ONE);
-               }else{
-                   //有htmlPath,用html的方式打开
-                   dto.setOpenType(Constants.NUMBER_THREE);
-                   dto.setHtmlPath(appFileBase + dto.getHtmlPath());
-               }
+                if(StringUtils.isEmpty(dto.getHtmlPath())){
+                    if(!StringUtils.isEmpty(dto.getFilePath())){
+                        dto.setFilePath(appFileBase+dto.getFilePath());
+                    }
+                    dto.setOpenType(DataFile.OpenType.BY_PDF.getType());
+                }else{
+                    //有htmlPath,用html的方式打开
+                    dto.setOpenType(DataFile.OpenType.BY_HTML.getType());
+                    dto.setHtmlPath(appFileBase + dto.getHtmlPath());
+                }
             }
         }
             return list;

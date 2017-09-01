@@ -187,14 +187,9 @@ public interface AppUserService extends BaseService<AppUser> {
      * 如果有微信用户信息，绑定微信信息；否则只做更新用户信息操作,返回微信用户昵称
      * @param user
      */
-    String updateUserInfo(AppUser user) throws SystemException;
+    String updateUserInfo(AppUser user) ;
 
 
-    /**
-     * 执行绑定或解绑微信用户
-     * @param user
-     */
-    void doBindOrUnBindWeiXin(AppUser user);
 
     /**
      * 根据邮箱或者手机号获取用户信息
@@ -210,4 +205,17 @@ public interface AppUserService extends BaseService<AppUser> {
     MyPage<TestAccountDTO> findTestAccount(Pageable pageable);
 
     void deleteDoctor(Integer id);
+
+    /**
+     * 解绑微信号
+     * @param user
+     */
+    void doUnBindWeiXin(AppUser user);
+
+    /**
+     * 绑定微信号
+     * @param user
+     * @return
+     */
+    String doBindWeiXin(AppUser user);
 }

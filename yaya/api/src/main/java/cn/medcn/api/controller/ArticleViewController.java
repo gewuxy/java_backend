@@ -48,6 +48,12 @@ public class ArticleViewController extends BaseController {
     }
 
 
+    /**
+     * 作为分享会议，任何人都可以访问会议的详细信息。放置在ArticleViewController ,不被拦截器拦截
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/meet/info")
     public String meetView(String id, Model model){
         MeetInfoDTO meetInfoDTO = meetService.findFinalMeetInfo(id, null);

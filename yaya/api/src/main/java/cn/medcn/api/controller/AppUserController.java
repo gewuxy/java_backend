@@ -199,12 +199,16 @@ public class AppUserController extends BaseController {
         AppUser user = appUserService.selectByPrimaryKey(userId);
         String unionId = user.getUnionid();
         //解绑异常
-        if(StringUtils.isEmpty(code) && unionId == null){
-            return error("用户未绑定,不能执行解绑操作");
-            //绑定操作
-        }else if(!StringUtils.isEmpty(code)){
-            if(unionId != null){
-                return error("该yaya账号已绑定微信");
+        if(StringUtils.isEmpty(code)){  //解绑
+            if(unionId == null){
+                return error("您未绑定微信,不能执行解绑操作");
+            }
+            appUserService.doUnBindWeiXin(user);
+            return success();
+
+        }else{  //绑定
+            if (unionId != null) {
+                return error("该YaYa账号已绑定微信");
             }
             //获取unionId
             OAuthDTO oAuthDTO = null;
@@ -213,42 +217,34 @@ public class AppUserController extends BaseController {
             } catch (SystemException e) {
                 return error(e.getMessage());
             }
-            if(oAuthDTO == null){
+            if (oAuthDTO == null) {
                 return error("openid获取失败");
             }
             WXUserInfo result = wxUserInfoService.findWXUserInfo(oAuthDTO.getUnionid());
             //判断该微信号是否已被绑定
-            if(result == null){   //没绑定
+            if (result == null) {   //没绑定
                 //发起http请求获取微信用户基本信息
                 WXUserInfo wxUserInfo = null;
                 try {
-                    wxUserInfo = wxOauthService.getUserInfoByOpenIdAndToken(oAuthDTO.getOpenid(),oAuthDTO.getAccess_token());
+                    wxUserInfo = wxOauthService.getUserInfoByOpenIdAndToken(oAuthDTO.getOpenid(), oAuthDTO.getAccess_token());
                 } catch (SystemException e) {
                     return error(e.getMessage());
                 }
                 user.setUnionid(wxUserInfo.getUnionid());
                 user.setWxUserInfo(wxUserInfo);
-            }else{ //已绑定
+            } else { //已绑定
                 AppUser condition = new AppUser();
                 condition.setUnionid(result.getUnionid());
-                AppUser bindUser = appUserService.selectOne(condition);
-                if(bindUser == null){
+                AppUser bindUser = appUserService.selectByPrimaryKey(condition);
+                if (bindUser == null) {
                     return error("未成功解绑");
                 }
                 String username = bindUser.getUsername();
-                return error("该微信已绑定YaYa医师账号 "+ (StringUtils.isEmpty(username) ? bindUser.getMobile() :username));
+                return error("该微信已绑定YaYa医师账号 " + (StringUtils.isEmpty(username) ? bindUser.getMobile() : username));
             }
-
-        }
-        // doBindOrUnBindWeiXin方法根据user是否有WXUserInfo判断是解绑还是绑定操作
-        appUserService.doBindOrUnBindWeiXin(user);
-        WXUserInfo wxUserInfo = user.getWxUserInfo();
-        if(wxUserInfo == null){
-            //解绑成功
-            return success();
-        }else{  //绑定成功
+            appUserService.doBindWeiXin(user);
             Map<String,String> map = new HashMap<>();
-            map.put("wxNickname",wxUserInfo.getNickname());
+            map.put("wxNickname",user.getWxUserInfo().getNickname());
             return success(map);
         }
     }

@@ -74,6 +74,52 @@ public class DataFile implements Serializable {
         return null;
     }
 
+    public enum DataType{
+        MEET(0,"会议"),
+        THOMSON(1,"汤森路透"),
+        MEDICINE(2,"药品目录"),
+        CLINICAL(3,"临床指南");
+
+        private Integer type;
+        private String name;
+
+        public Integer getType(){
+            return type;
+        }
+
+        public String getName(){
+            return name;
+        }
+
+        DataType(Integer type,String name){
+            this.type = type;
+            this.name = name;
+        }
+
+    }
+
+    public enum OpenType{
+        BY_PDF(1,"pdf打开"),
+        BY_DETAIL(2,"key，value打开"),
+        BY_HTML(3,"html打开");
+
+        private Integer type;
+
+        private String desc;
+
+        public Integer getType(){
+            return type;
+        }
+
+        public String getDesc(){
+            return desc;
+        }
+
+        OpenType(Integer type,String desc){
+            this.type = type;
+            this.desc = desc;
+        }
+    }
 
 
 }

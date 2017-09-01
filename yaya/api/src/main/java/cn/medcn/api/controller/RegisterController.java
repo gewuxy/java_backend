@@ -3,37 +3,40 @@ package cn.medcn.api.controller;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.EmailHelper;
-import cn.medcn.common.email.MailBean;
-import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.BaiduApiService;
 import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.supports.baidu.NearbySearchDTO;
 import cn.medcn.common.supports.baidu.SearchResultDTO;
-import cn.medcn.common.utils.*;
+import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.RedisCacheUtils;
+import cn.medcn.common.utils.RegexUtils;
 import cn.medcn.sys.model.SystemProperties;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SysPropertiesService;
 import cn.medcn.sys.service.SystemRegionService;
-import cn.medcn.user.dto.*;
-import cn.medcn.user.model.*;
+import cn.medcn.user.dto.AppUserDTO;
+import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.dto.HospitalDTO;
+import cn.medcn.user.dto.TitleDTO;
+import cn.medcn.user.model.ActiveStore;
+import cn.medcn.user.model.AppRole;
+import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.Department;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.HospitalService;
 import com.google.common.collect.Lists;
 import org.apache.commons.collections.map.HashedMap;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/4/20.
@@ -110,7 +113,7 @@ public class RegisterController extends BaseController{
 
         }else {
             Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
-            if(captcha.getCount() == 2 && between < 10*60*1000){
+            if(captcha.getCount() == 2 && between < TimeUnit.MINUTES.toMillis(10)){
                 return error("获取验证码次数频繁，请稍后");
             }
             String msgId = null;

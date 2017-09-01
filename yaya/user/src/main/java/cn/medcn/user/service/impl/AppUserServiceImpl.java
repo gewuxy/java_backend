@@ -390,7 +390,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
     public void updateDoctor(AppUser user)  throws Exception{
         user.setAuthed(true);  //防止user所有字段为null导致抛出异常
         if(!StringUtils.isEmpty(user.getProvince()) && !StringUtils.isEmpty(user.getCity())){ //防止zone为空没有更新
-            if(StringUtils.isEmpty(user.getZone())){
+            if(user.getZone() == null){
                 user.setZone("");
             }
         }
@@ -573,7 +573,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
      * @param user
      */
     @Override
-    public String updateUserInfo(AppUser user) throws SystemException {
+    public String updateUserInfo(AppUser user){
         appUserDAO.updateByPrimaryKeySelective(user);
 
         WXUserInfo wxUserInfo = user.getWxUserInfo();
@@ -590,32 +590,6 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
             }
         }
         return null;
-    }
-
-
-
-
-    /**
-     * 执行绑定或解绑微信用户
-     * @param user
-     */
-    @Override
-    public void doBindOrUnBindWeiXin(AppUser user) {
-        WXUserInfo wxUserInfo = user.getWxUserInfo();
-        if(wxUserInfo == null){
-            //根据unionId执行解绑操作
-            wxUserInfoDAO.deleteByPrimaryKey(user.getUnionid());
-            user.setUnionid(null);
-        }else{
-            //绑定操作
-            WXUserInfo result = wxUserInfoDAO.selectByPrimaryKey(wxUserInfo.getUnionid());
-            if(result == null){
-                wxUserInfoDAO.insert(wxUserInfo);
-            }else {
-                wxUserInfoDAO.updateByPrimaryKey(wxUserInfo);
-            }
-        }
-        appUserDAO.updateByPrimaryKey(user);  //字段为null也更新,当unionId为null时，执行解绑操作
     }
 
 
@@ -728,5 +702,32 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         PubUserDocGroup pubUserDocGroup = new PubUserDocGroup();
         pubUserDocGroup.setDoctorId(id);
         pubUserDocGroupDAO.delete(pubUserDocGroup);
+    }
+
+    /**
+     * 解绑微信号
+     * @param user
+     */
+    @Override
+    public void doUnBindWeiXin(AppUser user) {
+        wxUserInfoDAO.deleteByPrimaryKey(user.getUnionid());
+        user.setUnionid(null);
+        appUserDAO.updateByPrimaryKey(user);
+    }
+
+    /**
+     * 绑定微信号
+     * @param user
+     * @return
+     */
+    @Override
+    public String doBindWeiXin(AppUser user) {
+        appUserDAO.updateByPrimaryKey(user);
+        WXUserInfo result = wxUserInfoDAO.selectByPrimaryKey(user.getUnionid());
+        if(result == null){
+            WXUserInfo userInfo = user.getWxUserInfo();
+            wxUserInfoDAO.insert(userInfo);
+        }
+        return null;
     }
 }

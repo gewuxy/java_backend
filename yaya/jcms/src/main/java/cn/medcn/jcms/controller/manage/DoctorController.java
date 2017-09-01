@@ -371,6 +371,9 @@ public class DoctorController extends BaseController{
                 int finishCount = 0;
              for(DoctorImportExcel docExcel:docList){
                       //判断数据合法性
+                 if(StringUtils.isEmpty(docExcel.getLinkman())){
+                    break;
+                 }
                     try {
                         checkData(docExcel);
                     } catch (SystemException e) {
@@ -396,9 +399,6 @@ public class DoctorController extends BaseController{
 
     private void checkData(DoctorImportExcel excel) throws SystemException{
 
-                if(StringUtils.isEmpty(excel.getLinkman())){
-                    throw new SystemException("医生姓名不能为空");
-                }
                 if(StringUtils.isEmpty(excel.getHospital())){
                     throw new SystemException("医生:"+excel.getLinkman()+"的单位不能为空");
                 }

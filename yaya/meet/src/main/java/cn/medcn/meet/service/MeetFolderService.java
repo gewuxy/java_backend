@@ -55,11 +55,17 @@ public interface MeetFolderService extends BaseService<InfinityTree> {
 
 
     /**
-     * 移除文件夹和文件夹的会议
+     * 删除文件夹
      * @param id
      * @return
      */
-    Integer deleteFolderAndSDetail(String id);
+    Integer deleteFolder(String id);
+
+    /**
+     * 递归删除文件夹
+     * @param folderId
+     */
+    void recursiveDeleteFolder(String folderId);
 
     /**
      * 获取目录层级

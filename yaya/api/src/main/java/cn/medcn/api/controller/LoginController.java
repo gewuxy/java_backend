@@ -149,7 +149,7 @@ public class LoginController extends BaseController{
         if(!StringUtils.isEmpty(openid)){
             if(!StringUtils.isEmpty(user.getUnionid())){ //账号已绑定微信，获取绑定的微信信息
                 WXUserInfo info = wxUserInfoService.selectByPrimaryKey(user.getUnionid());
-                return error("该yaya账号已绑定微信账号:" + info.getNickname());
+                return error("该YaYa账号已绑定微信账号:" + info.getNickname());
             }
             //检查该openid是否已被绑定
             OAuthDTO oAuthDTO = redisCacheUtils.getCacheObject(openid);
@@ -162,10 +162,15 @@ public class LoginController extends BaseController{
             findUser = appUserService.selectOne(findUser);
             if(findUser != null){   //已绑定
                 String name = findUser.getUsername();
-                return APIUtils.error("该微信已绑定yaya账号:"+ (StringUtils.isEmpty(name)? findUser.getMobile():name));
+                return APIUtils.error("该微信已绑定YaYa账号:"+ (StringUtils.isEmpty(name)? findUser.getMobile():name));
             }
             //unionid没有绑定，获取微信用户信息
-            WXUserInfo wxUserInfo = wxOauthService.getUserInfoByOpenIdAndToken(openid,oAuthDTO.getAccess_token());
+            WXUserInfo wxUserInfo = null;
+            try {
+                wxUserInfo = wxOauthService.getUserInfoByOpenIdAndToken(openid,oAuthDTO.getAccess_token());
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
             user.setUnionid(oAuthDTO.getUnionid());
             user.setWxUserInfo(wxUserInfo);
         }
@@ -181,7 +186,7 @@ public class LoginController extends BaseController{
      * @param request
      * @return
      */
-    private AppUserDTO updateUserInfoAndGetDTO(AppUser user,HttpServletRequest request) throws SystemException {
+    private AppUserDTO updateUserInfoAndGetDTO(AppUser user,HttpServletRequest request){
         Principal principal = getLegalToken(user);
         user.setLastLoginTime(new Date());
         user.setLastLoginIp(request.getRemoteAddr());
