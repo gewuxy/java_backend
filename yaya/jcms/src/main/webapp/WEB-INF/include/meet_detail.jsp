@@ -20,8 +20,15 @@
                     <p>本次会议需支付象数：<span class="color-blue">${meet.meetSetting.xsCredits}</span></p>
                 </c:when>
                 <c:when test="${meet.meetSetting.requiredXs != null && meet.meetSetting.requiredXs == 1}">
-                    <p>本次会议奖励象数：<span class="color-blue">${meet.meetSetting.xsCredits}</span>，
+                    <p>本次会议奖励象数：<span class="color-blue">${meet.meetSetting.xsCredits}</span>,
                         还有 <span class="color-blue">${attendCount>meet.meetSetting.awardLimit?0:meet.meetSetting.awardLimit-attendCount}</span> 人能够获得奖励</p>
+                </c:when>
+            </c:choose>
+            <c:choose>
+                <c:when test="${meet.meetSetting.rewardCredit != null && (meet.meetSetting.rewardCredit == 2 || meet.meetSetting.rewardCredit == 3) }">
+                    <p>本次会议奖励学分：<span class="color-blue">${meet.meetSetting.eduCredits}</span>,
+                        还有<span class="color-blue">${getAwardCreditCount>meet.meetSetting.awardCreditLimit?0:meet.meetSetting.awardCreditLimit-getAwardCreditCount}</span> 人能够获得奖励</p>
+                    </p>
                 </c:when>
             </c:choose>
             <div class="metting-detail-introBox  clearfix">
