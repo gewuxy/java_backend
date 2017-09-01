@@ -933,7 +933,8 @@ public class MeetController extends BaseController {
         //Integer attendCount = meetService.getMeetAttendCount(id);
         Integer awardCount = meetService.findGetRewardUserCount(id, MeetRewardHistory.rewardLabel.XS.getRewardType());
         model.addAttribute("attendCount", awardCount);
-
+        Integer awardCreditCount = meetService.findGetRewardUserCount(id, MeetRewardHistory.rewardLabel.CREDIT.getRewardType());
+        model.addAttribute("getAwardCreditCount",awardCreditCount);
         String qrCodePath = checkAndCreateQRCode(id);
         model.addAttribute("qrCodePath", qrCodePath);
 
