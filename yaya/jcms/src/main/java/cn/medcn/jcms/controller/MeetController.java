@@ -179,7 +179,7 @@ public class MeetController extends BaseController {
         if (StringUtils.isEmpty(folderId)) {
             return error("请选择文件夹");
         }
-
+        //需要拿到会议的名称，所以直接查询出meet，不使用checkMeetIsMine方法
         Integer userId = SubjectUtils.getCurrentUserid();
         Meet meet = new Meet();
         meet.setId(meetId);
@@ -234,29 +234,11 @@ public class MeetController extends BaseController {
             return error("不能删除不属于自己的会议");
         }
         //递归删除
-        deleteFolderAndDetail(id);
+        meetFolderService.recursiveDeleteFolder(id);
         return success();
     }
 
 
-    /**
-     * 递归删除文件夹和会议
-     *
-     * @param id
-     */
-    private void deleteFolderAndDetail(String id) {
-        InfinityTree tree = new InfinityTree();
-        tree.setPreid(id);
-        List<InfinityTree> list = meetFolderService.select(tree);
-        if (CheckUtils.isEmpty(list)) { //没有子文件夹
-            meetFolderService.deleteFolderAndSDetail(id);
-        } else {
-            for (InfinityTree tree1 : list) {
-                deleteFolderAndDetail(tree1.getId());
-            }
-            meetFolderService.deleteFolderAndSDetail(id);
-        }
-    }
 
     /**
      * 会议草稿箱
@@ -1099,7 +1081,7 @@ public class MeetController extends BaseController {
         }
         Meet meet = new Meet();
         meet.setId(meetId);
-        meet.setState((short) 4);
+        meet.setState(Meet.MeetType.CANCEL.getState());
         meet.setOwnerId(SubjectUtils.getCurrentUserid());
         int count = meetService.updateByPrimaryKeySelective(meet);
 
