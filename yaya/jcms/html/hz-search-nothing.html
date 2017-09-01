@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>患者管理-没搜索结果</title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="css/perfect-scrollbar.min.css">
+    <!--[if lt IE 9]>
+    <script src="js/html5.js"></script>
+    <![endif]-->
+</head>
+<body >
+
+<!-- aside -->
+<div class="aside p-re-1">
+    <div class="l-menu content">
+        <div class="l-list">
+            <ul>
+                <li>
+                    <a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">功能</p>
+            <ul>
+                <li>
+                    <a href="metting-step01.html"><i></i><img src="images/icon-left-2.png" alt="" /><span>会议发布</span></a>
+                </li>
+                <li>
+                    <a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+                </li>
+                <li>
+                    <a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">数据</p>
+            <ul>
+                <li>
+                    <a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+                </li>
+                <li>
+                    <a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">管理</p>
+            <ul>
+                <li class="cur">
+                    <a href="hz-hzgl.html"><i></i><img src="images/icon-left-hover-8.png"  alt="" /><span>医生管理</span></a>
+                </li>
+                <li>
+                    <a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+                </li>
+                <li>
+                    <a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="logout-btn"><a href="#">退出账号</a></div>
+    </div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main max-height select-table clearfix">
+
+    <!-- header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="clearfix">
+                <div class="fl clearfix">
+                    <img src="images/subPage-header-image-08.png" alt="">
+                </div>
+                <div class="oh">
+                    <p><strong>医生管理</strong></p>
+                    <p>关注医生分组管理，群发通知便捷有效</p>
+                </div>
+            </div>
+        </div>
+    </header>
+    <!-- header end -->
+
+    <div class="tab-hd  ">
+        <ul class="tab-list clearfix">
+            <li class="cur">
+                <a href="hz-hzgl.html">医生管理<i></i></a>
+            </li>
+            <li >
+                <a href="hz-drys.html">导入医生<i></i></a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-bd">
+        <div class="groupBox fl clearfix">
+            <ul>
+                <li  groundId="111">
+
+                    <span class="fr">1200</span>
+                    <span class="fl">
+                    <strong><a href="javascript:;" class="title">全部医生</a></strong>
+                </span>
+                    <i></i>
+                </li>
+                <li class="cur" groundId="112">
+                    <span class="fr">150</span>
+                    <span class="fl">
+                    <strong><a href="javascript:;" class="title">未分组</a></strong>
+                    <p><a href="#" class="fx-btn-4">修改</a></p>
+                </span>
+                    <i></i>
+                </li>
+                <li groundId="113">
+                    <span class="fr">150</span>
+                    <span class="fl">
+                    <strong><a href="javascript:;" class="title">尿急</a></strong>
+                    <p><a href="#" class="fx-btn-4">修改</a></p>
+                </span>
+                    <i></i>
+                </li>
+                <li groundId="114">
+                    <span class="fr">150</span>
+                    <span class="fl">
+                    <strong><a href="javascript:;" class="title">已康复</a></strong>
+                    <p><a href="#" class="fx-btn-4">修改</a></p>
+                </span>
+                    <i></i>
+                </li>
+            </ul>
+            <p class="t-center margin-t-b"><a href="#" class="add-icon fx-btn-1">添加分组</a></p>
+        </div>
+        <div class="select-table-box">
+            <div class="tb-contacts-head">
+                <div class="tb-search">
+                    <span class="search-box ">
+                        <form action="">
+                            <label for="search-text" class="search-text-hook">
+                                <input id="search-text" type="text" class="sear-txt" />
+                                <input type="reset" class="search-empty none" value="X" />
+                            </label>
+                            <input class="sear-button" type="button" />
+
+                        </form>
+                    </span>
+                </div>
+                <table class=" tb-contacts-list" cellspacing="0">
+                    <thead>
+                    <tr>
+                        <th class="col1">&nbsp;</th>
+                        <th class="col1"><i class="tb-icon icon-check select-all"></i></th>
+                        <th class="col5" colspan="7" style="display:none; padding-left: 10px; text-align: left;"><span class="margin-r"><a href="#" class="button-middle button-green fx-btn-3">移至分组</a></span></th>
+                        <th class="col5" colspan="7" style=" padding-left: 10px;">全选</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="normalBoxItem">
+                <p><img src="./images/not-search.png" alt=""></p>
+                <p style="color:#acacac; font-size:16px;">搜索不到结果</p>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+
+</div>
+<div class="mask-wrap">
+    <div class="dis-tbcell">
+        <div class="distb-box distb-box-min fx-mask-box-1">
+            <div class="mask-hd clearfix">
+                <h3 class="font-size-1">新建分组</h3>
+                <span class="close-btn-fx"><img src="images/cha.png"></span>
+            </div>
+            <div class="fx-mask-box clearfix t-center" >
+                <span class="fSize-max td-title">分组名称</span><span><input type="text" class="text-input" placeholder="18个中文字符以内（必填）"></span>
+            </div>
+            <div class="sb-btn-box p-btm-1">
+                <button class="close-button-fx cur">确认</button>
+                <button class="close-button-fx">取消</button>
+            </div>
+        </div>
+        <div class="distb-box fx-mask-box-2">
+            <div class="mask-hd clearfix">
+                <h3 class="font-size-1">添加患者</h3>
+                <span class="close-btn-fx"><img src="images/cha.png"></span>
+            </div>
+            <div class="fx-mask-box clearfix">
+                <div class="column clearfix">
+                    <div class="col-2-1 clearfix">
+                        <span class="fSize-max td-title">姓名</span><span><input type="text" class="text-input" placeholder="请填写患者姓名"></span>
+                    </div>
+                    <div class="col-2-1 last clearfix">
+                        <span class="fSize-max td-title">性别</span><span><input class="margin-r" type="radio" name="Sex" value="Male" checked="checked">男<input class="margin-r margin-l"  type="radio" name="Sex" value="Female">女</span>
+                    </div>
+                </div>
+                <div class="column clearfix">
+                    <div class="col-2-1 clearfix">
+                        <span class="fSize-max td-title">手机</span><span><input type="text" class="text-input" placeholder="请填写患者手机"></span>
+                    </div>
+                    <div class="col-2-1 last clearfix">
+                        <span class="fSize-max td-title">年龄</span><span><input type="text" class="text-input" placeholder=""></span>
+                    </div>
+                </div>
+                <div class="clearfix">
+                    <textarea name="" id="" cols="30" rows="10" class="text-textarea" placeholder="备注信息"></textarea>
+                </div>
+
+            </div>
+            <div class="sb-btn-box p-btm-1">
+                <div class="column clearfix column-last">
+                    <div class="col-2-1 t-left">
+                        <button class="close-button-fx">批量处理</button>
+                        <strong><a href="#" class="color-blue">点击此处</a></strong>
+                        下载excel模版
+                    </div>
+                    <div class="col-2-1 t-right last">
+                        <button class="close-button-fx">继续添加</button>
+                        <button class="close-button-fx cur">确认</button>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="distb-box distb-box-min fx-mask-box-3 " >
+            <div class="mask-hd clearfix">
+                <h3 class="font-size-1">设置分组</h3>
+                <span class="close-btn-fx"><img src="images/cha.png"></span>
+            </div>
+            <div class="clearfix hidden-box">
+                <form action="">
+                    <ul class="fx-li-box" >
+
+                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li>
+                        <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li>
+                        <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li>
+                        <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>
+
+
+
+                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>                        <li><label><input name="Fruit" type="checkbox" checked value="" class="tb-icon" />遗传病      </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />半乳糖血症   </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />白化病 </label></li> <li><label><input name="Fruit" type="checkbox" value="" class="tb-icon" />枫糖尿症 </label></li>
+                    </ul>
+                </form>
+
+            </div>
+            <div class="sb-btn-box  p-btm-1">
+                <button class="close-button-fx cur">确认</button>
+                <button class="close-button-fx">取消</button>
+            </div>
+        </div>
+        <div class="distb-box distb-box-min fx-mask-box-4">
+            <div class="mask-hd clearfix">
+                <h3 class="font-size-1">设置分组</h3>
+                <span class="close-btn-fx"><img src="images/cha.png"></span>
+            </div>
+            <div class="fx-mask-box clearfix t-center" >
+                <span class="fSize-max td-title">分组名称</span><span><input type="text" class="text-input" placeholder="" value="糖尿病人"></span>
+            </div>
+            <div class="sb-btn-box p-btm-1 t-right">
+                <button class="close-button-fx">删除分组</button>
+                <button class="close-button-fx cur">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/jquery-ui-1.9.2.custom.min.js"></script>
+<script src="js/slide.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/main.js"></script>
+<style>
+
+</style>
+<script>
+    $(function(){
+        var selectTableAll = $(".tb-contacts-head").find(".select-all");
+        var selectTable = $(".select-table");
+        var selectList = selectTable.find(".ui-selectable").find('.tb-icon');
+        var selectTrNum = selectList.parents("tr").length;
+        var selectHead = $(".tb-contacts-head").find("th");
+
+
+
+
+        /*隔行换色*/
+        $(".ui-selectable tr:odd").addClass("td-bg");
+
+
+        //全选按钮选中
+        selectTableAll.on("click",function(){
+            $(this).toggleClass("select");
+            selectTableAll.removeClass("select-notAll");
+            var $tr = $(".select-table").find(".ui-selectable tr");
+            if( $tr.hasClass("selectTr") && selectTrNum != $(".selectTr").length){
+                $tr.addClass("selectTr");
+                $tr.find(".icon-drag").addClass("icon-drag-check");
+                $tr.find(".icon-check").addClass("select");
+            } else {
+                $tr.toggleClass("selectTr");
+                $tr.find(".icon-drag").toggleClass("icon-drag-check");
+                $tr.find(".icon-check").toggleClass("select");
+            }
+            //选中显示修改分组
+            if($(this).hasClass("select")){
+                selectHead.filter(":eq(2)").show();
+                selectHead.filter(":gt(2)").hide();
+            } else {
+                selectHead.filter(":eq(2)").hide();
+                selectHead.filter(":gt(2)").show();
+            }
+        });
+        //点击选中状态
+        selectList.on("click",function(){
+            $(this).closest("tr").toggleClass("selectTr");
+            $(this).closest("tr").find(".icon-drag").toggleClass("icon-drag-check");
+            $(this).closest("tr").find(".icon-check").toggleClass("select");
+
+            if($(".selectTr").length == selectTrNum){
+                selectTableAll.addClass("select");
+            } else {
+                selectTableAll.removeClass("select");
+            }
+
+            if($(".selectTr").length > 0){
+                selectTableAll.addClass("select-notAll");
+                selectHead.filter(":eq(2)").show();
+                selectHead.filter(":gt(2)").hide();
+            } else {
+                selectTableAll.removeClass("select-notAll");
+                selectHead.filter(":eq(2)").hide();
+                selectHead.filter(":gt(2)").show();
+            }
+        });
+
+        //拖动触发
+        selectList.draggable({
+            appendTo:"body",
+            zIndex: 20,
+            revertDuration: 5,
+            helper: function(event, ui) {
+                //contactid = $(this).attr("grcontactid");
+                var contactid = new Array();
+                if( $(this).closest("tr").hasClass("selectTr") == false ){
+                    $(this).closest("tr").toggleClass("selectTr");
+                    $(this).closest("tr").find(".icon-drag").toggleClass("icon-drag-check");
+                    $(this).closest("tr").find(".icon-check").toggleClass("select");
+                }
+                if( $(this).closest("tr").find(".icon-check").hasClass("select-all") ){
+                    alert("选中");
+                }
+                if( $(this).parents("tr").find(".icon-check").hasClass("select") ){
+                    $(".ui-selectable .select").each(function(){
+                        contactid.push($(this).closest("tr").attr("grcontactid"));
+                    });
+                }
+                return $("<p class='drag_table' style='position:absolute; left:100px; top:100px;' userid='"+contactid+"' >" +"正在拖动" + contactid.length + "个患者" +"</p>");
+
+            },
+            revert: true,
+            connectToSortable: ".groupBox li",
+            cursor: "move"
+        });
+
+        //将分组改为能填充物体
+        $(".groupBox li").droppable({
+            hoverClass: "dragSelect",
+            tolerance: "intersect",
+            drop: function(event, ui) {
+                var groupid = $(this).attr("groundId");
+                var cID = ui.helper.attr("userid");
+                console.log(groupid);
+                console.log(cID);
+                savaGroundSelect(groupid,cID);
+            }
+        });
+        //保存函数
+        function savaGroundSelect(groupid,cID){
+            console.log("触发函数");
+           alert("已选中组"+groupid+"选中用户"+cID);
+//            //调用数据
+//            var DATA = '';
+//            var group = $(".group_name_input").attr("nameid");
+//            if ($(".luxury_checkbox").attr("checkAll") == "true") {
+//                DATA = '{"GRID":"'+gId+'","CTIDS":"'+contactIdString+'","EXCLUSION":"true","ISGROUP":"true","GROUP":"'+group+'"}';
+//            }else{
+//                DATA = '{"GRID":"'+gId+'","CTIDS":"'+contactIdString+'","EXCLUSION":"false"}';
+//            }
+//            $.ajax({
+//                url: 'handler/handleAttachToGroup.php',
+//                type: 'POST',
+//                dataType:'JSON',
+//                data: {
+//                    "DATA": DATA
+//                },
+//                beforeSend:function(){
+//                    $('body').append('<div class="tips_cover"></div><div class="cover_content"><div class="coverIng"><span>正在保存到群组，请稍候...</span></div></div>');
+//                },
+//                success: function(data){
+//                    if (data.flag) {
+//                        $('.cover_content').empty().append('<div class="cover_after"><span>成功保存到群组~</span></div>');
+//                        coverRemove();
+//                        _cHandler.getAllCCount();
+//                        _cHandler.getAllG();
+//                        if (group == "all") {
+//                            $('#allContact').trigger("click");
+//                        }else if (group =="ungrouped") {
+//                            $('#ungrouped').trigger("click");
+//                        }else {
+//                            $(".group_name li").each(function(){
+//                                if($(this).attr("id") == group){
+//                                    $(this).trigger("click");
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
+//            });
+
+        }
+
+        // 换弹出窗形态
+        var screenHeight = $(window).height();
+        var listPopupBox = $(".tb-popupBox-hook");
+
+        listPopupBox.mouseenter(function(){
+            $(this).find(".tb-popupBox").show();
+            var popupBoxTopHeight = $(this).offset().top - $(window).scrollTop();
+            var popupBoxHeight = $(this).find(".tb-popupBox").height();
+            if((popupBoxTopHeight + popupBoxHeight) > screenHeight) {
+                $(this).find(".tb-popupBox").addClass("tb-popupBox-button");
+            } else {
+                $(this).find(".tb-popupBox").addClass("tb-popupBox-top");
+            }
+        }).mouseleave(function(){
+            $(this).find(".tb-popupBox").hide();
+            $(this).find(".tb-popupBox").removeClass("tb-popupBox-top tb-popupBox-button")
+        });
+
+        //选中搜索框出现按钮
+        $('.search-text-hook .sear-txt').focus(function(){
+            $(this).next('.search-empty').removeClass('none');
+        });
+        $('.search-box').on('mouseenter mouseleave',function(){
+            $(this).find('.search-empty').toggleClass('none');
+        });
+
+
+
+
+
+
+    })
+
+
+
+</script>
+
+</body>
+</html>

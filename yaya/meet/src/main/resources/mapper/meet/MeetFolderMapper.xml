@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetFolderDAO">
+
+    <!-- 查询单位号的文件夹 -->
+    <select id="findUnitMeetFolder" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        SELECT * from v_meet_folder_final
+        WHERE type=0 AND user_id=#{masterId}
+        UNION
+        select * from v_meet_folder_final
+        WHERE  state BETWEEN 1 AND 3 AND type=1
+        AND user_id=#{masterId}
+    </select>
+
+    <!-- 查询我关注的所有单位号的文件夹 -->
+    <select id="findMyMeetFolder" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        select f.* from v_meet_folder_final f
+        LEFT JOIN t_app_attention a ON a.master_id = f.user_id
+        WHERE f.type=0 AND f.meet_count>0 AND a.slaver_id=#{userId}
+        UNION
+        select f.* from v_meet_folder_final f
+        LEFT JOIN t_app_attention a ON a.master_id = f.user_id
+        WHERE a.slaver_id=#{userId} AND f.type=1 AND f.state=#{state}
+        <if test="meetType!=null">
+            AND f.meet_type=#{meetType}
+        </if>
+    </select>
+
+    <!-- 根据父目录ID查询子目录数据 -->
+    <select id="findLeafMeetFolder" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        SELECT * FROM v_leaf_folder_meet WHERE preid=#{preId}
+        <if test="showFlag!=null and showFlag==1">
+            AND type=0 and meet_count!=0
+            UNION
+            SELECT * FROM v_leaf_folder_meet WHERE preid=#{preId} AND type=1
+        </if>
+        ORDER BY type
+    </select>
+
+    <select id="findPublishedMeeting" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+      SELECT f.id,f.meet_name,NULL AS publish_time,f.type,f.meet_count
+        FROM v_meet_folder_final f
+            WHERE f.user_id = #{masterId} AND f.type=0
+        UNION
+         (SELECT f.id,f.meet_name,m.publish_time,f.type,f.meet_count
+        FROM v_meet_folder_final f LEFT JOIN t_meet m ON m.id = f.id
+            WHERE f.user_id = #{masterId} AND f.type=1)  ORDER BY type,publish_time DESC
+    </select>
+
+    <select id="findPublishedSubList" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+       SELECT t.id,t.infinity_name AS meet_name,NULL AS publish_time,0 AS type,
+       (select COUNT(id) FROM t_infinity_tree_detail WHERE infinity_id = t.id) AS meet_count
+       FROM t_infinity_tree t
+       WHERE t.user_id = #{masterId} AND t.preid = #{preId}
+        UNION
+        (SELECT m.id,m.meet_name,m.publish_time,1 AS TYPE ,0 AS meet_count
+        FROM t_infinity_tree_detail d INNER JOIN t_meet m ON d.resource_id = m.id
+        INNER JOIN t_infinity_tree t ON d.infinity_id = t.id
+        WHERE t.user_id = #{masterId} AND d.infinity_id = #{preId} AND m.state BETWEEN 1 AND 3)
+         ORDER BY type,publish_time DESC
+    </select>
+
+
+</mapper>

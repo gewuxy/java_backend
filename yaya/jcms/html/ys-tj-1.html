@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+<!-- 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/> -->
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> demo </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="js/html5.js"></script>
+	<![endif]-->
+    <style>
+        .highcharts-text-outline { display:none;}
+
+    </style>
+
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside">
+    <div class="l-menu content">
+        <div class="l-list">
+            <ul>
+                <li>
+                    <a href="index.html"><i></i><img src="images/u336.png" width="22" height="20" alt="" /><span>首页</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">功能</p>
+            <ul>
+                <li>
+                    <a href="meeting.html"><i></i><img src="images/u316.png" width="26" height="18" alt="" /><span>会议发布</span></a>
+                </li>
+                <li>
+                    <a href="zypt.html"><i></i><img src="images/u306.png" width="24" height="24" alt="" /><span>资源平台</span></a>
+                </li>
+                <li>
+                    <a href="fwzhang.html"><i></i><img src="images/u310.png" width="24" height="20" alt="" /><span>群发功能</span></a>
+                </li>
+                <li>
+                    <a href="xxtz.html"><i></i><img src="images/u318.png" width="20" height="15" alt="" /><span>消息通知</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">数据</p>
+            <ul>
+                <li>
+                    <a href="data-stastic.html"><i></i><img src="images/u312.png" width="21" height="16" alt="" /><span>会议统计</span></a>
+                </li>
+                <li class="cur">
+                    <a href="ys-tj.html"><i></i><img src="images/u330.png" width="19" height="18" alt="" /><span>医生统计</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">管理</p>
+            <ul>
+                <li>
+                    <a href="ysgl.html"><i></i><img src="images/u332.svg" width="21" alt="" /><span>医生管理</span></a>
+                </li>
+                <li>
+                    <a href="zlgl.html"><i></i><img src="images/u314.png" width="21" height="19" alt="" /><span>资料管理</span></a>
+                </li>
+                <li>
+                    <a href="zhgl.html"><i></i><img src="images/u308.png" width="21" height="22" alt="" /><span>账号管理</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="logout-btn"><a href="#">退出账号</a></div>
+    </div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main clearfix">
+	<!-- header -->
+	<header>
+	    <div class="header-content">
+	        <p><img src="images/u-6.png" width="26" height="18" alt="" /><span class="hd-txt">医生统计</span></p>
+	        <p>关注医生用户属性归类统计，掌握关注用户的属性分布</p>
+	    </div>
+	</header>
+	<!-- header end -->
+
+    <div class="tab-hd">
+        <div class="tab-lin-bd"><span class="tab-line"></span></div>
+        <ul class="tab-list clearfix">
+            <li>
+                <a href="">会议统计<i></i></a>
+            </li>
+            <li class="cur">
+                <a href="">医生统计<i></i></a>
+            </li>
+        </ul>
+    </div>
+    <div class="tj-con mar-top-bd">
+        <div class="border tj-content clearfix">
+            <div class="tj-top clearfix">
+                <h3>关注量分析</h3>
+            </div>
+            <table class="tj-table tj-table-2 tj-table-3 clearfix">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>本周新增关注</p>
+                            <p><span class="td-txt">10</span>人</p>
+                        </td>
+                        <td>
+                            <p>本月新增关注</p>
+                            <p><span class="td-txt">158</span>人</p>
+                        </td>
+                        <td>
+                            <p>总关注</p>
+                            <p><span class="td-txt">35000</span>人</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class="tj-con">
+        <div class="border tj-content clearfix">
+            <div class="tj-top clearfix">
+                <select name="" id="" class="select-bd">
+                    <option value="全国">全国</option>
+                    <option value="北京">北京</option>
+                    <option value="广州">广州</option>
+                    <option value="深圳">深圳</option>
+                    <option value="福建">福建</option>
+                    <option value="厦门">厦门</option>
+                    <option value="武汉">武汉</option>
+                    <option value="杭州">杭州</option>
+                </select>
+                <strong>用户数据分布</strong>
+            </div>
+            <div class="data-tj-box">
+                <table class="data-table-bd">
+                    <tr>
+                        <td>
+                            <div class="chart-div" id="chart-div-0">
+                                <div style="position: relative;"><div dir="ltr" style="position: relative; width: 450px; height: 300px;"><div style="position: absolute; left: 0px; top: 0px; width: 100%; height: 100%;"><vml width="450" height="300" aria-label="A chart." style="overflow: hidden;"><defs id="defs"></defs><rect x="0" y="0" width="450" height="300" stroke="none" stroke-width="0" fill="#ffffff"></rect><g><text text-anchor="start" x="86" y="38.35" font-family="Arial" font-size="11" font-weight="bold" stroke="none" stroke-width="0" fill="#000000">用户地区分布</text><rect x="86" y="29" width="278" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect></g><g><rect x="276" y="58" width="88" height="101" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><rect x="276" y="58" width="88" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="291" y="67.35" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#222222">北京</text></g><circle cx="281.5" cy="63.5" r="5.5" stroke="none" stroke-width="0" fill="#3366cc"></circle></g><g><rect x="276" y="76" width="88" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="291" y="85.35" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#222222">福建</text></g><circle cx="281.5" cy="81.5" r="5.5" stroke="none" stroke-width="0" fill="#dc3912"></circle></g><g><rect x="276" y="94" width="88" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="291" y="103.35" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#222222">上海</text></g><circle cx="281.5" cy="99.5" r="5.5" stroke="none" stroke-width="0" fill="#ff9900"></circle></g><g><rect x="276" y="112" width="88" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="291" y="121.35" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#222222">广州</text></g><circle cx="281.5" cy="117.5" r="5.5" stroke="none" stroke-width="0" fill="#109618"></circle></g><g><rect x="276" y="130" width="88" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="291" y="139.35" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#222222">深圳</text></g><circle cx="281.5" cy="135.5" r="5.5" stroke="none" stroke-width="0" fill="#990099"></circle></g><g><rect x="276" y="148" width="88" height="11" stroke="none" stroke-width="0" fill-opacity="0" fill="#ffffff"></rect><g><text text-anchor="start" x="291" y="157.35" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#222222">其它</text></g><circle cx="281.5" cy="153.5" r="5.5" stroke="none" stroke-width="0" fill="#0099c6"></circle></g></g><g><path d="M172,151L153.48635992170563,67.01639963033632A86,86,0,0,1,172,65L172,151A0,0,0,0,0,172,151" stroke="#ffffff" stroke-width="1" fill="#0099c6"></path></g><g><path d="M172,151L133.04343525837322,74.32936635496326A86,86,0,0,1,153.48635992170563,67.01639963033632L172,151A0,0,0,0,0,172,151" stroke="#ffffff" stroke-width="1" fill="#990099"></path></g><g><path d="M172,151L106.88995884518313,94.81563793351344A86,86,0,0,1,133.04343525837322,74.32936635496326L172,151A0,0,0,0,0,172,151" stroke="#ffffff" stroke-width="1" fill="#109618"></path></g><g><path d="M172,151L87.23259660774984,136.49181878609394A86,86,0,0,1,106.88995884518313,94.81563793351344L172,151A0,0,0,0,0,172,151" stroke="#ffffff" stroke-width="1" fill="#ff9900"></path></g><g><path d="M172,151L147.09364970616946,233.31448059145492A86,86,0,0,1,87.23259660774984,136.49181878609394L172,151A0,0,0,0,0,172,151" stroke="#ffffff" stroke-width="1" fill="#dc3912"></path><text text-anchor="start" x="107.23122143794693" y="187.1654111914671" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#ffffff">23%</text></g><g><path d="M172,151L172,65A86,86,0,1,1,147.09364970616946,233.31448059145492L172,151A0,0,0,1,0,172,151" stroke="#ffffff" stroke-width="1" fill="#3366cc"></path><text text-anchor="start" x="210.71599031787594" y="163.1685661866498" font-family="Arial" font-size="11" stroke="none" stroke-width="0" fill="#ffffff">54.7%</text></g><g></g></vml></div></div><div aria-hidden="true" style="display: none; position: absolute; top: 310px; left: 460px; white-space: nowrap; font-family: Arial; font-size: 11px;">其它</div><div></div></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="chart-div" id="chart-div-1"></div>
+                        </td>
+                    </tr>
+                    <tr class="last">
+                        <td>
+                            <div class="chart-div" id="chart-div-2"></div> 
+                        </td>
+                        <td>
+                            <div class="chart-div" id="chart-div-3"></div>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tj-con">
+        <div class="border tj-content clearfix">
+            <div class="tj-top tab-wrap clearfix">
+                <span class="tab-hd-txt">属性分布表</span>
+                <span class="tab-menu tab-cur">地区分布</span>
+                <span class="tab-menu">医院级别</span>
+                <span class="tab-menu">职称分布</span>
+                <span class="tab-menu">科室分布</span>
+            </div>
+            <div class="tab-con-wrap">
+                <div class="tab-top">
+                	<i></i>详细数据
+                </div>
+                <table class="tab-table-box">
+                	<thead>
+                		<tr>
+                			<td>地图分布</td>
+                			<td>用户数<span class="sj-btn"><i class="sj-top"></i><i class="sj-btm sj-cur"></i></span></td>
+                			<td>占比</td>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                	</tbody>
+                </table>
+            </div>
+            <div class="tab-con-wrap">
+                <div class="tab-top">
+                	<i></i>详细数据
+                </div>
+                <table class="tab-table-box">
+                	<thead>
+                		<tr>
+                			<td>地图分布</td>
+                			<td>用户数<span class="sj-btn"><i class="sj-top"></i><i class="sj-btm sj-cur"></i></span></td>
+                			<td>占比</td>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京eeeeedff</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                	</tbody>
+                </table>
+            </div>
+            <div class="tab-con-wrap">
+                <div class="tab-top">
+                	<i></i>详细数据
+                </div>
+                <table class="tab-table-box">
+                	<thead>
+                		<tr>
+                			<td>地图分布</td>
+                			<td>用户数<span class="sj-btn"><i class="sj-top"></i><i class="sj-btm sj-cur"></i></span></td>
+                			<td>占比</td>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<tr>
+                			<td>北京eeeee</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                	</tbody>
+                </table>
+            </div>
+            <div class="tab-con-wrap">
+                <div class="tab-top">
+                	<i></i>详细数据
+                </div>
+                <table class="tab-table-box">
+                	<thead>
+                		<tr>
+                			<td>地图分布</td>
+                			<td>用户数<span class="sj-btn"><i class="sj-top"></i><i class="sj-btm sj-cur"></i></span></td>
+                			<td>占比</td>
+                		</tr>
+                	</thead>
+                	<tbody>
+                		<tr>
+                			<td>北京wwwwww</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                		<tr>
+                			<td>北京</td>
+                			<td>364</td>
+                			<td>68.04%</td>
+                		</tr>
+                	</tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="tj-con mar-top-bd">
+        <div class="border tj-content clearfix">
+            <div class="tj-top clearfix">
+                <h3>关注量分析</h3>
+            </div>
+            <div class="data-tj-box">
+                    <div id="Region" style="position:relative; height:360px;">
+                    <div class="regionList" id="MapControl">
+                        <ul class="list1"></ul>
+                        <ul class="list2"></ul>
+                        <ul class="list3"></ul>
+                    </div>
+                    <div class="regionMap" id="RegionMap"></div>
+                    <div id="MapColor" style=" display:none; float:left; width:30px; height:180px; margin:80px 0 0 10px; display:inline; background:url(images/map_color.png) center 0;"></div>
+        </div>
+    </div>
+</div>
+<div id="container" style="width:400px;height:400px"></div>
+<script src="js/jquery.min.js"></script>
+<script src="js/map/raphael-min.js"></script>
+<script src="js/map/chinaMapConfig.js"></script>
+<script src="js/map/map.js"></script>
+<script src="js/google.charts.load.js"></script>
+<script src="resources/charts/45/js/jsapi_compiled_ui_module.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/highcharts.js"></script>
+<script src="js/exporting.js"></script>
+<script>
+$(function(){
+
+
+
+// 地图分布
+var data = {"jiangsu":{"value":"30.05%","index":"1","stateInitColor":"0"},"henan":{"value":"19.77%","index":"2","stateInitColor":"0"},"anhui":{"value":"10.85%","index":"3","stateInitColor":"0"},"zhejiang":{"value":"10.02%","index":"4","stateInitColor":"0"},"liaoning":{"value":"8.46%","index":"5","stateInitColor":"0"},"beijing":{"value":"4.04%","index":"6","stateInitColor":"1"},"hubei":{"value":"3.66%","index":"7","stateInitColor":"1"},"jilin":{"value":"2.56%","index":"8","stateInitColor":"1"},"shanghai":{"value":"2.47%","index":"9","stateInitColor":"1"},"guangxi":{"value":"2.3%","index":"10","stateInitColor":"1"},"sichuan":{"value":"1.48%","index":"11","stateInitColor":"2"},"guizhou":{"value":"0.99%","index":"12","stateInitColor":"2"},"hunan":{"value":"0.78%","index":"13","stateInitColor":"2"},"shandong":{"value":"0.7%","index":"14","stateInitColor":"2"},"guangdong":{"value":"0.44%","index":"15","stateInitColor":"2"},"jiangxi":{"value":"0.34%","index":"16","stateInitColor":"3"},"fujian":{"value":"0.27%","index":"17","stateInitColor":"3"},"yunnan":{"value":"0.23%","index":"18","stateInitColor":"3"},"hainan":{"value":"0.21%","index":"19","stateInitColor":"3"},"shanxi":{"value":"0.11%","index":"20","stateInitColor":"3"},"hebei":{"value":"0.11%","index":"21","stateInitColor":"4"},"neimongol":{"value":"0.04%","index":"22","stateInitColor":"4"},"tianjin":{"value":"0.04%","index":"23","stateInitColor":"4"},"gansu":{"value":"0.04%","index":"24","stateInitColor":"4"},"shaanxi":{"value":"0.02%","index":"25","stateInitColor":"4"},"macau":{"value":"0.0%","index":"26","stateInitColor":"7"},"hongkong":{"value":"0.0%","index":"27","stateInitColor":"7"},"taiwan":{"value":"0.0%","index":"28","stateInitColor":"7"},"qinghai":{"value":"0.0%","index":"29","stateInitColor":"7"},"xizang":{"value":"0.0%","index":"30","stateInitColor":"7"},"ningxia":{"value":"0.0%","index":"31","stateInitColor":"7"},"xinjiang":{"value":"0.0%","index":"32","stateInitColor":"7"},"heilongjiang":{"value":"0.0%","index":"33","stateInitColor":"7"},"chongqing":{"value":"0.0%","index":"34","stateInitColor":"7"}};
+        var i = 1;
+        for(k in data){
+            if(i <= 12){
+                var _cls = i < 4 ? 'active' : ''; 
+                $('#MapControl .list1').append('<li name="'+k+'"><div class="mapInfo"><i class="'+_cls+'">'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
+            }else if(i <= 24){
+                $('#MapControl .list2').append('<li name="'+k+'"><div class="mapInfo"><i>'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
+            }else{
+                $('#MapControl .list3').append('<li name="'+k+'"><div class="mapInfo"><i>'+(i++)+'</i><span>'+chinaMapConfig.names[k]+'</span><b>'+data[k].value+'</b></div></li>')
+            }
+        }
+
+var mapObj_1 = {};
+var stateColorList = ['003399', '0058B0', '0071E1', '1C8DFF', '51A8FF', '82C0FF', 'AAD5ee', 'AAD5FF'];
+
+$('#RegionMap').SVGMap({
+    external: mapObj_1,
+    mapName: 'china',
+    mapWidth: 350,
+    mapHeight: 350,
+    stateData: data,
+    // stateTipWidth: 118,
+    // stateTipHeight: 47,
+    // stateTipX: 2,
+    // stateTipY: 0,
+    stateTipHtml: function (mapData, obj) {
+        var _value = mapData[obj.id].value;
+        var _idx = mapData[obj.id].index;
+        var active = '';
+        _idx < 4 ? active = 'active' : active = '';
+        var tipStr = '<div class="mapInfo"><i class="' + active + '">' + _idx + '</i><span>' + obj.name + '</span><b>' + _value + '</b></div>';
+        return tipStr;
+    }
+});
+$('#MapControl li').hover(function () {
+    var thisName = $(this).attr('name');
+    
+    var thisHtml = $(this).html();
+    $('#MapControl li').removeClass('select');
+    $(this).addClass('select');
+    $(document.body).append('<div id="StateTip"></div');
+    $('#StateTip').css({
+        left: $(mapObj_1[thisName].node).offset().left - 50,
+        top: $(mapObj_1[thisName].node).offset().top - 40
+    }).html(thisHtml).show();
+    mapObj_1[thisName].attr({
+        fill: '#E99A4D'
+    });
+}, function () {
+    var thisName = $(this).attr('name');
+
+    $('#StateTip').remove();
+    $('#MapControl li').removeClass('select');
+    mapObj_1[$(this).attr('name')].attr({
+        fill: "#" + stateColorList[data[$(this).attr('name')].stateInitColor]
+    });
+});
+
+$('#MapColor').show();
+});
+</script>
+<script>
+$(function () {
+//    var ajaxData = {"ksList":[{"usercount":1,"percent":"2.86%","d_did":8,"d_dname":"儿科（儿科）"},{"usercount":1,"percent":"2.86%","d_did":74,"d_dname":"其他"},{"usercount":1,"percent":"2.86%","d_did":75,"d_dname":"内科"},{"usercount":1,"percent":"2.86%","d_did":97,"d_dname":"内科(心血管内科)"},{"usercount":1,"percent":"2.86%","d_did":21,"d_dname":"内科（普通内科）"},{"usercount":1,"percent":"2.86%","d_did":85,"d_dname":"外科"},{"usercount":1,"percent":"2.86%","d_did":6,"d_dname":"外科（外科）"},{"usercount":2,"percent":"5.71%","d_did":39,"d_dname":"外科（整形外科）"},{"usercount":1,"percent":"2.86%","d_did":38,"d_dname":"外科（泌尿外科）"},{"usercount":1,"percent":"2.86%","d_did":40,"d_dname":"外科（烧伤外科）"},{"usercount":3,"percent":"8.57%","d_did":44,"d_dname":"妇产科（不孕不育）"},{"usercount":2,"percent":"5.71%","d_did":0,"d_dname":"新增"},{"usercount":8,"percent":"22.86%","d_did":1,"d_dname":"消化科（消化科）"},{"usercount":1,"percent":"2.86%","d_did":73,"d_dname":"白求恩基金管理委员"},{"usercount":1,"percent":"2.86%","d_did":100,"d_dname":"皮肤科"},{"usercount":1,"percent":"2.86%","d_did":121,"d_dname":"眼科(眼肿瘤和眼眶病专科)"},{"usercount":1,"percent":"2.86%","d_did":64,"d_dname":"耳鼻咽喉科（耳专科）"},{"usercount":2,"percent":"5.71%","d_did":16,"d_dname":"肿瘤科（肿瘤科）"},{"usercount":1,"percent":"2.86%","d_did":2,"d_dname":"胃肠科（胃肠科）"},{"usercount":1,"percent":"2.86%","d_did":19,"d_dname":"药剂科（中药）"},{"usercount":1,"percent":"2.86%","d_did":17,"d_dname":"骨科（骨科）"},{"usercount":2,"percent":"5.71%","d_did":18,"d_dname":"麻醉科（麻醉科）"}]};
+    var ajaxData = {"ksList":[{"usercount":1,"percent":"2.86%","d_did":8,"d_dname":"儿科（儿科）"},{"usercount":1,"percent":"2.86%","d_did":74,"d_dname":"其他"},{"usercount":1,"percent":"2.86%","d_did":75,"d_dname":"内科"},{"usercount":1,"percent":"2.86%","d_did":97,"d_dname":"内科(心血管内科)"},{"usercount":1,"percent":"2.86%","d_did":21,"d_dname":"内科（普通内科）"},{"usercount":1,"percent":"2.86%","d_did":85,"d_dname":"外科"},{"usercount":1,"percent":"2.86%","d_did":6,"d_dname":"外科（外科）"},{"usercount":2,"percent":"5.71%","d_did":39,"d_dname":"外科（整形外科）"}]};
+    var ajaxData_now = [];
+    // console.log(ajaxData.zcList[0].d_zc);
+    // console.log(ajaxData.zcList.length);
+
+    for(var i=0; i < ajaxData.ksList.length;i++){
+        console.log(ajaxData.ksList[i].d_zc);
+        var name = String(ajaxData.ksList[i].d_dname),
+            percent = parseInt(ajaxData.ksList[i].percent);
+        ajaxData_now.push({name:name,y:percent});
+    }
+    console.log(ajaxData_now);
+
+    // $(result).each(function(i,n){
+    // var id = n['d_zc'],
+    //     value = n['percent'];
+    //     ajaxData.push({name:id,y:value});
+
+    // });
+
+    // ajaxData = [];
+    // $.ajax({
+    //     type: "post",
+    //     contentType: "application/json",
+    //     url: "http://192.168.1.129:8080/doctorData!getDocZc",
+    //     async : "false",
+    //     success: function(result){
+    //         console.log("能进入数据");
+    //         $(result).each(function(i,n){
+    //             var id = n['d_zc'],
+    //                 value = n['percent'];
+    //                 ajaxData.push({name:id,y:value});
+
+    //         });
+    //     },
+    //     error:function (XMLHttpRequest, textStatus, errorThrown) {
+    //            alert("请求对象XMLHttpRequest: "+XMLHttpRequest);
+    //         alert("错误类型textStatus: "+textStatus);
+    //         alert("异常对象errorThrown: "+errorThrown);
+
+    //     }
+    // })
+
+
+    //用户地区分布
+    $('#chart-div-0').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        credits:{
+            enabled:false // 禁用版权信息
+        },
+        exporting: {
+            enabled: false
+        },
+        title: {
+            text: '用户地区分布'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: -35,
+                   formatter: function() {  
+                      if (this.percentage > 4) return Highcharts.numberFormat(this.point.percentage, 1) +'%';
+                   },
+                },
+                showInLegend: true
+            }
+        },
+        legend: {
+
+            itemHoverStyle: {
+                color: '#000'
+            },
+            itemStyle : {
+                'fontSize' : '12px',
+                'color'    : '#444',
+                'fontWeight': '100',
+            },               
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'middle',
+            symbolHeight: 12,
+            symbolWidth :12,
+            symbolRadius :10,
+            itemMarginTop:8,
+            itemMarginBottom:8,
+            itemWidth: 105,
+            x: 10,
+            y: 5,
+            borderWidth: 0,
+            labelFormatter: function () {
+              return this.name + '&nbsp';
+            },
+            useHTML: true
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+             data: [
+                 ['北京', 3.8],
+                 ['福建', 1.6],
+                 ['上海', 0.6],
+                 ['广州', 0.43],
+                 ['深圳', 0.28],
+                 ['其它', 0.24]
+             ]
+            //data: ajaxData_now
+        }]
+    });
+    //医院级别
+    $('#chart-div-1').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        credits:{
+            enabled:false // 禁用版权信息
+        },
+        exporting: {
+            enabled: false
+        },
+        title: {
+            text: '医院级别'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: -35,
+                    formatter: function() {
+                        if (this.percentage > 4) return Highcharts.numberFormat(this.point.percentage, 1) +'%';
+                    },
+                },
+                showInLegend: true
+            }
+        },
+        legend: {
+
+            itemHoverStyle: {
+                color: '#000'
+            },
+            itemStyle : {
+                'fontSize' : '12px',
+                'color'    : '#444',
+                'fontWeight': '100',
+            },
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'middle',
+            symbolHeight: 12,
+            symbolWidth :12,
+            symbolRadius :10,
+            itemMarginTop:8,
+            itemMarginBottom:8,
+            itemWidth: 105,
+            x: 10,
+            y: 5,
+            borderWidth: 0,
+            labelFormatter: function () {
+                return this.name + '&nbsp';
+            },
+            useHTML: true
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+                ['一级及以下医院', 0.68],
+                ['二级医院', 12.6],
+                ['三级医院', 0.65],
+                ['其它', 9.43]
+
+            ]
+            //data: ajaxData_now
+        }]
+    });
+    //职称分布
+    $('#chart-div-2').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        credits:{
+            enabled:false // 禁用版权信息
+        },
+        exporting: {
+            enabled: false
+        },
+        title: {
+            text: '职称分布'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: -35,
+                    formatter: function() {
+                        if (this.percentage > 4) return Highcharts.numberFormat(this.point.percentage, 1) +'%';
+                    },
+                },
+                showInLegend: true
+            }
+        },
+        legend: {
+
+            itemHoverStyle: {
+                color: '#000'
+            },
+            itemStyle : {
+                'fontSize' : '12px',
+                'color'    : '#444',
+                'fontWeight': '100',
+            },
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'middle',
+            symbolHeight: 12,
+            symbolWidth :12,
+            symbolRadius :10,
+            itemMarginTop:8,
+            itemMarginBottom:8,
+            itemWidth: 105,
+            x: 10,
+            y: 5,
+            borderWidth: 0,
+            labelFormatter: function () {
+                return this.name + '&nbsp';
+            },
+            useHTML: true
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+                ['主任医师（教授）', 2.6],
+                ['副主任医师（副教授）', 0.8],
+                ['主治医师（讲师）', 6.67],
+                ['住院医师（助教）', 3.3]
+
+            ]
+            //data: ajaxData_now
+        }]
+    });
+    //科室分布
+    $('#chart-div-3').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false
+        },
+        credits:{
+            enabled:false // 禁用版权信息
+        },
+        exporting: {
+            enabled: false
+        },
+        title: {
+            text: '科室分布'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: -35,
+                    formatter: function() {
+                        if (this.percentage > 4) return Highcharts.numberFormat(this.point.percentage, 1) +'%';
+                    },
+                },
+                showInLegend: true
+            }
+        },
+        legend: {
+
+            itemHoverStyle: {
+                color: '#000'
+            },
+            itemStyle : {
+                'fontSize' : '12px',
+                'color'    : '#444',
+                'fontWeight': '100',
+            },
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'middle',
+            symbolHeight: 12,
+            symbolWidth :12,
+            symbolRadius :10,
+            itemMarginTop:8,
+            itemMarginBottom:8,
+            itemWidth: 105,
+            x: 10,
+            y: 5,
+            borderWidth: 0,
+            labelFormatter: function () {
+                return this.name + '&nbsp';
+            },
+            useHTML: true
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+                ['胃肠科', 4.012],
+                ['心血管科', 2.68],
+                ['儿科', 1.097],
+                ['外科', 0.723],
+                ['心血管', 0.4723],
+                ['其它', 1.23]
+            ]
+            //data: ajaxData_now
+        }]
+    });
+
+
+
+
+
+});
+
+
+
+
+
+</script>
+</body>
+</html>

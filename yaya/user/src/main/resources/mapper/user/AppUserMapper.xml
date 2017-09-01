@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.AppUserDAO" >
+
+    <select id="searchAccount" resultType="cn.medcn.user.dto.PublicAccountDTO">
+        SELECT  id,nickname,headimg FROM t_app_user WHERE  pub_flag=1 AND authed=1 AND nickname LIKE
+        CONCAT('%',#{keyword}, '%')
+
+    </select>
+
+    <select id="mySubscribe" resultType="cn.medcn.user.dto.PublicAccountDTO">
+        SELECT tu.id,nickname,headimg
+        FROM t_app_user tu INNER JOIN t_app_attention ta ON tu.id = ta.master_id
+        WHERE ta.slaver_id = #{slaverId}
+    </select>
+
+
+    <select id="findAllMaterialList" resultType="cn.medcn.user.dto.MaterialDTO">
+        SELECT id,material_name,material_url,material_type,file_size,create_time  FROM t_material WHERE user_id = #{id} ORDER BY create_time DESC
+    </select>
+
+
+    <select id="findMaterialDTOList" resultType="cn.medcn.user.dto.MaterialDTO">
+      SELECT id,material_name,material_url,material_type,file_size,create_time FROM t_material WHERE user_id = #{masterId} ORDER BY create_time DESC limit 3
+    </select>
+
+    <select id="findMeetingDTOList" resultType="cn.medcn.user.dto.MeetingDTO">
+        SELECT tm.id,meet_name,meet_type,start_time,end_time,state,ta.nickname AS organizer,ta.headimg FROM t_meet tm
+        LEFT JOIN t_meet_prop tp ON tm.id = tp.meet_id
+        LEFT JOIN t_app_user ta ON ta.id = tm.owner_id
+          WHERE owner_id = #{masterId} AND tm.state &gt;0 AND tm.state &lt;4 ORDER  BY publish_time DESC
+    </select>
+
+    <select id="findUnitInfo" resultType="cn.medcn.user.dto.UnitInfoDTO">
+            SELECT tu.id,nickname,headimg,province,city,sign,
+            (SELECT count(*) FROM t_app_attention ta WHERE tu.id = ta.master_id AND ta.slaver_id = #{slaverId}) AS attention,
+            (SELECT COUNT(*) FROM t_app_attention ta WHERE tu.id = ta.master_id) AS attentionNum,
+            (SELECT count(*) FROM t_material tm WHERE tm.user_id = tu.id)AS materialNum
+            FROM t_app_user tu
+            WHERE tu.id = #{masterId}
+    </select>
+
+
+    <select id="findAppUsers" resultType="cn.medcn.user.model.AppUser">
+        SELECT * FROM t_app_user
+        WHERE 1=1
+        <if test="roleId != null">
+            AND role_id = #{roleId}
+        </if>
+        <if test="authed != null">
+            AND authed = #{authed}
+        </if>
+        <if test="keyword!=null">
+            AND (
+              username like CONCAT('%',#{keyword}, '%') OR
+              nickname like CONCAT('%',#{keyword}, '%') OR
+              mobile like CONCAT('%',#{keyword}, '%') OR
+              nickname like CONCAT('%',#{keyword}, '%') OR
+              province like CONCAT('%',#{keyword}, '%') OR
+              city like CONCAT('%',#{keyword}, '%')
+            )
+        </if>
+    </select>
+
+    <select id="findAllDocCount" resultType="Integer">
+        SELECT count(tu.id) FROM t_app_user tu INNER JOIN t_app_attention ta  ON tu.id = ta.slaver_id WHERE tu.role_id = 2 AND ta.master_id = #{userId}
+    </select>
+
+    <select id="selectRecommend" resultType="cn.medcn.user.dto.RecommendDTO">
+        SELECT tu.id,nickname,headimg,
+        (SELECT COUNT(ta.id) FROM t_app_attention ta WHERE ta.master_id = tu.id AND ta.slaver_id = #{userId}) AS attention
+        FROM t_app_user tu
+        WHERE tu.authed = 1 AND  tu.pub_flag = 1 AND tu.tuijian = 1
+    </select>
+
+    <select id="findUndifindGroupNum" resultType="Integer">
+        SELECT count(tu.id)
+        FROM  t_app_user tu
+        INNER JOIN t_app_attention ta ON tu.id = ta.slaver_id
+        LEFT JOIN t_user_doctor_group tudg ON tudg.doctor_id = tu.id AND tudg.pub_user_id = #{userId}
+        LEFT JOIN t_user_group tug ON tug.id = tudg.group_id AND tug.pub_user_id = tudg.pub_user_id
+        WHERE tu.role_id = 2 AND ta.master_id = #{userId} AND tug.id is null
+    </select>
+
+    <select id="findAppUserByLoginName" resultType="cn.medcn.user.model.AppUser">
+        SELECT * FROM t_app_user WHERE username = #{loginName} OR mobile = #{loginName} limit 1
+    </select>
+
+    <select id="findBindWxCount" resultType="java.lang.Integer">
+      SELECT count(u.id) FROM t_app_user u
+      INNER JOIN t_app_attention a on a.slaver_id = u.id
+      WHERE u.unionid !='' AND a.master_id=#{userId}
+    </select>
+
+    <select id="findTestAccounts" resultType="cn.medcn.user.dto.TestAccountDTO">
+        SELECT u.id, u.username, u.linkman, u.mobile, u.regist_date, u.province, u.city,
+        ud.unit_name as hospital
+        FROM t_app_user u INNER JOIN t_app_user_detail ud ON u.id = ud.user_id
+        WHERE ud.unit_name = #{unitName}
+        <if test="keyword != null">
+            AND (
+            u.username like CONCAT('%',#{keyword}, '%')
+            OR u.mobile like CONCAT('%',#{keyword}, '%')
+            OR u.nickname like CONCAT('%',#{keyword}, '%')
+            OR u.linkman like CONCAT('%',#{keyword}, '%')
+            )
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.SurveyHistoryDAO" >
+
+    <select id="findSurveyRecordByMeetId" resultType="cn.medcn.meet.dto.SurveyHistoryRecordDTO">
+        SELECT his.id,his.user_id,u.nickname,dt.unit_name,dt.sub_unit_name,his.submit_time
+        FROM t_survey_history his
+        INNER JOIN t_app_user u ON u.id = his.user_id
+        LEFT JOIN t_app_user_detail dt ON dt.user_id = u.id
+        WHERE his.meet_id = #{meetId}
+    </select>
+
+    <select id="findUserSelAnswerByQuestionId" resultType="cn.medcn.meet.dto.SurveyRecordItemDTO">
+        SELECT i.answer as selAnswer FROM t_survey_history_item i
+        LEFT JOIN t_survey_question q ON q.id = i.question_id
+        LEFT JOIN t_survey_history h ON h.id = i.history_id
+        INNER JOIN t_app_user u ON u.id = h.user_id
+        WHERE i.question_id = #{questionId} GROUP BY h.user_id
+    </select>
+
+    <select id="findOptItemListByUser" resultType="cn.medcn.meet.dto.QuestionOptItemDTO">
+        SELECT his.user_id as id,i.question_id,q.sort,i.answer as selAnswer from t_survey_history his
+        LEFT JOIN t_survey_history_item i on i.history_id = his.id
+        LEFT JOIN t_survey_question q ON q.id = i.question_id
+        WHERE his.meet_id=#{meetId} and his.user_id=#{userId}
+        ORDER BY i.question_id
+    </select>
+
+    <select id="findUserSurveyHis" resultType="cn.medcn.meet.dto.AttendSurveyUserDataDTO">
+        SELECT his.user_id,u.nickname,dt.unit_name,dt.sub_unit_name,h.`level`,dt.title,u.province,
+        u.city,grp.group_name,m.meet_name,his.submit_time
+        FROM t_survey_history his
+        LEFT JOIN t_meet m ON m.id = his.meet_id
+        INNER JOIN t_app_user u on u.id = his.user_id
+        LEFT JOIN t_app_user_detail dt on dt.user_id = u.id
+        LEFT JOIN t_hospital h ON h.id = dt.hos_id
+        LEFT JOIN (SELECT g.group_name,ug.doctor_id from t_user_group g
+            LEFT JOIN t_user_doctor_group ug ON ug.pub_user_id = g.pub_user_id
+            AND ug.group_id = g.id WHERE ug.pub_user_id = #{userId}) grp
+        ON grp.doctor_id = his.user_id
+        WHERE his.meet_id=#{meetId}
+    </select>
+
+</mapper>

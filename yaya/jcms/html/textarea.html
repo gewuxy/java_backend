@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+</head>
+<body>
+<script src="js/jquery.min.js"></script>
+<script>
+$(function() {
+    var counter = $('textarea').val().length; //获取文本域的字符串长度
+    $('var').text(40 - counter);
+    $('textarea').keyup(function() {
+        var text = $('textarea').val();
+        var counter = text.length;
+        $('var').text(40 - counter);    //每次减去字符长度
+    });
+});
+</script>
+ 
+</head>
+<body>
+    <form action="" method="post">
+    <div id="divform" align="center">
+        <p id="gptu">
+            你还可以输入<var style="color: #C00">--</var>个字符。</p>
+        <p>
+            <label>
+                <textarea name="" cols="" rows="" maxlength="200" style="height: 80px; width: 400px"></textarea>
+            </label>
+        </p>
+    </div>
+    </form>
+</body>
+</html>
+</body>
+</html>

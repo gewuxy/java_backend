@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> demo </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+	<!--[if lt IE 9]>
+	<script src="js/html5.js"></script>
+	<![endif]-->
+</head>
+<body>
+    <div class="container-width" style="width:500px; height:300px; margin:0 auto;">
+        <div id="container" style="min-width:400px;height:400px"></div>
+    </div>
+    
+
+<script src="js/jquery.min.js"></script>
+<script src="js/highcharts.js"></script>
+<script>
+$(function () {
+    var ajaxData = {"ksList":[{"usercount":1,"percent":"2.86%","d_did":8,"d_dname":"儿科（儿科）"},{"usercount":1,"percent":"2.86%","d_did":74,"d_dname":"其他"},{"usercount":1,"percent":"2.86%","d_did":75,"d_dname":"内科"},{"usercount":1,"percent":"2.86%","d_did":97,"d_dname":"内科(心血管内科)"},{"usercount":1,"percent":"2.86%","d_did":21,"d_dname":"内科（普通内科）"},{"usercount":1,"percent":"2.86%","d_did":85,"d_dname":"外科"},{"usercount":1,"percent":"2.86%","d_did":6,"d_dname":"外科（外科）"},{"usercount":2,"percent":"5.71%","d_did":39,"d_dname":"外科（整形外科）"},{"usercount":1,"percent":"2.86%","d_did":38,"d_dname":"外科（泌尿外科）"},{"usercount":1,"percent":"2.86%","d_did":40,"d_dname":"外科（烧伤外科）"},{"usercount":3,"percent":"8.57%","d_did":44,"d_dname":"妇产科（不孕不育）"},{"usercount":2,"percent":"5.71%","d_did":0,"d_dname":"新增"},{"usercount":8,"percent":"22.86%","d_did":1,"d_dname":"消化科（消化科）"},{"usercount":1,"percent":"2.86%","d_did":73,"d_dname":"白求恩基金管理委员"},{"usercount":1,"percent":"2.86%","d_did":100,"d_dname":"皮肤科"},{"usercount":1,"percent":"2.86%","d_did":121,"d_dname":"眼科(眼肿瘤和眼眶病专科)"},{"usercount":1,"percent":"2.86%","d_did":64,"d_dname":"耳鼻咽喉科（耳专科）"},{"usercount":2,"percent":"5.71%","d_did":16,"d_dname":"肿瘤科（肿瘤科）"},{"usercount":1,"percent":"2.86%","d_did":2,"d_dname":"胃肠科（胃肠科）"},{"usercount":1,"percent":"2.86%","d_did":19,"d_dname":"药剂科（中药）"},{"usercount":1,"percent":"2.86%","d_did":17,"d_dname":"骨科（骨科）"},{"usercount":2,"percent":"5.71%","d_did":18,"d_dname":"麻醉科（麻醉科）"}]};
+    var ajaxData_now = [];
+    // console.log(ajaxData.zcList[0].d_zc);
+    // console.log(ajaxData.zcList.length);
+
+    for(var i=0; i < ajaxData.ksList.length;i++){
+        console.log(ajaxData.ksList[i].d_zc);
+        var name = String(ajaxData.ksList[i].d_dname),
+            percent = parseInt(ajaxData.ksList[i].percent);
+        ajaxData_now.push({name:name,y:percent});
+    }
+    console.log(ajaxData_now);
+
+    // $(result).each(function(i,n){
+    // var id = n['d_zc'],
+    //     value = n['percent'];
+    //     ajaxData.push({name:id,y:value});
+
+    // });
+
+    // ajaxData = [];
+    // $.ajax({
+    //     type: "post",
+    //     contentType: "application/json",
+    //     url: "http://192.168.1.129:8080/doctorData!getDocZc",
+    //     async : "false",
+    //     success: function(result){
+    //         console.log("能进入数据");
+    //         $(result).each(function(i,n){
+    //             var id = n['d_zc'],
+    //                 value = n['percent'];
+    //                 ajaxData.push({name:id,y:value});
+
+    //         });
+    //     },
+    //     error:function (XMLHttpRequest, textStatus, errorThrown) {
+    //            alert("请求对象XMLHttpRequest: "+XMLHttpRequest);
+    //         alert("错误类型textStatus: "+textStatus);
+    //         alert("异常对象errorThrown: "+errorThrown);
+
+    //     }
+    // })
+
+    $('#container').highcharts({
+        chart: {
+            plotBackgroundColor: null,
+            plotBorderWidth: null,
+            plotShadow: false,
+            width:450,
+            height:300,
+        },
+        title: {
+            text: 'Browser market shares at a specific website, 2014'
+        },
+        tooltip: {
+            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
+        },
+        plotOptions: {
+            pie: {
+                allowPointSelect: true,
+                size:200,
+                cursor: 'pointer',
+                dataLabels: {
+                    enabled: true,
+                    distance: -35,
+                   formatter: function() {  
+                      if (this.percentage > 4) return Highcharts.numberFormat(this.point.percentage, 1) +'%';
+                   },
+                },
+                showInLegend: true
+            }
+        },
+        legend: {
+            itemHoverStyle: {
+                color: '#fff'
+            },
+            itemStyle : {
+                'fontSize' : '12px',
+                'color'    : '#444',
+                'fontWeight': '100',
+            },               
+            layout: 'vertical',
+            align: 'left',
+            verticalAlign: 'middle',
+            symbolHeight: 12,
+            symbolWidth :12,
+            symbolRadius :10,
+            itemMarginBottom:10,
+            itemWidth: 105,
+            x: 10,
+            y: 5,
+            borderWidth: 0,
+            labelFormatter: function () {
+              return this.name + '&nbsp';
+            },
+            useHTML: true
+        },
+        credits: {
+                text: '',
+                href: 'http://www.example.com'
+        },
+        series: [{
+            type: 'pie',
+            name: 'Browser share',
+            data: [
+                ['Firefox',   45.0],
+                ['IE',       26.8],
+                {
+                    name: 'Chrome',
+                    y: 12.8,
+                },
+                ['Safari',    8.5],
+                ['Opera',     6.2],
+                ['Others',   5]
+            ]
+            // data: ajaxData_now
+        }]
+    });
+});
+
+
+
+
+
+</script>
+</body>
+</html>

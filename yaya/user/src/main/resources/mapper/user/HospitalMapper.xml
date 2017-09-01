@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.HospitalDAO" >
+
+    <select id="findPorvinces" resultType="java.lang.String">
+        SELECT province from t_hospital WHERE province is not null GROUP BY province
+    </select>
+
+    <select id="findCities" resultType="java.lang.String">
+        SELECT city from t_hospital WHERE province=#{province} GROUP BY city
+    </select>
+
+    <select id="findHospitals" resultType="java.lang.String">
+        SELECT name from t_hospital WHERE city = #{city}
+    </select>
+
+    <select id="pageHospitals" resultType="cn.medcn.user.model.Hospital">
+      SELECT * FROM t_hospital WHERE 1=1
+      <if test="level != null">
+          AND level = #{level}
+      </if>
+      <if test="city != null">
+          AND  city = #{city}
+      </if>
+      <if test="province!=null">
+          AND province = #{province}
+      </if>
+      <if test="regionId!=null">
+          AND region_id = #{regionId}
+      </if>
+      <if test="keyword != null">
+          AND name like CONCAT('%',#{keyword}, '%')
+      </if>
+    </select>
+
+    <select id="findAllLevels" resultType="cn.medcn.user.dto.HospitalLevelDTO">
+        SELECT level, count(level) as count from t_hospital GROUP BY level
+    </select>
+</mapper>

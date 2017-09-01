@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.ExamHistoryDAO" >
+
+    <select id="findPaperIdById" resultType="java.lang.Integer">
+        SELECT m.paper_id FROM t_meet_exam m
+        LEFT JOIN t_exam_paper p ON m.paper_id=p.id
+        WHERE m.meet_id=#{meetId}
+    </select>
+
+    <select id="findTotalCountByQuestion" resultType="cn.medcn.meet.dto.ExamHistoryDataDTO">
+        SELECT question.sort,question.title, count(history.id) AS total_count
+        FROM (SELECT q.id,pq.sort,q.title from t_exam_question q
+        INNER JOIN t_exam_paper_question pq on pq.question_id = q.id and pq.paper_id = #{paperId} ) as question
+        LEFT JOIN
+        (select item.id,item.question_id,item.answer from t_exam_history h INNER JOIN t_exam_history_item item
+        on h.id = item.history_id where h.paper_id = #{paperId} ) as history
+        on history.question_id = question.id  and history.answer!=''
+        group BY question.id
+    </select>
+
+    <!-- 该查询方法 是根据用户答题的分数大于0 来统计 只适用新版数据，旧版数据用户的答题分数为空 -->
+    <select id="findRightCountByQuestion" resultType="cn.medcn.meet.dto.ExamHistoryDataDTO">
+        SELECT question.sort,count(history.id) as right_count
+        FROM (SELECT q.id,pq.sort,q.title from t_exam_question q
+        INNER JOIN t_exam_paper_question pq on pq.question_id = q.id and pq.paper_id = #{paperId} ) as question
+        LEFT JOIN
+        (select item.id,item.question_id,item.score from t_exam_history h INNER JOIN t_exam_history_item item
+        on h.id = item.history_id where h.paper_id = #{paperId} ) as history
+        on history.question_id = question.id
+        where history.score > 0
+        group BY question.id
+    </select>
+
+    <select id="findExamAnswerRecord" resultType="cn.medcn.meet.dto.ExamHistoryUserDTO">
+        SELECT question.sort,question.right_key as rightkey,history.answer
+        FROM (SELECT q.id,pq.sort,q.title,q.right_key from t_exam_question q
+        INNER JOIN t_exam_paper_question pq on pq.question_id = q.id and pq.paper_id = #{paperId}  ) as question
+        LEFT JOIN
+        (select item.id,item.question_id,item.score,item.answer from t_exam_history h INNER JOIN t_exam_history_item item
+        on h.id = item.history_id where h.paper_id = #{paperId} ) as history
+        on history.question_id = question.id
+    </select>
+
+    <select id="findExamHisRecord" resultType="cn.medcn.meet.dto.ExamHistoryRecordDTO">
+        SELECT his.id,his.user_id,u.nickname,dt.unit_name,dt.sub_unit_name,his.submit_time,
+        his.score FROM t_exam_history his
+        INNER JOIN t_app_user u ON u.id = his.user_id
+        LEFT JOIN t_app_user_detail dt ON dt.user_id = u.id
+        WHERE his.meet_id = #{meetId}
+    </select>
+
+    <select id="findExamHistoryByUserid" resultType="cn.medcn.meet.dto.ExamHistoryUserDTO">
+        SELECT u.nickname,h.score as getscore,pq.sort,q.title,item.score,item.right_key as rightkey,item.answer
+        FROM t_exam_history h
+        INNER JOIN t_exam_history_item item ON h.id = item.history_id
+        LEFT JOIN t_app_user u ON u.id = h.user_id
+        LEFT JOIN t_exam_question q ON q.id = item.question_id
+        INNER JOIN t_exam_paper_question pq ON pq.question_id = q.id
+        WHERE h.paper_id = #{paperId} AND h.user_id=#{userId}
+        GROUP BY item.id ORDER BY item.question_id
+    </select>
+
+    <select id="findExamHisRecordByGroupId" resultType="cn.medcn.meet.dto.AttendExamHistoryDTO">
+        SELECT userinfo.*,his.finish_times,his.submit_time,his.score
+        FROM (
+            SELECT g.id,g.group_name,dg.doctor_id as userId,u.nickname,dt.unit_name,dt.sub_unit_name,
+                   h.`level`,dt.title,u.province,u.city
+            FROM t_user_group g
+            LEFT JOIN t_user_doctor_group dg ON dg.pub_user_id = g.pub_user_id
+            AND dg.group_id = g.id
+            LEFT JOIN t_app_user u ON u.id = dg.doctor_id
+            LEFT JOIN t_app_user_detail dt on dt.user_id = u.id
+            LEFT JOIN t_hospital h ON h.id = dt.hos_id
+            WHERE g.pub_user_id=#{userId} and dg.group_id=#{groupId}
+            ) userinfo
+            LEFT JOIN t_exam_history his ON his.user_id = userinfo.userId
+            and his.meet_id=#{meetId}
+    </select>
+
+    <select id="findExamHisRecordByMeetId" resultType="cn.medcn.meet.dto.AttendExamHistoryDTO">
+        SELECT his.user_id,u.nickname,dt.unit_name,dt.sub_unit_name,h.`level`,dt.title,u.province,
+        u.city,grp.group_name,m.meet_name,his.finish_times,his.submit_time,his.score
+        FROM t_exam_history his
+        LEFT JOIN t_meet m ON m.id = his.meet_id
+        INNER JOIN t_app_user u on u.id = his.user_id
+        LEFT JOIN t_app_user_detail dt on dt.user_id = u.id
+        LEFT JOIN t_hospital h ON h.id = dt.hos_id
+        LEFT JOIN (SELECT g.group_name,ug.doctor_id from t_user_group g
+                LEFT JOIN t_user_doctor_group ug ON ug.pub_user_id = g.pub_user_id
+                AND ug.group_id = g.id WHERE ug.pub_user_id =#{userId}) grp
+        ON grp.doctor_id = his.user_id
+        WHERE his.meet_id=#{meetId}
+    </select>
+
+    <select id="findOptItemByUser" resultType="cn.medcn.meet.dto.QuestionOptItemDTO">
+        SELECT his.user_id as id,i.question_id,q.sort,i.answer as selAnswer from t_exam_history his
+        INNER JOIN t_exam_history_item i on i.history_id = his.id
+        LEFT JOIN t_exam_paper_question q ON q.question_id = i.question_id
+        WHERE his.meet_id=#{meetId}  and his.user_id=#{userId}
+        ORDER BY i.question_id
+    </select>
+
+    <select id="findUserExamScore" resultType="java.lang.Integer">
+        SELECT score FROM t_exam_history WHERE meet_id = #{meetId} AND user_id = #{userId}
+    </select>
+
+    <select id="findExamHistory" resultType="cn.medcn.meet.model.ExamHistory">
+        SELECT * FROM t_exam_history WHERE exam_id = #{examId} AND user_id = #{userId} limit 1
+    </select>
+</mapper>

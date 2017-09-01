@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.ExamPaperQuestionDAO" >
+
+    <select id="findPaperTotalPoint" resultType="java.lang.Integer">
+        SELECT sum(point) FROM t_exam_paper_question WHERE paper_id = #{paperId}
+    </select>
+
+    <select id="findPaperQuestion" resultType="cn.medcn.meet.model.ExamPaperQuestion">
+        SELECT id, paper_id, question_id, point, sort FROM t_exam_paper_question
+        WHERE paper_id = #{paperId}
+        ORDER by sort
+    </select>
+
+
+
+</mapper>

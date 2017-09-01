@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetAttendDAO" >
+
+    <select id="findAttendCount" resultType="java.lang.Integer">
+        SELECT count(user_id) from t_meet_attend WHERE meet_id = #{meetId} GROUP BY user_id
+    </select>
+
+    <resultMap id="MeetStasticMap" type="cn.medcn.meet.dto.MeetStasticDTO">
+        <result column="month_meet_count" property="monthMeetCount"></result>
+        <result column="all_meet_count" property="allMeetCount"></result>
+        <result column="month_attend_count" property="monthAttendCount"></result>
+        <result column="all_attend_count" property="allAttendCount"></result>
+        <result column="month_reprint_count" property="monthReprintCount"></result>
+        <result column="all_reprint_count" property="allReprintCount"></result>
+        <result column="month_share_count" property="monthShareCount"></result>
+        <result column="all_share_count" property="allShareCount"></result>
+    </resultMap>
+
+    <select id="findMeetCount" resultMap="MeetStasticMap">
+        SELECT aa.all_meet_count,bb.month_meet_count FROM
+        (SELECT COUNT(m.id) AS all_meet_count,m.owner_id
+          FROM t_meet m,t_meet_prop p WHERE m.id = p.meet_id
+          and m.owner_id=#{userId} GROUP BY m.owner_id) aa
+          LEFT JOIN
+        (SELECT COUNT(m.id) AS month_meet_count,m.owner_id
+          FROM t_meet m,t_meet_prop p WHERE m.id = p.meet_id
+          AND m.owner_id=#{userId}
+          AND date_format(m.publish_time,'%Y-%m')=date_format(now(),'%Y-%m')
+          GROUP BY m.owner_id) bb ON aa.owner_id = bb.owner_id
+    </select>
+
+    <select id="findUserAttendCount" resultMap="MeetStasticMap">
+        SELECT aa.all_attend_count,bb.month_attend_count FROM
+        (SELECT COUNT(matd.id) AS all_attend_count,m.owner_id
+        FROM t_meet m,t_meet_attend matd WHERE m.id=matd.meet_id
+        AND m.owner_id=#{userId} GROUP BY m.owner_id
+        )aa LEFT JOIN
+        (SELECT COUNT(matd.id) AS month_attend_count,m.owner_id
+        FROM t_meet m,t_meet_attend matd WHERE m.id=matd.meet_id
+        AND m.owner_id=#{userId} AND DATE_FORMAT(matd.start_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        GROUP BY m.owner_id
+        ) bb ON aa.owner_id = bb.owner_id
+    </select>
+
+    <select id="findReprintCount" resultMap="MeetStasticMap">
+        SELECT aa.all_reprint_count,bb.month_reprint_count FROM
+        (SELECT COUNT(id) AS all_reprint_count,meet_id
+        FROM t_meet_reprint WHERE meet_id IN (
+        SELECT meet_id FROM t_meet_share_info WHERE meet_id IN (
+        SELECT id FROM t_meet WHERE shared=1 AND owner_id=#{userId}
+        -- and state=3
+        ) AND share_flag=1
+        )GROUP BY meet_id) aa LEFT JOIN
+        (SELECT COUNT(id) AS month_reprint_count,meet_id
+        FROM t_meet_reprint where meet_id in (
+        SELECT meet_id FROM t_meet_share_info WHERE meet_id IN (
+        SELECT id FROM t_meet WHERE shared=1 AND owner_id=#{userId}
+        -- and state=3
+        ) AND share_flag=1
+        ) AND DATE_FORMAT(reprint_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        GROUP BY meet_id
+        )bb ON aa.meet_id = bb.meet_id ;
+    </select>
+
+    <select id="findShareCount" resultMap="MeetStasticMap">
+        SELECT aa.all_share_count,bb.month_share_count FROM
+        (SELECT COUNT(id) AS all_share_count,sf.owner_id
+        FROM t_meet_share_info sf WHERE sf.meet_id IN
+        (SELECT id FROM t_meet WHERE shared=1 AND owner_id=#{userId}
+        -- and state=3
+        ) AND sf.share_flag=1 GROUP BY sf.owner_id
+        )aa LEFT JOIN
+        (SELECT COUNT(id) AS month_share_count,sf.owner_id
+        FROM t_meet_share_info sf WHERE sf.meet_id IN
+        (select id from t_meet where shared=1 and owner_id=#{userId}
+        --  and state=3
+        ) AND sf.share_flag=1 AND DATE_FORMAT(sf.share_time,'%Y-%m')=date_format(now(),'%Y-%m')
+        GROUP BY sf.owner_id
+        ) bb on aa.owner_id = bb.owner_id ;
+    </select>
+
+    <select id="findMeetListByPage" resultType="cn.medcn.meet.dto.MeetDataDTO">
+        SELECT mtp.*,ml.module_name FROM (
+            SELECT m.id,m.meet_name,m.state,m.publish_time,m.create_time
+            FROM t_meet m,t_meet_prop mp
+            WHERE m.id = mp.meet_id
+            AND m.owner_id = #{userId}
+        ) mtp LEFT JOIN t_meet_module ml ON mtp.id = ml.meet_id
+        GROUP BY ml.meet_id
+    </select>
+
+
+    <!-- 统计某个时间段内(本月、本周、自定义时间、全部) 条件参数startTime、endTime -->
+    <select id="findAttendCountByTag" resultType="cn.medcn.meet.dto.MeetAttendCountDTO">
+        SELECT count(atd.id) as attendCount,date_format(atd.start_time,'%Y-%m-%d')as attendDate
+        from t_meet m,t_meet_attend atd where m.id=atd.meet_id
+        and m.owner_id=#{userId}
+        <if test="startTime != null and endTime != null">
+            AND atd.start_time BETWEEN #{startTime} and #{endTime}
+        </if>
+        <if test="meetId != null and meetId != null">
+            AND m.id = #{meetId}
+        </if>
+          GROUP BY attendDate
+    </select>
+
+    <select id="findTotalCount" resultType="java.lang.Integer">
+        SELECT count(atd.id) FROM t_meet_attend atd
+        LEFT JOIN t_app_user a ON atd.user_id = a.id
+        WHERE atd.meet_id=#{meetId}
+        <if test="province!=null and province!='全国'">
+            AND a.province=#{province}
+        </if>
+    </select>
+
+    <select id="findDataByPro" resultType="cn.medcn.user.dto.UserDataDetailDTO">
+        SELECT a.province as propName,count(a.id) as userCount
+        FROM t_meet_attend atd
+        LEFT JOIN t_app_user a ON atd.user_id = a.id
+        WHERE atd.meet_id=#{meetId}
+        GROUP BY propName
+        ORDER BY userCount DESC;
+    </select>
+
+    <select id="findCityDataByPro" resultType="cn.medcn.user.dto.UserDataDetailDTO">
+        SELECT a.city as propName,count(a.id)as userCount
+        FROM t_meet_attend atd
+        LEFT JOIN t_app_user a ON atd.user_id = a.id
+        WHERE atd.meet_id=#{meetId}
+        <if test="province!=null and province!='全国'">
+            AND a.province=#{province}
+        </if>
+        GROUP BY propName
+        ORDER BY userCount DESC;
+    </select>
+
+    <select id="findDataByHos" resultType="cn.medcn.user.dto.UserDataDetailDTO">
+        SELECT h.level as propName,count(a.id)as userCount
+        FROM t_meet_attend atd
+        LEFT JOIN t_app_user a ON atd.user_id = a.id
+        LEFT JOIN t_app_user_detail d ON d.user_id = a.id
+        LEFT JOIN t_hospital h ON h.id = d.hos_id
+        WHERE atd.meet_id=#{meetId}
+         <if test="province!=null and province!='全国'">
+             AND a.province=#{province}
+         </if>
+        GROUP BY propName
+        ORDER BY userCount DESC;
+    </select>
+
+    <select id="findDataByTitle" resultType="cn.medcn.user.dto.UserDataDetailDTO">
+        SELECT d.title as propName,count(a.id)as userCount
+        FROM t_meet_attend atd
+        LEFT JOIN t_app_user a ON atd.user_id = a.id
+        LEFT JOIN t_app_user_detail d ON d.user_id = a.id
+        WHERE atd.meet_id=#{meetId}
+        <if test="province!=null and province!='全国'">
+            AND a.province=#{province}
+        </if>
+        GROUP BY propName
+        ORDER BY userCount DESC;
+    </select>
+
+    <select id="findDataByDepart" resultType="cn.medcn.user.dto.UserDataDetailDTO">
+        SELECT d.sub_unit_name as propName,count(a.id)as userCount
+        FROM t_meet_attend atd
+        LEFT JOIN t_app_user a ON atd.user_id = a.id
+        LEFT JOIN t_app_user_detail d ON d.user_id = a.id
+        WHERE atd.meet_id=#{meetId}
+        <if test="province!=null and province!='全国'">
+            AND a.province=#{province}
+        </if>
+        GROUP BY propName
+        ORDER BY userCount DESC;
+    </select>
+
+    <resultMap id="MeetAttendUserMap" type="cn.medcn.meet.dto.MeetAttendUserDTO">
+        <result column="start_time" property="attendTime"></result>
+        <result column="nickname" property="nickName"></result>
+        <result column="unit_name" property="unitName"></result>
+        <result column="sub_unit_name" property="subUnitName"></result>
+        <result column="mobile" property="mobile"></result>
+        <result column="username" property="username"></result>
+    </resultMap>
+
+    <select id="findAttendUserList" resultMap="MeetAttendUserMap">
+        SELECT atd.start_time,a.nickname,d.unit_name,d.sub_unit_name,a.mobile,a.username
+        FROM t_meet_attend atd
+        INNER JOIN t_app_user a on a.id = atd.user_id
+        LEFT JOIN t_app_user_detail d on d.user_id = a.id
+        WHERE atd.meet_id=#{meetId} GROUP BY atd.user_id
+    </select>
+
+    <select id="findAttendUserExcel" resultType="cn.medcn.meet.dto.MeetAttendUserDTO">
+        SELECT a.id,a.nickname,d.unit_name,d.sub_unit_name,h.`level`,d.title,a.province,a.city,grp.group_name,
+                atd.start_time,atd.end_time,atd.usetime,m.meet_name,d.cme_id
+            FROM t_meet_attend atd
+            LEFT JOIN t_meet m ON atd.meet_id = m.id
+            INNER JOIN t_app_user a ON a.id = atd.user_id
+            LEFT JOIN t_app_user_detail d ON d.user_id = a.id
+            LEFT JOIN t_hospital h ON h.id = d.hos_id
+            LEFT JOIN (SELECT g.group_name,ug.doctor_id FROM t_user_group g
+                        LEFT JOIN t_user_doctor_group ug ON ug.pub_user_id = g.pub_user_id
+                        AND ug.group_id = g.id
+                        WHERE ug.pub_user_id = #{userId}) grp
+            ON grp.doctor_id =atd.user_id
+            WHERE atd.meet_id=#{meetId} ORDER BY  atd.user_id
+    </select>
+
+    <select id="findAttendUserDetailExcel" resultType="cn.medcn.meet.dto.AttendMeetUserDetailDTO">
+        SELECT atd.*,g.group_name,r.function_id,r.complete_progress,r.used_time
+        FROM v_attend_meet_user atd
+        LEFT JOIN v_user_group g ON g.doctor_id = atd.id AND g.pub_user_id=#{userId}
+        LEFT JOIN t_meet_learning_record r ON r.user_id = atd.id AND r.meet_id = atd.meet_id
+        WHERE atd.meet_id=#{meetId} ORDER BY r.user_id
+    </select>
+
+    <resultMap id="MeetMap" type="cn.medcn.meet.dto.MeetDTO">
+        <result column="id" property="id"></result>
+        <result column="meet_name" property="meetName"></result>
+        <result column="meet_type" property="meetType"></result>
+        <result column="module_name" property="moduleName"></result>
+        <result column="meet_time" property="meetTime"></result>
+        <result column="function_id" property="functionId"></result>
+        <result column="module_id" property="moduleId"></result>
+    </resultMap>
+    <select id="findMeet" resultMap="MeetMap">
+        SELECT m.id,m.meet_name,m.meet_type,md.module_name,md.function_id,md.id module_id,
+        TIME_FORMAT(TIMEDIFF(mp.end_time,mp.start_time),'%H小时%i分')as meet_time
+        FROM t_meet m
+        LEFT JOIN t_meet_module md ON m.id = md.meet_id
+        LEFT JOIN t_meet_prop mp ON m.id = mp.meet_id
+        where m.id=#{meetId}
+    </select>
+
+
+    <select id="findGroupIdLimitByMeetId" resultType="cn.medcn.meet.dto.MeetLimitDTO">
+        SELECT m.id,m.meet_name,p.group_id FROM t_meet m
+        LEFT JOIN t_meet_prop p on p.meet_id = m.id
+        where p.member_limit_type=2 and m.id=#{meetId}
+    </select>
+
+    <select id="findByPersonal" resultType="cn.medcn.meet.dto.MeetAttendDetailDTO">
+        select attendDate, count(attendDate) as `count` FROM
+        (select date_format(start_time,'%m-%d') as attendDate from t_meet_attend where user_id = #{userId}
+        AND start_time &gt; #{startDate} AND start_time &lt; #{endDate}
+        ) as attend
+        GROUP BY attend.attendDate
+    </select>
+
+    <select id="findPublishByPersonal" resultType="cn.medcn.meet.dto.MeetAttendDetailDTO">
+        SELECT pub.attendDate, count(pub.attendDate) as `count` FROM
+        (select m.id, DATE_FORMAT(m.publish_time,'%m-%d') as attendDate from t_meet m
+        inner JOIN t_app_attention a on m.owner_id = a.master_id
+        where a.slaver_id = #{userId} and m.publish_time &lt; #{endDate}
+        AND m.publish_time &gt; #{startDate}
+        ) AS pub
+        GROUP BY pub.attendDate
+    </select>
+
+    <select id="countPublishByPersonal" resultType="java.lang.Integer">
+        SELECT count(0) FROM t_meet m INNER JOIN t_app_attention a on m.owner_id = a.master_id
+        WHERE a.slaver_id = #{userId} AND m.state > 0 AND m.state &lt; 6
+    </select>
+</mapper>

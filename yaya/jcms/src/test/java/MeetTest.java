@@ -1,0 +1,115 @@
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
+import cn.medcn.meet.dto.MeetFolderDTO;
+import cn.medcn.meet.dto.MeetInfoDTO;
+import cn.medcn.meet.dto.MeetTuijianDTO;
+import cn.medcn.meet.model.ExamHistory;
+import cn.medcn.meet.model.Lecturer;
+import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.service.ExamService;
+import cn.medcn.meet.service.MeetService;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.List;
+
+/**
+ * Created by lixuan on 2017/5/16.
+ */
+@RunWith(SpringJUnit4ClassRunner.class)
+@ContextConfiguration(locations = {"classpath*:spring-context-*.xml"})
+public class MeetTest {
+
+    @Autowired
+    private MeetService meetService;
+
+    @Autowired
+    private ExamService examService;
+
+    @Test
+    public void testUpdateMeet(){
+        Meet meet = meetService.selectByPrimaryKey("17042512131640894934");
+        Lecturer lecturer = new Lecturer();
+        lecturer.setName("刘主任");
+        lecturer.setHeadimg("/upload/headimg/1234567.jpg");
+        lecturer.setTitle("主任医师");
+        lecturer.setHospital("中山大学附属医院");
+        lecturer.setDepart("泌尿外科");
+        meet.setLecturer(lecturer);
+
+        meetService.updateMeet(meet);
+    }
+
+
+    @Test
+    public void testFindTuijian(){
+        Pageable pageable = new Pageable(1, 5);
+        MyPage<MeetTuijianDTO> page = meetService.findMeetTuijian(pageable, 7);
+        for(MeetTuijianDTO tuijian:page.getDataList()){
+            System.out.println("tuijian : "+tuijian.getMeetName()+" 主讲者="+tuijian.getLecturer());
+        }
+    }
+
+
+    @Test
+    public void testFindMeetInfo(){
+        MeetInfoDTO info = meetService.findMeetInfo("17042512131640894904");
+        System.out.println(info.getMeetName()+" - "+info.getHeadimg()+" - "+info.getStartTime());
+    }
+
+    @Test
+    public void testFindMyMeets(){
+        Pageable pageable = new Pageable();
+        pageable.getParams().put("state",2);
+        pageable.getParams().put("userId",7);
+        MyPage<MeetInfoDTO> page = meetService.findMyMeets(pageable);
+        System.out.println(page.getTotal());
+    }
+
+    @Test
+    public void testDeleteHistory(){
+        ExamHistory history = new ExamHistory();
+        history.setExamId(1);
+        history.setMeetId("1");
+        history.setUserId(1);
+        history.setPaperId(1);
+        history.setModuleId(1);
+        examService.deleteHistory(history);
+    }
+
+    @Test
+    public void testSearch(){
+        String keyword = "测试";
+        Pageable pageable = new Pageable();
+        pageable.getParams().put("keyword", keyword);
+        MyPage<MeetInfoDTO> page = meetService.searchMeetInfo(pageable);
+        for(MeetInfoDTO dto:page.getDataList()){
+            System.out.println(dto.getMeetName());
+        }
+    }
+
+
+    @Test
+    public void testFindMeetFavorite(){
+        Pageable pageable = new Pageable(1, 3);
+        pageable.put("userId", 1200011);
+        MyPage<MeetInfoDTO> page = meetService.findMeetFavorite(pageable);
+        for (MeetInfoDTO meetInfoDTO : page.getDataList()){
+            System.out.println(meetInfoDTO.getMeetName());
+        }
+    }
+
+
+    @Test
+    public void testFindRecommendMeets(){
+        Integer userId = 1200011;
+        List<MeetFolderDTO> recommends = meetService.findRecommendMeetFolder(userId);
+        for (MeetFolderDTO meetFolderDTO : recommends){
+            System.out.println(meetFolderDTO.getMeetName() + " - 会议个数= "+meetFolderDTO.getMeetCount()+" - "+meetFolderDTO.getType()+" - "+ meetFolderDTO.getMeetType() + " - "+meetFolderDTO.getProvince() +" - "+meetFolderDTO.getCity());
+        }
+    }
+
+}

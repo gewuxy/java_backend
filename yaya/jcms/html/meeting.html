@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> demo </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link href="css/daterangepicker.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+	<div class="l-menu content">
+		<div class="l-list">
+			<ul>
+				<li>
+					<a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">功能</p>
+			<ul>
+				<li class="cur">
+					<a href="metting-step01.html"><i></i><img src="images/icon-left-hover-2.png" alt="" /><span>会议发布</span></a>
+				</li>
+				<li>
+					<a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+				</li>
+				<li>
+					<a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">数据</p>
+			<ul>
+				<li>
+					<a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+				</li>
+				<li>
+					<a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">管理</p>
+			<ul>
+				<li>
+					<a href="hz-hzgl.html"><i></i><img src="images/icon-left-8.png"  alt="" /><span>医生管理</span></a>
+				</li>
+				<li>
+					<a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+				</li>
+				<li>
+					<a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="logout-btn"><a href="#">退出账号</a></div>
+	</div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main bg-change clearfix">
+
+	<!-- header -->
+	<header>
+	    <div class="header-content">
+	        <p><img src="images/u317.png" width="26" height="18" alt="" /><span class="hd-txt">会议发布</span></p>
+	        <p>快速发布在线会议，下载手机app端即可查看PPT、直播、调研、考试等会议</p>
+	    </div>
+	</header>
+	<!-- header end -->
+
+    <div class="tab-hd">
+
+        <ul class="tab-list clearfix">
+            <li class="cur">
+                <a href="metting-step01.html">新建会议<i></i></a>
+            </li>
+            <li>
+                <a href="meeting-1">我的会议<i></i></a>
+            </li>
+        </ul>
+    </div>
+    <div class="m-con m-a m-top-con clearfix">
+        <div class="fl m-a-l">
+            <a href="#" class="active"><img src="images/u-12.png" width="16" height="16" alt=""/><font>微课会议</font></a>
+            <a href="#"><img src="images/u-13.png" width="16" height="16" alt=""/><font>直播现场</font></a>
+        </div>
+        <div class="fr m-a-r">
+            <a href="javascript:;" class="yz-btn-link">＋已转载会议</a>
+        </div>
+    </div>
+	<div class="m-con m-b clearfix">
+		<div class="m-b-h">
+			说明<i>1）药草园网站会议功能操作指南.doc</i><i>2）会议群功能录音帮助文档.doc </i>
+		</div>
+		<div class="fl m-b-l m-c-t">会议名称</div>
+		<div  class="fl m-b-b">
+			<p class="m-title-txt">根据会议内容，编写不超过45字的会议标题</p>
+			<p><input type="text" name="" value="高海兵 2015中国丙肝防治指南" disabled id="content"></p>
+		</div>
+		<div  class="fl m-b-c">
+			<p>分类</p>
+            <div class="select-mode select-mode-1">
+                <span class="hd-txt"><span class="select-val" val="1" id="fenlei">妇幼保健医学</span><em></em></span>
+                <!-- <dl>
+                    <dd>选择分类</dd>
+                    <dd>选择分类1</dd>
+                    <dd>选择分类2</dd>
+                    <dd>选择分类3</dd>
+                </dl> -->
+            </div>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix">
+		<div class="fl m-c-t">会议时间</div>
+		<div  class="fl">
+            <input type="text" class="laydate-icon laydate-box" value="2016-07-20 8:00" id="start" placeholder="点击选择开始时间" disabled>
+            ——
+            <input type="text" class=" laydate-icon laydate-box" value="2016-07-20 20:00" id="end" placeholder="点击选择结束时间" disabled>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix">
+		<div class="fl m-c-t">会议介绍</div>
+		<div  class="fl">
+		<p class="m-title-txt">简述会议简述、会议日程、与会嘉宾等信息</p>
+		<textarea rows="3" cols="20" class="textarea-box" id="textarea" disabled>
+		课题：《2型糖尿病的三级预防》
+		讲师：孙丰雷，主治医师，山东省中医院老年病科。
+		内容简介：
+		1.糖尿病的诊断及分型；
+		2.糖尿病的流行病学；
+		3.糖尿病的三级预防。
+		</textarea>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix">
+		<div class="fl m-c-t">演讲者</div>
+		<div  class="fl">
+			<p class="m-title-txt">本次演讲嘉宾姓名，多个嘉宾请用逗号“，”隔开</p>
+			<p><input type="text" class="input-font" id="jiabin"><span  class="erro-info jiabin-info"></span></p>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix">
+		<div class="fl m-c-t">参与人员</div>
+		<div class="fl">
+			<p class="m-title-txt">对参与人员进行限制</p>
+			<select class="se-box-1" id="renyuan">
+				<option value="0">不限</option>
+				<option value="1">500-</option>
+				<option value="2">1000-1500</option>
+				<option value="3">1500-2000</option>
+			</select>
+			<div class="m-f-a clearfix">
+				<span>
+					<font>省份</font>
+					<select id="prov">
+					<option value="">全国</option>
+					<option value="1">北京</option>
+					<option value="2">广东</option>
+					<option value="3">河南</option>
+					</select>
+				</span>
+				<span>
+					<font>城市</font>
+					<select id="city">
+					<option value="">不限</option>
+					<option value="1">北京</option>
+					<option value="2">广州</option>
+					<option value="3">深圳</option>
+					</select>
+				</span>
+				<span>
+					<font>科室</font>
+					<select id="keshi">
+					<option value="">科室</option>
+					<option value="1">内科</option>
+					<option value="2">外科</option>
+					<option value="3">妇科</option>
+					</select>
+				</span>
+				<span  class="erro-info city-info"></span>
+			</div>
+			<div class="m-f-b">
+				<p>指定参与者</p>
+				<table class="table-box-2">
+					<thead>
+						<tr>
+							<td>姓名</th>
+							<td>医院</th>
+							<td>科室</th>
+							<td>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>jin</th>
+							<td>医院1</th>
+							<td>科室111</th>
+							<td><a href=""><img src="images/add.png"></a></th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix">
+		<div class="fl m-c-t">参与人员</div>
+		<div class="fl">
+			<p class="m-title-txt">对参与人员进行限制</p>
+			<select name="meeting.maxNumber" class="se-box-1" id="maxNumber">
+							<option value="不限">
+								-不限-
+							</option>
+							<option value="500-1000人">
+								500-1000人
+							</option>
+							<option value="200-500人">
+								200-500人
+							</option>
+							<option value="少于200人">
+								少于200人
+							</option>
+         				</select>
+			<div class="m-f-a clearfix">
+			<div class="fbhy-xtk" style=" margin-left: 0px;">
+				         <input id="area" type="radio" name="radio" value="0" onclick="checkRadio()">&nbsp;<font>方式一</font>
+             		</div>
+				<span>
+					<font>省份</font>
+					<select name="tmeeting.province" id="selProvince" class="metx_sel" style="" onchange="getCity(this.options[this.selectedIndex].value);">
+			                <option value="-全国-"> -全国- </option>
+			                <option value="福建"> 福建 </option>
+			                <option value="北京"> 北京 </option>
+			                <option value="上海"> 上海 </option>
+			                <option value="天津"> 天津 </option>
+			                <option value="重庆"> 重庆 </option>
+			                <option value="河北"> 河北 </option>
+			                <option value="山西"> 山西 </option>
+			                <option value="内蒙古"> 内蒙古 </option>
+			                <option value="辽宁"> 辽宁 </option>
+			                <option value="吉林"> 吉林 </option>
+			                <option value="黑龙江"> 黑龙江 </option>
+			                <option value="江苏"> 江苏 </option>
+			                <option value="浙江"> 浙江 </option>
+			                <option value="安徽"> 安徽</option>
+			                <option value="江西"> 江西</option>
+			                <option value="山东"> 山东 </option>
+			                <option value="河南"> 河南</option>
+			                <option value="湖北"> 湖北 </option>
+			                <option value="湖南"> 湖南 </option>
+			                <option value="广东"> 广东</option>
+			                <option value="广西"> 广西</option>
+			                <option value="海南"> 海南 </option>
+			                <option value="四川"> 四川 </option>
+			                <option value="贵州"> 贵州 </option>
+			                <option value="云南"> 云南 </option>
+			                <option value="西藏"> 西藏 </option>
+			                <option value="陕西"> 陕西 </option>
+			                <option value="甘肃"> 甘肃 </option>
+			                <option value="宁夏"> 宁夏 </option>
+			                <option value="青海"> 青海 </option>
+			                <option value="新疆"> 新疆</option>
+			                <option value="香港"> 香港 </option>
+			                <option value="澳门"> 澳门 </option>
+			                <option value="台湾"> 台湾 </option>
+			                <option value="其它"> 其它 </option>
+			            </select>
+				</span>
+				<span>
+					<font>城市</font>
+					<select name="tmeeting.city" id="selCity" class="metx_sel">
+														<option value="不限 ">
+															不限
+														</option>
+		
+													</select>
+				</span>
+				<span>
+					<font>科室</font>
+					<select name="tmeeting.department" id="ks" class="metx_sel">
+														<option value="不限 ">
+															不限
+														</option>
+														<option value="内科">
+																内科
+															</option>
+															<option value="外科">
+																外科
+															</option>
+															<option value="妇科">
+																妇科
+															</option>
+															<option value="产科">
+																产科
+															</option>
+															<option value="产科">
+																儿科
+															</option>
+															<option value="口腔科">
+																口腔科
+															</option>
+															<option value="传染科">
+																传染科
+															</option>
+															<option value="康复科">
+																康复科
+															</option>
+															<option value="急诊科">
+																急诊科
+															</option>
+															<option value="眼科">
+																眼科
+															</option>
+															<option value="精神科">
+																精神科
+															</option>
+															<option value="耳鼻咽喉科">
+																耳鼻咽喉科
+															</option>
+															<option value="肿瘤科">
+																肿瘤科
+															</option>
+															<option value="麻醉科">
+																麻醉科
+															</option>
+															<option value="药剂科">
+																药剂科
+															</option>
+															<option value="中药科">
+																中药科
+															</option>
+															<option value="中医科">
+																中医科
+															</option>
+															<option value="骨科">
+																骨科
+															</option>
+															<option value="消化科">
+																消化科
+															</option>
+															<option value="胃肠科">
+																胃肠科
+															</option>
+															<option value="内分泌科">
+																内分泌科
+															</option>
+															<option value="医疗美容科">
+																医疗美容科
+															</option>
+															<option value="其他">
+																其他
+															</option>
+															<option value="全科">
+																全科
+															</option>
+													</select>
+													<font color="red" id="departmentTip"></font>
+				</span>
+			</div>
+			<!--<div class="m-f-b">
+				<p>指定参与者</p>
+				<table class="table-box-2">
+					<thead>
+						<tr>
+							<td>姓名</th>
+							<td>医院</th>
+							<td>科室</th>
+							<td>操作</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr>
+							<td>姓名</th>
+							<td>医院</th>
+							<td>科室</th>
+							<td><a href=""><img src="images/add.png"></a></th>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		-->
+		
+		<div class="fbhy-xtk" style=" margin-left: 0px;">
+			       		 <input id="attender" type="radio" name="radio" value="1" onclick="checkRadio()">&nbsp;<font>方式二</font>	
+			       		 <input id="hid" type="hidden" name="tmeeting.namelist" value="">
+		     		 </div>
+		      
+				    <div class="wdhy-new-fb-xtk" style="margin-left: 0px;" id="open_list">名单&nbsp;：<a href="javascript:;" id="btn_j_r3" onclick="btnClick()" class="file-upload" disabled="disabled"><input id="addBtn" name="submit" type="button" value="添加" disabled="disabled">添加</a>&nbsp;&nbsp;<i class="file-upload"><input id="bcFans" name="bcFans" onclick="bcfans();" type="button" class="md_btn_srh" value="保存" disabled="disabled">保存</i>&nbsp;&nbsp;<i class="file-upload"><input id="qcFans" name="qcFans" onclick="qcfans();" type="button" class="md_btn_srh" value="清除">清除</i></div>
+			        <div class="selStyle" id="selector" style="margin-right: -150px;"></div>
+					<div class="mgk-namelist" style="margin-left: 0px;">
+                      <div class="fqmd-xm-new">姓名</div>
+                      <div class="fqmd-yymc-new">&nbsp;&nbsp;&nbsp;医院名称</div>
+		              <div class="fqmd-kes-new">&nbsp;&nbsp;&nbsp;科室</div>
+					  <div class="fqmd-zt-new">&nbsp;&nbsp;操作</div>
+					</div>
+					 
+					
+						<div class="mgk-xtkwc-new" id="showNameList" style="display:none;height:120px;overflow-y:scroll;margin-left: 0px;"></div>
+					
+					
+					<div id="hidNameList" style="display:none;">
+						
+					</div>
+					<div id="hidDocId" style="display:none;">
+					</div>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix p-btm-none input-wbox">
+		<div class="fl m-c-t">签到会议</div>
+		<div  class="fl">
+			<p class="m-title-txt">设定会议地址，可实现签到功能</p>
+			<div class="m-g-a">
+				<span><input type="radio" name="a" value="0" data-sx="mo" class="input-radiobox" checked /><font>不限定<small>默认</small></font></span>
+				<span><input type="radio" name="a" value="1" data-sx="0" class="input-radiobox" /><font>设定地址</font></span>
+			</div>
+		</div>
+		<div class="p-btm-h clearfix"></div>
+		<div class="m-g-b input-conbox">
+			<img src="images/u1054.png" width="22" height="20">请设定会议坐标，在会议前后30分钟内可到会场签到
+		</div>
+	</div>
+	<div class="m-con m-c m-i clearfix">
+		<div class="fl m-c-t">会议资料</div>
+		<div  class="fl">
+			<p class="m-title-txt">与会议相关的PPT、PDF、Word文件</p>
+			<span class="file-upload"><input type="file">上传文件</span>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix">
+		<div class="fl m-c-t">会议资料</div>
+		<div class="fl">
+			<p>与会议相关的PPT、PDF、Word文件</p>
+			<p style="margin-top:10px;"><i id="span1"><input type="file" id="word" name="upload" style="display: none" onchange="clearPath('word','we');fileChange(this,'we','wd1','msg1','word');"></i>
+			<input id="we" style="color: #539CD4;" name="materialName1" class="wdzxtx_inp_srh" value="" onblur="checkMaterial();" readonly="readonly">
+			<span class="file-upload"><input type="button" name="sx" onclick="word.click();" class="md_btn_srh">上传文件</span>
+			<a onclick="clear_material('we','wd1','msg1','span1')" style=" cursor: pointer;" class="file-upload">删除</a></p><div class="fontStyle" id="wd1"></div>
+			<div id="msg1" style="font-size:12px;color:red;line-height:12px;"></div>
+			<p style="margin-top:10px;"><i id="span2"><input type="file" id="ppt" name="upload" style="display: none" onchange="clearPath('ppt','pept');fileChange(this,'pept','wd2','msg2','ppt');"></i>
+			<input id="pept" style="color: #539CD4;" name="materialName2" class="wdzxtx_inp_srh" value="" onblur="checkMaterial();" readonly="readonly">
+			<span class="file-upload"><input type="button" name="sx" onclick="ppt.click()" class="md_btn_srh">上传文件</span>
+			<a onclick="clear_material('pept','wd2','msg2','span2')" style="cursor: pointer;" class="file-upload">删除</a></p>
+			<div class="fontStyle" id="wd2"></div>
+			<div id="msg2" style="font-size:12px;color:red;line-height:12px;"></div>
+			<p style="margin-top:10px;"><i id="span3"><input type="file" id="any" name="upload" style="display:none" onchange="clearPath('any','other');fileChange(this,'other','wd3','msg3','any');"></i>
+            <input id="other" style="color:#539CD4;" name="materialName3" class="wdzxtx_inp_srh" value="" onblur="checkMaterial();" readonly="readonly">
+			<span class="file-upload"><input type="button" name="sx" onclick="any.click();" class="md_btn_srh">上传文件</span>
+             <a onclick="clear_material('other','wd3','msg3','span3')" style="cursor:pointer;" class="file-upload">删除</a></p>
+             <div class="fontStyle" id="wd3"></div>
+			<div id="msg3" style="font-size:12px;color:red;line-height:12px;"></div>
+		</div><!--
+		<div class="fbhy-xtkxg" style="color: #539CD4">
+			
+		</div>
+		<div class="fl2" style="color:#539CD4;margin-top: 68px;margin-left: -475px">
+			
+		</div>
+		<div class="fbhy-xtkxg" style="color: #539CD4">
+			<div id="msg2" style="font-size:12px;color:red;line-height:12px;"></div>
+		</div>
+		<div class="fl3" style="color:#539CD4; margin-top: 109px; margin-left: -475px">
+             
+		</div>
+		<div class="fbhy-xtkxg" style="color: #539CD4">
+			<div id="msg3" style="font-size:12px;color:red;line-height:12px;"></div>
+		</div>
+		--><div class="msg-xtk" id="msgDiv" style="color:#539CD4;display:none;">
+			<div id="msg" style="color:red;"></div>
+		</div>
+					
+		
+		
+		
+	</div>
+	<div class="m-con m-c m-j clearfix input-wbox">
+		<div class="fl m-c-t">考题问卷</div>
+		<div  class="fl">
+			<p class="m-title-txt">可添加题库或调查问卷</p>
+			<div class="m-g-a">
+				<span><input type="radio" name="c" value="0" data-sx="mo" class="input-radiobox" checked /><font>不限定<small>默认</small></font></span>
+				<span><input type="radio" name="c" value="1" data-sx="0" class="input-radiobox" /><font>考题</font></span>
+				<span><input type="radio" name="c" value="2" data-sx="1" class="input-radiobox" /><font>问卷</font></span>
+			</div>
+			<div class="input-conbox input-box-se">
+				<a href="" class="kaoti-set">考题设置</a><i class="c-1">会议开始前可设置考试题目</i>
+			</div>
+			<div class="input-conbox input-box-se">
+				<a href="" class="kaoti-set">问卷设置</a><i class="c-1">会议开始前可设置题目</i>
+			</div>
+		</div>
+	</div>
+	<div class="m-con m-c m-j clearfix p-btm-none input-wbox">
+		<div class="fl m-c-t">象数设定</div>
+		<div  class="fl">
+			<p class="m-title-txt">根据情况设定象数值</p>
+			<div class="m-g-a">
+				<span><input type="radio" name="b" value="0" data-sx="mo" class="input-radiobox" checked /><font>不限定<small>默认</small></font></span>
+				<span><input type="radio" name="b" value="1" data-sx="0" class="input-radiobox" /><font>设定限制</font></span>
+			</div>
+		</div>
+		<div class="p-btm-h clearfix"></div>
+		<div class="m-g-b input-conbox">
+			<p>
+				<select class="select-txt">
+					<option value="象数赠与">象数赠与</option>
+					<option value="学习费用">学习费用</option>
+				</select>
+				可用<i class="c-2">4080象数</i>
+			</p>
+			<p>
+				前<input type="text" class="input-txt-1">
+				位参与者 赠予
+				<input type="text" class="input-txt-1">象数
+				<i class="l-txt">将使用 0象数 剩余象数将课程结束后自动返还</i>
+			</p>
+		</div>
+	</div>
+	<div class="m-con m-c clearfix p-btm-none input-wbox">
+		<div class="fl m-c-t">继教学分</div>
+		<div  class="fl">
+			<p class="m-title-txt">是否给予参会者学分</p>
+			<div class="m-g-a">
+				<span><input type="radio" name="d" value="0" data-sx="mo" class="input-radiobox" checked /><font>不限定<small>默认</small></font></span>
+				<span><input type="radio" name="d" value="1" data-sx="0" class="input-radiobox" /><font>设定限制</font></span>
+			</div>
+		</div>
+		<div class="p-btm-h clearfix"></div>
+		<div class="m-g-b input-conbox">
+			<p>
+				<select class="select-txt">
+					<option value="I类学分">I类学分</option>
+					<option value="B类学分">B类学分</option>
+				</select>
+				能获得<input type="text" class="input-txt-1">学分
+			</p>
+			<p class="input-box-se">
+				<select class="select-txt">
+					<option value="I类学分">所需</option>
+					<option value="B类学分">奖励</option>
+				</select>
+				<input type="text" class="input-txt-1">象数
+			</p>
+		</div>
+	</div>
+	<div class="btn-wrap">
+		<button class="resave-btn" id="confirm-reset">保存草稿</button>
+		<button class="submit-btn" id="confirm-btn">确 认</button>
+	</div>
+</div>
+<!--mask-wrap-->
+<div class="mask-wrap">
+	<div class="m-layer-bd">
+		<div class="mask-hd clearfix">
+			<a href="#" class="mask-le cur"><img src="images/u2986.png">已转载会议</a>
+			<a href="#" class="mask-le"><img src="images/u-2.png">我的会议</a>
+			<span class="close-btn"><img src="images/cha.png"></span>
+		</div>
+		<div class="table-box-div">
+			<table class="table-box-3">
+				<thead>
+					<tr>
+						<td class="tb3-td-1"><i>会议名称</i></td>
+						<td class="tb3-td-2">来源</td>
+						<td class="tb3-td-3">操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+        <div class="page-box page-box-re">
+            <a href="" class="page-list page-border page-prev"><i></i></a>
+            <span class="page-list">1 / 3</span>
+            <a href="" class="page-list page-border page-next"><i></i></a>
+            <input type="text" class="page-list page-border">
+            <a href="" class="page-list page-border page-link">跳转</a>
+            <a href="" class="page-list page-border page-link">查看我的资源</a>
+        </div>
+        <div class="sb-btn-box">
+        	<button class="cur">确认</button>
+        	<button class="close-button">取消</button>
+        </div>
+	</div>
+</div>
+<!--/mask-wrap end-->
+
+<div class="mask-wrap-2">
+	<div class="dis-tbcell">
+		<div class="distb-box fx-mask-box-1">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">内容预览</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+		    <div class="slider-box slider-wrap fx-mask-box-1">
+		        <ul class="slides">
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		        </ul>
+		    </div>
+		</div>
+	</div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="laydate/laydate.js"></script>
+<script src="js/slide.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

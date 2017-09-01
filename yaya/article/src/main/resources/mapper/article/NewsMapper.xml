@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.article.dao.NewsDAO" >
+
+    <select id="findByParams" resultType="cn.medcn.article.model.News">
+        SELECT id,title,category_id, create_time, xfrom, author, summary, keywords, out_link,article_img
+        FROM t_article WHERE category_id = #{categoryId}
+        ORDER BY weight,create_time DESC
+    </select>
+
+    <select id="getMaxNid" resultType="java.lang.Integer">
+        SELECT max(old_id) FROM t_article WHERE category_id = #{categoryId}
+    </select>
+
+    <select id="findAllNews" resultType="cn.medcn.article.model.News">
+        SELECT a.id,a.title,a.category_id, a.create_time, a.xfrom, a.author, a.summary, a.keywords, a.out_link,a.article_img
+        FROM t_article a
+        WHERE a.category_id = '170510121548925' or a.category_id='170510121523528' or a.category_id='170510121548956'
+        ORDER BY weight,create_time DESC
+    </select>
+</mapper>

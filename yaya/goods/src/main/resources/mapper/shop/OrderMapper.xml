@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.goods.dao.OrderDAO" >
+
+
+
+    <select id="findMyOrder" resultType="cn.medcn.goods.dto.OrderDTO">
+
+        SELECT name,price, order_no,o.status,o.create_time,receiver,phone,zone_code,post_no,post_unit,o.province,o.address FROM
+       t_goods_order o LEFT JOIN t_app_user u on o.user_id = u.id LEFT JOIN t_goods g ON  g.id = o.goods_id
+        WHERE u.id=#{userId} ORDER BY o.create_time DESC
+
+    </select>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.AppMenuDAO" >
+    <select id="findMenusByRole" resultType="cn.medcn.user.model.AppMenu">
+        SELECT m.* FROM t_app_menu m LEFT JOIN t_app_rolemenu rm on rm.menu_id = m.id AND rm.role_id=#{roleId} ORDER BY m.sort
+    </select>
+
+    <select id="findAll" resultType="cn.medcn.user.model.AppMenu">
+        SELECT * FROM t_app_menu ORDER BY sort
+    </select>
+</mapper>

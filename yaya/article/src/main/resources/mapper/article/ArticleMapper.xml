@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.article.dao.ArticleDAO" >
+
+    <select id="findArticles" resultType="cn.medcn.article.model.Article">
+        SELECT id, title, category_id, create_time, xfrom, author,
+        summary, article_img, keywords ,authed ,weight FROM t_article WHERE 1=1
+        <if test="authed != null">
+            AND authed=#{authed}
+        </if>
+        <if test="categoryId != null">
+            AND category_id = #{categoryId}
+        </if>
+        <if test="keyword != null">
+            AND (title like CONCAT('%',#{keyword}, '%') OR
+              author like CONCAT('%',#{keyword}, '%') OR
+              xfrom like CONCAT('%',#{keyword}, '%') OR
+              keywords like CONCAT('%',#{keyword}, '%')
+            )
+        </if>
+        ORDER BY weight DESC
+    </select>
+
+
+    <select id="findAdvert" resultType="cn.medcn.article.model.Article">
+      SELECT id, title, category_id, author, article_img FROM t_article WHERE
+      category_id=#{categoryId} AND authed=TRUE ORDER BY weight DESC limit 1
+    </select>
+
+    <select id="findBanners" resultType="cn.medcn.article.model.Article">
+        SELECT id, title, category_id, article_img FROM t_article WHERE
+        category_id=#{categoryId} AND authed=TRUE ORDER BY weight DESC
+    </select>
+
+
+</mapper>

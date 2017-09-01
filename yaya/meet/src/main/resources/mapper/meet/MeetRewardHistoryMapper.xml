@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetRewardHistoryDAO">
+    <!-- 查询用户获取会议奖励 -->
+    <select id="findUserGetRewardHistory" resultType="cn.medcn.meet.model.MeetRewardHistory">
+        SELECT * FROM t_meet_reward_history WHERE meet_id=#{meetId} AND user_id=#{userId}
+        <if test="rewardType!=null">
+            AND reward_type = #{rewardType}
+        </if>
+    </select>
+    
+    <select id="findGetRewardUserCount" resultType="java.lang.Integer">
+        SELECT count(user_id) FROM t_meet_reward_history WHERE reward_type = #{rewardType}
+        AND meet_id = #{meetId}
+    </select>
+
+   </mapper>

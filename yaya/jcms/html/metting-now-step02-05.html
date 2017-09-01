@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> 发布会议 - 签到功能 </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/swiper.css">
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link href="css/daterangepicker.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/wenjuan_ht.css">
+	<link href="css/style.css" rel="stylesheet">
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/moment.min.js" type="text/javascript"></script>
+	<script src="js/jquery.daterangepicker.js"></script>
+	<script src="laydate/laydate.js"></script>
+	<script src="js/slide.js"></script>
+	<script src="js/perfect-scrollbar.jquery.min.js"></script>
+	<script src="js/main.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+	<div class="l-menu content">
+		<div class="l-list">
+			<ul>
+				<li>
+					<a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">功能</p>
+			<ul>
+				<li class="cur">
+					<a href="metting-step01.html"><i></i><img src="images/icon-left-hover-2.png" alt="" /><span>会议发布</span></a>
+				</li>
+				<li>
+					<a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+				</li>
+				<li>
+					<a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">数据</p>
+			<ul>
+				<li>
+					<a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+				</li>
+				<li>
+					<a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">管理</p>
+			<ul>
+				<li>
+					<a href="hz-hzgl.html"><i></i><img src="images/icon-left-8.png"  alt="" /><span>医生管理</span></a>
+				</li>
+				<li>
+					<a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+				</li>
+				<li>
+					<a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="logout-btn"><a href="#">退出账号</a></div>
+	</div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main  mettingForm  clearfix">
+
+	<!-- header -->
+	<header class="header">
+		<div class="header-content">
+			<div class="clearfix">
+				<div class="fl clearfix">
+					<img src="images/subPage-header-image-09.png" alt="">
+				</div>
+				<div class="oh">
+					<p><strong>会议发布</strong></p>
+					<p>快速发布在线会议，下载手机app端即可查看PPT、直播、调研、考试等会议</p>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- header end -->
+
+
+    <div class="tab-hd">
+
+        <ul class="tab-list clearfix">
+			<li class="cur">
+				<a href="metting-step01.html">会议发布<i></i></a>
+			</li>
+			<li>
+				<a href="metting-02.html">草稿箱<i></i></a>
+			</li>
+			<li>
+				<a href="metting-03.html">已发布会议<i></i></a>
+			</li>
+        </ul>
+    </div>
+
+	<div class="tab-bd">
+
+		<div class=" clearfix metting-process">
+			<div class=" clearfix link-justified metting-process-02">
+				<ul>
+					<li class="cur">创建会议</li>
+					<li>设置功能</li>
+					<li>发布预览</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="table-top-box clearfix">
+			<a href="metting-now-step02.html" class="mask-le"><span class="icon iconfont icon-minIcon1"></span>微课</a>
+			<a href="metting-now-step02-03.html" class="mask-le "><span class="icon iconfont icon-minIcon3"></span>考试</a>
+			<a href="metting-now-step02-02.html" class="mask-le"><span class="icon iconfont icon-minIcon4"></span>问卷</a>
+			<a href="metting-now-step02-05.html" class="mask-le cur"><span class="icon iconfont icon-minIcon5"></span>签到</a>
+			<a href="metting-now-step02-04.html" class="mask-le "><span class="icon iconfont icon-minIcon2"></span>视频</a>
+		</div>
+
+
+		<div class="formrow-hr"></div>
+		<div class="formrow formrow-del-box formrow-del-hook">
+			<label for="" class="formTitle formTitle-style2 formTItleMargin">添加签到</label>
+			<div class="formControls">
+				<div class="formControls">
+					<p class="color-gray-2-up">签到时间&nbsp;<span class="time-tj">
+									<label for="" id="timeStart1">
+										<a href="javascript:;" class="callTimedate timedate-icon">选择日期</a><input type="text" disabled="" class="timedate-input " placeholder="">
+									</label>
+								</span></p>
+
+					<div class="metting-Map clearfix pr">
+						<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=8khx0tj4mlproerlsppHpVfMuCK2pabX"></script>
+						<div><input id="meetingaddress" class="wdzxtx_inp_srh" name="meetingaddress" maxlength="45" type="text" value=""></div>
+						<div style="" id="allmap" class="map-box"></div>
+						<div id="r-result" class="map-inputCurrent" style=""><input type="text" id="suggestId" size="20" value="百度" style="width:200px; height: 20px; position:relative;top:-2px;" /></div>
+						<div id="searchResultPanel" ></div>
+
+
+
+
+					</div>
+
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+		<div class="buttonArea clearfix" style="margin: 20px 25px 40px;">
+			<div class="formrow">
+				<div class="fr clearfix">
+					<!--<input type="button" id="" class="formButton formButton-max fx-btn-2" value="上传PPT">-->
+				</div>
+				<div class="fl clearfix">
+					<input type="button" id="" class="formButton formButton-max" value="上一步">&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" id="" class="formButton formButton-max" value="完成">
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+	</div>
+</div>
+<div class="mask-wrap">
+	<div class="dis-tbcell">
+		<div class="distb-box distb-box-tips fx-mask-box-2">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">温馨提示</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+			<div class="mask-share-box">
+				<p class="top-txt color-black">会覆盖当前的PPT文件，是否继续？</p>
+			</div>
+			<div class="sb-btn-box p-btm-1 t-right">
+				<button class="close-button-fx cur">继续</button>
+				<button class="close-button-fx">否</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$(function(){
+
+
+		$(".callTimedate").on('click',function(){
+			$('#timeStart1').trigger('focus');
+		});
+		$('#timeStart1').dateRangePicker({
+			singleMonth: true,
+			showShortcuts: false,
+			showTopbar: false,
+			startOfWeek: 'monday',
+			separator : ' ~ ',
+			format: 'YYYY/MM/DD HH:mm',
+			autoClose: false,
+			time: {
+				enabled: true
+			}
+		}).bind('datepicker-first-date-selected', function(event, obj){
+			/*首次点击的时间*/
+			console.log('first-date-selected',obj);
+		}).bind('datepicker-change',function(event,obj){
+			/* This event will be triggered when second date is selected */
+			console.log('change',obj);
+			$(this).find('input').val(obj.value);
+			// {
+			// 		date1: (开始时间),
+			// 		date2: (开始时间),
+			//	 	value: "2013-06-05 00:00 to 2013-06-07 00:00"
+			// }
+		});
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	});
+
+
+	var mp = new BMap.Map("allmap");
+	var point = new BMap.Point(116.404, 39.915);
+	mp.centerAndZoom(point, 14);
+	mp.addOverlay(new BMap.Marker(point));
+	console.log(mp);
+
+	mp.enableScrollWheelZoom();
+	mp.enableInertialDragging();
+
+	mp.enableContinuousZoom();
+
+	// 添加带有定位的导航控件
+	var navigationControl = new BMap.NavigationControl({
+		// 靠左上角位置
+		anchor: BMAP_ANCHOR_TOP_RIGHT,
+		// LARGE类型
+		type: BMAP_NAVIGATION_CONTROL_LARGE,
+		// 启用显示定位
+		enableGeolocation: true
+	});
+	mp.addControl(navigationControl);
+	mp.addEventListener("click", function(e){
+		var pt = e.point;
+		mp.clearOverlays();    //清除地图上所有覆盖物
+		mp.addOverlay(new BMap.Marker(pt));    //添加标注
+//        alert(pt.lng + ", " + pt.lat);
+		var geoc = new BMap.Geocoder();
+		geoc.getLocation(pt, function(rs){
+			var addComp = rs.addressComponents;
+			var addCompInfo = addComp.city  + addComp.district  + addComp.street + addComp.streetNumber;
+//            alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+			window.parent.document.getElementById('meetingaddress').value = addComp.city + addComp.district + addComp.street + addComp.streetNumber;
+//             window.parent.document.getElementById('openmap').innerText = pt.lng + ", " + pt.lat;
+//             window.parent.document.getElementById('lng').value = pt.lng;
+//             window.parent.document.getElementById('lat').value = pt.lat;
+			G("searchResultPanel").innerHTML = addCompInfo;
+			G("suggestId").value = addCompInfo + pt.lng + "," + pt.lat;
+
+//            console.log(mp.overlayPixelToPoint());
+
+//           window.parent.$.fancybox.close();
+		});
+	});
+
+	// 百度地图API功能
+	function G(id) {
+		return document.getElementById(id);
+	}
+
+	var ac = new BMap.Autocomplete(    //建立一个自动完成的对象
+			{"input" : "suggestId"
+				,"location" : mp
+			});
+
+	ac.addEventListener("onhighlight", function(e) {  //鼠标放在下拉列表上的事件
+		var str = "";
+		var _value = e.fromitem.value;
+		var value = "";
+		if (e.fromitem.index > -1) {
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}
+		str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+		value = "";
+		if (e.toitem.index > -1) {
+			_value = e.toitem.value;
+			value = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		}
+		str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+		G("searchResultPanel").innerHTML = str;
+	});
+
+	var myValue;
+	ac.addEventListener("onconfirm", function(e) {    //鼠标点击下拉列表后的事件
+		var _value = e.item.value;
+		myValue = _value.province +  _value.city +  _value.district +  _value.street +  _value.business;
+		G("searchResultPanel").innerHTML ="onconfirm<br />index = " + e.item.index + "<br />myValue = " + myValue;
+		setPlace();
+	});
+
+	function setPlace(){
+		mp.clearOverlays();    //清除地图上所有覆盖物
+		function myFun(){
+			var pp = local.getResults().getPoi(0).point;    //获取第一个智能搜索的结果
+			mp.centerAndZoom(pp, 18);
+			mp.addOverlay(new BMap.Marker(pp));    //添加标注
+			//alert(pp.lng + ", " + pp.lat);
+			var geoc = new BMap.Geocoder();
+			geoc.getLocation(pp, function(rs){
+				var addComp = rs.addressComponents;
+				//alert(addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber);
+			});
+		}
+		var local = new BMap.LocalSearch(mp, { //智能搜索
+			onSearchComplete: myFun
+		});
+		local.search(myValue);
+	}
+
+	var size = new BMap.Size(10, 20);
+	mp.addControl(new BMap.CityListControl({
+		anchor: BMAP_ANCHOR_TOP_LEFT,
+		offset: size,
+//         切换城市之间事件
+//         onChangeBefore: function(){
+//            alert('before');
+//         },
+//         切换城市之后事件
+//         onChangeAfter:function(){
+//           alert('after');
+//         }
+
+	}));
+</script>
+
+
+
+
+</body>
+</html>

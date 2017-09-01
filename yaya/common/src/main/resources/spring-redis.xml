@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:cache="http://www.springframework.org/schema/cache"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/cache http://www.springframework.org/schema/cache/spring-cache.xsd">
+    <cache:annotation-driven cache-manager="cacheManager" />
+
+    <bean id="jedisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+        <property name="maxIdle" value="${redis.max_idle}"/><!-- 最大空闲连接 -->
+        <property name="maxTotal" value="${redis.max_total}"/><!-- 最大连接数 -->
+        <property name="maxWaitMillis" value="${redis.connection_timeout}"/><!-- 等待可用连接的最大时间 -->
+        <property name="testOnBorrow" value="${redis.testOnBorrow}"/>
+        <property name="timeBetweenEvictionRunsMillis" value="60000"></property>
+        <property name="minEvictableIdleTimeMillis" value="1800000"></property>
+        <property name="numTestsPerEvictionRun" value="3"></property>
+    </bean>
+
+    <bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory" destroy-method="destroy">
+        <property name="poolConfig" ref="jedisPoolConfig"></property>
+        <property name="hostName" value="${redis.host}"></property>
+        <property name="port" value="${redis.port}"></property>
+        <property name="timeout" value="${redis.connection_timeout}"></property>
+        <property name="password" value="${redis.password}"/>
+        <property name="usePool" value="${redis.usepool}"/>
+    </bean>
+
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory"></property>
+        <property name="keySerializer">
+            <bean class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+        </property>
+        <property name="valueSerializer" ref="redisValueSerializer">
+            <!--<bean class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>-->
+        </property>
+    </bean>
+
+    <bean id="redisValueSerializer" class="org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer"/>
+
+    <bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
+        <property name="caches">
+            <set>
+                <bean class="cn.medcn.common.cache.RedisCache">
+                    <property name="redisTemplate" ref="redisTemplate" />
+                    <property name="name" value="default_cache"/>
+                    <property name="expire" value="180"/>
+                </bean>
+                <bean class="cn.medcn.common.cache.RedisCache">
+                    <property name="redisTemplate" ref="redisTemplate"/>
+                    <property name="name" value="middle_time_cache"/>
+                    <property name="expire" value="86400"/>
+                </bean>
+            </set>
+        </property>
+    </bean>
+
+</beans>

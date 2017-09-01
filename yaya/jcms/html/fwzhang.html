@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> demo </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+    <div class="l-menu content">
+        <div class="l-list">
+            <ul>
+                <li>
+                    <a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">功能</p>
+            <ul>
+                <li>
+                    <a href="metting-step01.html"><i></i><img src="images/icon-left-2.png" alt="" /><span>会议发布</span></a>
+                </li>
+                <li>
+                    <a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+                </li>
+                <li class="cur">
+                    <a href="hz-sftz.html"><i></i><img src="images/icon-left-hover-4.png" alt="" /><span>群发功能</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">数据</p>
+            <ul>
+                <li>
+                    <a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+                </li>
+                <li>
+                    <a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">管理</p>
+            <ul>
+                <li>
+                    <a href="hz-hzgl.html"><i></i><img src="images/icon-left-8.png"  alt="" /><span>医生管理</span></a>
+                </li>
+                <li>
+                    <a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+                </li>
+                <li>
+                    <a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="logout-btn"><a href="#">退出账号</a></div>
+    </div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main clearfix">
+	<!-- header -->
+	<header>
+	    <div class="header-content">
+	        <p><img src="images/u6225.png" alt="" /><span class="hd-txt">群发</span></p>
+	        <p>编辑新闻资讯，实时广播至关注用户，重要消息及时传递</p>
+	    </div>
+	</header>
+	<!-- header end -->
+
+    <div class="tab-hd">
+        <ul class="tab-list clearfix">
+            <li class="cur">
+                <a href="">群发消息<i></i></a>
+            </li>
+            <li>
+                <a href="">已发送<i></i></a>
+            </li>
+        </ul>
+    </div>
+    <div class="tab-bd">
+        <div class="border-1 fwz-box">
+            <div class="fl fwz-left">
+                <a href="" class="cur"><img src="images/u6198.png" alt="">发文章</a>
+                <a href=""><img src="images/u6305.png" alt="">发文字</a>
+                <a href=""><img src="images/u6422.png" alt="">发图片</a>
+            </div>
+            <div class="fwz-ri">
+                群发对象<strong>540人</strong>
+                <select name="" id="">
+                    <option value="">全部用户</option>
+                    <option value="">分组1</option>
+                    <option value="">分组2</option>
+                </select>
+            </div>
+        </div>
+        <div class="fwz-box fwz-wrap clearfix">
+            <div class="fl fwz-lefter">
+                <div class="sand-box" id="sand-box-7">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('7')"></i></div>
+                    <div class="upload-img" id="preview7">
+                        添加封面图片
+                        <img src="" id="imghead7" style="display:none;">
+                    </div>
+                    <div class="upload-txt"><span id="t7" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-7" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-8">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('8')"></i></div>
+                    <div class="upload-img" id="preview8">
+                        缩略图
+                        <img src="" id="imghead8" style="display:none;">
+                    </div>
+                    <div class="upload-txt"><span id="t8" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-8" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-6" style="display:none;">
+                    <div class="upload-img" id="preview6">
+                        <div class="s-mask-box"><i class="edit-btn" onclick="showRight('6')"></i><i class="delete-btn" onclick="deleteOper('6')"></i></div>
+                        缩略图
+                        <img src="" id="imghead6" style="display:none;">
+                    </div>
+                    <div class="upload-txt"><span id="t6" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-6" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-5" style="display:none;">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('5')"></i><i class="delete-btn" onclick="deleteOper('5')"></i></div>
+                    <div class="upload-img" id="preview5">
+                        缩略图
+                        <img src="" id="imghead5" style="display:none;">
+                    </div>
+                    <div class="upload-txt"><span id="t5" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-5" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-4" style="display:none;">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('4')"></i><i class="delete-btn" onclick="deleteOper('4')"></i></div>
+                    <div class="upload-img" id="preview4">
+                        缩略图
+                        <img src="" id="imghead4" style="display:none;">
+                    </div>
+                    <div class="upload-txt"><span id="t4" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-4" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-3" style="display:none;">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('3')"></i><i class="delete-btn" onclick="deleteOper('3')"></i></div>
+                    <div class="upload-img" id="preview3">
+                        缩略图
+                        <img src="" id="imghead3" style="display:none;">
+                    </div>
+                    <div class="upload-txt"><span id="t3" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-3" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-2" style="display:none;">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('2')"></i><i class="delete-btn" onclick="deleteOper('2')"></i></div>
+                    <div class="upload-img" id="preview2">
+                        缩略图
+                        <!-- <img src="" id="imghead7" style="display:none;"> -->
+                    </div>
+                    <div class="upload-txt"><span id="t2" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-2" type="hidden">
+                </div>
+                <div class="sand-box re-sand-box" id="sand-box-1" style="display:none;">
+                    <div class="s-mask-box"><i class="edit-btn" onclick="showRight('1')"></i><i class="delete-btn" onclick="deleteOper('1')"></i></div>
+                    <div class="upload-img" id="preview1">
+                        缩略图
+                        <!-- <img src="" id="imghead8" style="display:none;"> -->
+                    </div>
+                    <div class="upload-txt"><span id="t1" class="upload-title-txt">标题</span></div>
+                    <input id="fileName-1" type="hidden">
+                </div>
+                <div class="file-upload file-upload-1" id="add-6" onclick="showAdd('6');"><img src="images/add6.png"></div>
+                <div class="file-upload file-upload-1" id="add-5" onclick="showAdd('5');" style="display:none;"><img src="images/add5.png"></div>
+                <div class="file-upload file-upload-1" id="add-4" onclick="showAdd('4');" style="display:none;"><img src="images/add4.png"></div>
+                <div class="file-upload file-upload-1" id="add-3" onclick="showAdd('3');" style="display:none;"><img src="images/add3.png"></div>
+                <div class="file-upload file-upload-1" id="add-2" onclick="showAdd('2');" style="display:none;"><img src="images/add2.png"></div>
+                <div class="file-upload file-upload-1" id="add-1" onclick="showAdd('1');" style="display:none;"><img src="images/add1.png"></div>
+            </div>
+            <div class="fl fwz-righter-bd" id="righter-bd">
+                <div class="fwz-righter">
+                    <span class="arrow-span"></span>
+                    <div class="bt-div">
+                        <h3>标题<i class="error-info-txt title-info">请完善信息</i></h3>
+                        <div class="bt-input radiu-c">
+                        <span class="text-input-box text-input-box-7">
+                            <input type="text" id="title7" class="input-border" maxlength="40" onkeyup="showTitle('7');"><span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-8" style="display:none;">
+                            <input type="text" id="title8" class="input-border" maxlength="40" onkeyup="showTitle('8');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-6" style="display:none;">
+                            <input type="text" id="title6" class="input-border" maxlength="40" onkeyup="showTitle('6');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-5" style="display:none;">
+                            <input type="text" id="title5" class="input-border" maxlength="40" onkeyup="showTitle('5');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-4" style="display:none;">
+                            <input type="text" id="title4" class="input-border" maxlength="40" onkeyup="showTitle('4');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-3" style="display:none;">
+                            <input type="text" id="title3" class="input-border" maxlength="40" onkeyup="showTitle('3');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-2" style="display:none;">
+                            <input type="text" id="title2" class="input-border" maxlength="40" onkeyup="showTitle('2');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                            <span class="text-input-box text-input-box-1" style="display:none;">
+                            <input type="text" id="title1" class="input-border" maxlength="40" onkeyup="showTitle('1');">
+                            <span class="info-num"><i>0</i>/40</span>
+                        </span>
+                        </div>
+                        <div class="sc-box">
+                            <h3>图片<i class="error-info-txt cover-info">请完善信息</i></h3>
+                            <span class="po-ri"><input type="checkbox"> 封面图片显示在正文中</span>
+                            <span class="file-upload tp-upload-box" id="file-7"><input type="file" onchange="previewImage(this,7)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-8" style="display:none;"><input type="file" onchange="previewImage(this,8)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-6" style="display:none;"><input type="file" onchange="previewImage(this,6)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-5" style="display:none;"><input type="file" onchange="previewImage(this,5)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-4" style="display:none;"><input type="file" onchange="previewImage(this,4)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-3" style="display:none;"><input type="file" onchange="previewImage(this,3)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-2" style="display:none;"><input type="file" onchange="previewImage(this,2)">上传图片</span>
+                            <span class="file-upload tp-upload-box" id="file-1" style="display:none;"><input type="file" onchange="previewImage(this,1)">上传图片</span>
+                            <div class="bt-tips"><span>（大图片建议尺寸：900像素 * 500像素）</span></div>
+                        </div>
+                        <h3>正文<i class="error-info-txt cont-info">请完善信息</i></h3>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content7"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content8" style="display:none;"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content6" style="display:none;"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content5" style="display:none;"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content4" style="display:none;"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content3" style="display:none;"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content2" style="display:none;"></textarea>
+                        <textarea name="" cols="30" rows="10" class="zwbj-box radiu-c" id="content1" style="display:none;"></textarea>
+                        <h3>原文链接（选填）</h3>
+                        <input id="link7" class="input-link radiu-c" placeholder="http://" type="text">
+                        <input id="link8" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                        <input id="link6" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                        <input id="link5" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                        <input id="link4" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                        <input id="link3" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                        <input id="link2" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                        <input id="link1" class="input-link radiu-c" placeholder="http://" style="display:none;" type="text">
+                    </div>
+                </div>
+                <div class="border-1 qunfa-btn quer-btn">
+                    <button id="qunfa-btn">确认群发</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/qunfa-article.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/main.js"></script>
+</body>
+</html>

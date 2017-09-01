@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetModuleDAO" >
+
+
+    <select id="findActiveModules" resultType="cn.medcn.meet.model.MeetModule">
+        SELECT id, module_name, function_id, meet_id, main_flag, active FROM
+        t_meet_module where meet_id = #{meetId} AND active = true ORDER BY function_id
+    </select>
+</mapper>

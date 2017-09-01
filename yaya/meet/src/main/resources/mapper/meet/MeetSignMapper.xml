@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetSignDAO" >
+
+    <select id="findSignRecordByMeetId" resultType="cn.medcn.meet.dto.MeetSignHistoryDTO">
+        SELECT s.user_id as userId,s.sign_time as signTime,s.sign_flag as signFlag,
+        u.nickname,d.unit_name as unitName,d.sub_unit_name as subUnitName
+        FROM t_meet_sign s
+        INNER JOIN t_app_user u ON u.id = s.user_id
+        LEFT JOIN t_app_user_detail d ON d.user_id = u.id
+        WHERE s.meet_id=#{meetId}
+    </select>
+</mapper>

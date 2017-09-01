@@ -1,0 +1,171 @@
+/* CSS Document */
+/*meeting brief introduction*/
+body {
+	margin:0px;
+	padding:0px;
+	background:#fff;
+	position:absolute;
+	min-height:100%;
+	width:100%;
+	font-size:.34rem;
+	font-family:"Microsoft Yahei", Helvetica, STHeiti STXihei, Microsoft JhengHei,Tohoma, Arial;
+}
+a{
+	text-decoration:none;
+}
+
+.meeting_intr{
+	width:auto;
+	margin:0px;
+	padding:0px;
+	min-height:100%;
+	margin-bottom:1rem;
+}
+.meeting_intr .pitc{
+	margin:0px;
+	border:0px;
+	padding:0px;
+	line-height: 0;
+}
+.meeting_intr .pitc img{
+	margin:0px;
+	border:0px;
+	padding:0px;
+}
+.meeting_intr .top{
+	position:absolute;
+	color:#FFF;
+	padding:6% 0.32rem 0px 0.32rem;
+	word-break:break-all;
+	word-wrap:break-word;
+	text-align:left;
+	color:#FFF;
+}
+.meeting_intr .title{
+	font-size:.36rem;
+	line-height:.52rem;
+}
+.meeting_intr .host{
+	line-height:.4rem;
+	padding-top:6px;
+	font-size:.26rem;
+	filter:alpha(Opacity=80);
+	-moz-opacity:0.8;
+	opacity:0.8;
+}
+.meeting_intr .plate{
+	height:.72rem;
+	box-shadow:0 1px 0px 0.5px #f0f0f0;
+}
+.meeting_intr .plate ul{
+	padding:0px;
+	margin:0px;
+	border:0px;
+}
+.meeting_intr .plate ul li{
+	float:left;
+	list-style:none;
+	width:27%;
+	text-align: center;
+	height:.72rem;
+	line-height:.72rem;
+	margin:0px 3%;
+}
+.meeting_intr .plate ul li a{
+	color:#000000;
+}
+.meeting_intr .plate ul li a hover{
+	color:#1ba0cc;
+}
+.meeting_intr .plate .zd{
+	line-height:.72rem;
+	border-bottom:2px solid #1ba0cc;
+}
+.meeting_intr .explain{
+	border-top:10px solid #f5f5f5;
+	border-bottom:10px solid #f5f5f5;
+	margin:0px;
+	font-size:.24rem;
+	color:#999;
+	padding:0 0.32rem 0rem 0.32rem;
+}
+.meeting_intr .explain .ex{
+	border-bottom:1px solid #f0f0f0;
+	padding:10px 0px;
+}
+.meeting_intr .explain .ex img{
+	width:.32rem;
+    float:left;
+	padding:0.15rem 0px 0px 0px;
+}
+.meeting_intr .explain .ex .right{
+	padding:0px;
+	padding-left:.44rem;
+	word-break:break-all;
+	word-wrap:break-word;
+	line-height:.7rem;
+}
+.meeting_intr .explain .ex font{
+	color:#92d500;
+}
+.meeting_intr .explain .ex .right .col{
+	color:#1ba0cc;
+}
+.meeting_intr .brief{
+	height:100%;
+	font-size:.26rem;
+	margin:0.32rem 0.32rem 0.2rem 0.32rem;
+}
+.meeting_intr .brief .word{
+	color:#1ba0cc;
+	line-height:36px;
+}
+.meeting_intr .brief .sub{
+	padding-bottom:10px;
+}
+.meeting_intr .brief .sub p{
+	padding:4px 0px;
+	border:0px;
+	margin:0px;
+	line-height:.52rem;
+	word-break:break-all;
+	word-wrap:break-word;
+}
+.meeting_intr .brief .sub .texa{
+	text-align:center;
+	margin:0 auto;
+
+
+}
+.meeting_intr .down{
+    margin:20px 0px 50px 0px;
+	text-align:center;
+}
+.meeting_intr .down p{
+	padding:0px;
+	margin:0px;
+	border:0px;
+}
+.meeting_intr .down .erm{
+	padding:0px;
+	margin:0px;
+	border:0px;
+	padding-top:16px;
+}
+.meeting_intr .down h1{
+	font-size:.24rem;
+	padding-bottom:30px;
+}
+.meeting_intr .down .www{
+	font-size:.24rem;
+	color:#666;
+}
+
+
+.explain .last { border-color:#fff;}
+.meeting_intr .explain1 .ex img { width:0.62rem; }
+
+/*会议底部按钮*/
+.fixed-button { position:fixed; bottom:0; left:0; width:100%;text-align:center;  }
+.fixed-button .btn-metting-go { position: relative; height:1rem; line-height: 1rem; display: block; width:100%; background: #00bd62; color:#fff ;  }
+.fixed-button .btn-metting-go img {  width: 0.66rem; height: 0.4rem !important; position: relative; top: .09rem; margin-right: .15rem;}

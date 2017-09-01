@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.sys.dao.SystemRegionDAO" >
+
+    <select id="findByPage" resultType="cn.medcn.sys.model.SystemRegion">
+        SELECT * FROM t_sys_region WHERE 1=1
+        <if test="preId != null">
+            AND pre_id = #{preId}
+        </if>
+        <if test="level != null">
+          AND level = #{level}
+        </if>
+        <if test="keyword != null">
+            AND (name LIKE CONCAT(#{keyword}, '%') OR spell LIKE CONCAT(#{keyword}, '%')
+            OR alpha LIKE CONCAT(#{keyword}, '%') OR id LIKE CONCAT(#{keyword}, '%'))
+        </if>
+    </select>
+
+    <select id="findAll" resultType="cn.medcn.sys.model.SystemRegion">
+        SELECT id, pre_id, `name`, level FROM t_sys_region
+    </select>
+</mapper>

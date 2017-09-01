@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.goods.dao.TradeDetailDAO" >
+
+
+    <select id="findTradeInfo" resultType="cn.medcn.goods.dto.TradeDetailDTO">
+        SELECT cost,cost_time,description,type FROM
+          t_app_user tu LEFT JOIN t_xs_trade_detail xs ON tu.id = xs.user_id WHERE user_id=#{userId} ORDER BY cost_time DESC
+    </select>
+</mapper>

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api" />
+        <module name="article" />
+        <module name="common" />
+        <module name="data" />
+        <module name="goods" />
+        <module name="jbms" />
+        <module name="jcms" />
+        <module name="meet" />
+        <module name="search" />
+        <module name="system" />
+        <module name="transfer" />
+        <module name="user" />
+        <module name="weixin" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="api" target="1.7" />
+      <module name="article" target="1.7" />
+      <module name="common" target="1.7" />
+      <module name="data" target="1.7" />
+      <module name="goods" target="1.7" />
+      <module name="jbms" target="1.7" />
+      <module name="jcms" target="1.7" />
+      <module name="meet" target="1.7" />
+      <module name="search" target="1.7" />
+      <module name="system" target="1.7" />
+      <module name="transfer" target="1.7" />
+      <module name="user" target="1.7" />
+      <module name="weixin" target="1.7" />
+      <module name="yaya7.0" target="1.7" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

@@ -1,0 +1,154 @@
+2017-08-23 刘礼平
+增加 t_data_file 字段html_path
+
+2017-08-11 刘礼平
+修改t_app_user_detail major 为varchar(500)  已更新到公网
+增加t_app_user_detail 字段 specialty_name
+修改t_data_file_detail 的字段为 detailKey,detailValue
+增加 t_app_user 字段 unionid 已更新到公网
+创建t_wx_userinfo  已更新到公网
+老数据的M_producer需要存到t_data_file的author
+t_department 增加icon字段
+添加t_properties表
+
+2017-08-10 李轩 已更新到公网
+修改 `t_jpush_message` 表增加两个字段
+alter table `t_jpush_message` add `flat` int(11) default '0' COMMENT '0表示app 1表示微信 2表示全部',
+alter table `t_jpush_message` add `result` varchar(100) default NULL,
+
+
+2017-08-10 李轩 已更新到公网
+增加 `t_meet_notify`表
+CREATE TABLE `t_meet_notify` (
+  `id` int(11) NOT NULL auto_increment,
+  `meet_id` varchar(32) NOT NULL,
+  `state` int(11) default '0' COMMENT '0表示未通知 1表示已通知 2表示已取消',
+  `notify_time` bigint(20) default NULL COMMENT '会议提醒推送时间戳',
+  `target_id` int(11) NOT NULL COMMENT '提醒接受者ID',
+  `notify_type` int(11) default '0' COMMENT '0表示会议 1表示考试 2表示问卷',
+  `content` varchar(255) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+
+
+
+2017-08-10 李轩 已更新到公网
+增加 `t_wx_menu`表
+CREATE TABLE `t_wx_menu` (
+  `id` int(11) NOT NULL auto_increment,
+  `name` varchar(30) NOT NULL,
+  `parent_id` int(11) default '0',
+  `sort` int(11) default NULL,
+  `type` varchar(10) default NULL,
+  `url` varchar(200) default NULL,
+  `key` varchar(50) default NULL,
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8;
+
+
+2017-07-24 李轩  已更新到公网
+增加 `t_wx_userinfo`表
+DDL为：
+CREATE TABLE `t_wx_userinfo` (
+  `unionid` varchar(32) NOT NULL,
+  `openid` varchar(32) default NULL,
+  `subscribe` tinyint(4) default NULL,
+  `nickname` varchar(100) default NULL,
+  `sex` int(11) default NULL COMMENT '1表示男 2表示女 0表示未设置',
+  `language` varchar(50) default NULL,
+  `country` varchar(50) default NULL,
+  `province` varchar(50) default NULL,
+  `city` varchar(50) default NULL,
+  `headimgurl` varchar(255) default NULL,
+  `subscribe_time` bigint(20) default NULL,
+  PRIMARY KEY  (`unionid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+
+
+2017-07-26 刘长玲  已更新到公网
+新增 `t_infinity_tree` 表字段 `leaf` 字段 标识是否是子目录：0 不是 1 是'
+DDL为：
+alter table `t_infinity_tree` add `leaf` int(11) NULL DEFAULT NULL COMMENT '是否是叶子：0 不是 1 是'
+
+增加 `t_infinity_tree_detail`表    已更新到公网
+DDL为：
+CREATE TABLE `t_infinity_tree_detail` (
+  `id` int(11) NOT NULL auto_increment,
+  `infinity_id` varchar(32) default NULL,
+  `resource_id` varchar(32) default NULL COMMENT '资源ID 依赖tree表中mount_type 挂载类型设置',
+  `resource_name` varchar(200) default NULL COMMENT '资源名称',
+  PRIMARY KEY  (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8;
+
+增加 `t_recommend`表    已更新到公网
+CREATE TABLE `t_recommend` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`resource_id`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '推荐的资源id' ,
+`rec_type`  smallint(6) NULL DEFAULT NULL COMMENT '推荐类型：1 会议文件夹  2 会议  3 单位号  ' ,
+`rec_flag`  tinyint(4) NULL DEFAULT NULL COMMENT '是否推荐 0不推荐 1推荐' ,
+`rec_date`  datetime NULL DEFAULT NULL COMMENT '推荐日期' ,
+`sort`  smallint(6) NULL DEFAULT NULL COMMENT '排序序号 ' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+AUTO_INCREMENT=1
+ROW_FORMAT=COMPACT;
+
+
+2017-07-31 刘长玲     已更新到公网
+增加 `t_meet_learning_record` 表
+DDL为：
+CREATE TABLE `t_meet_learning_record` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`function_id`  int(11) NULL DEFAULT NULL DEFAULT 0 COMMENT '功能ID 1ppt 2视频 3 考试 4 问卷 5 签到' ,
+`meet_id`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会议id' ,
+`user_id`  int(11) NULL DEFAULT NULL COMMENT '用户id' ,
+`complete_progress`  varchar(11) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '完成进度 百分比' ,
+`used_time` bigint(20) default NULL COMMENT '学习用时(ppt内容和视频学习)；提交时间（考试、问卷）；签到时间',
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+AUTO_INCREMENT=1
+ROW_FORMAT=COMPACT;
+
+增加 `t_meet_reward_history` 表    已更新到公网
+DDL为：
+CREATE TABLE `t_meet_reward_history` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`user_id`  int(11) NULL DEFAULT NULL COMMENT '用户ID' ,
+`meet_id`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会议id' ,
+`reward_point`  int(11) NULL DEFAULT NULL COMMENT '奖励数值' ,
+`reward_type`  int(11) NULL DEFAULT NULL COMMENT '奖励类型 1：象数  2：学分' ,
+`reward_time`  datetime NULL DEFAULT NULL COMMENT '奖励时间' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+AUTO_INCREMENT=1
+ROW_FORMAT=COMPACT;
+
+2017-08-01 刘长玲    已更新到公网
+增加`t_meet_setting`表
+CREATE TABLE `t_meet_setting` (
+`id`  int(11) NOT NULL AUTO_INCREMENT ,
+`meet_id`  varchar(32) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL COMMENT '会议ID' ,
+`prop_mode`  int(11) NULL DEFAULT NULL COMMENT '属性设置方式：1赠送象数 2支付象数 3 I类学分 4 II类学分' ,
+`prop_value`  int(11) NULL DEFAULT NULL COMMENT '奖励或支付的象数值；或奖励的学分数' ,
+`reward_limit`  int(11) NULL DEFAULT NULL COMMENT '奖励人数限制' ,
+`prop_type`  tinyint(4) NULL DEFAULT NULL COMMENT '属性类型 1象数 2学分' ,
+PRIMARY KEY (`id`)
+)
+ENGINE=InnoDB
+DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci
+AUTO_INCREMENT=1
+ROW_FORMAT=COMPACT;
+
+
+
+
+
+

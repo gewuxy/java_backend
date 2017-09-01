@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> 发布会议 </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link href="css/daterangepicker.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/perfect-scrollbar.min.css">
+	<link href="css/style.css" rel="stylesheet">
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+	<div class="l-menu content">
+		<div class="l-list">
+			<ul>
+				<li>
+					<a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">功能</p>
+			<ul>
+				<li class="cur">
+					<a href="metting-step01.html"><i></i><img src="images/icon-left-hover-2.png" alt="" /><span>会议发布</span></a>
+				</li>
+				<li>
+					<a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+				</li>
+				<li>
+					<a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">数据</p>
+			<ul>
+				<li>
+					<a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+				</li>
+				<li>
+					<a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">管理</p>
+			<ul>
+				<li>
+					<a href="hz-hzgl.html"><i></i><img src="images/icon-left-8.png"  alt="" /><span>医生管理</span></a>
+				</li>
+				<li>
+					<a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+				</li>
+				<li>
+					<a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="logout-btn"><a href="#">退出账号</a></div>
+	</div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main  mettingForm clearfix">
+
+	<!-- header -->
+	<header class="header">
+		<div class="header-content">
+			<div class="clearfix">
+				<div class="fl clearfix">
+					<img src="images/subPage-header-image-09.png" alt="">
+				</div>
+				<div class="oh">
+					<p><strong>会议发布</strong></p>
+					<p>快速发布在线会议，下载手机app端即可查看PPT、直播、调研、考试等会议</p>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- header end -->
+
+    <div class="tab-hd">
+
+        <ul class="tab-list clearfix">
+            <li class="cur">
+                <a href="metting-step01.html">会议发布<i></i></a>
+            </li>
+            <li>
+                <a href="metting-02.html">草稿箱<i></i></a>
+            </li>
+			<li>
+				<a href="metting-03.html">已发布会议<i></i></a>
+			</li>
+        </ul>
+    </div>
+
+	<div class="tab-bd" style="padding-bottom:500px;">
+
+		<div class=" clearfix metting-process">
+			<div class=" clearfix link-justified metting-process-02">
+				<ul>
+					<li class="cur">创建会议</li>
+					<li>会议详情</li>
+					<li>发布预览</li>
+				</ul>
+			</div>
+		</div>
+
+
+		<form action="/web/meeting/save" method="post" id="meetingForm" name="meetingForm">
+			<div class="clearfix">
+				<div class="formrow">
+					<label for="" class="formTitle formTitle-style2">主讲嘉宾</label>
+					<div class="formControls">
+						<p>
+							<span class="radioboxIcon color-black">
+								<input type="radio" name="radio2" id="checkbox_1" checked  class="chk_1 chk-hook" >
+								<label for="checkbox_1" ><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;完善的主讲信息</label>
+							</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+							<span class="radioboxIcon color-black">
+								<input type="radio" name="radio2" id="checkbox_2"  class="chk_1 chk-hook" >
+								<label for="checkbox_2" ><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;不显示</label>
+							</span>
+						</p>
+						<div class="formGuest">
+							<div class="fl clearfix">
+								<div class="formGuest-img clearfix">
+									<img src="./img/hz-detail-img100.jpg" alt="" width="110" height="110">
+								</div>
+								<p class="t-center">
+									<label for="changeImg" class="changeImg ">
+										<input type="file" id="changeImg" class="none">
+										<span class="button uploadFile-button">上传图片</span>
+									</label>
+								</p>
+								<p class="color-gray-up t-center" style="font-size:12px;">300 X 300px <Br />正方形照片</p>
+
+							</div>
+							<div class="oh">
+								<div class="formControls">
+									<p><input type="text" placeholder="主讲姓名" value="" name="loginName" id="" class="textInput" data-type="email"><span class="formIconTips " ><img src="./images/icon-error.png" alt="">&nbsp;&nbsp;&nbsp;请输入主讲名称</span></p>
+									<p><input type="text" placeholder="职称" value="" name="loginName" id="" class="textInput" data-type="email"><span class="formIconTips none" ><img src="./images/icon-error.png" alt="">&nbsp;&nbsp;&nbsp;请输入职称</span></p>
+									<p><input type="text" placeholder="在职医院" value="" name="loginName" id="" class="textInput" data-type="email"><span class="formIconTips none" ><img src="./images/icon-error.png" alt="">&nbsp;&nbsp;&nbsp;请输入在职医院</span></p>
+									<p><input type="text" placeholder="所在科室" value="" name="loginName" id="" class="textInput" data-type="email"><span class="formIconTips none" ><img src="./images/icon-error.png" alt="">&nbsp;&nbsp;&nbsp;请输入所在科室</span></p>
+
+								</div>
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow">
+					<label for="" class="formTitle formTitle-style2">会议简介</label>
+					<div class="formControls">
+						<p>会议资料说明，包括主讲介绍、会议详情说明、会议日程等相关信息</p>
+						<div class="textareaForm"><textarea name="" id="" cols="30" rows="10"></textarea></div>
+
+					</div>
+				</div>
+			</div>
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2">参议人员</label>
+					<div class="formControls">
+						<div class="formRadiobox ">
+							<span class="radioboxIcon color-black">
+								<input type="radio" name="radio" id="checkbox_3" checked  class="chk_1 chk-hook" >
+								<label for="checkbox_3" ><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;指定参与者</label>
+							</span>
+							<div class="formRadiobox-item clearfix">
+								<span class="text">省份</span>
+								<span class="formPage-select-item  pr">
+									<i class="formPage-select-arrow"></i>
+									<select name="" class="text-input formPage-select formPage-select-hook">
+										<option value="">全国</option>
+										<option value="1">北京</option>
+										<option value="2">广东</option>
+										<option value="3">河南</option>
+									</select>
+								</span>
+								<span class="text">城市</span>
+								<span class="formPage-select-item  pr">
+									<i class="formPage-select-arrow"></i>
+									<select name="" class="text-input formPage-select formPage-select-hook">
+										<option value="">不限</option>
+										<option value="1">北京</option>
+										<option value="2">广州</option>
+										<option value="3">深圳</option>
+									</select>
+								</span>
+								<span class="text">科室</span>
+								<span class="formPage-select-item  pr">
+									<i class="formPage-select-arrow"></i>
+									<select name="" class="text-input formPage-select formPage-select-hook">
+										<option value="">科室</option>
+										<option value="1">内科</option>
+										<option value="2">外科</option>
+										<option value="3">妇科</option>
+									</select>
+								</span>
+
+							</div>
+							<span class="radioboxIcon color-black">
+								<input type="radio" name="radio" id="checkbox_4" class="chk_1 chk-hook">
+								<label for="checkbox_4" ><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;指定医生分组</label>
+							</span>
+							<div class="formRadiobox-item clearfix">
+								<span class="formPage-select-item select-max pr" style="margin-left:30px;" >
+									<i class="formPage-select-arrow"></i>
+									<select name="" class="text-input formPage-select formPage-select-hook">
+										<option value="">全部关注医生</option>
+										<option value="1">北京</option>
+										<option value="2">广东</option>
+										<option value="3">河南</option>
+									</select>
+								</span>
+							</div>
+						</div>
+
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2 formTItleMargin">添加象数</label>
+					<div class="formControls">
+						<p class="rowMargin"><span class="formPage-select-item  pr">
+									<i class="formPage-select-arrow"></i>
+									<select name="" class="text-input formPage-select formPage-select-colorBlack formPage-select-hook">
+										<option value="">赠送象数</option>
+										<option value="1">学习费用</option>
+									</select>
+								</span>&nbsp;&nbsp;&nbsp;<span class="color-black">当前有4821象数</span>&nbsp;&nbsp;&nbsp;<a href="#" class="color-blue">象数管理</a>
+						</p>
+						<p class="color-gray-2-up">前 <input type="text " class="gary-input" value="0" > 位参与者&nbsp;赠予 <input type="text" class="gary-input" value="0"> 象数</p>
+
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2 formTItleMargin">添加课件</label>
+					<div class="formControls">
+						<p><a href="#" class="black-button">上传文件</a>&nbsp;&nbsp;&nbsp;已上传&nbsp;<span class="color-green-up">15</span>&nbsp;个文件&nbsp;&nbsp;&nbsp;<a href="#" class="color-blue">刷新</a></p>
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2 formTItleMargin">添加考试</label>
+					<div class="formControls">
+						<div class="formControls">
+							<p class="rowMargin"><a href="#" class="black-button">设置考题</a>&nbsp;&nbsp;&nbsp;点击&nbsp;<a href="#" class="color-blue">考试模版</a>&nbsp;并下载</p>
+							<p class="color-gray-2-up">及格分数 <input type="text " class="gary-input" value="60" > 分，不及格可重考 <input type="text" class="gary-input" value="0"> 次</p>
+							<p class="color-gray-2-up">起止时间&nbsp;<span class="time-tj">
+									<label for="" id="timeStart">
+										<a href="javascript:;" class="callTimedate timedate-icon">选择日期</a><input type="text" disabled="" class="timedate-input " placeholder="">
+									</label>
+								</span></p>
+
+						</div>
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2 formTItleMargin">添加问卷</label>
+					<div class="formControls">
+						<p><a href="#" class="black-button">设置问卷</a>&nbsp;&nbsp;&nbsp;点击&nbsp;<a href="#" class="color-blue">问卷调查模版</a>&nbsp;下载</p>
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2 formTItleMargin">添加签到</label>
+					<div class="formControls">
+						<div class="formControls">
+							<p ><a href="#" class="black-button" onclick="openmap();"
+								   href="javascript:;" id="openmap">会场地址</a>&nbsp;&nbsp;&nbsp;&nbsp;<input id="meetingaddress" class="wdzxtx_inp_srh" name="meetingaddress" type="text" value="请选择会场地址"></p>
+							<p class="color-gray-2-up">签到时间&nbsp;<span class="time-tj">
+									<label for="" id="timeStart1">
+										<a href="javascript:;" class="callTimedate timedate-icon">选择日期</a><input type="text" disabled="" class="timedate-input " placeholder="">
+									</label>
+								</span></p>
+
+						</div>
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+
+			<div class="formrow-hr"></div>
+			<div class="clearfix">
+				<div class="formrow formrow-del-box formrow-del-hook">
+					<label for="" class="formTitle formTitle-style2 formTItleMargin">添加视频</label>
+					<div class="formControls">
+						<p><a href="#" class="black-button">上传视频</a>&nbsp;&nbsp;&nbsp;已上传&nbsp;<span class="color-green-up">105</span>&nbsp;个视频&nbsp;&nbsp;&nbsp;<a href="#" class="color-blue">刷新</a></p>
+					</div>
+					<div class="formrow-del-item">
+						<a href="javascript:;"><span class="icon iconfont icon-minIcon16"></span>&nbsp;删除</a>
+					</div>
+				</div>
+			</div>
+			<div class="buttonArea clearfix">
+				<div class="formrow">
+					<div class="fr clearfix">
+						<input type="button" id="" class="formButton formButton-max" value="保存草稿">
+					</div>
+					<div class="fl clearfix">
+						<input type="button" id="" class="formButton formButton-max" value="上一步">&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" id="" class="formButton formButton-max" value="下一步">
+					</div>
+				</div>
+			</div>
+		</form>
+
+
+	</div>
+</div>
+<!--mask-wrap-->
+<div class="mask-wrap">
+	<div class="m-layer-bd">
+		<div class="mask-hd clearfix">
+			<a href="#" class="mask-le cur"><img src="images/u2986.png">已转载会议</a>
+			<a href="#" class="mask-le"><img src="images/u-2.png">我的会议</a>
+			<span class="close-btn"><img src="images/cha.png"></span>
+		</div>
+		<div class="table-box-div">
+			<table class="table-box-3">
+				<thead>
+					<tr>
+						<td class="tb3-td-1"><i>会议名称</i></td>
+						<td class="tb3-td-2">来源</td>
+						<td class="tb3-td-3">操作</td>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+					<tr>
+						<td class="tb-list-1">
+							<input type="radio">
+							<img src="images/p-1.png">
+							广州医科大学附属第一医院规培师资培训
+						</td>
+						<td>
+							广医一院教学培训平台
+						</td>
+						<td class="tb-bj-box">
+							<div class="my-m-btn my-m-btn-1">
+								<a href="javascript:;" class="fx-btn-1 yl">预览</a>
+								<a class="fx-btn-2 zai" href="">转载发布</a>
+							</div>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+        <div class="page-box page-box-re">
+            <a href="" class="page-list page-border page-prev"><i></i></a>
+            <span class="page-list">1 / 3</span>
+            <a href="" class="page-list page-border page-next"><i></i></a>
+            <input type="text" class="page-list page-border">
+            <a href="" class="page-list page-border page-link">跳转</a>
+            <a href="" class="page-list page-border page-link">查看我的资源</a>
+        </div>
+        <div class="sb-btn-box">
+        	<button class="cur">确认</button>
+        	<button class="close-button">取消</button>
+        </div>
+	</div>
+</div>
+<!--/mask-wrap end-->
+
+<div class="mask-wrap-2">
+	<div class="dis-tbcell">
+		<div class="distb-box fx-mask-box-1">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">内容预览</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+		    <div class="slider-box slider-wrap fx-mask-box-1">
+		        <ul class="slides">
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		            <li>
+	                    <img src="http://img.emao.net/act/material/nd/kn/nkrg.jpg">
+	                    <span class="txt">
+                    	文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述文字内容描述
+                    	</span>
+		            </li>
+		        </ul>
+		    </div>
+		</div>
+	</div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/moment.min.js" type="text/javascript"></script>
+<script src="js/jquery.daterangepicker.js"></script>
+<script src="laydate/laydate.js"></script>
+<script src="js/slide.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script src="js/layer/layer.js"></script>
+<script>
+	$(function(){
+
+
+		$(".callTimedate").on('click',function(){
+			$('#timeStart').trigger('focus');
+		});
+		$('#timeStart').dateRangePicker({
+			singleMonth: true,
+			showShortcuts: false,
+			showTopbar: false,
+			startOfWeek: 'monday',
+			separator : ' ~ ',
+			format: 'YYYY/MM/DD HH:mm',
+			autoClose: false,
+			time: {
+				enabled: true
+			}
+		}).bind('datepicker-first-date-selected', function(event, obj){
+			/*首次点击的时间*/
+			console.log('first-date-selected',obj);
+		}).bind('datepicker-change',function(event,obj){
+			/* This event will be triggered when second date is selected */
+			console.log('change',obj);
+			$(this).find('input').val(obj.value);
+			// {
+			// 		date1: (开始时间),
+			// 		date2: (开始时间),
+			//	 	value: "2013-06-05 00:00 to 2013-06-07 00:00"
+			// }
+		});
+
+
+		$(".callTimedate").on('click',function(){
+			$('#timeStart1').trigger('focus');
+		});
+		$('#timeStart1').dateRangePicker({
+			singleMonth: true,
+			showShortcuts: false,
+			showTopbar: false,
+			startOfWeek: 'monday',
+			separator : ' ~ ',
+			format: 'YYYY/MM/DD HH:mm',
+			autoClose: false,
+			time: {
+				enabled: true
+			}
+		}).bind('datepicker-first-date-selected', function(event, obj){
+			/*首次点击的时间*/
+			console.log('first-date-selected',obj);
+		}).bind('datepicker-change',function(event,obj){
+			/* This event will be triggered when second date is selected */
+			console.log('change',obj);
+			$(this).find('input').val(obj.value);
+			// {
+			// 		date1: (开始时间),
+			// 		date2: (开始时间),
+			//	 	value: "2013-06-05 00:00 to 2013-06-07 00:00"
+			// }
+		});
+
+
+		//
+		$(".formrow-del-hook").hover(function(){
+			$(this).find(".formrow-del-item").toggle();
+
+			$(this).find(".formrow-del-item").find("a").click(function(){
+				$(this).parents(".formrow").parent().next(".formrow-hr").remove();
+				$(this).parents(".formrow").parent().remove();
+			});
+		});
+
+
+
+
+	});
+
+	var laySum = 0; //定义变量
+	function getlay() {  //利用这个方法向子页面传递layer的index
+		return laySum;
+	}
+
+	/*弹出窗*/
+	var zIndex=19891014;
+	/**打开地图 2016-04-13**/
+	function openmap(){
+		/*$('.map').fancybox({
+		 width:800,
+		 height:600,
+		 'centerOnScroll':true,
+		 'autoScale':true,
+		 'overlayOpacity': '1',
+		 'overlayColor' : '#000',
+		 'padding' : 0
+		 });*/
+		flaySum=layer.open({
+			type: 2,
+			title: false,
+			shade: 0.8,
+			moveOut: true,
+			area: ['60%', '60%'],
+			shadeClose: true,
+			//content:'http://192.168.1.32:8080/zyjsp/jsp/baidumap.jsp'
+//			content:'http://www.medcn.cn/zyjsp/jsp/baidumap.jsp'
+			content:'map.html'
+		});
+		zIndex+=100;
+		$('.map').parent().attr('style','z-index: '+zIndex+'; width: 80%; height: 100%; top: 20px; left: 10px;');
+
+	}
+	// 清除地址
+	function clearaddress(){
+		document.getElementById('meetingaddress').value = "";
+		document.getElementById('openmap').innerText = "请设定会议坐标，在会议前后30分钟内可到会场签到";
+	}
+
+
+</script>
+
+
+</body>
+</html>

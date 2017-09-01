@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.GroupDAO" >
+
+    <select id="findGroupList" resultType="cn.medcn.user.model.Group">
+        SELECT tg.id,tg.pub_user_id,tg.group_name,tg.remark,count(td.doctor_id) AS memberCount FROM t_user_group tg
+        LEFT JOIN t_user_doctor_group td ON tg.id = td.group_id AND tg.pub_user_id = td.pub_user_id
+        WHERE tg.pub_user_id = #{pubUserId} GROUP BY tg.id
+    </select>
+</mapper>

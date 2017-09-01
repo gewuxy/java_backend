@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+    <context:property-placeholder location="classpath*:*.properties"/>
+    <context:component-scan base-package="cn.medcn" >
+        <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
+    </context:component-scan>
+
+
+    <!-- 读取数据库配置文件 -->
+    <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource"
+          destroy-method="close">
+        <property name="driverClassName" value="${jdbc.driver_classname}" />
+        <property name="url" value="${jdbc.url}" />
+        <property name="username" value="${jdbc.username}" />
+        <property name="password" value="${jdbc.password}" />
+        <!--initialSize: 初始化连接-->
+        <property name="initialSize" value="50"/>
+        <!--maxIdle: 最大空闲连接-->
+        <property name="maxIdle" value="10"/>
+        <!--minIdle: 最小空闲连接-->
+        <property name="minIdle" value="5"/>
+        <!--maxActive: 最大连接数量-->
+        <property name="maxActive" value="300"/>
+        <!--removeAbandoned: 是否自动回收超时连接-->
+        <property name="removeAbandoned" value="true"/>
+        <!--removeAbandonedTimeout: 超时时间(以秒数为单位)-->
+        <property name="removeAbandonedTimeout" value="180"/>
+        <!--maxWait: 超时等待时间以毫秒为单位 6000毫秒/1000等于60秒-->
+        <property name="maxWait" value="3000"/>
+        <property name="validationQuery">
+            <value>SELECT 1</value>
+        </property>
+        <property name="testOnBorrow">
+            <value>true</value>
+        </property>
+    </bean>
+
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource"/>
+        <property name="mapperLocations" value="classpath*:mapper/*/*.xml"/>
+        <property name="typeAliasesPackage" value="cn.medcn.*.model"/>
+        <property name="configLocation" value="classpath:Mybatis-Config.xml"/>
+    </bean>
+
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="cn.medcn.*.dao"/>
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"/>
+    </bean>
+
+
+    <bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+        <property name="host" value="${mail_server_host}" />
+        <property name="username" value="${mail_username}" />
+        <property name="password" value="${mail_password}" />
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="javaMailProperties">
+            <props>
+                <prop key="mail.smtp.auth">${mail_smtp_auth}</prop>
+                <prop key="mail.smtp.timeout">${mail_smtp_timeout}</prop>
+                <prop key="mail.smtp.port">${mail_server_port}</prop>
+                <prop key="mail.smtp.socketFactory.port">${mail_server_port}</prop>
+                <prop key="mail.smtp.socketFactory.fallback">${mail_smtp_fallback}</prop>
+            </props>
+        </property>
+    </bean>
+
+
+
+    <!-- 定义事务管理器 -->
+    <bean id="transactionManager"
+          class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>
+    <!-- 下面使用aop切面的方式来实现 -->
+    <tx:advice id="txAdvice" transaction-manager="transactionManager">
+        <!--配置事务传播性，隔离级别以及超时回滚等问题 -->
+        <tx:attributes>
+            <tx:method name="save*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="insert*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="update*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="add*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="execute*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="import*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="delete*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="do*"  propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="remove*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="modify*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="run*" propagation="REQUIRED" rollback-for="Exception"/>
+            <tx:method name="find*" propagation="SUPPORTS" rollback-for="Exception" read-only="true" />
+            <tx:method name="select*" propagation="SUPPORTS" rollback-for="Exception" read-only="true" />
+            <tx:method name="list*" propagation="SUPPORTS" rollback-for="Exception" read-only="true" />
+            <tx:method name="page*" propagation="SUPPORTS" rollback-for="Exception" read-only="true" />
+            <tx:method name="*" propagation="SUPPORTS" rollback-for="Exception" read-only="true" />
+        </tx:attributes>
+    </tx:advice>
+    <aop:config proxy-target-class="false">
+        <!--配置事务切点 -->
+        <aop:pointcut id="services"
+                      expression="execution(* cn.medcn..service.*.*(..))" />
+        <aop:advisor pointcut-ref="services" advice-ref="txAdvice" />
+    </aop:config>
+
+    <import resource="spring-redis.xml"/>
+    <import resource="spring-local.xml"/>
+</beans>

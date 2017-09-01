@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.data.dao.DataFileDAO" >
+
+
+    <select id="findDataFileByPage" resultType="cn.medcn.data.model.DataFile">
+        SELECT id, title, author, file_size, update_date, data_from, file_path
+         FROM t_data_file WHERE 1=1
+         <if test="categoryId != null">
+             AND category_id = #{categoryId}
+         </if>
+         <if test="keyword != null">
+             AND (title LIKE CONCAT('%',#{keyword}, '%') OR author LIKE CONCAT('%',#{keyword}, '%')
+              OR data_from LIKE CONCAT('%',#{keyword}, '%')
+             )
+         </if>
+    </select>
+
+    <select id="findFavorite" resultType="cn.medcn.data.dto.FileCategoryDTO">
+        SELECT td.id, title, author, file_size, update_date, data_from, file_path,html_path
+        FROM t_data_file td
+        INNER JOIN t_resource_favorite tr ON tr.resource_id = td.id
+        WHERE tr.resource_type = #{resourceType} AND tr.user_id = #{userId}
+    </select>
+
+
+
+    <select id="selectMedicineListByKeyword" resultType="cn.medcn.data.dto.FileCategoryDTO">
+        SELECT id, title, author, file_size, update_date, data_from, file_path,html_path
+        FROM t_data_file WHERE (title LIKE CONCAT('%',#{keyword}, '%') OR keywords LIKE CONCAT('%',#{keyword}, '%')  OR data_from LIKE CONCAT('%',#{keyword}, '%'))
+        AND root_category = #{rootCategory}
+    </select>
+
+
+    <select id="findFile" resultType="cn.medcn.data.dto.FileCategoryDTO">
+        SELECT  id,title,author,data_from,file_size,update_date,file_path,html_path
+        FROM t_data_file WHERE category_id = #{preId}
+    </select>
+
+    <select id="findCategory" resultType="cn.medcn.data.dto.FileCategoryDTO">
+        SELECT tc.id,tc.name AS title,leaf,0 as isFile
+        FROM t_data_category tc WHERE pre_id = #{preId}
+    </select>
+</mapper>

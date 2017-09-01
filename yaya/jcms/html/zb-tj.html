@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> demo </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+    <div class="l-menu content">
+        <div class="l-list">
+            <ul>
+                <li>
+                    <a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">功能</p>
+            <ul>
+                <li>
+                    <a href="metting-step01.html"><i></i><img src="images/icon-left-2.png" alt="" /><span>会议发布</span></a>
+                </li>
+                <li>
+                    <a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+                </li>
+                <li>
+                    <a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">数据</p>
+            <ul>
+                <li>
+                    <a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+                </li>
+                <li>
+                    <a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">管理</p>
+            <ul>
+                <li class="cur">
+                    <a href="hz-hzgl.html"><i></i><img src="images/icon-left-hover-8.png"  alt="" /><span>医生管理</span></a>
+                </li>
+                <li>
+                    <a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+                </li>
+                <li>
+                    <a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="logout-btn"><a href="#">退出账号</a></div>
+    </div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main clearfix">
+
+	<div class="detail-box clearfix">
+		<a href="" class="fl fl-img">上一页</a>
+		<div class="fl fl-txt">
+			<p class="detail-txt-1">骨科感染的治疗以及预防</p>
+			<p class="detail-box-1">
+				<span class="cur">微课</span>
+				<span>骨科</span>
+				会议时间：不限
+			</p>
+		</div>
+	</div>
+
+    <div class="tab-hd">
+
+        <ul class="tab-list clearfix">
+            <li>
+                <a href="">会议详情<i></i></a>
+            </li>
+            <li class="cur">
+                <a href=""><img src="images/u-14.png" class="img-icon">内容统计<i></i></a>
+            </li>
+            <li>
+                <a href=""><img src="images/u-10.png" class="img-icon">用户统计<i></i></a>
+            </li>
+            <li>
+                <a href=""><img src="images/u-11.png" class="img-icon">转载统计<i></i></a>
+            </li>
+        </ul>
+        <span class="tj-right">资源平台共享: <i class="open-btn">已开启</i></span>
+    </div>
+    <div class="tj-con mar-top-bd">
+        <div class="border tj-content clearfix">
+            <div class="tj-top clearfix">
+                <h3>直播统计</h3>
+            </div>
+            <table class="tj-table tj-table-2 clearfix">
+                <tbody>
+                    <tr>
+                        <td>
+                            <p>会议时长</p>
+                            <p><span class="td-txt-1">00：53：23</span></p>
+                        </td>
+                        <td>
+                            <p>观看人数</p>
+                            <p><span class="td-txt">158</span>人</p>
+                        </td>
+                        <td>
+                            <p>使用流量</p>
+                            <p><span class="td-txt">8</span><span class="td-txt-2">G</span></p>
+                        </td>
+                        <td>
+                            <p>使用象数</p>
+                            <p><span class="td-txt">80</span>象数</p>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="tj-top echarts-box echarts-box-s">
+                <h3 class="echart-txt">分时观看统计</h3>
+                <div id="echarts-1" class="echarts-1 echarts-2"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="js/jquery.min.js"></script>
+<script src="js/echarts.min.js"></script>
+<script src="js/perfect-scrollbar.jquery.min.js"></script>
+<script src="js/main.js"></script>
+<script type="text/javascript">
+var dom = document.getElementById('echarts-1');
+var myChart = echarts.init(dom);
+var app = {};
+option = null;
+option = {
+    color: ['#3398DB'],
+    tooltip : {
+        trigger: 'axis',
+        axisPointer : {            // 坐标轴指示器，坐标轴触发有效
+            type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
+        }
+    },
+    grid: {
+        left: '0',
+        right: '0',
+        bottom: '3%',
+        top:'5%',
+        containLabel: true
+    },
+    xAxis : [
+        {
+            type : 'category',
+            data : ['1分钟', '3分钟', '6分钟', '9分钟', '12分钟', '15分钟','18分钟', '21分钟', '24分钟', '27分钟', '30分钟', '33分钟', '36分钟'],
+            axisTick: {
+                alignWithLabel: true
+            }
+        }
+    ],
+    yAxis : [
+        {
+            type : 'value'
+        }
+    ],
+    series : [
+        {
+            name:'直接访问',
+            type:'bar',
+            barWidth: '60%',
+            data:[417, 512, 339, 334, 290, 330, 220, 52, 200, 434, 590, 330, 220]
+        }]
+};;
+if (option && typeof option === "object") {
+    myChart.setOption(option, true);
+}
+</script>
+</script>
+</body>
+</html>

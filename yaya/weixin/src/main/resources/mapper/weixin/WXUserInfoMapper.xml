@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.weixin.dao.WXUserInfoDAO" >
+
+    <select id="checkBindStatus" resultType="java.lang.Integer">
+        SELECT u.id FROM t_app_user u INNER JOIN t_wx_userinfo w ON u.unionid = w.unionid WHERE w.openid = #{openid}
+    </select>
+
+
+    <select id="findWxUserInfoByAppUserId" resultType="cn.medcn.weixin.model.WXUserInfo">
+        SELECT wu.* FROM t_wx_userinfo wu INNER JOIN t_app_user au on au.unionid = wu.unionid
+        WHERE au.id = #{userId} limit 1
+    </select>
+</mapper>

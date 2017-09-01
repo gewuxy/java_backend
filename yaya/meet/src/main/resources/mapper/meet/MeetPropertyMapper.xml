@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetPropertyDAO" >
+
+    <select id="findProperty" resultType="cn.medcn.meet.model.MeetProperty">
+        SELECT id, meet_id, start_time, end_time, attend_limit, linkman, edu_credits,
+        xs_credits, award_limit, talk_forbid, specify_province, specify_city,group_id,
+        member_limit_type,specify_depart FROM t_meet_prop WHERE meet_id = #{meetId}
+    </select>
+</mapper>

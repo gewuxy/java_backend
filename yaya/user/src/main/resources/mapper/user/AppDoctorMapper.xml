@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.AppDoctorDAO" >
+
+    <select id="findAllDocInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+        SELECT tu.id,tug.id AS groupId,tu.linkman,tu.headimg, td.unit_name AS hospital,td.sub_unit_name AS type,
+        tu.unionid,td.title,tug.group_name FROM t_app_user tu
+        INNER JOIN t_app_attention ta ON tu.id = ta.slaver_id
+        LEFT JOIN t_app_user_detail td ON tu.id = td.user_id
+        LEFT JOIN t_user_doctor_group tudg ON tudg.doctor_id = tu.id AND tudg.pub_user_id = #{userId}
+        LEFT JOIN t_user_group tug ON tug.id = tudg.group_id AND tug.pub_user_id = tudg.pub_user_id
+        WHERE tu.role_id = 2 AND ta.master_id = #{userId}
+        AND tu.linkman LIKE CONCAT('%', #{linkman}, '%')
+    </select>
+
+    <select id="findUndifindGroupDocInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+        SELECT tu.id,tug.id AS groupId,tu.linkman,tu.headimg, td.unit_name AS hospital,td.sub_unit_name AS type,
+        tu.unionid,td.title,tug.group_name FROM t_app_user tu
+        INNER JOIN t_app_attention ta ON tu.id = ta.slaver_id
+        LEFT JOIN t_app_user_detail td ON tu.id = td.user_id
+        LEFT JOIN t_user_doctor_group tudg ON tudg.doctor_id = tu.id AND tudg.pub_user_id = #{userId}
+        LEFT JOIN t_user_group tug ON tug.id = tudg.group_id AND tug.pub_user_id = tudg.pub_user_id
+        WHERE tu.role_id = 2 AND ta.master_id = #{userId} AND tug.id is null
+    </select>
+
+    <select id="findBindWxDocInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+        SELECT tu.id,tg.group_id,tu.linkman,tu.headimg,td.unit_name AS hospital,td.sub_unit_name AS type,
+        tu.unionid,td.title,tug.group_name FROM t_app_user tu
+        INNER JOIN t_app_attention ta ON ta.slaver_id = tu.id
+        LEFT JOIN t_app_user_detail td ON td.user_id = tu.id
+        LEFT JOIN t_user_doctor_group tg ON tg.doctor_id = tu.id AND tg.pub_user_id = #{userId}
+        LEFT JOIN t_user_group tug ON tug.id = tg.group_id
+        WHERE tu.unionid!='' AND tu.role_id = 2 AND ta.master_id = #{userId}
+    </select>
+
+    <select id="getPopUpInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+        SELECT tu.id,tu.province,tu.city,tu.zone,tu.mobile,tu.username,
+        (SELECT COUNT(DISTINCT tm.id) FROM t_meet_attend ta INNER JOIN t_meet tm ON ta.meet_id = tm.id WHERE ta.user_id = tu.id AND tm.owner_id = #{ownerId} )AS attendCount,
+        (SELECT SUM(usedtime) FROM t_audio_history th INNER JOIN t_meet tm ON th.meet_id = tm.id WHERE th.user_id = tu.id AND tm.owner_id = #{ownerId} )AS learnTime
+        FROM t_app_user tu
+         LEFT JOIN t_app_user_detail td ON tu.id = td.user_id
+         where tu.id = #{docId}
+    </select>
+
+    <select id="findDocInfoByGId" resultType="cn.medcn.user.dto.DoctorDTO">
+        SELECT tu.id,tg.group_id,tu.linkman,tu.headimg,td.unit_name AS hospital,td.sub_unit_name AS type,
+        tu.unionid,td.title,tug.group_name
+        FROM t_app_user tu
+        INNER JOIN t_app_attention ta ON ta.slaver_id = tu.id
+        LEFT JOIN t_app_user_detail td ON td.user_id = tu.id
+        INNER JOIN t_user_doctor_group tg ON tg.doctor_id = tu.id AND tg.pub_user_id = #{userId}
+        INNER JOIN t_user_group tug ON tug.id = tg.group_id
+        WHERE tu.role_id = 2 AND ta.master_id = #{userId} AND tg.group_id = #{groupId}
+    </select>
+
+    <select id="findDoctorInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+        SELECT tu.id,tu.linkman,tu.headimg,tu.unionid,tu.degree,tu.province,tu.city,tu.zone,tu.username,
+        td.title,td.unit_name AS hospital, td.sub_unit_name AS type,tug.group_name,
+        (SELECT count(DISTINCT tm.id) FROM t_audio_history th LEFT JOIN t_meet tm ON  th.meet_id = tm.id WHERE th.user_id = tu.id AND tm.owner_id = #{ownerId} AND th.finished=1) AS finishedNum,
+        (SELECT SUM(usedtime) FROM t_audio_history th INNER JOIN t_meet tm ON tm.id = th.meet_id WHERE th.user_id = tu.id AND tm.owner_id = #{ownerId})AS learnTime,
+        (SELECT SUM(usedtime) FROM t_video_history th INNER JOIN t_meet t ON th.meet_id = t.id   WHERE th.user_id = tu.id AND t.owner_id = #{ownerId})AS videoTime,
+        (SELECT AVG(th.score) FROM t_exam_history th INNER JOIN t_meet tm ON th.meet_id = tm.id  WHERE tm.owner_id = #{ownerId} AND th.user_id = tu.id) AS average
+        FROM t_app_user tu
+        LEFT JOIN t_app_user_detail td ON tu.id = td.user_id
+        LEFT JOIN t_user_doctor_group tg ON tg.doctor_id = tu.id AND tg.pub_user_id =  #{ownerId}
+        LEFT JOIN t_user_group tug ON tug.id = tg.group_id
+        WHERE tu.id = #{doctorId}
+    </select>
+
+</mapper>

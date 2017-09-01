@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.ExamQuestionDAO" >
+
+    <select id="findPaperQuestions" resultType="cn.medcn.meet.model.ExamQuestion">
+        SELECT q.id, q.title, q.right_key, q.options, q.qtype, q.owner, q.shared, q.detail, q.dc, q.category,q.create_time, pq.point FROM t_exam_paper_question pq LEFT JOIN t_exam_question q
+        ON q.id = pq.question_id WHERE pq.paper_id= #{paperId} ORDER BY pq.sort
+    </select>
+
+    <select id="findQuestion" resultType="cn.medcn.meet.model.ExamQuestion">
+        SELECT q.id, q.title, q.right_key, q.options, q.qtype, q.owner, q.shared, q.detail, q.dc, q.category,q.create_time, pq.point FROM t_exam_paper_question pq LEFT JOIN t_exam_question q
+        ON q.id = pq.question_id WHERE pq.paper_id= #{paperId} AND pq.question_id = #{questionId} limit 1
+    </select>
+
+    <select id="findQuestionSort" resultType="java.lang.Integer">
+        SELECT q.sort FROM t_meet_exam e
+        LEFT JOIN t_exam_paper_question q ON q.paper_id = e.paper_id
+        WHERE e.meet_id=#{meetId} GROUP BY q.sort
+    </select>
+
+</mapper>

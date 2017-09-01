@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.article.dao.ArticleCategoryDAO" >
+
+    <select id="findAllCategory" resultType="cn.medcn.article.model.ArticleCategory">
+        SELECT * FROM t_article_category ORDER BY sort
+    </select>
+
+    <select id="findCategoryByPreid" resultType="cn.medcn.article.model.ArticleCategory">
+        SELECT * FROM t_article_category WHERE pre_id = #{preId} ORDER BY sort
+    </select>
+</mapper>

@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetDAO" >
+
+    <resultMap id="tuijianMap" type="cn.medcn.meet.dto.MeetTuijianDTO">
+        <result column="id" property="id"/>
+        <result column="meet_name" property="meetName"/>
+        <result column="meet_type" property="meetType"/>
+        <result column="start_time" property="startTime"/>
+        <result column="end_time" property="endTime"/>
+        <result column="lecturer" property="lecturer"/>
+        <result column="lecturer_title" property="lecturerTile"/>
+        <result column="lecturer_img" property="lecturerImg"/>
+        <result column="lecturer_hos" property="lecturerHos"/>
+        <result column="headimg" property="pubUserHead"/>
+        <result column="pub_user_id" property="pubUserId"/>
+        <result column="state" property="state"/>
+    </resultMap>
+
+    <select id="findMeetTuijian" resultMap="tuijianMap">
+        SELECT m.id, m.meet_name, m.meet_type, ml.name as lecturer, ml.title as lecturer_title,ml.hospital as lecturer_hos,
+        ml.headimg as lecturer_img, p.start_time, p.end_time, m.state,u.headimg, u.id as pub_user_id, f.id as `stored`
+        FROM t_meet m
+        LEFT JOIN t_meet_lecturer ml on m.id = ml.meet_id
+        LEFT JOIN t_app_user u on m.owner_id = u.id
+        LEFT JOIN t_meet_prop p on p.meet_id = m.id
+        LEFT JOIN t_resource_favorite f on f.resource_id=m.id AND f.user_id=#{userId}
+        WHERE m.state &gt; 0 AND m.state &lt; 4 AND m.tuijian = TRUE ORDER BY publish_time DESC
+    </select>
+
+    <resultMap id="meetTypeStateMap" type="cn.medcn.meet.dto.MeetTypeState">
+        <result column="meet_type" property="name"/>
+        <result column="cnt" property="count"/>
+        <result column="icon" property="icon"/>
+    </resultMap>
+
+    <select id="findMeetTypes" resultMap="meetTypeStateMap">
+        SELECT m.meet_type,d.icon, count(m.meet_type) as cnt FROM t_meet m
+        LEFT JOIN t_app_attention a ON a.master_id=m.owner_id
+        LEFT JOIN t_department d ON d.`name` = m.meet_type
+        WHERE a.slaver_id=#{userId} AND m.state BETWEEN 1 AND 3
+        GROUP BY m.meet_type ORDER BY cnt DESC
+    </select>
+
+
+    <select id="findMeetInfo" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+        SELECT  m.id, m.meet_name,m.owner_id as pub_user_id, m.organizer, m.meet_type, m.introduction,m.state,p.start_time, p.end_time,
+        ml.title as lecturer_title, ml.hospital as lecturer_hos, ml.depart as lecturer_depart,ml.headimg as lecturer_head,u.headimg,
+        ml.name as lecturer, acd.img_url as cover_url, msx.prop_mode as requiredXs,msx.prop_value as xsCredits,msx.reward_limit as awardLimit,
+        mse.prop_mode as rewardCredit,mse.prop_value as eduCredits,mse.reward_limit as awardCreditLimit
+        FROM t_meet m
+        LEFT JOIN t_meet_prop p on m.id = p.meet_id
+        LEFT JOIN t_meet_setting msx on msx.meet_id = m.id and msx.prop_type = 1
+        LEFT JOIN t_meet_setting mse on mse.meet_id = m.id and mse.prop_type = 2
+        LEFT JOIN t_app_user u on u.id = m.owner_id
+        LEFT JOIN t_meet_lecturer ml on ml.meet_id=m.id
+        LEFT JOIN t_meet_audio ma on ma.meet_id = m.id AND ma.course_id > 0
+        LEFT JOIN t_audio_course_detail acd on acd.course_id=ma.course_id AND acd.sort=1
+        WHERE m.id = #{meetId}
+        limit 1
+    </select>
+
+    <select id="searchMeetInfo" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+        SELECT  m.id, m.meet_name, m.organizer, m.meet_type, m.introduction,
+        ml.name as lecturer, p.start_time, p.end_time,m.state,u.headimg
+        FROM t_meet m INNER JOIN t_meet_prop p on m.id = p.meet_id
+        INNER JOIN t_app_user u on u.id = m.owner_id
+        LEFT JOIN t_meet_lecturer ml on ml.id=m.lecturer_id
+        WHERE m.state &gt; 0 AND m.state &lt; 4
+        <if test="keyword != null">
+          AND (m.meet_name LIKE CONCAT('%',#{keyword}, '%'))
+        </if>
+    </select>
+
+    <select id="findMyMeets" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+        SELECT  m.id, m.meet_name, m.meet_type, m.introduction,
+        m.organizer, p.start_time, p.end_time,m.state, u.headimg
+        FROM t_meet m
+        LEFT JOIN t_meet_prop p on m.id = p.meet_id
+        LEFT JOIN t_app_attention a ON a.master_id=m.owner_id
+        LEFT JOIN t_app_user u on m.owner_id = u.id
+        WHERE a.slaver_id=#{userId} AND m.state=#{state}
+        <if test="meetType!=null">
+            AND m.meet_type = #{meetType}
+        </if>
+        ORDER BY p.start_time DESC
+    </select>
+
+    <select id="findMyStore" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+
+        select m.id, m.meet_name,u.headimg,  m.organizer, m.meet_type, m.state,mp.start_time, mp.end_time,
+            msx.prop_mode as requiredXs, msx.prop_value as xs_credits,mse.prop_mode as rewardCredit,mse.prop_value as edu_credits,
+            u.province,u.city,ml.`name` as lecturer,ml.headimg as lecturer_head, ml.title as lecturer_title,
+            ml.hospital as lecturer_hos, ml.depart as lecturer_depart
+        FROM t_meet m INNER JOIN t_resource_favorite f on m.id = f.resource_id
+        AND f.user_id = #{userId} and f.resource_type = #{resourceType}
+        INNER JOIN t_meet_prop mp on mp.meet_id = m.id
+        INNER JOIN t_app_user u on u.id = m.owner_id
+        LEFT JOIN t_meet_lecturer ml on ml.meet_id = m.id
+        LEFT JOIN t_meet_setting msx on msx.meet_id = m.id and msx.prop_type = 1
+        LEFT JOIN t_meet_setting mse on mse.meet_id = m.id and mse.prop_type = 2
+    </select>
+
+    <select id="findPublished" resultType="cn.medcn.meet.dto.MeetListInfoDTO">
+        SELECT m.id, m.meet_name, m.state,m.create_time, m.publish_time, p.start_time FROM t_meet m
+        LEFT JOIN t_meet_prop p on p.meet_id = m.id
+        WHERE m.owner_id=#{masterId} AND m.state>0 GROUP BY m.id ORDER BY m.publish_time DESC
+    </select>
+
+    <select id="findMeetForSend" resultType="cn.medcn.meet.dto.MeetListInfoDTO">
+        SELECT m.id, m.meet_name, m.state,m.create_time, m.publish_time FROM t_meet m
+        WHERE m.owner_id=#{masterId} AND m.state>0 AND m.state &lt; 3 GROUP BY m.id ORDER BY m.publish_time DESC
+    </select>
+
+    <select id="findDraft" resultType="cn.medcn.meet.dto.MeetListInfoDTO">
+        SELECT m.id, m.meet_name, m.state,m.create_time, m.publish_time FROM t_meet m
+        WHERE m.owner_id=#{masterId} AND m.state=0 ORDER BY m.create_time DESC
+    </select>
+
+   <!-- <select id="getMeetHistory" resultMap="mtHistoryRM">
+          SELECT tm.id AS meet_id,tm.meet_name,tm.publish_time, tmd.id AS module_id,tmd.module_name,tmt.usetime
+          FROM t_meet tm
+          LEFT JOIN t_meet_module tmd ON tm.id = tmd.meet_id
+          LEFT JOIN t_meet_attend tmt ON tmt.meet_id = tm.id
+          WHERE tm.owner_id = #{ownerId} AND tmt.user_id = #{doctorId} ORDER BY tm.publish_time DESC
+    </select>-->
+
+    <!-- <resultMap id="mtHistoryRM" type="cn.medcn.meet.dto.MeetHistoryDTO" autoMapping="true">
+        <id property="meetId" column="meet_id"></id>
+        <collection property="moduleList" resultMap="moduleRM"></collection>
+    </resultMap>
+
+    <resultMap id="moduleRM" type="cn.medcn.meet.dto.MeetModuleDTO">
+        <id property="moduleId" column="module_id"></id>
+        <result property="meetId" column="meet_id"></result>
+        <result property="moduleName" column="module_name"></result>
+    </resultMap>
+-->
+    <select id="getMeetHistory" resultType="cn.medcn.meet.dto.MeetHistoryDTO" >
+        SELECT tm.id AS meet_id,tm.meet_name,tm.publish_time, sum(th.usedtime) AS usedtime
+        FROM t_meet tm
+        LEFT JOIN t_audio_history th ON th.meet_id = tm.id
+        WHERE tm.owner_id = #{ownerId} AND th.user_id = #{doctorId} GROUP BY tm.id ORDER BY tm.publish_time DESC
+    </select>
+
+    <select id="findSignPos" resultType="java.lang.String">
+        SELECT p.position_name from t_meet m
+        LEFT JOIN t_meet_module md on m.id = md.meet_id
+        LEFT JOIN t_meet_position p on m.id = p.meet_id
+        where md.module_name='签到' and m.id=#{meetId}
+    </select>
+
+
+    <update id="modifyStartState">
+        update t_meet m set m.state = 2 where m.state = 1 and
+        exists(select id from  t_meet_prop where start_time &lt; NOW() and end_time &gt; NOW() and meet_id = m.id);
+    </update>
+
+    <update id="modifyEndState">
+        update t_meet m set m.state = 3 where m.state = 2 and
+        exists(select id from  t_meet_prop where end_time &lt; NOW() and meet_id = m.id);
+    </update>
+
+    <!-- add by Liuchangling on 2017/7/28 -->
+    <!-- 根据会议状态/会议分类 查询没有被添加到文件夹的 会议列表 -->
+    <select id="findMyMeetList" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+        SELECT mt.* FROM(
+            SELECT m.id,m.meet_name,m.organizer,m.meet_type,m.state,p.start_time,p.end_time,
+                   sxs.prop_mode as requiredXs,sxs.prop_value as xsCredits,sxs.reward_limit as awardLimit,
+                   scrd.prop_mode as rewardCredit,scrd.prop_value as eduCredits,scrd.reward_limit as awardCreditLimit
+            FROM t_meet m
+            LEFT JOIN t_meet_prop p on m.id = p.meet_id
+            LEFT JOIN t_app_attention a ON a.master_id = m.owner_id
+            LEFT JOIN t_meet_setting sxs ON sxs.meet_id = m.id AND sxs.prop_type=1
+            LEFT JOIN t_meet_setting scrd ON scrd.meet_id = m.id AND scrd.prop_type=2
+            WHERE a.slaver_id=#{userId} AND m.state=#{state}
+            <if test="meetType!=null">
+                AND m.meet_type = #{meetType}
+            </if>
+            ORDER BY p.start_time DESC
+        ) mt LEFT JOIN  t_infinity_tree_detail d ON d.resource_id = mt.id
+        WHERE d.infinity_id IS NULL
+    </select>
+
+    <!-- add by Liuchangling on 2017/7/28 -->
+    <!-- 根据目录ID、状态/会议分类 查询下级会议数据 -->
+    <select id="findTreeResourceByCondition" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+        SELECT mt.* FROM(
+            SELECT d.resource_id
+            FROM t_infinity_tree_detail d
+            LEFT JOIN t_infinity_tree t ON t.id = d.infinity_id
+            WHERE t.id=#{preId}
+        ) rs INNER JOIN (
+            SELECT m.id,m.meet_name,m.organizer,m.meet_type,m.state,p.start_time,p.end_time,
+                   sxs.prop_mode as requiredXs,sxs.prop_value as xsCredits,sxs.reward_limit as awardLimit,
+                   scrd.prop_mode as rewardCredit,scrd.prop_value as eduCredits,scrd.reward_limit as awardCreditLimit
+            FROM t_meet m
+            LEFT JOIN t_meet_prop p ON p.meet_id = m.id
+            LEFT JOIN t_meet_setting sxs ON sxs.meet_id = m.id AND sxs.prop_type=1
+            LEFT JOIN t_meet_setting scrd ON scrd.meet_id = m.id AND scrd.prop_type=2
+        ) mt ON mt.id = rs.resource_id
+        WHERE mt.state=#{state}
+        <if test="meetType!=null">
+            AND m.meet_type = #{meetType}
+        </if>
+        ORDER BY mt.start_time DESC
+    </select>
+
+    <select id="findMeetSetting" resultType="cn.medcn.meet.model.MeetSetting">
+        SELECT * FROM t_meet_setting WHERE meet_id = #{meetId}
+        <if test="propMode!=null">
+            AND propMode = #{propMode}
+        </if>
+    </select>
+
+    <select id="findMeetFavorite" resultType="cn.medcn.meet.dto.MeetInfoDTO">
+        select m.id, m.meet_name,u.headimg,  m.organizer, m.meet_type, ml.`name` as lecturer, ml.headimg as lecturer_head,
+        ml.title as lecturer_title, ml.hospital as lecturer_hos, ml.depart as lecturer_depart,
+        mp.start_time, mp.end_time, m.state, msx.prop_value as xs_credits, mse.prop_value as edu_credits
+        from t_meet m INNER JOIN t_resource_favorite f
+        on m.id = f.resource_id and f.resource_type = 0 AND f.user_id = #{userId}
+        INNER JOIN t_meet_prop mp on mp.meet_id = m.id
+        INNER JOIN t_app_user u on u.id = m.owner_id
+        LEFT JOIN t_meet_lecturer ml on ml.meet_id = m.id
+        LEFT JOIN t_meet_setting msx on msx.meet_id = m.id and msx.prop_type = 1
+        LEFT JOIN t_meet_setting mse on mse.meet_id = m.id and mse.prop_type = 2
+        ORDER BY f.store_time DESC
+    </select>
+
+
+    <select id="findFixedRecommend" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        SELECT vmf.* FROM t_recommend r INNER JOIN v_meet_folder_final vmf on vmf.id = r.resource_id WHERE r.fixed = true limit 1
+    </select>
+
+
+    <select id="findRandomRecommendMeets" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        SELECT vmf.* FROM t_recommend r INNER JOIN v_meet_folder_final vmf ON vmf.id = r.resource_id WHERE r.fixed = false
+        AND r.rec_flag = true AND r.rec_type = 2
+        ORDER BY rand() limit #{randLimit}
+    </select>
+
+
+    <select id="findRandomMeets" resultType="cn.medcn.meet.dto.MeetFolderDTO" parameterType="cn.medcn.meet.dto.SearchRandomMeetDTO">
+        SELECT vm.* FROM v_meet_folder_final vm INNER JOIN t_meet_audio ma on vm.id = ma.meet_id
+        WHERE vm.type = 1 AND vm.state BETWEEN 1 AND 3 AND vm.user_id != #{escapeUserId}
+        <if test="depart != null and province != null and city != null">
+            AND (
+            vm.meet_type like CONCAT(#{depart}, '%')
+            OR vm.city LIKE CONCAT(#{city}, '%')
+            OR  vm.province like CONCAT(#{province}, '%')
+            )
+        </if>
+        ORDER BY rand() limit #{randLimit}
+    </select>
+
+    <select id="searchMeetFolderInfo" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        SELECT * FROM v_meet_folder_final WHERE type=0
+        and meet_name like CONCAT('%',#{keyword}, '%')
+        UNION
+        SELECT * FROM v_meet_folder_final
+        WHERE state BETWEEN 1 AND 3 AND type=1
+        and meet_name like CONCAT('%',#{keyword}, '%')
+    </select>
+
+    <select id="findRecommendLecturers" resultType="cn.medcn.meet.model.Lecturer">
+        select tml.* from t_meet_lecturer tml INNER JOIN t_infinity_tree_detail td ON td.resource_id = tml.meet_id
+        INNER JOIN v_infinity v on v.level1_id = td.infinity_id OR v.level2_id = td.infinity_id
+        WHERE v.level1_id = #{folderId} GROUP BY tml.meet_id LIMIT #{max}
+    </select>
+
+    <select id="getMeetFolder" resultType="cn.medcn.meet.dto.MeetFolderDTO">
+        SELECT * FROM v_meet_folder_final WHERE id = #{id}
+    </select>
+
+</mapper>

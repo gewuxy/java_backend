@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/api/api.iml" filepath="$PROJECT_DIR$/api/api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/article/article.iml" filepath="$PROJECT_DIR$/article/article.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/data/data.iml" filepath="$PROJECT_DIR$/data/data.iml" />
+      <module fileurl="file://$PROJECT_DIR$/goods/goods.iml" filepath="$PROJECT_DIR$/goods/goods.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jbms/jbms.iml" filepath="$PROJECT_DIR$/jbms/jbms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/jcms/jcms.iml" filepath="$PROJECT_DIR$/jcms/jcms.iml" />
+      <module fileurl="file://$PROJECT_DIR$/meet/meet.iml" filepath="$PROJECT_DIR$/meet/meet.iml" />
+      <module fileurl="file://$PROJECT_DIR$/search/search.iml" filepath="$PROJECT_DIR$/search/search.iml" />
+      <module fileurl="file://$PROJECT_DIR$/system/system.iml" filepath="$PROJECT_DIR$/system/system.iml" />
+      <module fileurl="file://$PROJECT_DIR$/transfer/transfer.iml" filepath="$PROJECT_DIR$/transfer/transfer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/user/user.iml" filepath="$PROJECT_DIR$/user/user.iml" />
+      <module fileurl="file://$PROJECT_DIR$/weixin/weixin.iml" filepath="$PROJECT_DIR$/weixin/weixin.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yaya7.0.iml" filepath="$PROJECT_DIR$/yaya7.0.iml" />
+    </modules>
+  </component>
+</project>

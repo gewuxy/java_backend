@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetMessageDAO" >
+
+    <resultMap id="meetMessageDTOMap" type="cn.medcn.meet.dto.MeetMessageDTO">
+        <result column="id" property="id"/>
+        <result column="message" property="message"/>
+        <result column="meet_id" property="meetId"/>
+        <result column="sender_id" property="senderId"/>
+        <result column="sender" property="sender"/>
+        <result column="send_time" property="sendTime"/>
+        <result column="msg_type" property="msgType"/>
+        <result column="headimg" property="headimg"/>
+    </resultMap>
+
+    <select id="findMeetMessageDTO" resultMap="meetMessageDTOMap">
+      SELECT m.id, m.message, m.meet_id, m.sender_id,
+      m.send_time, m.msg_type, u.nickname as sender, u.headimg from t_meet_message m
+      LEFT JOIN t_app_user u on u.id = m.sender_id
+      WHERE m.meet_id = #{meetId} ORDER BY send_time DESC
+    </select>
+</mapper>

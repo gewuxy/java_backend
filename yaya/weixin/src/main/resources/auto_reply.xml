@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<auto_replies>
+    <reply id="default_reply">
+        <content><![CDATA[欢迎您的加入！
+
+YaYa医师，中国首个医生移动学术会议交流平台。1000个医疗单位入驻，70万执业注册医师选择使用。让您参加会议、考试更轻松、高效。
+
+<a href='@bindURL'>点击这里注册或绑定</a>您的YaYa医师账号，参加会议更便捷喔~]]></content>
+    </reply>
+
+    <reply id="scene_reply">
+        <content><![CDATA[感谢关注“@unitName”YaYa医师单位号。
+
+YaYa医师，中国首个医生移动学术会议交流平台。1000个医疗单位入驻，70万执业注册医师选择使用。让您参加会议、考试更轻松、高效。
+
+<a href='@bindURL'>点击这里注册或绑定</a>您的YaYa医师账号，参加会议更便捷喔~]]>
+        </content>
+    </reply>
+</auto_replies>

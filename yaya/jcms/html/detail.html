@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> 会议详情 </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/iconfont.css">
+	<link href="css/style.css" rel="stylesheet">
+    <script src="js/jquery.min.js"></script>
+    <script src="js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="js/main.js"></script>
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+    <div class="l-menu content">
+        <div class="l-list">
+            <ul>
+                <li>
+                    <a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">功能</p>
+            <ul>
+                <li>
+                    <a href="metting-step01.html"><i></i><img src="images/icon-left-2.png" alt="" /><span>会议发布</span></a>
+                </li>
+                <li class="cur">
+                    <a href="zypt.html"><i></i><img src="images/icon-left-hover-3.png" alt="" /><span>资源平台</span></a>
+                </li>
+                <li>
+                    <a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">数据</p>
+            <ul>
+                <li>
+                    <a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+                </li>
+                <li>
+                    <a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="l-list">
+            <p class="m-tit">管理</p>
+            <ul>
+                <li>
+                    <a href="hz-hzgl.html"><i></i><img src="images/icon-left-hover-8.png"  alt="" /><span>医生管理</span></a>
+                </li>
+                <li>
+                    <a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+                </li>
+                <li>
+                    <a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+                </li>
+            </ul>
+        </div>
+        <div class="logout-btn"><a href="#">退出账号</a></div>
+    </div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main re-wrap clearfix">
+
+    <div class="detail-box clearfix">
+        <div class="fr">
+            <span class="backPage">
+                <a href="#"><span class="icon iconfont icon-minIcon11"></span>&nbsp;返回上级</a>
+            </span>
+            <span class="detail-status-icon">资源平台共享: <i class="open-btn">已开启</i><i class="icon"></i></span>
+
+        </div>
+        <div class="fl fl-txt">
+            <p class="detail-txt-1">骨科感染的治疗以及预防</p>
+            <p class="detail-box-1">
+                <span >微课</span><i class="rowSpace">|</i><span>骨科</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                会议时间：1小时25分
+            </p>
+        </div>
+    </div>
+
+    <div class="tab-hd clearfix">
+        <ul class="tab-list ">
+            <li class="cur">
+                <a href="detail.html">会议详情<i></i></a>
+            </li>
+            <li>
+                <a href="detail-1.html">用户统计<i></i></a>
+            </li>
+            <li>
+                <a href="detail-2.html">内容统计<i></i></a>
+            </li>
+            <li>
+                <a href="detail-4.html">考题统计<i></i></a>
+            </li>
+            <li>
+                <a href="detail-5.html">问卷统计<i></i></a>
+            </li>
+            <li>
+                <a href="detail-6.html">签到统计<i></i></a>
+            </li>
+            <li>
+                <a href="detail-7.html">视频统计<i></i></a>
+            </li>
+        </ul>
+    </div>
+
+    <!--<div class="fl iframe-box ">-->
+         <!--<iframe id="iframe-1" src="http://www.medcn.cn/mt!getMeetingBrief?meetingid=13568" ></iframe>-->
+    	<!--&lt;!&ndash; <iframe id="iframe-1" src="iframe.html" ></iframe> &ndash;&gt;-->
+        <!--&lt;!&ndash;<iframe id="testIframe" frameborder="0" scrolling="no" src="iframe.html" width="100%" height="120"></iframe>&ndash;&gt;-->
+    <!--</div>-->
+    <script>
+    //高度自适应
+    var iframe = document.getElementById("testIframe");
+    var iframeHeight = function() {
+        var hash = window.location.hash.slice(1), h;
+        if (hash && /height=/.test(hash)) {
+            h = hash.replace("height=", "");
+            iframe.height = h;
+        }
+        setTimeout(iframeHeight, 200);
+    };
+    iframeHeight();
+
+    </script>
+    <div class="fl metting-detail">
+        <div class="metting-detail-item">
+            <div class="metting-detail-cover">
+                <img src="./img/_inputImage2.png" width="100%" alt="">
+            </div>
+            <div class="metting-detail-info clearfix">
+                <div class="metting-detail-time">
+                    2016/7/15 18:00<i class="rowSpace">|</i>时长:1.5小时<i class="style-2 listTips">进行中</i><i class="style-1 listTips">内科</i>
+                </div>
+                <p>本次会议奖励象数：<span class="color-blue">50</span>，还有 <span class="color-blue">260</span> 人能够获得奖励</p>
+                <div class="metting-detail-introBox  clearfix">
+                    <div class="fl">
+                        <img src="./img/hz-detail-img-info.jpg" alt="">
+                    </div>
+                    <div class="oh">
+                        <h4>河南省医学会神经病学分会</h4>
+                        <p>主办方</p>
+                    </div>
+                </div>
+            </div>
+            <div class="metting-detail-content clearfix">
+                <h3 class="mettingTitle"><span>会议简介</span></h3>
+                <div class="metting-detail-introBox metting-detail-introBox-max clearfix">
+                    <div class="fl">
+                        <img src="./img/hz-detail-img-info.jpg" alt="">
+                    </div>
+                    <div class="oh">
+                        <h4>李昆明&nbsp;&nbsp;骨科博士</h4>
+                        <p>福建省骨科医学会</p>
+                    </div>
+                </div>
+                <div class="metting-detail-main">
+                    <p>个人简介: 李昆明，男，博士，教授，主任医师。现任第四军医大学唐都医院神
+                        经外科副主任。长期从事立体定向和功能神经外科工作，积极参与了微电极导
+                        向定向手术治疗帕金森病新技术的引进、创新及推广工作，采用脑深部电刺激技
+                        术（脑起搏器技术）和毁损技术治疗帕金森病、扭转痉挛、原发性震颤、痉挛性
+                        斜颈、舞蹈症患者3000余例，手术疗效明显，并发症发生率低；应用全息、实
+                        时、可视神经导航技术结合微电极导向手术治疗精神病（精神分裂症、躁狂症、
+                        强迫症、抑郁症、焦虑症）、疼痛等取得显著疗效。</p>
+                    <p>课题：《2型糖尿病的三级预防》</p>
+                    <p>讲师：孙丰雷，主治医师，山东省中医院老年病科。</p>
+                    <p>内容简介：</p>
+                    <p>1.糖尿病的诊断及分型；<br />
+                        2.糖尿病的流行病学；<br />
+                        3.糖尿病的三级预防。</p>
+                </div>
+                <div class="metting-detail-state">
+                    <h3 class="title">会议简介</h3>
+                    <p>本站所有会议、视频、科研资料、题库等资料均由内容提供方版权所有，未经允许不可用作其
+                        他商业用途，敬请熟知。</p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="fl metting-detail-rightItem">
+        <!--<div class="wx-box wx-box-noBg  clearfix">-->
+            <!--<a href="#" class="detail-button"><span class="icon iconfont icon-minIcon3"></span>PPT语音会议管理</a>-->
+        <!--</div>-->
+        <div class="wx-box clearfix">
+            <div class="fl">
+                <p class="iconImg"><span class="icon iconfont icon-minIcon15"></span></p>
+                <p>微课管理</p>
+            </div>
+            <div class="oh">
+                <a href="#" class="color-blue"><span class="icon iconfont icon-minIcon9"></span>设置</a>
+            </div>
+        </div>
+        <div class="wx-box clearfix">
+            <div class="fl">
+                <p class="iconImg"><span class="icon iconfont icon-minIcon15"></span></p>
+                <p>视频管理</p>
+            </div>
+            <div class="oh">
+                <a href="#" class="color-blue"><span class="icon iconfont icon-minIcon9"></span>设置</a>
+            </div>
+        </div>
+        <div class="wx-box clearfix">
+            <div class="fl">
+                <p class="iconImg"><span class="icon iconfont icon-minIcon15"></span></p>
+                <p>考试管理</p>
+            </div>
+            <div class="oh">
+                <a href="#" class="color-blue"><span class="icon iconfont icon-minIcon9"></span>设置</a>
+            </div>
+        </div>
+        <div class="wx-box clearfix">
+            <div class="fl">
+                <p class="iconImg"><span class="icon iconfont icon-minIcon15"></span></p>
+                <p>签到管理</p>
+            </div>
+            <div class="oh">
+                <a href="#" class="color-blue"><span class="icon iconfont icon-minIcon9"></span>设置</a>
+            </div>
+        </div>
+        <div class="wx-box clearfix">
+            <div class="fl">
+                <p class="iconImg"><span class="icon iconfont icon-minIcon15"></span></p>
+                <p>课件管理</p>
+            </div>
+            <div class="oh">
+                <a href="#" class="color-blue"><span class="icon iconfont icon-minIcon9"></span>上传课件</a>
+            </div>
+        </div>
+        <div class="wx-box clearfix">
+            <h3>签到地址</h3>
+            <p>广东省广州市越秀区越秀路越秀街越秀大厦B3栋2202</p>
+        </div>
+        <div class="wx-box clearfix">
+            <p class="t-center">
+                <img src="./img/_img-ewm.jpg" alt="">
+            </p>
+            <p class="t-center">
+                H5会议分享链接
+            </p>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

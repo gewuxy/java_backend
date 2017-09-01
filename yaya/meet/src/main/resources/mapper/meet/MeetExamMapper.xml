@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetExamDAO" >
+
+    <select id="getExamHistory" resultType="cn.medcn.meet.dto.ExamHistoryDTO">
+        SELECT th.id,tp.paper_name,th.usedtime,th.score FROM t_meet tm
+        INNER JOIN t_exam_history th ON tm.id = th.meet_id
+        INNER JOIN t_exam_paper tp ON th.paper_id = tp.id
+        WHERE tm.owner_id = #{ownerId} AND th.user_id = #{doctorId} AND th.finished = 1
+    </select>
+
+    <select id="getUserInfo" resultType="cn.medcn.meet.dto.MeetExamDetailDTO">
+        SELECT  tu.id AS userId,tu.nickname,tu.headimg,td.title,th.paper_id,th.score FROM t_exam_history th
+        INNER JOIN t_exam_paper tp ON th.paper_id = tp.id
+        INNER JOIN t_app_user tu ON tu.id = th.user_id
+        LEFT JOIN t_app_user_detail td ON td.user_id = tu.id
+        WHERE th.id = #{historyId} AND tp.owner = #{ownerId} limit 1
+    </select>
+
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/redis http://www.springframework.org/schema/redis/spring-redis.xsd">
+
+
+    <bean id="meetMessageListener" class="cn.medcn.api.listener.MeetMessageListener">
+        <property name="redisTemplate" ref="redisTemplate"/>
+    </bean>
+
+    <bean id="topicContainer" class="org.springframework.data.redis.listener.RedisMessageListenerContainer" destroy-method="destroy">
+        <property name="connectionFactory" ref="jedisConnectionFactory"/>
+        <property name="taskExecutor">
+            <bean class="org.springframework.scheduling.concurrent.ThreadPoolTaskScheduler">
+                <property name="poolSize" value="3"></property>
+            </bean>
+        </property>
+        <property name="messageListeners">
+            <map>
+                <entry key-ref="meetMessageListener">
+                    <bean class="org.springframework.data.redis.listener.ChannelTopic">
+                        <constructor-arg value="meet_message_topic"/>
+                    </bean>
+                </entry>
+            </map>
+        </property>
+    </bean>
+</beans>

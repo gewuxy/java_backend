@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.AudioCourseDetailDAO" >
+
+    <select id="findDetailsByCourseId" resultType="cn.medcn.meet.model.AudioCourseDetail">
+        SELECT * FROM t_audio_course_detail WHERE course_id = #{courseId} ORDER BY sort
+    </select>
+
+
+    <update id="updateBatchDecreaseSort">
+        UPDATE t_audio_course_detail SET sort = sort - 1 WHERE
+        course_id = #{courseId} AND sort >= #{startSort}
+    </update>
+
+    <update id="updateBatchAddSort">
+        UPDATE t_audio_course_detail SET sort = sort+1 WHERE
+        course_id = #{courseId} AND sort >= #{startSort}
+    </update>
+
+    <select id="findViewPptCount" resultType="cn.medcn.meet.dto.AudioHistoryDTO">
+        -- tagNo=0 全部 tagNo=1 本月  tagNo=2 本周
+        SELECT dt.sort as pptSort,count(ah.detail_id)as userCount FROM t_audio_course_detail dt
+        LEFT JOIN t_audio_history ah ON ah.detail_id = dt.id
+        -- AND ah.finished=1
+        <if test="startTime != null and endTime != null">
+            AND ah.end_time BETWEEN #{startTime} and #{endTime}
+        </if>
+        INNER JOIN t_audio_course cs ON cs.id = dt.course_id
+        INNER JOIN t_meet_audio ad ON ad.course_id = cs.id
+        where ad.meet_id = #{meetId}
+        GROUP BY dt.id ORDER BY dt.sort
+    </select>
+
+    <select id="findViewAudioList" resultType="cn.medcn.meet.dto.AudioRecordDTO">
+        SELECT his.user_id as id,u.nickname,u.headimg,ud.unit_name,ud.sub_unit_name,
+        count(his.detail_id)as pptCount,SUM(his.usedtime)as usedtime
+        FROM t_audio_history his
+        INNER JOIN t_app_user u ON u.id = his.user_id
+        LEFT JOIN t_app_user_detail ud ON ud.user_id = u.id
+        WHERE his.meet_id = #{meetId}
+        GROUP BY his.user_id
+    </select>
+
+    <select id="findPPtTotalCount" resultType="cn.medcn.meet.model.AudioCourseDetail">
+        SELECT dt.id,dt.sort,dt.duration from t_meet_audio a, t_audio_course_detail dt
+        where dt.course_id = a.course_id AND a.meet_id=#{meetId}
+    </select>
+
+    <select id="findAudioRecordList" resultType="cn.medcn.meet.dto.AudioRecordDTO">
+        SELECT his.user_id as id,u.nickname,ud.unit_name,ud.sub_unit_name,ud.title,h.`level`,
+        u.province,u.city,grp.group_name,dt.sort,dt.duration,his.usedtime,his.finished,m.meet_name
+        FROM t_audio_history his
+        LEFT JOIN t_audio_course_detail dt ON dt.id = his.detail_id
+        LEFT JOIN t_meet m ON m.id = his.meet_id
+        INNER JOIN t_app_user u ON u.id = his.user_id
+        LEFT JOIN t_app_user_detail ud ON ud.user_id = u.id
+        LEFT JOIN t_hospital h ON h.id = ud.hos_id
+        LEFT JOIN
+        (SELECT g.group_name,ug.doctor_id from t_user_group g
+        LEFT JOIN t_user_doctor_group ug ON ug.pub_user_id = g.pub_user_id
+        AND ug.group_id = g.id WHERE ug.pub_user_id = #{userId}
+        ) grp ON his.user_id = grp.doctor_id
+        WHERE his.meet_id = #{meetId}
+        <if test="id != null">
+            AND his.user_id= #{id}
+        </if>
+        ORDER BY his.user_id,sort
+    </select>
+
+
+    <select id="findViewCount" resultType="java.lang.Integer">
+       -- GROUP BY 只在MySQL5.6 以下版本 有作用
+        SELECT his.user_id FROM t_audio_history his
+        INNER JOIN t_app_user u ON u.id = his.user_id
+        WHERE his.meet_id=#{meetId} GROUP BY his.user_id
+    </select>
+
+    <select id="findFinishedPPtCount" resultType="cn.medcn.meet.dto.AudioRecordDTO">
+        SELECT his.user_id as id,
+        count(his.detail_id)as pptCount
+        FROM t_audio_history his
+        INNER JOIN t_app_user u ON u.id = his.user_id
+        LEFT JOIN t_app_user_detail ud ON ud.user_id = u.id
+        WHERE his.meet_id =#{meetId} and his.finished=1
+        <if test="id != null">
+            AND his.user_id= #{id}
+        </if>
+        GROUP BY his.user_id
+    </select>
+
+</mapper>

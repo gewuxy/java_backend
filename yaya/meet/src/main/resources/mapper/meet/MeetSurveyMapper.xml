@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetSurveyDAO" >
+
+    <select id="getSurveyHistory" resultType="cn.medcn.meet.dto.SurveyHistoryDTO">
+        SELECT th.id,tp.paper_name,th.usedtime FROM t_meet tm
+        INNER JOIN t_survey_history th ON tm.id = th.meet_id
+        INNER JOIN t_survey_paper tp ON tp.id = th.paper_id
+        WHERE tm.owner_id = #{ownerId} AND th.user_id = #{doctorId}
+    </select>
+
+    <select id="findUserInfo" resultType="cn.medcn.meet.dto.MeetSurveyDetailDTO">
+        SELECT  tu.id AS userId,tu.nickname,tu.headimg, td.title,tp.id AS paperId FROM t_survey_history th
+        INNER JOIN t_app_user tu ON th.user_id = tu.id
+        LEFT JOIN t_app_user_detail td ON td.user_id = tu.id
+        INNER JOIN t_survey_paper tp ON tp.id = th.paper_id
+        WHERE th.id = #{historyId} AND tp.owner = #{ownerId} limit 1
+    </select>
+
+    <select id="findGroupUserData" resultType="cn.medcn.meet.dto.AttendSurveyUserDataDTO">
+        SELECT userinfo.*, his.submit_time FROM (
+            SELECT g.id,g.group_name,ug.doctor_id as userId,u.nickname,dt.unit_name,dt.sub_unit_name,
+                  h.`level`,dt.title,u.province,u.city
+            FROM t_user_group g
+            LEFT JOIN t_user_doctor_group ug ON ug.pub_user_id = g.pub_user_id AND ug.group_id = g.id
+            LEFT JOIN t_app_user u on u.id = ug.doctor_id
+            LEFT JOIN t_app_user_detail dt on dt.user_id = u.id
+            LEFT JOIN t_hospital h ON h.id = dt.hos_id
+            WHERE ug.pub_user_id =#{userId} and ug.group_id=#{groupId}
+            )userinfo
+            LEFT JOIN t_survey_history his ON his.user_id = userinfo.userId
+          and  his.meet_id=#{meetId}
+    </select>
+</mapper>

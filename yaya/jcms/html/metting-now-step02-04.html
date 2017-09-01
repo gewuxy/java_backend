@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+	<meta name="renderer" content="webkit"/>
+	<link rel="shortcut icon" href="" type="image/x-icon" />
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> 发布会议 - 视频功能 </title>
+	<meta name="Keywords" content="">
+	<meta name="description" content="">
+	<link href="css/global.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/swiper.css">
+	<link rel="stylesheet" href="css/iconfont.css">
+	<link href="css/daterangepicker.css" rel="stylesheet">
+	<link rel="stylesheet" href="css/wenjuan_ht.css">
+	<link href="css/style.css" rel="stylesheet">
+
+	<script src="js/jquery.min.js"></script>
+	<script src="js/moment.min.js" type="text/javascript"></script>
+	<script src="laydate/laydate.js"></script>
+	<script src="js/slide.js"></script>
+	<script src="js/perfect-scrollbar.jquery.min.js"></script>
+	<script src="js/main.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5.js"></script>
+<![endif]-->
+</head>
+<body>
+
+<!-- aside -->
+<div class="aside p-re-1">
+	<div class="l-menu content">
+		<div class="l-list">
+			<ul>
+				<li>
+					<a href="index.html"><i></i><img src="images/icon-left-1.png" alt="" /><span>首页</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">功能</p>
+			<ul>
+				<li class="cur">
+					<a href="metting-step01.html"><i></i><img src="images/icon-left-hover-2.png" alt="" /><span>会议发布</span></a>
+				</li>
+				<li>
+					<a href="zypt.html"><i></i><img src="images/icon-left-3.png" alt="" /><span>资源平台</span></a>
+				</li>
+				<li>
+					<a href="hz-sftz.html"><i></i><img src="images/icon-left-4.png" alt="" /><span>群发功能</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">数据</p>
+			<ul>
+				<li>
+					<a href="data-stastic.html"><i></i><img src="images/icon-left-6.png" alt="" /><span>会议统计</span></a>
+				</li>
+				<li>
+					<a href="ys-tj.html"><i></i><img src="images/icon-left-7.png" alt="" /><span>医生统计</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="l-list">
+			<p class="m-tit">管理</p>
+			<ul>
+				<li>
+					<a href="hz-hzgl.html"><i></i><img src="images/icon-left-8.png"  alt="" /><span>医生管理</span></a>
+				</li>
+				<li>
+					<a href="zlgl.html"><i></i><img src="images/icon-left-9.png" alt="" /><span>资料管理</span></a>
+				</li>
+				<li>
+					<a href="zhgl.html"><i></i><img src="images/icon-left-10.png" alt="" /><span>账号管理</span></a>
+				</li>
+			</ul>
+		</div>
+		<div class="logout-btn"><a href="#">退出账号</a></div>
+	</div>
+</div>
+<!-- aside end-->
+
+<!-- main -->
+<div class="g-main  mettingForm clearfix">
+
+	<!-- header -->
+	<header class="header">
+		<div class="header-content">
+			<div class="clearfix">
+				<div class="fl clearfix">
+					<img src="images/subPage-header-image-09.png" alt="">
+				</div>
+				<div class="oh">
+					<p><strong>会议发布</strong></p>
+					<p>快速发布在线会议，下载手机app端即可查看PPT、直播、调研、考试等会议</p>
+				</div>
+			</div>
+		</div>
+	</header>
+	<!-- header end -->
+
+
+    <div class="tab-hd">
+
+        <ul class="tab-list clearfix">
+			<li class="cur">
+				<a href="metting-step01.html">会议发布<i></i></a>
+			</li>
+			<li>
+				<a href="metting-02.html">草稿箱<i></i></a>
+			</li>
+			<li>
+				<a href="metting-03.html">已发布会议<i></i></a>
+			</li>
+        </ul>
+    </div>
+
+	<div class="tab-bd">
+
+		<div class=" clearfix metting-process">
+			<div class=" clearfix link-justified metting-process-02">
+				<ul>
+					<li class="cur">创建会议</li>
+					<li>设置功能</li>
+					<li>发布预览</li>
+				</ul>
+			</div>
+		</div>
+
+		<div class="table-top-box clearfix">
+			<a href="metting-now-step02.html" class="mask-le"><span class="icon iconfont icon-minIcon1"></span>微课</a>
+			<a href="metting-now-step02-03.html" class="mask-le "><span class="icon iconfont icon-minIcon3"></span>考试</a>
+			<a href="metting-now-step02-02.html" class="mask-le"><span class="icon iconfont icon-minIcon4"></span>问卷</a>
+			<a href="metting-now-step02-05.html" class="mask-le"><span class="icon iconfont icon-minIcon5"></span>签到</a>
+			<a href="metting-now-step02-04.html" class="mask-le cur"><span class="icon iconfont icon-minIcon2"></span>视频</a>
+		</div>
+
+
+		<div class="formrow-hr"></div>
+		<div class="clearfix" style="margin:40px 0 0 25px;">
+			<a href="javascript:;" class="formButton fx-btn-2">添加视频</a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:;" class="formButton fx-btn-1">新建文件夹</a>
+			<div class="metting-bootstrap">
+				<a href="#">当前目录</a><i class="rowSpace">\</i><a href="#">第二级文件目录</a><i class="rowSpace">\</i><a href="#" class="color-blue">第三级文件目录</a>
+			</div>
+		</div>
+		<div class="clearfix" style="margin:40px 20px 60px 25px;">
+			<table class="table-box-3 mettingForm">
+				<thead>
+				<tr>
+					<td class="tb-w-1-title"><i>名字</i></td>
+					<td class="tb-w-2">总时间（秒）</td>
+					<td class="tb-w-6">消耗流量（M）</td>
+					<td class="tb-w-2 p-le-1">操作</td>
+				</tr>
+				</thead>
+				<tbody>
+				<tr>
+					<td class="tb-w-1-title">
+						<a href=""><span class="icon iconfont icon-minIcon8"></span>文件夹标题一</a>
+					</td>
+					<td class="tb-w-2"></td>
+					<td class="tb-w-6"></td>
+					<td class="tb-w-2 p-le-1">
+						<a href="javascript:;" class="yl fx-btn-3">修改</a><i class="rowSpace">|</i><a class="fx-btn-2 zai" href="javascript:;">删除</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tb-w-1-title">
+						<a href=""><span class="icon iconfont icon-minIcon8"></span>骨科常见通病的处理</a>
+					</td>
+					<td class="tb-w-2"></td>
+					<td class="tb-w-6"></td>
+					<td class="tb-w-2 p-le-1">
+						<a href="javascript:;" class="yl fx-btn-3">修改</a><i class="rowSpace">|</i><a class="fx-btn-2 zai" href="javascript:;">删除</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tb-w-1-title">
+						<a href=""><span class="icon iconfont icon-minIcon2"></span>骨科常见通病的处理</a>
+					</td>
+					<td class="tb-w-2">222秒</td>
+					<td class="tb-w-6">URL无流量消耗</td>
+					<td class="tb-w-2 p-le-1">
+						<a href="javascript:;" class="yl fx-btn-4">修改</a><i class="rowSpace">|</i><a class="fx-btn-2 zai" href="javascript:;">删除</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tb-w-1-title">
+						<a href=""><span class="icon iconfont icon-minIcon2"></span>骨科常见通病的处理</a>
+					</td>
+					<td class="tb-w-2">222秒</td>
+					<td class="tb-w-6">URL无流量消耗</td>
+					<td class="tb-w-2 p-le-1">
+						<a href="javascript:;" class="yl fx-btn-4">修改</a><i class="rowSpace">|</i><a class="fx-btn-2 zai" href="javascript:;">删除</a>
+					</td>
+				</tr>
+				<tr>
+					<td class="tb-w-1-title">
+						<a href=""><span class="icon iconfont icon-minIcon2"></span>骨科常见通病的处理</a>
+					</td>
+					<td class="tb-w-2">222秒</td>
+					<td class="tb-w-6">URL无流量消耗</td>
+					<td class="tb-w-2 p-le-1">
+						<a href="javascript:;" class="yl fx-btn-4">修改</a><i class="rowSpace">|</i><a class="fx-btn-2 zai" href="javascript:;">删除</a>
+					</td>
+				</tr>
+
+				</tbody>
+			</table>
+		</div>
+
+
+
+
+		<div class="buttonArea clearfix" style="margin: 20px 25px 40px;">
+			<div class="formrow">
+				<div class="fr clearfix">
+					<!--<input type="button" id="" class="formButton formButton-max" value="保存草稿">-->
+				</div>
+				<div class="fl clearfix">
+					<input type="button" id="" class="formButton formButton-max" value="上一步">&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" id="" class="formButton formButton-max" value="完成">
+				</div>
+			</div>
+		</div>
+
+
+
+
+
+	</div>
+</div>
+<!--mask-wrap-->
+<div class="mask-wrap">
+	<div class="dis-tbcell">
+		<div class="distb-box distb-box-min fx-mask-box-1">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">新建文件夹</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+			<div class="fx-mask-box clearfix t-center" >
+				<span class="fSize-max td-title">分组名称</span><span><input type="text" class="text-input" placeholder="18个中文字符以内（必填）"></span>
+			</div>
+			<div class="sb-btn-box p-btm-1">
+				<button class="close-button-fx cur">确认</button>
+				<button class="close-button-fx">取消</button>
+			</div>
+		</div>
+		<div class="distb-box distb-box-addViedoBox fx-mask-box-2">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">添加视频</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+			<div class="fx-mask-box clearfix">
+				<div class="formrow clearfix">
+					<label for="" class="formTitle">文件名</label>
+					<div class="formControls">
+
+							<input type="text" class="textInput" maxlength="50" placeholder="视频名">
+
+					</div>
+				</div>
+				<div class="formrow clearfix">
+					<label for="" class="formTitle">视频URL</label>
+					<div class="formControls">
+
+							<input type="text" class="textInput" maxlength="50" placeholder="未设置">
+
+					</div>
+				</div>
+				<div class="formrow clearfix">
+					<label for="" class="formTitle">总时间（秒）</label>
+					<div class="formControls">
+
+							<input type="text" class="textInput" maxlength="50" placeholder="333">
+
+					</div>
+				</div>
+			</div>
+			<div class="sb-btn-box p-btm-1">
+				<button class="close-button-fx cur">确认</button>
+				<button class="close-button-fx">取消</button>
+			</div>
+		</div>
+		<div class="distb-box distb-box-min fx-mask-box-3">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">设置文件夹</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+			<div class="fx-mask-box clearfix t-center" >
+				<span class="fSize-max td-title">分组名称</span><span><input type="text" class="text-input" placeholder="18个中文字符以内（必填）" value="已设置的文件名"></span>
+			</div>
+			<div class="sb-btn-box p-btm-1">
+				<button class="close-button-fx cur">确认</button>
+				<button class="close-button-fx">取消</button>
+			</div>
+		</div>
+		<div class="distb-box distb-box-addViedoBox fx-mask-box-4">
+			<div class="mask-hd clearfix">
+				<h3 class="font-size-1">设置视频</h3>
+				<span class="close-btn-fx"><img src="images/cha.png"></span>
+			</div>
+			<div class="fx-mask-box clearfix">
+				<div class="formrow clearfix">
+					<label for="" class="formTitle">文件名</label>
+					<div class="formControls">
+
+						<input type="text" class="textInput" maxlength="50" placeholder="视频名" value="第一课-前列腺发烧">
+
+					</div>
+				</div>
+				<div class="formrow clearfix">
+					<label for="" class="formTitle">视频URL</label>
+					<div class="formControls">
+
+						<input type="text" class="textInput" maxlength="50" placeholder="未设置" value="http://abc.com">
+
+					</div>
+				</div>
+				<div class="formrow clearfix">
+					<label for="" class="formTitle">总时间（秒）</label>
+					<div class="formControls">
+
+						<input type="text" class="textInput" maxlength="50" placeholder="333" value="2345">
+
+					</div>
+				</div>
+			</div>
+			<div class="sb-btn-box p-btm-1">
+				<button class="close-button-fx cur">确认</button>
+				<button class="close-button-fx">取消</button>
+			</div>
+		</div>
+	</div>
+</div>
+<!--/mask-wrap end-->
+
+<script src="js/mettingFaq.js"></script>
+<script>
+	$(function(){
+
+
+
+
+
+		//表单模拟单选框选中
+		var formRadio = $(".formImgRadio-item");
+
+		formRadio.off('click').on('click', function () {
+			if ($(this).hasClass("current")) {
+				$(this).removeClass("current");
+			} else {
+				$(this).addClass("current");
+			}
+			$(this).find("input[name='formRadio']").attr("checked",$(this).hasClass("current"));
+			return false;
+		});
+
+
+
+
+
+
+
+
+
+
+	});
+
+
+
+</script>
+
+
+</body>
+</html>

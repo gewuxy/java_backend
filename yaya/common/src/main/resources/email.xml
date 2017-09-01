@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<emails>
+    <email id="feedback">
+        <load>
+            <![CDATA[
+		<div style=" padding:10px;font-size:14px;color:#1b3861; font-family:Microsoft YaHei,Helvetica">
+		    <p style="line-height:38px;">尊敬的敬信药草园管理员:</p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 20px;word-spacing: 5px;">
+			您好 !
+			</p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 25px;
+			word-spacing: 5px;">
+			@content
+			</p>
+			<p style="text-indent:2em;word-break: break-all;line-height:22px;
+			word-spacing: 5px; color:#666">这是一封由<a href="http://www.medcn.com" target="_blank">药草园</a>系统发出的邮件,请勿回复。如有疑问请<a href="http://www.medcn.com/about
+			" target="_blank">联系我们</a>。</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:left; margin:0;">产品 : @product</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:left; margin:0;">昵称 : @nickName</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:left; margin:0;">Q  Q : @qq</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:left; margin:0;">E-mail : @email</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102);text-align:left;margin:0;">@date</p>
+		</div>
+	]]>
+        </load>
+    </email>
+
+    <email id="pwdRest">
+        <load>
+            <![CDATA[
+		<div style=" padding:10px;font-size:14px;color:#1b3861; font-family:Microsoft YaHei,Helvetica">
+		    <p style="line-height:38px;">亲爱的用户@user:</p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 20px;word-spacing: 5px;">
+			您 好 !
+			请使用下面的链接，重置您的密码。</p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 20px;
+			word-spacing: 5px;">
+			<a href="@url">@url</a></p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 22px;
+			word-spacing: 5px;">如果该链接无法点击，请直接拷贝以上链接到浏览器地址栏中访问。</p>
+			<p style="text-indent:2em ;
+			word-spacing: 5px;">(注意:请您在收到邮件24个小时内使用，否则该链接将会失效。)</p>
+			<p style="text-indent:2em;word-break: break-all;line-height:22px;
+			word-spacing: 5px; color:#666">这是一封由<a href="http://www.medcn.com" target="_blank">药草园</a>系统发出,请勿回复，如有疑问请<a href="http://www.medcn.com/about
+			" target="_blank">联系我们</a>。</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:right; margin:0;">敬信药草园</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102);text-align:right;margin:0;">@date</p>
+		</div>
+	]]>
+        </load>
+    </email>
+
+    <email id="bindAccount">
+        <load>
+            <![CDATA[
+		<div style=" padding:10px;font-size:14px;color:#1b3861; font-family:Microsoft YaHei,Helvetica">
+		    <p style="line-height:38px;">亲爱的用户@user:</p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 20px;word-spacing: 5px;">
+			您 好 !
+			请使用下面的链接，绑定您的邮箱账号。</p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 20px;
+			word-spacing: 5px;">
+			<a href="@url">@url</a></p>
+			<p style="text-indent:2em;word-break: break-all;line-height: 22px;
+			word-spacing: 5px;">如果该链接无法点击，请直接拷贝以上链接到浏览器地址栏中访问。</p>
+			<p style="text-indent:2em ;
+			word-spacing: 5px;">(注意:请您在收到邮件24个小时内使用，否则该链接将会失效。)</p>
+			<p style="text-indent:2em;word-break: break-all;line-height:22px;
+			word-spacing: 5px; color:#666">这是一封由<a href="http://www.medcn.com" target="_blank">药草园</a>系统发出,请勿回复，如有疑问请<a href="http://www.medcn.com/about
+			" target="_blank">联系我们</a>。</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:right; margin:0;">敬信药草园</p>
+			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102);text-align:right;margin:0;">@date</p>
+		</div>
+	]]>
+        </load>
+    </email>
+
+    <email id="versionUpdateNotify">
+        <load>
+            <![CDATA[
+                <p>
+                    <span style="font-size: 16px;font-family:&#39;等线 Light&#39;">尊敬的YaYa医师用户：</span>
+                </p>
+                <p style="text-indent: 32px">
+                    <span style="font-size:16px;font-family:&#39;等线 Light&#39;">感谢您对YaYa医师的支持与信赖！</span>
+                </p>
+                <p style="text-indent: 32px">
+                    <span style="font-size:16px;font-family:&#39;等线 Light&#39;">从2013到2017，从第一位用户、第一个单位号到如今70万医师和千家单位，YaYa医师团队始终在产品功能、用户体验和服务上精益求精，致力打造最专业的医学教育培训平台。</span>
+                </p>
+                <p style="text-indent: 32px">
+                    <span style="font-size:16px;font-family:&#39;等线 Light&#39;">2017</span><span style="font-size:16px;font-family:&#39;等线 Light&#39;">年7月10日，YaYa医师7.0版本全新上线！！！</span>
+                </p>
+                <p style="text-indent: 32px">
+                    <strong><span style="font-size:16px;font-family:&#39;等线 Light&#39;">与此同时，7.0之前的版本将于7月31日全面停止数据更新服务，为了不影响您的使用，请您及时前往各大应用商店进行更新。</span></strong>
+                </p>
+                <p style="text-indent: 32px">
+                    <span style="font-size:16px;font-family:&#39;等线 Light&#39;">&nbsp;</span>
+                </p>
+                <p style="text-align:right">
+                    <a><span style="font-size:16px;font-family:&#39;等线 Light&#39;">YaYa</span></a><span style="font-size:16px;font-family:&#39;等线 Light&#39;">医师团队</span>
+                </p>
+                <p style="text-align:right">
+                    <span style="font-size:16px;font-family: &#39;等线 Light&#39;">敬信科技</span>
+                </p>
+                <p style="text-align:right">
+                    <span style="font-size:16px;font-family:&#39;等线 Light&#39;">2017</span><span style="font-size:16px;font-family:&#39;等线 Light&#39;">年7月17日</span>
+                </p>
+	]]>
+        </load>
+    </email>
+</emails>

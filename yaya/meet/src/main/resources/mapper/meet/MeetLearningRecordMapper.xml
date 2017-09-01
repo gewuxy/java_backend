@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.MeetLearningRecordDAO">
+    <!-- 查询用户学习进度 -->
+    <select id="findLearningRecordList" resultType="cn.medcn.meet.model.MeetLearningRecord">
+        SELECT m.*,r.complete_progress FROM (
+          SELECT meet_id,function_id FROM t_meet_module  WHERE meet_id=#{meetId}
+        ) m LEFT JOIN t_meet_learning_record r
+         ON r.function_id = m.function_id AND r.meet_id = #{meetId} AND r.user_id=#{userId}
+         ORDER BY m.function_id
+    </select>
+
+   </mapper>

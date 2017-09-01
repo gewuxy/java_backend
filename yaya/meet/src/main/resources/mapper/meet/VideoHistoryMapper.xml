@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.VideoHistoryDAO" >
+
+    <select id="findVProgressByMeetId" resultType="cn.medcn.meet.dto.VideoProgressDTO">
+        SELECT dt.id,dt.`name`,u.nickname,dt.duration,h.usedtime FROM t_video_history h
+        LEFT JOIN t_video_course_detail dt ON dt.id = h.detail_id
+        LEFT JOIN t_video_course c ON c.id = h.course_id
+        INNER JOIN t_app_user u ON u.id = h.user_id
+        WHERE dt.type=1 AND h.meet_id=#{meetId}
+    </select>
+
+
+    <select id="findUserVideoWatchTime" resultType="java.lang.Integer">
+        SELECT SUM(usedtime) FROM t_video_history WHERE meet_id=#{meetId} AND user_id=#{userId}
+    </select>
+
+    <select id="findVideoTotalTime" resultType="java.lang.Integer">
+       SELECT  SUM(duration) FROM t_meet_video v LEFT JOIN t_video_course_detail d
+       on d.course_id = v.course_id where v.meet_id=#{meetId} and d.type=1
+    </select>
+</mapper>

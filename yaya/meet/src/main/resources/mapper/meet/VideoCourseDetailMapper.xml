@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.VideoCourseDetailDAO" >
+
+    <select id="findRootDetail" resultType="cn.medcn.meet.model.VideoCourseDetail">
+        SELECT id, pre_id, course_id, name, type, url, video_type, duration FROM t_video_course_detail
+        WHERE course_id = #{courseId} AND pre_id = 0
+        ORDER BY id
+    </select>
+
+    <select id="findVideoRecordByMeetId" resultType="cn.medcn.meet.dto.VideoCourseRecordDTO">
+        SELECT dt.id,dt.`name`,dt.duration,count(h.user_id)as totalCount FROM t_video_history h
+        LEFT JOIN t_video_course_detail dt ON dt.id = h.detail_id AND dt.type=1
+        LEFT JOIN t_video_course c ON h.course_id = c.id
+        WHERE h.meet_id=#{meetId} GROUP BY dt.id
+    </select>
+</mapper>

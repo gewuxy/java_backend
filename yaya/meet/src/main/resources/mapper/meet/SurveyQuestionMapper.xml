@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.SurveyQuestionDAO" >
+
+    <select id="findQuestionsByPaperId" resultType="cn.medcn.meet.model.SurveyQuestion">
+        SELECT * from t_survey_question WHERE paper_id = #{paperId} ORDER BY sort
+    </select>
+    
+    <select id="findSurveyDatasByMeetId" resultType="cn.medcn.meet.model.SurveyQuestion">
+        SELECT q.* FROM t_survey_question q  LEFT JOIN t_meet_survey s ON s.paper_id=q.paper_id
+        WHERE s.meet_id=#{meetId}
+    </select>
+
+    <select id="findSurveyByMeetId" resultType="cn.medcn.meet.dto.SurveyRecordDTO">
+        SELECT q.*,m.meet_name,count(h.user_id)as totalCount FROM t_survey_question q
+        LEFT JOIN t_meet_survey s ON s.paper_id=q.paper_id
+        INNER JOIN t_meet m ON m.id = s.meet_id
+        LEFT JOIN t_survey_history h ON h.meet_id = s.meet_id
+        WHERE s.meet_id=#{meetId} GROUP BY q.id
+    </select>
+
+    <select id="findQuestionSort" resultType="java.lang.Integer">
+        SELECT q.sort FROM t_meet_survey s
+        LEFT JOIN t_survey_question q ON q.paper_id = s.paper_id
+        WHERE s.meet_id=#{meetId} GROUP BY q.sort
+    </select>
+</mapper>

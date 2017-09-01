@@ -1,0 +1,105 @@
+/*�ײ�-��ע����ϵ*/
+.weixin {
+    background-color: #4dc0ec;
+    width: 100%;
+    float: left;
+    height: 416px;
+}
+.weixin .gzwm {
+    font-size: 30px;
+    color: #ffffff;
+    padding-top: 50px;
+    text-align: center;
+}
+.weixin-fwh,.weixin-dyh{
+    margin-top: 10px;
+    width: 420px;
+    height: 135px;
+    margin-left:36px;
+    margin-right: 36px;
+    padding-top: 80px;
+    background-repeat: no-repeat;
+    background-position: left center;
+}
+
+.weixin-fwh {
+    float:left;
+    background-image:url(../../images/v2/weixin-fwh.png);
+}
+.weixin-fwh p{
+    line-height: 36px;
+}
+.weixin-dyh{
+    float:right;
+    background-image:url(../../images/v2/weixin-dyh.png);
+}
+.weixin-dyh p{
+    line-height: 36px;
+}
+.weixin .ewm p {
+    font-size: 18px;
+    color: #ffffff;
+    padding-left: 160px;
+}
+.weixin .weibo .weibohao {
+    width: 512px;
+    float: left;
+    text-align: right;
+    height: 30px;
+    line-height: 30px;
+    color: #ffffff;
+}
+.lianxidh{
+    float:left;
+    width:100%;
+    height:416px;
+    background-image:url(../../images/v2/lianxidh.png);
+    color: #ffffff;
+}
+.lianxidh .number {
+    background-image: url(../../images/v2/lianxidh-tb.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-top: 70px;
+    height: 70px;
+}
+.lianxidh .lxwm {
+    margin-top: 30px;
+    text-align: center;
+    font-size: 30px;
+}
+.lianxidh .lxhm {
+    background-image: url(../../images/v2/number.png);
+    background-repeat: no-repeat;
+    background-position: center center;
+    margin-top: 20px;
+    height: 107px;
+    text-align: center;
+    font-size: 14px;
+    padding-top: 16px;
+}
+
+.lxhm p {
+    line-height:36px;
+}
+
+
+
+/*�ײ�-foot*/
+.footer {
+    font-size: 14px;
+    color: #4c4c4c;
+    line-height: 30px;
+    float: left;
+    width: 100%;
+    text-align: center;
+    margin-bottom: 20px;
+    border-top-width: 1px;
+    border-top-style: solid;
+    border-top-color: #cccccc;
+    padding-top: 20px;
+}
+.footer a{
+    color: #4c4c4c;
+    margin-right: 10px;
+}
