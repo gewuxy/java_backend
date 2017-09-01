@@ -49,7 +49,7 @@
 
     <select id="findPublishedSubList" resultType="cn.medcn.meet.dto.MeetFolderDTO">
        SELECT t.id,t.infinity_name AS meet_name,NULL AS publish_time,0 AS type,
-       (select COUNT(id) FROM t_infinity_tree_detail WHERE infinity_id = t.id) AS meet_count
+       (select COUNT(m.id) FROM t_infinity_tree_detail d LEFT JOIN t_meet m ON d.resource_id = m.id WHERE infinity_id = t.id AND m.state BETWEEN 1 AND 3) AS meet_count
        FROM t_infinity_tree t
        WHERE t.user_id = #{masterId} AND t.preid = #{preId}
         UNION
