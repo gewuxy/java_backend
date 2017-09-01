@@ -1398,8 +1398,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
     public void saveOrUpdateLearnRecord(MeetLearningRecord record) {
         String meetId = record.getMeetId();
         Integer userId = record.getUserId();
-        int ppt_funcId = MeetLearningRecord.functionName.PPT.getFunId();
-        if (record.getFunctionId() != ppt_funcId) {
+        int ppt_funcId = MeetModule.ModuleFunction.PPT.getFunId();
+        if (record.getFunctionId() != ppt_funcId
+                && record.getFunctionId() != MeetModule.ModuleFunction.VIDEO.getFunId()) {
             record.setCompleteProgress(100);
         }
 
@@ -1500,16 +1501,18 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         float remainRate = 1f;//剩余模块占比
         float pptRate = 0.5f;//ppt模块占比
         int avgSize = records.size();//记录条数
-        int currentProgress; //每条记录当前的进度
+        int currentProgress = 0; //每条记录当前的进度
 
         for (MeetLearningRecord record : records){
-            currentProgress = record.getCompleteProgress();
-            if (record.getFunctionId() == MeetModule.ModuleFunction.PPT.getFunId()){
-                completeProgress += (records.size() > 1 ? pptRate : remainRate) * currentProgress;
-                avgSize = avgSize - 1;
-                remainRate = pptRate;
-            } else {
-                completeProgress += (records.size() > 1 ? remainRate / avgSize : 1) * currentProgress;
+            if(record.getCompleteProgress() != null) {
+                currentProgress = record.getCompleteProgress();
+                if (record.getFunctionId() == MeetModule.ModuleFunction.PPT.getFunId()){
+                    completeProgress += (records.size() > 1 ? pptRate : remainRate) * currentProgress;
+                    avgSize = avgSize - 1;
+                    remainRate = pptRate;
+                } else {
+                    completeProgress += (records.size() > 1 ? remainRate / avgSize : 1) * currentProgress;
+                }
             }
         }
         return Math.round(completeProgress > 100 ? 100 : completeProgress);
