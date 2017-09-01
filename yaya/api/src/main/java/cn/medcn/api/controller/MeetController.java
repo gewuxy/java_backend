@@ -387,7 +387,7 @@ public class MeetController extends BaseController {
         if (totalTime > 0) {
             completeCount = Math.round((float) watchTime / totalTime * 100);
         }
-        Integer funcId = MeetLearningRecord.functionName.VIDEO.getFunId();
+        Integer funcId = MeetModule.ModuleFunction.VIDEO.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(userId, meetId, funcId);
         learningRecord.setCompleteProgress(completeCount);
         learningRecord.setUsedTime(new Long(watchTime));
