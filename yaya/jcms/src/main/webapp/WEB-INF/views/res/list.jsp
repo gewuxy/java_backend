@@ -198,7 +198,7 @@
             </div>
             <div class="mask-share-box">
                 <p class="top-txt color-black"><span id="requiredPrefix"></span><i class="color-blue" id="requiredCredits"></i>&nbsp;是否立即转载？</p>
-                <p>账户剩余<span class="color-black" id="leftCredits">0</span>象数，可继续<a href="" class="color-blue">充值</a>增加象数值</p>
+                <p>账户剩余<span class="color-black" id="leftCredits">0</span>象数，可继续<a href="${ctx}/mng/account/xsInfo" class="color-blue">充值</a>增加象数值</p>
             </div>
             <div class="sb-btn-box p-btm-1 t-right">
                 <button class="close-button-fx cur" id="reprintBtn">确认</button>
