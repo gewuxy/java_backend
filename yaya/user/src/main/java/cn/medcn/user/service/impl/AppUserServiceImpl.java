@@ -443,7 +443,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
         //获取用户信息
         UnitInfoDTO unitInfoDTO = appUserDAO.findUnitInfo(pageable.getParams());
-        if (unitInfoDTO != null && !"".equals(unitInfoDTO)) {
+        if (unitInfoDTO != null) {
             //获取资料列表
             List<MaterialDTO> materialDTOList = appUserDAO.findMaterialDTOList(pageable.getParams());
             if (!CheckUtils.isEmpty(materialDTOList)){
