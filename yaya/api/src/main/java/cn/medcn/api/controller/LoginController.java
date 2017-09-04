@@ -111,6 +111,7 @@ public class LoginController extends BaseController{
      * @param username
      * @param password
      * @param openid 当openid不为空时，执行绑定微信号功能
+     * @param masterId 定制版需要传递的单位号ID
      * @param request
      * @return
      * @throws SystemException
@@ -118,7 +119,7 @@ public class LoginController extends BaseController{
      */
     @RequestMapping(value = "/login")
     @ResponseBody
-    public String login(String username, String password, String openid,HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
+    public String login(String username, String password, String openid, Integer masterId, HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
         if (StringUtils.isEmpty(username)) {
             return error(SpringUtils.getMessage("user.username.notnull"));
         }
@@ -173,6 +174,10 @@ public class LoginController extends BaseController{
             }
             user.setUnionid(oAuthDTO.getUnionid());
             user.setWxUserInfo(wxUserInfo);
+        }
+        //如果有masterId 则给用户增加指定的单位号的关注
+        if (masterId != null && masterId != 0){
+            appUserService.executeAttention(user.getId(), masterId);
         }
         AppUserDTO dto = updateUserInfoAndGetDTO(user,request);
         return success(dto);
