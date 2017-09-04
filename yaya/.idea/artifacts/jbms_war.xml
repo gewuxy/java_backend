@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="jbms:war">
-    <output-path>$PROJECT_DIR$/jbms/target</output-path>
-    <root id="archive" name="jbms.war">
-      <element id="artifact" artifact-name="jbms:war exploded" />
-    </root>
-  </artifact>
-</component>

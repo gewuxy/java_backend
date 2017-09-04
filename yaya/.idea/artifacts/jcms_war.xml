@@ -1,8 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="jcms:war">
-    <output-path>$PROJECT_DIR$/jcms/target</output-path>
-    <root id="archive" name="jcms.war">
-      <element id="artifact" artifact-name="jcms:war exploded" />
-    </root>
-  </artifact>
-</component>
