@@ -260,7 +260,14 @@ public interface MeetService extends BaseService<Meet> {
      * @param meetId
      * @return
      */
-    void doPublish(String meetId,Integer saveAction) throws SystemException;
+    void doPublish(String meetId) throws SystemException;
+
+    /**
+     * 保存草稿会议
+     * @param meetId
+     * @throws SystemException
+     */
+    void saveDraftMeet(String meetId) throws SystemException;
 
     /**
      * 检测用户是否可以参与会议
@@ -365,13 +372,6 @@ public interface MeetService extends BaseService<Meet> {
     MeetInfoDTO findFinalMeetInfo(String meetId, Integer userId);
 
     /**
-     * 查询app首页推荐会议
-     * @param pageable
-     * @return
-     */
-    MyPage<MeetFolderDTO> findRecommendMeetFolder(Pageable pageable);
-
-    /**
      * 微信推荐会议
      * @param userId
      * @return
@@ -386,7 +386,54 @@ public interface MeetService extends BaseService<Meet> {
     // 查询模块课程ID
     Integer findModuleCourseId(MeetModule module);
 
+    /**
+     * 复制会议模块课程及明细
+     * @param oldMeetId
+     * @param newMeetId
+     * @throws SystemException
+     */
+    void copyMeetModuleCourse(String oldMeetId, String newMeetId) throws SystemException;
 
+    /**
+     * 复制会议ppt语音课程及明细
+     * @param oldCourseId
+     * @param newModuleId
+     * @param newMeetId
+     */
+    void copyAudioCourse(Integer oldCourseId, Integer newModuleId, String newMeetId) ;
+
+    /**
+     * 复制会议视频课程及明细
+     * @param oldCourseId
+     * @param newModuleId
+     * @param newMeetId
+     */
+    void copyVideoCourse(Integer oldCourseId, Integer newModuleId, String newMeetId);
+
+    /**
+     * 复制会议考题数据
+     * @param oldExam
+     * @param newModuleId
+     * @param newMeetId
+     */
+    void copyExam(MeetExam oldExam, Integer newModuleId, String newMeetId);
+
+    /**
+     * 复制会议问卷数据
+     * @param oldPaperId
+     * @param newModuleId
+     * @param newMeetId
+     */
+    void copySurvey(Integer oldPaperId, Integer newModuleId, String newMeetId);
+
+    /**
+     * 复制会议签到数据
+     * @param oldMeetId
+     * @param newMeetId
+     * @param oldModuleId
+     * @param newModuleId
+     */
+    void copyMeetSign(String oldMeetId, String newMeetId, Integer oldModuleId, Integer newModuleId);
 }
 
 

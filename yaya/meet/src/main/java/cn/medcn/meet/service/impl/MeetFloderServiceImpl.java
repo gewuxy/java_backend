@@ -212,4 +212,22 @@ public class MeetFloderServiceImpl extends BaseServiceImpl<InfinityTree> impleme
         }
     }
 
+    /**
+     * 复制会议文件夹
+     * @param oldMeetId
+     * @param newMeetId
+     * @param meetName
+     */
+    public void copyMeetFolder(String oldMeetId, String newMeetId, String meetName) {
+        InfinityTreeDetail detail = new InfinityTreeDetail();
+        detail.setResourceId(oldMeetId);
+        InfinityTreeDetail treeDetail = selectTreeDetail(detail);
+        if (treeDetail != null) {
+            treeDetail.setId(null);
+            treeDetail.setResourceId(newMeetId);
+            treeDetail.setResourceName(meetName);
+            insertDetail(treeDetail);
+        }
+    }
+
 }

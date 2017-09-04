@@ -8,4 +8,11 @@ import cn.medcn.meet.model.MeetMaterial;
  */
 public interface MeetMaterialService extends BaseService<MeetMaterial> {
 
+    /**
+     * 复制会议资料文件
+     * @param oldMeetId
+     * @param newMeetId
+     * @return
+     */
+    void copyMeetMaterial(String oldMeetId, String newMeetId);
 }

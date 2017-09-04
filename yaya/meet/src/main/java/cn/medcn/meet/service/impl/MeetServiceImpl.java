@@ -13,10 +13,7 @@ import cn.medcn.goods.service.CreditsService;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
-import cn.medcn.meet.service.MeetFolderService;
-import cn.medcn.meet.service.MeetMaterialService;
-import cn.medcn.meet.service.MeetNotifyService;
-import cn.medcn.meet.service.MeetService;
+import cn.medcn.meet.service.*;
 import cn.medcn.meet.support.MeetCheckHelper;
 import cn.medcn.user.dao.GroupDAO;
 import cn.medcn.user.dao.PubUserDocGroupDAO;
@@ -42,6 +39,9 @@ import java.util.*;
  */
 @Service
 public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetService {
+
+    @Value("${app.file.base}")
+    private String appFileBase;
 
     @Autowired
     private MeetDAO meetDAO;
@@ -115,8 +115,6 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
     @Autowired
     private MeetRewardHistoryDAO meetRewardHistoryDAO;
 
-    @Value("${app.file.base}")
-    private String appFileBase;
 
     @Autowired
     protected MeetNotifyService meetNotifyService;
@@ -126,6 +124,21 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
 
     @Autowired
     private MeetFolderService meetFolderService;
+
+    @Autowired
+    private AudioService audioService;
+
+    @Autowired
+    private VideoService videoService;
+
+    @Autowired
+    private ExamService examService;
+
+    @Autowired
+    private SurveyService surveyService;
+
+    @Autowired
+    private SignService signService;
 
     @Override
     public Mapper<Meet> getBaseMapper() {
@@ -890,14 +903,14 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         }
 
         // 学分设置
-        MeetSetting settingCre = new MeetSetting();
-        settingCre.setMeetId(meetId);
+        MeetSetting settingCredit = new MeetSetting();
+        settingCredit.setMeetId(meetId);
         if (setting.getRewardCredit() != null && setting.getRewardCredit() != 0) {
-            settingCre.setPropMode(setting.getRewardCredit());
-            settingCre.setPropValue(setting.getEduCredits());
-            settingCre.setRewardLimit(setting.getAwardCreditLimit());
-            settingCre.setPropType(CREDIT_TYPE);
-            meetSettingDAO.insert(settingCre);
+            settingCredit.setPropMode(setting.getRewardCredit());
+            settingCredit.setPropValue(setting.getEduCredits());
+            settingCredit.setRewardLimit(setting.getAwardCreditLimit());
+            settingCredit.setPropType(CREDIT_TYPE);
+            meetSettingDAO.insert(settingCredit);
         }
     }
 
@@ -1180,21 +1193,41 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         return pos;
     }
 
-    // 发布会议动作
-    private interface actionNumber{
-        int saveDraft = 0; // 保存草稿
-        int finish = 1; // 完成发布
-    }
 
     /**
      * 发布会议
      * @param meetId
-     * @param saveAction 保存动作 0表示保存草稿 1表示完成发布
      * @return
      */
     @Override
     @CacheEvict(value = DEFAULT_CACHE, key = "'meetinfo_'+#meetId")
-    public void doPublish(String meetId,Integer saveAction) throws SystemException {
+    public void doPublish(String meetId) throws SystemException {
+        Meet meet = findMeetInfoById(meetId);
+        MeetProperty condition = new MeetProperty();
+        condition.setMeetId(meetId);
+        MeetProperty property = meetPropertyDAO.selectOne(condition);
+        if (property.getStartTime().before(new Date())) {
+            meet.setState(Meet.MeetType.IN_USE.getState());
+        } else {
+            meet.setState(Meet.MeetType.NOT_START.getState());
+        }
+        meetDAO.updateByPrimaryKeySelective(meet);
+    }
+
+
+    /**
+     * 保存草稿会议
+     * @param meetId
+     */
+    @Override
+    @CacheEvict(value = DEFAULT_CACHE, key = "'meetinfo_'+#meetId")
+    public void saveDraftMeet(String meetId) throws SystemException {
+        Meet meet = findMeetInfoById(meetId);
+        meet.setState(Meet.MeetType.DRAFT.getState());
+        meetDAO.updateByPrimaryKeySelective(meet);
+    }
+
+    private Meet findMeetInfoById(String meetId) throws SystemException {
         List<MeetModule> modules = findModules(meetId);
         //在会议拥有考试 问卷 或者签到的时候 需要检测是否设置好信息
         for (MeetModule module : modules) {
@@ -1211,23 +1244,11 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
                     break;
             }
         }
+
         Meet meet = meetDAO.selectByPrimaryKey(meetId);
         meet.setPublishTime(new Date());
-        MeetProperty condition = new MeetProperty();
-        condition.setMeetId(meetId);
-        MeetProperty property = meetPropertyDAO.selectOne(condition);
-        if (saveAction.intValue() == actionNumber.finish) {
-            if (property.getStartTime().before(new Date())) {
-                meet.setState(Meet.MeetType.IN_USE.getState());
-            } else {
-                meet.setState(Meet.MeetType.NOT_START.getState());
-            }
-        } else {
-            meet.setState(Meet.MeetType.DRAFT.getState());
-        }
-        meetDAO.updateByPrimaryKeySelective(meet);
+        return meet;
     }
-
 
     private void checkPosition(String meetId, Integer moduleId) throws SystemException {
         MeetPosition condition = new MeetPosition();
@@ -1241,7 +1262,6 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
             throw new SystemException("会议签到设置未完善");
         }
     }
-
 
     private void checkSurvey(String meetId, Integer moduleId) throws SystemException {
         MeetSurvey condition = new MeetSurvey();
@@ -1704,48 +1724,6 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
 
 
     /**
-     * 查询App首页推荐会议 分页
-     * @param pageable
-     * @return
-     */
-    @Override
-    public MyPage<MeetFolderDTO> findRecommendMeetFolder(Pageable pageable) {
-        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
-        Integer userId = (Integer) pageable.get("userId");
-        MyPage<MeetFolderDTO> page = new MyPage<MeetFolderDTO>();
-        List<MeetFolderDTO> list = Lists.newArrayList();
-
-        //首先查询出固定的一个推荐
-        int fixedLimit = 1;
-        MeetFolderDTO fixedMeetFolder = meetDAO.findFixedRecommend();
-
-        //如果是会议文件夹的情况 需要查询出下面的3个会议的主讲者
-        int maxLecturerLimit = 3;
-        if (fixedMeetFolder != null && fixedMeetFolder.getType() == 0){
-            fixedMeetFolder.setLecturerList(meetDAO.findRecommendLecturers(fixedMeetFolder.getId(), maxLecturerLimit));
-        }
-        list.add(fixedMeetFolder);
-
-        //查询出推荐的随机四个推荐的会议
-        int recommendCount = Constants.NUMBER_FOUR;
-        pageable.setPageSize(recommendCount);
-        List<MeetFolderDTO> recommendList = meetDAO.findRandomRecommendMeets(recommendCount);
-        list.addAll(recommendList);
-
-        //如果不够四个 则在后面的三个的基础加上缺失量
-        int diff = recommendCount - recommendList.size();
-        //从会议表中随机抽取三个跟用户相关的会议
-        int randomLimit = Constants.NUMBER_THREE + diff;
-        pageable.setPageSize(randomLimit);
-        list.addAll(findRandomLimitMeets(userId, randomLimit));
-        for (MeetFolderDTO meetFolderDTO : list){
-            MeetCheckHelper.checkMeetFolder(meetFolderDTO, appFileBase);
-        }
-        page = MyPage.page2Mypage((Page)list);
-        return page;
-    }
-
-    /**
      * 微信查询推荐会议
      * @param userId
      * @return
@@ -1816,6 +1794,242 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
     @Override
     public MeetFolderDTO getMeetFolder(String id) {
         return meetDAO.getMeetFolder(id);
+    }
+
+
+    /**
+     * 复制会议课程及明细
+     * @param oldMeetId
+     * @param newMeetId
+     * @throws SystemException
+     */
+    @Override
+    public void copyMeetModuleCourse(String oldMeetId, String newMeetId) throws SystemException {
+        // 查询会议所有模块
+        List<MeetModule> moduleList = findModules(oldMeetId);
+        if (!CheckUtils.isEmpty(moduleList)) {
+            for (MeetModule oldMeetModule : moduleList) {
+                // 复制模块表 返回新的模块id
+                Integer newModuleId = addModuleReturnId(newMeetId, oldMeetModule);
+
+                // 获取草稿会议功能id
+                int oldFunctionId = oldMeetModule.getFunctionId();
+
+                // 查询草稿会议的课程id
+                Integer oldCourseId = findModuleCourseId(oldMeetModule);
+
+                // 根据课程课程id查询 草稿会议的课程表 并复制创建新的会议课程表获取新的课程ID
+                if (oldFunctionId == MeetModule.ModuleFunction.PPT.getFunId()) {
+
+                    // 复制PPT课程会议
+                    copyAudioCourse(oldCourseId, newModuleId, newMeetId);
+
+                } else if (oldFunctionId == MeetModule.ModuleFunction.VIDEO.getFunId()) {
+
+                    // 复制视频课程会议
+                    copyVideoCourse(oldCourseId, newModuleId, newMeetId);
+
+                } else if (oldFunctionId == MeetModule.ModuleFunction.EXAM.getFunId()) {
+
+                    // 复制考试课程会议
+                    MeetExam oldExam = examService.findExam(oldMeetId, oldMeetModule.getId());
+                    if (oldExam != null) {
+                        copyExam(oldExam, newModuleId, newMeetId);
+                    }
+
+                } else if (oldFunctionId == MeetModule.ModuleFunction.SURVEY.getFunId()) {
+
+                    // 复制问卷调查课程会议
+                    copySurvey(oldCourseId, newModuleId, newMeetId);
+
+                } else {
+                    // 复制会议签到数据
+                   copyMeetSign(oldMeetId, newMeetId, oldMeetModule.getId(), newModuleId);
+
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 复制会议ppt语音课程及明细
+     * @param oldCourseId
+     * @param newModuleId
+     * @param newMeetId
+     */
+    @Override
+    public void copyAudioCourse(Integer oldCourseId, Integer newModuleId, String newMeetId) {
+        AudioCourse oldAudioCourse = null;
+        if (oldCourseId != null && oldCourseId != 0) {
+            // 查询PPT语音课程
+            oldAudioCourse = audioService.findAudioCourse(oldCourseId);
+        }
+        Integer newCourseId = 0;
+        if (oldAudioCourse != null) {
+            // 复制PPT语音课程
+            AudioCourse newAudioCourse = oldAudioCourse;
+            newAudioCourse.setId(null);
+            audioService.insert(newAudioCourse);
+
+            newCourseId = newAudioCourse.getId();
+            // 复制PPT明细表
+            if (!CheckUtils.isEmpty(oldAudioCourse.getDetails())) {
+                List<AudioCourseDetail> oldDetailList = oldAudioCourse.getDetails();
+                for (AudioCourseDetail detail : oldDetailList) {
+                    detail.setId(null);
+                    detail.setCourseId(newCourseId);
+                }
+                audioService.insertBatch(oldDetailList);
+            }
+        }
+
+        // 复制PPT语音会议表
+        MeetAudio newAudio = new MeetAudio();
+        newAudio.setId(null);
+        newAudio.setMeetId(newMeetId);
+        newAudio.setModuleId(newModuleId);
+        newAudio.setCourseId(newCourseId);
+        audioService.addMeetAudio(newAudio);
+    }
+
+
+    /**
+     * 复制会议视频课程及明细
+     * @param oldCourseId
+     * @param newModuleId
+     * @param newMeetId
+     */
+    @Override
+    public void copyVideoCourse(Integer oldCourseId, Integer newModuleId, String newMeetId) {
+        VideoCourse videoCourse = new VideoCourse();
+        videoCourse.setId(oldCourseId);
+        VideoCourse oldVideoCourse = videoService.selectByPrimaryKey(videoCourse);
+        Integer newCourseId = 0;
+        if (oldVideoCourse != null) {
+            // 复制视频课程
+            VideoCourse newVideoCourse = oldVideoCourse;
+            newVideoCourse.setId(null);
+            videoService.insert(newVideoCourse);
+            newCourseId = newVideoCourse.getId();
+        }
+
+        // 复制视频表
+        MeetVideo newVideo = new MeetVideo();
+        newVideo.setMeetId(newMeetId);
+        newVideo.setModuleId(newModuleId);
+        newVideo.setCourseId(newCourseId);
+        videoService.insertMeetVideo(newVideo);
+
+        List<VideoCourseDetail> oldDetailList = videoService.findRootDetail(oldCourseId);
+        if (!CheckUtils.isEmpty(oldDetailList)) {
+            for (VideoCourseDetail detail : oldDetailList) {
+                Integer oldPreId = detail.getId();
+                List<VideoCourseDetail> oldLeafDetailList = videoService.findByPreid(oldPreId);
+                // 复制父目录数据
+                detail.setId(null);
+                detail.setCourseId(newCourseId);
+                Integer newPreId = videoService.addDetail(detail);
+                // 复制子目录数据
+                if (!CheckUtils.isEmpty(oldLeafDetailList)) {
+                    for (VideoCourseDetail leafDetail : oldLeafDetailList) {
+                        leafDetail.setId(null);
+                        leafDetail.setCourseId(newCourseId);
+                        leafDetail.setPreId(newPreId);
+                        videoService.addDetail(leafDetail);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 复制会议考题数据
+     * @param oldExam
+     * @param newModuleId
+     * @param newMeetId
+     */
+    @Override
+    public void copyExam(MeetExam oldExam, Integer newModuleId, String newMeetId) {
+        Integer oldPaperId = oldExam.getPaperId();
+        ExamPaper oldExamPaper = examService.findExamPaper(oldPaperId);
+        if (oldExamPaper != null) {
+            ExamPaper newExamPaper = oldExamPaper;
+            newExamPaper.setId(null);
+            Integer newPaperId = examService.addPaper(newExamPaper);
+
+            MeetExam newExam = oldExam;
+            newExam.setId(null);
+            newExam.setPaperId(newPaperId);
+            newExam.setModuleId(newModuleId);
+            newExam.setMeetId(newMeetId);
+            examService.insert(newExam);
+
+            List<ExamPaperQuestion> oldQuestionList = examService.findQuestionListByPaperId(oldPaperId);
+            if (!CheckUtils.isEmpty(oldQuestionList)) {
+                for (ExamPaperQuestion paperQuestion : oldQuestionList) {
+                    Integer oldQuestionId = paperQuestion.getQuestionId();
+                    ExamQuestion oldQuestion = examService.findQuestion(paperQuestion.getPaperId(), oldQuestionId);
+                    ExamQuestion newQuestion = oldQuestion;
+                    newQuestion.setId(null);
+                    Integer newQuestionId = examService.addQuestion(newQuestion);
+
+                    paperQuestion.setId(null);
+                    paperQuestion.setPaperId(newPaperId);
+                    paperQuestion.setQuestionId(newQuestionId);
+                    examService.insertExamPaperQuestion(paperQuestion);
+                }
+            }
+        }
+    }
+
+    /**
+     * 复制会议问卷数据
+     * @param oldPaperId
+     * @param newModuleId
+     * @param newMeetId
+     */
+    @Override
+    public void copySurvey(Integer oldPaperId, Integer newModuleId, String newMeetId) {
+        SurveyPaper oldSurvey = surveyService.findSurveyPaper(oldPaperId);
+        if (oldSurvey != null) {
+            SurveyPaper newSurveyPaper = oldSurvey;
+            newSurveyPaper.setId(null);
+            Integer newPaperId = surveyService.addSurveyPaper(newSurveyPaper);
+
+            MeetSurvey newSurvey = new MeetSurvey();
+            newSurvey.setPaperId(newPaperId);
+            newSurvey.setModuleId(newModuleId);
+            newSurvey.setMeetId(newMeetId);
+            surveyService.insert(newSurvey);
+
+            List<SurveyQuestion> oldQuestionList = oldSurvey.getQuestionList();
+            for (SurveyQuestion question : oldQuestionList) {
+                question.setId(null);
+                question.setPaperId(newPaperId);
+                surveyService.addQuestion(question);
+            }
+
+        }
+    }
+
+    /**
+     * 复制签到会议数据
+     * @param oldMeetId
+     * @param newMeetId
+     * @param oldModuleId
+     * @param newModuleId
+     */
+    @Override
+    public void copyMeetSign(String oldMeetId, String newMeetId, Integer oldModuleId, Integer newModuleId) {
+        MeetPosition oldPosition = signService.findPosition(oldMeetId, oldModuleId);
+        if (oldPosition != null) {
+            MeetPosition position = oldPosition;
+            position.setId(null);
+            position.setMeetId(newMeetId);
+            position.setModuleId(newModuleId);
+            signService.insert(position);
+        }
     }
 
 
