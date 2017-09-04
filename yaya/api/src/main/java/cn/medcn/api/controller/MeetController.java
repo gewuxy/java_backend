@@ -659,7 +659,7 @@ public class MeetController extends BaseController {
     @ResponseBody
     public String folderLeafList(Pageable pageable, String preId, Integer showFlag) {
         if (preId == null) {
-            return error("preId不能为空");
+            return error("参数错误");
         }
         Principal principal = SecurityUtils.getCurrentUserInfo();
         Integer userId = principal.getId();
@@ -700,13 +700,10 @@ public class MeetController extends BaseController {
      * @return
      */
     private void userLearningProgress(MeetFolderDTO folderDTO, int userId) {
-        if (folderDTO.getType() == MeetFolderDTO.FolderType.meet.ordinal() && folderDTO.getState() == Meet.MeetType.OVER.ordinal()) {
+        if (folderDTO.getType() == MeetFolderDTO.FolderType.meet.ordinal()
+                && folderDTO.getState() == Meet.MeetType.OVER.ordinal()) {
             int completeCount = meetService.findUserLearningRecord(folderDTO.getId(), userId);
-            if (completeCount > 0) {
-                folderDTO.setCompleteProgress(completeCount);
-            } else {
-                folderDTO.setCompleteProgress(0);
-            }
+            folderDTO.setCompleteProgress(completeCount);
         }
     }
 
