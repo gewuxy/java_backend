@@ -544,7 +544,7 @@ public class MeetController extends BaseController {
 
             //如果有选择文件夹，将会议添加到文件夹下
             String folderId = meet.getFolderId();
-            if (folderId != null && !"".equals(folderId)) {
+            if (StringUtils.isEmpty(folderId)) {
                 InfinityTreeDetail detail = new InfinityTreeDetail();
                 detail.setInfinityId(folderId);
                 detail.setResourceId(meet.getId());
@@ -586,22 +586,6 @@ public class MeetController extends BaseController {
         return APIUtils.success(credits.getCredit());
     }
 
-    private void checkCredits(Integer eduCredits, Integer xsCredits, Integer userId, Integer limit) throws SystemException {
-        if (eduCredits != null && eduCredits == 1) {
-            if (xsCredits == null) {
-                xsCredits = 0;
-            }
-            if (xsCredits > 0) {//判断象数是否足够
-                if (limit == null || limit == 0) {
-                    throw new SystemException("请填写奖励人数限制");
-                }
-                Credits credits = creditsService.doFindMyCredits(userId);
-                if (credits.getCredit() < limit * xsCredits) {
-                    throw new SystemException("保存会议失败,您的象数不足");
-                }
-            }
-        }
-    }
 
 
     private void loadMeetInfo(String id, Model model) {
@@ -690,12 +674,12 @@ public class MeetController extends BaseController {
         Integer memberLimitType = meet.getMeetProperty().getMemberLimitType();
         Integer groupId = meet.getMeetProperty().getGroupId();
         if (memberLimitType == null) {
-            memberLimitType = 0;
+            memberLimitType = MeetProperty.MemberLimit.NOT_LIMIT.getType();
         }
-        if (memberLimitType == 1 && !StringUtils.isEmpty(specifyProvince)) {
+        if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_LOCATION.getType() && !StringUtils.isEmpty(specifyProvince)) {
             List<SystemRegion> cities = systemRegionService.findRegionByPreName(specifyProvince);
             model.addAttribute("cities", cities);
-        } else if (memberLimitType == 2 &&
+        } else if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_GROUP.getType() &&
                 (groupId != null && groupId != 0)) {// 指定群组
             // 查询组名
             Group group = new Group();
