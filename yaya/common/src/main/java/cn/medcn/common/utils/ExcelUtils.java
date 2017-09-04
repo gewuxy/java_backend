@@ -44,28 +44,8 @@ public class ExcelUtils {
         return wb;
     }
 
-    /**
-     * 创建excel
-     *
-     * @param fileName
-     * @param heads
-     * @param datas
-     * @param response
-     * @throws IOException
-     */
-    public static void createExcel(String fileName, String[] heads, List<String[]> datas, HttpServletResponse response) throws IOException {
-        Workbook workbook = writeExcel(fileName, heads, datas);
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        workbook.write(os);
-        byte[] bytes = os.toByteArray();
-        response.setContentType("application/msexcel;charset=gb2312");
-        response.setHeader("Content-disposition", "attachment;filename= " + new String(fileName.getBytes("gb2312"), "ISO8859-1"));
-        response.getOutputStream().write(bytes);
-        response.getOutputStream().flush();
-        response.getOutputStream().close();
-    }
 
-    public static void createExcel(String fileName,Workbook workbook, HttpServletResponse response) throws IOException {
+    public static void outputWorkBook(String fileName, Workbook workbook, HttpServletResponse response) throws IOException {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         workbook.write(os);
         byte[] bytes = os.toByteArray();
