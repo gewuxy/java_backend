@@ -510,7 +510,7 @@ public class DoctorController extends BaseController{
         }
         try {
 
-            ExcelUtils.createExcel(fileName,workbook,response);
+            ExcelUtils.outputWorkBook(fileName,workbook,response);
         } catch (IOException e) {
             e.printStackTrace();
             throw new SystemException("文件导出失败");

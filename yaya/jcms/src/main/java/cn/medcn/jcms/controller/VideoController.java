@@ -5,7 +5,6 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.common.supports.ExcelField;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.ExcelUtils;
@@ -21,7 +20,6 @@ import cn.medcn.meet.model.VideoCourseDetail;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.meet.service.VideoService;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -164,7 +160,7 @@ public class VideoController extends BaseController {
             }
 
             try {
-                ExcelUtils.createExcel(fileName, workbook, response);
+                ExcelUtils.outputWorkBook(fileName, workbook, response);
             } catch (Exception e) {
                 e.printStackTrace();
                 return APIUtils.error("导出文件出错");
@@ -246,7 +242,7 @@ public class VideoController extends BaseController {
             }
 
             try {
-                ExcelUtils.createExcel(fileName,workbook,response);
+                ExcelUtils.outputWorkBook(fileName,workbook,response);
             }catch (Exception e){
                 e.printStackTrace();
                 return APIUtils.error("导出文件出错");

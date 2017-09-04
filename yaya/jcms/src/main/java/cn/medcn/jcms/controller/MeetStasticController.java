@@ -9,8 +9,6 @@ import cn.medcn.common.utils.*;
 import cn.medcn.jcms.security.Principal;
 import cn.medcn.jcms.utils.SubjectUtils;
 import cn.medcn.meet.dto.*;
-import cn.medcn.meet.model.Meet;
-import cn.medcn.meet.model.MeetLearningRecord;
 import cn.medcn.meet.service.ExamService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.meet.service.MeetStasticService;
@@ -414,7 +412,7 @@ public class MeetStasticController extends BaseController {
                 workbook = ExcelUtils.writeExcel(fileName, dataList, AttendMeetUserExcelData.class);
 
                 try {
-                    ExcelUtils.createExcel(fileName, workbook, response);
+                    ExcelUtils.outputWorkBook(fileName, workbook, response);
                 } catch (Exception e) {
                     e.printStackTrace();
                     return APIUtils.error("导出文件出错");

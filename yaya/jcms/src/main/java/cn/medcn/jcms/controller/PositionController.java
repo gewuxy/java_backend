@@ -4,7 +4,6 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.supports.ExcelField;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.ExcelUtils;
@@ -119,7 +118,7 @@ public class PositionController extends BaseController {
             }
 
             try {
-                ExcelUtils.createExcel(fileName,workbook,response);
+                ExcelUtils.outputWorkBook(fileName,workbook,response);
             } catch (IOException e) {
                 e.printStackTrace();
                 return APIUtils.error("导出文件出错");

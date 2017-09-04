@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
@@ -266,7 +265,7 @@ public class ExamController extends BaseController {
             workbook = ExcelUtils.writeExcel(fileName, dataList, ExamExcelData.class);
 
             try {
-                ExcelUtils.createExcel(fileName, workbook, response);
+                ExcelUtils.outputWorkBook(fileName, workbook, response);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -419,7 +418,7 @@ public class ExamController extends BaseController {
             workbook = ExcelUtils.writeExcel(fileName, dataList, ExamHistoryUserExcelData.class);
 
             try {
-                ExcelUtils.createExcel(fileName, workbook, response);
+                ExcelUtils.outputWorkBook(fileName, workbook, response);
             } catch (IOException e) {
                 e.printStackTrace();
                 return APIUtils.error("导出文件出错");
