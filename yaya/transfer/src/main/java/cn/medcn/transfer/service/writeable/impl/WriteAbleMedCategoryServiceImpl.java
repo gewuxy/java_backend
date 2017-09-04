@@ -31,7 +31,7 @@ public class WriteAbleMedCategoryServiceImpl extends WriteAbleBaseServiceImpl<Me
                 insert(medCategory);
             } else {
                 medCategory.setId(existed.getId());
-                LogUtils.debug(this.getClass(), "栏目 ："+medCategory.getName()+" 已经存在，跳过....");
+                //LogUtils.debug(this.getClass(), "栏目 ："+medCategory.getName()+" 已经存在，跳过....");
             }
             return medCategory;
         } catch (Exception e) {

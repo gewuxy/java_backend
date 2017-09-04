@@ -59,7 +59,7 @@ public class MedicineServiceImpl extends DataServiceImpl {
             try {
                 MedicineSms existed = writeAbleMedicineSmsService.findOne(condition);
                 if (existed != null) {
-                    LogUtils.debug(this.getClass(), "文件 ："+title+"["+author+"]"+"已经存在，跳过....");
+                    //LogUtils.debug(this.getClass(), "文件 ："+title+"["+author+"]"+"已经存在，跳过....");
                     return ;
                 }
             } catch (InvocationTargetException e) {
