@@ -79,7 +79,7 @@ public class DoctorController extends BaseController{
     private String uploadBase;
 
 
-    private interface groupNameId{
+    private interface GroupNameId {
         Integer NO_GROUP_ID = 0; // 未分组ID
         Integer WX_GROUP_ID = 1; // 绑定微信分组ID
     }
@@ -103,28 +103,25 @@ public class DoctorController extends BaseController{
         model.addAttribute("bindWxCount",bindWxCount);
 
         //查询关注此公众号的所有医生数量
-        Integer count = doctorService.findAllDocCount(userId);
+        Integer count = doctorService.findAllDoctorCount(userId);
         model.addAttribute("count", count);
 
         // 查询医生信息
-        if (searchName == null) {
-            searchName = "";
-        }
         MyPage<DoctorDTO> list = null;
         if (groupId == null) {
             //查询所有医生信息 根据医生名字 全局搜索 不对分组搜索
             pageable.put("linkman", searchName);
-            list = doctorService.findAllDocInfo(pageable);
-        } else if (groupId == groupNameId.NO_GROUP_ID) {
+            list = doctorService.findAllDoctorInfo(pageable);
+        } else if (groupId == GroupNameId.NO_GROUP_ID) {
             //未分组的医生信息
-            list = doctorService.findUndifindGroupDocInfo(pageable);
-        } else if (groupId == groupNameId.WX_GROUP_ID) {
+            list = doctorService.findUndifindGroupDoctorInfo(pageable);
+        } else if (groupId == GroupNameId.WX_GROUP_ID) {
             // 查询绑定微信的医生信息
-            list = doctorService.findBindWxDocInfo(pageable);
+            list = doctorService.findBindWxDoctorInfo(pageable);
         } else {
             //查询分组医生信息 模糊搜索医生信息
             pageable.getParams().put("groupId", groupId);
-            list = doctorService.findDocInfoByGId(pageable);
+            list = doctorService.findDoctorInfoByGId(pageable);
         }
         for (DoctorDTO dto : list.getDataList()) {
             if (!StringUtils.isEmpty(dto.getHeadimg())) {

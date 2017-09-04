@@ -62,7 +62,7 @@
         </if>
     </select>
 
-    <select id="findAllDocCount" resultType="Integer">
+    <select id="findAllDoctorCount" resultType="Integer">
         SELECT count(tu.id) FROM t_app_user tu INNER JOIN t_app_attention ta  ON tu.id = ta.slaver_id WHERE tu.role_id = 2 AND ta.master_id = #{userId}
     </select>
 

@@ -14,16 +14,16 @@ import java.util.Map;
  */
 public interface AppDoctorDAO extends Mapper<AppDoctor> {
 
-    List<DoctorDTO> findAllDocInfo(Map<String, Object> params);
+    List<DoctorDTO> findAllDoctorInfo(Map<String, Object> params);
 
-    List<DoctorDTO> findDocInfoByGId(Map<String, Object> params);
+    List<DoctorDTO> findDoctorInfoByGId(Map<String, Object> params);
 
     DoctorDTO findDoctorInfo(Map<String,Object> map);
 
     DoctorDTO getPopUpInfo(@Param("docId") Integer docId, @Param("ownerId") Integer ownerId);
 
 
-    List<DoctorDTO> findUndifindGroupDocInfo(Map<String, Object> params);
+    List<DoctorDTO> findUndifindGroupDoctorInfo(Map<String, Object> params);
 
-    List<DoctorDTO> findBindWxDocInfo(Map<String, Object> params);
+    List<DoctorDTO> findBindWxDoctorInfo(Map<String, Object> params);
 }

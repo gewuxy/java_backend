@@ -8,7 +8,6 @@ import cn.medcn.user.dao.AppUserDAO;
 import cn.medcn.user.dao.GroupDAO;
 import cn.medcn.user.dao.PubUserDocGroupDAO;
 import cn.medcn.user.dto.DoctorDTO;
-import cn.medcn.user.model.AppDoctor;
 import cn.medcn.user.model.PubUserDocGroup;
 import cn.medcn.user.model.Group;
 import cn.medcn.user.service.DoctorService;
@@ -64,9 +63,9 @@ public class DoctorServiceImpl extends BaseServiceImpl<Group> implements DoctorS
      * @return
      */
     @Override
-    public MyPage<DoctorDTO> findAllDocInfo(Pageable pageable) {
+    public MyPage<DoctorDTO> findAllDoctorInfo(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
-        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findAllDocInfo(pageable.getParams());
+        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findAllDoctorInfo(pageable.getParams());
         return MyPage.page2Mypage(page);
     }
 
@@ -76,9 +75,9 @@ public class DoctorServiceImpl extends BaseServiceImpl<Group> implements DoctorS
      * @return
      */
     @Override
-    public MyPage<DoctorDTO> findDocInfoByGId(Pageable pageable) {
+    public MyPage<DoctorDTO> findDoctorInfoByGId(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
-        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findDocInfoByGId(pageable.getParams());
+        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findDoctorInfoByGId(pageable.getParams());
         return MyPage.page2Mypage(page);
     }
 
@@ -125,8 +124,8 @@ public class DoctorServiceImpl extends BaseServiceImpl<Group> implements DoctorS
      * @return
      */
     @Override
-    public Integer findAllDocCount(Integer userId) {
-        return appUserDAO.findAllDocCount(userId);
+    public Integer findAllDoctorCount(Integer userId) {
+        return appUserDAO.findAllDoctorCount(userId);
     }
 
     /**
@@ -146,9 +145,9 @@ public class DoctorServiceImpl extends BaseServiceImpl<Group> implements DoctorS
     }
 
     @Override
-    public MyPage<DoctorDTO> findUndifindGroupDocInfo(Pageable pageable) {
+    public MyPage<DoctorDTO> findUndifindGroupDoctorInfo(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
-        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findUndifindGroupDocInfo(pageable.getParams());
+        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findUndifindGroupDoctorInfo(pageable.getParams());
         return MyPage.page2Mypage(page);
     }
 
@@ -177,9 +176,9 @@ public class DoctorServiceImpl extends BaseServiceImpl<Group> implements DoctorS
      * @return
      */
     @Override
-    public MyPage<DoctorDTO> findBindWxDocInfo(Pageable pageable){
+    public MyPage<DoctorDTO> findBindWxDoctorInfo(Pageable pageable){
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
-        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findBindWxDocInfo(pageable.getParams());
+        Page<DoctorDTO> page = (Page<DoctorDTO>)appDoctorDAO.findBindWxDoctorInfo(pageable.getParams());
         return MyPage.page2Mypage(page);
     }
 }

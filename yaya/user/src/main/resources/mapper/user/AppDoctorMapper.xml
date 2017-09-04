@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.user.dao.AppDoctorDAO" >
 
-    <select id="findAllDocInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+    <select id="findAllDoctorInfo" resultType="cn.medcn.user.dto.DoctorDTO">
         SELECT tu.id,tug.id AS groupId,tu.linkman,tu.headimg, td.unit_name AS hospital,td.sub_unit_name AS type,
         tu.unionid,td.title,tug.group_name FROM t_app_user tu
         INNER JOIN t_app_attention ta ON tu.id = ta.slaver_id
@@ -13,7 +13,7 @@
         AND tu.linkman LIKE CONCAT('%', #{linkman}, '%')
     </select>
 
-    <select id="findUndifindGroupDocInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+    <select id="findUndifindGroupDoctorInfo" resultType="cn.medcn.user.dto.DoctorDTO">
         SELECT tu.id,tug.id AS groupId,tu.linkman,tu.headimg, td.unit_name AS hospital,td.sub_unit_name AS type,
         tu.unionid,td.title,tug.group_name FROM t_app_user tu
         INNER JOIN t_app_attention ta ON tu.id = ta.slaver_id
@@ -23,7 +23,7 @@
         WHERE tu.role_id = 2 AND ta.master_id = #{userId} AND tug.id is null
     </select>
 
-    <select id="findBindWxDocInfo" resultType="cn.medcn.user.dto.DoctorDTO">
+    <select id="findBindWxDoctorInfo" resultType="cn.medcn.user.dto.DoctorDTO">
         SELECT tu.id,tg.group_id,tu.linkman,tu.headimg,td.unit_name AS hospital,td.sub_unit_name AS type,
         tu.unionid,td.title,tug.group_name FROM t_app_user tu
         INNER JOIN t_app_attention ta ON ta.slaver_id = tu.id
@@ -42,7 +42,7 @@
          where tu.id = #{docId}
     </select>
 
-    <select id="findDocInfoByGId" resultType="cn.medcn.user.dto.DoctorDTO">
+    <select id="findDoctorInfoByGId" resultType="cn.medcn.user.dto.DoctorDTO">
         SELECT tu.id,tg.group_id,tu.linkman,tu.headimg,td.unit_name AS hospital,td.sub_unit_name AS type,
         tu.unionid,td.title,tug.group_name
         FROM t_app_user tu
