@@ -320,6 +320,13 @@ public interface MeetService extends BaseService<Meet> {
     List<MeetLearningRecord> findLearningRecord(String meetId,Integer userId);
 
     /**
+     *  设置用户学习记录
+     * @param folderDTO
+     * @param userId
+     */
+    void setUserLearningRecord(MeetFolderDTO folderDTO,Integer userId);
+
+    /**
      * 查询用户是否有获取会议象数或学分奖励的记录
      * @param meetId
      * @param userId
