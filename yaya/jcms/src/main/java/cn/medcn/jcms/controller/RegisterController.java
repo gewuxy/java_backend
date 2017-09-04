@@ -70,107 +70,28 @@ public class RegisterController extends BaseController {
     @ResponseBody
     public String getCode(String mobile){
 
-        if(!RegexUtils.checkMobile(mobile)){
-            return error("手机格式不正确");
-        }
-
-        AppUser user = new AppUser();
-        user.setMobile(mobile);
-
-        //10分钟内最多允许获取3次验证码
-        Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(mobile);
-        if(captcha == null){ //第一次获取
-            String msgId = null;
-            try {
-                msgId = jSmsService.send(mobile, Constants.DEFAULT_TEMPLATE_ID);
-            } catch (Exception e) {
-                return error("发送短信失败");
-            }
-            Captcha firstCaptcha = new Captcha();
-            firstCaptcha.setFirstTime(new Date());
-            firstCaptcha.setCount(0);
-            firstCaptcha.setMsgId(msgId);
-            redisCacheUtils.setCacheObject(mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
-            return success();
-
-        }else {
-            Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
-            if(captcha.getCount() == 2 && between < 10*60*1000){
-                return error("获取验证码次数频繁，请稍后");
-            }
-            String msgId = null;
-            try {
-                msgId = jSmsService.send(mobile, Constants.DEFAULT_TEMPLATE_ID);
-            } catch (Exception e) {
-                return error("发送短信失败");
-            }
-            captcha.setMsgId(msgId);
-            captcha.setCount(captcha.getCount() + 1);
-            redisCacheUtils.setCacheObject(mobile,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
-        }
-
-        return success();
+        return appUserService.sendCaptcha(mobile);
     }
 
 
     /**
-     * 获取职称
+     * 获取职称列表
      * @return
      */
     @RequestMapping("/title")
     @ResponseBody
     public String getTitleList(){
-        List<TitleDTO> dtoList = new ArrayList<>();
-        List<String> gradeList = new ArrayList<>();
-        gradeList.add("医师");
-        gradeList.add("药师");
-        gradeList.add("护师");
-        gradeList.add("技师");
-
-        TitleDTO dto1 = new TitleDTO();
-        dto1.setTitle("高级职称");
-        dto1.setGrade(gradeList);
-
-        TitleDTO dto2 = new TitleDTO();
-        dto2.setTitle("中级职称");
-        dto2.setGrade(gradeList);
-
-        TitleDTO dto3 = new TitleDTO();
-        dto3.setTitle("初级职称");
-        dto3.setGrade(gradeList);
-
-        TitleDTO dto4 = new TitleDTO();
-        dto4.setTitle("其他");
-        List<String> list = new ArrayList<>();
-        list.add("其他职称");
-        dto4.setGrade(list);
-
-        dtoList.add(dto1);
-        dtoList.add(dto2);
-        dtoList.add(dto3);
-        dtoList.add(dto4);
-        return APIUtils.success(dtoList);
+        List<TitleDTO> list =  appUserService.getTitle();
+        return success(list);
     }
 
 
     @RequestMapping("/specialties")
     @ResponseBody
     public String specialty(){
-        List<Department> list = hospitalService.findAllDepart();
-        Map<String,List<String>> map = new HashMap<>();
-        for(Department department:list){
-            List<String> nameList = new ArrayList<>();
-            map.put(department.getCategory(),nameList);
-        }
-        Set<String> set = map.keySet();
-        for(String category:set){
-            for(Department department:list){
-                if(category.equals(department.getCategory())){
-                    map.get(category).add(department.getName());
-                }
-            }
-        }
-        return APIUtils.success(map);
+        //获取医院科室，用map接收，科室第一级为key,科室第二级为value
+        Map<String,List<String>> map =  hospitalService.getAllDepart();
+        return success(map);
     }
 
     /**
@@ -189,14 +110,7 @@ public class RegisterController extends BaseController {
     @RequestMapping(value = "/regions")
     @ResponseBody
     public String allRegion(){
-        List<SystemRegion> regions = systemRegionService.findAll();
-        List<SystemRegion> result = Lists.newArrayList();
-        for(SystemRegion region : regions){
-            if (region.getLevel() == 1){
-                setSubList(region, regions);
-                result.add(region);
-            }
-        }
+        List<SystemRegion> result = systemRegionService.getPCZRelationList();
 
         return success(result);
     }
@@ -260,6 +174,7 @@ public class RegisterController extends BaseController {
         }
         user.setRegistDate(new Date());
         user.setPubFlag(false);
+
         Captcha captcha1 = (Captcha)redisCacheUtils.getCacheObject(dto.getMobile());
         try {
             if(!jSmsService.verify(captcha1.getMsgId(),captcha)){
@@ -268,32 +183,13 @@ public class RegisterController extends BaseController {
         } catch (Exception e) {
             return error("验证码已被校验，请重新获取验证码");
         }
-        //执行注册
-        try{
-            //检查是否是测试用邀请码,测试邀请码返回false
-            if(hadCheckInvite(dto.getHospital(), invite)){
-                appUserService.executeRegist(user, invite,masterId);//真实用户注册
-            }else{
-                appUserService.executeRegist(user, null,null);  //测试用户注册
-            }
-        }catch (Exception e){
-            return error(e.getMessage());
+        //执行测试用户和正式用户的注册流程,医院名:敬信药草园,邀请码:2603 为测试用户注册
+        String err = appUserService.executeUserRegister(dto, invite, masterId, user);
+        if (err != null){
+            return err;
         }
         return success();
 
-    }
-
-    /**
-     * 检查是否是测试用邀请码,测试邀请码返回false
-     * @param hosName
-     * @param invite
-     * @return
-     */
-    private boolean hadCheckInvite(String hosName, String invite){
-        if(Constants.DEFAULT_HOS_NAME.equals(hosName) && Constants.DEFAULT_INVITE.equals(invite)){
-            return false;
-        }
-        return true;
     }
 
 
@@ -347,44 +243,6 @@ public class RegisterController extends BaseController {
 
 
 
-//    @RequestMapping(value = "/checkUser")
-//    @ResponseBody
-//    public String checkUser(String username){
-//        AppUser searchUser = new AppUser();
-//        searchUser.setUsername(username);
-//        if(appUserService.selectOne(searchUser) != null){
-//            return error("用户名已被使用");
-//        }
-//        return success();
-//    }
-
-
-
-
-//    @RequestMapping(value="/cities",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String cities(String  province) throws UnsupportedEncodingException {
-//        province = URLDecoder.decode(province, "UTF-8");
-//        if(province == null){
-//            return error("省份不能为空");
-//        }
-//        List<SystemRegion> list = systemRegionService.findRegionByPreName(province);
-//        return success(list);
-//    }
-//
-//    @RequestMapping(value="/zones",method = RequestMethod.POST)
-//    @ResponseBody
-//    public String zones(String city) throws UnsupportedEncodingException {
-//        city = URLDecoder.decode(city, "UTF-8");
-//        if(city == null){
-//            return error("城市不能为空");
-//        }
-//        List<SystemRegion> list = systemRegionService.findRegionByPreName(city);
-//        return success(list);
-//    }
-//
-
-
 //    /**
 //     * 根据省市获取医院
 //     * @param province
@@ -422,27 +280,4 @@ public class RegisterController extends BaseController {
         return "/regist/register_success";
     }
 
-//    @RequestMapping("/checkMobile")
-//    @ResponseBody
-//    public String checkMobile(String mobile){
-//        AppUser user = new AppUser();
-//        user.setMobile(mobile);
-//        int count = appUserService.selectCount(user);
-//        if(count > 0){
-//            return error("该手机已被注册，请使用新手机号码");
-//        }
-//        return success();
-//    }
-
-
-    private void setSubList(SystemRegion region, List<SystemRegion> regions){
-        for(SystemRegion sub:regions){
-            if(region.getId().intValue() == sub.getPreId().intValue()){
-                if(region.getLevel() < 3){
-                    setSubList(sub, regions);
-                }
-                region.getDetails().add(sub);
-            }
-        }
-    }
 }
