@@ -67,7 +67,7 @@ public class HomeController extends BaseController{
         model.addAttribute("headimg", appFileBase+principal.getHeadimg());
         model.addAttribute("credits", credits);
         //查询出关注人数
-        Integer attentionCount = doctorService.findAllDocCount(principal.getId());
+        Integer attentionCount = doctorService.findAllDoctorCount(principal.getId());
         model.addAttribute("attention", attentionCount);
         //查询出我已经发布的会议
         Pageable pageable = new Pageable(1, 6);
