@@ -30,7 +30,7 @@
                 <p class="min-size">完成本次会议可获得${meet.eduCredits}学分, 剩余${meet.remainAwardCreditCount}个名额</p>
             </c:if>
             <c:if test="${meet.requiredXs}">
-                <p class="min-size">完成本次会议可获得${meet.xsCredits}象数，剩余${meet.remainAwardXsCount}个名额</p>
+                <p class="min-size">完成本次会议可获得${meet.xsCredits}象数, 剩余${meet.remainAwardXsCount}个名额</p>
             </c:if>
             <c:if test="${!meet.requiredXs && meet.xsCredits != null && meet.xsCredits>0}">
                 <p class="min-size">完成本次会议需支付${meet.xsCredits}象数</p>
