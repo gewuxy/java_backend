@@ -36,4 +36,9 @@ public interface SystemRegionService extends BaseService<SystemRegion> {
 
     List<SystemRegion> findAll();
 
+    /**
+     * 获取省市区相关联列表
+     * @return
+     */
+    List<SystemRegion> getPCZRelationList();
 }
