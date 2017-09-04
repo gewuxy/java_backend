@@ -285,7 +285,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
         conditionMap.put("meetId", meetId);
         conditionMap.put("userId", userId);
         List<AttendMeetUserDetailDTO> list = meetAttendDAO.findAttendUserDetailExcel(conditionMap);
-        return list == null ? null : list;
+        return list;
     }
 
     /**

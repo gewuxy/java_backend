@@ -34,7 +34,7 @@ public interface AppUserDAO extends Mapper<AppUser> {
 
     List<MaterialDTO> findAllMaterialList(Map<String,Object> map);
 
-    Integer findAllDocCount(Integer userId);
+    Integer findAllDoctorCount(Integer userId);
 
 
     List<RecommendDTO> selectRecommend(Map<String,Object> map);

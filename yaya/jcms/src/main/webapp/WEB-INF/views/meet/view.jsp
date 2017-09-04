@@ -78,7 +78,7 @@
 
     $(function(){
         $("#finishBtn").click(function(){
-            $.get('${ctx}/func/meet/publish',{'meetId':'${meet.id}','saveAction':1},function (data) {
+            $.get('${ctx}/func/meet/publish',{'meetId':'${meet.id}'},function (data) {
                 if(data.code == 0){
                     window.location.href = '${ctx}/func/meet/list';
                 }else{
@@ -88,7 +88,7 @@
         });
 
         $("#draftBtn").click(function(){
-            $.get('${ctx}/func/meet/publish',{'meetId':'${meet.id}','saveAction':0},function (data) {
+            $.get('${ctx}/func/meet/save/draft',{'meetId':'${meet.id}'},function (data) {
                 if(data.code == 0){
                     window.location.href = '${ctx}/func/meet/draft';
                 }else{

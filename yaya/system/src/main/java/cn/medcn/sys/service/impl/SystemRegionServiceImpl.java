@@ -90,4 +90,38 @@ public class SystemRegionServiceImpl extends BaseServiceImpl<SystemRegion> imple
         List<SystemRegion> list = systemRegionDAO.findAll();
         return list;
     }
+
+    /**
+     * 获取省市区相关联列表
+     * @return
+     */
+    @Override
+    public List<SystemRegion> getPCZRelationList() {
+        List<SystemRegion> regions = findAll();
+        List<SystemRegion> result = Lists.newArrayList();
+        for(SystemRegion region : regions){
+            if (region.getLevel() == 1){
+                setSubList(region, regions);
+                result.add(region);
+            }
+        }
+        return result;
+    }
+
+
+    /**
+     * 递归方法添加省对应的市区
+     * @param region
+     * @param regions
+     */
+    private void setSubList(SystemRegion region, List<SystemRegion> regions){
+        for(SystemRegion sub:regions){
+            if(region.getId().intValue() == sub.getPreId().intValue()){
+                if(region.getLevel() < 3){
+                    setSubList(sub, regions);
+                }
+                region.getDetails().add(sub);
+            }
+        }
+    }
 }

@@ -24,21 +24,21 @@ public interface DoctorService extends BaseService<Group>{
      */
     List<Group> findGroupList(Integer userId);
 
-    MyPage<DoctorDTO> findAllDocInfo(Pageable pageable);
+    MyPage<DoctorDTO> findAllDoctorInfo(Pageable pageable);
 
-    MyPage<DoctorDTO> findDocInfoByGId(Pageable pageable);
+    MyPage<DoctorDTO> findDoctorInfoByGId(Pageable pageable);
 
     void allotGroup(Integer doctorId, Integer groupId, Integer userId);
 
     void allotGroups(Integer[] doctorIds, Integer groupId, Integer userId);
 
-    Integer findAllDocCount(Integer userId);
+    Integer findAllDoctorCount(Integer userId);
 
     DoctorDTO findDoctorInfo(Map<String,Object> map );
 
     int findUndifindGroupNum(Integer userId);
 
-    MyPage<DoctorDTO> findUndifindGroupDocInfo(Pageable pageable);
+    MyPage<DoctorDTO> findUndifindGroupDoctorInfo(Pageable pageable);
 
     /**
      * 删除公众号和医生的关系
@@ -58,5 +58,5 @@ public interface DoctorService extends BaseService<Group>{
      * @param pageable
      * @return
      */
-    MyPage<DoctorDTO> findBindWxDocInfo(Pageable pageable);
+    MyPage<DoctorDTO> findBindWxDoctorInfo(Pageable pageable);
 }

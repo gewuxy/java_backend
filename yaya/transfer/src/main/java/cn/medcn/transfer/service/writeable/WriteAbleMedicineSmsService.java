@@ -11,4 +11,6 @@ public interface WriteAbleMedicineSmsService extends WriteAbleBaseService<Medici
 
 
     void transfer(MedicineSms medicineSms);
+
+    void modifyTitle();
 }

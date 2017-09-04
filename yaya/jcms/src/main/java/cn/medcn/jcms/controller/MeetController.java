@@ -362,7 +362,7 @@ public class MeetController extends BaseController {
 
             //如果有选择文件夹，将会议添加到文件夹下
             String folderId = meet.getFolderId();
-            if (folderId != null && !"".equals(folderId)) {
+            if (StringUtils.isEmpty(folderId)) {
                 InfinityTreeDetail detail = new InfinityTreeDetail();
                 detail.setInfinityId(folderId);
                 detail.setResourceId(meet.getId());
@@ -403,6 +403,7 @@ public class MeetController extends BaseController {
         }
         return APIUtils.success(credits.getCredit());
     }
+
 
 
     private void loadMeetInfo(String id, Model model) {
@@ -491,16 +492,16 @@ public class MeetController extends BaseController {
         Integer memberLimitType = meet.getMeetProperty().getMemberLimitType();
         Integer groupId = meet.getMeetProperty().getGroupId();
         if (memberLimitType == null) {
-            memberLimitType = MeetProperty.LimitType.NOT_LIMIT.getLimitType();
+            memberLimitType = MeetProperty.MemberLimit.NOT_LIMIT.getType();
         }
-        if (memberLimitType == MeetProperty.LimitType.REGION_LIMIT.getLimitType()
-                && !StringUtils.isEmpty(specifyProvince)) {
 
+        if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_LOCATION.getType()
+                && !StringUtils.isEmpty(specifyProvince)) {
             List<SystemRegion> cities = systemRegionService.findRegionByPreName(specifyProvince);
             model.addAttribute("cities", cities);
 
-        } else if (memberLimitType == MeetProperty.LimitType.GROUP_LIMIT.getLimitType()
-                && (groupId != null && groupId != 0)) {// 指定群组
+        } else if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_GROUP.getType()
+                &&(groupId != null && groupId != 0)) {// 指定群组
             // 查询组名
             Group group = new Group();
             group.setId(groupId);

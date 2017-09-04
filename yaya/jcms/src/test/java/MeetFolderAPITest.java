@@ -84,11 +84,12 @@ public class MeetFolderAPITest {
 
     @Test
     public void testFindLearnRecord(){
-        Integer s = meetService.findUserLearningRecord("17062316273862869316",7342);
+       // Integer s = meetService.findUserLearningRecord("17062316273862869316",7342);
         /*float a = 50;
         float b = 4;
         Integer c = Math.round(a / b);*/
-        System.out.println("----"+s);
+        Integer c = Math.round((float) 0 / 200 * 100);
+        System.out.println("----"+c);
     }
 
     @Test
@@ -183,11 +184,22 @@ public class MeetFolderAPITest {
 
     @Test
     public void testMeetList(){
+        Integer userId =7345;
+        Integer state = 2;
         Pageable pageable = new Pageable();
-        //pageable.put("state", state);
+        pageable.put("state", state);
         //pageable.put("meetType", depart);
-        pageable.put("userId", 7345);
+        pageable.put("userId", userId);
         MyPage<MeetFolderDTO> page = meetFolderService.findMyMeetFolderList(pageable);
+        if (!CheckUtils.isEmpty(page.getDataList())) {
+            for (MeetFolderDTO folderDTO : page.getDataList()) {
+                // 设置用户学习进度
+                meetService.setUserLearningRecord(folderDTO, userId);
+                if (folderDTO.getType() == MeetFolderDTO.FolderType.folder.ordinal()) { // 文件夹 设置相应的状态
+                    folderDTO.setState(state);
+                }
+            }
+        }
         System.out.println(APIUtils.success(page.getDataList()));
     }
 

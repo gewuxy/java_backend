@@ -3,6 +3,7 @@ package cn.medcn.user.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.user.dao.DepartmentDAO;
 import cn.medcn.user.dao.HospitalDAO;
@@ -20,8 +21,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by lixuan on 2017/4/24.
@@ -178,5 +178,28 @@ public class HospitalServiceImpl extends BaseServiceImpl<Hospital> implements Ho
     @Override
     public List<HospitalLevelDTO> findAllLevels() {
         return null;
+    }
+
+    /**
+     * 获取医院科室，用map接收，科室第一级为key,科室第二级为value
+     * @return
+     */
+    @Override
+    public Map<String,List<String>> getAllDepart() {
+        List<Department> list = findAllDepart();
+        Map<String,List<String>> map = new HashMap<>();
+        for(Department department:list){
+            List<String> nameList = new ArrayList<>();
+            map.put(department.getCategory(),nameList);
+        }
+        Set<String> set = map.keySet();
+        for(String category:set){
+            for(Department department:list){
+                if(category.equals(department.getCategory())){
+                    map.get(category).add(department.getName());
+                }
+            }
+        }
+        return map;
     }
 }

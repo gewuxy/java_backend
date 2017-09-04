@@ -213,7 +213,7 @@ public class SurveyController extends BaseController {
             workbook = ExcelUtils.writeExcel(fileName,dataList,SurveyHistoryUserExcelData.class);
 
             try {
-                ExcelUtils.createExcel(fileName,workbook, response);
+                ExcelUtils.outputWorkBook(fileName,workbook, response);
             }catch (Exception e){
                 e.printStackTrace();
                 return APIUtils.error("导出文件出错");

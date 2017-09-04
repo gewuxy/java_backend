@@ -46,10 +46,11 @@ public class MedicineServiceImpl extends DataServiceImpl {
         if (fileName.toLowerCase().endsWith(".doc") || fileName.toLowerCase().endsWith(".docx")) {
             String title = fileName.substring(0, fileName.lastIndexOf("."));
             title = title.replaceAll(" ?\\([0-9]+\\)","");
-            String author = getApprovalNumber(title);
-            if (!StringUtils.isEmpty(author) && author.startsWith("_")){
-                title = title.replace(author, "");
-                author = author.substring(1);
+            String[] infoArray = title.split("_");
+            String author = null;
+            if (infoArray != null && infoArray.length > 0){
+                title = infoArray[0];
+                author = infoArray.length > 1 ? infoArray[1] : null;
             }
 
             MedicineSms condition = new MedicineSms();
@@ -128,6 +129,7 @@ public class MedicineServiceImpl extends DataServiceImpl {
         }
         return approval;
     }
+
 
 
     public static void main(String[] args) {

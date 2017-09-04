@@ -11,6 +11,7 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.RegexUtils;
+import cn.medcn.meet.model.Meet;
 import cn.medcn.sys.model.SystemProperties;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SysPropertiesService;
@@ -55,13 +56,10 @@ public class RegisterController extends BaseController{
     private SystemRegionService systemRegionService;
 
     @Autowired
-    private EmailHelper emailHelper;
+    private JSmsService jSmsService;
 
     @Autowired
     private RedisCacheUtils redisCacheUtils;
-
-    @Autowired
-    private JSmsService jSmsService;
 
     @Autowired
     private BaiduApiService baiduApiService;
@@ -80,55 +78,16 @@ public class RegisterController extends BaseController{
     /**
      * 生成短信验证码给前端
      * @param mobile
-     * @param type  type=0或者空时表示注册时或者绑定新手机号时获取验证码,1表示重置密码时获取验证码
      * @return
      */
     @RequestMapping("/get_captcha")
     @ResponseBody
-    public String getCode(String mobile,Integer type){
+    public String getCode(String mobile){
 
-        if(!RegexUtils.checkMobile(mobile)){
-            return error("手机格式不正确");
-        }
-
-        AppUser user = new AppUser();
-        user.setMobile(mobile);
-
-
-        //10分钟内最多允许获取3次验证码
-        Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(mobile);
-        if(captcha == null){ //第一次获取
-            String msgId = null;
-            try {
-                msgId = jSmsService.send(mobile, Constants.DEFAULT_TEMPLATE_ID);
-            } catch (Exception e) {
-                return error("发送短信失败");
-            }
-            Captcha firstCaptcha = new Captcha();
-            firstCaptcha.setFirstTime(new Date());
-            firstCaptcha.setCount(Constants.NUMBER_ZERO);
-            firstCaptcha.setMsgId(msgId);
-            redisCacheUtils.setCacheObject(mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
-            return success();
-
-        }else {
-            Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
-            if(captcha.getCount() == 2 && between < TimeUnit.MINUTES.toMillis(10)){
-                return error("获取验证码次数频繁，请稍后");
-            }
-            String msgId = null;
-            try {
-                msgId = jSmsService.send(mobile, Constants.DEFAULT_TEMPLATE_ID);
-            } catch (Exception e) {
-                return APIUtils.error("发送短信失败");
-            }
-            captcha.setMsgId(msgId);
-            captcha.setCount(captcha.getCount() + 1);
-            redisCacheUtils.setCacheObject(mobile,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
-        }
-
-        return success();
+            return appUserService.sendCaptcha(mobile);
     }
+
+
 
 
     /**
@@ -138,75 +97,23 @@ public class RegisterController extends BaseController{
     @RequestMapping("/properties")
     @ResponseBody
     public String getProperties(Integer version){
-        SystemProperties properties = new SystemProperties();
-        List<SystemProperties> list = null;
-        list = sysPropertiesService.select(properties);
-        Integer newVersion = getNewVersion(list);
-        Map<String,Object> map = new HashedMap();
-        map.put("version",newVersion);
-        if(version != null && version >= newVersion){  //版本无变化
-            return success(map);
-        }
-        //第一次获取或者版本有变化
 
-        for(SystemProperties properties1:list){
-            if(!StringUtils.isEmpty(properties1.getPicture())){
-                properties1.setPicture(appFileBaseUrl + properties1.getPicture());
-            }
-        }
-        map.put("propList",list);
-        return success(map);
-
+        return appUserService.getHosLevel(version,appFileBaseUrl);
     }
 
-    private Integer getNewVersion(List<SystemProperties> list){
-        Integer version = list.get(0).getVersion();
-        for(int i=1;i<list.size();i++){
-            if(list.get(i).getVersion() > version){
-                version = list.get(i).getVersion();
-            }
-        }
-        return version;
-    }
+
 
     /**
-     * 获取职称
+     * 获取职称列表
      * @return
      */
     @RequestMapping("/title")
     @ResponseBody
     public String getTitleList(){
-        List<TitleDTO> dtoList = new ArrayList<>();
-        List<String> gradeList = new ArrayList<>();
-        gradeList.add("医师");
-        gradeList.add("药师");
-        gradeList.add("护师");
-        gradeList.add("技师");
-
-        TitleDTO dto1 = new TitleDTO();
-        dto1.setTitle("高级职称");
-        dto1.setGrade(gradeList);
-
-        TitleDTO dto2 = new TitleDTO();
-        dto2.setTitle("中级职称");
-        dto2.setGrade(gradeList);
-
-        TitleDTO dto3 = new TitleDTO();
-        dto3.setTitle("初级职称");
-        dto3.setGrade(gradeList);
-
-        TitleDTO dto4 = new TitleDTO();
-        dto4.setTitle("其他");
-        List<String> list = new ArrayList<>();
-        list.add("其他职称");
-        dto4.setGrade(list);
-
-        dtoList.add(dto1);
-        dtoList.add(dto2);
-        dtoList.add(dto3);
-        dtoList.add(dto4);
-        return success(dtoList);
+        List<TitleDTO> list = appUserService.getTitle();
+        return success(list);
     }
+
 
 
     /**
@@ -220,25 +127,19 @@ public class RegisterController extends BaseController{
         return success(list);
     }
 
+    /**
+     * 科室列表
+     * 微信注册，网页注册时使用此接口
+     * @return
+     */
     @RequestMapping("/specialties")
     @ResponseBody
     public String specialty(){
-        List<Department> list = hospitalService.findAllDepart();
-        Map<String,List<String>> map = new HashMap<>();
-        for(Department department:list){
-            List<String> nameList = new ArrayList<>();
-            map.put(department.getCategory(),nameList);
-        }
-        Set<String> set = map.keySet();
-        for(String category:set){
-            for(Department department:list){
-                if(category.equals(department.getCategory())){
-                    map.get(category).add(department.getName());
-                }
-            }
-        }
+        //获取医院科室，用map接收，科室第一级为key,科室第二级为value
+        Map<String,List<String>> map =  hospitalService.getAllDepart();
         return success(map);
     }
+
 
 
     /**
@@ -249,6 +150,7 @@ public class RegisterController extends BaseController{
     @RequestMapping("/scan_register")
     @ResponseBody
     public String checkInvite(Integer[] masterId){
+
         if(masterId == null){ //没有激活码提供方
             return success();
         }
@@ -271,6 +173,7 @@ public class RegisterController extends BaseController{
             return error("激活码数量为0");
         }
     }
+
 
     /**
      *     用户app注册
@@ -322,19 +225,15 @@ public class RegisterController extends BaseController{
         } catch (Exception e) {
             return error("验证码已被校验，请重新获取验证码");
         }
-        try{
-            //检查是否是测试用邀请码,测试邀请码返回false
-            if(hadCheckInvite(dto.getHospital(), invite)){
-                //已检查invite,masterId，不可能同时为空
-                appUserService.executeRegist(user, invite,masterId);//真实用户注册
-            }else{
-                appUserService.executeRegist(user, null,null);  //测试用户注册
-            }
-        }catch (Exception e){
-            return error(e.getMessage());
+
+        //执行测试用户和正式用户的注册流程
+        String err = appUserService.executeUserRegister(dto, invite, masterId, user);
+        if (err != null){
+            return err;
         }
         return success();
     }
+
 
 
 
@@ -381,21 +280,6 @@ public class RegisterController extends BaseController{
             return error("邀请码不能为空");
         }
         return null;
-    }
-
-
-    /**
-     * 检查是否是测试用邀请码,测试邀请码返回false
-     * @param hosName
-     * @param invite
-     * @return
-     */
-    private boolean hadCheckInvite(String hosName, String invite){
-
-        if(Constants.DEFAULT_HOS_NAME.equals(hosName) && Constants.DEFAULT_INVITE.equals(invite)){
-            return false;
-        }
-        return true;
     }
 
 
@@ -511,30 +395,18 @@ public class RegisterController extends BaseController{
         return success(searchResult);
     }
 
+    /**
+     * 获取省市区相关联列表
+     * @return
+     */
     @RequestMapping(value = "/regions")
     @ResponseBody
     public String allRegion(){
-        List<SystemRegion> regions = systemRegionService.findAll();
-        List<SystemRegion> result = Lists.newArrayList();
-        for(SystemRegion region : regions){
-            if (region.getLevel() == 1){
-                setSubList(region, regions);
-                result.add(region);
-            }
-        }
+        //获取省市区相关联列表
+        List<SystemRegion> result = systemRegionService.getPCZRelationList();
 
         return success(result);
     }
 
-    private void setSubList(SystemRegion region, List<SystemRegion> regions){
-        for(SystemRegion sub:regions){
-            if(region.getId().intValue() == sub.getPreId().intValue()){
-                if(region.getLevel() < 3){
-                    setSubList(sub, regions);
-                }
-                region.getDetails().add(sub);
-            }
-        }
-    }
 
 }

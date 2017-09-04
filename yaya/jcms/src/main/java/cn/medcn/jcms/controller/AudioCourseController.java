@@ -449,7 +449,7 @@ public class AudioCourseController extends BaseController {
                 if (pptTotalCount>1){
                     ExcelUtils.createMergeExcel(fileName, workbook, pptTotalCount, columnIndexArray, response);
                 } else {
-                    ExcelUtils.createExcel(fileName,workbook,response);
+                    ExcelUtils.outputWorkBook(fileName,workbook,response);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
