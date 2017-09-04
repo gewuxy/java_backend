@@ -86,4 +86,12 @@ public interface MeetFolderService extends BaseService<InfinityTree> {
     void updateTreeDetail(InfinityTreeDetail detail);
 
     void deleteTreeDetail(InfinityTreeDetail detail);
+
+    /**
+     * 复制会议文件夹
+     * @param oldMeetId
+     * @param newMeetId
+     */
+    void copyMeetFolder(String oldMeetId, String newMeetId, String meetName);
+
 }

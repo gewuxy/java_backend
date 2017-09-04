@@ -30,10 +30,14 @@ public class AttendExamHistoryDTO {
     private Boolean attend;
     // 会议名称
     private String meetName;
+    // 分组
+    private String groupName;
     // 省份
     private String province;
     // 城市
     private String city;
+    // 区
+    private String zone;
     // 职称
     private String title;
     // 医院级别

@@ -770,7 +770,7 @@ public class ExamServiceImpl extends BaseServiceImpl<MeetExam> implements ExamSe
                 examHistoryDTO.setAttend(true);
             }
         }
-        return list == null ? null : list;
+        return list;
     }
 
     /**
@@ -782,8 +782,7 @@ public class ExamServiceImpl extends BaseServiceImpl<MeetExam> implements ExamSe
      */
     @Override
     public List<QuestionOptItemDTO> findOptItemListByUser(String meetId, Integer userId) {
-        List<QuestionOptItemDTO> list = examHistoryDAO.findOptItemByUser(meetId, userId);
-        return list == null ? null : list;
+        return examHistoryDAO.findOptItemByUser(meetId, userId);
     }
 
     /**

@@ -30,20 +30,23 @@ public class ExamHistoryUserExcelData {
     @ExcelField(columnIndex = 5,title = "职称")
     private String title;
 
-    @ExcelField(columnIndex = 6,title = "所在省市")
+    @ExcelField(columnIndex = 6,title = "所在省市区")
     private String province;
 
-    @ExcelField(columnIndex = 7,title = "考试次数")
+    @ExcelField(columnIndex = 7,title = "所在分组")
+    private String groupName;
+
+    @ExcelField(columnIndex = 8,title = "考试次数")
     private String examTimes;
 
-    @ExcelField(columnIndex = 8,title = "提交考题时间")
+    @ExcelField(columnIndex = 9,title = "提交考题时间")
     private String submitTime;
 
-    @ExcelField(columnIndex = 9,title = "成绩")
+    @ExcelField(columnIndex = 10,title = "成绩")
     private String score;
 
     //    考试次数	第一题	第二题	第三题	...第N题	主观题：XXXXXX	提交问卷时间	成绩
-    @ExcelField(columnIndex = 10, title = "第%d题")
+    @ExcelField(columnIndex = 11, title = "第%d题")
     private List answerList;
 
 
