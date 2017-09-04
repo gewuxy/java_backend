@@ -1492,9 +1492,21 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
 
     public List<MeetLearningRecord> findLearningRecord(String meetId,Integer userId){
         List<MeetLearningRecord> learningList = meetLearningRecordDAO.findLearningRecordList(meetId, userId);
-        return learningList == null ? null : learningList;
+        return learningList;
     }
 
+    /**
+     * 设置用户学习记录
+     * @param folderDTO
+     * @param userId
+     */
+    public void setUserLearningRecord(MeetFolderDTO folderDTO,Integer userId){
+        if (folderDTO.getType() == MeetFolderDTO.FolderType.meet.ordinal()
+                && (folderDTO.getState().intValue() == Meet.MeetType.IN_USE.getState().intValue()
+                || folderDTO.getState().intValue() == Meet.MeetType.OVER.getState().intValue())) {
+            folderDTO.setCompleteProgress(findUserLearningRecord(folderDTO.getId(),userId));
+        }
+    }
 
     protected int calCompleteProgress(List<MeetLearningRecord> records){
         float completeProgress = 0.0f;

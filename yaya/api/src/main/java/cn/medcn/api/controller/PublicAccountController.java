@@ -173,10 +173,7 @@ public class PublicAccountController {
         // 查询会议文件夹及会议列表
         MyPage<MeetFolderDTO> page = meetFolderService.findUnitMeetFolder(pageable);
         for (MeetFolderDTO folderDTO : page.getDataList()) {
-            Integer userLearnProgress = meetService.findUserLearningRecord(folderDTO.getId(), userId);
-            if (userLearnProgress != null) {
-                folderDTO.setCompleteProgress(userLearnProgress);
-            }
+            meetService.setUserLearningRecord(folderDTO,userId);
         }
         if (pageable.getPageNum() == 1) {
             if (!StringUtils.isEmpty(unitInfoDTO.getHeadimg())) {
@@ -193,7 +190,7 @@ public class PublicAccountController {
             unitInfoDTO.setMeetFolderList(page.getDataList());
             return APIUtils.success(unitInfoDTO);
         } else { //下拉列表操作，只返回会议文件夹及会议列表
-            List folderList = page.getDataList();
+            List<MeetFolderDTO> folderList = page.getDataList();
             return APIUtils.success(folderList);
         }
     }

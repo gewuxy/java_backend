@@ -194,7 +194,8 @@ public class MeetController extends BaseController {
         MyPage<MeetFolderDTO> page = meetFolderService.findMyMeetFolderList(pageable);
         if (!CheckUtils.isEmpty(page.getDataList())) {
             for (MeetFolderDTO folderDTO : page.getDataList()) {
-                userLearningProgress(folderDTO, userId);
+                // 设置用户学习进度
+                meetService.setUserLearningRecord(folderDTO, userId);
                 if (folderDTO.getType() == MeetFolderDTO.FolderType.folder.ordinal()) { // 文件夹 设置相应的状态
                     folderDTO.setState(state);
                 }
@@ -659,7 +660,7 @@ public class MeetController extends BaseController {
     @ResponseBody
     public String folderLeafList(Pageable pageable, String preId, Integer showFlag) {
         if (preId == null) {
-            return error("preId不能为空");
+            return error("参数错误");
         }
         Principal principal = SecurityUtils.getCurrentUserInfo();
         Integer userId = principal.getId();
@@ -669,7 +670,7 @@ public class MeetController extends BaseController {
         MyPage<MeetFolderDTO> page = meetFolderService.findLeafMeetFolder(pageable);
         if (!CheckUtils.isEmpty(page.getDataList())) {
             for (MeetFolderDTO folderDTO : page.getDataList()) {
-                userLearningProgress(folderDTO, userId);
+                meetService.setUserLearningRecord(folderDTO, userId);
             }
         }
         return success(page.getDataList());
@@ -692,23 +693,6 @@ public class MeetController extends BaseController {
         return learningRecord;
     }
 
-    /**
-     * 获取学习进度
-     *
-     * @param folderDTO
-     * @param userId
-     * @return
-     */
-    private void userLearningProgress(MeetFolderDTO folderDTO, int userId) {
-        if (folderDTO.getType() == MeetFolderDTO.FolderType.meet.ordinal() && folderDTO.getState() == Meet.MeetType.OVER.ordinal()) {
-            int completeCount = meetService.findUserLearningRecord(folderDTO.getId(), userId);
-            if (completeCount > 0) {
-                folderDTO.setCompleteProgress(completeCount);
-            } else {
-                folderDTO.setCompleteProgress(0);
-            }
-        }
-    }
 
 
 }
