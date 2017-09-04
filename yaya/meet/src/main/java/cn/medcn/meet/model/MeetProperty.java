@@ -48,4 +48,26 @@ public class MeetProperty implements Serializable{
     private Integer memberLimitType;
     /**指定科室参与*/
     private String specifyDepart;
+
+    public enum LimitType {
+        NOT_LIMIT(0,"不限制"),
+        REGION_LIMIT(1,"地区"),
+        GROUP_LIMIT(2,"群组");
+
+        private Integer limitType;
+        private String limitLabel;
+
+        public Integer getLimitType() {
+            return limitType;
+        }
+
+        public String getLimitLabel() {
+            return limitLabel;
+        }
+
+        LimitType(Integer limitType, String limitLabel){
+            this.limitType = limitType ;
+            this.limitLabel = limitLabel;
+        }
+    }
 }
