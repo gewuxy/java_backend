@@ -239,7 +239,6 @@ public class MeetController extends BaseController {
     }
 
 
-
     /**
      * 会议草稿箱
      *
@@ -256,218 +255,6 @@ public class MeetController extends BaseController {
         return "/meet/draft";
     }
 
-    // 从草稿箱复制会议信息
-    private String copyMeetInfo(String oldMeetId) throws SystemException {
-        Meet oldMeet = meetService.findMeet(oldMeetId);
-        String newMeetId = null;
-        if (oldMeet != null) {
-            Meet newMeet = oldMeet;
-            newMeet.setId(UUIDUtil.getNowStringID());
-            newMeetId = meetService.addMeetInfo(newMeet);
-            // 复制会议文件资料
-            MeetMaterial condition = new MeetMaterial();
-            condition.setMeetId(oldMeetId);
-            List<MeetMaterial> materials = meetMaterialService.select(condition);
-            if (!CheckUtils.isEmpty(materials)) {
-                for (MeetMaterial material : materials) {
-                    material.setMeetId(newMeetId);
-                    MeetMaterial newMaterial = material;
-                    newMaterial.setId(null);
-                    meetMaterialService.insert(newMaterial);
-                }
-            }
-
-            // 复制会议文件夹
-            InfinityTreeDetail detail = new InfinityTreeDetail();
-            detail.setResourceId(oldMeetId);
-            InfinityTreeDetail treeDetail = meetFolderService.selectTreeDetail(detail);
-            if (treeDetail != null) {
-                treeDetail.setId(null);
-                treeDetail.setResourceId(newMeetId);
-                treeDetail.setResourceName(newMeet.getMeetName());
-                meetFolderService.insertDetail(treeDetail);
-            }
-        }
-        return newMeetId;
-    }
-
-    // 复制会议课程模块
-    private void copyModuleCourse(String oldMeetId, String newMeetId) throws SystemException {
-        // 查询会议所有模块
-        List<MeetModule> moduleList = meetService.findModules(oldMeetId);
-        if (!CheckUtils.isEmpty(moduleList)) {
-            for (MeetModule oldMeetModule : moduleList) {
-                // 复制模块表
-                Integer newModuleId = meetService.addModuleReturnId(newMeetId, oldMeetModule);
-
-                int oldFunctionId = oldMeetModule.getFunctionId();
-
-                // 查询草稿会议的课程ID
-                Integer oldCourseId = meetService.findModuleCourseId(oldMeetModule);
-
-                // 根据courseId查询 草稿会议的课程表 并复制创建新的会议课程表获取新的课程ID
-                if (oldFunctionId == MeetModule.ModuleFunction.PPT.getFunId()) {
-                    // 复制PPT课程会议
-                    copyAudioCourse(oldCourseId, newModuleId, newMeetId);
-                } else if (oldFunctionId == MeetModule.ModuleFunction.VIDEO.getFunId()) {
-                    // 复制视频课程会议
-                    copyVideoCourse(oldCourseId, newModuleId, newMeetId);
-                } else if (oldFunctionId == MeetModule.ModuleFunction.EXAM.getFunId()) {
-                    // 复制考试课程会议
-                    MeetExam oldExam = examService.findExam(oldMeetId, oldMeetModule.getId());
-                    if (oldExam != null) {
-                        copyExam(oldExam, newModuleId, newMeetId);
-                    }
-                } else if (oldFunctionId == MeetModule.ModuleFunction.SURVEY.getFunId()) {
-                    // 复制问卷调查课程会议
-                    copySurvey(oldCourseId, newModuleId, newMeetId);
-                } else {
-                    // 复制签到课程会议
-                    MeetPosition oldPosition = signService.findPosition(oldMeetId, oldMeetModule.getId());
-                    if (oldPosition != null) {
-                        MeetPosition position = oldPosition;
-                        position.setId(null);
-                        position.setMeetId(newMeetId);
-                        position.setModuleId(newModuleId);
-                        signService.insert(position);
-                    }
-                }
-            }
-        }
-    }
-
-    private void copyAudioCourse(Integer oldCourseId, Integer newModuleId, String newMeetId) {
-        AudioCourse oldAudioCourse = null;
-        if (oldCourseId != null && oldCourseId != 0) {
-            oldAudioCourse = audioService.findAudioCourse(oldCourseId);
-        }
-        Integer newCourseId = 0;
-        if (oldAudioCourse != null) {
-            // 复制PPT语音课程
-            AudioCourse newAudioCourse = oldAudioCourse;
-            newAudioCourse.setId(null);
-            audioService.insert(newAudioCourse);
-            newCourseId = newAudioCourse.getId();
-            // 复制ppt明细表
-            if (!CheckUtils.isEmpty(oldAudioCourse.getDetails())) {
-                List<AudioCourseDetail> oldDetailList = oldAudioCourse.getDetails();
-                for (AudioCourseDetail detail : oldDetailList) {
-                    detail.setId(null);
-                    detail.setCourseId(newCourseId);
-                }
-                audioService.insertBatch(oldDetailList);
-            }
-        }
-
-        // 复制ppt语音表
-        MeetAudio newAudio = new MeetAudio();
-        newAudio.setId(null);
-        newAudio.setMeetId(newMeetId);
-        newAudio.setModuleId(newModuleId);
-        newAudio.setCourseId(newCourseId);
-        audioService.addMeetAudio(newAudio);
-
-
-    }
-
-    private void copyVideoCourse(Integer oldCourseId, Integer newModuleId, String newMeetId) {
-        VideoCourse videoCourse = new VideoCourse();
-        videoCourse.setId(oldCourseId);
-        VideoCourse oldVideoCourse = videoService.selectByPrimaryKey(videoCourse);
-        Integer newCourseId = 0;
-        if (oldVideoCourse != null) {
-            // 复制视频课程
-            VideoCourse newVideoCourse = oldVideoCourse;
-            newVideoCourse.setId(null);
-            videoService.insert(newVideoCourse);
-            newCourseId = newVideoCourse.getId();
-        }
-
-        // 复制视频表
-        MeetVideo newVideo = new MeetVideo();
-        newVideo.setMeetId(newMeetId);
-        newVideo.setModuleId(newModuleId);
-        newVideo.setCourseId(newCourseId);
-        videoService.insertMeetVideo(newVideo);
-
-        List<VideoCourseDetail> oldDetailList = videoService.findRootDetail(oldCourseId);
-        if (!CheckUtils.isEmpty(oldDetailList)) {
-            for (VideoCourseDetail detail : oldDetailList) {
-                Integer oldPreId = detail.getId();
-                List<VideoCourseDetail> oldLeafDetailList = videoService.findByPreid(oldPreId);
-                // 复制父目录数据
-                detail.setId(null);
-                detail.setCourseId(newCourseId);
-                Integer newPreId = videoService.addDetail(detail);
-                // 复制子目录数据
-                if (!CheckUtils.isEmpty(oldLeafDetailList)) {
-                    for (VideoCourseDetail leafDetail : oldLeafDetailList) {
-                        leafDetail.setId(null);
-                        leafDetail.setCourseId(newCourseId);
-                        leafDetail.setPreId(newPreId);
-                        videoService.addDetail(leafDetail);
-                    }
-                }
-            }
-        }
-    }
-
-    private void copyExam(MeetExam oldExam, Integer newModuleId, String newMeetId) {
-        Integer oldPaperId = oldExam.getPaperId();
-        ExamPaper oldExamPaper = examService.findExamPaper(oldPaperId);
-        if (oldExamPaper != null) {
-            ExamPaper newExamPaper = oldExamPaper;
-            newExamPaper.setId(null);
-            Integer newPaperId = examService.addPaper(newExamPaper);
-
-            MeetExam newExam = oldExam;
-            newExam.setId(null);
-            newExam.setPaperId(newPaperId);
-            newExam.setModuleId(newModuleId);
-            newExam.setMeetId(newMeetId);
-            examService.insert(newExam);
-
-            List<ExamPaperQuestion> oldQuestionList = examService.findQuestionListByPaperId(oldPaperId);
-            if (!CheckUtils.isEmpty(oldQuestionList)) {
-                for (ExamPaperQuestion paperQuestion : oldQuestionList) {
-                    Integer oldQuestionId = paperQuestion.getQuestionId();
-                    ExamQuestion oldQuestion = examService.findQuestion(paperQuestion.getPaperId(), oldQuestionId);
-                    ExamQuestion newQuestion = oldQuestion;
-                    newQuestion.setId(null);
-                    Integer newQuestionId = examService.addQuestion(newQuestion);
-
-                    paperQuestion.setId(null);
-                    paperQuestion.setPaperId(newPaperId);
-                    paperQuestion.setQuestionId(newQuestionId);
-                    examService.insertExamPaperQuestion(paperQuestion);
-                }
-            }
-        }
-    }
-
-    private void copySurvey(Integer oldPaperId, Integer newModuleId, String newMeetId) {
-        SurveyPaper oldSurvey = surveyService.findSurveyPaper(oldPaperId);
-        if (oldSurvey != null) {
-            SurveyPaper newSurveyPaper = oldSurvey;
-            newSurveyPaper.setId(null);
-            Integer newPaperId = surveyService.addSurveyPaper(newSurveyPaper);
-
-            MeetSurvey newSurvey = new MeetSurvey();
-            newSurvey.setPaperId(newPaperId);
-            newSurvey.setModuleId(newModuleId);
-            newSurvey.setMeetId(newMeetId);
-            surveyService.insert(newSurvey);
-
-            List<SurveyQuestion> oldQuestionList = oldSurvey.getQuestionList();
-            for (SurveyQuestion question : oldQuestionList) {
-                question.setId(null);
-                question.setPaperId(newPaperId);
-                surveyService.addQuestion(question);
-            }
-
-        }
-    }
-
 
     /**
      * 复制草稿 跳转到编辑会议界面
@@ -481,12 +268,43 @@ public class MeetController extends BaseController {
         if (!meetService.checkMeetIsMine(principal.getId(), id)) {
             throw new SystemException(SpringUtils.getMessage("meet.notmine"));
         }
-        // 复制会议信息
+
+        // 复制会议基本数据
         String newMeetId = copyMeetInfo(id);
-        // 复制会议模块数据
-        copyModuleCourse(id, newMeetId);
+        if (!CheckUtils.isEmpty(newMeetId)) {
+            // 复制会议模块数据
+            meetService.copyMeetModuleCourse(id, newMeetId);
+        }
+
         return "redirect:/func/meet/edit?id=" + newMeetId;
     }
+
+
+    /**
+     * 复制草稿箱会议数据
+     * @param oldMeetId
+     * @return
+     * @throws SystemException
+     */
+    private String copyMeetInfo(String oldMeetId) throws SystemException {
+        Meet oldMeet = meetService.findMeet(oldMeetId);
+        String newMeetId = null;
+        if (oldMeet != null) {
+            Meet newMeet = oldMeet;
+            // 复制会议基本信息
+            newMeet.setId(UUIDUtil.getNowStringID());
+            newMeetId = meetService.addMeetInfo(newMeet);
+
+            // 复制会议文件资料
+            meetMaterialService.copyMeetMaterial(oldMeetId,newMeetId);
+
+            // 复制会议文件夹
+            meetFolderService.copyMeetFolder(oldMeetId,newMeetId,newMeet.getMeetName());
+        }
+
+        return newMeetId;
+    }
+
 
     /**
      * 跳转到添加会议页面
@@ -533,7 +351,7 @@ public class MeetController extends BaseController {
         boolean isAdd = StringUtils.isEmpty(meet.getId());
         if (isAdd) {
             meet.setId(UUIDUtil.getNowStringID());
-            meet.setState((short) 0);
+            meet.setState(Meet.MeetType.DRAFT.getState());
             meet.setOrganizer(principal.getNickname());
             meet.setCreateTime(new Date());
             meet.setOwnerId(principal.getId());
@@ -584,23 +402,6 @@ public class MeetController extends BaseController {
             }
         }
         return APIUtils.success(credits.getCredit());
-    }
-
-    private void checkCredits(Integer eduCredits, Integer xsCredits, Integer userId, Integer limit) throws SystemException {
-        if (eduCredits != null && eduCredits == 1) {
-            if (xsCredits == null) {
-                xsCredits = 0;
-            }
-            if (xsCredits > 0) {//判断象数是否足够
-                if (limit == null || limit == 0) {
-                    throw new SystemException("请填写奖励人数限制");
-                }
-                Credits credits = creditsService.doFindMyCredits(userId);
-                if (credits.getCredit() < limit * xsCredits) {
-                    throw new SystemException("保存会议失败,您的象数不足");
-                }
-            }
-        }
     }
 
 
@@ -690,13 +491,16 @@ public class MeetController extends BaseController {
         Integer memberLimitType = meet.getMeetProperty().getMemberLimitType();
         Integer groupId = meet.getMeetProperty().getGroupId();
         if (memberLimitType == null) {
-            memberLimitType = 0;
+            memberLimitType = MeetProperty.LimitType.NOT_LIMIT.getLimitType();
         }
-        if (memberLimitType == 1 && !StringUtils.isEmpty(specifyProvince)) {
+        if (memberLimitType == MeetProperty.LimitType.REGION_LIMIT.getLimitType()
+                && !StringUtils.isEmpty(specifyProvince)) {
+
             List<SystemRegion> cities = systemRegionService.findRegionByPreName(specifyProvince);
             model.addAttribute("cities", cities);
-        } else if (memberLimitType == 2 &&
-                (groupId != null && groupId != 0)) {// 指定群组
+
+        } else if (memberLimitType == MeetProperty.LimitType.GROUP_LIMIT.getLimitType()
+                && (groupId != null && groupId != 0)) {// 指定群组
             // 查询组名
             Group group = new Group();
             group.setId(groupId);
@@ -991,16 +795,41 @@ public class MeetController extends BaseController {
         return "/meet/materialList";
     }
 
-
+    /**
+     * 完成发布会议
+     * @param meetId
+     * @return
+     */
     @RequestMapping(value = "/publish")
     @ResponseBody
-    public String publish(String meetId, Integer saveAction) {
+    public String publish(String meetId) {
         Principal principal = SubjectUtils.getCurrentUser();
         if (!meetService.checkMeetIsMine(principal.getId(), meetId)) {
             return APIUtils.error("您不能操作不属于您的会议");
         }
         try {
-            meetService.doPublish(meetId, saveAction);
+            meetService.doPublish(meetId);
+        } catch (SystemException e) {
+            e.printStackTrace();
+            return APIUtils.error(e.getMessage());
+        }
+        return APIUtils.success();
+    }
+
+    /**
+     * 保存草稿会议
+     * @param meetId
+     * @return
+     */
+    @RequestMapping(value = "/save/draft")
+    @ResponseBody
+    public String saveDraft(String meetId){
+        Principal principal = SubjectUtils.getCurrentUser();
+        if (!meetService.checkMeetIsMine(principal.getId(), meetId)) {
+            return APIUtils.error("您不能操作不属于您的会议");
+        }
+        try {
+            meetService.saveDraftMeet(meetId);
         } catch (SystemException e) {
             e.printStackTrace();
             return APIUtils.error(e.getMessage());
