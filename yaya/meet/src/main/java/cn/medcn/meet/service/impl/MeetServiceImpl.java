@@ -1181,7 +1181,7 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
     }
 
     // 发布会议动作
-    private interface actionNumber{
+    private interface ActionNumber {
         int saveDraft = 0; // 保存草稿
         int finish = 1; // 完成发布
     }
@@ -1216,7 +1216,7 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         MeetProperty condition = new MeetProperty();
         condition.setMeetId(meetId);
         MeetProperty property = meetPropertyDAO.selectOne(condition);
-        if (saveAction.intValue() == actionNumber.finish) {
+        if (saveAction.intValue() == ActionNumber.finish) {
             if (property.getStartTime().before(new Date())) {
                 meet.setState(Meet.MeetType.IN_USE.getState());
             } else {
