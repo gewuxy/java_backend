@@ -8,6 +8,7 @@ import cn.medcn.user.model.Department;
 import cn.medcn.user.model.Hospital;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/4/24.
@@ -89,4 +90,10 @@ public interface HospitalService extends BaseService<Hospital> {
      * @return
      */
     List<HospitalLevelDTO> findAllLevels();
+
+    /**
+     * 获取医院科室，用map接收，科室第一级为key,科室第二级为value
+     * @return
+     */
+    Map<String,List<String>> getAllDepart();
 }

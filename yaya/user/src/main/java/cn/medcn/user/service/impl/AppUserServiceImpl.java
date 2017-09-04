@@ -4,14 +4,15 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.common.utils.UUIDUtil;
+import cn.medcn.common.utils.*;
 import cn.medcn.goods.dao.TradeDetailDAO;
 import cn.medcn.goods.model.Credits;
 import cn.medcn.goods.model.TradeDetail;
 import cn.medcn.goods.service.CreditsService;
+import cn.medcn.sys.model.SystemProperties;
+import cn.medcn.sys.service.SysPropertiesService;
 import cn.medcn.user.dao.*;
 import cn.medcn.user.dto.*;
 import cn.medcn.user.model.*;
@@ -21,13 +22,16 @@ import cn.medcn.weixin.model.WXUserInfo;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/4/20.
@@ -81,6 +85,14 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
     @Autowired
     private WXUserInfoDAO wxUserInfoDAO;
 
+    @Autowired
+    private RedisCacheUtils redisCacheUtils;
+
+    @Autowired
+    private SysPropertiesService sysPropertiesService;
+
+    @Autowired
+    private JSmsService jSmsService;
 
     @Override
     public Mapper<AppUser> getBaseMapper() {
@@ -730,4 +742,151 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         }
         return null;
     }
+
+    /**
+     * 发送验证码
+     * @param mobile
+     * @return
+     */
+    @Override
+    public String sendCaptcha(String mobile) {
+
+        if(!RegexUtils.checkMobile(mobile)){
+            return APIUtils.error("手机格式不正确");
+        }
+
+        AppUser user = new AppUser();
+        user.setMobile(mobile);
+
+
+        //10分钟内最多允许获取3次验证码
+        Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(mobile);
+        if(captcha == null){ //第一次获取
+            String msgId = null;
+            try {
+                msgId = jSmsService.send(mobile, Constants.DEFAULT_TEMPLATE_ID);
+            } catch (Exception e) {
+                return APIUtils.error("发送短信失败");
+            }
+            Captcha firstCaptcha = new Captcha();
+            firstCaptcha.setFirstTime(new Date());
+            firstCaptcha.setCount(Constants.NUMBER_ZERO);
+            firstCaptcha.setMsgId(msgId);
+            redisCacheUtils.setCacheObject(mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
+            return APIUtils.success();
+
+        }else {
+            Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
+            if(captcha.getCount() == 2 && between < TimeUnit.MINUTES.toMillis(10)){
+                return APIUtils.error("获取验证码次数频繁，请稍后");
+            }
+            String msgId = null;
+            try {
+                msgId = jSmsService.send(mobile, Constants.DEFAULT_TEMPLATE_ID);
+            } catch (Exception e) {
+                return APIUtils.error("发送短信失败");
+            }
+            captcha.setMsgId(msgId);
+            captcha.setCount(captcha.getCount() + 1);
+            redisCacheUtils.setCacheObject(mobile,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
+        }
+
+        return APIUtils.success();
+    }
+
+    /**
+     * 获取医院等级
+     * @param version
+     * @return
+     */
+    @Override
+    public String getHosLevel(Integer version,String appFileBaseUrl) {
+        SystemProperties properties = new SystemProperties();
+        List<SystemProperties> list = null;
+        list = sysPropertiesService.select(properties);
+        Integer newVersion = list.get(0).getVersion();
+        for(int i=1;i<list.size();i++){
+            if(list.get(i).getVersion() > newVersion){
+                newVersion = list.get(i).getVersion();
+            }
+        }
+
+        Map<String,Object> map = new HashedMap();
+        map.put("version",newVersion);
+        if(version != null && version >= newVersion){  //版本无变化
+            return APIUtils.success(map);
+        }
+        //第一次获取或者版本有变化,返回所有的数据
+
+        for(SystemProperties properties1:list){
+            if(!StringUtils.isEmpty(properties1.getPicture())){
+                properties1.setPicture(appFileBaseUrl + properties1.getPicture());
+            }
+        }
+        map.put("propList",list);
+        return APIUtils.success(map);
+    }
+
+    /**
+     * 获取医生职称
+     * @return
+     */
+    @Override
+    public List<TitleDTO> getTitle() {
+        List<TitleDTO> dtoList = new ArrayList<>();
+        List<String> gradeList = new ArrayList<>();
+        gradeList.add("医师");
+        gradeList.add("药师");
+        gradeList.add("护师");
+        gradeList.add("技师");
+
+        TitleDTO dto1 = new TitleDTO();
+        dto1.setTitle("高级职称");
+        dto1.setGrade(gradeList);
+
+        TitleDTO dto2 = new TitleDTO();
+        dto2.setTitle("中级职称");
+        dto2.setGrade(gradeList);
+
+        TitleDTO dto3 = new TitleDTO();
+        dto3.setTitle("初级职称");
+        dto3.setGrade(gradeList);
+
+        TitleDTO dto4 = new TitleDTO();
+        dto4.setTitle("其他");
+        List<String> list = new ArrayList<>();
+        list.add("其他职称");
+        dto4.setGrade(list);
+
+        dtoList.add(dto1);
+        dtoList.add(dto2);
+        dtoList.add(dto3);
+        dtoList.add(dto4);
+        return dtoList;
+    }
+
+    /**
+     * 执行测试用户和正式用户注册
+     * @param dto
+     * @param invite
+     * @param masterId
+     * @param user
+     * @return
+     */
+    @Override
+    public String executeUserRegister(AppUserDTO dto, String invite, Integer[] masterId, AppUser user) {
+        try{
+            //检查是否是测试用邀请码, 医院名:敬信药草园,邀请码:2603 为测试用户注册
+            if(Constants.DEFAULT_HOS_NAME.equals(dto.getHospital()) && Constants.DEFAULT_INVITE.equals(invite)){
+               executeRegist(user, null,null);  //测试用户注册
+            }else{
+                //已检查invite,masterId，不可能同时为空
+                executeRegist(user, invite,masterId);//真实用户注册
+            }
+        }catch (Exception e){
+            return APIUtils.error(e.getMessage());
+        }
+        return null;
+    }
+
 }

@@ -218,4 +218,35 @@ public interface AppUserService extends BaseService<AppUser> {
      * @return
      */
     String doBindWeiXin(AppUser user);
+
+    /**
+     * 发送验证码
+     * @param mobile
+     * @return
+     */
+    String sendCaptcha(String mobile);
+
+    /**
+     * 获取医院等级
+     * @param version
+     * @return
+     */
+    String getHosLevel(Integer version,String appFileBaseUrl);
+
+    /**
+     * 获取医生职称
+     * @return
+     */
+    List<TitleDTO> getTitle();
+
+    /**
+     * 执行测试用户和正式用户注册
+     * 医院名:敬信药草园,邀请码:2603 为测试用户注册
+     * @param dto
+     * @param invite
+     * @param masterId
+     * @param user
+     * @return
+     */
+    String executeUserRegister(AppUserDTO dto, String invite, Integer[] masterId, AppUser user);
 }
