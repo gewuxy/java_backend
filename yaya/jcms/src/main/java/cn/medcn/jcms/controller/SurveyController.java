@@ -152,7 +152,7 @@ public class SurveyController extends BaseController {
             pageable.put("meetId", id);
             page = surveyService.findSurveyRecord(pageable);
         } else {
-            return APIUtils.error("会议ID不存在");
+            return APIUtils.error("参数错误");
         }
         return APIUtils.success(page);
     }
@@ -173,54 +173,71 @@ public class SurveyController extends BaseController {
 
         if (!StringUtils.isEmpty(meetId)) {
             Workbook workbook = null;
-            String fileName = " 参与问卷人员情况.xls";
+            String fileName = "_参与问卷人员情况.xls";
             List<Object> dataList = Lists.newArrayList();
 
             List<AttendSurveyUserDataDTO> surveyDataList = findSurveyDataList(principal.getId(),meetId);
             if (!CheckUtils.isEmpty(surveyDataList)){
                 fileName = surveyDataList.get(0).getMeetName() + fileName;
+
                 // 查询一共多少道题目
                 List<Integer> sortList = surveyService.findQuestionSort(meetId);
 
                 // 根据用户ID 查询用户的答题数据
                 for (AttendSurveyUserDataDTO userDataDTO : surveyDataList) {
+                    // 填充excel表格数据
                     SurveyHistoryUserExcelData excelData = fillDataToSurveyExcel(userDataDTO);
 
                     Integer userId = userDataDTO.getUserId();
-                    // 查询用户题目选项记录
-                    List<QuestionOptItemDTO> optItemDTOList = surveyService.findOptItemListByUser(meetId, userId);
-                    List answerList = Lists.newArrayList();
-                    if (!CheckUtils.isEmpty(sortList)){
-                        for (Integer i : sortList) {
-                            if (!CheckUtils.isEmpty(optItemDTOList)) {
-                                for (QuestionOptItemDTO itemDTO : optItemDTOList) {
-                                    // 比较题号和用户答题的题号一致 设置该题用户选择的答案
-                                    if (i == itemDTO.getSort()) {
-                                        answerList.add(itemDTO.getSelAnswer());
-                                    }
-                                }
-                            } else {
-                                answerList.add("空");
-                            }
-                        }
-                    }
+                    // 用户每道题选择的答案记录
+                    List answerList = findUserSelectAnswer(meetId, userId, sortList);
                     excelData.setAnswerList(answerList);
+
                     dataList.add(excelData);
                 }
             }else{
                 return APIUtils.error("暂无相关数据");
             }
+
             workbook = ExcelUtils.writeExcel(fileName,dataList,SurveyHistoryUserExcelData.class);
 
             try {
+
                 ExcelUtils.outputWorkBook(fileName,workbook, response);
+
             }catch (Exception e){
                 e.printStackTrace();
-                return APIUtils.error("导出文件出错");
+                return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
             }
-
         }
-        return APIUtils.error("导出文件出错");
+
+        return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
+    }
+
+    /**
+     *  查找用户选择的答案
+     * @param meetId
+     * @param userId
+     * @param sortList
+     */
+    private List findUserSelectAnswer(String meetId, Integer userId, List<Integer> sortList){
+        List<QuestionOptItemDTO> optItemDTOList = surveyService.findOptItemListByUser(meetId, userId);
+        List answerList = Lists.newArrayList();
+        if (!CheckUtils.isEmpty(sortList)){
+            for (Integer i : sortList) {
+                if (!CheckUtils.isEmpty(optItemDTOList)) {
+                    for (QuestionOptItemDTO itemDTO : optItemDTOList) {
+                        // 比较题号和用户答题的题号一致 设置该题用户选择的答案
+                        if (i == itemDTO.getSort()) {
+                            answerList.add(itemDTO.getSelAnswer());
+                        }
+                    }
+                } else {
+                    answerList.add("空");
+                }
+            }
+        }
+        return answerList;
     }
 
     /**
@@ -230,27 +247,10 @@ public class SurveyController extends BaseController {
      * @return
      */
     private List<AttendSurveyUserDataDTO> findSurveyDataList(Integer userId,String meetId){
-        List<AttendSurveyUserDataDTO> surveyDataList = Lists.newArrayList();
-        MeetLimitDTO meetLimitDTO = surveyService.findGroupIdIsLimit(meetId);
-        // 查询会议是否有限制分组
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("meetId", meetId);
         conditionMap.put("userId", userId);
-
-        if (meetLimitDTO != null && (!"".equals(meetLimitDTO.getGroupId())
-                && meetLimitDTO.getGroupId() != 0)) {
-            // 如果限制分组，查询该分组下的用户的基本信息
-            conditionMap.put("groupId", meetLimitDTO.getGroupId());
-            surveyDataList = surveyService.findAttendUserDataByGroupId(conditionMap);
-            if (!CheckUtils.isEmpty(surveyDataList)){
-                AttendSurveyUserDataDTO userDataDTO = surveyDataList.get(0);
-                userDataDTO.setMeetName(meetLimitDTO.getMeetName());
-            }
-        } else {
-            // 查询问卷记录中的用户数据
-            surveyDataList = surveyService.findUserSurveyHis(conditionMap);
-        }
-        return surveyDataList;
+        return surveyService.findUserSurveyHis(conditionMap);
     }
 
     /**
@@ -269,71 +269,91 @@ public class SurveyController extends BaseController {
         }
 
         if (!StringUtils.isEmpty(id)) {
-            List srList = Lists.newArrayList();
+            List surveyList = Lists.newArrayList();
+
             pageable.setPageSize(3);// 设置每页显示3条数据
             pageable.put("meetId", id);
             // 查询问卷数据列表
             MyPage<SurveyQuestion> questionPage = surveyService.findSurveyDatas(pageable);
-            if (!CheckUtils.isEmpty(questionPage.getDataList())){
-                for (SurveyQuestion sq : questionPage.getDataList()){
+
+            if (!CheckUtils.isEmpty(questionPage.getDataList())) {
+                for (SurveyQuestion sq : questionPage.getDataList()) {
                     SurveyRecordDTO recordDTO = new SurveyRecordDTO();
                     recordDTO.setSort(sq.getSort());
                     recordDTO.setTitle(sq.getTitle());
                     recordDTO.setQtype(sq.getQtype());
 
-                    // 选项记录
-                    List<SurveyRecordItemDTO> itemDTO = new ArrayList<>();
-
                     // 每道题目的所有选项
-                    List<KeyValuePair> kvlist = sq.getOptionList();
+                    List<KeyValuePair> kvList = sq.getOptionList();
 
                     // 根据题目ID 查询所有用户答题记录
                     Integer questionId = sq.getId();
-                    List<SurveyRecordItemDTO> surveyRecordList = surveyService.findSurveyRecordByQid(questionId);
-                    // 再遍历所有的答题记录 和题目的选项列表遍历 对比用户选择的选项对比 累加每个选项的选择次数
-                    if (!CheckUtils.isEmpty(surveyRecordList)) {
-                        for (KeyValuePair kv : kvlist) {
-                            // 选项
-                            String key = kv.getKey();
-                            // 选项内容
-                            String v = kv.getValue();
-                            SurveyRecordItemDTO item = new SurveyRecordItemDTO();
-                            item.setOptkey(key);
-                            item.setOption(v);
+                    // 用户每道题目选择的答案和正确答案比较，统计出每个选项被选择的次数
+                    assignRecordItemDTOData(questionId, kvList, recordDTO);
 
-                            Integer selCount = 0;
-                            for (SurveyRecordItemDTO sv : surveyRecordList) {
-                                if (!StringUtils.isBlank(sv.getSelAnswer())) {
-                                    selCount = calculationNumber(key,sv.getSelAnswer(),selCount);
-                                }
-                            }
-                            item.setSelCount(selCount);
-                            itemDTO.add(item);
-                            recordDTO.setSurveyRecordItemDTO(itemDTO);
-                            selCount = 0;
-                        }
-                    } else {
-                        // 遍历题目所有选项
-                        for (KeyValuePair kv : kvlist) {
-                            // 选项
-                            String key = kv.getKey();
-                            // 选项内容
-                            String v = kv.getValue();
-                            SurveyRecordItemDTO item = new SurveyRecordItemDTO();
-                            item.setOptkey(key);
-                            item.setOption(v);
-                            item.setSelCount(0);
-                            itemDTO.add(item);
-                        }
-                        recordDTO.setSurveyRecordItemDTO(itemDTO);
-                    }
-                    srList.add(recordDTO);
+                    surveyList.add(recordDTO);
                 }
             }
-            questionPage.setDataList(srList);
+
+            questionPage.setDataList(surveyList);
             return APIUtils.success(questionPage);
-        }else{
-            return APIUtils.error("会议ID不存在");
+
+        } else {
+            return APIUtils.error("参数错误");
+        }
+    }
+
+    /**
+     * 统计每个选项被选择的次数
+     *
+     * @param questionId 题目id
+     * @param kvList     题目的选项列表
+     * @param recordDTO  问卷内容DTO
+     */
+    private void assignRecordItemDTOData(Integer questionId, List<KeyValuePair> kvList, SurveyRecordDTO recordDTO) {
+        // 选项内容及被选择的次数记录
+        List<SurveyRecordItemDTO> itemDTO = new ArrayList<>();
+        // 题目选项记录
+        List<SurveyRecordItemDTO> surveyRecordList = surveyService.findSurveyRecordByQid(questionId);
+        // 遍历所有的答题记录和题目的选项列表，比较正确答案和用户选择的答案，累加每个选项被选择的次数
+        if (!CheckUtils.isEmpty(surveyRecordList)) {
+            for (KeyValuePair kv : kvList) {
+                // 选项
+                String key = kv.getKey();
+                // 选项内容
+                String v = kv.getValue();
+
+                // 题目选项内容
+                SurveyRecordItemDTO item = new SurveyRecordItemDTO();
+                item.setOptkey(key);
+                item.setOption(v);
+
+                Integer selCount = 0;
+                for (SurveyRecordItemDTO sv : surveyRecordList) {
+                    if (!StringUtils.isBlank(sv.getSelAnswer())) { // 用户选择的答案
+                        // 计算每个选项被选择的次数
+                        selCount = calculateNumber(key, sv.getSelAnswer(), selCount);
+                    }
+                }
+                item.setSelCount(selCount);
+                itemDTO.add(item);
+                recordDTO.setSurveyRecordItemDTO(itemDTO);
+                selCount = 0;
+            }
+        } else {
+            // 遍历题目所有选项
+            for (KeyValuePair kv : kvList) {
+                // 选项
+                String key = kv.getKey();
+                // 选项内容
+                String v = kv.getValue();
+                SurveyRecordItemDTO item = new SurveyRecordItemDTO();
+                item.setOptkey(key);
+                item.setOption(v);
+                item.setSelCount(0);
+                itemDTO.add(item);
+            }
+            recordDTO.setSurveyRecordItemDTO(itemDTO);
         }
     }
 
@@ -378,7 +398,7 @@ public class SurveyController extends BaseController {
 
         if (!StringUtils.isEmpty(meetId)) {
             Workbook workbook = null;
-            String fileName = " 问卷数据分析.xls";
+            String fileName = "_问卷数据分析.xls";
             List<Object> dataList = Lists.newArrayList();
 
             Map<String, Object> conditionMap = new HashMap<String, Object>();
@@ -387,17 +407,9 @@ public class SurveyController extends BaseController {
 
             if (!CheckUtils.isEmpty(surveyList)) {
                 fileName = surveyList.get(0).getMeetName() + fileName;
+
                 // 根据Map的value大小 合并数据
-                Map<Integer,List> questionMap = Maps.newHashMap();
-                for (SurveyRecordDTO sv : surveyList) {
-                    // 每道题目的所有选项
-                    if (questionMap.get(sv.getSort()) == null) {
-                        List<KeyValuePair> kvlist = sv.getOptionList();
-                        questionMap.put(sv.getSort(), kvlist);
-                    } else {
-                        questionMap.get(sv.getSort()).add(sv.getOptionList());
-                    }
-                }
+                Map<Integer,List> questionMap = assignDataToMap(surveyList);
 
                 for (SurveyRecordDTO survey : surveyList) {
                     dataList.addAll(assignmentToSurvey(survey));
@@ -406,11 +418,11 @@ public class SurveyController extends BaseController {
                 workbook = ExcelUtils.writeExcel(fileName,dataList,SurveyExcelData.class);
 
                 try {
-                    //int[] columnIndexArray = new int[]{0, 1};
                     Integer sortIndex = SurveyExcelData.columnIndex.SORT.getColumnIndex();
                     Integer questionTitleIndex = SurveyExcelData.columnIndex.QUESTION_TITLE.getColumnIndex();
+                    // 需要合并的列的下标
                     int[] columnIndexArray = new int[]{sortIndex, questionTitleIndex};
-                    ExcelUtils.createMergeExcel(fileName, workbook,questionMap , columnIndexArray, response);
+                    ExcelUtils.createMergeExcel(fileName, workbook, questionMap, columnIndexArray, response);
 
                 }catch (Exception e){
                     e.printStackTrace();
@@ -420,7 +432,26 @@ public class SurveyController extends BaseController {
                 return APIUtils.error("暂无数据导出");
             }
         }
-        return APIUtils.error("导出文件出错");
+        return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
+    }
+
+    /**
+     * 赋值数据到map中
+     * @param surveyList
+     * @return
+     */
+    private Map<Integer,List> assignDataToMap(List<SurveyRecordDTO> surveyList){
+        Map<Integer,List> questionMap = Maps.newHashMap();
+        for (SurveyRecordDTO sv : surveyList) {
+            // 每道题目的所有选项
+            if (questionMap.get(sv.getSort()) == null) {
+                List<KeyValuePair> kvList = sv.getOptionList();
+                questionMap.put(sv.getSort(), kvList);
+            } else {
+                questionMap.get(sv.getSort()).add(sv.getOptionList());
+            }
+        }
+        return questionMap;
     }
 
     /**
@@ -432,10 +463,10 @@ public class SurveyController extends BaseController {
         List<Object> dataList = Lists.newArrayList();
         // 每道题目的所有选项
         List<KeyValuePair> kvlist = surveyDTO.getOptionList();
-        // 根据题目ID 查询所有用户答题记录
+        // 根据题目id查询所有用户答题记录
         Integer questionId = surveyDTO.getId();
         List<SurveyRecordItemDTO> userRecordList = surveyService.findSurveyRecordByQid(questionId);
-        // 遍历所有的答题记录 和题目的选项列表遍历 对比用户选择的选项 累加每个选项的选择次数
+        // 遍历所有的答题记录和题目的选项列表遍历 对比用户选择的选项 累加每个选项的选择次数
         if (!CheckUtils.isEmpty(userRecordList)) {
             DecimalFormat dft = new DecimalFormat("0%");
 
@@ -444,21 +475,22 @@ public class SurveyController extends BaseController {
                 excelData.setSort(surveyDTO.getSort().toString());
                 excelData.setQuestionTitle(surveyDTO.getTitle());
                 // 选项
-                String key = kv.getKey();
-                excelData.setQuestionOption(key);
+                excelData.setQuestionOption(kv.getKey());
                 // 参加问卷的总人数
                 Integer totalCount = surveyDTO.getTotalCount();
-                Integer selCount = 0;
+                // 被选择的次数
+                Integer selectCount = 0;
 
                 for (SurveyRecordItemDTO recordItemDTO : userRecordList) {
                     if (!StringUtils.isBlank(recordItemDTO.getSelAnswer())) {
-                        selCount = calculationNumber(key,recordItemDTO.getSelAnswer(),selCount);
+                        // 计算每个选项 选择的人数
+                        selectCount = calculateNumber(kv.getKey(),recordItemDTO.getSelAnswer(),selectCount);
                     }
-                    excelData.setSelectionCount(selCount.toString());
-                    excelData.setSelectance(dft.format((float) selCount / (float) totalCount));
+                    excelData.setSelectionCount(selectCount.toString());
+                    excelData.setSelectance(dft.format((float) selectCount / totalCount));
                 }
                 dataList.add(excelData);
-                selCount = 0;
+                selectCount = 0;
             }
         } else {
             // 遍历题目所有选项
@@ -478,21 +510,22 @@ public class SurveyController extends BaseController {
 
     /**
      * 计算选项选择人数
-     * @param rightkey
-     * @param selAnswer
-     * @param selCount
+     * @param rightKey 正确答案
+     * @param selAnswer 用户选择的答案
+     * @param selectCount 选择的次数
      * @return
      */
-    private int calculationNumber(String rightkey,String selAnswer,int selCount){
-        // 用户选择的选项
-        String[] selKeys = selAnswer.split("");
+    private int calculateNumber(String rightKey,String selAnswer,int selectCount){
         // 遍历题目所有选项
-        for (int i = 1; i < selKeys.length; i++) {
-            String selKey = selKeys[i];
-            if (selKey.equals(rightkey)) {
-                selCount++;
+        for (int i = 0; i < selAnswer.length(); i++) {
+            char selKey = selAnswer.charAt(i);
+            if (rightKey.equals(String.valueOf(selKey))) {
+                selectCount ++;
+                break;
             }
         }
-        return selCount;
+        return selectCount;
     }
+
+
 }
