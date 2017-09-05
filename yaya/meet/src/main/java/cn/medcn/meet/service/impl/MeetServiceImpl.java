@@ -237,6 +237,11 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         }
     }
 
+    /**
+     * 查询功能模块的课程id
+     * @param module
+     * @return
+     */
     public Integer findModuleCourseId(MeetModule module){
         Integer courseId = 0;
         switch (module.getFunctionId()) {
@@ -280,7 +285,6 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         }
         return courseId;
     }
-
 
 
     /**
@@ -361,22 +365,22 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         if (meet.getState() == 0 || meet.getState() >= 4) {
             throw new SystemException(SpringUtils.getMessage("meet.state.error"));
         }
+        // 如果用户已经参加过会议则不再判断会议是否需要象数
         boolean attended = checkAttend(meetId, userId);
-        //如果用户已经参加过会议则不再判断会议是否需要象数
-        //没有参加过会议则需要判断会议是否需要象数 并进行象数扣除或者奖励
         MeetProperty meetProperty = findMeetProperty(meetId);
         checkStartTime(meetProperty);
         if (!attended) {
+            //没有参加过会议则需要判断会议是否需要象数 并进行象数扣除或者奖励
             checkAttention(meet.getOwnerId(), userId);
             //没有参加过会先判断会议是否指定用户参加
             checkAttendLimit(meetProperty, meetId);
             Integer memberLimitType = meetProperty.getMemberLimitType();
             if (memberLimitType == null) {
-                memberLimitType = 0;
+                memberLimitType = MeetProperty.MemberLimit.NOT_LIMIT.getType();
             }
-            if (memberLimitType == 1) {
+            if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_LOCATION.getType()) {
                 checkZone(meetProperty, userId);
-            } else if (memberLimitType == 2) {
+            } else if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_GROUP.getType()) {
                 checkMember(meetProperty, meetId, userId);
             }
             // payCredits(meetId, userId, meet.getOwnerId());
@@ -883,23 +887,23 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         Integer XS_TYPE = MeetSetting.propTypeLabel.XS.getPropType();
         Integer CREDIT_TYPE = MeetSetting.propTypeLabel.CREDIT.getPropType();
         // 象数设置
-        MeetSetting settingXs = new MeetSetting();
+        MeetSetting sett = new MeetSetting();
         if (setting.getRequiredXs() != null){
-            settingXs.setPropMode(setting.getRequiredXs());
-            settingXs.setPropType(XS_TYPE);
+            sett.setPropMode(setting.getRequiredXs());
+            sett.setPropType(XS_TYPE);
             if (setting.getRequiredXs().intValue() == 0) {
-                settingXs.setRewardLimit(0);
+                sett.setRewardLimit(0);
             }
         }
         if (setting.getAwardLimit() != null) {
-            settingXs.setRewardLimit(setting.getAwardLimit());
+            sett.setRewardLimit(setting.getAwardLimit());
         }
         if (setting.getXsCredits() != null) {
-            settingXs.setPropValue(setting.getXsCredits());
+            sett.setPropValue(setting.getXsCredits());
         }
-        if (settingXs != null && setting.getRequiredXs() != null) {
-            settingXs.setMeetId(meetId);
-            meetSettingDAO.insert(settingXs);
+        if (sett != null && setting.getRequiredXs() != null) {
+            sett.setMeetId(meetId);
+            meetSettingDAO.insert(sett);
         }
 
         // 学分设置
@@ -1657,7 +1661,6 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         // 奖励学分类型
         int rewardTypeCredit = MeetRewardHistory.rewardLabel.CREDIT.getRewardType();
 
-
         // 收藏标记
         if (userId != null){
             if (meetInfoDTO.getState() == Meet.MeetType.IN_USE.getState().intValue()
@@ -1682,8 +1685,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
                     }
                 }
             }
+            // 是否收藏
             meetInfoDTO.setStored(checkFavorite(meetId, userId));
-            // 是否关注
+            // 是否参加过
             boolean attended = checkAttend(meetId, userId);
             meetInfoDTO.setAttended(attended);
             // 是否可以参加
