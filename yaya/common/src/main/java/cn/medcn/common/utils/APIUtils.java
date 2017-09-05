@@ -30,6 +30,9 @@ public class APIUtils {
 
     public static final String ERROR_CODE_NOTENOUGH_CREDITS = "201";
 
+    // 导出excel文件出错
+    public static final String ERROR_CODE_EXPORT_EXCEL = "300";
+
     public static String success(){
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(CODE_KEY,SUCCESS_CODE);
