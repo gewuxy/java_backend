@@ -12,10 +12,9 @@ import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.meet.dto.MeetFolderDTO;
 import cn.medcn.meet.dto.MeetInfoDTO;
-import cn.medcn.meet.model.Meet;
 import cn.medcn.meet.service.MeetFolderService;
 import cn.medcn.meet.service.MeetService;
-import cn.medcn.meet.service.MeetStasticService;
+import cn.medcn.meet.service.MeetStatsService;
 import cn.medcn.user.model.Favorite;
 import cn.medcn.weixin.config.WeixinConfig;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +34,7 @@ import java.util.List;
 @RequestMapping(value = "/weixin/meet")
 public class WXMeetController extends BaseController {
     @Autowired
-    protected MeetStasticService meetStasticService;
+    protected MeetStatsService meetStatsService;
 
     @Autowired
     protected MeetService meetService;
@@ -64,7 +63,7 @@ public class WXMeetController extends BaseController {
             offset = 0;
         }
         Principal principal = SecurityUtils.getCurrentUserInfo();
-        return success(meetStasticService.findFinalAttendByPersonal(principal.getId(), offset));
+        return success(meetStatsService.findFinalAttendByPersonal(principal.getId(), offset));
     }
 
 
@@ -75,7 +74,7 @@ public class WXMeetController extends BaseController {
             offset = 0;
         }
         Principal principal = SecurityUtils.getCurrentUserInfo();
-        return success(meetStasticService.findFinalPublishByPersonal(principal.getId(), offset));
+        return success(meetStatsService.findFinalPublishByPersonal(principal.getId(), offset));
     }
 
 
