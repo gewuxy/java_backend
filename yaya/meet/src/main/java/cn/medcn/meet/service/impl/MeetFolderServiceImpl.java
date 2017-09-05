@@ -28,7 +28,7 @@ import java.util.List;
  * Created by Liuchangling on 2017/7/27.
  */
 @Service
-public class MeetFloderServiceImpl extends BaseServiceImpl<InfinityTree> implements MeetFolderService {
+public class MeetFolderServiceImpl extends BaseServiceImpl<InfinityTree> implements MeetFolderService {
 
     @Autowired
     private MeetFolderDAO meetFolderDAO;
@@ -109,10 +109,6 @@ public class MeetFloderServiceImpl extends BaseServiceImpl<InfinityTree> impleme
         Page<MeetFolderDTO> page = (Page) meetFolderDAO.findPublishedSubList(pageable.getParams());
         return MyPage.page2Mypage(page);
     }
-
-
-
-
 
 
     /**
