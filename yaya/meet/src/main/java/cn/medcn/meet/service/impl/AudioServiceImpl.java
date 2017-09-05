@@ -136,7 +136,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      */
     @Override
     public MyPage<CourseReprintDTO> findResource(Pageable pageable) {
-        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), false);
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
         MyPage<CourseReprintDTO> page = MyPage.page2Mypage((Page) audioCourseDAO.findResource(pageable.getParams()));
         return page;
     }

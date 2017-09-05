@@ -124,7 +124,7 @@
             <div class="sd-list bg-change" id="categoryList">
                 <a category="" class="${empty category?'cur':''}" style="cursor: pointer;">全部</a>
                 <c:forEach items="${categoryList}" var="cate">
-                    <a category="${cate.name}"  class="${category eq cate.name?'cur':''}"  style="cursor: pointer;" >${cate.name}(${cate.count})</a>
+                    <a category="${cate.name}"  class="${category eq cate.name?'cur':''}"  style="cursor: pointer;" >${cate.name}<c:if test="${not empty cate.name}">(${cate.count})</c:if></a>
                 </c:forEach>
             </div>
             <table class="table-box-3">

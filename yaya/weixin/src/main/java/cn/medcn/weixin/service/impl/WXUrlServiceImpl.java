@@ -18,8 +18,7 @@ public class WXUrlServiceImpl implements WXUrlService {
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append(appBase);
         stringBuffer.append(subURL);
-        //todo
-        //这里可能需要考虑安全问题  对参数进行加密
+        //todo 这里可能需要考虑安全问题  对参数进行加密
         return stringBuffer.toString();
     }
 }

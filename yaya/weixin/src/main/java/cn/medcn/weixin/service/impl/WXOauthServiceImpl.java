@@ -9,6 +9,7 @@ import cn.medcn.weixin.dto.Result;
 import cn.medcn.weixin.model.WXUserInfo;
 import cn.medcn.weixin.service.WXOauthService;
 import cn.medcn.weixin.service.WXTokenService;
+import cn.medcn.weixin.util.EmojiFilterUtil;
 import cn.medcn.weixin.util.ResultCheckUtil;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
@@ -88,6 +89,9 @@ public class WXOauthServiceImpl extends WXBaseServiceImpl implements WXOauthServ
             throw new SystemException("非法的编码");
         }
         WXUserInfo userInfo = JSON.parseObject(userInfoStr,WXUserInfo.class);  //userInfo不为null
+        //过滤昵称中的特殊字符
+        String nickname = EmojiFilterUtil.filterName(userInfo.getNickname());
+        userInfo.setNickname(nickname);
         return userInfo;
     }
 
@@ -125,6 +129,9 @@ public class WXOauthServiceImpl extends WXBaseServiceImpl implements WXOauthServ
             throw new SystemException("非法的编码");
         }
         WXUserInfo userInfo = JSON.parseObject(userInfoStr,WXUserInfo.class);
+        //过滤昵称中的特殊字符
+        String nickname = EmojiFilterUtil.filterName(userInfo.getNickname());
+        userInfo.setNickname(nickname);
         return userInfo;
     }
 
