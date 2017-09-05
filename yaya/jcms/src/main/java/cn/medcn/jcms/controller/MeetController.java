@@ -362,7 +362,7 @@ public class MeetController extends BaseController {
 
             //如果有选择文件夹，将会议添加到文件夹下
             String folderId = meet.getFolderId();
-            if (StringUtils.isEmpty(folderId)) {
+            if (!StringUtils.isEmpty(folderId)) {
                 InfinityTreeDetail detail = new InfinityTreeDetail();
                 detail.setInfinityId(folderId);
                 detail.setResourceId(meet.getId());
@@ -717,18 +717,16 @@ public class MeetController extends BaseController {
         model.addAttribute("modules", meetService.findModules(id));
         model.addAttribute("pubUserHeadImg", appFileBase + principal.getHeadimg());
         model.addAttribute("appFileBase", appFileBase);
-        //Integer attendCount = meetService.getMeetAttendCount(id);
+
         Integer awardCount = meetService.findGetRewardUserCount(id, MeetRewardHistory.rewardLabel.XS.getRewardType());
         model.addAttribute("attendCount", awardCount);
+
         Integer awardCreditCount = meetService.findGetRewardUserCount(id, MeetRewardHistory.rewardLabel.CREDIT.getRewardType());
         model.addAttribute("getAwardCreditCount",awardCreditCount);
+
         String qrCodePath = checkAndCreateQRCode(id);
         model.addAttribute("qrCodePath", qrCodePath);
 
-        //将会议简介中的回车换成<br>
-//        if(!StringUtils.isEmpty(meet.getIntroduction())){
-//            meet.setIntroduction(meet.getIntroduction().replaceAll("\n","<br>"));
-//        }
         if (tag != null && tag == 1) {
             return "/meet/detail";
         } else {
