@@ -34,7 +34,7 @@ import java.util.*;
  */
 @Controller
 @RequestMapping(value = "/data/state")
-public class MeetStasticController extends BaseController {
+public class MeetStatsController extends BaseController {
 
     @Autowired
     private MeetStatsService meetStatsService;
