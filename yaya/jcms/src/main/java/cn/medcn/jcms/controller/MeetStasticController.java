@@ -9,10 +9,8 @@ import cn.medcn.common.utils.*;
 import cn.medcn.jcms.security.Principal;
 import cn.medcn.jcms.utils.SubjectUtils;
 import cn.medcn.meet.dto.*;
-import cn.medcn.meet.service.ExamService;
-import cn.medcn.meet.service.MeetService;
-import cn.medcn.meet.service.MeetStasticService;
-import cn.medcn.meet.service.VideoService;
+import cn.medcn.meet.model.MeetModule;
+import cn.medcn.meet.service.*;
 import cn.medcn.meet.support.UserInfoCheckHelper;
 import cn.medcn.user.dto.UserDataDetailDTO;
 import com.google.common.collect.Lists;
@@ -39,7 +37,7 @@ import java.util.*;
 public class MeetStasticController extends BaseController {
 
     @Autowired
-    private MeetStasticService meetStasticService;
+    private MeetStatsService meetStatsService;
 
     @Autowired
     private MeetService meetService;
@@ -50,6 +48,7 @@ public class MeetStasticController extends BaseController {
     @Autowired
     private VideoService videoService;
 
+    private static final String UNFINISHED = "未完成";
 
     /**
      * 会议统计 记录数统计
@@ -71,7 +70,7 @@ public class MeetStasticController extends BaseController {
     @ResponseBody
     public String statistics() {
         Integer userId = SubjectUtils.getCurrentUserid();
-        MeetStasticDTO staticsDTO = meetStasticService.findMeetStastic(userId);
+        MeetStasticDTO staticsDTO = meetStatsService.findMeetStastic(userId);
         return APIUtils.success(staticsDTO);
     }
 
@@ -86,7 +85,7 @@ public class MeetStasticController extends BaseController {
     public String getMeetDataList(Pageable pageable) {
         Integer userId = SubjectUtils.getCurrentUserid();
         pageable.put("userId", userId);
-        MyPage<MeetDataDTO> page = meetStasticService.findMyMeetList(pageable);
+        MyPage<MeetDataDTO> page = meetStatsService.findMyMeetList(pageable);
         return APIUtils.success(page);
     }
 
@@ -99,7 +98,7 @@ public class MeetStasticController extends BaseController {
     @RequestMapping(value = "/meets")
     @ResponseBody
     public String meets(String meetId) {
-        return APIUtils.success(meetStasticService.findMeet(meetId));
+        return APIUtils.success(meetStatsService.findMeet(meetId));
     }
 
     /**
@@ -135,7 +134,7 @@ public class MeetStasticController extends BaseController {
         if (!StringUtils.isBlank(meetId)) {
             conditionMap.put("meetId", meetId);
         }
-        List<MeetAttendCountDTO> attendList = meetStasticService.findAttendCountByTag(conditionMap);
+        List<MeetAttendCountDTO> attendList = meetStatsService.findAttendCountByTag(conditionMap);
 
         Map<String, Object> attendMap = new HashMap<String, Object>();
         if (!CheckUtils.isEmpty(attendList)) {
@@ -163,8 +162,8 @@ public class MeetStasticController extends BaseController {
         params.put("propNum",propNum);
         params.put("meetId", meetId);
         params.put("province", province);
-        List<UserDataDetailDTO> list = meetStasticService.findUserDataList(params);
-        Integer totalCount = meetStasticService.findTotalCount(params);
+        List<UserDataDetailDTO> list = meetStatsService.findUserDataList(params);
+        Integer totalCount = meetStatsService.findTotalCount(params);
         Float percent;
         Integer userCount;
         if (!CheckUtils.isEmpty(list)) {
@@ -213,7 +212,7 @@ public class MeetStasticController extends BaseController {
         // 查询参加会议的用户数据
         if (!StringUtils.isEmpty(id)) {
             pageable.put("meetId", id);
-            MyPage<MeetAttendUserDTO> page = meetStasticService.findAttendUserList(pageable);
+            MyPage<MeetAttendUserDTO> page = meetStatsService.findAttendUserList(pageable);
             if (!CheckUtils.isEmpty(page.getDataList())) {
                 return APIUtils.success(page);
             } else {
@@ -244,7 +243,7 @@ public class MeetStasticController extends BaseController {
             String fileName = " 会议参与人员.xls";
             List<Object> dataList = Lists.newArrayList();
 
-           List<MeetAttendUserDTO> attendUserList = meetStasticService.findAttendUserExcel(meetId, principal.getId());
+           List<MeetAttendUserDTO> attendUserList = meetStatsService.findAttendUserExcel(meetId, principal.getId());
             if (!CheckUtils.isEmpty(attendUserList)) {
                 fileName = attendUserList.get(0).getMeetName() + fileName;
                 Map<Integer, List> attendUserMap = Maps.newHashMap();
@@ -314,16 +313,8 @@ public class MeetStasticController extends BaseController {
         excelData.setTitle(attendUserDTO.getTitle());
         excelData.setProvince(attendUserDTO.getProvince() + attendUserDTO.getCity());
         excelData.setGroupName(attendUserDTO.getGroupName());
-        if (attendUserDTO.getStartTime() == null) {
-            excelData.setStartTime(null);
-        } else {
-            excelData.setStartTime(format.format(attendUserDTO.getStartTime()));
-        }
-        if (attendUserDTO.getEndTime() == null) {
-            excelData.setEndTime(null);
-        } else {
-            excelData.setEndTime(format.format(attendUserDTO.getEndTime()));
-        }
+        excelData.setStartTime(format.format(attendUserDTO.getStartTime()));
+        excelData.setEndTime(format.format(attendUserDTO.getEndTime()));
         // 设置学习总时长
         if (attendUserDTO.getUseTime() != null) {
             excelData.setTotalHours(CalendarUtils.secToTime(attendUserDTO.getUseTime()));
@@ -341,8 +332,9 @@ public class MeetStasticController extends BaseController {
         return excelData;
     }
 
+
     /**
-     * 导出参会成员相关数据
+     * 导出参会成员学习记录
      *
      * @param meetId
      * @param response
@@ -359,10 +351,11 @@ public class MeetStasticController extends BaseController {
         }
         if (!StringUtils.isEmpty(meetId)) {
             Workbook workbook = null;
-            String fileName = " 会议参与人员.xls";
+            String fileName = "_会议参与人员.xls";
             List<Object> dataList = Lists.newArrayList();
 
-            List<AttendMeetUserDetailDTO> attendUserList = meetStasticService.findAttendUserDetailExcel(meetId,principal.getId());
+            // 查询参会用户信息
+            List<AttendMeetUserDetailDTO> attendUserList = meetStatsService.findAttendUserDetailExcel(meetId,principal.getId());
             if (!CheckUtils.isEmpty(attendUserList)) {
                 fileName = attendUserList.get(0).getMeetName() + fileName;
 
@@ -375,28 +368,20 @@ public class MeetStasticController extends BaseController {
                     videoTotalTime = "0";
                 }
 
-                int tempUserId = 0; // 临时用户ID 对比是否同一个用户ID多次出现
+                int tempUserId = 0; // 临时用户id 对比是否同一个用户id多次出现
                 AttendMeetUserExcelData excelData = null;
                 for (AttendMeetUserDetailDTO attendUserDTO : attendUserList) {
                     int userId = attendUserDTO.getId();
                     if (tempUserId != attendUserDTO.getId()){
+                        // 临时用户id 不等于用户id，说明用户是第一次出现，需要new新的数据对象存储数据
                         excelData = new AttendMeetUserExcelData();
 
-                        // 设置用户总的学习记录 百分比
+                        // 设置用户总的学习完成度 百分比
                         Integer learningRecord = calculateLearningRecord(meetId,userId);
                         excelData.setLearnRecord(learningRecord + "%");
 
                         // 设置用户未观看视频的默认值
-                        if (totalTime != null && totalTime > 0) {
-                            if (excelData.getWatchVideoTime() != null
-                                    && excelData.getWatchVideoTime().equals("0")) {
-                                excelData.setWatchVideoTime("未完成");
-                            }
-                            if (excelData.getWatchVideoPercent() != null
-                                    && excelData.getWatchVideoPercent().equals("0%")) {
-                                excelData.setWatchVideoPercent("未完成");
-                            }
-                        }
+                        notWatchVideoDefaultValue(excelData, totalTime);
 
                         // 设置视频总时长
                         excelData.setVideoTotalTime(videoTotalTime);
@@ -404,8 +389,12 @@ public class MeetStasticController extends BaseController {
                         dataList.add(excelData);
                     }
 
-                    fillValueToExcel(excelData, attendUserDTO);
+                    // 设置用户基本信息
+                    fillUserDatailToExcel(excelData, attendUserDTO);
+                    // 设置用户模块学习记录数据
+                    fillUserLearningRecordToExcel(excelData, attendUserDTO);
 
+                    // 变更临时用户id
                     tempUserId = attendUserDTO.getId();
                 }
 
@@ -425,28 +414,36 @@ public class MeetStasticController extends BaseController {
     }
 
     /**
-     * 赋值到excel表格
-     *
+     * 设置用户没有观看视频，相关的字段默认值
+     * @param excelData
+     * @param totalTime
+     */
+    private void notWatchVideoDefaultValue(AttendMeetUserExcelData excelData, Integer totalTime){
+        if (totalTime != null && totalTime > 0) {
+            if (excelData.getWatchVideoTime() != null
+                    && excelData.getWatchVideoTime().equals("0")) {
+                excelData.setWatchVideoTime(UNFINISHED);
+            }
+            if (excelData.getWatchVideoPercent() != null
+                    && excelData.getWatchVideoPercent().equals("0%")) {
+                excelData.setWatchVideoPercent(UNFINISHED);
+            }
+        }
+    }
+
+    /**
+     * 填充用户基本信息
+     * @param excelData
      * @param dto
      * @return
      */
-    private void fillValueToExcel(AttendMeetUserExcelData excelData, AttendMeetUserDetailDTO dto) {
+    private void fillUserDatailToExcel(AttendMeetUserExcelData excelData, AttendMeetUserDetailDTO dto) {
+        // excelData 为空，说明用户是第一次出现，需新new一个新的对象存储用户信息数据,反之覆盖上一次的用户信息
         if (excelData == null) {
             excelData = new AttendMeetUserExcelData();
         }
 
         UserInfoCheckHelper.checkAttendMeetUserDetailDTO(dto);
-
-        Integer pptFuncId = AttendMeetUserDetailDTO.functionName.PPT.getFuncId();
-        Integer videoFuncId = AttendMeetUserDetailDTO.functionName.VIDEO.getFuncId();
-        Integer examFuncId = AttendMeetUserDetailDTO.functionName.EXAM.getFuncId();
-        Integer surveyFuncId = AttendMeetUserDetailDTO.functionName.SURVEY.getFuncId();
-        Integer signFuncId = AttendMeetUserDetailDTO.functionName.SIGN.getFuncId();
-
-        Integer functionId = dto.getFunctionId();
-        String percent = dto.getCompleteProgress() + "%";
-        Integer uId = dto.getId();
-        String meetId = dto.getMeetId();
 
         if (dto.getStartTime() != null) {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
@@ -461,37 +458,67 @@ public class MeetStasticController extends BaseController {
         excelData.setMobile(dto.getMobile());
         excelData.setEmail(dto.getUsername());
         excelData.setCmeId(dto.getCmeId());
-        // 如果是ppt和视频模块 将使用时长转换为时长；如果是其他模块则转换为日期格式
+    }
+
+    /**
+     * 填充用户模块学习记录
+     * @param excelData
+     * @param dto
+     */
+    private void fillUserLearningRecordToExcel(AttendMeetUserExcelData excelData, AttendMeetUserDetailDTO dto){
+        Integer pptFuncId = MeetModule.ModuleFunction.PPT.getFunId();
+        Integer videoFuncId = MeetModule.ModuleFunction.VIDEO.getFunId();
+        Integer examFuncId = MeetModule.ModuleFunction.EXAM.getFunId();
+        Integer surveyFuncId = MeetModule.ModuleFunction.SURVEY.getFunId();
+        Integer signFuncId = MeetModule.ModuleFunction.SIGN.getFunId();
+
+        Integer uId = dto.getId();
+        String meetId = dto.getMeetId();
+        Integer functionId = dto.getFunctionId();
+        String percent = dto.getCompleteProgress() + "%";
+
         String usedTime = null;
         if (dto.getUsedTime() != null && dto.getUsedTime() > 0) {
             if ((functionId == pptFuncId)
                     || (functionId == videoFuncId)) {
+                // 如果是ppt和视频模块 将使用时长转换为时长（时:分:秒格式）
                 usedTime = CalendarUtils.secToTime(dto.getUsedTime().intValue());
             } else {
+                // 如果是其他模块则转换为日期格式
                 usedTime = CalendarUtils.transferLongToDate(dto.getUsedTime(), Constants.DATE_FORMAT_TYPE);
             }
         }
 
-        if (usedTime == null && percent.equals("0%")) {
-            usedTime = "未完成";
-            percent = "未完成";
+        if (usedTime == null || percent.equals("0%")) {
+            usedTime = UNFINISHED;
+            percent = UNFINISHED;
         }
+
         if (functionId == pptFuncId) {
+            // 设置ppt学习记录
             excelData.setViewPPTTime(usedTime);
             excelData.setPptPercent(percent);
+
         } else if (functionId == videoFuncId) {
+            // 设置视频学习记录
             excelData.setWatchVideoTime(usedTime);
             excelData.setWatchVideoPercent(percent);
+
         } else if (functionId == examFuncId) {
+            // 设置考试记录
             excelData.setExamTime(usedTime);
             excelData.setExamPercent(percent);
             // 设置用户考试分数
             Integer userScore = examService.findUserExamScore(meetId, uId);
             excelData.setScore(String.valueOf(userScore));
+
         } else if (functionId == surveyFuncId) {
+            // 设置问卷记录
             excelData.setSurveyTime(usedTime);
             excelData.setSurveyPercent(percent);
+
         } else if (functionId == signFuncId) {
+            // 设置签到记录
             excelData.setSignTime(usedTime);
             excelData.setSignPercent(percent);
             if (percent.equals("0%")) {
@@ -499,22 +526,24 @@ public class MeetStasticController extends BaseController {
             } else {
                 excelData.setSignFlag("成功");
             }
+
         } else {
+            // 没有学习记录的情况 设置默认值
             excelData.setViewPPTTime(usedTime);
             excelData.setPptPercent(percent);
             excelData.setWatchVideoTime(usedTime);
             excelData.setWatchVideoPercent(percent);
             excelData.setExamTime(usedTime);
             excelData.setExamPercent(percent);
-            excelData.setScore("未完成");
+            excelData.setScore(UNFINISHED);
             excelData.setSurveyTime(usedTime);
             excelData.setSurveyPercent(percent);
             excelData.setSignTime(usedTime);
             excelData.setSignPercent(percent);
-            excelData.setSignFlag("未完成");
+            excelData.setSignFlag(UNFINISHED);
         }
-
     }
+
 
     /**
      * 计算学习记录
@@ -523,8 +552,7 @@ public class MeetStasticController extends BaseController {
      * @return
      */
     private Integer calculateLearningRecord(String meetId,Integer userId){
-        Integer completeProgress = meetService.findUserLearningRecord(meetId,userId);
-        return completeProgress;
+        return meetService.findUserLearningRecord(meetId,userId);
     }
 
 
