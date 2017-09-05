@@ -176,8 +176,8 @@ public class SurveyController extends BaseController {
             String fileName = "_参与问卷人员情况.xls";
             List<Object> dataList = Lists.newArrayList();
 
-            List<AttendSurveyUserDataDTO> surveyDataList = findSurveyDataList(principal.getId(),meetId);
-            if (!CheckUtils.isEmpty(surveyDataList)){
+            List<AttendSurveyUserDataDTO> surveyDataList = findSurveyDataList(principal.getId(), meetId);
+            if (!CheckUtils.isEmpty(surveyDataList)) {
                 fileName = surveyDataList.get(0).getMeetName() + fileName;
 
                 // 查询一共多少道题目
@@ -195,17 +195,17 @@ public class SurveyController extends BaseController {
 
                     dataList.add(excelData);
                 }
-            }else{
+            } else {
                 return APIUtils.error("暂无相关数据");
             }
 
-            workbook = ExcelUtils.writeExcel(fileName,dataList,SurveyHistoryUserExcelData.class);
+            workbook = ExcelUtils.writeExcel(fileName, dataList, SurveyHistoryUserExcelData.class);
 
             try {
 
-                ExcelUtils.outputWorkBook(fileName,workbook, response);
+                ExcelUtils.outputWorkBook(fileName, workbook, response);
 
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
                 return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
             }
@@ -215,15 +215,16 @@ public class SurveyController extends BaseController {
     }
 
     /**
-     *  查找用户选择的答案
+     * 查找用户选择的答案
+     *
      * @param meetId
      * @param userId
      * @param sortList
      */
-    private List findUserSelectAnswer(String meetId, Integer userId, List<Integer> sortList){
+    private List findUserSelectAnswer(String meetId, Integer userId, List<Integer> sortList) {
         List<QuestionOptItemDTO> optItemDTOList = surveyService.findOptItemListByUser(meetId, userId);
         List answerList = Lists.newArrayList();
-        if (!CheckUtils.isEmpty(sortList)){
+        if (!CheckUtils.isEmpty(sortList)) {
             for (Integer i : sortList) {
                 if (!CheckUtils.isEmpty(optItemDTOList)) {
                     for (QuestionOptItemDTO itemDTO : optItemDTOList) {
@@ -242,11 +243,12 @@ public class SurveyController extends BaseController {
 
     /**
      * 查询 参加问卷的用户记录
+     *
      * @param userId
      * @param meetId
      * @return
      */
-    private List<AttendSurveyUserDataDTO> findSurveyDataList(Integer userId,String meetId){
+    private List<AttendSurveyUserDataDTO> findSurveyDataList(Integer userId, String meetId) {
         Map<String, Object> conditionMap = new HashMap<>();
         conditionMap.put("meetId", meetId);
         conditionMap.put("userId", userId);
@@ -359,14 +361,15 @@ public class SurveyController extends BaseController {
 
     /**
      * 填充用户问卷记录到excel表格
+     *
      * @param userDataDTO
      * @return
      */
-    private SurveyHistoryUserExcelData fillDataToSurveyExcel(AttendSurveyUserDataDTO userDataDTO){
+    private SurveyHistoryUserExcelData fillDataToSurveyExcel(AttendSurveyUserDataDTO userDataDTO) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         SurveyHistoryUserExcelData excelData = new SurveyHistoryUserExcelData();
         excelData.setName(userDataDTO.getNickname());
-        if(userDataDTO.getAttend()){
+        if (userDataDTO.getAttend()) {
             excelData.setParticipation("是");
         } else {
             excelData.setParticipation("否");
@@ -384,6 +387,7 @@ public class SurveyController extends BaseController {
 
     /**
      * 导出问卷数据分析Excel
+     *
      * @param meetId
      * @param response
      * @return
@@ -409,13 +413,13 @@ public class SurveyController extends BaseController {
                 fileName = surveyList.get(0).getMeetName() + fileName;
 
                 // 根据Map的value大小 合并数据
-                Map<Integer,List> questionMap = assignDataToMap(surveyList);
+                Map<Integer, List> questionMap = assignDataToMap(surveyList);
 
                 for (SurveyRecordDTO survey : surveyList) {
                     dataList.addAll(assignmentToSurvey(survey));
                 }
 
-                workbook = ExcelUtils.writeExcel(fileName,dataList,SurveyExcelData.class);
+                workbook = ExcelUtils.writeExcel(fileName, dataList, SurveyExcelData.class);
 
                 try {
                     Integer sortIndex = SurveyExcelData.columnIndex.SORT.getColumnIndex();
@@ -424,7 +428,7 @@ public class SurveyController extends BaseController {
                     int[] columnIndexArray = new int[]{sortIndex, questionTitleIndex};
                     ExcelUtils.createMergeExcel(fileName, workbook, questionMap, columnIndexArray, response);
 
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 
@@ -437,11 +441,12 @@ public class SurveyController extends BaseController {
 
     /**
      * 赋值数据到map中
+     *
      * @param surveyList
      * @return
      */
-    private Map<Integer,List> assignDataToMap(List<SurveyRecordDTO> surveyList){
-        Map<Integer,List> questionMap = Maps.newHashMap();
+    private Map<Integer, List> assignDataToMap(List<SurveyRecordDTO> surveyList) {
+        Map<Integer, List> questionMap = Maps.newHashMap();
         for (SurveyRecordDTO sv : surveyList) {
             // 每道题目的所有选项
             if (questionMap.get(sv.getSort()) == null) {
@@ -456,10 +461,11 @@ public class SurveyController extends BaseController {
 
     /**
      * 填充用户问卷记录 excel表格数据
+     *
      * @param surveyDTO
      * @return
      */
-    private List assignmentToSurvey(SurveyRecordDTO surveyDTO){
+    private List assignmentToSurvey(SurveyRecordDTO surveyDTO) {
         List<Object> dataList = Lists.newArrayList();
         // 每道题目的所有选项
         List<KeyValuePair> kvlist = surveyDTO.getOptionList();
@@ -484,7 +490,7 @@ public class SurveyController extends BaseController {
                 for (SurveyRecordItemDTO recordItemDTO : userRecordList) {
                     if (!StringUtils.isBlank(recordItemDTO.getSelAnswer())) {
                         // 计算每个选项 选择的人数
-                        selectCount = calculateNumber(kv.getKey(),recordItemDTO.getSelAnswer(),selectCount);
+                        selectCount = calculateNumber(kv.getKey(), recordItemDTO.getSelAnswer(), selectCount);
                     }
                     excelData.setSelectionCount(selectCount.toString());
                     excelData.setSelectance(dft.format((float) selectCount / totalCount));
@@ -510,17 +516,18 @@ public class SurveyController extends BaseController {
 
     /**
      * 计算选项选择人数
-     * @param rightKey 正确答案
-     * @param selAnswer 用户选择的答案
+     *
+     * @param rightKey    正确答案
+     * @param selAnswer   用户选择的答案
      * @param selectCount 选择的次数
      * @return
      */
-    private int calculateNumber(String rightKey,String selAnswer,int selectCount){
+    private int calculateNumber(String rightKey, String selAnswer, int selectCount) {
         // 遍历题目所有选项
         for (int i = 0; i < selAnswer.length(); i++) {
             char selKey = selAnswer.charAt(i);
             if (rightKey.equals(String.valueOf(selKey))) {
-                selectCount ++;
+                selectCount++;
                 break;
             }
         }
