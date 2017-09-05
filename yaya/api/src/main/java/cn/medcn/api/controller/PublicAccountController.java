@@ -175,6 +175,7 @@ public class PublicAccountController {
         for (MeetFolderDTO folderDTO : page.getDataList()) {
             meetService.setUserLearningRecord(folderDTO,userId);
         }
+        // 第一页时 查询单位号的详情信息,往下翻页只需要查询会议文件夹及会议数据
         if (pageable.getPageNum() == 1) {
             if (!StringUtils.isEmpty(unitInfoDTO.getHeadimg())) {
                 unitInfoDTO.setHeadimg(appFileBase + unitInfoDTO.getHeadimg());
