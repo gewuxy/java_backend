@@ -49,26 +49,4 @@ public class AttendMeetUserDetailDTO {
     // 学习用时(ppt内容和视频学习)；提交时间（考试、问卷）、签到时间
     private Long usedTime;
 
-    public enum functionName {
-        PPT(1, "微课"),
-        VIDEO(2, "视频"),
-        EXAM(3, "考试"),
-        SURVEY(4, "问卷"),
-        SIGN(5, "签到");
-        private Integer funcId;
-        private String funcName;
-
-        public Integer getFuncId() {
-            return funcId;
-        }
-
-        public String getFuncName() {
-            return funcName;
-        }
-        functionName(Integer funcId,String funcName){
-            this.funcId = funcId;
-            this.funcName = funcName;
-        }
-    }
-
 }
