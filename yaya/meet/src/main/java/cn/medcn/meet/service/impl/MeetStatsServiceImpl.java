@@ -1,6 +1,5 @@
 package cn.medcn.meet.service.impl;
 
-import cn.medcn.common.Constants;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
@@ -9,27 +8,21 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.MeetAttend;
-import cn.medcn.meet.model.MeetLearningRecord;
-import cn.medcn.meet.model.MeetModule;
-import cn.medcn.meet.service.MeetStasticService;
-import cn.medcn.meet.support.UserInfoCheckHelper;
+import cn.medcn.meet.service.MeetStatsService;
 import cn.medcn.user.dto.UserDataDetailDTO;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Liuchangling on 2017/5/16.
+ * Created by Liuchangling on 2017/9/5.
  */
-@Service
-public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implements MeetStasticService {
 
+public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements MeetStatsService {
     @Autowired
     private MeetAttendDAO meetAttendDAO;
 
