@@ -37,7 +37,7 @@ import java.util.*;
  * Created by lixuan on 2017/5/15.
  */
 @Controller
-@RequestMapping(value="/register")
+@RequestMapping(value="/regist")
 public class RegisterController extends BaseController {
 
 
