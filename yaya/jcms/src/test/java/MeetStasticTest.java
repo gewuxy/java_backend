@@ -4,14 +4,13 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.meet.dto.MeetAttendCountDTO;
 import cn.medcn.meet.dto.MeetDataDTO;
 import cn.medcn.meet.dto.MeetStasticDTO;
-import cn.medcn.meet.service.MeetStasticService;
+import cn.medcn.meet.service.MeetStatsService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,11 +26,11 @@ import java.util.Map;
 public class MeetStasticTest {
 
     @Autowired
-    private MeetStasticService meetStasticService;
+    private MeetStatsService meetStatsService;
 
     @Test
     public void  testFindmeetdata(){
-        MeetStasticDTO meetDto = meetStasticService.findMeetStastic(14);
+        MeetStasticDTO meetDto = meetStatsService.findMeetStastic(14);
         System.out.println("get all meet count: "+ meetDto.getAllAttendCount() +
                 " get current meet count: "+ meetDto.getMonthAttendCount());
     }
@@ -40,7 +39,7 @@ public class MeetStasticTest {
     public void testFindMymeet(){
         Pageable pageable = new Pageable(1,5);
         pageable.getParams().put("userId",14);
-        MyPage<MeetDataDTO> page = meetStasticService.findMyMeetList(pageable);
+        MyPage<MeetDataDTO> page = meetStatsService.findMyMeetList(pageable);
         for (MeetDataDTO md : page.getDataList()) {
             System.out.println("the meet name: " + md.getMeetName() + " the start time: " + md.getCreateTime() +
                                 "the module name: " + md.getModuleName());
@@ -54,7 +53,7 @@ public class MeetStasticTest {
         params.put("tagNo",0);
         params.put("startTime","2017-05-21 00:00:00");
         params.put("endTime","2017-05-21 23:00:00");
-        List<MeetAttendCountDTO> attendList = meetStasticService.findAttendCountByTag(params);
+        List<MeetAttendCountDTO> attendList = meetStatsService.findAttendCountByTime(params);
         APIUtils.success(attendList);
         if (attendList!=null && attendList.size()!=0){
             for (MeetAttendCountDTO attendCountDTO : attendList) {
@@ -68,7 +67,7 @@ public class MeetStasticTest {
 
     @Test
     public void testFindUserDetail(){
-        meetStasticService.findAttendUserDetailExcel("17071915061286766938",1200007);
+        meetStatsService.findAttendUserDetailExcel("17071915061286766938",1200007);
     }
 
     @Test

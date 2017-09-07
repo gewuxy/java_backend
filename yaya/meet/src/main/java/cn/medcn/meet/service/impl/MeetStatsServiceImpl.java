@@ -1,6 +1,5 @@
 package cn.medcn.meet.service.impl;
 
-import cn.medcn.common.Constants;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
@@ -9,10 +8,7 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.MeetAttend;
-import cn.medcn.meet.model.MeetLearningRecord;
-import cn.medcn.meet.model.MeetModule;
-import cn.medcn.meet.service.MeetStasticService;
-import cn.medcn.meet.support.UserInfoCheckHelper;
+import cn.medcn.meet.service.MeetStatsService;
 import cn.medcn.user.dto.UserDataDetailDTO;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
@@ -21,15 +17,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * Created by Liuchangling on 2017/5/16.
+ * Created by Liuchangling on 2017/9/5.
  */
 @Service
-public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implements MeetStasticService {
-
+public class MeetStatsServiceImpl extends BaseServiceImpl<MeetAttend> implements MeetStatsService {
     @Autowired
     private MeetAttendDAO meetAttendDAO;
 
@@ -98,10 +92,6 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
         } else {
             mtsticDto.setMonthReprintCount(0);
         }
-
-
-        // 查询公众号分享的所有会议数 和当月分享的会议数
-
         return mtsticDto;
     }
 
@@ -126,19 +116,8 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
      * @return
      */
     @Override
-    public List<MeetAttendCountDTO> findAttendCountByTag(Map<String, Object> params) {
-        Integer tagNum = (Integer) params.get("tagNum");
-        if (tagNum == null) tagNum = 0;
-
-        List<MeetAttendCountDTO> attendList = meetAttendDAO.findAttendCountByTag(params);
-        if (!CheckUtils.isEmpty(attendList)) {
-            for (MeetAttendCountDTO attendCountDTO : attendList) {
-                attendCountDTO.setTagNum(tagNum);
-            }
-            return attendList;
-        } else {
-            return null;
-        }
+    public List<MeetAttendCountDTO> findAttendCountByTime(Map<String, Object> params) {
+        return meetAttendDAO.findAttendCountByTime(params);
     }
 
     /**
@@ -149,8 +128,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
      */
     @Override
     public Integer findTotalCount(Map<String, Object> params) {
-        Integer totalCount = meetAttendDAO.findTotalCount(params);
-        return totalCount;
+        return meetAttendDAO.findTotalCount(params);
     }
 
     /**
@@ -161,14 +139,12 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
      */
     @Override
     public List<UserDataDetailDTO> findDataByPro(Map<String, Object> params) {
-        List<UserDataDetailDTO> prolist = meetAttendDAO.findDataByPro(params);
-        return prolist;
+        return meetAttendDAO.findDataByPro(params);
     }
 
     @Override
     public List<UserDataDetailDTO> findCityDataByPro(Map<String, Object> params) {
-        List<UserDataDetailDTO> ctylist = meetAttendDAO.findCityDataByPro(params);
-        return ctylist;
+        return meetAttendDAO.findCityDataByPro(params);
     }
 
     /**
@@ -179,8 +155,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
      */
     @Override
     public List<UserDataDetailDTO> findDataByHos(Map<String, Object> params) {
-        List<UserDataDetailDTO> hoslist = meetAttendDAO.findDataByHos(params);
-        return hoslist;
+        return meetAttendDAO.findDataByHos(params);
     }
 
     /**
@@ -191,8 +166,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
      */
     @Override
     public List<UserDataDetailDTO> findDataByTitle(Map<String, Object> params) {
-        List<UserDataDetailDTO> titlist = meetAttendDAO.findDataByTitle(params);
-        return titlist;
+        return meetAttendDAO.findDataByTitle(params);
     }
 
     /**
@@ -203,20 +177,20 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
      */
     @Override
     public List<UserDataDetailDTO> findDataByDepart(Map<String, Object> params) {
-        List<UserDataDetailDTO> deptlist = meetAttendDAO.findDataByDepart(params);
-        return deptlist;
+        return meetAttendDAO.findDataByDepart(params);
     }
 
     @Override
     public List<UserDataDetailDTO> findUserDataList(Map<String,Object> params){
-        Integer propNum = (Integer) params.get("propNum");
+        List<UserDataDetailDTO> list = null;
+        /*Integer propNum = (Integer) params.get("propNum");
         if (propNum == null) {
-            propNum = UserDataDetailDTO.conditionNumber.PRO_OR_CITY;
+            propNum = UserDataDetailDTO.conditionNumber.REGION;
         }
         String province = (String)params.get("province");
         List<UserDataDetailDTO> list;
-        if (propNum == UserDataDetailDTO.conditionNumber.PRO_OR_CITY) {
-            if (province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_CITY)) {
+        if (propNum == UserDataDetailDTO.conditionNumber.REGION) {
+            if (province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_PROVIMCE)) {
                 list = meetAttendDAO.findDataByPro(params);
             } else {
                 list = meetAttendDAO.findCityDataByPro(params);
@@ -227,7 +201,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
             list = meetAttendDAO.findDataByTitle(params);
         } else {
             list = meetAttendDAO.findDataByDepart(params);
-        }
+        }*/
         return list;
     }
 
@@ -236,7 +210,6 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
         List<MeetDTO> mtlist = meetAttendDAO.findMeet(meetId);
         String modName = "";
         List<MeetDTO> list = new ArrayList<MeetDTO>();
-        ;
         MeetDTO mdto;
         for (MeetDTO m : mtlist) {
             mdto = new MeetDTO();
@@ -267,8 +240,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
         Map<String, Object> map = new HashMap();
         map.put("meetId", meetId);
         map.put("userId", userId);
-        List<MeetAttendUserDTO> list = meetAttendDAO.findAttendUserExcel(map);
-        return list;
+        return meetAttendDAO.findAttendUserExcel(map);
     }
 
     /**
@@ -284,8 +256,7 @@ public class MeetStasticServiceImpl extends BaseServiceImpl<MeetAttend> implemen
         Map<String, Object> conditionMap = new HashMap<String, Object>();
         conditionMap.put("meetId", meetId);
         conditionMap.put("userId", userId);
-        List<AttendMeetUserDetailDTO> list = meetAttendDAO.findAttendUserDetailExcel(conditionMap);
-        return list;
+        return meetAttendDAO.findAttendUserDetailExcel(conditionMap);
     }
 
     /**

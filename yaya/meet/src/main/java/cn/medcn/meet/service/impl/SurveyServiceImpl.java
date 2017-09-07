@@ -3,6 +3,7 @@ package cn.medcn.meet.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.KeyValuePair;
 import cn.medcn.common.utils.LetterUtils;
 import cn.medcn.meet.dao.*;
@@ -356,25 +357,6 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
 
     }
 
-
-    /**
-     * 查询用户选择的选项数据
-     * @param questionId
-     * @return
-     */
-    @Override
-    public Map<String,Object> findSurveyHis(Integer questionId){
-        // 定义List 以键值对 存放用户选择的答案
-        //List<Map<String,Object>> suvList = Lists.newArrayList();
-        Map<String,Object> selMap = new HashMap<>();
-        List<SurveyRecordItemDTO> mapList = surveyHistoryDAO.findUserSelAnswerByQuestionId(questionId);
-        for (SurveyRecordItemDTO itemDTO : mapList){
-            selMap.put(itemDTO.getOptkey(),itemDTO.getSelCount());
-            //suvList.add(selMap);
-        }
-        return selMap;
-    }
-
     /**
      * 导出问卷数据分析
      * @param map
@@ -396,16 +378,6 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
         Page<SurveyHistoryRecordDTO> page = (Page) surveyHistoryDAO.findSurveyRecordByMeetId(pageable.getParams());
         return MyPage.page2Mypage(page);
-    }
-
-    /**
-     * 导出 所有参加问卷调查的用户记录
-     * @param map
-     * @return
-     */
-    public List<SurveyHistoryRecordDTO> findSurveyRecordExcel(Map<String,Object> map){
-        List<SurveyHistoryRecordDTO> list = surveyHistoryDAO.findSurveyRecordByMeetId(map);
-        return list;
     }
 
     /**
@@ -463,15 +435,7 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
      */
     @Override
     public List<AttendSurveyUserDataDTO> findAttendUserDataByGroupId(Map<String,Object> map){
-        List<AttendSurveyUserDataDTO> userDataDTOList = meetSurveyDAO.findGroupUserData(map);
-        for (AttendSurveyUserDataDTO userDataDTO : userDataDTOList){
-            if (userDataDTO.getSubmitTime()==null || "".equals(userDataDTO.getSubmitTime())){
-                userDataDTO.setAttend(false);
-            }else {
-                userDataDTO.setAttend(true);
-            }
-        }
-        return  userDataDTOList;
+        return meetSurveyDAO.findGroupUserData(map);
     }
 
     /**
@@ -493,14 +457,34 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
      */
     @Override
    public List<AttendSurveyUserDataDTO> findUserSurveyHis(Map<String,Object> map){
-        List<AttendSurveyUserDataDTO> userDataDTOList = surveyHistoryDAO.findUserSurveyHis(map);
-        for (AttendSurveyUserDataDTO userDataDTO : userDataDTOList){
-            if (userDataDTO.getSubmitTime()==null || "".equals(userDataDTO.getSubmitTime())){
-                userDataDTO.setAttend(false);
-            }else {
-                userDataDTO.setAttend(true);
+        List<AttendSurveyUserDataDTO> surveyDTOList = null;
+        String meetId = map.get("meetId").toString();
+        // 查询是否有指定分组用户参加问卷
+        MeetLimitDTO meetLimitDTO = findGroupIdIsLimit(meetId);
+        if (meetLimitDTO != null ) {
+            if (meetLimitDTO.getGroupId() != null
+                    && !"".equals(meetLimitDTO.getGroupId())
+                    && meetLimitDTO.getGroupId() != 0) {
+                map.put("groupId", meetLimitDTO.getGroupId());
+                // 指定了分组 查询分组用户的 问卷数据
+                surveyDTOList = findAttendUserDataByGroupId(map);
+            }
+        } else {
+            // 没有指定分组，查询所有用参加问卷的数据
+            surveyDTOList = surveyHistoryDAO.findUserSurveyHis(map);
+        }
+
+        if (!CheckUtils.isEmpty(surveyDTOList)) {
+            for (AttendSurveyUserDataDTO userDataDTO : surveyDTOList) {
+                // 判断提交问卷时间为空，则该用户没有参加问卷
+                if (userDataDTO.getSubmitTime() == null
+                        || "".equals(userDataDTO.getSubmitTime())){
+                    userDataDTO.setAttend(false);
+                }else {
+                    userDataDTO.setAttend(true);
+                }
             }
         }
-        return  userDataDTOList;
+        return surveyDTOList;
     }
 }

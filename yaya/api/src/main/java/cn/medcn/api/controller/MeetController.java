@@ -280,7 +280,7 @@ public class MeetController extends BaseController {
         }
 
         // 添加或修改 考试学习进度记录
-        Integer funcId = MeetLearningRecord.functionName.EXAM.getFunId();
+        Integer funcId = MeetModule.ModuleFunction.EXAM.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(history.getUserId(),history.getMeetId(),funcId);
         learningRecord.setUsedTime(scoredHistory.getSubmitTime().getTime());
         meetService.saveOrUpdateLearnRecord(learningRecord);
@@ -325,7 +325,7 @@ public class MeetController extends BaseController {
         surveyService.executeSubmit(history);
 
         // 添加或修改 学习进度记录
-        Integer funcId = MeetLearningRecord.functionName.SURVEY.getFunId();
+        Integer funcId = MeetModule.ModuleFunction.SURVEY.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(principal.getId(),history.getMeetId(),funcId);
         learningRecord.setUsedTime(history.getSubmitTime().getTime());
         meetService.saveOrUpdateLearnRecord(learningRecord);
@@ -420,7 +420,7 @@ public class MeetController extends BaseController {
         String meetId = history.getMeetId();
         Integer completeCount = calculatePPTProgress(meetId, userId);
         // 添加或修改学习进度记录
-        Integer funcId = MeetLearningRecord.functionName.PPT.getFunId();
+        Integer funcId = MeetModule.ModuleFunction.PPT.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(userId, meetId, funcId);
         learningRecord.setCompleteProgress(completeCount);
         learningRecord.setUsedTime(new Long(history.getUsedtime()));
@@ -582,7 +582,7 @@ public class MeetController extends BaseController {
         signService.insertSign(sign);
 
         // 添加或修改 会议签到进度记录
-        Integer funcId = MeetLearningRecord.functionName.SIGN.getFunId();
+        Integer funcId = MeetModule.ModuleFunction.SIGN.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(principal.getId(), sign.getMeetId(), funcId);
         learningRecord.setUsedTime(sign.getSignTime().getTime());
         meetService.saveOrUpdateLearnRecord(learningRecord);

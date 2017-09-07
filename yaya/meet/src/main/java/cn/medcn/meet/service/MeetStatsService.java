@@ -4,24 +4,21 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.*;
-import cn.medcn.meet.model.Meet;
 import cn.medcn.meet.model.MeetAttend;
 import cn.medcn.user.dto.UserDataDetailDTO;
-import com.github.abel533.mapper.Mapper;
-import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-
 /**
- * Created by Liuchangling on 2017/5/16.
+ * Created by Liuchangling on 2017/9/5.
  */
 
-public interface MeetStasticService extends BaseService<MeetAttend>{
+public interface MeetStatsService extends BaseService<MeetAttend> {
     /**
      * 查询会议相关统计数
+     *
      * @param userId
      * @return
      */
@@ -40,7 +37,7 @@ public interface MeetStasticService extends BaseService<MeetAttend>{
      * @param params
      * @return
      */
-    List<MeetAttendCountDTO> findAttendCountByTag(Map<String, Object> params);
+    List<MeetAttendCountDTO> findAttendCountByTime(Map<String, Object> params);
 
     /**
      * 查询某会议的所有参会人数 、某会议特定的省份下的参会人数

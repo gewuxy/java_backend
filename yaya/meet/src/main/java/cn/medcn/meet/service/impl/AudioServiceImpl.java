@@ -5,6 +5,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.FileUtils;
 import cn.medcn.goods.dto.CreditPayDTO;
 import cn.medcn.goods.service.CreditsService;
@@ -430,7 +431,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public Integer findViewCount(String meetId) {
         List list = audioCourseDetailDAO.findViewCount(meetId);
         Integer viewCount = 0;
-        if(list!=null && list.size()!=0){
+        if(!CheckUtils.isEmpty(list)){
             viewCount = list.size();
         }
         return viewCount;
@@ -468,8 +469,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Override
     public List<AudioRecordDTO> findFinishedPPtCount(Map<String,Object> params){
-        List<AudioRecordDTO> dtlist = audioCourseDetailDAO.findFinishedPPtCount(params);
-        return dtlist;
+        List<AudioRecordDTO> recordList = audioCourseDetailDAO.findFinishedPPtCount(params);
+        return recordList;
     }
 
 
@@ -515,8 +516,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     public Integer findUserViewPPTCount(String meetId,Integer userId){
-        Integer pptCount = audioHistoryDAO.findUserViewPPTCount(meetId,userId);
-        return pptCount;
+        return audioHistoryDAO.findUserViewPPTCount(meetId,userId);
     }
 
     public void addMeetAudio(MeetAudio audio){

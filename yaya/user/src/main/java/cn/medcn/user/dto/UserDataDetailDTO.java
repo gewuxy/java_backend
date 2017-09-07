@@ -27,11 +27,11 @@ public class UserDataDetailDTO implements Serializable {
 
 
     public interface conditionNumber {
-        Integer PRO_OR_CITY = 1;
-        Integer HOSPITAL = 2;
-        Integer USER_TITLE = 3;
-        Integer DEPARTMENT = 4;
-        String DEFAULT_CITY = "全国";
+        Integer REGION = 1;     // 地区
+        Integer HOSPITAL = 2;   // 医院
+        Integer USER_TITLE = 3; // 职称
+        Integer DEPARTMENT = 4; // 科室
+        String  DEFAULT_PROVINCE = "全国";
     }
 
 }

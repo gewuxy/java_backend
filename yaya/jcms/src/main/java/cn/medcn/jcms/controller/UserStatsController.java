@@ -6,10 +6,9 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.jcms.utils.SubjectUtils;
-import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.dto.UserAttendDTO;
 import cn.medcn.user.dto.UserDataDetailDTO;
-import cn.medcn.user.service.UserStasticService;
+import cn.medcn.user.service.UserStatsService;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +25,9 @@ import java.util.*;
  */
 @Controller
 @RequestMapping(value = "/data/state")
-public class UserStasticController extends BaseController {
+public class UserStatsController extends BaseController {
     @Autowired
-    private UserStasticService userStasticService;
+    private UserStatsService userStatsService;
 
     /**
      * 医生统计 本周、本月、所有 关注数
@@ -40,13 +39,13 @@ public class UserStasticController extends BaseController {
     public String attendCount(Pageable pageable, Model model) {
         Integer userId = SubjectUtils.getCurrentUserid();
         // 公众号的关注数统计
-        UserAttendDTO attendDTO = userStasticService.findAttendCount(userId);
+        UserAttendDTO attendDTO = userStatsService.findAttendCount(userId);
         model.addAttribute("userAttendDTO", attendDTO);
 
         // 地图数据
         pageable.put("userId", userId);
         pageable.put("province", "全国");
-        List<UserDataDetailDTO> list = userStasticService.findUserDataByPro(pageable.getParams());
+        List<UserDataDetailDTO> list = userStatsService.findUserDataByPro(pageable.getParams());
         if (!CheckUtils.isEmpty(list)) {
             calculatePercent(list, pageable.getParams());
         }
@@ -75,7 +74,7 @@ public class UserStasticController extends BaseController {
         // 每页显示的条数
         pageable.setPageSize(6);
 
-        MyPage<UserDataDetailDTO> page = userStasticService.findUserData(pageable, propNum);
+        MyPage<UserDataDetailDTO> page = userStatsService.findUserData(pageable, propNum);
         if (page != null && !CheckUtils.isEmpty(page.getDataList())) {
             calculatePercent(page.getDataList(), pageable.getParams());
         }
@@ -98,7 +97,7 @@ public class UserStasticController extends BaseController {
         pageable.put("province", province);
         pageable.setPageSize(Integer.MAX_VALUE);
 
-        MyPage<UserDataDetailDTO> page = userStasticService.findUserData(pageable, propNum);
+        MyPage<UserDataDetailDTO> page = userStatsService.findUserData(pageable, propNum);
         List<UserDataDetailDTO> list = Lists.newArrayList();
         if (page != null) {
             list = page.getDataList();
@@ -122,10 +121,10 @@ public class UserStasticController extends BaseController {
         Integer userId = (Integer) params.get("userId");
         String province = (String) params.get("province");
         if (province == null || province.equals("全国")) {
-            totalCount = userStasticService.findTotalAttendCount(userId);
+            totalCount = userStatsService.findTotalAttendCount(userId);
         } else {
             // 查询指定省份 公众号的 用户关注数
-            List<UserDataDetailDTO> ulist = userStasticService.findDataByProvince(params);
+            List<UserDataDetailDTO> ulist = userStatsService.findDataByProvince(params);
             totalCount = CheckUtils.isEmpty(ulist) ? 0 : ulist.get(0).getUserCount();
         }
         float percent;

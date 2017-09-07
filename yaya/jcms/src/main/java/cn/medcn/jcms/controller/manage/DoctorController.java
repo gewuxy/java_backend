@@ -78,11 +78,8 @@ public class DoctorController extends BaseController{
     @Value("${app.file.upload.base}")
     private String uploadBase;
 
-
-    private interface GroupNameId {
-        Integer NO_GROUP_ID = 0; // 未分组ID
-        Integer WX_GROUP_ID = 1; // 绑定微信分组ID
-    }
+    private static final Integer NO_GROUP_ID = 0; // 未分组ID
+    private static final Integer WX_GROUP_ID = 1; // 绑定微信分组ID
 
     @RequestMapping("/list")
     public String doctors(Integer groupId, Pageable pageable, Model model,String searchName){
@@ -112,10 +109,10 @@ public class DoctorController extends BaseController{
             //查询所有医生信息 根据医生名字 全局搜索 不对分组搜索
             pageable.put("linkman", searchName);
             list = doctorService.findAllDoctorInfo(pageable);
-        } else if (groupId == GroupNameId.NO_GROUP_ID) {
+        } else if (groupId == NO_GROUP_ID) {
             //未分组的医生信息
             list = doctorService.findUndifindGroupDoctorInfo(pageable);
-        } else if (groupId == GroupNameId.WX_GROUP_ID) {
+        } else if (groupId == WX_GROUP_ID) {
             // 查询绑定微信的医生信息
             list = doctorService.findBindWxDoctorInfo(pageable);
         } else {

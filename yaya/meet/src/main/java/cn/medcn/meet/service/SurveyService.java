@@ -134,14 +134,6 @@ public interface SurveyService extends BaseService<MeetSurvey>{
      */
     MyPage<SurveyQuestion> findSurveyDatas(Pageable pageable);
 
-
-    /**
-     * 查询用户 问卷数据
-     * @param questionId
-     * @return
-     */
-    Map<String,Object> findSurveyHis(Integer questionId);
-
     /**
      * 根据会议ID 查询问卷数据
      * @param map
@@ -157,12 +149,11 @@ public interface SurveyService extends BaseService<MeetSurvey>{
     MyPage<SurveyHistoryRecordDTO> findSurveyRecord(Pageable pageable);
 
     /**
-     * 导出 所有参加问卷调查的用户记录
-     * @param map
+     * 查找用户选择的答案
+     * @param questionId
+     * @param surveyId
      * @return
      */
-    List<SurveyHistoryRecordDTO> findSurveyRecordExcel(Map<String,Object> map);
-
     String findAnswer(Integer questionId, Integer surveyId);
 
 

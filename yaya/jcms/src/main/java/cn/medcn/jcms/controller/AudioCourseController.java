@@ -244,6 +244,7 @@ public class AudioCourseController extends BaseController {
         if (courseId != null) {
             AudioCourse course = audioService.selectByPrimaryKey(courseId);
             course.setPublished(true);
+            course.setShared(true);
             audioService.updateByPrimaryKeySelective(course);
         }
         return "redirect:/func/meet/finish?meetId=" + meetId + "&moduleId=" + moduleId;

@@ -22,7 +22,7 @@
 
     <div class="item">
         <div class="item-area login-input">
-            <form action="${ctx}/register/do_register" method="post" id="bindForm" name="bindForm">
+            <form action="${ctx}/regist/do_register" method="post" id="bindForm" name="bindForm">
                 <div class="formrow radius login-input-item">
                     <label for="" class="cells-block pr"><input class="icon-register-hot" type="tel" name="mobile" id="mobile" value="${appUser.mobile}" maxlength="11" placeholder="请输入手机号码"></label>
                     <div class="cells-error none">请输入正确的手机号码</div>
@@ -211,7 +211,7 @@
         $.ajax({
             type: "POST", //用POST方式传输
             dataType: "json", //数据格式:JSON
-            url: '${ctx}/register/get_captcha', //目标地址
+            url: '${ctx}/regist/get_captcha', //目标地址
             data: {'mobile':mobile, 'type':0},
             error: function (XMLHttpRequest, textStatus, errorThrown) { },
             success: function (data){
@@ -380,7 +380,7 @@
             if (checkForm()){
                 $.post($("#bindForm").attr("action"), $("#bindForm").serialize(),function (data) {
                     if(data.code == 0){
-                        window.location.href = '${ctx}/register/registSuccess?mobile='+$("#mobile").val();
+                        window.location.href = '${ctx}/regist/registSuccess?mobile='+$("#mobile").val();
                     }else{
                         layer.msg(data.err);
                     }
@@ -407,7 +407,7 @@
             data.x = latitude;
             data.y = longitude;
             $.ajax({
-                url:'${ctx}/register/nearby/hospital',
+                url:'${ctx}/regist/nearby/hospital',
                 data:data,
                 async:false,
                 type:'post',
@@ -517,7 +517,7 @@
         function loadRegionData(){
             if (provincePickerData.length == 0){
                 $.ajax({
-                    url:'${ctx}/register/regions',
+                    url:'${ctx}/regist/regions',
                     async:false,
                     dataType:'json',
                     success:function(data){
@@ -586,7 +586,7 @@
         function loadSpecialtyData(){
             if(specialtyArray.length == 0){
                 $.ajax({
-                    url:'${ctx}/register/specialties',
+                    url:'${ctx}/regist/specialties',
                     async:false,
                     dataType:'json',
                     success:function(data){
@@ -645,7 +645,7 @@
         function loadTitleData(){
             if(titleData.length == 0){
                 $.ajax({
-                    url:'${ctx}/register/title',
+                    url:'${ctx}/regist/title',
                     async:false,
                     dataType:'json',
                     success:function(data){

@@ -4,7 +4,7 @@ import cn.medcn.api.utils.SecurityUtils;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.meet.dto.MeetAttendDTO;
-import cn.medcn.meet.service.MeetStasticService;
+import cn.medcn.meet.service.MeetStatsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +20,7 @@ public class MeetAttendStatsController extends BaseController{
 
 
     @Autowired
-    protected MeetStasticService meetStasticService;
+    protected MeetStatsService meetStatsService;
 
 
     /**
@@ -35,7 +35,7 @@ public class MeetAttendStatsController extends BaseController{
             offset = 0;
         }
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
-        MeetAttendDTO meetAttendDTO = meetStasticService.findFinalAttendByPersonal(userId, offset);
+        MeetAttendDTO meetAttendDTO = meetStatsService.findFinalAttendByPersonal(userId, offset);
         long[] array = CalendarUtils.getWeekTimeStartToEndByOffset(offset);
         meetAttendDTO.setTimeArray(array);
         meetAttendDTO.setDetailList(meetAttendDTO.build());
@@ -58,7 +58,7 @@ public class MeetAttendStatsController extends BaseController{
             offset = 0;
         }
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
-        MeetAttendDTO meetAttendDTO = meetStasticService.findFinalPublishByPersonal(userId, offset);
+        MeetAttendDTO meetAttendDTO = meetStatsService.findFinalPublishByPersonal(userId, offset);
         long[] array = CalendarUtils.getWeekTimeStartToEndByOffset(offset);
         meetAttendDTO.setTimeArray(array);
         meetAttendDTO.setDetailList(meetAttendDTO.build());

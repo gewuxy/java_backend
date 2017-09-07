@@ -92,7 +92,7 @@
 
 
     <!-- 统计某个时间段内(本月、本周、自定义时间、全部) 条件参数startTime、endTime -->
-    <select id="findAttendCountByTag" resultType="cn.medcn.meet.dto.MeetAttendCountDTO">
+    <select id="findAttendCountByTime" resultType="cn.medcn.meet.dto.MeetAttendCountDTO">
         SELECT count(atd.id) as attendCount,date_format(atd.start_time,'%Y-%m-%d')as attendDate
         from t_meet m,t_meet_attend atd where m.id=atd.meet_id
         and m.owner_id=#{userId}

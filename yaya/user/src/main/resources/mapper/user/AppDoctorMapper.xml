@@ -10,7 +10,9 @@
         LEFT JOIN t_user_doctor_group tudg ON tudg.doctor_id = tu.id AND tudg.pub_user_id = #{userId}
         LEFT JOIN t_user_group tug ON tug.id = tudg.group_id AND tug.pub_user_id = tudg.pub_user_id
         WHERE tu.role_id = 2 AND ta.master_id = #{userId}
-        AND tu.linkman LIKE CONCAT('%', #{linkman}, '%')
+        <if test="linkman != null and linkman !=''">
+            AND tu.linkman LIKE CONCAT('%', #{linkman}, '%')
+        </if>
     </select>
 
     <select id="findUndifindGroupDoctorInfo" resultType="cn.medcn.user.dto.DoctorDTO">

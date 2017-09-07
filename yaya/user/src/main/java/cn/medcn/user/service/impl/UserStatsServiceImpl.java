@@ -7,7 +7,7 @@ import cn.medcn.user.dao.AppAttentionDAO;
 import cn.medcn.user.dto.UserAttendDTO;
 import cn.medcn.user.dto.UserDataDetailDTO;
 import cn.medcn.user.model.AppAttention;
-import cn.medcn.user.service.UserStasticService;
+import cn.medcn.user.service.UserStatsService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -22,7 +22,7 @@ import java.util.Map;
  * Created by Liuchangling on 2017/5/18.
  */
 @Service
-public class UserStasticServiceImpl extends BaseServiceImpl<AppAttention> implements UserStasticService{
+public class UserStatsServiceImpl extends BaseServiceImpl<AppAttention> implements UserStatsService{
     @Autowired
     private AppAttentionDAO appAttentionDAO;
 
@@ -150,13 +150,13 @@ public class UserStasticServiceImpl extends BaseServiceImpl<AppAttention> implem
 
     @Override
     public MyPage<UserDataDetailDTO> findUserData(Pageable pageable, Integer propNum) {
-        if (propNum == null) {
-            propNum = UserDataDetailDTO.conditionNumber.PRO_OR_CITY;
+       if (propNum == null) {
+            propNum = UserDataDetailDTO.conditionNumber.REGION;
         }
         String province = (String) pageable.get("province");
         MyPage page = null;
-        if (propNum == UserDataDetailDTO.conditionNumber.PRO_OR_CITY){
-            if (province == null || province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_CITY)){
+        if (propNum == UserDataDetailDTO.conditionNumber.REGION){
+            if (province == null || province.equals(UserDataDetailDTO.conditionNumber.DEFAULT_PROVINCE)){
                 page = findUserDataByProvince(pageable);
             } else {
                 page = findUserDataByCity(pageable);
