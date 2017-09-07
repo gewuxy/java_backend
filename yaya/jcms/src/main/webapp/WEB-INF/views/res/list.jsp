@@ -208,7 +208,6 @@
     </div>
 </div>
 <form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
-    <input type="hidden" name="pageNum" id="pageNum" value="${page.pageNum}">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
     <input type="hidden" name="keyword" value="${keyword}">
     <input type="hidden" name="category" id="category" value="${category}">
