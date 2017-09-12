@@ -24,6 +24,7 @@
         <if test="meetType!=null">
             AND f.meet_type=#{meetType}
         </if>
+        ORDER BY type,start_time desc
     </select>
 
     <!-- 根据父目录ID查询子目录数据 -->
