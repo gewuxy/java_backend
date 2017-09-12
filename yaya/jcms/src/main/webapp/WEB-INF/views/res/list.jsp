@@ -20,6 +20,7 @@
 
             $("#categoryList>a").click(function(){
                 var category = $(this).attr("category");
+                $("#pageNum").val(1);
                 $("#category").val(category);
                 $("#pageForm").submit();
             });
@@ -72,7 +73,7 @@
         }
 
         function closeDialog(){
-            $("#reprintBtn").show();;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+            $("#reprintBtn").show();
             $('.fx-mask-box-1,.fx-mask-box-2').hide();
             $('.mask-wrap').removeClass('dis-table');
             $("#audioFrame").attr("src","");
@@ -208,8 +209,8 @@
     </div>
 </div>
 <form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
-    <input type="hidden" name="pageNum" id="pageNum" value="${page.pageNum}">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
+    <input type="hidden" name="pageNum" id="pageNum">
     <input type="hidden" name="keyword" value="${keyword}">
     <input type="hidden" name="category" id="category" value="${category}">
 </form>

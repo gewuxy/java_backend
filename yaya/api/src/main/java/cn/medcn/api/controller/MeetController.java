@@ -409,9 +409,9 @@ public class MeetController extends BaseController {
         JSONArray jsonArray = JSON.parseArray(pptAudioDTO.getDetails());
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
-            Integer detailId = (Integer) jsonObject.get("detailId");
-            Integer usedtime = (Integer) jsonObject.get("usedtime");
-            Boolean finished = (Boolean) jsonObject.get("finished");
+            Integer detailId = jsonObject.getInteger("detailId");
+            Integer usedtime = jsonObject.getInteger("usedtime");
+            Boolean finished = jsonObject.getBoolean("finished");
             history.setDetailId(detailId);
             history.setUsedtime(usedtime);
             history.setFinished(finished);
