@@ -338,7 +338,7 @@ public class MeetController extends BaseController {
             }
             Principal principal = SubjectUtils.getCurrentUser();
             //判断资源是否属于当前用户
-            if (principal.getId() != course.getOwner()) {
+            if (principal.getId().intValue() != course.getOwner().intValue()) {
                 throw new SystemException("您无法引用不属于您的资源");
             }
         }
