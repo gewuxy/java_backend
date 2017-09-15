@@ -121,10 +121,10 @@ public class PositionController extends BaseController {
                 ExcelUtils.outputWorkBook(fileName,workbook,response);
             } catch (IOException e) {
                 e.printStackTrace();
-                return APIUtils.error("导出文件出错");
+                return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
             }
         }
-        return APIUtils.error("导出文件出错");
+        return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
     }
 
     /**
