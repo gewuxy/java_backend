@@ -320,7 +320,7 @@
             <div class="page-width clearfix">
                 <h3 class="title">公司动态/Company News <a href="${base}/news/trends" class="fr more">查看更多</a> </h3>
                 <div class="v2-news-graphic ">
-                    <c:forEach items="${page.datas}" var="news">
+                    <c:forEach items="${page.dataList}" var="news">
                         <div class="v2-news-graphic-item clearfix">
                             <div class="fl"><a href="${base}/news/viewtrend/${news.id}"><img src="${news.articleImg}" alt=""></a></div>
                             <div class="oh">
