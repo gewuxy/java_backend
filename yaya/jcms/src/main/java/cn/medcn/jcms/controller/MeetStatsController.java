@@ -313,13 +313,13 @@ public class MeetStatsController extends BaseController {
                     ExcelUtils.createMergeExcel(fileName, workbook, attendUserMap, columnIndexArray, response);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return APIUtils.error("导出文件出错");
+                    return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
                 }
             } else {
                 return APIUtils.error("暂无数据导出");
             }
         }
-        return APIUtils.error("导出文件出错");
+        return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
     }
 
     /**
@@ -431,13 +431,13 @@ public class MeetStatsController extends BaseController {
                     ExcelUtils.outputWorkBook(fileName, workbook, response);
                 } catch (Exception e) {
                     e.printStackTrace();
-                    return APIUtils.error("导出文件出错");
+                    return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
                 }
             } else {
                 return APIUtils.error("暂无数据导出");
             }
         }
-        return APIUtils.error("导出文件出错");
+        return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
     }
 
     /**

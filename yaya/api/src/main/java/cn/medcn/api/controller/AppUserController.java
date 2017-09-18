@@ -128,11 +128,14 @@ public class AppUserController extends BaseController {
         }
         String suffix =  FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
         //相对路径
+        String dirPath = FilePath.PORTRAIT.path + File.separator;
+        File dir = new File(uploadBase+dirPath);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+
         String relativePath = FilePath.PORTRAIT.path + File.separator + UUIDUtil.getNowStringID() + "." + suffix;
         File saveFile = new File(uploadBase+relativePath);
-        if(!saveFile.exists()){
-            saveFile.mkdirs();
-        }
         try {
             file.transferTo(saveFile);
         } catch (IOException e) {

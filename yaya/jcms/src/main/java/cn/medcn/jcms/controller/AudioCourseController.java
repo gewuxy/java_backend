@@ -454,11 +454,11 @@ public class AudioCourseController extends BaseController {
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
-                return APIUtils.error("导出文件出错");
+                return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
             }
 
         }
-        return APIUtils.error("导出文件出错");
+        return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
     }
 
 
