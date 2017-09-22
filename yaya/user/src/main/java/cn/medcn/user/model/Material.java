@@ -48,6 +48,7 @@ public class Material {
 
     private Long fileSize;
 
+    private String htmlUrl;
 
 
 
