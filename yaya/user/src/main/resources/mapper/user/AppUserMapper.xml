@@ -16,12 +16,13 @@
 
 
     <select id="findAllMaterialList" resultType="cn.medcn.user.dto.MaterialDTO">
-        SELECT id,material_name,material_url,material_type,file_size,create_time  FROM t_material WHERE user_id = #{id} ORDER BY create_time DESC
+        SELECT id,material_name,material_url,material_type,file_size,create_time,html_url  FROM t_material WHERE user_id = #{id} ORDER BY create_time DESC
     </select>
 
 
     <select id="findMaterialDTOList" resultType="cn.medcn.user.dto.MaterialDTO">
-      SELECT id,material_name,material_url,material_type,file_size,create_time FROM t_material WHERE user_id = #{masterId} ORDER BY create_time DESC limit 3
+      SELECT id,material_name,material_url,material_type,file_size,create_time,html_url
+       FROM t_material WHERE user_id = #{masterId} ORDER BY create_time DESC limit 3
     </select>
 
     <select id="findMeetingDTOList" resultType="cn.medcn.user.dto.MeetingDTO">
