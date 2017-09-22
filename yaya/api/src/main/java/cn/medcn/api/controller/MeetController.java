@@ -98,6 +98,10 @@ public class MeetController extends BaseController {
                         if (!StringUtils.isEmpty(material.getFileUrl())) {
                             material.setFileUrl(appFileBase + material.getFileUrl());
                         }
+                        // 增加查看html格式文件路径
+                        if (!StringUtils.isEmpty(material.getHtmlUrl())) {
+                            material.setHtmlUrl(appFileBase + material.getHtmlUrl());
+                        }
                     }
                 }
                 meetInfoDTO.setAttention(appUserService.checkAttention(meetInfoDTO.getPubUserId(), principal.getId()));
@@ -116,6 +120,10 @@ public class MeetController extends BaseController {
             for (MeetMaterial meetMaterial : page.getDataList()) {
                 if (!StringUtils.isEmpty(meetMaterial.getFileUrl())) {
                     meetMaterial.setFileUrl(appFileBase + meetMaterial.getFileUrl());
+                }
+
+                if (!StringUtils.isEmpty(meetMaterial.getHtmlUrl())) {
+                    meetMaterial.setHtmlUrl(appFileBase + meetMaterial.getHtmlUrl());
                 }
             }
         }
