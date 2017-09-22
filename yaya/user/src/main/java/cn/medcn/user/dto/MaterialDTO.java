@@ -25,6 +25,8 @@ public class MaterialDTO {
     //文件大小
     private Long fileSize;
 
+    // html路径
+    private String htmlUrl;
 
 
 
