@@ -1,6 +1,7 @@
 package cn.medcn.common.utils;
 
 import java.security.MessageDigest;
+import java.util.Arrays;
 
 /**
  * Created by lixuan on 2017/1/5.
@@ -48,5 +49,16 @@ public class MD5Utils {
 
     public static void main(String[] args) {
         System.out.println(MD5Encode("123456","utf-8"));
+    }
+
+
+    public static String signature(String secret, String nonce, String timeStamp){
+        String[] array = new String[]{secret, nonce, timeStamp};
+        Arrays.sort(array);
+        StringBuffer buffer = new StringBuffer();
+        for (String str : array) {
+            buffer.append(str);
+        }
+        return MD5Encode(buffer.toString());
     }
 }
