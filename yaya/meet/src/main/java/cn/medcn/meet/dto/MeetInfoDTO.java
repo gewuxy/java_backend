@@ -94,4 +94,40 @@ public class MeetInfoDTO implements Serializable{
     // 获得奖励学分
     private Integer receiveAwardCredit;
 
+    // 会议类型 0表示录播 1表示PPT直播 2表示视频直播
+    private Integer meetKind;
+    // 转载自单位号
+    private String reprintFromUnitUser;
+
+    public enum MeetKind {
+        SPECIAL_PROG(0, "录播"),
+        PPT_LIVE(1, "PPT直播"),
+        VIDEO_LIVE(2, "视频直播");
+
+        private Integer kind;
+
+        private String label;
+
+        public Integer getKind() {
+            return kind;
+        }
+
+        public void setKind(Integer kind) {
+            this.kind = kind;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        public void setLabel(String label) {
+            this.label = label;
+        }
+
+        MeetKind(Integer state, String label){
+            this.kind = kind;
+            this.label = label;
+        }
+    }
+
 }

@@ -36,6 +36,9 @@ public class MeetMaterial implements Serializable {
     private String meetId;
 
     private String fileUrl;
+
+    private String htmlUrl;
+
     //用于前端呈现文件大小的字符串
     @Transient
     private String fileSizeStr;

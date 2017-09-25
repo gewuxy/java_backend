@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
@@ -60,6 +61,9 @@ public class LoginController extends BaseController{
     @Value("${app.file.base}")
     private String fileBase;
 
+    @Value("${csp.secret}")
+    protected String cspSecret;
+
     @Autowired
     private WXOauthService wxOauthService;
 
@@ -68,6 +72,32 @@ public class LoginController extends BaseController{
 
     @Autowired
     private SysPropertiesService sysPropertiesService;
+
+
+    @RequestMapping(value = "/cas", method = RequestMethod.GET)
+    @ResponseBody
+    public String userLoginCAS(String username, String password, String nonce, String time_stamp, String signature) {
+        if (CheckUtils.isEmpty(signature)){
+            return error("signature can not be null");
+        }
+
+        if (!signature.equals(MD5Utils.signature(cspSecret, nonce, time_stamp))){
+            return error("signature is illegal");
+        }
+
+        AppUser user = appUserService.findAppUserByLoginName(username);
+        if (user == null) {
+            return error(SpringUtils.getMessage("user.notexisted"));
+        }
+        if (!user.getPassword().equals(MD5Utils.MD5Encode(password))) {
+            return error(SpringUtils.getMessage("user.password.error"));
+        }
+        if (user.getAuthed() == null || !user.getAuthed()) {
+            return error(SpringUtils.getMessage("user.unauthed"));
+        }
+
+        return success(user);
+    }
 
 
     /**
