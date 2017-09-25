@@ -34,12 +34,12 @@ public class ServiceTest {
 //
 //        // =======================================================================
 
-//        String pubUserListStr = PropertyUtils.readPropFromCache("transfer_name_list.properties", "pub.user.list");
-//        String[] pubUserArray = pubUserListStr.split(",");
-//        for(String pubUserName : pubUserArray){
-//            Thread thread = new TransferThread(pubUserName);
-//            thread.start();
-//        }
+        String pubUserListStr = PropertyUtils.readPropFromCache("transfer_name_list.properties", "pub.user.list");
+        String[] pubUserArray = pubUserListStr.split(",");
+        for(String pubUserName : pubUserArray){
+            Thread thread = new TransferThread(pubUserName);
+            thread.start();
+        }
 
 //        ClinicalGuideCategoryService clinicalGuideCategoryService = new ClinicalGuideCategoryServiceImpl();
 //        clinicalGuideCategoryService.transfer();
@@ -47,8 +47,8 @@ public class ServiceTest {
 //        GuideServiceImpl guideService = new GuideServiceImpl();
 //        guideService.transfer("D:\\临床指南综合\\临床指南综合");
 
-        MedicineServiceImpl medicineService = new MedicineServiceImpl();
-        medicineService.transfer("D:\\药品说明书");
+//        MedicineServiceImpl medicineService = new MedicineServiceImpl();
+//        medicineService.transfer("D:\\药品说明书");
 //        TransferService transferService = new TransferServiceImpl();
 //        transferService.transferDoctor("957237");
 

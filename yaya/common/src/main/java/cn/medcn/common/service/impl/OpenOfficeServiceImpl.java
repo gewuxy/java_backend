@@ -53,7 +53,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
         convert2PDF(sourceFilePath, pdfFilePath);
         List<String> imageList = null;
         try {
-            String pdfFileName = sourceFilePath.substring(sourceFilePath.lastIndexOf(File.separator) + 1, sourceFilePath.lastIndexOf(".")) + "."+FileTypeSuffix.PDF_SUFFIX.suffix;
+            String pdfFileName = sourceFilePath.substring(sourceFilePath.lastIndexOf(File.separator) + 1, sourceFilePath.lastIndexOf(".")) + "." + FileTypeSuffix.PDF_SUFFIX.suffix;
             imageList = pdf2Images(pdfFilePath + pdfFileName, targetDir, courseId, request);
         } catch (Exception e) {
             e.printStackTrace();
@@ -94,8 +94,8 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
                 BufferedImage image = renderer.renderImage(i, 1.0f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
-                imageFilePath = imgDirPath+UUIDUtil.getNowStringID()+"."+suffix;
-                ImageIO.write(image, suffix, new File(appFileUploadBase+imageFilePath));
+                imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
+                ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 imageNameList.add(imageFilePath);
             }
             return imageNameList;

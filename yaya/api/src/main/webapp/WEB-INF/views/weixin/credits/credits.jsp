@@ -28,7 +28,7 @@
             </div>
             <div class="item-area">
                 <div class="formrow t-center">
-                    <a href="${ctx}/weixin/credits/pay" class="button radius blue-button" >充值象数</a>
+                    <!--<a href="${ctx}/weixin/credits/pay" class="button radius blue-button" >充值象数</a>-->
                     <a href="${ctx}/weixin/user/credits/details" class="button radius" style="margin-top:.3rem;">象数明细</a>
                 </div>
             </div>
