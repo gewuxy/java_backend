@@ -1,5 +1,8 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.utils.StringUtils;
+import cn.medcn.user.dto.CspUserInfoDTO;
+import com.jcraft.jsch.UserInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -18,7 +21,7 @@ import java.util.Date;
 @Table(name = "t_csp_user_info")
 public class CspUserInfo implements Serializable{
     @Id
-    protected Integer id;
+    protected String id;
 
     protected String nickName;
 
@@ -54,5 +57,16 @@ public class CspUserInfo implements Serializable{
 
 
 
-
+    public static CspUserInfo buildToUserInfo(CspUserInfoDTO dto) {
+        CspUserInfo userInfo = new CspUserInfo();
+        userInfo.setId(StringUtils.nowStr());
+        userInfo.setNickName(dto.getNick_name());
+        userInfo.setAvatar(dto.getAvatar());
+        userInfo.setCountry(dto.getCountry());
+        userInfo.setProvince(dto.getProvince());
+        userInfo.setCity(dto.getCity());
+        userInfo.setDistrict(dto.getDistrict());
+        userInfo.setRegisterTime(new Date());
+        return userInfo;
+    }
 }

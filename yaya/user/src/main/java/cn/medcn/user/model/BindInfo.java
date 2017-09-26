@@ -1,5 +1,7 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.utils.StringUtils;
+import cn.medcn.user.dto.CspUserInfoDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -64,5 +66,18 @@ public class BindInfo {
             this.typeId = typeId;
             this.label = label;
         }
+    }
+
+    public static BindInfo buildToBindInfo(CspUserInfoDTO dto) {
+        BindInfo bindUser = new BindInfo();
+        bindUser.setId(StringUtils.nowStr());
+        bindUser.setUserId(dto.getUid());
+        bindUser.setThirdPartyId(dto.getThird_party_id());
+        bindUser.setBindDate(new Date());
+        bindUser.setNickName(dto.getNick_name());
+        bindUser.setUniqueId(dto.getUnique_id());
+        bindUser.setGender(dto.getGender());
+        bindUser.setAvatar(dto.getAvatar());
+        return bindUser;
     }
 }
