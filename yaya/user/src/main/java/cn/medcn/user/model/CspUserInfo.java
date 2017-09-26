@@ -18,7 +18,7 @@ import java.util.Date;
 @Table(name = "t_csp_user_info")
 public class CspUserInfo implements Serializable{
     @Id
-    protected Integer id;
+    protected String id;
 
     protected String nickName;
 
