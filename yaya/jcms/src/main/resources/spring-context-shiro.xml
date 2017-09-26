@@ -82,6 +82,9 @@
                 /team=anon
                 /mc/**=anon
                 /test/**=anon
+
+                /func/meet/delivery/accept=anon
+                /func/meet/delivery/list=anon
                 /func/**=authc
 
                 /mng/**=authc

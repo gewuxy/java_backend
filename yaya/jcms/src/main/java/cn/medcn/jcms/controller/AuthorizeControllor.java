@@ -68,22 +68,28 @@ public class AuthorizeControllor extends BaseController {
     @ResponseBody
     public String authorize(String username, String password){
         if (CheckUtils.isEmpty(username) || CheckUtils.isEmpty(password)) {
-            return error("Username or Password can not be null");
+            return error("用户名或密码不能为空");
         }
 
         AppUser appUser = appUserService.findAppUserByLoginName(username);
         if (appUser == null) {
-            return error("User not found");
+            return error("用户不存在");
         }
 
         if (!MD5Utils.MD5Encode(password).equals(appUser.getPassword())){
-            return error("illegal password ");
+            return error("密码错误");
         }
 
-        Map<String, String> map = new HashMap<>();
-        map.put("code", createCode(String.valueOf(appUser.getId())));
+        if (appUser.getPubFlag() == null || !appUser.getPubFlag()) {
+            return error("只支持单位号认证");
+        }
 
-        return success(map);
+//        Map<String, String> map = new HashMap<>();
+//        map.put("code", createCode(String.valueOf(appUser.getId())));
+
+        //TODO 不是OAUTH2的标准 直接反回了用户信息 可能存在安全隐患
+
+        return success(OAuthUserDTO.build(appFileBase, appUser));
     }
 
     /**
