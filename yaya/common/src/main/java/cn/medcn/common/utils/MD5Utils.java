@@ -37,6 +37,25 @@ public class MD5Utils {
         return encrypt(origin, charsetName, ENCRYPT_MODE_MD5);
     }
 
+    public static String MD5Encode(String origin, String charsetname) {
+        String resultString = null;
+        try {
+            resultString = new String(origin);
+            MessageDigest md = MessageDigest.getInstance("MD5");
+            if (charsetname == null || "".equals(charsetname))
+                resultString = byteArrayToHexString(md.digest(resultString
+                        .getBytes()));
+            else
+                resultString = byteArrayToHexString(md.digest(resultString
+                        .getBytes(charsetname)));
+        } catch (Exception exception) {
+        }
+        return resultString;
+    }
+
+    public static String MD5Encode(String origin){
+        return MD5Encode(origin, "utf-8");
+    }
 
     public static String encrypt(String origin, String charsetName, String mode){
         String resultString = null;
