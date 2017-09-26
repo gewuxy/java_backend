@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Controller
 @RequestMapping(value = "/oauth")
-public class AuthorizeControllor extends BaseController {
+public class AuthorizeController extends BaseController {
 
     protected static final String CODE_PREFIX = "auth_code_";
 
