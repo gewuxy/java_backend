@@ -7,6 +7,15 @@ import java.util.Arrays;
  * Created by lixuan on 2017/1/5.
  */
 public class MD5Utils {
+    public static final String ENCRYPT_MODE_MD5 = "MD5";
+
+    public static final String ENCRYPT_MODE_SHA1 = "SHA1";
+
+    protected static final String ENCRYPT_DEFAULT_CHARSET = "utf-8";
+
+    protected static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
+            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
+
     private static String byteArrayToHexString(byte b[]) {
         StringBuffer resultSb = new StringBuffer();
         for (int i = 0; i < b.length; i++)
@@ -24,41 +33,38 @@ public class MD5Utils {
         return hexDigits[d1] + hexDigits[d2];
     }
 
-    public static String MD5Encode(String origin, String charsetname) {
+    public static String md5(String origin, String charsetName) {
+        return encrypt(origin, charsetName, ENCRYPT_MODE_MD5);
+    }
+
+
+    public static String encrypt(String origin, String charsetName, String mode){
         String resultString = null;
         try {
             resultString = new String(origin);
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            if (charsetname == null || "".equals(charsetname))
+            MessageDigest md = MessageDigest.getInstance(mode);
+            if (charsetName == null || "".equals(charsetName))
                 resultString = byteArrayToHexString(md.digest(resultString
                         .getBytes()));
             else
                 resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes(charsetname)));
+                        .getBytes(charsetName)));
         } catch (Exception exception) {
         }
         return resultString;
     }
 
-    public static String MD5Encode(String origin){
-        return MD5Encode(origin, "utf-8");
+
+    public static String sha1(String origin, String charsetName){
+        return encrypt(origin, charsetName, ENCRYPT_MODE_SHA1);
     }
 
-    private static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
-            "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
-
-    public static void main(String[] args) {
-        System.out.println(MD5Encode("123456","utf-8"));
+    public static String sha1(String origin){
+        return sha1(origin, ENCRYPT_DEFAULT_CHARSET);
     }
 
-
-    public static String signature(String secret, String nonce, String timeStamp){
-        String[] array = new String[]{secret, nonce, timeStamp};
-        Arrays.sort(array);
-        StringBuffer buffer = new StringBuffer();
-        for (String str : array) {
-            buffer.append(str);
-        }
-        return MD5Encode(buffer.toString());
+    public static String md5(String origin){
+        return md5(origin, ENCRYPT_DEFAULT_CHARSET);
     }
+
 }
