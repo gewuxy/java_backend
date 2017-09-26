@@ -63,9 +63,9 @@ public class EmailController extends BaseController{
         AppUser condition = new AppUser();
         condition.setUsername(username);
         AppUser user = appUserService.selectOne(condition);
-            if(user == null){
-                return error("该账号未注册");
-            }
+        if(user == null){
+            return error("该账号未注册");
+        }
         Integer type = Constants.NUMBER_ZERO;
         String url = appBaseUrl + "api/email/pwd/link?type=0" +"&code=";
         sendEmail(username,url,type);
