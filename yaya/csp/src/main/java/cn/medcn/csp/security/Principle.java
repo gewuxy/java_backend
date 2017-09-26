@@ -72,7 +72,7 @@ public class Principle implements Serializable{
     public static Principle build(CspUserInfo userInfo){
         if (userInfo != null) {
             Principle principle = new Principle();
-            principle.setId(userInfo.getId());
+            //principle.setId(userInfo.getId());
             principle.setMobile(userInfo.getMobile());
             principle.setEmail(userInfo.getEmail());
             principle.setNickName(userInfo.getNickName());
