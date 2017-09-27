@@ -155,10 +155,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
+    public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
         Captcha result = (Captcha)redisCacheUtils.getCacheObject(MOBILE_CACHE_PREFIX_KEY + mobile);
         try {
-            return jSmsService.verify(result.getMsgId(),captcha);
+            boolean isValid =  jSmsService.verify(result.getMsgId(),captcha);
+                if(!isValid){
+                    throw new SystemException(local("sms.error.captcha"));
+                }
 
         } catch (Exception e) {
             throw new SystemException("sms.invalid.captcha");
@@ -227,25 +230,19 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @param userId
      */
     @Override
-    public String doBindMobile(String mobile, String captcha, String userId) throws SystemException {
-
-        boolean isValid = checkCaptchaIsOrNotValid(captcha,mobile);
-        if(!isValid){
-            return null;
-        }
+    public void doBindMobile(String mobile, String captcha, String userId) throws SystemException {
         CspUserInfo result = findByLoginName(mobile);
         //该手机号已被绑定
         if(result != null){
-            return "mobile.was.bound";
+            throw new SystemException(local("mobile.was.bound"));
         }
         CspUserInfo info = selectByPrimaryKey(userId);
         //用户已绑定手机号
         if(!StringUtils.isEmpty(info.getMobile())){
-            return "user.has.mobile";
+            throw new SystemException(local("user.has.mobile"));
         }
         info.setMobile(mobile);
         updateByPrimaryKey(info);
-        return null;
 
     }
 
