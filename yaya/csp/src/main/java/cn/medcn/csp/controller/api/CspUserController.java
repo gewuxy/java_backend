@@ -2,12 +2,15 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.user.dto.Captcha;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
@@ -40,9 +43,6 @@ public class CspUserController extends BaseController {
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
-    @Autowired
-    protected AppUserService appUserService;
-
 
     @Value("${csp.file.upload.base}")
     protected String uploadBase;
@@ -58,17 +58,26 @@ public class CspUserController extends BaseController {
      */
     @RequestMapping("/register")
     @ResponseBody
-    public void register(CspUserInfo userInfo) {
+    public String register(CspUserInfo userInfo) {
         if (userInfo == null) {
-            error(SpringUtils.getMessage("error.param"));
-        } else {
-            try {
-                cspUserService.register(userInfo);
-            } catch (Exception e) {
-                new SystemException("user info can not be null");
-            }
-            success();
+            return error(local("user.param.empty"));
         }
+
+        String email = userInfo.getEmail();
+        String password = userInfo.getPassword();
+        String nickName = userInfo.getNickName();
+
+        if (StringUtils.isEmpty(email)) {
+            return error("user.username.notnull");
+        }
+        if (StringUtils.isEmpty(password)) {
+            return error("user.password.notnull");
+        }
+        if (StringUtils.isEmpty(nickName)) {
+            return error("user.linkman.notnull");
+        }
+
+       return cspUserService.register(userInfo);
     }
 
     /**
@@ -76,8 +85,8 @@ public class CspUserController extends BaseController {
      * type 1=微信 2=微博 3=Facebook 4=Twitter 5=YaYa医师 6=手机 7=邮箱
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
-     *
-     * @param username     邮箱
+     * @param email 邮箱
+     * @param password 密码
      * @param password     密码
      * @param thirdPartyId 第三方平台id
      * @param mobile       手机
@@ -88,60 +97,69 @@ public class CspUserController extends BaseController {
      */
     @RequestMapping("/login")
     @ResponseBody
-    public void login(String username, String password, Integer thirdPartyId,
-                      String mobile, String captcha, String nickName,
-                      CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
+    public String login(String email, String password, Integer thirdPartyId,
+                        String mobile, String captcha, String nickName,
+                        CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
-            error(SpringUtils.getMessage("user.empty.ThirdPartyId"));
+           return error(local("user.empty.ThirdPartyId"));
         }
 
         // 第三方平台id
         int type = thirdPartyId.intValue();
 
-        if (type == BindInfo.Type.EMAIL.getTypeId()) {
-            // 邮箱登录
-            loginByEmail(username, password, request);
+        CspUserInfo userInfo = null;
+        try {
+            if (type == BindInfo.Type.EMAIL.getTypeId()) {
+                // 邮箱登录
+                userInfo = loginByEmail(email, password);
 
-        } else if (type == BindInfo.Type.MOBILE.getTypeId()) {
-            // 手机登录
-            loginByMobile(mobile, captcha, request);
-
-        } else if (type <= BindInfo.Type.YaYa.getTypeId()) {
-            if (userInfoDTO != null) {
-                userInfoDTO.setThirdPartyId(type);
+            } else if (type == BindInfo.Type.MOBILE.getTypeId()) {
+                // 手机登录
+                userInfo = loginByMobile(mobile, captcha);
+            } else if (type <= BindInfo.Type.YaYa.getTypeId()) {
+                if (userInfoDTO != null) {
+                    userInfoDTO.setThirdPartyId(type);
+                }
+                // 第三方账号登录 含YaYa医师登录
+                userInfo = loginByThirdParty(userInfoDTO);
             }
-            // 第三方账号登录 含YaYa医师登录
-            loginByThirdParty(userInfoDTO, request);
+            // 登录成功，返回用户信息
+            String token = UUIDUtil.getUUID();
+            return loginSuccess(userInfo, token, request);
+
+        } catch (SystemException e){
+            return error(e.getMessage());
+
+        } catch (PasswordErrorException pe) {
+            return error(APIUtils.ERROR_PASSWORD, pe.getMessage());
         }
 
     }
 
     /**
      * 邮箱登录
-     *
-     * @param username
+     * @param email
      * @param password
      */
-    protected void loginByEmail(String username, String password, HttpServletRequest request) {
-        if (StringUtils.isEmpty(username)) {
-            error(SpringUtils.getMessage("user.empty.username"));
+    protected CspUserInfo loginByEmail(String email, String password) throws SystemException, PasswordErrorException {
+        if (StringUtils.isEmpty(email)) {
+            throw new SystemException(local("user.username.notnull"));
         }
         if (StringUtils.isEmpty(password)) {
-            error(SpringUtils.getMessage("user.empty.password"));
+            throw new SystemException(local("user.password.notnull"));
         }
 
-        CspUserInfo userInfo = cspUserService.findByLoginName(username);
+        CspUserInfo userInfo = cspUserService.findByLoginName(email);
         if (userInfo == null) {
-            error(SpringUtils.getMessage("user.error.nonentity"));
+            throw new SystemException(local("user.notexisted"));
         }
         // 用户输入密码是否正确
         if (!MD5Utils.md5(password).equals(userInfo.getPassword())) {
-            error(SpringUtils.getMessage("user.error.password"));
+            throw new PasswordErrorException((local("user.password.error")));
         }
-        // 登录成功，返回用户信息
-        loginSuccess(userInfo, userInfo.getToken(), request);
 
+        return userInfo;
     }
 
 
@@ -151,12 +169,24 @@ public class CspUserController extends BaseController {
      */
     @RequestMapping("/sendCaptcha")
     @ResponseBody
-    public void sendCaptcha(String mobile, Integer type) {
+    public String sendCaptcha(String mobile, Integer type) {
+        if(!StringUtils.isMobile(mobile)){
+            return error(local("user.mobile.format"));
+        }
+
+        int template = type.intValue();
+        int loginTemplate = Captcha.Type.LOGIN.getTypeId().intValue();
+        int bindTemplate = Captcha.Type.BIND.getTypeId().intValue();
+
+        if (template != loginTemplate && template != bindTemplate) {
+            return APIUtils.error(local("error.param"));
+        }
+
         try {
-            cspUserService.sendCaptcha(mobile, type);
-            success();
-        } catch (Exception e) {
-            error(SpringUtils.getMessage(e.getMessage()));
+            return cspUserService.sendCaptcha(mobile, type);
+
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
     }
 
@@ -208,7 +238,7 @@ public class CspUserController extends BaseController {
     public String updateInfo(CspUserInfo info) {
        info.setId(SecurityUtils.get().getId());
        cspUserService.updateByPrimaryKeySelective(info);
-        return success();
+       return success();
     }
 
 
@@ -354,30 +384,52 @@ public class CspUserController extends BaseController {
      * @param mobile
      * @param captcha
      */
-    protected void loginByMobile(String mobile, String captcha, HttpServletRequest request) {
+    protected CspUserInfo loginByMobile(String mobile, String captcha) throws SystemException{
         if (StringUtils.isEmpty(mobile)) {
-            error(SpringUtils.getMessage("user.empty.mobile"));
+            throw new SystemException(local("user.empty.mobile"));
         }
+
+        if (!StringUtils.isMobile(mobile)) {
+            throw new SystemException(local("user.mobile.format"));
+        }
+
         if (StringUtils.isEmpty(captcha)) {
-            error(SpringUtils.getMessage("user.empty.captcha"));
+            throw new SystemException(local("user.empty.captcha"));
+        }
+        // 检查验证码是否有效
+        cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+        // 根据手机号码检查用户是否存在
+        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+        if (userInfo == null) {
+            // 注册新用户
+            userInfo.setId(StringUtils.nowStr());
+            userInfo.setMobile(mobile);
+            userInfo.setRegisterTime(new Date());
+            cspUserService.insert(userInfo);
         }
 
-        // 检查验证码是否有效
-
-        boolean result = false;
-
-            // 根据手机号码检查用户是否存在
-            CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
-            if (userInfo == null) {
-                error(SpringUtils.getMessage("user.error.nonentity"));
-            }
-
-            // 登录成功，返回用户信息
-            loginSuccess(userInfo, userInfo.getToken(), request);
+        return userInfo;
 
 
+    }
 
-
+    /**
+     * 手机登录添加昵称
+     * @param nickName
+     * @return
+     */
+    @RequestMapping("/add/nickname")
+    @ResponseBody
+    public String saveNickName(String nickName) {
+        Principal principal = SecurityUtils.get();
+        if (StringUtils.isEmpty(nickName)) {
+            return error("user.linkman.notnull");
+        }
+        CspUserInfo userInfo = new CspUserInfo();
+        userInfo.setId(principal.getId());
+        userInfo.setNickName(nickName);
+        cspUserService.updateByPrimaryKeySelective(userInfo);
+        return success();
     }
 
     /**
@@ -385,12 +437,15 @@ public class CspUserController extends BaseController {
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再登录返回用户信息
      * type 1代表微信,2代表微博,3代表facebook,4代表twitter 5代表YaYa
      */
-    protected void loginByThirdParty(CspUserInfoDTO userDTO, HttpServletRequest request) {
+    protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) throws SystemException{
         if (userDTO == null) {
-            error(SpringUtils.getMessage("error.param"));
+            throw new SystemException(local("user.param.empty"));
         }
 
         String uniqueId = userDTO.getUniqueId();
+        if (StringUtils.isEmpty(uniqueId)) {
+            throw new SystemException(local("user.param.empty"));
+        }
         // 检查用户是否存在
         CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
 
@@ -399,10 +454,7 @@ public class CspUserController extends BaseController {
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
         }
 
-        // 缓存及更新用户登录时间
-        loginSuccess(userInfo, userInfo.getToken(), request);
-
-
+        return userInfo;
     }
 
     /**
@@ -410,14 +462,14 @@ public class CspUserController extends BaseController {
      *
      * @param userInfo
      */
-    protected void loginSuccess(CspUserInfo userInfo, String token, HttpServletRequest request) {
+    protected String loginSuccess(CspUserInfo userInfo, String token, HttpServletRequest request) {
         // 缓存用户信息
         cachePrincipal(userInfo, token);
         // 更新用户登录时间及ip
         userInfo.setLastLoginTime(new Date());
         userInfo.setLastLoginIp(request.getRemoteAddr());
         cspUserService.updateByPrimaryKey(userInfo);
-        success(userInfo);
+        return success(userInfo);
     }
 
     /**
@@ -429,7 +481,7 @@ public class CspUserController extends BaseController {
      */
     protected Principal cachePrincipal(CspUserInfo user, String token) {
         if (CheckUtils.isNotEmpty(token)) {
-            token = UUIDUtil.getUUID();
+            //token = UUIDUtil.getUUID();
             user.setToken(token);
             cspUserService.updateByPrimaryKey(user);
         }
@@ -444,15 +496,15 @@ public class CspUserController extends BaseController {
     }
 
     private Principal getLegalToken(CspUserInfo user) {
-        Principal principal = null;
+        Principal principle = null;
         if (StringUtils.isNotEmpty(user.getToken())) {
             //清除token 踢出之前的认证信息
             disablePrincipal(user.getToken());
         }
         String token = UUIDUtil.getUUID();
         user.setToken(token);
-        principal = cachePrincipal(user, token);
-        return principal;
+        principle = cachePrincipal(user, token);
+        return principle;
     }
 
     private void disablePrincipal(String token) {

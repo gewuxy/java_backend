@@ -33,7 +33,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * 注册用户
      * @param userInfo
      */
-    void register(CspUserInfo userInfo)throws SystemException;
+    String register(CspUserInfo userInfo);
 
     /**
      * 发送手机验证码

@@ -76,16 +76,24 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public void register(CspUserInfo userInfo) throws SystemException{
+    public String register(CspUserInfo userInfo) {
         if (userInfo == null) {
-            throw new SystemException("user info can not be null");
+            return APIUtils.error(local("user.param.empty"));
         }
+        String username = userInfo.getEmail();
+
+        // 检查用户邮箱是否已经注册过
+        CspUserInfo cspUser = cspUserInfoDAO.findByLoginName(username);
+        if (cspUser != null) {
+            return APIUtils.error(local("user.username.existed"));
+        }
+
         userInfo.setId(StringUtils.nowStr());
         String password = userInfo.getPassword();
-        if (StringUtils.isNotEmpty(password)) {
-            userInfo.setPassword(MD5Utils.md5(password));
-        }
+        userInfo.setPassword(MD5Utils.md5(password));
+        userInfo.setRegisterTime(new Date());
         cspUserInfoDAO.insert(userInfo);
+        return APIUtils.success(local("user.success.register"));
     }
 
     /**
@@ -95,27 +103,17 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      */
     @Override
     public String sendCaptcha(String mobile, Integer type) throws SystemException {
-        if(!StringUtils.isMobile(mobile)){
-            return APIUtils.error(SpringUtils.getMessage("user.error.mobile.format"));
-        }
-        int typeId = type.intValue();
-        int loginTemplate = Captcha.Type.LOGIN.getTypeId().intValue();
-        int bindTemplate = Captcha.Type.BIND.getTypeId().intValue();
-        if (type != loginTemplate && type != bindTemplate) {
-            return APIUtils.error(SpringUtils.getMessage("error.param"));
-        }
         //10分钟内最多允许获取3次验证码
         Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(mobile);
         if(captcha == null){ //第一次获取
             // 发送短信
-            String msgId = sendCaptchaByType(mobile, typeId);
+            String msgId = sendCaptchaByType(mobile, type);
 
             Captcha firstCaptcha = new Captcha();
             firstCaptcha.setFirstTime(new Date());
             firstCaptcha.setCount(Constants.NUMBER_ZERO);
             firstCaptcha.setMsgId(msgId);
             redisCacheUtils.setCacheObject(mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
-            return APIUtils.success();
 
         }else {
             Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
@@ -123,7 +121,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 return APIUtils.error("获取验证码次数频繁，请稍后");
             }
             // 发送短信
-            String msgId = sendCaptchaByType(mobile, typeId);
+            String msgId = sendCaptchaByType(mobile, type);
 
             captcha.setMsgId(msgId);
             captcha.setCount(captcha.getCount() + 1);
@@ -142,13 +140,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         String msgId = null;
         try {
             if (type == Captcha.Type.LOGIN.getTypeId().intValue()) {
-                msgId = jSmsService.send(mobile, LOGIN_TEMPLATE_ID);
+                msgId = jSmsService.send(mobile, Constants.CSP_LOGIN_TEMPLATE_ID);
             } else {
-                msgId = jSmsService.send(mobile, BIND_TEMPLATE_ID);
+                msgId = jSmsService.send(mobile, Constants.CSP_BIND_TEMPLATE_ID);
             }
 
         } catch (Exception e) {
-            throw new SystemException(SpringUtils.getMessage("sms.error.send"));
+            throw new SystemException(local("sms.error.send"));
         }
 
         return msgId;
@@ -156,15 +154,17 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Override
     public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
-        Captcha result = (Captcha)redisCacheUtils.getCacheObject(MOBILE_CACHE_PREFIX_KEY + mobile);
+        // 从缓存获取此号码的短信记录
+        Captcha result = (Captcha) redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
         try {
-            boolean isValid =  jSmsService.verify(result.getMsgId(),captcha);
-                if(!isValid){
-                    throw new SystemException(local("sms.error.captcha"));
-                }
+
+            Boolean bool = jSmsService.verify(result.getMsgId(),captcha);
+            if (!bool) {
+                throw new SystemException(local("sms.error.captcha"));
+            }
 
         } catch (Exception e) {
-            throw new SystemException("sms.invalid.captcha");
+            throw new SystemException(local("sms.invalid.captcha"));
         }
     }
 
@@ -176,9 +176,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO) {
         String userAvatarUrl = userDTO.getAvatar();
         if (StringUtils.isNotEmpty(userAvatarUrl)) {
+            // 将第三方平台和YaYa医师平台获取的头像保存到csp
             userDTO.setAvatar(saveAvatarFromThirdPlatform(userAvatarUrl));
         }
-
+        // 将第三方用户信息 保存到csp用户表
         CspUserInfo userInfo = CspUserInfo.buildToUserInfo(userDTO);
         cspUserInfoDAO.insert(userInfo);
 

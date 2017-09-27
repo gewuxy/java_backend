@@ -146,10 +146,11 @@ public class Constants {
 
 
     /* CSP短信验证码发送模板id TODO 暂时借用YaYa医师短信模板,CSP申请后需修改此模板id*/
-    public static final Integer LOGIN_TEMPLATE_ID = 40198;
+    public static final Integer CSP_LOGIN_TEMPLATE_ID = 40198;
 
     /* CSP绑定手机短信验证码模板id TODO 暂时借用YaYa医师短信模板,CSP申请后需修改此模板id*/
-    public static final Integer BIND_TEMPLATE_ID =  40198;
+    public static final Integer CSP_BIND_TEMPLATE_ID =  40198;
 
-    public static final String MOBILE_CACHE_PREFIX_KEY = "mobile_";
+    /* CSP 缓存验证码key */
+    public static final String CSP_MOBILE_CACHE_PREFIX_KEY = "mobile_";
 }
