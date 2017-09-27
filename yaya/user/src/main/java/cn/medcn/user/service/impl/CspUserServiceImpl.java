@@ -229,7 +229,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public String doBindMobile(String mobile, String captcha, String userId) throws SystemException {
 
-        checkCaptchaIsOrNotValid(captcha,mobile);
+        boolean isValid = checkCaptchaIsOrNotValid(captcha,mobile);
+        if(!isValid){
+            return null;
+        }
         CspUserInfo result = findByLoginName(mobile);
         //该手机号已被绑定
         if(result != null){
