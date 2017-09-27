@@ -75,4 +75,14 @@ public class MD5Utils {
         return md5(origin, ENCRYPT_DEFAULT_CHARSET);
     }
 
+    public static String signature(String secret, String nonce, String timeStamp){
+        String[] array = new String[]{secret, nonce, timeStamp};
+        Arrays.sort(array);
+        StringBuffer buffer = new StringBuffer();
+        for (String str : array) {
+            buffer.append(str);
+        }
+        return MD5Encode(buffer.toString());
+    }
+
 }
