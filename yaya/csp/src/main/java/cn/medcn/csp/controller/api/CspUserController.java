@@ -5,7 +5,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.csp.security.Principle;
+import cn.medcn.csp.security.Principal;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
@@ -214,33 +214,33 @@ public class CspUserController extends BaseController{
      * @param token
      * @return
      */
-    protected Principle cachePrincipal(CspUserInfo user, String token) {
-        Principle principle = createPrincipal(user, token);
-        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + token, principle, Constants.TOKEN_EXPIRE_TIME);
-        return principle;
+    protected Principal cachePrincipal(CspUserInfo user, String token) {
+        Principal principal = createPrincipal(user, token);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
+        return principal;
     }
 
-    private Principle createPrincipal(CspUserInfo user, String token) {
-        Principle principle = new Principle();
-        principle.setToken(token);
-        principle.setId(user.getId());
-        principle.setEmail(user.getEmail());
-        principle.setMobile(user.getMobile());
-        principle.setNickName(user.getNickName());
-        principle.setAvatar(user.getAvatar());
-        return principle;
+    private Principal createPrincipal(CspUserInfo user, String token) {
+        Principal principal = new Principal();
+        principal.setToken(token);
+        principal.setId(user.getId());
+        principal.setEmail(user.getEmail());
+        principal.setMobile(user.getMobile());
+        principal.setNickName(user.getNickName());
+        principal.setAvatar(user.getAvatar());
+        return principal;
     }
 
-    private Principle getLegalToken(CspUserInfo user) {
-        Principle principle = null;
+    private Principal getLegalToken(CspUserInfo user) {
+        Principal principal = null;
         if (StringUtils.isNotEmpty(user.getToken())) {
             //清除token 踢出之前的认证信息
             disablePrincipal(user.getToken());
         }
         String token = UUIDUtil.getUUID();
         user.setToken(token);
-        principle = cachePrincipal(user, token);
-        return principle;
+        principal = cachePrincipal(user, token);
+        return principal;
     }
 
     private void disablePrincipal(String token) {
