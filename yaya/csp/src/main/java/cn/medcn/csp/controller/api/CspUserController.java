@@ -255,11 +255,12 @@ public class CspUserController extends BaseController {
             return error(local("user.error.email.format"));
         }
         String userId = SecurityUtils.get().getId();
-        String result = cspUserService.sendMail(email,userId);
-        if(result == null){
-            return success();
+        try {
+            cspUserService.sendMail(email,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
-            return error(local(result));
+        return success();
 
     }
 
@@ -302,17 +303,12 @@ public class CspUserController extends BaseController {
             return error(e.getMessage());
         }
         String userId = SecurityUtils.get().getId();
-        String result = null;
         try {
-
             cspUserService.doBindMobile(mobile,captcha,userId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
-        if(result == null){
-            return success();
-        }
-            return error(local(result));
+        return success();
     }
 
 
@@ -325,11 +321,13 @@ public class CspUserController extends BaseController {
     public String unbindEmailOrMobile(Integer type){
 
         String userId = SecurityUtils.get().getId();
-        String result = cspUserService.doUnbindEmailOrMobile(type,userId);
-        if(result == null){
-            return success();
+        try {
+            cspUserService.doUnbindEmailOrMobile(type,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
-            return error(local(result));
+        return success();
+
     }
 
 
@@ -340,22 +338,25 @@ public class CspUserController extends BaseController {
      * 解绑只传third_party_id，YaYa医师绑定传YaYa账号，密码,third_party_id
      */
     @RequestMapping("changeBindStatus")
-    public String changeBindStatus(BindInfo info) {
+    public String changeBindStatus(BindInfo info)  {
 
         String userId = SecurityUtils.get().getId();
-        String result = null;
         //第三方账号绑定操作
         if (!StringUtils.isEmpty(info.getUniqueId())) {
-                 result = cspUserService.doBindThirdAccount(info,userId);
+            try {
+                cspUserService.doBindThirdAccount(info,userId);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
         }else {
             //解绑操作
-            result = cspUserService.doUnbindThirdAccount(info,userId);
+            try {
+                cspUserService.doUnbindThirdAccount(info,userId);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
         }
-                if(result == null){
-                    return success();
-                }
-                    return error(local(result));
-
+            return success();
     }
 
 
