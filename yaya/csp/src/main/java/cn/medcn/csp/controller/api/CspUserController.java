@@ -3,23 +3,32 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.PasswordErrorException;
+import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.service.JPushService;
+import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
-import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -27,7 +36,7 @@ import java.util.Date;
  */
 @Controller
 @RequestMapping(value = "/api/user")
-public class CspUserController extends BaseController{
+public class CspUserController extends BaseController {
     @Autowired
     protected CspUserService cspUserService;
 
@@ -35,8 +44,16 @@ public class CspUserController extends BaseController{
     protected RedisCacheUtils<String> redisCacheUtils;
 
 
+    @Value("${csp.file.upload.base}")
+    protected String uploadBase;
+
+    @Value("${csp.file.base}")
+    protected String fileBase;
+
+
     /**
      * 注册csp账号
+     *
      * @param userInfo
      */
     @RequestMapping("/register")
@@ -70,11 +87,14 @@ public class CspUserController extends BaseController{
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
      * @param email 邮箱
      * @param password 密码
+     *
+     * @param username     邮箱
+     * @param password     密码
      * @param thirdPartyId 第三方平台id
-     * @param mobile   手机
-     * @param captcha  验证码
-     * @param nickName 昵称
-     * @param userInfoDTO 第三方用户信息
+     * @param mobile       手机
+     * @param captcha      验证码
+     * @param nickName     昵称
+     * @param userInfoDTO  第三方用户信息
      * @return
      */
     @RequestMapping("/login")
@@ -82,10 +102,16 @@ public class CspUserController extends BaseController{
     public String login(String email, String password, Integer thirdPartyId,
                         String mobile, String captcha, String nickName,
                         CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
+    public void login(String username, String password, Integer thirdPartyId,
+                      String mobile, String captcha, String nickName,
+                      CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
            return error(local("user.empty.ThirdPartyId"));
         }
+            error(SpringUtils.getMessage("user.empty.ThirdPartyId"));
+        }
+
         // 第三方平台id
         int type = thirdPartyId.intValue();
 
@@ -121,6 +147,8 @@ public class CspUserController extends BaseController{
     /**
      * 邮箱登录
      * @param email
+     *
+     * @param username
      * @param password
      */
     protected CspUserInfo loginByEmail(String email, String password) throws SystemException, PasswordErrorException {
@@ -173,7 +201,195 @@ public class CspUserController extends BaseController{
 
 
     /**
+     * 修改头像
+     *
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/updateAvatar", method = RequestMethod.POST)
+    public String updateAvatar(@RequestParam(value = "file", required = false) MultipartFile file) {
+        if (file == null) {
+            return error(local("upload.error.null"));
+        }
+        //相对路径
+        String relativePath = FilePath.PORTRAIT.path + File.separator;
+        //文件保存路径
+        String savePath = uploadBase + relativePath;
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        //头像后缀
+        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
+        String fileName = UUIDUtil.getNowStringID() + "." + suffix;
+        String avatarFile = savePath + fileName;
+        File saveFile = new File(avatarFile);
+        try {
+            file.transferTo(saveFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return error(local("upload.avatar.err"));
+        }
+
+        //更新用户头像
+        CspUserInfo info = new CspUserInfo();
+        info.setId(SecurityUtils.get().getId());
+        info.setAvatar(relativePath + fileName);
+        cspUserService.updateByPrimaryKeySelective(info);
+        return success(fileBase + relativePath + fileName);
+    }
+
+
+    /**
+     * 更新个人信息中的姓名和简介
+     */
+    @RequestMapping("/updateInfo")
+    public String updateInfo(CspUserInfo info) {
+       info.setId(SecurityUtils.get().getId());
+       cspUserService.updateByPrimaryKeySelective(info);
+        return success();
+    }
+
+
+    /**
+     * 修改密码
+     * 用户登录时后台会将邮箱地址返回给前端，前端根据有无返回邮箱地址判断是否需要绑定邮箱
+     * 请求此接口，说明用户已绑定邮箱
+     */
+    @RequestMapping("resetPwd")
+    public String resetPwd(String oldPwd,String newPwd) {
+       if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
+           return error(local("user.empty.password"));
+       }
+       String userId = SecurityUtils.get().getId();
+       CspUserInfo result = cspUserService.selectByPrimaryKey(userId);
+       if(!MD5Utils.md5(oldPwd).equals(result.getPassword())){
+           return error(local("user.error.old.password"));
+       }
+        result.setPassword(MD5Utils.md5(newPwd));
+       cspUserService.updateByPrimaryKeySelective(result);
+       return success();
+    }
+
+
+    /**
+     * 发送绑定邮件
+     */
+    @RequestMapping("/toBind")
+    public String toBind(String email) {
+        if(StringUtils.isEmail(email)){
+            return error(local("user.error.email.format"));
+        }
+        String userId = SecurityUtils.get().getId();
+        try {
+            cspUserService.sendMail(email,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
+
+    }
+
+    /**
+     * 绑定邮箱
+     * @param code
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/bindEmail")
+    public String bindEmail(String code) throws SystemException {
+        String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
+        String result = redisCacheUtils.getCacheObject(key);
+        if (result == null) {  //链接超时
+            return "/test";
+        } else {
+            cspUserService.doBindMail(key, result);
+            return "/register/bindOk";
+        }
+
+    }
+
+
+
+
+    /**
+     * 绑定手机号
+     * @param mobile
+     * @param captcha
+     * @return
+     */
+    @RequestMapping("/bindMobile")
+    public String bindMobile(String mobile,String captcha)  {
+        if(StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
+            return error(local("error.param"));
+        }
+        try {
+            //检查验证码合法性
+            cspUserService.checkCaptchaIsOrNotValid(captcha,mobile);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        String userId = SecurityUtils.get().getId();
+        try {
+            cspUserService.doBindMobile(mobile,captcha,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
+    }
+
+
+    /**
+     *
+     * @param type 0代表邮箱，1代表手机
+     * @return
+     */
+    @RequestMapping("/unbindEmailOrMobile")
+    public String unbindEmailOrMobile(Integer type){
+
+        String userId = SecurityUtils.get().getId();
+        try {
+            cspUserService.doUnbindEmailOrMobile(type,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
+
+    }
+
+
+
+    /**
+     * 绑定或解绑第三方账号
+     * third_party_id 1代表微信，2代表微博，3代表facebook,4代表twitter,5代表YaYa医师
+     * 解绑只传third_party_id，YaYa医师绑定传YaYa账号，密码,third_party_id
+     */
+    @RequestMapping("changeBindStatus")
+    public String changeBindStatus(BindInfo info)  {
+
+        String userId = SecurityUtils.get().getId();
+        //第三方账号绑定操作
+        if (!StringUtils.isEmpty(info.getUniqueId())) {
+            try {
+                cspUserService.doBindThirdAccount(info,userId);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
+        }else {
+            //解绑操作
+            try {
+                cspUserService.doUnbindThirdAccount(info,userId);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
+        }
+            return success();
+    }
+
+
+    /**
      * 手机号码 + 验证码登录
+     *
      * @param mobile
      * @param captcha
      */
@@ -255,6 +471,7 @@ public class CspUserController extends BaseController{
 
     /**
      * 登录成功 返回用户信息
+     *
      * @param userInfo
      */
     protected String loginSuccess(CspUserInfo userInfo, String token, HttpServletRequest request) {
@@ -269,6 +486,7 @@ public class CspUserController extends BaseController{
 
     /**
      * 缓存用户信息
+     *
      * @param user
      * @param token
      * @return
@@ -304,7 +522,6 @@ public class CspUserController extends BaseController{
     private void disablePrincipal(String token) {
         redisCacheUtils.delete(Constants.TOKEN + "_" + token);
     }
-
 
 
 }

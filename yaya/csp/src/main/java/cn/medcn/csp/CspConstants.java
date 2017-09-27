@@ -7,6 +7,5 @@ public class CspConstants {
 
     public static final String TOKEN_KEY = "csp_token";
 
-
-
+    public static final String COURSE_ID_KEY = "courseId";
 }

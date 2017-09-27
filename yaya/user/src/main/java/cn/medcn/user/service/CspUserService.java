@@ -3,7 +3,12 @@ package cn.medcn.user.service;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import org.jdom.JDOMException;
+
+import javax.mail.MessagingException;
+import java.io.IOException;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -50,4 +55,50 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO);
+
+    /**
+     * 缓存信息和发送绑定邮件
+     * @param email
+     * @param userId
+     */
+    void sendMail(String email, String userId) throws SystemException;
+
+    /**
+     * 绑定手机号
+     * @param mobile
+     * @param captcha
+     * @param userId
+     */
+    void doBindMobile(String mobile, String captcha, String userId) throws SystemException;
+
+    /**
+     * 解绑邮箱或手机
+     * @param type
+     * @param userId
+     * @return
+     */
+    void doUnbindEmailOrMobile(Integer type, String userId) throws SystemException;
+
+    /**
+     * 绑定第三方账号
+     * @param info
+     * @param userId
+     * @return
+     */
+    void doBindThirdAccount(BindInfo info, String userId) throws SystemException;
+
+    /**
+     * 解绑第三方账号
+     * @param info
+     * @param userId
+     * @return
+     */
+    void doUnbindThirdAccount(BindInfo info, String userId) throws SystemException;
+
+    /**
+     * 绑定邮箱
+     * @param key
+     * @param result
+     */
+    void doBindMail(String key, String result) throws SystemException;
 }

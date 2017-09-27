@@ -2,9 +2,12 @@ package cn.medcn.user.service.impl;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
+import cn.medcn.common.email.EmailHelper;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.service.JPushService;
 import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dao.CspUserInfoDAO;
@@ -14,6 +17,7 @@ import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
 import com.github.abel533.mapper.Mapper;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -22,6 +26,7 @@ import java.io.File;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+import static cn.medcn.common.Constants.*;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -29,8 +34,12 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements CspUserService {
 
-    @Value("${app.file.base}")
-    protected String appFileBase;
+
+    @Value("${csp.file.upload.base}")
+    protected String uploadBase;
+
+    @Value("${app.csp.base}")
+    protected String cspBase;
 
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
@@ -43,6 +52,12 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Autowired
     protected JSmsService jSmsService;
+
+    @Autowired
+    protected EmailHelper emailHelper;
+
+    @Autowired
+    protected JPushService jPushService;
 
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
@@ -174,6 +189,189 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     /**
+     * 发送绑定邮件
+     * @param email
+     * @param userId
+     * @return
+     */
+    @Override
+    public void sendMail(String email, String userId) throws SystemException {
+        //TODO
+        CspUserInfo info = findByLoginName(email);
+        if (info != null) { //当前邮箱已被绑定
+            throw new SystemException(local("user.exist.email"));
+        }
+        CspUserInfo user = selectByPrimaryKey(userId);
+        if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
+            throw new SystemException(local("user.has.email"));
+        }
+        String code = StringUtils.uniqueStr();
+        redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
+        String url = cspBase + "/api/user/bindEmail?code=" + code;
+        try {
+            emailHelper.sendMail(email, "绑定邮箱", url, "bindEmail");
+        } catch (JDOMException e) {
+            e.printStackTrace();
+            throw new SystemException(local("email.address.error"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SystemException(local("email.error.send"));
+        }
+    }
+
+
+    /**
+     * 绑定手机号
+     * @param mobile
+     * @param captcha
+     * @param userId
+     */
+    @Override
+    public void doBindMobile(String mobile, String captcha, String userId) throws SystemException {
+        CspUserInfo result = findByLoginName(mobile);
+        //该手机号已被绑定
+        if(result != null){
+            throw new SystemException(local("mobile.was.bound"));
+        }
+        CspUserInfo info = selectByPrimaryKey(userId);
+        //用户已绑定手机号
+        if(!StringUtils.isEmpty(info.getMobile())){
+            throw new SystemException(local("user.has.mobile"));
+        }
+        info.setMobile(mobile);
+        updateByPrimaryKey(info);
+
+    }
+
+    /**
+     * 解绑邮箱或手机
+     * @param type
+     * @param userId
+     * @return
+     */
+    @Override
+    public void doUnbindEmailOrMobile(Integer type, String userId) throws SystemException {
+        if(type != Type.EMAIL && type != Type.MOBILE){
+            throw new SystemException(local("error.param"));
+        }
+        CspUserInfo info = selectByPrimaryKey(userId);
+        if(type == Type.EMAIL){
+            //用户没有绑定邮箱
+            if(StringUtils.isEmpty(info.getEmail())){
+                throw new SystemException(local("user.not.exist.email"));
+            }
+                info.setEmail("");
+        }else{
+            //用户没有绑定手机
+            if(StringUtils.isEmpty(info.getMobile())){
+                throw new SystemException(local("user.not.exist.mobile"));
+            }
+                info.setMobile("");
+        }
+            updateByPrimaryKeySelective(info);
+
+    }
+
+    /**
+     * 绑定第三方账号
+     * @param info
+     * @param userId
+     * @return
+     */
+    @Override
+    public void doBindThirdAccount(BindInfo info, String userId) throws SystemException {
+        BindInfo condition = new BindInfo();
+        condition.setUniqueId(info.getUniqueId());
+        condition.setThirdPartyId(info.getThirdPartyId());
+        condition = bindInfoDAO.selectOne(condition);
+        if(condition != null){  //该第三方账号已被使用
+            throw new SystemException(local("user.exist.account"));
+        }
+
+        BindInfo condition2 = new BindInfo();
+        condition2.setUserId(userId);
+        condition2.setThirdPartyId(info.getThirdPartyId());
+        condition2 = bindInfoDAO.selectOne(condition2);
+        if(condition2 != null){  //当前的账号已绑定其他第三方账号
+            throw new SystemException(local("user.exist.ThirdAccount"));
+        }
+
+        String path = saveAvatarFromThirdPlatform(info.getAvatar());
+        //插入到数据库
+        info.setAvatar(path);
+        info.setUserId(userId);
+        info.setBindDate(new Date());
+        bindInfoDAO.insert(info);
+    }
+
+    /**
+     * 解绑第三方账号
+     * @param info
+     * @param userId
+     * @return
+     */
+    @Override
+    public void doUnbindThirdAccount(BindInfo info, String userId) throws SystemException {
+        BindInfo condition = new BindInfo();
+        condition.setUserId(userId);
+        condition.setThirdPartyId(info.getThirdPartyId());
+        condition = bindInfoDAO.selectOne(condition);
+        if(condition == null){  //用户没绑定此第三方账号，不能解绑
+            throw new SystemException(local("user.notExist.ThirdAccount"));
+        }
+
+        CspUserInfo user = selectByPrimaryKey(userId);
+        String email = user.getEmail();
+        String mobile = user.getMobile();
+        //没有绑定手机和邮箱
+        if(StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)){
+            BindInfo condition2 = new BindInfo();
+            condition2.setUserId(userId);
+            int count = bindInfoDAO.selectCount(condition2);
+            if(count <= 1){  //没有绑定其他第三方账号，不能解绑
+                throw new SystemException(local("user.only.one.account"));
+            }
+        }
+
+        bindInfoDAO.delete(condition);
+        //删除头像
+        deleteAvatar(condition);
+    }
+
+    @Override
+    public void doBindMail(String key, String result) throws SystemException {
+        String email = result.substring(0, result.indexOf(","));
+        String userId = result.substring(result.indexOf(",") + 1);
+        CspUserInfo info = selectByPrimaryKey(userId);
+        if (info == null) { //用户不存在
+            throw new SystemException(local("user.error.nonentity"));
+        }
+        info.setEmail(email);
+        updateByPrimaryKeySelective(info);
+        redisCacheUtils.delete(key);
+        //发送推送通知邮箱已绑定
+        jPushService.sendChangeMessage(Integer.valueOf(userId),"3",email);
+    }
+
+    protected interface Type{
+        Integer EMAIL = 0;
+        Integer MOBILE = 1;
+    }
+
+
+    /**
+     * 删除头像文件
+     * @param condition
+     */
+    private void deleteAvatar(BindInfo condition) {
+        //删除头像文件
+        String avatar = condition.getAvatar();
+        if(StringUtils.isEmpty(avatar)){
+            FileUtils.deleteTargetFile(uploadBase + avatar);
+        }
+    }
+
+    /**
      * 将第三方平台和YaYa医师平台获取的头像保存到csp
      * @param avatar
      * @return
@@ -181,9 +379,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     private String saveAvatarFromThirdPlatform(String avatar) {
         //将头像保存到csp
         String relativePath = FilePath.PORTRAIT.path + File.separator;
-        String fileName = StringUtils.nowStr();
+        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
+        String fileName = StringUtils.nowStr() + suffix;
         File file = new File(avatar);
-        FileUtils.saveFile(appFileBase + relativePath, fileName, file);
+        FileUtils.saveFile(uploadBase + relativePath, fileName, file);
         return relativePath + fileName;
     }
 }
