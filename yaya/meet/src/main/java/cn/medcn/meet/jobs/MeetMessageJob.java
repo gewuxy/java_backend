@@ -26,7 +26,7 @@ public class MeetMessageJob implements Runnable{
     public void run() {
         while(true){
             try {
-                MeetMessage meetMessage = meetMessageService.bpopFromQuque();
+                MeetMessage meetMessage = meetMessageService.bpopFromQueue();
                 if(meetMessage != null){
                     meetMessage.setSendTime(new Date());
                     meetMessageService.insert(meetMessage);

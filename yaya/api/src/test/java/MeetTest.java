@@ -161,7 +161,7 @@ public class MeetTest {
 
     @Test
     public void testPopMeetMessage() throws Exception {
-        MeetMessage message = meetMessageService.bpopFromQuque();
+        MeetMessage message = meetMessageService.bpopFromQueue();
         if(message != null){
             System.out.println(message.getMeetId()+" - "+message.getMessage());
         }
