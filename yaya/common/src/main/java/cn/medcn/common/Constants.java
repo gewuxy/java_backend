@@ -144,4 +144,10 @@ public class Constants {
 
     public static final String DEFAULT_LOCAL = "zh_CN";
 
+
+    /* CSP短信验证码发送模板id TODO 暂时借用YaYa医师短信模板,CSP申请后需修改此模板id*/
+    public static final Integer LOGIN_TEMPLATE_ID = 40198;
+
+    /* CSP绑定手机短信验证码模板id TODO 暂时借用YaYa医师短信模板,CSP申请后需修改此模板id*/
+    public static final Integer BIND_TEMPLATE_ID =  40198;
 }
