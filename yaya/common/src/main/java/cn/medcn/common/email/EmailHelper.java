@@ -130,6 +130,17 @@ public class EmailHelper {
         return emailContent;
     }
 
+    public String formatCSPBindContent(String username, String url,String templateId) throws JDOMException, IOException {
+        InputStream inputStream = getClass().getClassLoader().getResourceAsStream("email.xml");
+        String emailContent = XMLUtils.doParseXML(inputStream,templateId, "load");
+        emailContent = emailContent.replaceAll(REPLACE_HOLDER_USER, StringUtils.isEmpty(username)?" -- ":username);
+        emailContent = emailContent.replaceAll(REPLACE_HOLDER_URL, StringUtils.isEmpty(url)?" -- ":url);
+        DateFormat format= new SimpleDateFormat("yyyy年MM月dd日");
+        emailContent = emailContent.replaceAll(REPLACE_HOLDER_DATE,format.format(new Date()));
+        return emailContent;
+    }
+
+
     public String formatByType(String username, String url,Integer type) throws JDOMException, IOException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("email.xml");
         String emailContent = null;
@@ -145,6 +156,17 @@ public class EmailHelper {
         return emailContent;
     }
 
+
+    public void sendMail(String email,String subject,String url,String template) throws JDOMException, IOException, MessagingException {
+        MailBean mailBean = new MailBean();
+        mailBean.setSubject(subject);
+        mailBean.setFrom(mailUserName);
+        mailBean.setFromName(mailCompanyName);
+        mailBean.setContext(formatCSPBindContent(email,url,template));
+        mailBean.setToEmails(new String[]{email});
+        javaMailSender.send(createMimeMessage(mailBean));
+
+    }
 
 
     public void sendVersionUpdateNotification(String subject, List<String> userNames) {
