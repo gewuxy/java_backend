@@ -7,36 +7,26 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
-import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.CspUserInfoDTO;
-import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.CspUserService;
-import com.google.common.collect.Maps;
-import org.apache.xmlbeans.impl.xb.xmlconfig.Extensionconfig;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
-import java.awt.color.ColorSpace;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -298,6 +288,7 @@ public class CspUserController extends BaseController {
             return error(local("error.param"));
         }
         try {
+            //检查验证码合法性
             cspUserService.checkCaptchaIsOrNotValid(captcha,mobile);
         } catch (SystemException e) {
             return error(e.getMessage());
