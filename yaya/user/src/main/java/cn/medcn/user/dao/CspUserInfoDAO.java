@@ -2,6 +2,7 @@ package cn.medcn.user.dao;
 
 import cn.medcn.user.model.CspUserInfo;
 import com.github.abel533.mapper.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -13,14 +14,14 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
      * @param uniqueId
      * @return
      */
-    CspUserInfo findBindUserByUniqueId(String uniqueId);
+    CspUserInfo findBindUserByUniqueId(@Param("uniqueId") String uniqueId);
 
     /**
      * 根据邮箱或者手机号码检查csp账号 是否存在
      * @param username
      * @return
      */
-    CspUserInfo findByLoginName(String username);
+    CspUserInfo findByLoginName(@Param("username") String username);
 
 
 }

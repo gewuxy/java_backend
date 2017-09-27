@@ -14,7 +14,7 @@ public class CspUserInfoDTO  {
     // 用户id
     protected String uid;
     // 昵称
-    protected String nick_name;
+    protected String nickName;
     // 性别
     protected String gender;
     // 国家
@@ -26,12 +26,12 @@ public class CspUserInfoDTO  {
     // 地区
     protected String district;
     // 第三方平台唯一id
-    protected String unique_id;
+    protected String uniqueId;
     // 头像
     protected String avatar;
 
     // 第三方平台id
-    protected Integer third_party_id;
+    protected Integer thirdPartyId;
 
 
 
