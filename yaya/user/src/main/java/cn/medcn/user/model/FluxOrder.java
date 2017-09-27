@@ -28,7 +28,7 @@ public class FluxOrder implements Serializable{
     protected Integer state;
 
     //生效时间
-    protected String effectTime;
+    protected Date effectTime;
 
     //订单号
     protected String tradeId;
