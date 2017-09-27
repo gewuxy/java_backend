@@ -255,27 +255,20 @@ public class CspUserController extends BaseController {
             return error(local("user.error.email.format"));
         }
         String userId = SecurityUtils.get().getId();
-        CspUserInfo info = cspUserService.findByLoginName(email);
-        if (info != null) { //当前邮箱已被绑定
-            return  error(local("user.exist.email"));
+        String result = cspUserService.sendMail(email,userId);
+        if(result == null){
+            return success();
         }
-        CspUserInfo user =cspUserService.selectByPrimaryKey(userId);
-        if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
-            return  error(local("user.has.email"));
-        }
-        try {
-            cspUserService.cacheInfoAndSendMail(email,userId);
-        } catch (JDOMException e) {
-            e.printStackTrace();
-            return error(local("email.address.error"));
-        } catch (Exception e) {
-            e.printStackTrace();
-            return error(local("email.error.send"));
-        }
-        return success();
+            return error(local(result));
+
     }
 
-    //TODO xml文件中取消拦截此方法
+    /**
+     * 绑定邮箱
+     * @param code
+     * @return
+     * @throws SystemException
+     */
     @RequestMapping("/bindEmail")
     public String bindEmail(String code) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
@@ -283,21 +276,13 @@ public class CspUserController extends BaseController {
         if (result == null) {  //链接超时
             return "/test";
         } else {
-            String email = result.substring(0, result.indexOf(","));
-            String userId = result.substring(result.indexOf(",") + 1);
-            CspUserInfo info = cspUserService.selectByPrimaryKey(userId);
-            if (info == null) { //用户不存在
-                throw new SystemException(local("user.error.nonentity"));
-            }
-            info.setEmail(email);
-            cspUserService.updateByPrimaryKeySelective(info);
-            redisCacheUtils.delete(key);
-            //发送推送通知邮箱已绑定
-            jPushService.sendChangeMessage(Integer.valueOf(userId),"3",email);
+            cspUserService.doBindMail(key, result);
             return "/register/bindOk";
         }
 
     }
+
+
 
 
     /**
@@ -312,7 +297,7 @@ public class CspUserController extends BaseController {
             return error(local("error.param"));
         }
         String userId = SecurityUtils.get().getId();
-        String result = cspUserService.bindMobile(mobile,captcha,userId);
+        String result = cspUserService.doBindMobile(mobile,captcha,userId);
         if(result == null){
             return success();
         }
@@ -329,7 +314,7 @@ public class CspUserController extends BaseController {
     public String unbindEmailOrMobile(Integer type){
 
         String userId = SecurityUtils.get().getId();
-        String result = cspUserService.unbindEmailOrMobile(type,userId);
+        String result = cspUserService.doUnbindEmailOrMobile(type,userId);
         if(result == null){
             return success();
         }
@@ -350,10 +335,10 @@ public class CspUserController extends BaseController {
         String result = null;
         //第三方账号绑定操作
         if (!StringUtils.isEmpty(info.getUniqueId())) {
-                 result = cspUserService.bindThirdAccount(info,userId);
+                 result = cspUserService.doBindThirdAccount(info,userId);
         }else {
             //解绑操作
-            result = cspUserService.unbindThirdAccount(info,userId);
+            result = cspUserService.doUnbindThirdAccount(info,userId);
         }
                 if(result == null){
                     return success();
