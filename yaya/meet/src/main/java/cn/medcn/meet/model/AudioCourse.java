@@ -39,6 +39,25 @@ public class AudioCourse implements Serializable {
     /**原始资料ID 转载来的资源才有的属性 非转载资源为0*/
     private Integer primitiveId;
 
+    protected Integer playType;
+    //csp投稿人ID
+    protected String cspUserId;
+    //课件来源 0或者空为YaYa 1表示csp
+    protected Integer sourceType;
+
     @Transient
     private List<AudioCourseDetail> details;
+
+
+    public enum PlayType{
+        normal,//录播
+        live_ppt,//ppt直播
+        live_video;//视频直播
+    }
+
+
+    public enum SourceType{
+        YaYa,
+        csp;
+    }
 }

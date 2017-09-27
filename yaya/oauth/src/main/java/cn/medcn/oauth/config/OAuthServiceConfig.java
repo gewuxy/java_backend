@@ -1,5 +1,6 @@
 package cn.medcn.oauth.config;
 
+import cn.medcn.common.utils.CheckUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -31,5 +32,8 @@ public class OAuthServiceConfig {
         this.scope = scope;
     }
 
+    public boolean hasScope(){
+        return CheckUtils.isNotEmpty(scope);
+    }
 
 }

@@ -4,6 +4,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.supports.BeanValidator;
 import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.SpringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
 import org.springframework.validation.ObjectError;
@@ -26,6 +27,15 @@ public class BaseController {
     protected void addErrorFlashMessage(RedirectAttributes redirectAttributes, String message){
         redirectAttributes.addFlashAttribute(APIUtils.MESSAGE_KEY, message);
         redirectAttributes.addFlashAttribute(APIUtils.CODE_KEY, APIUtils.ERROR_CODE);
+    }
+
+    /**
+     * 获取国际化信息
+     * @param key
+     * @return
+     */
+    public String local(String key){
+        return SpringUtils.getMessage(key);
     }
 
 

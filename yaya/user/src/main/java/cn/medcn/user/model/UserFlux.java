@@ -18,7 +18,7 @@ import java.util.Date;
 @Table(name = "t_csp_user_flux")
 public class UserFlux implements Serializable{
     @Id
-    protected Integer userId;
+    protected String userId;
 
     //流量值
     protected Integer flux;
