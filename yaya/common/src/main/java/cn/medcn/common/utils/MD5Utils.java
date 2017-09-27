@@ -41,6 +41,10 @@ public class MD5Utils {
         return md5(origin);
     }
 
+    public static String MD5Encode(String origin, String charsetName){
+        return md5(origin, charsetName);
+    }
+
 
     public static String encrypt(String origin, String charsetName, String mode){
         String resultString = null;
