@@ -60,7 +60,7 @@ public class CspUserInfo implements Serializable{
     public static CspUserInfo buildToUserInfo(CspUserInfoDTO dto) {
         CspUserInfo userInfo = new CspUserInfo();
         userInfo.setId(StringUtils.nowStr());
-        userInfo.setNickName(dto.getNick_name());
+        userInfo.setNickName(dto.getNickName());
         userInfo.setAvatar(dto.getAvatar());
         userInfo.setCountry(dto.getCountry());
         userInfo.setProvince(dto.getProvince());
