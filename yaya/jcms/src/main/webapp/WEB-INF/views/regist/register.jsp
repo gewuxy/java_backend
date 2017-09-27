@@ -325,8 +325,7 @@
 
 
     function showHospitalLevel(f){
-        var $this = $(f);
-        var _currentHospitalName = $this.find('.title').text();
+        var _currentHospitalName =f;
         console.log(_currentHospitalName)
         layer.open({
             type: 1,
@@ -498,6 +497,13 @@
                 layer.msg("请输入关键字");
             }else{
                 loadNearby(keyword);
+                layer.confirm("是否将此医院设为您的医院？", {
+                        skin: 'layui-layer-confirm'
+                    },
+                    function(a){
+                        showHospitalLevel(keyword);
+                    });
+
             }
         });
 
