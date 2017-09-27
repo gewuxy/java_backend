@@ -47,7 +47,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param captcha
      * @param mobile
      */
-    void checkCaptchaIsOrNotValid(String mobile, String captcha);
+    boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
 
     /**
      * 添加第三方平台用户及绑定用户信息
@@ -69,7 +69,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param captcha
      * @param userId
      */
-    String doBindMobile(String mobile, String captcha, String userId);
+    String doBindMobile(String mobile, String captcha, String userId) throws SystemException;
 
     /**
      * 解绑邮箱或手机

@@ -22,14 +22,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.mail.MessagingException;
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static cn.medcn.common.Constants.BIND_TEMPLATE_ID;
-import static cn.medcn.common.Constants.LOGIN_TEMPLATE_ID;
+import static cn.medcn.common.Constants.*;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -158,8 +155,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public void checkCaptchaIsOrNotValid(String mobile, String captcha) {
+    public boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
+        Captcha result = (Captcha)redisCacheUtils.getCacheObject(MOBILE_CACHE_PREFIX_KEY + mobile);
+        try {
+            return jSmsService.verify(result.getMsgId(),captcha);
 
+        } catch (Exception e) {
+            throw new SystemException("sms.invalid.captcha");
+        }
     }
 
     /**
@@ -224,7 +227,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @param userId
      */
     @Override
-    public String doBindMobile(String mobile, String captcha, String userId) {
+    public String doBindMobile(String mobile, String captcha, String userId) throws SystemException {
+
         checkCaptchaIsOrNotValid(captcha,mobile);
         CspUserInfo result = findByLoginName(mobile);
         //该手机号已被绑定
