@@ -1,7 +1,6 @@
 package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
@@ -28,7 +27,6 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
-import java.util.Locale;
 
 /**
  * Created by lixuan on 2017/9/12.
@@ -67,16 +65,22 @@ public class ChargeController extends BaseController {
             charge = chargeService.createCharge(orderNo,appId, amount, channel, ip);
         } catch (RateLimitException e) {
             e.printStackTrace();
+            return error(e.getMessage());
         } catch (APIException e) {
             e.printStackTrace();
+            return error(e.getMessage());
         } catch (ChannelException e) {
             e.printStackTrace();
+            return error(e.getMessage());
         } catch (InvalidRequestException e) {
             e.printStackTrace();
+            return error(e.getMessage());
         } catch (APIConnectionException e) {
             e.printStackTrace();
+            return error(e.getMessage());
         } catch (AuthenticationException e) {
             e.printStackTrace();
+            return error(e.getMessage());
         }
         //创建订单
         chargeService.createOrder(SecurityUtils.get().getId(),orderNo,amount,channel);
