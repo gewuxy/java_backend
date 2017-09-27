@@ -15,6 +15,8 @@ public interface BaseService<T> {
 
     String MIDDLE_TIME_CACHE = "middle_time_cache";
 
+    String local(String key);
+
     Mapper<T> getBaseMapper();
 
     T selectOne(T var1);
