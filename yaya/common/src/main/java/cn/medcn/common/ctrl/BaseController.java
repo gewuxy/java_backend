@@ -55,6 +55,10 @@ public class BaseController {
         return APIUtils.error(msg);
     }
 
+    protected String error(String errorCode , String msg){
+        return APIUtils.error(errorCode, msg);
+    }
+
     @InitBinder
     protected void init(WebDataBinder dataBinder){
         dataBinder.setValidator(new BeanValidator());
