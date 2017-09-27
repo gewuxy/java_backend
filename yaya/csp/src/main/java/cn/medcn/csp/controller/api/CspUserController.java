@@ -43,9 +43,6 @@ public class CspUserController extends BaseController {
     @Autowired
     protected AppUserService appUserService;
 
-    @Autowired
-    private JPushService jPushService;
-
 
     @Value("${csp.file.upload.base}")
     protected String uploadBase;
