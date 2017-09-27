@@ -2,6 +2,7 @@ package cn.medcn.user.service;
 
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.BaseService;
+import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.CspUserInfo;
 
 /**
@@ -34,12 +35,19 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param mobile
      * @param type
      */
-    void sendCaptcha(String mobile, Integer type);
+    String sendCaptcha(String mobile, Integer type) throws SystemException ;
 
     /**
      * 检查验证码是否有效
      * @param captcha
      * @param mobile
      */
-    void checkCaptchaIsOrNotValid(String captcha, String mobile);
+    void checkCaptchaIsOrNotValid(String mobile, String captcha);
+
+    /**
+     * 添加第三方平台用户及绑定用户信息
+     * @param userDTO
+     * @return
+     */
+    CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO);
 }
