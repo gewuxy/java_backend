@@ -5,6 +5,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
@@ -43,7 +44,7 @@ public class CspUserController extends BaseController{
     @ResponseBody
     public void register(CspUserInfo userInfo) {
         if (userInfo == null) {
-            error(SpringUtils.getMessage("error.param"));
+            error(local("error.param"));
         } else {
             try {
                 cspUserService.register(userInfo);
@@ -59,7 +60,7 @@ public class CspUserController extends BaseController{
      * type 1=微信 2=微博 3=Facebook 4=Twitter 5=YaYa医师 6=手机 7=邮箱
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
-     * @param username 邮箱
+     * @param email 邮箱
      * @param password 密码
      * @param thirdPartyId 第三方平台id
      * @param mobile   手机
@@ -70,59 +71,61 @@ public class CspUserController extends BaseController{
      */
     @RequestMapping("/login")
     @ResponseBody
-    public void login(String username, String password, Integer thirdPartyId,
+    public void login(String email, String password, Integer thirdPartyId,
                         String mobile, String captcha, String nickName,
                         CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
-           error(SpringUtils.getMessage("user.empty.ThirdPartyId"));
-       }
-
+           error(local("user.empty.ThirdPartyId"));
+        }
         // 第三方平台id
         int type = thirdPartyId.intValue();
 
+        CspUserInfo userInfo = null;
+
         if (type == BindInfo.Type.EMAIL.getTypeId()) {
             // 邮箱登录
-            loginByEmail(username, password, request);
+            userInfo = loginByEmail(email, password);
 
         } else if (type == BindInfo.Type.MOBILE.getTypeId()) {
             // 手机登录
-            loginByMobile(mobile, captcha, request);
+           userInfo = loginByMobile(mobile, captcha, nickName);
 
         } else if (type <= BindInfo.Type.YaYa.getTypeId()) {
             if (userInfoDTO != null) {
                 userInfoDTO.setThirdPartyId(type);
             }
             // 第三方账号登录 含YaYa医师登录
-            loginByThirdParty(userInfoDTO, request);
+            userInfo = loginByThirdParty(userInfoDTO);
         }
 
+        // 登录成功，返回用户信息
+        loginSuccess(userInfo, userInfo.getToken(), request);
     }
 
     /**
      * 邮箱登录
-     * @param username
+     * @param email
      * @param password
      */
-    protected void loginByEmail(String username, String password, HttpServletRequest request) {
-        if (StringUtils.isEmpty(username)) {
-            error(SpringUtils.getMessage("user.empty.username"));
+    protected CspUserInfo loginByEmail(String email, String password) {
+        if (StringUtils.isEmpty(email)) {
+            error(local("user.empty.email"));
         }
         if (StringUtils.isEmpty(password)) {
-            error(SpringUtils.getMessage("user.empty.password"));
+            error(local("user.empty.password"));
         }
 
-        CspUserInfo userInfo = cspUserService.findByLoginName(username);
+        CspUserInfo userInfo = cspUserService.findByLoginName(email);
         if (userInfo == null) {
-            error(SpringUtils.getMessage("user.error.nonentity"));
+            error(local("user.error.nonentity"));
         }
         // 用户输入密码是否正确
         if (!MD5Utils.md5(password).equals(userInfo.getPassword())) {
-            error(SpringUtils.getMessage("user.error.password"));
+            error(local("user.error.password"));
         }
-        // 登录成功，返回用户信息
-        loginSuccess(userInfo, userInfo.getToken(), request);
 
+        return userInfo;
     }
 
 
@@ -137,7 +140,7 @@ public class CspUserController extends BaseController{
             cspUserService.sendCaptcha(mobile, type);
             success();
         } catch (Exception e) {
-            error(SpringUtils.getMessage(e.getMessage()));
+            error(local(e.getMessage()));
         }
     }
 
@@ -147,12 +150,12 @@ public class CspUserController extends BaseController{
      * @param mobile
      * @param captcha
      */
-    protected void loginByMobile(String mobile, String captcha, HttpServletRequest request) {
+    protected CspUserInfo loginByMobile(String mobile, String captcha, String nickName) {
        if (StringUtils.isEmpty(mobile)) {
-           error(SpringUtils.getMessage("user.empty.mobile"));
+           error(local("user.empty.mobile"));
        }
        if (StringUtils.isEmpty(captcha)) {
-           error(SpringUtils.getMessage("user.empty.captcha"));
+           error(local("user.empty.captcha"));
        }
 
         // 检查验证码是否有效
@@ -161,22 +164,24 @@ public class CspUserController extends BaseController{
         // 根据手机号码检查用户是否存在
         CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
         if (userInfo == null) {
-            error(SpringUtils.getMessage("user.error.nonentity"));
+            error(local("user.error.nonentity"));
         }
 
-        // 登录成功，返回用户信息
-        loginSuccess(userInfo, userInfo.getToken(), request);
+        userInfo.setNickName(nickName);
+
+       return userInfo;
 
     }
+
 
     /**
      * 第三方登录 根据uniqueId检查是否有注册过csp账号，如果注册过，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再登录返回用户信息
      * type 1代表微信,2代表微博,3代表facebook,4代表twitter 5代表YaYa
      */
-    protected void loginByThirdParty(CspUserInfoDTO userDTO, HttpServletRequest request) {
+    protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) {
         if (userDTO == null) {
-            error(SpringUtils.getMessage("error.param"));
+            error(local("error.param"));
         }
 
         String uniqueId = userDTO.getUniqueId();
@@ -188,10 +193,7 @@ public class CspUserController extends BaseController{
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
         }
 
-        // 缓存及更新用户登录时间
-        loginSuccess(userInfo, userInfo.getToken(), request);
-
-
+        return userInfo;
     }
 
     /**
@@ -216,7 +218,7 @@ public class CspUserController extends BaseController{
      */
     protected Principal cachePrincipal(CspUserInfo user, String token) {
         Principal principal = createPrincipal(user, token);
-        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(CspConstants.TOKEN_KEY + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
 
@@ -231,21 +233,6 @@ public class CspUserController extends BaseController{
         return principal;
     }
 
-    private Principal getLegalToken(CspUserInfo user) {
-        Principal principal = null;
-        if (StringUtils.isNotEmpty(user.getToken())) {
-            //清除token 踢出之前的认证信息
-            disablePrincipal(user.getToken());
-        }
-        String token = UUIDUtil.getUUID();
-        user.setToken(token);
-        principal = cachePrincipal(user, token);
-        return principal;
-    }
-
-    private void disablePrincipal(String token) {
-        redisCacheUtils.delete(Constants.TOKEN + "_" + token);
-    }
 
 
 
