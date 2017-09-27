@@ -22,8 +22,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static cn.medcn.common.Constants.BIND_TEMPLATE_ID;
-import static cn.medcn.common.Constants.LOGIN_TEMPLATE_ID;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -129,9 +127,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         String msgId = null;
         try {
             if (type == Captcha.Type.LOGIN.getTypeId().intValue()) {
-                msgId = jSmsService.send(mobile, LOGIN_TEMPLATE_ID);
+                msgId = jSmsService.send(mobile, Constants.LOGIN_TEMPLATE_ID);
             } else {
-                msgId = jSmsService.send(mobile, BIND_TEMPLATE_ID);
+                msgId = jSmsService.send(mobile, Constants.BIND_TEMPLATE_ID);
             }
 
         } catch (Exception e) {
@@ -142,8 +140,18 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public void checkCaptchaIsOrNotValid(String mobile, String captcha) {
+    public Boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
+        // 从缓存获取是否有此号码的记录
+        Captcha result = (Captcha) redisCacheUtils.getCacheObject(Constants.MOBILE_CACHE_PREFIX_KEY + mobile);
+        try {
+            if(!jSmsService.verify(result.getMsgId(),captcha)){
+               throw new SystemException("sms.error.captcha");
+            }
 
+        } catch (Exception e) {
+            throw new SystemException("sms.invalid.captcha");
+        }
+        return false;
     }
 
     /**
