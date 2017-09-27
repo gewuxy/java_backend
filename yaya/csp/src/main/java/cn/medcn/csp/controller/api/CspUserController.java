@@ -376,12 +376,7 @@ public class CspUserController extends BaseController {
         // 检查验证码是否有效
 
         boolean result = false;
-        try {
-            result = cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
-        } catch (SystemException e) {
-            return error(local(e.getMessage()));
-        }
-        if(result){
+
             // 根据手机号码检查用户是否存在
             CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
             if (userInfo == null) {
@@ -390,7 +385,7 @@ public class CspUserController extends BaseController {
 
             // 登录成功，返回用户信息
             loginSuccess(userInfo, userInfo.getToken(), request);
-        }
+
 
 
 
