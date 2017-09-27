@@ -141,4 +141,6 @@ public class Constants {
 
     // 会议提醒提前时间 单位分钟
     public static final int MEET_NOTIFY_PRE_TIME = 15;
+
+    public static final String DEFAULT_LOCAL = "zh_CN";
 }

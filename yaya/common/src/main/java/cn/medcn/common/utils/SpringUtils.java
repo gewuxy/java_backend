@@ -28,7 +28,7 @@ public class SpringUtils implements ApplicationContextAware {
     }
 
     public static String getMessage(String messageKey){
-        return ctx.getMessage(messageKey, null, Locale.CHINA);
+        return ctx.getMessage(messageKey, null, LocalUtils.get());
     }
 
 }
