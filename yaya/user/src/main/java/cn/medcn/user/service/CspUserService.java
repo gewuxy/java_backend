@@ -61,7 +61,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param email
      * @param userId
      */
-    String sendMail(String email, String userId) ;
+    void sendMail(String email, String userId) throws SystemException;
 
     /**
      * 绑定手机号
@@ -77,7 +77,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    String doUnbindEmailOrMobile(Integer type, String userId);
+    void doUnbindEmailOrMobile(Integer type, String userId) throws SystemException;
 
     /**
      * 绑定第三方账号
@@ -85,7 +85,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    String doBindThirdAccount(BindInfo info, String userId);
+    void doBindThirdAccount(BindInfo info, String userId) throws SystemException;
 
     /**
      * 解绑第三方账号
@@ -93,7 +93,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    String doUnbindThirdAccount(BindInfo info, String userId);
+    void doUnbindThirdAccount(BindInfo info, String userId) throws SystemException;
 
     /**
      * 绑定邮箱

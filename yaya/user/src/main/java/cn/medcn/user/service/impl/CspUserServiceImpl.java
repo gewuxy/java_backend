@@ -197,15 +197,15 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String sendMail(String email, String userId)  {
+    public void sendMail(String email, String userId) throws SystemException {
         //TODO
         CspUserInfo info = findByLoginName(email);
         if (info != null) { //当前邮箱已被绑定
-            return  "user.exist.email";
+            throw new SystemException(local("user.exist.email"));
         }
         CspUserInfo user = selectByPrimaryKey(userId);
         if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
-            return  "user.has.email";
+            throw new SystemException(local("user.has.email"));
         }
         String code = StringUtils.uniqueStr();
         redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
@@ -214,12 +214,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             emailHelper.sendMail(email, "绑定邮箱", url, "bindEmail");
         } catch (JDOMException e) {
             e.printStackTrace();
-            return "email.address.error";
+            throw new SystemException(local("email.address.error"));
         } catch (Exception e) {
             e.printStackTrace();
-            return "email.error.send";
+            throw new SystemException(local("email.error.send"));
         }
-        return null;
     }
 
 
@@ -253,28 +252,26 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String doUnbindEmailOrMobile(Integer type, String userId) {
+    public void doUnbindEmailOrMobile(Integer type, String userId) throws SystemException {
         if(type != Type.EMAIL && type != Type.MOBILE){
-            return "error.param";
+            throw new SystemException(local("error.param"));
         }
         CspUserInfo info = selectByPrimaryKey(userId);
         if(type == Type.EMAIL){
             //用户没有绑定邮箱
             if(StringUtils.isEmpty(info.getEmail())){
-                return "user.not.exist.email";
+                throw new SystemException(local("user.not.exist.email"));
             }
                 info.setEmail("");
         }else{
             //用户没有绑定手机
             if(StringUtils.isEmpty(info.getMobile())){
-                return "user.not.exist.mobile";
+                throw new SystemException(local("user.not.exist.mobile"));
             }
                 info.setMobile("");
         }
-
             updateByPrimaryKeySelective(info);
 
-        return null;
     }
 
     /**
@@ -284,13 +281,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String doBindThirdAccount(BindInfo info, String userId) {
+    public void doBindThirdAccount(BindInfo info, String userId) throws SystemException {
         BindInfo condition = new BindInfo();
         condition.setUniqueId(info.getUniqueId());
         condition.setThirdPartyId(info.getThirdPartyId());
         condition = bindInfoDAO.selectOne(condition);
         if(condition != null){  //该第三方账号已被使用
-           return "user.exist.account";
+            throw new SystemException(local("user.exist.account"));
         }
 
         BindInfo condition2 = new BindInfo();
@@ -298,7 +295,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         condition2.setThirdPartyId(info.getThirdPartyId());
         condition2 = bindInfoDAO.selectOne(condition2);
         if(condition2 != null){  //当前的账号已绑定其他第三方账号
-            return "user.exist.ThirdAccount";
+            throw new SystemException(local("user.exist.ThirdAccount"));
         }
 
         String path = saveAvatarFromThirdPlatform(info.getAvatar());
@@ -307,7 +304,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         info.setUserId(userId);
         info.setBindDate(new Date());
         bindInfoDAO.insert(info);
-        return null;
     }
 
     /**
@@ -317,13 +313,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String doUnbindThirdAccount(BindInfo info, String userId) {
+    public void doUnbindThirdAccount(BindInfo info, String userId) throws SystemException {
         BindInfo condition = new BindInfo();
         condition.setUserId(userId);
         condition.setThirdPartyId(info.getThirdPartyId());
         condition = bindInfoDAO.selectOne(condition);
         if(condition == null){  //用户没绑定此第三方账号，不能解绑
-           return "user.notExist.ThirdAccount";
+            throw new SystemException(local("user.notExist.ThirdAccount"));
         }
 
         CspUserInfo user = selectByPrimaryKey(userId);
@@ -335,14 +331,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             condition2.setUserId(userId);
             int count = bindInfoDAO.selectCount(condition2);
             if(count <= 1){  //没有绑定其他第三方账号，不能解绑
-                return "user.only.one.account";
+                throw new SystemException(local("user.only.one.account"));
             }
         }
 
         bindInfoDAO.delete(condition);
         //删除头像
         deleteAvatar(condition);
-        return null;
     }
 
     @Override
