@@ -14,7 +14,7 @@ public class ResponseUtils {
         Writer writer = null;
         try {
             writer = httpServletResponse.getWriter();
-            writer.write(APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.unauthed")));
+            writer.write(jsonStr);
             writer.flush();
         } catch (IOException e) {
             e.printStackTrace();

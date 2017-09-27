@@ -217,19 +217,18 @@ public class CspUserController extends BaseController{
      * @return
      */
     protected Principal cachePrincipal(CspUserInfo user, String token) {
+        if (CheckUtils.isNotEmpty(token)) {
+            token = UUIDUtil.getUUID();
+            user.setToken(token);
+            cspUserService.updateByPrimaryKey(user);
+        }
         Principal principal = createPrincipal(user, token);
         redisCacheUtils.setCacheObject(CspConstants.TOKEN_KEY + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
 
     private Principal createPrincipal(CspUserInfo user, String token) {
-        Principal principal = new Principal();
-        principal.setToken(token);
-        principal.setId(user.getId());
-        principal.setEmail(user.getEmail());
-        principal.setMobile(user.getMobile());
-        principal.setNickName(user.getNickName());
-        principal.setAvatar(user.getAvatar());
+        Principal principal = Principal.build(user);
         return principal;
     }
 

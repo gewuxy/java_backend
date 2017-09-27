@@ -28,7 +28,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         //客户端将token从header中传过来 作为每次请求的权限认证标识
         String token = httpServletRequest.getHeader(Constants.TOKEN);
         //String token = "eb3b4a00c831429cb16d1b5dd00d8db6";
-        String cacheKey = CspConstants.TOKEN_KEY+"_"+token;
+        String cacheKey = Constants.TOKEN+"_"+token;
         Principal principal = (Principal) redisCacheUtils.getCacheObject(cacheKey);
         if(principal == null){
             ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.unauthed")));
