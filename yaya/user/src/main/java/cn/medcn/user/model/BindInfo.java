@@ -72,10 +72,10 @@ public class BindInfo {
         BindInfo bindUser = new BindInfo();
         bindUser.setId(StringUtils.nowStr());
         bindUser.setUserId(dto.getUid());
-        bindUser.setThirdPartyId(dto.getThird_party_id());
+        bindUser.setThirdPartyId(dto.getThirdPartyId());
         bindUser.setBindDate(new Date());
-        bindUser.setNickName(dto.getNick_name());
-        bindUser.setUniqueId(dto.getUnique_id());
+        bindUser.setNickName(dto.getNickName());
+        bindUser.setUniqueId(dto.getUniqueId());
         bindUser.setGender(dto.getGender());
         bindUser.setAvatar(dto.getAvatar());
         return bindUser;
