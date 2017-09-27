@@ -41,11 +41,29 @@ h3 { font-size:.4rem; }
 .pr { position:relative; }
 .none { display:none; }
 .overflowText {
+    max-width: 100%;
     overflow: hidden;/*超出部分隐藏*/
     white-space: nowrap;/*不换行*/
     text-overflow:ellipsis;/*超出部分文字以...显示*/
 }
-
+/*多行文字截取*/
+.overflowText-nowrap-multi {
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+}
+/*弹性一行，内容里一定要是 box 属性*/
+.overflowText-nowrap-flex{
+    display: -webkit-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+    -webkit-box-flex: 1;
+    height: inherit;
+}
 
 
 
@@ -394,6 +412,7 @@ h3 { font-size:.4rem; }
 
 
     /*layui-layer*/
+.layui-layer-popup { position: relative;}
 .layui-layer-popup .layui-layer-title { font-size:.3rem; height:.84rem; line-height: .84rem;}
 
 .layui-layer-popup .layui-layer-setwin {  right:0; top:0;}
@@ -409,6 +428,13 @@ h3 { font-size:.4rem; }
 .layui-layer.layui-layer-dialog .layui-layer-padding .layui-layer-icon { }
 .layui-layer.layui-layer-dialog .layui-layer-content .layui-layer-ico { width:.6rem; height:.6rem; top:.32rem; left:.3rem; background:url(../images/WeUI-success.png) no-repeat; background-position:0;  background-size:.55rem;}
 .layui-layer.layui-layer-dialog .layui-layer-content { font-size:.28rem; line-height:.48rem; display: block; padding: .24rem .5rem; }
+.layui-layer.layui-layer-dialog .layui-layer-title { font-size:.28rem;}
+.layui-layer.layui-layer-dialog { min-width:2.6rem;}
+
+
+.layui-layer.layui-layer-confirm .layui-layer-content{ font-size:.22rem; padding: .24rem .26rem;}
+.layui-layer.layui-layer-confirm .layui-layer-title { font-size:.22rem;}
+.layui-layer.layui-layer-confirm .layui-layer-btn a{height: 0.46rem; line-height: .46rem; margin: 0.12rem 0.12rem 0; padding: 0 .2rem; border-radius: .04rem; font-size: .2rem;}
 
 .layui-layer.layui-layer-msg { min-width: 40%; }
 
@@ -439,7 +465,7 @@ h3 { font-size:.4rem; }
 /*weui*/
 .weui-picker__bd { height:4.76rem}
 .weui-picker__item {
-    padding: .12rem 0 .1rem;
+    padding: .11rem 0 .1rem;
     font-size:0.28rem;
 }
 .weui-picker__indicator {
