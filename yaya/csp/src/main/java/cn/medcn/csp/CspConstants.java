@@ -6,4 +6,7 @@ package cn.medcn.csp;
 public class CspConstants {
 
     public static final String TOKEN_KEY = "csp_token";
+
+
+
 }
