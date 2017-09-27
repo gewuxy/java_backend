@@ -28,7 +28,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * 注册用户
      * @param userInfo
      */
-    void register(CspUserInfo userInfo)throws SystemException;
+    String register(CspUserInfo userInfo);
 
     /**
      * 发送手机验证码
@@ -42,7 +42,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param captcha
      * @param mobile
      */
-    Boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
+    boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
 
     /**
      * 添加第三方平台用户及绑定用户信息
