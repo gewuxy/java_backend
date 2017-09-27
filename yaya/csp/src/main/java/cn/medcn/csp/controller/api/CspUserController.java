@@ -87,8 +87,6 @@ public class CspUserController extends BaseController {
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
      * @param email 邮箱
      * @param password 密码
-     *
-     * @param username     邮箱
      * @param password     密码
      * @param thirdPartyId 第三方平台id
      * @param mobile       手机
@@ -102,14 +100,9 @@ public class CspUserController extends BaseController {
     public String login(String email, String password, Integer thirdPartyId,
                         String mobile, String captcha, String nickName,
                         CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
-    public void login(String username, String password, Integer thirdPartyId,
-                      String mobile, String captcha, String nickName,
-                      CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
            return error(local("user.empty.ThirdPartyId"));
-        }
-            error(SpringUtils.getMessage("user.empty.ThirdPartyId"));
         }
 
         // 第三方平台id
@@ -147,8 +140,6 @@ public class CspUserController extends BaseController {
     /**
      * 邮箱登录
      * @param email
-     *
-     * @param username
      * @param password
      */
     protected CspUserInfo loginByEmail(String email, String password) throws SystemException, PasswordErrorException {
@@ -247,7 +238,7 @@ public class CspUserController extends BaseController {
     public String updateInfo(CspUserInfo info) {
        info.setId(SecurityUtils.get().getId());
        cspUserService.updateByPrimaryKeySelective(info);
-        return success();
+       return success();
     }
 
 
@@ -406,22 +397,19 @@ public class CspUserController extends BaseController {
             throw new SystemException(local("user.empty.captcha"));
         }
         // 检查验证码是否有效
-        Boolean result = cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
-        if (result) {
-            // 根据手机号码检查用户是否存在
-            CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
-            if (userInfo == null) {
-                // 注册新用户
-                userInfo.setId(StringUtils.nowStr());
-                userInfo.setMobile(mobile);
-                userInfo.setRegisterTime(new Date());
-                cspUserService.insert(userInfo);
-            }
-            return userInfo;
-
-        } else {
-            throw new SystemException(local("sms.invalid.captcha"));
+        cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+        // 根据手机号码检查用户是否存在
+        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+        if (userInfo == null) {
+            // 注册新用户
+            userInfo.setId(StringUtils.nowStr());
+            userInfo.setMobile(mobile);
+            userInfo.setRegisterTime(new Date());
+            cspUserService.insert(userInfo);
         }
+
+        return userInfo;
+
 
     }
 
