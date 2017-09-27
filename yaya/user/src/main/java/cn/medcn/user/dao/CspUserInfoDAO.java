@@ -20,27 +20,7 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
      * @param username
      * @return
      */
-    CspUserInfo findUserByEmailOrMobile(String username);
-
-    /**
-     * 注册用户
-     * @param userInfo
-     */
-    void register(CspUserInfo userInfo);
-
-    /**
-     * 发送手机验证码
-     * @param mobile
-     * @param type
-     */
-    void sendCaptcha(String mobile, Integer type);
-
-    /**
-     * 检查验证码是否有效
-     * @param captcha
-     * @param mobile
-     */
-    void checkCaptchaIsOrNotValid(String captcha, String mobile);
+    CspUserInfo findByLoginName(String username);
 
 
 }

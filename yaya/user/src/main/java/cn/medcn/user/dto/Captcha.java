@@ -21,5 +21,32 @@ public class Captcha {
 
   private Integer count ;
 
+  public enum Type{
+    LOGIN(0, "登录"),
+    BIND(1, "绑定");
 
+    private Integer typeId;
+    private String label;
+
+    public Integer getTypeId() {
+      return typeId;
+    }
+
+    public void setTypeId(Integer typeId) {
+      this.typeId = typeId;
+    }
+
+    public String getLabel() {
+      return label;
+    }
+
+    public void setLabe(String label) {
+      this.label = label;
+    }
+
+    Type(Integer typeId, String label) {
+      this.typeId = typeId;
+      this.label = label;
+    }
+  }
 }
