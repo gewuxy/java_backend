@@ -37,25 +37,14 @@ public class MD5Utils {
         return encrypt(origin, charsetName, ENCRYPT_MODE_MD5);
     }
 
-    public static String MD5Encode(String origin, String charsetname) {
-        String resultString = null;
-        try {
-            resultString = new String(origin);
-            MessageDigest md = MessageDigest.getInstance("MD5");
-            if (charsetname == null || "".equals(charsetname))
-                resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes()));
-            else
-                resultString = byteArrayToHexString(md.digest(resultString
-                        .getBytes(charsetname)));
-        } catch (Exception exception) {
-        }
-        return resultString;
+    public static String MD5Encode(String origin){
+        return md5(origin);
     }
 
-    public static String MD5Encode(String origin){
-        return MD5Encode(origin, "utf-8");
+    public static String MD5Encode(String origin, String charsetName){
+        return md5(origin, charsetName);
     }
+
 
     public static String encrypt(String origin, String charsetName, String mode){
         String resultString = null;
@@ -84,6 +73,16 @@ public class MD5Utils {
 
     public static String md5(String origin){
         return md5(origin, ENCRYPT_DEFAULT_CHARSET);
+    }
+
+    public static String signature(String secret, String nonce, String timeStamp){
+        String[] array = new String[]{secret, nonce, timeStamp};
+        Arrays.sort(array);
+        StringBuffer buffer = new StringBuffer();
+        for (String str : array) {
+            buffer.append(str);
+        }
+        return MD5Encode(buffer.toString());
     }
 
 }
