@@ -1,5 +1,6 @@
 package cn.medcn.user.service;
 
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.user.model.CspUserInfo;
 
@@ -26,7 +27,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * 注册用户
      * @param userInfo
      */
-    void register(CspUserInfo userInfo);
+    void register(CspUserInfo userInfo)throws SystemException;
 
     /**
      * 发送手机验证码
