@@ -292,12 +292,23 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping("/bindMobile")
-    public String bindMobile(String mobile,String captcha){
+    public String bindMobile(String mobile,String captcha)  {
         if(StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
             return error(local("error.param"));
         }
+        try {
+            cspUserService.checkCaptchaIsOrNotValid(captcha,mobile);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
         String userId = SecurityUtils.get().getId();
-        String result = cspUserService.doBindMobile(mobile,captcha,userId);
+        String result = null;
+        try {
+
+            cspUserService.doBindMobile(mobile,captcha,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
         if(result == null){
             return success();
         }
@@ -363,16 +374,25 @@ public class CspUserController extends BaseController {
         }
 
         // 检查验证码是否有效
-        cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
 
-        // 根据手机号码检查用户是否存在
-        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
-        if (userInfo == null) {
-            error(SpringUtils.getMessage("user.error.nonentity"));
+        boolean result = false;
+        try {
+            result = cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+        } catch (SystemException e) {
+            return error(local(e.getMessage()));
+        }
+        if(result){
+            // 根据手机号码检查用户是否存在
+            CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+            if (userInfo == null) {
+                error(SpringUtils.getMessage("user.error.nonentity"));
+            }
+
+            // 登录成功，返回用户信息
+            loginSuccess(userInfo, userInfo.getToken(), request);
         }
 
-        // 登录成功，返回用户信息
-        loginSuccess(userInfo, userInfo.getToken(), request);
+
 
     }
 
