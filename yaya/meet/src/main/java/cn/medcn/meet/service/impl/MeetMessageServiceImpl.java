@@ -42,7 +42,7 @@ public class MeetMessageServiceImpl extends BaseServiceImpl<MeetMessage> impleme
     }
 
     @Override
-    public MeetMessage bpopFromQuque() throws Exception {
+    public MeetMessage bpopFromQueue() throws Exception {
         MeetMessage message = redisCacheUtils.bRPopFromQueue(MEET_MESSAGE_QUEUE_KEY);
         return message;
     }

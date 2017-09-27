@@ -25,12 +25,19 @@ public class MeetMessageDTO implements Serializable{
     private String sender;
 
     private Date sendTime;
-
+    //0表示普通消息 1表示直播 2表示同步
     private Integer msgType;
 
     private String headimg;
 
     private String meetName;
+
+
+    public enum MessageType{
+        normal,//普通消息
+        live,//直播指令
+        sync;//同步指令
+    }
 
     public static MeetMessage buildToMessage(MeetMessageDTO dto){
         MeetMessage message = new MeetMessage();

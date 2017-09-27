@@ -19,7 +19,7 @@ public interface MeetMessageService extends BaseService<MeetMessage> {
 
     void pushToQueue(MeetMessage message) throws Exception;
 
-    MeetMessage bpopFromQuque() throws Exception;
+    MeetMessage bpopFromQueue() throws Exception;
 
     void publish(MeetMessageDTO message);
 
