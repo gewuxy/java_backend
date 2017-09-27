@@ -4,6 +4,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.email.EmailHelper;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.service.JPushService;
 import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.supports.FileTypeSuffix;
@@ -36,11 +37,12 @@ import static cn.medcn.common.Constants.LOGIN_TEMPLATE_ID;
 @Service
 public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements CspUserService {
 
-    @Value("${app.file.base}")
-    protected String appFileBase;
 
     @Value("${csp.file.upload.base}")
     protected String uploadBase;
+
+    @Value("${app.csp.base}")
+    protected String cspBase;
 
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
@@ -55,7 +57,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     protected JSmsService jSmsService;
 
     @Autowired
-    private EmailHelper emailHelper;
+    protected EmailHelper emailHelper;
+
+    @Autowired
+    protected JPushService jPushService;
 
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
@@ -186,12 +191,29 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public void cacheInfoAndSendMail(String email, String userId) throws JDOMException, MessagingException, IOException {
+    public String sendMail(String email, String userId)  {
         //TODO
+        CspUserInfo info = findByLoginName(email);
+        if (info != null) { //当前邮箱已被绑定
+            return  "user.exist.email";
+        }
+        CspUserInfo user = selectByPrimaryKey(userId);
+        if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
+            return  "user.has.email";
+        }
         String code = StringUtils.uniqueStr();
         redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-        String url = "127.0.0.1/api/user/bindEmail?code=" + code;
-        emailHelper.sendMail(email, "绑定邮箱", url, "bindEmail");
+        String url = cspBase + "/api/user/bindEmail?code=" + code;
+        try {
+            emailHelper.sendMail(email, "绑定邮箱", url, "bindEmail");
+        } catch (JDOMException e) {
+            e.printStackTrace();
+            return "email.address.error";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "email.error.send";
+        }
+        return null;
     }
 
 
@@ -202,7 +224,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @param userId
      */
     @Override
-    public String bindMobile(String mobile, String captcha, String userId) {
+    public String doBindMobile(String mobile, String captcha, String userId) {
         checkCaptchaIsOrNotValid(captcha,mobile);
         CspUserInfo result = findByLoginName(mobile);
         //该手机号已被绑定
@@ -227,7 +249,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String unbindEmailOrMobile(Integer type, String userId) {
+    public String doUnbindEmailOrMobile(Integer type, String userId) {
         if(type != Type.EMAIL && type != Type.MOBILE){
             return "error.param";
         }
@@ -258,7 +280,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String bindThirdAccount(BindInfo info, String userId) {
+    public String doBindThirdAccount(BindInfo info, String userId) {
         BindInfo condition = new BindInfo();
         condition.setUniqueId(info.getUniqueId());
         condition.setThirdPartyId(info.getThirdPartyId());
@@ -291,7 +313,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public String unbindThirdAccount(BindInfo info, String userId) {
+    public String doUnbindThirdAccount(BindInfo info, String userId) {
         BindInfo condition = new BindInfo();
         condition.setUserId(userId);
         condition.setThirdPartyId(info.getThirdPartyId());
@@ -317,6 +339,21 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         //删除头像
         deleteAvatar(condition);
         return null;
+    }
+
+    @Override
+    public void doBindMail(String key, String result) throws SystemException {
+        String email = result.substring(0, result.indexOf(","));
+        String userId = result.substring(result.indexOf(",") + 1);
+        CspUserInfo info = selectByPrimaryKey(userId);
+        if (info == null) { //用户不存在
+            throw new SystemException(local("user.error.nonentity"));
+        }
+        info.setEmail(email);
+        updateByPrimaryKeySelective(info);
+        redisCacheUtils.delete(key);
+        //发送推送通知邮箱已绑定
+        jPushService.sendChangeMessage(Integer.valueOf(userId),"3",email);
     }
 
     protected interface Type{
@@ -348,7 +385,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
         String fileName = StringUtils.nowStr() + suffix;
         File file = new File(avatar);
-        FileUtils.saveFile(appFileBase + relativePath, fileName, file);
+        FileUtils.saveFile(uploadBase + relativePath, fileName, file);
         return relativePath + fileName;
     }
 }

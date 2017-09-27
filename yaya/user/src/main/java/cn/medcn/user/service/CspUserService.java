@@ -61,7 +61,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param email
      * @param userId
      */
-    void cacheInfoAndSendMail(String email, String userId) throws JDOMException, MessagingException, IOException;
+    String sendMail(String email, String userId) ;
 
     /**
      * 绑定手机号
@@ -69,7 +69,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param captcha
      * @param userId
      */
-    String bindMobile(String mobile, String captcha, String userId);
+    String doBindMobile(String mobile, String captcha, String userId);
 
     /**
      * 解绑邮箱或手机
@@ -77,7 +77,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    String unbindEmailOrMobile(Integer type, String userId);
+    String doUnbindEmailOrMobile(Integer type, String userId);
 
     /**
      * 绑定第三方账号
@@ -85,7 +85,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    String bindThirdAccount(BindInfo info, String userId);
+    String doBindThirdAccount(BindInfo info, String userId);
 
     /**
      * 解绑第三方账号
@@ -93,5 +93,12 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    String unbindThirdAccount(BindInfo info, String userId);
+    String doUnbindThirdAccount(BindInfo info, String userId);
+
+    /**
+     * 绑定邮箱
+     * @param key
+     * @param result
+     */
+    void doBindMail(String key, String result) throws SystemException;
 }
