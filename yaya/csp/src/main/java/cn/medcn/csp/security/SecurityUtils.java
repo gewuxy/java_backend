@@ -5,13 +5,13 @@ package cn.medcn.csp.security;
  */
 public class SecurityUtils {
 
-    protected static final ThreadLocal<Principle> threadLocal = new ThreadLocal<>();
+    protected static final ThreadLocal<Principal> threadLocal = new ThreadLocal<>();
 
-    public static Principle get(){
+    public static Principal get(){
         return threadLocal.get();
     }
 
-    public static void set(Principle principle){
+    public static void set(Principal principle){
         threadLocal.set(principle);
     }
 }

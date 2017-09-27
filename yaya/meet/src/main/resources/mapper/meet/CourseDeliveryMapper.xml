@@ -2,4 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.meet.dao.CourseDeliveryDAO" >
 
+    <select id="findDeliveryHistory" resultType="cn.medcn.meet.dto.DeliveryHistoryDTO">
+
+        SELECT u.headimg ,u.id as acceptId u.nickname as acceptName, count(u.id) as acceptCount FROM
+        t_app_user u INNER t_csp_delivery d ON d.accept_id = u.id
+        WHERE d.author_id = #{authorId}
+        GROUP BY u.id
+
+    </select>
+
+    <select id="findByAcceptId" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+
+        SELECT d.id, c.title, c.play_type, l.start_time, l.end_time, d.img_url FROM t_audio_course c
+        LEFT JOIN t_csp_live l ON l.course_id = c.id
+        INNER t_audio_course_detail cd ON c.id = cd.course_id AND d.sort = 1
+        INNER t_csp_delivery d ON d.source_id = c.id
+        WHERE d.accept_id = #{acceptId} AND d.author_id = #{authorId}
+
+    </select>
 </mapper>

@@ -224,7 +224,50 @@ public class FileUtils {
     }
 
 
+    /**
+     * @param filePath
+     * @param filename
+     * @param file     源文件
+     */
+    public static void saveFile(String filePath, String filename, File file) {
+        File newsFileRoot = new File(filePath);
+        if (!newsFileRoot.exists()) {
+            newsFileRoot.mkdirs();
+        }
+        saveFile(file, new File(filePath + filename));
+    }
 
+    /**
+     *
+     * @param source 源文件
+     * @param dest 目标文件
+     */
+    public static void saveFile(File source, File dest) {
+        FileOutputStream fos = null;
+        FileInputStream fis = null;
+        try {
+
+            fos =new FileOutputStream(dest);
+            fis = new FileInputStream(source);
+            byte[] buf = new byte[1024];
+            int len = 0;
+            while ((len = fis.read(buf)) > 0) {
+                fos.write(buf, 0, len);
+            }
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (fis != null)
+                    fis.close();
+                if (fos != null)
+                    fos.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+    }
 
 
     public static void main(String[] args) {

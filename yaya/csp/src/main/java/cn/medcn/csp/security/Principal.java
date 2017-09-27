@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by lixuan on 2017/9/12.
  */
-public class Principle implements Serializable{
+public class Principal implements Serializable{
 
     protected String id;
 
@@ -69,9 +69,9 @@ public class Principle implements Serializable{
         this.nickName = nickName;
     }
 
-    public static Principle build(CspUserInfo userInfo){
+    public static Principal build(CspUserInfo userInfo){
         if (userInfo != null) {
-            Principle principle = new Principle();
+            Principal principle = new Principal();
             principle.setId(userInfo.getId());
             principle.setMobile(userInfo.getMobile());
             principle.setEmail(userInfo.getEmail());
