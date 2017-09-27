@@ -153,12 +153,15 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public boolean checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
+    public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
         // 从缓存获取此号码的短信记录
         Captcha result = (Captcha) redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
         try {
 
-            return jSmsService.verify(result.getMsgId(),captcha);
+            Boolean bool = jSmsService.verify(result.getMsgId(),captcha);
+            if (!bool) {
+                throw new SystemException(local("sms.error.captcha"));
+            }
 
         } catch (Exception e) {
             throw new SystemException(local("sms.invalid.captcha"));
