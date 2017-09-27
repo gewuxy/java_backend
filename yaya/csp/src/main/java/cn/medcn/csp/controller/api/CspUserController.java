@@ -5,7 +5,6 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.service.JPushService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.security.Principal;
@@ -218,7 +217,6 @@ public class CspUserController extends BaseController {
         try {
             file.transferTo(saveFile);
         } catch (IOException e) {
-            e.printStackTrace();
             return error(local("upload.avatar.err"));
         }
 
