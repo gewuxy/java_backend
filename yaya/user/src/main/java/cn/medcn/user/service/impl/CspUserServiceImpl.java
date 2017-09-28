@@ -187,27 +187,41 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     /**
-     * 发送绑定邮件
+     * 缓存信息和发送绑定或找回密码邮件
      * @param email
      * @param userId
      * @return
-     */
+     */             //TODO 模板
     @Override
     public void sendMail(String email, String userId) throws SystemException {
-        //TODO
-        CspUserInfo info = findByLoginName(email);
-        if (info != null) { //当前邮箱已被绑定
-            throw new SystemException(local("user.exist.email"));
-        }
-        CspUserInfo user = selectByPrimaryKey(userId);
-        if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
-            throw new SystemException(local("user.has.email"));
-        }
         String code = StringUtils.uniqueStr();
-        redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-        String url = cspBase + "/api/user/bindEmail?code=" + code;
+        String url = null;
+        String subject = null;
+        String template = null;
+        //绑定邮件
+        if(userId != null){
+            CspUserInfo info = findByLoginName(email);
+            if (info != null) { //当前邮箱已被绑定
+                throw new SystemException(local("user.exist.email"));
+            }
+            CspUserInfo user = selectByPrimaryKey(userId);
+            if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
+                throw new SystemException(local("user.has.email"));
+            }
+            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
+            url = cspBase + "/api/email/bindEmail?&code=" + code;
+            subject = "绑定邮箱";
+            template = "bindEmail";
+        }else{
+            //找回密码邮件
+            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
+            url = cspBase + "/api/email/toReset?&code=" + code;
+            subject = "找回密码";
+            template = "pwdRest";
+        }
+
         try {
-            emailHelper.sendMail(email, "绑定邮箱", url, "bindEmail");
+            emailHelper.sendMail(email, subject, url, template);
         } catch (JDOMException e) {
             e.printStackTrace();
             throw new SystemException(local("email.address.error"));
@@ -346,6 +360,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         //发送推送通知邮箱已绑定
         jPushService.sendChangeMessage(Integer.valueOf(userId),"3",email);
     }
+
 
     protected interface Type{
         Integer EMAIL = 0;
