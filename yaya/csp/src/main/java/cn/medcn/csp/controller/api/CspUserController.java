@@ -2,10 +2,8 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
@@ -24,8 +22,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 /**
