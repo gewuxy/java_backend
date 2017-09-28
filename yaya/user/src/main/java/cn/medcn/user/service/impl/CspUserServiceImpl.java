@@ -274,13 +274,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             if(StringUtils.isEmpty(info.getEmail())){
                 throw new SystemException(local("user.not.exist.email"));
             }
-                info.setEmail("");
         }else{
             //用户没有绑定手机
             if(StringUtils.isEmpty(info.getMobile())){
                 throw new SystemException(local("user.not.exist.mobile"));
             }
-                info.setMobile("");
         }
 
             BindInfo bindInfo = new BindInfo();
@@ -290,7 +288,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
                 throw new SystemException(local("user.only.one.account"));
             }
-
+            if(type == Type.EMAIL){
+                info.setEmail("");
+            }
+            info.setMobile("");
             updateByPrimaryKeySelective(info);
 
     }
