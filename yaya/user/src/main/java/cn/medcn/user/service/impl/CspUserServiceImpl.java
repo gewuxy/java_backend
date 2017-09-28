@@ -174,11 +174,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     public CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO) {
-        String userAvatarUrl = userDTO.getAvatar();
-        if (StringUtils.isNotEmpty(userAvatarUrl)) {
-            // 将第三方平台和YaYa医师平台获取的头像保存到csp
-            userDTO.setAvatar(saveAvatarFromThirdPlatform(userAvatarUrl));
-        }
         // 将第三方用户信息 保存到csp用户表
         CspUserInfo userInfo = CspUserInfo.buildToUserInfo(userDTO);
         cspUserInfoDAO.insert(userInfo);
@@ -299,9 +294,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             throw new SystemException(local("user.exist.ThirdAccount"));
         }
 
-        String path = saveAvatarFromThirdPlatform(info.getAvatar());
         //插入到数据库
-        info.setAvatar(path);
         info.setUserId(userId);
         info.setBindDate(new Date());
         bindInfoDAO.insert(info);
@@ -337,8 +330,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         }
 
         bindInfoDAO.delete(condition);
-        //删除头像
-        deleteAvatar(condition);
     }
 
     @Override
@@ -362,30 +353,20 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
 
-    /**
-     * 删除头像文件
-     * @param condition
-     */
-    private void deleteAvatar(BindInfo condition) {
-        //删除头像文件
-        String avatar = condition.getAvatar();
-        if(StringUtils.isEmpty(avatar)){
-            FileUtils.deleteTargetFile(uploadBase + avatar);
-        }
-    }
 
-    /**
-     * 将第三方平台和YaYa医师平台获取的头像保存到csp
-     * @param avatar
-     * @return
-     */
-    private String saveAvatarFromThirdPlatform(String avatar) {
-        //将头像保存到csp
-        String relativePath = FilePath.PORTRAIT.path + File.separator;
-        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
-        String fileName = StringUtils.nowStr() + suffix;
-        File file = new File(avatar);
-        FileUtils.saveFile(uploadBase + relativePath, fileName, file);
-        return relativePath + fileName;
-    }
+
+//    /**
+//     * 将第三方平台和YaYa医师平台获取的头像保存到csp
+//     * @param avatar
+//     * @return
+//     */
+//    private String saveAvatarFromThirdPlatform(String avatar) {
+//        //将头像保存到csp
+//        String relativePath = FilePath.PORTRAIT.path + File.separator;
+//        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
+//        String fileName = StringUtils.nowStr() + suffix;
+//        File file = new File(avatar);
+//        FileUtils.saveFile(uploadBase + relativePath, fileName, file);
+//        return relativePath + fileName;
+//    }
 }
