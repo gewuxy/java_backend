@@ -1,6 +1,7 @@
 package cn.medcn.user.service.impl;
 
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.FluxOrderDAO;
 import cn.medcn.user.dao.UserFluxDAO;
 import cn.medcn.user.model.FluxOrder;
@@ -66,6 +67,31 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("client_ip", ip);
         chargeParams.put("subject", "charge flux");
         chargeParams.put("body", "charge flux");
+
+        //支付宝手机网页支付
+        if("alipay_wap".equals(channel)){
+            Map<String, String> extraMap = new HashMap();
+            extraMap.put("success_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
+            chargeParams.put("extra",extraMap);
+        }
+        //支付宝电脑网站支付
+        if("alipay_pc_direct".equals(channel)){
+            Map<String, String> extraMap = new HashMap();
+            extraMap.put("success_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
+            chargeParams.put("extra",extraMap);
+        }
+        //银联全渠道手机网页支付
+        if("upacp_wap".equals(channel)){
+            Map<String, String> extraMap = new HashMap();
+            extraMap.put("result_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
+            chargeParams.put("extra",extraMap);
+        }
+        //银联PC网页支付
+        if("upacp_pc".equals(channel)){
+            Map<String, String> extraMap = new HashMap();
+            extraMap.put("result_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
+            chargeParams.put("extra",extraMap);
+        }
         return Charge.create(chargeParams);
     }
 
@@ -80,6 +106,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      */
     public void createOrder(String userId, String orderNo, Integer amount, String channel) {
         FluxOrder order = new FluxOrder();
+        order.setTradeId(StringUtils.nowStr());
         order.setUserId(userId);
         order.setBuyTime(new Date());
         order.setTradeId(orderNo);
