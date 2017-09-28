@@ -49,7 +49,9 @@
     $(function(){
         $("#submit").click(function(){
                 $.post('${ctx}/api/charge/toCharge',{'amount':1,'channel':'alipay_pc_direct'},function(result){
-                    if (result.code != 0){
+                    alert("te");
+                    if (result.code == 0){
+                        alert(123);
                         pingpp.createPayment(result.data, function(result, err){
                             console.log(result);
                             console.log(err.msg);
