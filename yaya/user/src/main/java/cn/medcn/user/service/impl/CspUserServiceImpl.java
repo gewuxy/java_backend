@@ -353,20 +353,4 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
 
-
-
-//    /**
-//     * 将第三方平台和YaYa医师平台获取的头像保存到csp
-//     * @param avatar
-//     * @return
-//     */
-//    private String saveAvatarFromThirdPlatform(String avatar) {
-//        //将头像保存到csp
-//        String relativePath = FilePath.PORTRAIT.path + File.separator;
-//        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
-//        String fileName = StringUtils.nowStr() + suffix;
-//        File file = new File(avatar);
-//        FileUtils.saveFile(uploadBase + relativePath, fileName, file);
-//        return relativePath + fileName;
-//    }
 }
