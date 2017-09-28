@@ -6,6 +6,7 @@ import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.meet.dao.CourseDeliveryDAO;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
+import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.CourseDeliveryService;
@@ -76,5 +77,17 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
             delivery.setPublishState(false);
             courseDeliveryDAO.insert(delivery);
         }
+    }
+
+
+    /**
+     * 返回所有开发投稿的单位号
+     *
+     * @return
+     */
+    @Override
+    public MyPage<DeliveryAccepterDTO> findAcceptors(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize());
+        return MyPage.page2Mypage((Page) courseDeliveryDAO.findAcceptors());
     }
 }

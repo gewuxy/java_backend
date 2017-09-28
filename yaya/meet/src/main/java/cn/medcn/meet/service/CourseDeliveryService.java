@@ -4,6 +4,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
+import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.CourseDelivery;
 
@@ -36,4 +37,10 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      * @param authorId
      */
     void executeDelivery(Integer courseId, Integer[] acceptIds, String authorId);
+
+    /**
+     * 返回所有开发投稿的单位号
+     * @return
+     */
+    MyPage<DeliveryAccepterDTO> findAcceptors(Pageable pageable);
 }

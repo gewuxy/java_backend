@@ -81,7 +81,7 @@ public class LoginController extends BaseController{
             return error("signature can not be null");
         }
 
-        if (!signature.equals(MD5Utils.signature(cspSecret, nonce, time_stamp))){
+        if (!signature.equals(MD5Utils.signature(cspSecret, nonce, time_stamp, MD5Utils.ENCRYPT_MODE_MD5))){
             return error("signature is illegal");
         }
 

@@ -64,9 +64,22 @@ public class ZeGoCallBack implements Serializable {
      * @return
      */
     public final void signature(){
-        String mySignature = MD5Utils.signature(appKey, this.nonce, String.valueOf(this.timestamp));
+        String[] secret = appKey.split(",");
+        String mySignature = MD5Utils.signature(appKey, this.nonce, String.valueOf(this.timestamp), MD5Utils.ENCRYPT_MODE_SHA1);
         if (!mySignature.equals(signature)) {
             throw new IllegalArgumentException("Invalid signature");
         }
+    }
+
+    public static void main(String[] args) {
+//        String text = "0x70,0x63,0xcd,0x6f,0x52,0xfd,0x88,0xeb,0x49,0x52,0xad,0xd6,0xa6,0xdd,0x57,0xba,0x1f,0x10,0x42,0x0b,0x89,0xd3,0x9d,0x7d,0xa6,0x04,0x2f,0x7a,0xda,0xed,0x75,0x19";
+//        String[] array = text.split(",");
+//        byte[] bytes = new byte[array.length];
+//        for (int i = 0; i < array.length; i++) {
+//            bytes[i] = Byte.parseByte(array[i]);
+//        }
+//        System.out.println(MD5Utils.byteArrayToHexString(bytes));
+
+        System.out.println(Integer.toHexString(101));
     }
 }
