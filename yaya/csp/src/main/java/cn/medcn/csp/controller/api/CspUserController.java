@@ -197,6 +197,7 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/updateAvatar", method = RequestMethod.POST)
+    @ResponseBody
     public String updateAvatar(@RequestParam(value = "file", required = false) MultipartFile file) {
         if (file == null) {
             return error(local("upload.error.null"));
@@ -233,6 +234,7 @@ public class CspUserController extends BaseController {
      * 更新个人信息中的姓名和简介
      */
     @RequestMapping("/updateInfo")
+    @ResponseBody
     public String updateInfo(CspUserInfo info) {
        info.setId(SecurityUtils.get().getId());
        cspUserService.updateByPrimaryKeySelective(info);
@@ -246,6 +248,7 @@ public class CspUserController extends BaseController {
      * 请求此接口，说明用户已绑定邮箱
      */
     @RequestMapping("/resetPwd")
+    @ResponseBody
     public String resetPwd(String oldPwd,String newPwd) {
        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
            return error(local("user.empty.password"));
@@ -265,6 +268,7 @@ public class CspUserController extends BaseController {
      * 发送绑定邮件
      */
     @RequestMapping("/toBind")
+    @ResponseBody
     public String toBind(String email) {
         if(StringUtils.isEmail(email)){
             return error(local("user.error.email.format"));
@@ -308,6 +312,7 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping("/bindMobile")
+    @ResponseBody
     public String bindMobile(String mobile,String captcha)  {
         if(StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
             return error(local("error.param"));
@@ -334,6 +339,7 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping("/unbind")
+    @ResponseBody
     public String unbindEmailOrMobile(Integer type){
 
         String userId = SecurityUtils.get().getId();
@@ -354,6 +360,7 @@ public class CspUserController extends BaseController {
      * 解绑只传third_party_id，YaYa医师绑定传YaYa账号，密码,third_party_id
      */
     @RequestMapping("/changeBindStatus")
+    @ResponseBody
     public String changeBindStatus(BindInfo info)  {
 
         String userId = SecurityUtils.get().getId();
