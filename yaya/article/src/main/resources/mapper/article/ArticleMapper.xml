@@ -23,7 +23,7 @@
 
 
     <select id="findAdvert" resultType="cn.medcn.article.model.Article">
-      SELECT id, title, category_id, author, article_img FROM t_article WHERE
+      SELECT id, title, category_id, author, article_img,content FROM t_article WHERE
       category_id=#{categoryId} AND authed=TRUE ORDER BY weight DESC limit 1
     </select>
 

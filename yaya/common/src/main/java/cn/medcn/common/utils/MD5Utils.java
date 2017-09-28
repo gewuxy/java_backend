@@ -76,6 +76,18 @@ public class MD5Utils {
     }
 
     public static String signature(String secret, String nonce, String timeStamp){
+        if (CheckUtils.isEmpty(secret)) {
+            throw new IllegalArgumentException("Secret can not be null");
+        }
+
+        if (CheckUtils.isEmpty(nonce)) {
+            throw new IllegalArgumentException("Nonce can not be null");
+        }
+
+        if (CheckUtils.isEmpty(timeStamp)) {
+            throw new IllegalArgumentException("Timestamp can not be null");
+        }
+
         String[] array = new String[]{secret, nonce, timeStamp};
         Arrays.sort(array);
         StringBuffer buffer = new StringBuffer();

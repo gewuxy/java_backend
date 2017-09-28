@@ -13,4 +13,6 @@ public interface LiveService extends BaseService<Live> {
 
     void publish(LiveOrderDTO dto);
 
+    Live findByCourseId(Integer courseId);
+
 }

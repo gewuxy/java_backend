@@ -5,10 +5,14 @@ import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.csp.dto.CloseCallback;
+import cn.medcn.csp.dto.CreateCallback;
+import cn.medcn.csp.dto.ReplayCallback;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import org.apache.commons.collections.map.HashedMap;
@@ -19,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -116,6 +121,51 @@ public class MeetingController extends BaseController {
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             return error(local("course.error.author"));
         }
-        return success(audioCourse);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("course", audioCourse);
+        if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
+            //查询出直播信息
+            Live live = liveService.findByCourseId(courseId);
+            result.put("live", live);
+        }
+        return success(result);
+    }
+
+    @RequestMapping(value = "/live/create")
+    @ResponseBody
+    public String onCreate(CreateCallback callback){
+        try {
+            callback.signature();
+            // todo 修改对应的直播信息
+            return success();
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = "/live/close")
+    @ResponseBody
+    public String onClose(CloseCallback callback){
+        try {
+            callback.signature();
+            // todo 修改对应的直播信息
+            return success();
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+    }
+
+
+    @RequestMapping(value = "/live/replay")
+    @ResponseBody
+    public String onReplay(ReplayCallback callback){
+        try {
+            callback.signature();
+            // todo 修改对应的直播信息
+            return success();
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
     }
 }
