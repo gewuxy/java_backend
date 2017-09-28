@@ -78,6 +78,24 @@ public class CspUserController extends BaseController {
     }
 
     /**
+     * 缓存用户信息
+     *
+     * @param user
+     * @return
+     */
+    protected Principal cachePrincipal(CspUserInfo user) {
+        if (CheckUtils.isEmpty(user.getToken())) {
+            user.setToken(UUIDUtil.getUUID());
+            cspUserService.updateByPrimaryKey(user);
+        }
+
+        Principal principal = Principal.build(user);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
+        return principal;
+    }
+
+
+    /**
      * 邮箱+密码、手机+验证码登录 、第三方账号登录
      * type 1=微信 2=微博 3=Facebook 4=Twitter 5=YaYa医师 6=手机 7=邮箱
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
@@ -101,10 +119,9 @@ public class CspUserController extends BaseController {
            return error(local("user.empty.ThirdPartyId"));
         }
 
+        CspUserInfo userInfo = null;
         // 第三方平台id
         int type = thirdPartyId.intValue();
-
-        CspUserInfo userInfo = null;
         try {
             if (type == BindInfo.Type.EMAIL.getTypeId()) {
                 // 邮箱登录
@@ -122,10 +139,14 @@ public class CspUserController extends BaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
+            // 更新用户登录信息
             userInfo.setLastLoginIp(request.getRemoteAddr());
             userInfo.setLastLoginTime(new Date());
+            cspUserService.updateByPrimaryKey(userInfo);
 
+            // 缓存用户信息
             cachePrincipal(userInfo);
+
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
             return success(dto);
 
@@ -138,6 +159,7 @@ public class CspUserController extends BaseController {
 
     }
 
+
     /**
      * 邮箱登录
      * @param email
@@ -147,6 +169,11 @@ public class CspUserController extends BaseController {
         if (StringUtils.isEmpty(email)) {
             throw new SystemException(local("user.username.notnull"));
         }
+
+        if (StringUtils.isEmail(email)) {
+            throw new SystemException(local("user.email.format"));
+        }
+
         if (StringUtils.isEmpty(password)) {
             throw new SystemException(local("user.password.notnull"));
         }
@@ -163,6 +190,65 @@ public class CspUserController extends BaseController {
         return userInfo;
     }
 
+
+    /**
+     * 手机号码 + 验证码登录
+     *
+     * @param mobile
+     * @param captcha
+     */
+    protected CspUserInfo loginByMobile(String mobile, String captcha) throws SystemException{
+        if (StringUtils.isEmpty(mobile)) {
+            throw new SystemException(local("user.empty.mobile"));
+        }
+
+        if (!StringUtils.isMobile(mobile)) {
+            throw new SystemException(local("user.mobile.format"));
+        }
+
+        if (StringUtils.isEmpty(captcha)) {
+            throw new SystemException(local("user.empty.captcha"));
+        }
+        // 检查验证码是否有效
+        cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+        // 根据手机号码检查用户是否存在
+        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+        if (userInfo == null) {
+            // 注册新用户
+            userInfo.setId(StringUtils.nowStr());
+            userInfo.setMobile(mobile);
+            userInfo.setRegisterTime(new Date());
+            cspUserService.insert(userInfo);
+        }
+
+        return userInfo;
+    }
+
+
+    /**
+     * 第三方登录 根据uniqueId检查是否有注册过csp账号，如果注册过，登录成功返回用户信息；
+     * 反之，根据客户端传过来的第三方信息，保存到数据库，再登录返回用户信息
+     * type 1代表微信,2代表微博,3代表facebook,4代表twitter 5代表YaYa
+     */
+    protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) throws SystemException{
+        if (userDTO == null) {
+            throw new SystemException(local("user.param.empty"));
+        }
+
+        String uniqueId = userDTO.getUniqueId();
+        if (StringUtils.isEmpty(uniqueId)) {
+            throw new SystemException(local("user.param.empty"));
+        }
+        // 检查用户是否存在
+        CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
+
+        // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
+        if (userInfo == null) {
+            userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
+        }
+
+        return userInfo;
+    }
 
     /**
      * 发送手机验证码
@@ -317,7 +403,6 @@ public class CspUserController extends BaseController {
     }
 
 
-
     /**
      * 绑定或解绑第三方账号
      * third_party_id 1代表微信，2代表微博，3代表facebook,4代表twitter,5代表YaYa医师
@@ -348,103 +433,6 @@ public class CspUserController extends BaseController {
 
 
 
-    /**
-     * 手机号码 + 验证码登录
-     *
-     * @param mobile
-     * @param captcha
-     */
-    protected CspUserInfo loginByMobile(String mobile, String captcha) throws SystemException{
-        if (StringUtils.isEmpty(mobile)) {
-            throw new SystemException(local("user.empty.mobile"));
-        }
 
-        if (!StringUtils.isMobile(mobile)) {
-            throw new SystemException(local("user.mobile.format"));
-        }
-
-        if (StringUtils.isEmpty(captcha)) {
-            throw new SystemException(local("user.empty.captcha"));
-        }
-        // 检查验证码是否有效
-        cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
-        // 根据手机号码检查用户是否存在
-        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
-        if (userInfo == null) {
-            // 注册新用户
-            userInfo.setId(StringUtils.nowStr());
-            userInfo.setMobile(mobile);
-            userInfo.setRegisterTime(new Date());
-            cspUserService.insert(userInfo);
-        }
-
-        return userInfo;
-    }
-
-    /**
-     * 手机登录添加昵称
-     * @param nickName
-     * @return
-     */
-    @RequestMapping("/add/nickname")
-    @ResponseBody
-    public String saveNickName(String nickName) {
-        Principal principal = SecurityUtils.get();
-        if (StringUtils.isEmpty(nickName)) {
-            return error("user.linkman.notnull");
-        }
-        CspUserInfo userInfo = new CspUserInfo();
-        userInfo.setId(principal.getId());
-        userInfo.setNickName(nickName);
-        cspUserService.updateByPrimaryKeySelective(userInfo);
-        return success();
-    }
-
-    /**
-     * 第三方登录 根据uniqueId检查是否有注册过csp账号，如果注册过，登录成功返回用户信息；
-     * 反之，根据客户端传过来的第三方信息，保存到数据库，再登录返回用户信息
-     * type 1代表微信,2代表微博,3代表facebook,4代表twitter 5代表YaYa
-     */
-    protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) throws SystemException{
-        if (userDTO == null) {
-            throw new SystemException(local("user.param.empty"));
-        }
-
-        String uniqueId = userDTO.getUniqueId();
-        if (StringUtils.isEmpty(uniqueId)) {
-            throw new SystemException(local("user.param.empty"));
-        }
-        // 检查用户是否存在
-        CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
-
-        // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
-        if (userInfo == null) {
-            userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
-        }
-
-        return userInfo;
-    }
-
-
-    /**
-     * 缓存用户信息
-     *
-     * @param user
-     * @return
-     */
-    protected Principal cachePrincipal(CspUserInfo user) {
-        if (CheckUtils.isNotEmpty(user.getToken())) {
-            user.setToken(UUIDUtil.getUUID());
-            cspUserService.updateByPrimaryKey(user);
-        }
-        Principal principal = createPrincipal(user);
-        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
-        return principal;
-    }
-
-    private Principal createPrincipal(CspUserInfo user) {
-        Principal principal = Principal.build(user);
-        return principal;
-    }
 
 }
