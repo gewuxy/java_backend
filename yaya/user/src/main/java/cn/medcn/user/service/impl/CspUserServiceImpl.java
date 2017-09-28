@@ -85,7 +85,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         // 检查用户邮箱是否已经注册过
         CspUserInfo cspUser = cspUserInfoDAO.findByLoginName(username);
         if (cspUser != null) {
-            return APIUtils.error(local("user.username.existed"));
+            return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
         }
 
         userInfo.setId(StringUtils.nowStr());
