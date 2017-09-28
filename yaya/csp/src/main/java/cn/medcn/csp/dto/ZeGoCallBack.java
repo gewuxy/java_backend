@@ -64,7 +64,7 @@ public class ZeGoCallBack implements Serializable {
      * @return
      */
     public final void signature(){
-        String mySignature = MD5Utils.signature(appKey, this.nonce, String.valueOf(this.timestamp));
+        String mySignature = MD5Utils.signature(appKey, this.nonce, String.valueOf(this.timestamp), MD5Utils.ENCRYPT_MODE_SHA1);
         if (!mySignature.equals(signature)) {
             throw new IllegalArgumentException("Invalid signature");
         }
