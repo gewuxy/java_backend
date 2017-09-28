@@ -1,0 +1,58 @@
+body {
+    font-size:.28rem;
+    background-color:#fff;
+}
+
+.warp {
+    position: relative;
+    /*max-width: 12.8rem;*/
+    margin: 0 auto;
+    background-color:#fff;
+}
+
+.color-gary { color:#b3b3b3;}
+
+.img-responsive {
+    width: 100%;
+    max-width: 100%;
+}
+.img-radius {
+    -webkit-border-radius:50%;
+    -moz-border-radius:50%;
+    border-radius:50%;}
+
+img { vertical-align: middle; max-width: 100%; _max-width: none; height: auto !important;}
+
+.t-center { text-align: center;}
+.fl { float:left;}
+.fr { float:right;}
+.oh { overflow: hidden;}
+
+/**/
+.YaYa-header { position: relative;}
+.YaYa-metting-time { position:absolute; bottom:0; right:0; width:100%; padding:0.16rem 0.28rem;  text-align: right; background:rgba(0,0,0,0.5); color:#fff; font-size:0.28rem; }
+.YaYa-metting-info { padding:0.3rem 0.22rem; font-size:0.32rem; }
+.YaYa-metting-info .title{ font-size:0.38rem; color:#0882e7; }
+.YaYa-metting-info .min-size { font-size:0.3rem; color:#666666;}
+.YaYa-metting-intro { border-top:1px solid #dbdbdb; padding:0.25rem;}
+.YaYa-metting-intro img { width:0.82rem;}
+.YaYa-metting-intro .oh { font-size:0.28rem; }
+.YaYa-metting-intro .fl{ margin-right:0.3rem; }
+.YaYa-metting-intro .oh h4 { font-size:0.32rem; line-height: 1.2em; }
+
+
+.YaYa-metting-title h3 { font-size:0.26rem;}
+.YaYa-metting-detail { padding:0.25rem;}
+.YaYa-metting-author { padding:0.25rem; margin:0.25rem 0; border:0.01rem solid #b1b1b1;}
+.YaYa-metting-author img { width:0.95rem;}
+.YaYa-metting-author .oh { font-size:0.28rem; color:#888888;}
+.YaYa-metting-author .fl { margin-right:0.3rem;}
+.YaYa-metting-author .oh h4{ color:#333333; font-size:0.36rem; line-height: 1.2em;}
+.YaYa-metting-details .YaYa-metting-detail-main { font-size:0.34rem;}
+.YaYa-metting-details .YaYa-metting-detail-main p{ margin-bottom:0.15rem;}
+
+.YaYa-footer { padding:1rem 0; font-size:0.3rem;}
+.YaYa-bottom { margin-top:1rem; color:#666;}
+.YaYa-erweima img{ min-width:3.8rem;}
+
+.YaYa-split {     width:100%; height: 0.28rem; border-top:0.02rem solid rgba(7,17,27,.1);border-bottom:0.02rem solid rgba(7,17,27,.1);  background:#f3f5f7; }
