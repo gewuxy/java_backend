@@ -1,5 +1,6 @@
 package cn.medcn.user.dto;
 
+import cn.medcn.user.model.CspUserInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,8 +33,21 @@ public class CspUserInfoDTO  {
 
     // 第三方平台id
     protected Integer thirdPartyId;
+    // 个人简介
+    protected String info;
 
-
+    public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
+        CspUserInfoDTO dto = new CspUserInfoDTO();
+        dto.setUid(userInfo.getId());
+        dto.setNickName(userInfo.getNickName());
+        dto.setCountry(userInfo.getCountry());
+        dto.setProvince(userInfo.getProvince());
+        dto.setCity(userInfo.getCity());
+        dto.setDistrict(userInfo.getDistrict());
+        dto.setAvatar(userInfo.getAvatar());
+        dto.setInfo(userInfo.getInfo());
+        return dto;
+    }
 
 
 }
