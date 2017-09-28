@@ -226,9 +226,10 @@ public class CspUserController extends BaseController {
 
 
     /**
-     * 第三方登录 根据uniqueId检查是否有注册过csp账号，如果注册过，登录成功返回用户信息；
-     * 反之，根据客户端传过来的第三方信息，保存到数据库，再登录返回用户信息
-     * type 1代表微信,2代表微博,3代表facebook,4代表twitter 5代表YaYa
+     * 第三方平台登录
+     * @param userDTO
+     * @return
+     * @throws SystemException
      */
     protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) throws SystemException{
         if (userDTO == null) {
@@ -249,6 +250,7 @@ public class CspUserController extends BaseController {
 
         return userInfo;
     }
+
 
     /**
      * 发送手机验证码
