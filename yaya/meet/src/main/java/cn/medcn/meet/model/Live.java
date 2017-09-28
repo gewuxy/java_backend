@@ -40,6 +40,14 @@ public class Live {
 
     protected Integer closeType;//关闭状态
 
+    protected String replayUrl;//回放地址
+
+    protected Date expireDate;//过期时间
+
+    protected Integer playCount;//观看总人数
+
+    protected Integer onlineCount;//在线人数
+
 
     public enum LiveState{
         init,//初始状态
