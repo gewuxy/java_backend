@@ -50,8 +50,6 @@ public class MeetingController extends BaseController {
     @Value("${ZeGo.replay.expire.days}")
     protected int expireDays;
 
-    @Autowired
-
 
     /**
      * 会议阅览
