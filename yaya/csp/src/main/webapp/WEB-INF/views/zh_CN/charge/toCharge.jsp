@@ -33,7 +33,7 @@
                             支付方式：<input type="text" name="channel">
                         </div>
                         <div class="t-center formMargin-top">
-                            <button class="index-reg-button" id="submit">确认</button>
+                            <input class="index-reg-button" id="submit">确认</input>
                         </div>
                     </form>
 
@@ -49,9 +49,7 @@
     $(function(){
         $("#submit").click(function(){
                 $.post('${ctx}/api/charge/toCharge',{'amount':1,'channel':'alipay_pc_direct'},function(result){
-                    alert("te");
                     if (result.code == 0){
-                        alert(123);
                         pingpp.createPayment(result.data, function(result, err){
                             console.log(result);
                             console.log(err.msg);
@@ -67,8 +65,6 @@
                         });
                     }
                 },'json');
-
-
         });
     });
 
