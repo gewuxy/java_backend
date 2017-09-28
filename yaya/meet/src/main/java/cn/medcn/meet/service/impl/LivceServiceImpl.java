@@ -31,4 +31,11 @@ public class LivceServiceImpl extends BaseServiceImpl<Live> implements LiveServi
     public void publish(LiveOrderDTO dto) {
         redisCacheUtils.publish(CSP_LIVE_TOPIC_KEY, dto);
     }
+
+    @Override
+    public Live findByCourseId(Integer courseId) {
+        Live cond = new Live();
+        cond.setCourseId(courseId);
+        return liveDAO.selectOne(cond);
+    }
 }
