@@ -9,7 +9,7 @@ import com.pingplusplus.model.Charge;
 /**
  * Created by LiuLP on 2017/9/26.
  */
-public interface ChargeService extends BaseService<FluxOrder>{
+public interface ChargeService extends BaseService<FluxOrder> {
 
     Charge createCharge(String orderNo, String appId, Integer amount, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
 
