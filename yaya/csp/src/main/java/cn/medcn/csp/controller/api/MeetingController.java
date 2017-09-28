@@ -150,6 +150,7 @@ public class MeetingController extends BaseController {
                 live.setHdlUrl(callback.getHdl_url()[0]);
                 live.setRtmpUrl(callback.getRtmp_url()[0]);
                 live.setHlsUrl(callback.getHls_url()[0]);
+                live.setPicUrl(callback.getPic_url()[0]);
                 live.setLiveState(Live.LiveState.usable.ordinal());
                 liveService.updateByPrimaryKey(live);
             }
