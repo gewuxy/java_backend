@@ -83,11 +83,15 @@ public class ChargeController extends BaseController {
             return error(e.getMessage());
         }
         //创建订单
-        chargeService.createOrder(SecurityUtils.get().getId(),orderNo,amount,channel);
+        chargeService.createOrder("123456",orderNo,amount,channel);
             return success(charge.toString());
 
     }
 
+    @RequestMapping("/test")
+    public String testCharge(){
+        return "/charge/toCharge";
+    }
 
     /**
      * 异步回调

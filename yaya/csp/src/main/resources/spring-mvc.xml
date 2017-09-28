@@ -58,6 +58,7 @@
             <mvc:exclude-mapping path="/api/advert/view/{id}"/>
             <mvc:exclude-mapping path="/api/user/bindEmail"/>
             <mvc:exclude-mapping path="/api/meeting/live/**"/>
+            <mvc:exclude-mapping path="/api/charge/**"/>
             <bean class="cn.medcn.csp.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
 
