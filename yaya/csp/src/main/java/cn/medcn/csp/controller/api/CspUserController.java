@@ -204,31 +204,14 @@ public class CspUserController extends BaseController {
         if (file == null) {
             return error(local("upload.error.null"));
         }
-        //相对路径
-        String relativePath = FilePath.PORTRAIT.path + File.separator;
-        //文件保存路径
-        String savePath = uploadBase + relativePath;
-        File dir = new File(savePath);
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        //头像后缀
-        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
-        String fileName = UUIDUtil.getNowStringID() + "." + suffix;
-        String avatarFile = savePath + fileName;
-        File saveFile = new File(avatarFile);
+        String userId = SecurityUtils.get().getId();
+        String url = null;
         try {
-            file.transferTo(saveFile);
-        } catch (IOException e) {
-            return error(local("upload.avatar.err"));
+            url = cspUserService.updateAvatar(file,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
-
-        //更新用户头像
-        CspUserInfo info = new CspUserInfo();
-        info.setId(SecurityUtils.get().getId());
-        info.setAvatar(relativePath + fileName);
-        cspUserService.updateByPrimaryKeySelective(info);
-        return success(fileBase + relativePath + fileName);
+        return success(url);
     }
 
 
