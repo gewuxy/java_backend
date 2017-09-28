@@ -43,6 +43,7 @@ public class DeliveryController extends BaseController {
     }
 
     @RequestMapping(value = "/user/detail")
+    @ResponseBody
     public String detail(Integer acceptId){
         Principal principal = SecurityUtils.get();
         List<CourseDeliveryDTO> list = courseDeliveryService.findByAcceptId(acceptId, principal.getId());
@@ -60,6 +61,7 @@ public class DeliveryController extends BaseController {
 
 
     @RequestMapping(value = "/acceptors")
+    @ResponseBody
     public String acceptors(Pageable pageable){
         MyPage<DeliveryAccepterDTO> page = courseDeliveryService.findAcceptors(pageable);
         for (DeliveryAccepterDTO dto : page.getDataList()) {
