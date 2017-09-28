@@ -75,7 +75,7 @@ public class MD5Utils {
         return md5(origin, ENCRYPT_DEFAULT_CHARSET);
     }
 
-    public static String signature(String secret, String nonce, String timeStamp){
+    public static String signature(String secret, String nonce, String timeStamp, String encryptMode){
         if (CheckUtils.isEmpty(secret)) {
             throw new IllegalArgumentException("Secret can not be null");
         }
@@ -94,7 +94,7 @@ public class MD5Utils {
         for (String str : array) {
             buffer.append(str);
         }
-        return MD5Encode(buffer.toString());
+        return encrypt(buffer.toString(), ENCRYPT_DEFAULT_CHARSET, encryptMode);
     }
 
 }
