@@ -3,9 +3,7 @@ package cn.medcn.csp.utils;
 import org.apache.commons.codec.binary.Base64;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.security.*;
 import java.security.spec.X509EncodedKeySpec;
 import java.util.Enumeration;
@@ -48,11 +46,38 @@ public class SignatureUtil {
     }
 
     /**
+     * 读取文件, 部署 web 程序的时候, 签名和验签内容需要从 request 中获得
+     * @param filePath
+     * @return
+     * @throws Exception
+     */
+    public static String getStringFromFile(String filePath) throws Exception {
+        FileInputStream in = new FileInputStream(filePath);
+        InputStreamReader inReader = new InputStreamReader(in, "UTF-8");
+        BufferedReader bf = new BufferedReader(inReader);
+        StringBuilder sb = new StringBuilder();
+        String line;
+        do {
+            line = bf.readLine();
+            if (line != null) {
+                if (sb.length() != 0) {
+                    sb.append("\n");
+                }
+                sb.append(line);
+            }
+        } while (line != null);
+
+        return sb.toString();
+    }
+
+
+    /**
      * 获得公钥
      * @return
      * @throws Exception
      */
-    public static PublicKey getPubKey(String pubKeyString ) throws Exception {
+    public static PublicKey getPubKey(String path ) throws Exception {
+        String pubKeyString = getStringFromFile(path);
         pubKeyString = pubKeyString.replaceAll("(-+BEGIN PUBLIC KEY-+\\r?\\n|-+END PUBLIC KEY-+\\r?\\n?)", "");
         byte[] keyBytes = Base64.decodeBase64(pubKeyString);
 
