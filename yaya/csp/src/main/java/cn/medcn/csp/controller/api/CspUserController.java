@@ -88,15 +88,14 @@ public class CspUserController extends BaseController {
      * @param thirdPartyId 第三方平台id
      * @param mobile       手机
      * @param captcha      验证码
-     * @param nickName     昵称
      * @param userInfoDTO  第三方用户信息
      * @return
      */
     @RequestMapping("/login")
     @ResponseBody
     public String login(String email, String password, Integer thirdPartyId,
-                        String mobile, String captcha, String nickName,
-                        CspUserInfoDTO userInfoDTO, HttpServletRequest request) {
+                        String mobile, String captcha, CspUserInfoDTO userInfoDTO,
+                        HttpServletRequest request) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
            return error(local("user.empty.ThirdPartyId"));
@@ -114,6 +113,7 @@ public class CspUserController extends BaseController {
             } else if (type == BindInfo.Type.MOBILE.getTypeId()) {
                 // 手机登录
                 userInfo = loginByMobile(mobile, captcha);
+
             } else if (type <= BindInfo.Type.YaYa.getTypeId()) {
                 if (userInfoDTO != null) {
                     userInfoDTO.setThirdPartyId(type);
@@ -126,8 +126,8 @@ public class CspUserController extends BaseController {
             userInfo.setLastLoginTime(new Date());
 
             cachePrincipal(userInfo);
-
-            return success(userInfo);
+            CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
+            return success(dto);
 
         } catch (SystemException e){
             return error(e.getMessage());
@@ -286,10 +286,6 @@ public class CspUserController extends BaseController {
     }
 
 
-
-
-
-
     /**
      * 绑定手机号
      * @param mobile
@@ -400,8 +396,6 @@ public class CspUserController extends BaseController {
         }
 
         return userInfo;
-
-
     }
 
     /**
@@ -457,7 +451,6 @@ public class CspUserController extends BaseController {
      */
     protected Principal cachePrincipal(CspUserInfo user) {
         if (CheckUtils.isNotEmpty(user.getToken())) {
-            //token = UUIDUtil.getUUID();
             user.setToken(UUIDUtil.getUUID());
             cspUserService.updateByPrimaryKey(user);
         }
