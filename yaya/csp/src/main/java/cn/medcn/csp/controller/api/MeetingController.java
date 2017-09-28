@@ -50,6 +50,9 @@ public class MeetingController extends BaseController {
     @Value("${ZeGo.replay.expire.days}")
     protected int expireDays;
 
+    @Autowired
+
+
     /**
      * 会议阅览
      * @param courseId
@@ -199,5 +202,13 @@ public class MeetingController extends BaseController {
         } catch (Exception e) {
             return error(e.getMessage());
         }
+    }
+
+    @RequestMapping(value = "/list")
+    @ResponseBody
+    public String list() {
+        Principal principal = SecurityUtils.get();
+
+        return success();
     }
 }
