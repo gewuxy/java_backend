@@ -22,7 +22,8 @@
                             <li class="current">
                                 <a class="first-level" target="_blank" href="${base}/"><strong class="first-level-min">首页</strong></a><i></i>
                             </li>
-                            <li>
+                            <!-- todo 注释掉官网头部的菜单 -->
+                            <!--<li>
                                 <a class="first-level" style="cursor: pointer;"><strong
                                         class="first-level-min">健康动态</strong></a><i></i>
                                 <ul>
@@ -38,6 +39,7 @@
                                     <li><a href="http://www.medcn.cn/jiankangjsp/dzzy_select.jsp">对症找药</a></li>
                                 </ul>
                             </li>
+                            -->
                         </ul>
                         </hal>
                     </div>
