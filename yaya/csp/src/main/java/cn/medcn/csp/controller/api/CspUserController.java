@@ -245,7 +245,7 @@ public class CspUserController extends BaseController {
      * 用户登录时后台会将邮箱地址返回给前端，前端根据有无返回邮箱地址判断是否需要绑定邮箱
      * 请求此接口，说明用户已绑定邮箱
      */
-    @RequestMapping("resetPwd")
+    @RequestMapping("/resetPwd")
     public String resetPwd(String oldPwd,String newPwd) {
        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
            return error(local("user.empty.password"));
@@ -329,11 +329,11 @@ public class CspUserController extends BaseController {
 
 
     /**
-     *
+     *解绑手机或邮箱
      * @param type 0代表邮箱，1代表手机
      * @return
      */
-    @RequestMapping("/unbindEmailOrMobile")
+    @RequestMapping("/unbind")
     public String unbindEmailOrMobile(Integer type){
 
         String userId = SecurityUtils.get().getId();
@@ -353,7 +353,7 @@ public class CspUserController extends BaseController {
      * third_party_id 1代表微信，2代表微博，3代表facebook,4代表twitter,5代表YaYa医师
      * 解绑只传third_party_id，YaYa医师绑定传YaYa账号，密码,third_party_id
      */
-    @RequestMapping("changeBindStatus")
+    @RequestMapping("/changeBindStatus")
     public String changeBindStatus(BindInfo info)  {
 
         String userId = SecurityUtils.get().getId();
