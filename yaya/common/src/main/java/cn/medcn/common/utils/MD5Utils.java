@@ -1,5 +1,6 @@
 package cn.medcn.common.utils;
 
+import java.io.ByteArrayOutputStream;
 import java.security.MessageDigest;
 import java.util.Arrays;
 
@@ -16,7 +17,7 @@ public class MD5Utils {
     protected static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
-    private static String byteArrayToHexString(byte b[]) {
+    public static String byteArrayToHexString(byte b[]) {
         StringBuffer resultSb = new StringBuffer();
         for (int i = 0; i < b.length; i++)
             resultSb.append(byteToHexString(b[i]));
@@ -24,7 +25,7 @@ public class MD5Utils {
         return resultSb.toString();
     }
 
-    private static String byteToHexString(byte b) {
+    public static String byteToHexString(byte b) {
         int n = b;
         if (n < 0)
             n += 256;

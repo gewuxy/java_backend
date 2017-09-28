@@ -20,4 +20,11 @@
         WHERE d.accept_id = #{acceptId} AND d.author_id = #{authorId}
 
     </select>
+
+
+    <select id="findAcceptors" resultType="cn.medcn.meet.dto.DeliveryAccepterDTO">
+        SELECT u.id, u.nickname, u.sign as info, u.headimg as avatar FROM
+        t_app_user u INNER JOIN t_app_user_detail ud ON u.id = ud.user_id AND u.pub_flag = true
+        AND ud.delivery_flag = true
+    </select>
 </mapper>
