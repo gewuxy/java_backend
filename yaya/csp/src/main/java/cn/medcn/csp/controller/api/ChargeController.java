@@ -55,9 +55,10 @@ public class ChargeController extends BaseController {
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";
         String orderNo = StringUtils.nowStr();
-        String ip = request.getRemoteAddr();
-        ip = "10.0.0.234";
-//        Pingpp.privateKey = privateKey;
+//        String userId = SecurityUtils.get().getId();
+//        String ip = request.getRemoteAddr();
+        String ip = "10.0.0.234";
+        Pingpp.privateKey = privateKey;
         Charge charge = null;
 
         try {

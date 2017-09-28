@@ -283,24 +283,7 @@ public class CspUserController extends BaseController {
 
     }
 
-    /**
-     * 绑定邮箱
-     * @param code
-     * @return
-     * @throws SystemException
-     */
-    @RequestMapping("/bindEmail")
-    public String bindEmail(String code) throws SystemException {
-        String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
-        String result = redisCacheUtils.getCacheObject(key);
-        if (result == null) {  //链接超时
-            return "/test";
-        } else {
-            cspUserService.doBindMail(key, result);
-            return "/register/bindOk";
-        }
 
-    }
 
 
 
@@ -381,6 +364,7 @@ public class CspUserController extends BaseController {
         }
             return success();
     }
+
 
 
     /**
