@@ -23,7 +23,8 @@
 
     <!-- 视图分解器 -->
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
-        <property name="prefix" value="/WEB-INF/views"/>
+        <!-- TODO 需修改 -->
+        <property name="prefix" value="/WEB-INF/views/zh_CN"/>
         <property name="suffix" value=".jsp"/>
         <property name="redirectHttp10Compatible" value="false" />
     </bean>
@@ -54,6 +55,7 @@
             <mvc:exclude-mapping path="/api/user/register"/>
             <mvc:exclude-mapping path="/api/user/sendCaptcha"/>
             <mvc:exclude-mapping path="/api/advert/advert"/>
+            <mvc:exclude-mapping path="/api/advert/view/{id}"/>
             <mvc:exclude-mapping path="/api/user/bindEmail"/>
             <mvc:exclude-mapping path="/api/meeting/live/**"/>
             <bean class="cn.medcn.csp.interceptor.AuthInterceptor"/>

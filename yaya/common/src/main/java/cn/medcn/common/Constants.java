@@ -153,4 +153,7 @@ public class Constants {
 
     /* CSP 缓存验证码key */
     public static final String CSP_MOBILE_CACHE_PREFIX_KEY = "mobile_";
+
+    /* CSP 广告倒计时默认值(s) */
+    public static final int CSP_ADVERT_COUNT_DOWN = 3;
 }
