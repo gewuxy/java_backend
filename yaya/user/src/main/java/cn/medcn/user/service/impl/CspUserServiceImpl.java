@@ -21,12 +21,12 @@ import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
-
-import static cn.medcn.common.Constants.*;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -36,6 +36,12 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Value("${app.csp.base}")
     protected String cspBase;
+
+    @Value("${csp.file.upload.base}")
+    protected String uploadBase;
+
+    @Value("${csp.file.base}")
+    protected String fileBase;
 
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
@@ -276,6 +282,15 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
                 info.setMobile("");
         }
+
+            BindInfo bindInfo = new BindInfo();
+            bindInfo.setUserId(userId);
+            int count = bindInfoDAO.selectCount(bindInfo);
+            //用户没有绑定第三方账号，并且只绑定了手机或邮箱的情况下不能解绑
+            if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
+                throw new SystemException(local("user.only.one.account"));
+            }
+
             updateByPrimaryKeySelective(info);
 
     }
@@ -355,6 +370,41 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         redisCacheUtils.delete(key);
         //发送推送通知邮箱已绑定
         jPushService.sendChangeMessage(Integer.valueOf(userId),"3",email);
+    }
+
+
+    /**
+     * 修改头像
+     * @param file
+     * @return 头像地址
+     */
+    @Override
+    public String updateAvatar(MultipartFile file,String userId) throws SystemException {
+        //相对路径
+        String relativePath = FilePath.PORTRAIT.path + File.separator;
+        //文件保存路径
+        String savePath = uploadBase + relativePath;
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        //头像后缀
+        String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
+        String fileName = UUIDUtil.getNowStringID() + "." + suffix;
+        String absoluteName = savePath + fileName;
+        File saveFile = new File(absoluteName);
+        try {
+            file.transferTo(saveFile);
+        } catch (IOException e) {
+            throw new SystemException(local("upload.avatar.err"));
+        }
+
+        //更新用户头像
+        CspUserInfo info = new CspUserInfo();
+        info.setId(userId);
+        info.setAvatar(relativePath + fileName);
+        updateByPrimaryKeySelective(info);
+        return fileBase + relativePath + fileName;
     }
 
 

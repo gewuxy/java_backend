@@ -6,6 +6,7 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import org.jdom.JDOMException;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
@@ -102,4 +103,10 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      */
     void doBindMail(String key, String result) throws SystemException;
 
+    /**
+     * 修改头像
+     * @param file
+     * @return 头像地址
+     */
+    String updateAvatar(MultipartFile file,String userId) throws SystemException;
 }
