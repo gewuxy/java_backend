@@ -15,7 +15,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "t_csp_use_flux_purchase")
+@Table(name = "t_csp_user_flux_purchase")
 public class FluxOrder implements Serializable{
     @Id
     protected Integer id;
