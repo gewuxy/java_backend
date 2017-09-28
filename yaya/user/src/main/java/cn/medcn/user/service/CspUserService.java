@@ -57,7 +57,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO);
 
     /**
-     * 缓存信息和发送绑定邮件
+     * 缓存信息和发送绑定或找回密码邮件
      * @param email
      * @param userId
      */
@@ -101,4 +101,5 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param result
      */
     void doBindMail(String key, String result) throws SystemException;
+
 }
