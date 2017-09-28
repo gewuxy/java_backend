@@ -5,9 +5,7 @@ import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.csp.dto.CloseCallback;
-import cn.medcn.csp.dto.CreateCallback;
-import cn.medcn.csp.dto.ReplayCallback;
+import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.LiveOrderDTO;
@@ -17,14 +15,17 @@ import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 会议控制器
@@ -43,6 +44,9 @@ public class MeetingController extends BaseController {
 
     @Autowired
     protected LiveService liveService;
+
+    @Value("${ZeGo.replay.expire.days}")
+    protected int expireDays;
 
     /**
      * 会议阅览
@@ -134,10 +138,20 @@ public class MeetingController extends BaseController {
 
     @RequestMapping(value = "/live/create")
     @ResponseBody
-    public String onCreate(CreateCallback callback){
+    public String onCreate(ZeGoCallBack callback){
         try {
             callback.signature();
-            // todo 修改对应的直播信息
+
+            Integer channelId = Integer.valueOf(callback.getChannel_id());
+            Live live = liveService.findByCourseId(channelId);
+            if (live != null) {
+                live.setHdlUrl(callback.getHdl_url()[0]);
+                live.setRtmpUrl(callback.getRtmp_url()[0]);
+                live.setHlsUrl(callback.getHls_url()[0]);
+                live.setLiveState(Live.LiveState.usable.ordinal());
+                liveService.updateByPrimaryKey(live);
+            }
+
             return success();
         } catch (Exception e) {
             return error(e.getMessage());
@@ -146,10 +160,16 @@ public class MeetingController extends BaseController {
 
     @RequestMapping(value = "/live/close")
     @ResponseBody
-    public String onClose(CloseCallback callback){
+    public String onClose(ZeGoCallBack callback){
         try {
             callback.signature();
-            // todo 修改对应的直播信息
+            Integer channelId = Integer.valueOf(callback.getChannel_id());
+            Live live = liveService.findByCourseId(channelId);
+            if (live != null) {
+                live.setLiveState(Live.LiveState.closed.ordinal());
+                live.setCloseType(callback.getType());
+                liveService.updateByPrimaryKey(live);
+            }
             return success();
         } catch (Exception e) {
             return error(e.getMessage());
@@ -159,10 +179,19 @@ public class MeetingController extends BaseController {
 
     @RequestMapping(value = "/live/replay")
     @ResponseBody
-    public String onReplay(ReplayCallback callback){
+    public String onReplay(ZeGoCallBack callback){
         try {
             callback.signature();
-            // todo 修改对应的直播信息
+
+            Integer channelId = Integer.valueOf(callback.getChannel_id());
+            Live live = liveService.findByCourseId(channelId);
+            if (live != null) {
+                live.setReplayUrl(callback.getReplay_url());
+                live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expireDays)));
+                live.setPlayCount(callback.getPlayer_count());
+                live.setOnlineCount(callback.getOnline_nums());
+                liveService.updateByPrimaryKey(live);
+            }
             return success();
         } catch (Exception e) {
             return error(e.getMessage());
