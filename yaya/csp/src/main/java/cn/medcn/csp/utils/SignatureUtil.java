@@ -16,6 +16,7 @@ public class SignatureUtil {
 
     /**
      * 获取签名
+     *
      * @param request
      * @return
      */
@@ -47,6 +48,7 @@ public class SignatureUtil {
 
     /**
      * 读取文件, 部署 web 程序的时候, 签名和验签内容需要从 request 中获得
+     *
      * @param filePath
      * @return
      * @throws Exception
@@ -73,10 +75,11 @@ public class SignatureUtil {
 
     /**
      * 获得公钥
+     *
      * @return
      * @throws Exception
      */
-    public static PublicKey getPubKey(String path ) throws Exception {
+    public static PublicKey getPubKey(String path) throws Exception {
         String pubKeyString = getStringFromFile(path);
         pubKeyString = pubKeyString.replaceAll("(-+BEGIN PUBLIC KEY-+\\r?\\n|-+END PUBLIC KEY-+\\r?\\n?)", "");
         byte[] keyBytes = Base64.decodeBase64(pubKeyString);
@@ -90,6 +93,7 @@ public class SignatureUtil {
 
     /**
      * 验证签名
+     *
      * @param dataString
      * @param signatureString
      * @param publicKey

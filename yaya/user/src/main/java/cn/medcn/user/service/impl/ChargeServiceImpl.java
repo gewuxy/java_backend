@@ -36,7 +36,6 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
     }
 
 
-
     /**
      * 创建Charge对象，返回给前端
      *
@@ -69,28 +68,28 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("body", "charge flux");
 
         //支付宝手机网页支付
-        if("alipay_wap".equals(channel)){
+        if ("alipay_wap".equals(channel)) {
             Map<String, String> extraMap = new HashMap();
             extraMap.put("success_url", "http://www.baidu.com");
-            chargeParams.put("extra",extraMap);
+            chargeParams.put("extra", extraMap);
         }
         //支付宝电脑网站支付
-        if("alipay_pc_direct".equals(channel)){
+        if ("alipay_pc_direct".equals(channel)) {
             Map<String, String> extraMap = new HashMap();
             extraMap.put("success_url", "http://www.baidu.com");
-            chargeParams.put("extra",extraMap);
+            chargeParams.put("extra", extraMap);
         }
         //银联全渠道手机网页支付
-        if("upacp_wap".equals(channel)){
+        if ("upacp_wap".equals(channel)) {
             Map<String, String> extraMap = new HashMap();
             extraMap.put("result_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
-            chargeParams.put("extra",extraMap);
+            chargeParams.put("extra", extraMap);
         }
         //银联PC网页支付
-        if("upacp_pc".equals(channel)){
+        if ("upacp_pc".equals(channel)) {
             Map<String, String> extraMap = new HashMap();
             extraMap.put("result_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
-            chargeParams.put("extra",extraMap);
+            chargeParams.put("extra", extraMap);
         }
         return Charge.create(chargeParams);
     }
@@ -118,11 +117,9 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
     }
 
 
-
-
-
     /**
      * 更新订单状态和用户流量值
+     *
      * @param result
      */
     public void updateOrderAndUserFlux(FluxOrder result) {
@@ -135,12 +132,12 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         String userId = result.getUserId();
         UserFlux flux = userFluxDAO.selectByPrimaryKey(userId);
         //没有充值记录，创建充值记录
-        if(flux == null){
+        if (flux == null) {
             UserFlux condition = new UserFlux();
             condition.setUserId(userId);
             condition.setFlux(result.getFlux());
             userFluxDAO.insert(condition);
-        }else{
+        } else {
             flux.setFlux(flux.getFlux() + result.getFlux());
             userFluxDAO.updateByPrimaryKey(flux);
         }

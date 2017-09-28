@@ -2,7 +2,6 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
@@ -11,10 +10,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
-import com.pingplusplus.model.Event;
-import com.pingplusplus.model.Webhooks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -40,13 +36,12 @@ public class ChargeController extends BaseController {
     protected ChargeService chargeService;
 
 
-
     /**
      * 购买流量，需要传递amount(金额),channel(支付渠道)
      */
     @RequestMapping("/toCharge")
     @ResponseBody
-    public String toCharge(Integer amount,String channel,HttpServletRequest request) throws Exception {
+    public String toCharge(Integer amount, String channel, HttpServletRequest request) throws Exception {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";
@@ -61,7 +56,7 @@ public class ChargeController extends BaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo,appId, amount, channel, ip);
+            charge = chargeService.createCharge(orderNo, appId, amount, channel, ip);
         } catch (RateLimitException e) {
             e.printStackTrace();
             return error(e.getMessage());
@@ -82,13 +77,13 @@ public class ChargeController extends BaseController {
             return error(e.getMessage());
         }
         //创建订单
-        chargeService.createOrder("123456",orderNo,amount,channel);
-            return success(charge.toString());
+        chargeService.createOrder("123456", orderNo, amount, channel);
+        return success(charge.toString());
 
     }
 
     @RequestMapping("/test")
-    public String testCharge(){
+    public String testCharge() {
         return "/charge/toCharge";
     }
 
@@ -113,7 +108,7 @@ public class ChargeController extends BaseController {
             e.printStackTrace();
         }
         //获取ping++公钥
-        PublicKey publicKey= null;
+        PublicKey publicKey = null;
         try {
             String path = this.getClass().getClassLoader().getResource("publicKey.pem").getPath();
             publicKey = SignatureUtil.getPubKey(path);
@@ -124,7 +119,7 @@ public class ChargeController extends BaseController {
         //验证签名
         Boolean isTrue = null;
         try {
-            isTrue = SignatureUtil.verifyData(body,signature,publicKey);
+            isTrue = SignatureUtil.verifyData(body, signature, publicKey);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         } catch (InvalidKeyException e) {
@@ -134,34 +129,34 @@ public class ChargeController extends BaseController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        if(isTrue){
-            JSONObject event=JSON.parseObject(body);
+        if (isTrue) {
+            JSONObject event = JSON.parseObject(body);
             //支付成功事件
             if ("charge.succeeded".equals(event.get("type"))) {
                 JSONObject data = JSON.parseObject(event.get("data").toString());
                 JSONObject object = JSON.parseObject(data.get("object").toString());
-                String orderNo = (String)object.get("order_no");
+                String orderNo = (String) object.get("order_no");
                 //查找订单
                 FluxOrder condition = new FluxOrder();
                 condition.setTradeId(orderNo);
                 FluxOrder result = chargeService.selectOne(condition);
-                if(result != null){
+                if (result != null) {
                     //更新订单状态，修改用户流量值
                     chargeService.updateOrderAndUserFlux(result);
                     response.setStatus(200);
-                }else{
+                } else {
                     //没有找到订单
                     response.setStatus(500);
                 }
             }
-        }else{
+        } else {
             //签名错误
             response.setStatus(500);
         }
     }
 
 
-    public static void main(String[] args){
+    public static void main(String[] args) {
 
     }
 }
