@@ -34,10 +34,6 @@ import static cn.medcn.common.Constants.*;
 @Service
 public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements CspUserService {
 
-
-    @Value("${csp.file.upload.base}")
-    protected String uploadBase;
-
     @Value("${app.csp.base}")
     protected String cspBase;
 

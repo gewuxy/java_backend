@@ -40,26 +40,24 @@ public class ChargeController extends BaseController {
     protected ChargeService chargeService;
 
 
-    @Value("${private.key}")
-    protected String privateKey;
-
-    @Value("${ping.public.key}")
-    protected String publicKeyString;
 
     /**
      * 购买流量，需要传递amount(金额),channel(支付渠道)
      */
     @RequestMapping("/toCharge")
     @ResponseBody
-    public String toCharge(Integer amount,String channel,HttpServletRequest request)  {
+    public String toCharge(Integer amount,String channel,HttpServletRequest request) throws Exception {
+        String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";
         String orderNo = StringUtils.nowStr();
 //        String userId = SecurityUtils.get().getId();
 //        String ip = request.getRemoteAddr();
         String ip = "10.0.0.234";
-        Pingpp.privateKey = privateKey;
+//        Pingpp.privateKey = privateKey;
+        Pingpp.privateKeyPath = path;
         Charge charge = null;
+
 
         try {
             //生成Charge对象
@@ -117,7 +115,8 @@ public class ChargeController extends BaseController {
         //获取ping++公钥
         PublicKey publicKey= null;
         try {
-            publicKey = SignatureUtil.getPubKey(publicKeyString);
+            String path = this.getClass().getClassLoader().getResource("publicKey.pem").getPath();
+            publicKey = SignatureUtil.getPubKey(path);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,10 +135,11 @@ public class ChargeController extends BaseController {
             e.printStackTrace();
         }
         if(isTrue){
-            Event event = Webhooks.eventParse(body);
+            JSONObject event=JSON.parseObject(body);
             //支付成功事件
-            if ("charge.succeeded".equals(event.getType())) {
-                JSONObject object = JSON.parseObject(event.getObject());
+            if ("charge.succeeded".equals(event.get("type"))) {
+                JSONObject data = JSON.parseObject(event.get("data").toString());
+                JSONObject object = JSON.parseObject(data.get("object").toString());
                 String orderNo = (String)object.get("order_no");
                 //查找订单
                 FluxOrder condition = new FluxOrder();
@@ -161,6 +161,9 @@ public class ChargeController extends BaseController {
     }
 
 
+    public static void main(String[] args){
+
+    }
 }
 
 
