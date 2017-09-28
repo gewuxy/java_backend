@@ -2,19 +2,17 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.ctrl.FilePath;
+import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.Captcha;
-import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -123,9 +121,13 @@ public class CspUserController extends BaseController {
                 // 第三方账号登录 含YaYa医师登录
                 userInfo = loginByThirdParty(userInfoDTO);
             }
-            // 登录成功，返回用户信息
-            String token = UUIDUtil.getUUID();
-            return loginSuccess(userInfo, token, request);
+
+            userInfo.setLastLoginIp(request.getRemoteAddr());
+            userInfo.setLastLoginTime(new Date());
+
+            cachePrincipal(userInfo);
+
+            return success(userInfo);
 
         } catch (SystemException e){
             return error(e.getMessage());
@@ -446,59 +448,27 @@ public class CspUserController extends BaseController {
         return userInfo;
     }
 
-    /**
-     * 登录成功 返回用户信息
-     *
-     * @param userInfo
-     */
-    protected String loginSuccess(CspUserInfo userInfo, String token, HttpServletRequest request) {
-        // 缓存用户信息
-        cachePrincipal(userInfo, token);
-        // 更新用户登录时间及ip
-        userInfo.setLastLoginTime(new Date());
-        userInfo.setLastLoginIp(request.getRemoteAddr());
-        cspUserService.updateByPrimaryKey(userInfo);
-        return success(userInfo);
-    }
 
     /**
      * 缓存用户信息
      *
      * @param user
-     * @param token
      * @return
      */
-    protected Principal cachePrincipal(CspUserInfo user, String token) {
-        if (CheckUtils.isNotEmpty(token)) {
+    protected Principal cachePrincipal(CspUserInfo user) {
+        if (CheckUtils.isNotEmpty(user.getToken())) {
             //token = UUIDUtil.getUUID();
-            user.setToken(token);
+            user.setToken(UUIDUtil.getUUID());
             cspUserService.updateByPrimaryKey(user);
         }
-        Principal principal = createPrincipal(user, token);
-        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
+        Principal principal = createPrincipal(user);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
 
-    private Principal createPrincipal(CspUserInfo user, String token) {
+    private Principal createPrincipal(CspUserInfo user) {
         Principal principal = Principal.build(user);
         return principal;
     }
-
-    private Principal getLegalToken(CspUserInfo user) {
-        Principal principle = null;
-        if (StringUtils.isNotEmpty(user.getToken())) {
-            //清除token 踢出之前的认证信息
-            disablePrincipal(user.getToken());
-        }
-        String token = UUIDUtil.getUUID();
-        user.setToken(token);
-        principle = cachePrincipal(user, token);
-        return principle;
-    }
-
-    private void disablePrincipal(String token) {
-        redisCacheUtils.delete(Constants.TOKEN + "_" + token);
-    }
-
 
 }
