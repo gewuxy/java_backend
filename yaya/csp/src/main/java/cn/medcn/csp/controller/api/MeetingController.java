@@ -27,6 +27,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
+
 /**
  * 会议控制器
  * Created by lixuan on 2017/9/27.
@@ -152,7 +154,7 @@ public class MeetingController extends BaseController {
                 liveService.updateByPrimaryKey(live);
             }
 
-            return success();
+            return ZEGO_SUCCESS_CODE;
         } catch (Exception e) {
             return error(e.getMessage());
         }
@@ -170,7 +172,7 @@ public class MeetingController extends BaseController {
                 live.setCloseType(callback.getType());
                 liveService.updateByPrimaryKey(live);
             }
-            return success();
+            return ZEGO_SUCCESS_CODE;
         } catch (Exception e) {
             return error(e.getMessage());
         }
@@ -192,7 +194,7 @@ public class MeetingController extends BaseController {
                 live.setOnlineCount(callback.getOnline_nums());
                 liveService.updateByPrimaryKey(live);
             }
-            return success();
+            return ZEGO_SUCCESS_CODE;
         } catch (Exception e) {
             return error(e.getMessage());
         }
