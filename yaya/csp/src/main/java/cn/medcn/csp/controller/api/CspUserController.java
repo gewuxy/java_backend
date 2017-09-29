@@ -63,6 +63,9 @@ public class CspUserController extends BaseController {
         if (StringUtils.isEmpty(email)) {
             return error("user.username.notnull");
         }
+        if (!StringUtils.isEmail(email)) {
+            return error("user.email.format");
+        }
         if (StringUtils.isEmpty(password)) {
             return error("user.password.notnull");
         }
@@ -173,10 +176,17 @@ public class CspUserController extends BaseController {
         if (StringUtils.isEmpty(password)) {
             throw new SystemException(local("user.password.notnull"));
         }
-
-        CspUserInfo userInfo = cspUserService.findByLoginName(email);
+        // 检查用户是否注册且已经激活
+        CspUserInfo condition = new CspUserInfo();
+        condition.setEmail(email);
+        condition.setActive(true);
+        CspUserInfo userInfo = cspUserService.selectOne(condition);
         if (userInfo == null) {
             throw new SystemException(local("user.notexisted"));
+        }
+        // 邮箱未激活
+        if (userInfo.getActive() == false) {
+            throw new SystemException(local(""));
         }
         // 用户输入密码是否正确
         if (!MD5Utils.md5(password).equals(userInfo.getPassword())) {
