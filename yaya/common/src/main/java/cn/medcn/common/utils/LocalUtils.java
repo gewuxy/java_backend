@@ -11,6 +11,17 @@ public class LocalUtils {
 
     protected static final ThreadLocal<String> strLocal = new ThreadLocal<>();
 
+    protected static final ThreadLocal<Boolean> abroadLocal = new ThreadLocal<>();
+
+
+    public static Boolean isAbroad(){
+        return abroadLocal.get() == null ? false : abroadLocal.get();
+    }
+
+    public static void setAbroad(Boolean abroad){
+        abroadLocal.set(abroad == null ? false : abroad);
+    }
+
     public static String getLocalStr(){
         return strLocal.get();
     }
