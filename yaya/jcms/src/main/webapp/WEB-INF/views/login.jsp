@@ -29,7 +29,7 @@
         </a>
         <div class="c_right fr">
             <span>入驻YaYa数字平台请点击</span>
-            <a href="http://yyks.medyaya.cn/web/regist/registchoice" id="apply" class="underline">立即注册</a>
+            <a href="http://www.medyaya.cn/prm/web/regist/registchoice" id="apply" class="underline">立即注册</a>
         </div>
     </div>
 </div>
@@ -40,7 +40,7 @@
 
             <ul>
                 <li><a  class="cur">YaYa医师会议系统</a></li>
-                <li><a href="http://yyks.medyaya.cn">PRM患者管理系统</a></li>
+                <li><a href="http://www.medyaya.cn/prm">PRM患者管理系统</a></li>
             </ul>
 
         </div>
@@ -288,9 +288,9 @@
                     <li><a href="http://www.medcn.com/help/contribute">我要投稿</a></li>
                 </ul>
             </div>
-            <div class="col-lg-1">
+            <!--<div class="col-lg-1">
                 <h4><a href="http://www.medcn.cn/Medicalmall/jk.html">象城</a></h4>
-            </div>
+            </div>-->
         </div>
     </div>
 </div>
