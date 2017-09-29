@@ -1,5 +1,6 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import com.jcraft.jsch.UserInfo;
@@ -71,39 +72,10 @@ public class CspUserInfo implements Serializable{
         userInfo.setCity(dto.getCity());
         userInfo.setDistrict(dto.getDistrict());
         userInfo.setRegisterTime(new Date());
+        userInfo.setActive(true);
+        userInfo.setAbroad(LocalUtils.isAbroad());
         return userInfo;
     }
 
-    /**
-     * 邮箱模板内容
-     */
-    public enum MailTemplate{
-        REGISTER(0, "register"), // 注册
-        FIND_PWD(1, "pwdRest"), // 找回密码
-        BIND(2, "bindEmail"); // 绑定
 
-        private Integer labelId;
-        private String label;
-
-        public Integer getLabelId() {
-            return labelId;
-        }
-
-        public void setLabelId(Integer labelId) {
-            this.labelId = labelId;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-
-        public void setLabel(String label) {
-            this.label = label;
-        }
-
-        MailTemplate(Integer labelId, String label){
-            this.labelId = labelId;
-            this.label = label;
-        }
-    }
 }
