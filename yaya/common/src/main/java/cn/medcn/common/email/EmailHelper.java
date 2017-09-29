@@ -3,7 +3,6 @@ package cn.medcn.common.email;
 import cn.medcn.common.Constants;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.XMLUtils;
-import com.sun.mail.smtp.SMTPTransport;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.mail.MailSendException;
@@ -17,19 +16,10 @@ import org.springframework.stereotype.Component;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import javax.naming.NamingEnumeration;
-import javax.naming.NamingException;
-import javax.naming.directory.Attribute;
-import javax.naming.directory.Attributes;
-import javax.naming.directory.DirContext;
-import javax.naming.directory.InitialDirContext;
 import java.io.*;
-import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.Hashtable;
 import java.util.List;
 
 /**
@@ -130,7 +120,7 @@ public class EmailHelper {
         return emailContent;
     }
 
-    public String formatCSPBindContent(String username, String url,String templateId) throws JDOMException, IOException {
+    public String formatContent(String username, String url, String templateId) throws JDOMException, IOException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("email.xml");
         String emailContent = XMLUtils.doParseXML(inputStream,templateId, "load");
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_USER, StringUtils.isEmpty(username)?" -- ":username);
@@ -162,7 +152,7 @@ public class EmailHelper {
         mailBean.setSubject(subject);
         mailBean.setFrom(mailUserName);
         mailBean.setFromName(mailCompanyName);
-        mailBean.setContext(formatCSPBindContent(email,url,template));
+        mailBean.setContext(formatContent(email,url,template));
         mailBean.setToEmails(new String[]{email});
         javaMailSender.send(createMimeMessage(mailBean));
 
