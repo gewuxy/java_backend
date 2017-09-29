@@ -37,10 +37,10 @@ public class CspUserController extends BaseController {
     protected RedisCacheUtils<String> redisCacheUtils;
 
 
-    @Value("${csp.file.upload.base}")
+    @Value("${app.file.upload.base}")
     protected String uploadBase;
 
-    @Value("${csp.file.base}")
+    @Value("${app.file.base}")
     protected String fileBase;
 
 
