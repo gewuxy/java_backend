@@ -211,6 +211,7 @@ public class CspUserController extends BaseController {
         CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
         if (userInfo == null) {
             // 注册新用户
+            userInfo = new CspUserInfo();
             userInfo.setId(StringUtils.nowStr());
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
