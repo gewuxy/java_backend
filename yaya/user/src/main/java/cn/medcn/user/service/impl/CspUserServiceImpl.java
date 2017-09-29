@@ -34,13 +34,13 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements CspUserService {
 
-    @Value("${app.csp.base}")
-    protected String cspBase;
+    @Value("${app.yaya.base}")
+    protected String appBase;
 
-    @Value("${csp.file.upload.base}")
+    @Value("${app.file.upload.base}")
     protected String uploadBase;
 
-    @Value("${csp.file.base}")
+    @Value("${app.file.base}")
     protected String fileBase;
 
     @Autowired
@@ -211,13 +211,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 throw new SystemException(local("user.has.email"));
             }
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-            url = cspBase + "/api/email/bindEmail?&code=" + code;
+            url = appBase + "/api/email/bindEmail?&code=" + code;
             subject = "绑定邮箱";
             template = "bindEmail";
         }else{
             //找回密码邮件
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = cspBase + "/api/email/toReset?&code=" + code;
+            url = appBase + "/api/email/toReset?&code=" + code;
             subject = "找回密码";
             template = "pwdRest";
         }
