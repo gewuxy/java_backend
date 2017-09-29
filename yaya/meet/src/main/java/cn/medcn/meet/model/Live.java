@@ -48,6 +48,7 @@ public class Live {
 
     protected Integer onlineCount;//在线人数
 
+    protected Integer livePage; //正在直播的ppt页码
 
     public enum LiveState{
         init,//初始状态
