@@ -3,6 +3,7 @@ package cn.medcn.common.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.SpringUtils;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -17,6 +18,10 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
     @Override
     public String local(String key) {
         return SpringUtils.getMessage(key);
+    }
+
+    public boolean isAbroad(){
+        return LocalUtils.isAbroad();
     }
 
     @Override

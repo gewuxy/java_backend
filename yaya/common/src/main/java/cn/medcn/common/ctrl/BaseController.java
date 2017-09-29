@@ -4,6 +4,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.supports.BeanValidator;
 import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.SpringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.DataBinder;
@@ -36,6 +37,11 @@ public class BaseController {
      */
     public String local(String key){
         return SpringUtils.getMessage(key);
+    }
+
+
+    protected boolean isAbroad(){
+        return LocalUtils.isAbroad();
     }
 
 

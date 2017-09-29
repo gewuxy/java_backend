@@ -11,9 +11,16 @@ import com.pingplusplus.model.Charge;
  */
 public interface ChargeService extends BaseService<FluxOrder> {
 
-    Charge createCharge(String orderNo, String appId, Integer amount, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
+    Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
 
     void createOrder(String id, String orderNo, Integer amount, String channel);
 
     void updateOrderAndUserFlux(FluxOrder result);
+
+    /**
+     * 创建paypal订单
+     * @param userId
+     * @param flux
+     */
+    void createPaypalOrder(String userId, Integer flux);
 }
