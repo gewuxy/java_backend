@@ -3,6 +3,7 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.EmailHelper;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.utils.MD5Utils;
@@ -39,6 +40,29 @@ public class EmailController extends BaseController{
     private String appBaseUrl;
 
 
+    /**
+     * 点击验证邮箱 激活链接
+     * @param code
+     * @return
+     * @throws SystemException
+     */
+   @RequestMapping("/active")
+    public String certifiedMail(String code) throws SystemException {
+        String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
+        String email = (String)redisCacheUtils.getCacheObject(key);
+        if (StringUtils.isEmpty(email)) {  //链接超时
+            return "/register/linkTimeOut";
+        } else {
+            CspUserInfo userInfo = cspUserService.findByLoginName(email);
+            if (userInfo != null) {
+                userInfo.setActive(true);
+                cspUserService.updateByPrimaryKey(userInfo);
+            }
+            return "/register/activeOk";
+        }
+
+    }
+
 
     /**
      * 发送找回密码邮件
@@ -57,7 +81,7 @@ public class EmailController extends BaseController{
         }
 
         try {
-            cspUserService.sendMail(email,null);
+            cspUserService.sendMail(email,null, MailBean.MailTemplate.FIND_PWD.getLabelId());
         } catch (SystemException e) {
             return error(e.getMessage());
         }
