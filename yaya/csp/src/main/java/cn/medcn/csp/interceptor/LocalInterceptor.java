@@ -9,9 +9,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.util.Locale;
-
-import static cn.medcn.common.Constants.DEFAULT_LOCAL;
+import static cn.medcn.common.Constants.*;
 
 /**
  * Created by lixuan on 2017/9/26.
@@ -19,13 +17,19 @@ import static cn.medcn.common.Constants.DEFAULT_LOCAL;
 public class LocalInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        String local = httpServletRequest.getHeader("_local");
+        String local = httpServletRequest.getHeader(LOCAL_KEY);
+
+        String abroad = httpServletRequest.getHeader(ABROAD_KEY);
+
         if (CheckUtils.isEmpty(local)) {
-            local = CookieUtils.getCookieValue(httpServletRequest, "_local");
+            local = CookieUtils.getCookieValue(httpServletRequest, LOCAL_KEY);
             if (CheckUtils.isEmpty(local)) {
                 local = DEFAULT_LOCAL;
             }
         }
+
+        LocalUtils.setAbroad(CheckUtils.isEmpty(abroad) ? false : ("1".equals(abroad) ? true : false));
+
         LocalUtils.setLocalStr(local);
         LocalUtils.set(LocalUtils.getByKey(local));
         return true;

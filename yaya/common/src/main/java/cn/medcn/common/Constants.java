@@ -144,6 +144,10 @@ public class Constants {
 
     public static final String DEFAULT_LOCAL = "zh_CN";
 
+    public static final String LOCAL_KEY = "_local";
+
+    public static final String ABROAD_KEY = "abroad";
+
 
     /* CSP短信验证码发送模板id TODO 暂时借用YaYa医师短信模板,CSP申请后需修改此模板id*/
     public static final Integer CSP_LOGIN_TEMPLATE_ID = 40198;
