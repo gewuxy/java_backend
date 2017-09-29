@@ -40,7 +40,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * 创建Charge对象，返回给前端
      *
      * @param appId
-     * @param amount
+     * @param flux
      * @param channel
      * @param ip
      * @return
@@ -51,12 +51,12 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws APIConnectionException
      * @throws AuthenticationException
      */
-    public Charge createCharge(String orderNo, String appId, Integer amount, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException {
+    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
         //单位为对应币种的最小货币单位，人民币为分。如订单总金额为 1 元， amount 为 100
-        chargeParams.put("amount", amount * 100);
+        chargeParams.put("amount", flux *2 * 100);
         Map<String, String> app = new HashMap();
         //appId
         app.put("id", appId);
@@ -100,18 +100,18 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      *
      * @param userId
      * @param orderNo 订单id
-     * @param amount  交易金额
+     * @param flux  流量值
      * @param channel 付款方式
      */
-    public void createOrder(String userId, String orderNo, Integer amount, String channel) {
+    public void createOrder(String userId, String orderNo, Integer flux, String channel) {
         FluxOrder order = new FluxOrder();
         order.setId(StringUtils.nowStr());
         order.setUserId(userId);
         order.setBuyTime(new Date());
         order.setTradeId(orderNo);
         order.setState(0);
-        //将金额转换为流量，再转为以M为单位
-        order.setFlux((int) (amount / 2.0 * 1024));
+        //已M为单位存储
+        order.setFlux(flux * 1024);
         order.setPlatform(channel);
         fluxOrderDAO.insert(order);
     }
@@ -142,6 +142,23 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
             userFluxDAO.updateByPrimaryKey(flux);
         }
 
+    }
+
+    /**
+     * 创建paypal订单
+     * @param userId
+     * @param flux
+     */
+    @Override
+    public void createPaypalOrder(String userId, Integer flux) {
+        String id = StringUtils.nowStr();
+        FluxOrder order = new FluxOrder();
+        order.setId(id);
+        order.setState(0);
+        order.setBuyTime(new Date());
+        order.setUserId(userId);
+        order.setPlatform("paypal");
+        order.setFlux(flux);
     }
 
 }

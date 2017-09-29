@@ -7,6 +7,7 @@ import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.*;
@@ -37,12 +38,13 @@ public class ChargeController extends BaseController {
     protected ChargeService chargeService;
 
 
+
     /**
-     * 购买流量，需要传递amount(金额),channel(支付渠道)
+     * 购买流量，需要传递flux(流量值),channel(支付渠道)
      */
     @RequestMapping("/toCharge")
     @ResponseBody
-    public String toCharge(Integer amount, String channel, HttpServletRequest request) throws Exception {
+    public String toCharge(Integer flux, String channel, HttpServletRequest request) throws Exception {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";
@@ -55,7 +57,7 @@ public class ChargeController extends BaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, appId, amount, channel, ip);
+            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip);
         } catch (RateLimitException e) {
             e.printStackTrace();
             return error(e.getMessage());
@@ -76,7 +78,7 @@ public class ChargeController extends BaseController {
             return error(e.getMessage());
         }
         //创建订单
-        chargeService.createOrder(userId, orderNo, amount, channel);
+        chargeService.createOrder(userId, orderNo, flux, channel);
         return success(charge.toString());
 
     }
@@ -154,6 +156,55 @@ public class ChargeController extends BaseController {
         }
     }
 
+
+    /**
+     * paypal支付创建订单
+     * @param flux 流量值
+     * @return
+     */
+    @RequestMapping("/createOrder")
+    @ResponseBody
+    public String createOrder(Integer flux){
+        String userId = SecurityUtils.get().getId();
+        chargeService.createPaypalOrder(userId,flux);
+        return success();
+    }
+
+
+//    @RequestMapping("/paypalResult")
+//    @ResponseBody
+//    public String paypalResult(String paymentId){
+//        String str = SignatureUtil.getPaymentDetails(paymentId);
+//        JSONObject detail = JSONObject.parseObject(str);
+//        //校验订单是否完成
+//        if("approved".equals(detail.getString("state"))){
+//            JSONObject transactions = detail.getJSONArray("transactions").getJSONObject(0);
+//            JSONObject amount = transactions.getJSONObject("amount");
+//            JSONArray relatedResources = transactions.getJSONArray("related_resources");
+//            //从数据库查询支付总金额与Paypal校验支付总金额
+//            double total = 0;
+//            System.out.println("amount.optDouble('total'):"+amount.optDouble("total"));
+//            if( total != amount.optDouble("total") ){
+//                return false;
+//            }
+//            //校验交易货币类型
+//            String currency = "USD";
+//            if( !currency.equals(amount.optString("currency")) ){
+//                return false;
+//            }
+//            //校验每个子订单是否完成
+//            for (int i = 0,j = relatedResources.size(); i < j; i++) {
+//                JSONObject sale = relatedResources.getJSONObject(i).getJSONObject("sale");
+//                if(sale!=null){
+//                    if( !"completed".equals(sale.getString("state")) ){
+//                        System.out.println("子订单未完成,订单状态:"+sale.getString("state"));
+//                    }
+//                }
+//            }
+//            return true;
+//        }
+//        return false;
+//    }
 
 }
 
