@@ -50,7 +50,7 @@
         </load>
     </email>
 
-    <email id="bindEmail">
+    <email id="bindAccount">
         <load>
             <![CDATA[
 		<div style=" padding:10px;font-size:14px;color:#1b3861; font-family:Microsoft YaHei,Helvetica">
@@ -72,29 +72,6 @@
 			<p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102);text-align:right;margin:0;">@date</p>
 		</div>
 	]]>
-        </load>
-    </email>
-
-    <email id="register">
-        <load>
-        <![CDATA[
-            <div style=" padding:10px;font-size:14px;color:#1b3861; font-family:Microsoft YaHei,Helvetica">
-                <p style="line-height:38px;">亲爱的用户@user:</p>
-                <p style="text-indent:2em;word-break: break-all;line-height: 20px;word-spacing: 5px;">
-                您 好 !
-                请使用下面的链接，激活您的CSPMeeting账号。</p>
-                <p style="text-indent:2em;word-break: break-all;line-height: 20px;
-                word-spacing: 5px;">
-                <a href="@url">@url</a></p>
-                <p style="text-indent:2em;word-break: break-all;line-height: 22px;
-                word-spacing: 5px;">如果该链接无法点击，请直接拷贝以上链接到浏览器地址栏中访问。</p>
-                <p style="text-indent:2em;word-break: break-all;line-height:22px;
-                word-spacing: 5px; color:#666">这是一封由<a href="http://www.medcn.com" target="_blank">药草园</a>系统发出,请勿回复，如有疑问请<a href="http://www.medcn.com/about
-                " target="_blank">联系我们</a>。</p>
-                <p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102); text-align:right; margin:0;">敬信药草园</p>
-                <p style="word-break: break-all;line-height: 30px;word-spacing: 5px;color: rgb(102, 102, 102);text-align:right;margin:0;">@date</p>
-            </div>
-	    ]]>
         </load>
     </email>
 
