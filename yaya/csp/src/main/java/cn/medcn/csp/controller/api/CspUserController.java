@@ -2,6 +2,7 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
@@ -237,6 +238,8 @@ public class CspUserController extends BaseController {
             userInfo.setId(StringUtils.nowStr());
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
+            userInfo.setActive(true);
+            userInfo.setAbroad(LocalUtils.isAbroad());
             cspUserService.insert(userInfo);
         }
 
@@ -370,7 +373,7 @@ public class CspUserController extends BaseController {
         }
         String userId = SecurityUtils.get().getId();
         try {
-            cspUserService.sendMail(email,userId,CspUserInfo.MailTemplate.BIND.getLabelId());
+            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
         } catch (SystemException e) {
             return error(e.getMessage());
         }
