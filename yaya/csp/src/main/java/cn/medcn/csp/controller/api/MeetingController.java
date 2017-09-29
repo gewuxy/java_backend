@@ -1,12 +1,18 @@
 package cn.medcn.csp.controller.api;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.ctrl.FilePath;
+import cn.medcn.common.dto.AddressDTO;
 import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.utils.AddressUtils;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.DESUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
@@ -17,10 +23,10 @@ import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import org.apache.commons.collections.map.HashedMap;
-import org.apache.maven.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -32,6 +38,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static cn.medcn.common.Constants.ABROAD_KEY;
+import static cn.medcn.common.Constants.LOCAL_KEY;
 import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
 
 /**
@@ -71,19 +79,70 @@ public class MeetingController extends BaseController {
 
 
     /**
-     * 会议分享
-     * @param meeting
+     * 课件分享
+     * @param signature 将参数进行DES加密之后的字符串
      * @param model
-     * @param local  分享该会议的人的地理位置
      * @param request
      * @return
      */
     @RequestMapping("/share")
-    public String share(String meeting, Model model, String local,HttpServletRequest request){
-        String ip = request.getRemoteAddr();
+    public String share(String signature, Model model, HttpServletRequest request) throws SystemException{
+
+        Map<String, Object> params = parseParams(signature);
+        String id = (String) params.get("id");
+        String local = (String) params.get(LOCAL_KEY);
+        LocalUtils.set(LocalUtils.getByKey(local));
+        LocalUtils.setLocalStr(local);
+
+        String abroad = (String) params.get(ABROAD_KEY);
+        boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
+
+        AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
+        if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
+            throw new SystemException(local("source.access.deny"));
+        }
+
+        Integer courseId = Integer.valueOf(id);
+        AudioCourse course = audioService.findAudioCourse(courseId);
+        if (course == null) {
+            throw new SystemException(local("source.not.exists"));
+        }
+
+        model.addAttribute("course", course);
+        if (course.getPlayType() == null) {
+            course.setPlayType(0);
+        }
+        if (AudioCourse.PlayType.normal.ordinal() < course.getPlayType()) {//直播
+            Live live = liveService.findByCourseId(courseId);
+            model.addAttribute("live", live);
+        }
+
+        return "/meeting/course_"+course.getPlayType().intValue();
+    }
 
 
-        return "/sharePage";
+    public Map<String, Object> parseParams(String signature) throws SystemException {
+        if (CheckUtils.isEmpty(signature)) {
+            throw new SystemException(local("error.param"));
+        }
+
+        String plain = DESUtils.decode(Constants.DES_PRIVATE_KEY, signature);
+
+        String[] params = plain.split("&");
+        if (params.length != 3) {
+            throw new SystemException(local("error.param"));
+        }
+
+        Map<String, Object> paramMap = new HashedMap();
+        for (String param : params) {
+            if (param.indexOf("=") < 0) {
+                throw new SystemException(local("error.param"));
+            }
+            String[] paramArr = param.split("=");
+            paramMap.put(paramArr[0], paramArr[1]);
+        }
+
+        return paramMap;
     }
 
     /**

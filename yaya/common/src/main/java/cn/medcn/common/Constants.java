@@ -160,4 +160,6 @@ public class Constants {
 
     /* CSP 广告倒计时默认值(s) */
     public static final int CSP_ADVERT_COUNT_DOWN = 3;
+
+    public static final String DES_PRIVATE_KEY = "2b3e2d604fab436eb7171de397aee892";
 }
