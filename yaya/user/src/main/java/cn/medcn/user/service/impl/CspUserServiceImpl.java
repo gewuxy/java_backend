@@ -106,7 +106,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public String sendCaptcha(String mobile, Integer type) throws SystemException {
         //10分钟内最多允许获取3次验证码
-        Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(mobile);
+        Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
         if(captcha == null){ //第一次获取
             // 发送短信
             String msgId = sendCaptchaByType(mobile, type);
@@ -115,7 +115,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             firstCaptcha.setFirstTime(new Date());
             firstCaptcha.setCount(Constants.NUMBER_ZERO);
             firstCaptcha.setMsgId(msgId);
-            redisCacheUtils.setCacheObject(mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
+            redisCacheUtils.setCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
 
         }else {
             Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
@@ -127,7 +127,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
             captcha.setMsgId(msgId);
             captcha.setCount(captcha.getCount() + 1);
-            redisCacheUtils.setCacheObject(mobile,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
+            redisCacheUtils.setCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
         }
 
         return APIUtils.success();

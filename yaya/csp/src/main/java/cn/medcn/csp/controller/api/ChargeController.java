@@ -2,6 +2,7 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
@@ -46,10 +47,8 @@ public class ChargeController extends BaseController {
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";
         String orderNo = StringUtils.nowStr();
-//        String userId = SecurityUtils.get().getId();
-//        String ip = request.getRemoteAddr();
-        String ip = "10.0.0.234";
-//        Pingpp.privateKey = privateKey;
+        String userId = SecurityUtils.get().getId();
+        String ip = request.getRemoteAddr();
         Pingpp.privateKeyPath = path;
         Charge charge = null;
 
@@ -77,7 +76,7 @@ public class ChargeController extends BaseController {
             return error(e.getMessage());
         }
         //创建订单
-        chargeService.createOrder("123456", orderNo, amount, channel);
+        chargeService.createOrder(userId, orderNo, amount, channel);
         return success(charge.toString());
 
     }
@@ -156,9 +155,6 @@ public class ChargeController extends BaseController {
     }
 
 
-    public static void main(String[] args) {
-
-    }
 }
 
 

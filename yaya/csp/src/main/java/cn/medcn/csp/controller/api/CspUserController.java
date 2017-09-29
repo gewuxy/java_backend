@@ -166,7 +166,7 @@ public class CspUserController extends BaseController {
             throw new SystemException(local("user.username.notnull"));
         }
 
-        if (StringUtils.isEmail(email)) {
+        if (!StringUtils.isEmail(email)) {
             throw new SystemException(local("user.email.format"));
         }
 
@@ -211,6 +211,7 @@ public class CspUserController extends BaseController {
         CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
         if (userInfo == null) {
             // 注册新用户
+            userInfo = new CspUserInfo();
             userInfo.setId(StringUtils.nowStr());
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
@@ -257,6 +258,9 @@ public class CspUserController extends BaseController {
     public String sendCaptcha(String mobile, Integer type) {
         if(!StringUtils.isMobile(mobile)){
             return error(local("user.mobile.format"));
+        }
+        if (type == null) {
+            return error(local("error.param"));
         }
 
         int template = type.intValue();
