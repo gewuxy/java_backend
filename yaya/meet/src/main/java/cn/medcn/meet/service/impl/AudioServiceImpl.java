@@ -522,4 +522,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public void addMeetAudio(MeetAudio audio){
         meetAudioDAO.insert(audio);
     }
+
+    /**
+     * 查询csp会议列表
+     * @return
+     */
+    public MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingList(pageable.getParams()));
+    }
 }

@@ -1,5 +1,6 @@
 package cn.medcn.meet.dao;
 
+import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.CourseReprintDTO;
 import cn.medcn.meet.dto.CourseSharedDTO;
 import cn.medcn.meet.dto.ResourceCategoryDTO;
@@ -47,4 +48,11 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
      * @return
      */
     List<CourseReprintDTO> findMyReprinted(Map<String, Object> params);
+
+    /**
+     * 查询csp会议列表
+     * @param params
+     * @return
+     */
+    List<CourseDeliveryDTO> findCspMeetingList(Map<String, Object> params);
 }

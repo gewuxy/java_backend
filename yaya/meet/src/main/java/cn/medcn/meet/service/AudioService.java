@@ -200,4 +200,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
 
     void addMeetAudio(MeetAudio audio);
 
+
+    /**
+     * 查询csp会议列表
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) ;
+
+
 }
