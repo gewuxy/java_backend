@@ -4,10 +4,13 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.Live;
@@ -238,9 +241,13 @@ public class MeetingController extends BaseController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public String list() {
+    public String list(Pageable pageable) {
         Principal principal = SecurityUtils.get();
-
-        return success();
+        String cspUserId = principal.getId();
+        pageable.put("cspUserId", cspUserId);
+        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+        return success(page.getDataList());
     }
+
+
 }
