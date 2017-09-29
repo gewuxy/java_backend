@@ -30,7 +30,7 @@ public class LocalUtils {
 
     public static Locale getByKey(String key){
         if (CheckUtils.isEmpty(key)) {
-            throw new RuntimeException("_local key required");
+            throw new RuntimeException("local key required");
         }
         String[] array = key.split("_");
         return new Locale(array[0], array[1]);

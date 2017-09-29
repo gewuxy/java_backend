@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.Locale;
 
 import static cn.medcn.common.Constants.DEFAULT_LOCAL;
+import static cn.medcn.common.Constants.LOCAL_KEY;
 
 /**
  * Created by lixuan on 2017/9/26.
@@ -19,9 +20,9 @@ import static cn.medcn.common.Constants.DEFAULT_LOCAL;
 public class LocalInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
-        String local = httpServletRequest.getHeader("_local");
+        String local = httpServletRequest.getHeader(LOCAL_KEY);
         if (CheckUtils.isEmpty(local)) {
-            local = CookieUtils.getCookieValue(httpServletRequest, "_local");
+            local = CookieUtils.getCookieValue(httpServletRequest, LOCAL_KEY);
             if (CheckUtils.isEmpty(local)) {
                 local = DEFAULT_LOCAL;
             }

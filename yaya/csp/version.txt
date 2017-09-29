@@ -1,0 +1,2 @@
+t_app_user_detail 表增加字段`delivery_flag`
+ddl: alter table `t_app_user_detail` add `delivery_flag` tinyint(4) default '0' COMMENT '单位号投稿开关',
