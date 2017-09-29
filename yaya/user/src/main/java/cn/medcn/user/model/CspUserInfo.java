@@ -55,6 +55,10 @@ public class CspUserInfo implements Serializable{
 
     protected String info;
 
+    // 国内=0、海外=1
+    protected Boolean abroad;
+    // 是否有激活 未激活=0 已激活=1
+    protected Boolean active;
 
 
     public static CspUserInfo buildToUserInfo(CspUserInfoDTO dto) {
