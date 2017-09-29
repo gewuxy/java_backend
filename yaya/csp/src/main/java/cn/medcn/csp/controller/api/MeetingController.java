@@ -159,6 +159,11 @@ public class MeetingController extends BaseController {
         return success(result);
     }
 
+    /**
+     * ZeGo 直播流被创建的时候的回调
+     * @param callback
+     * @return
+     */
     @RequestMapping(value = "/live/create")
     @ResponseBody
     public String onCreate(ZeGoCallBack callback){
@@ -182,6 +187,11 @@ public class MeetingController extends BaseController {
         }
     }
 
+    /**
+     * ZeGo 直播流被关闭的时候的回调
+     * @param callback
+     * @return
+     */
     @RequestMapping(value = "/live/close")
     @ResponseBody
     public String onClose(ZeGoCallBack callback){
@@ -200,7 +210,11 @@ public class MeetingController extends BaseController {
         }
     }
 
-
+    /**
+     * ZeGo 直播流重播地址获取时回调
+     * @param callback
+     * @return
+     */
     @RequestMapping(value = "/live/replay")
     @ResponseBody
     public String onReplay(ZeGoCallBack callback){
