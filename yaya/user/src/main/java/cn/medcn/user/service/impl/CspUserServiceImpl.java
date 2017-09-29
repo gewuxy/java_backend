@@ -78,7 +78,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public String register(CspUserInfo userInfo) {
+    public String register(CspUserInfo userInfo) throws SystemException {
         if (userInfo == null) {
             return APIUtils.error(local("user.param.empty"));
         }
@@ -90,11 +90,18 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
         }
 
+        // 是否海外用户
+        userInfo.setAbroad(LocalUtils.isAbroad());
         userInfo.setId(StringUtils.nowStr());
         String password = userInfo.getPassword();
         userInfo.setPassword(MD5Utils.md5(password));
         userInfo.setRegisterTime(new Date());
+        userInfo.setActive(false);//未激活
         cspUserInfoDAO.insert(userInfo);
+
+        // 发送激活邮箱链接
+        sendMail(username, userInfo.getId(), CspUserInfo.MailTemplate.REGISTER.getLabelId());
+
         return APIUtils.success(local("user.success.register"));
     }
 
@@ -192,16 +199,37 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * 缓存信息和发送绑定或找回密码邮件
      * @param email
      * @param userId
+     * @param template
      * @return
      */             //TODO 模板
     @Override
-    public void sendMail(String email, String userId) throws SystemException {
+    public void sendMail(String email, String userId, Integer template) throws SystemException {
         String code = StringUtils.uniqueStr();
         String url = null;
         String subject = null;
-        String template = null;
-        //绑定邮件
-        if(userId != null){
+        String templateLabel = null;
+
+        // 邮件模板类型
+        int registerTemplate = CspUserInfo.MailTemplate.REGISTER.getLabelId().intValue();
+        int findPwdTemplate = CspUserInfo.MailTemplate.FIND_PWD.getLabelId().intValue();
+        int bindTemplate = CspUserInfo.MailTemplate.BIND.getLabelId().intValue();
+
+        if (template != null && template.intValue() == registerTemplate) {
+            // 发送注册激活邮箱邮件
+            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
+            url = appBase + "/api/email/active?code=" + code;
+            subject = "CSPMeeting账号激活";
+            templateLabel = CspUserInfo.MailTemplate.REGISTER.getLabel();
+
+        } else if (template.intValue() == findPwdTemplate) {
+            // 发送找回密码邮件
+            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
+            url = appBase + "/api/email/toReset?code=" + code;
+            subject = "找回密码";
+            templateLabel = CspUserInfo.MailTemplate.FIND_PWD.getLabel();
+
+        } else if (template.intValue() == bindTemplate) {
+            // 发送绑定邮箱邮件
             CspUserInfo info = findByLoginName(email);
             if (info != null) { //当前邮箱已被绑定
                 throw new SystemException(local("user.exist.email"));
@@ -211,19 +239,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 throw new SystemException(local("user.has.email"));
             }
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-            url = appBase + "/api/email/bindEmail?&code=" + code;
+            url = appBase + "/api/email/bindEmail?code=" + code;
             subject = "绑定邮箱";
-            template = "bindEmail";
-        }else{
-            //找回密码邮件
-            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = appBase + "/api/email/toReset?&code=" + code;
-            subject = "找回密码";
-            template = "pwdRest";
+            templateLabel = CspUserInfo.MailTemplate.BIND.getLabel();
         }
 
         try {
-            emailHelper.sendMail(email, subject, url, template);
+            emailHelper.sendMail(email, subject, url, templateLabel);
         } catch (JDOMException e) {
             e.printStackTrace();
             throw new SystemException(local("email.address.error"));

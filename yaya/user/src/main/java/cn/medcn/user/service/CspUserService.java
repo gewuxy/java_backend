@@ -34,7 +34,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * 注册用户
      * @param userInfo
      */
-    String register(CspUserInfo userInfo);
+    String register(CspUserInfo userInfo) throws SystemException;
 
     /**
      * 发送手机验证码
@@ -61,8 +61,9 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * 缓存信息和发送绑定或找回密码邮件
      * @param email
      * @param userId
+     * @param template 模板
      */
-    void sendMail(String email, String userId) throws SystemException;
+    void sendMail(String email, String userId, Integer template) throws SystemException;
 
     /**
      * 绑定手机号
