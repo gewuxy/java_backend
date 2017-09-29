@@ -166,7 +166,7 @@ public class CspUserController extends BaseController {
             throw new SystemException(local("user.username.notnull"));
         }
 
-        if (StringUtils.isEmail(email)) {
+        if (!StringUtils.isEmail(email)) {
             throw new SystemException(local("user.email.format"));
         }
 
