@@ -35,6 +35,8 @@ public class CspUserInfoDTO  {
     protected Integer thirdPartyId;
     // 个人简介
     protected String info;
+    // token
+    protected String token;
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
         CspUserInfoDTO dto = new CspUserInfoDTO();
@@ -46,6 +48,7 @@ public class CspUserInfoDTO  {
         dto.setDistrict(userInfo.getDistrict());
         dto.setAvatar(userInfo.getAvatar());
         dto.setInfo(userInfo.getInfo());
+        dto.setToken(userInfo.getToken());
         return dto;
     }
 
