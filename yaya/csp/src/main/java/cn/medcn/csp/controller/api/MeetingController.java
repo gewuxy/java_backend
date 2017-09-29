@@ -14,6 +14,7 @@ import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.maven.model.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,6 +53,7 @@ public class MeetingController extends BaseController {
     protected int expireDays;
 
 
+
     /**
      * 会议阅览
      * @param courseId
@@ -61,6 +64,23 @@ public class MeetingController extends BaseController {
     public String view(Integer courseId){
         AudioCourse audioCourse = audioService.findAudioCourse(courseId);
         return success(audioCourse);
+    }
+
+
+    /**
+     * 会议分享
+     * @param meeting
+     * @param model
+     * @param local  分享该会议的人的地理位置
+     * @param request
+     * @return
+     */
+    @RequestMapping("/share")
+    public String share(String meeting, Model model, String local,HttpServletRequest request){
+        String ip = request.getRemoteAddr();
+
+
+        return "/sharePage";
     }
 
     /**
@@ -139,6 +159,11 @@ public class MeetingController extends BaseController {
         return success(result);
     }
 
+    /**
+     * ZeGo 直播流被创建的时候的回调
+     * @param callback
+     * @return
+     */
     @RequestMapping(value = "/live/create")
     @ResponseBody
     public String onCreate(ZeGoCallBack callback){
@@ -162,6 +187,11 @@ public class MeetingController extends BaseController {
         }
     }
 
+    /**
+     * ZeGo 直播流被关闭的时候的回调
+     * @param callback
+     * @return
+     */
     @RequestMapping(value = "/live/close")
     @ResponseBody
     public String onClose(ZeGoCallBack callback){
@@ -180,7 +210,11 @@ public class MeetingController extends BaseController {
         }
     }
 
-
+    /**
+     * ZeGo 直播流重播地址获取时回调
+     * @param callback
+     * @return
+     */
     @RequestMapping(value = "/live/replay")
     @ResponseBody
     public String onReplay(ZeGoCallBack callback){

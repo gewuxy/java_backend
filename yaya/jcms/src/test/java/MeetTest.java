@@ -1,11 +1,13 @@
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.MeetFolderDTO;
 import cn.medcn.meet.dto.MeetInfoDTO;
 import cn.medcn.meet.dto.MeetTuijianDTO;
 import cn.medcn.meet.model.ExamHistory;
 import cn.medcn.meet.model.Lecturer;
 import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.ExamService;
 import cn.medcn.meet.service.MeetService;
 import org.junit.Test;
@@ -28,6 +30,9 @@ public class MeetTest {
 
     @Autowired
     private ExamService examService;
+
+    @Autowired
+    protected CourseDeliveryService courseDeliveryService;
 
     @Test
     public void testUpdateMeet(){
@@ -110,6 +115,12 @@ public class MeetTest {
         for (MeetFolderDTO meetFolderDTO : recommends){
             System.out.println(meetFolderDTO.getMeetName() + " - 会议个数= "+meetFolderDTO.getMeetCount()+" - "+meetFolderDTO.getType()+" - "+ meetFolderDTO.getMeetType() + " - "+meetFolderDTO.getProvince() +" - "+meetFolderDTO.getCity());
         }
+    }
+
+    @Test
+    public void testAcceptors(){
+        MyPage<DeliveryAccepterDTO> page = courseDeliveryService.findAcceptors(new Pageable());
+        System.out.println(page.getTotal());
     }
 
 }

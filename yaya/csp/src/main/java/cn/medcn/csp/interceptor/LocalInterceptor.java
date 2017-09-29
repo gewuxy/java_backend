@@ -9,6 +9,8 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.util.Locale;
+
 import static cn.medcn.common.Constants.DEFAULT_LOCAL;
 
 /**
@@ -24,6 +26,7 @@ public class LocalInterceptor implements HandlerInterceptor {
                 local = DEFAULT_LOCAL;
             }
         }
+        LocalUtils.setLocalStr(local);
         LocalUtils.set(LocalUtils.getByKey(local));
         return true;
     }

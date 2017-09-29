@@ -9,6 +9,16 @@ public class LocalUtils {
 
     protected static final ThreadLocal<Locale> threadLocal = new ThreadLocal<>();
 
+    protected static final ThreadLocal<String> strLocal = new ThreadLocal<>();
+
+    public static String getLocalStr(){
+        return strLocal.get();
+    }
+
+    public static void setLocalStr(String _local){
+        strLocal.set(_local);
+    }
+
     public static void set(Locale local){
         threadLocal.set(local);
     }
@@ -19,14 +29,11 @@ public class LocalUtils {
 
 
     public static Locale getByKey(String key){
-        Locale locale = null;
-        switch (key) {
-            case "zh_CN" :
-                locale = Locale.CHINA;
-                break;
-            case "en_US" :
-                locale = Locale.US;
+        if (CheckUtils.isEmpty(key)) {
+            throw new RuntimeException("_local key required");
         }
-        return locale;
+        String[] array = key.split("_");
+        return new Locale(array[0], array[1]);
+
     }
 }
