@@ -17,6 +17,8 @@ public interface BaseService<T> {
 
     String local(String key);
 
+    boolean isAbroad();
+
     Mapper<T> getBaseMapper();
 
     T selectOne(T var1);
