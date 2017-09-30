@@ -117,7 +117,7 @@ public class MeetingController extends BaseController {
             model.addAttribute("live", live);
         }
 
-        return "/meeting/course_"+course.getPlayType().intValue();
+        return localeView("/meeting/course_"+course.getPlayType().intValue());
     }
 
 

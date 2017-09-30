@@ -103,7 +103,7 @@ public class DESUtils {
     }
 
     public static void main(String[] args) {
-        String src = "id=123&abroad=1&_local=zh_TW";
+        String src = "id=529&abroad=0&_local=zh_CN";
         String pw = encode(Constants.DES_PRIVATE_KEY, src);
         System.out.println("加密之后="+pw);
         String plain = decode(Constants.DES_PRIVATE_KEY, pw);
