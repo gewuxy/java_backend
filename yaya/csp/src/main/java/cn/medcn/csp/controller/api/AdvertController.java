@@ -58,7 +58,7 @@ public class AdvertController extends BaseController {
     public String view(@PathVariable String id, Model model) {
         Article article = articleService.selectByPrimaryKey(id);
         model.addAttribute("article", article);
-        return "/advert/view";
+        return localeView("/advert/view");
     }
 
 }
