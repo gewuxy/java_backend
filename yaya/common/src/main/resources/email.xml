@@ -50,7 +50,7 @@
         </load>
     </email>
 
-    <email id="bindEmail">
+    <email id="bindAccount">
         <load>
             <![CDATA[
 		<div style=" padding:10px;font-size:14px;color:#1b3861; font-family:Microsoft YaHei,Helvetica">

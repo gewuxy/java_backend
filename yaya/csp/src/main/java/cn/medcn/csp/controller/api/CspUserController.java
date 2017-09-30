@@ -2,6 +2,7 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
@@ -63,6 +64,9 @@ public class CspUserController extends BaseController {
         if (StringUtils.isEmpty(email)) {
             return error("user.username.notnull");
         }
+        if (!StringUtils.isEmail(email)) {
+            return error("user.email.format");
+        }
         if (StringUtils.isEmpty(password)) {
             return error("user.password.notnull");
         }
@@ -70,7 +74,14 @@ public class CspUserController extends BaseController {
             return error("user.linkman.notnull");
         }
 
-       return cspUserService.register(userInfo);
+        try {
+
+            return cspUserService.register(userInfo);
+
+        } catch (SystemException e){
+            return error(e.getMessage());
+        }
+
     }
 
     /**
@@ -135,6 +146,11 @@ public class CspUserController extends BaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
+            // 当前登录的用户不是海外用户
+            if (userInfo.getAbroad() != LocalUtils.isAbroad()) {
+                return error(local("user.login.error"));
+            }
+
             // 更新用户登录信息
             userInfo.setLastLoginIp(request.getRemoteAddr());
             userInfo.setLastLoginTime(new Date());
@@ -165,18 +181,25 @@ public class CspUserController extends BaseController {
         if (StringUtils.isEmpty(email)) {
             throw new SystemException(local("user.username.notnull"));
         }
-
         if (!StringUtils.isEmail(email)) {
             throw new SystemException(local("user.email.format"));
         }
-
         if (StringUtils.isEmpty(password)) {
             throw new SystemException(local("user.password.notnull"));
         }
 
-        CspUserInfo userInfo = cspUserService.findByLoginName(email);
+        // 检查用户是否注册且已经激活
+        CspUserInfo condition = new CspUserInfo();
+        condition.setEmail(email);
+        condition.setActive(true);
+        CspUserInfo userInfo = cspUserService.selectOne(condition);
+
         if (userInfo == null) {
             throw new SystemException(local("user.notexisted"));
+        }
+        // 邮箱未激活
+        if (userInfo.getActive() == false) {
+            throw new SystemException(local("user.unActive.email"));
         }
         // 用户输入密码是否正确
         if (!MD5Utils.md5(password).equals(userInfo.getPassword())) {
@@ -215,6 +238,8 @@ public class CspUserController extends BaseController {
             userInfo.setId(StringUtils.nowStr());
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
+            userInfo.setActive(true);
+            userInfo.setAbroad(LocalUtils.isAbroad());
             cspUserService.insert(userInfo);
         }
 
@@ -348,7 +373,7 @@ public class CspUserController extends BaseController {
         }
         String userId = SecurityUtils.get().getId();
         try {
-            cspUserService.sendMail(email,userId);
+            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
         } catch (SystemException e) {
             return error(e.getMessage());
         }
