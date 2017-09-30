@@ -34,7 +34,7 @@ public class AddressDTO {
     protected String ip;
 
     public boolean isAbroad(){
-        return !this.country_id.endsWith("CN");
+        return !this.country_id.endsWith("CN") && !this.country_id.equals("-1");
     }
 
 
