@@ -166,45 +166,43 @@ public class ChargeController extends BaseController {
     @ResponseBody
     public String createOrder(Integer flux){
         String userId = SecurityUtils.get().getId();
-        chargeService.createPaypalOrder(userId,flux);
-        return success();
+        String orderId = chargeService.createPaypalOrder(userId,flux);
+        return success(orderId);
     }
 
 
-//    @RequestMapping("/paypalResult")
-//    @ResponseBody
-//    public String paypalResult(String paymentId){
-//        String str = SignatureUtil.getPaymentDetails(paymentId);
-//        JSONObject detail = JSONObject.parseObject(str);
-//        //校验订单是否完成
-//        if("approved".equals(detail.getString("state"))){
-//            JSONObject transactions = detail.getJSONArray("transactions").getJSONObject(0);
-//            JSONObject amount = transactions.getJSONObject("amount");
-//            JSONArray relatedResources = transactions.getJSONArray("related_resources");
-//            //从数据库查询支付总金额与Paypal校验支付总金额
-//            double total = 0;
-//            System.out.println("amount.optDouble('total'):"+amount.optDouble("total"));
-//            if( total != amount.optDouble("total") ){
-//                return false;
-//            }
-//            //校验交易货币类型
-//            String currency = "USD";
-//            if( !currency.equals(amount.optString("currency")) ){
-//                return false;
-//            }
-//            //校验每个子订单是否完成
-//            for (int i = 0,j = relatedResources.size(); i < j; i++) {
-//                JSONObject sale = relatedResources.getJSONObject(i).getJSONObject("sale");
-//                if(sale!=null){
-//                    if( !"completed".equals(sale.getString("state")) ){
-//                        System.out.println("子订单未完成,订单状态:"+sale.getString("state"));
-//                    }
-//                }
-//            }
-//            return true;
-//        }
-//        return false;
-//    }
+    /**
+     * paypal支付回调
+     * @param paymentId
+     * @param orderId
+     * @return
+     */
+    @RequestMapping("/paypalCallback")
+    @ResponseBody
+    public String paypalResult(String paymentId,String orderId){
+
+        String str = SignatureUtil.getPaymentDetails(paymentId);
+        JSONObject detail = JSONObject.parseObject(str);
+        //校验订单是否完成
+        if("approved".equals(detail.getString("state"))){
+            JSONObject transactions = detail.getJSONArray("transactions").getJSONObject(0);
+            JSONObject amount = transactions.getJSONObject("amount");
+            //校验交易货币类型
+            String currency = "USD";
+            if( !currency.equals(amount.getString("currency")) ){
+                return error();
+            }
+            FluxOrder order = chargeService.selectByPrimaryKey(orderId);
+            //没有相关订单
+            if(order == null ){
+                return error();
+            }
+            //更新订单状态，修改用户流量值
+            chargeService.updateOrderAndUserFlux(order);
+            return success();
+        }
+        return error();
+    }
 
 }
 
