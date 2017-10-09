@@ -145,20 +145,24 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
     }
 
     /**
-     * 创建paypal订单
+     * 创建paypal订单,将订单id返回给前端
      * @param userId
      * @param flux
      */
     @Override
-    public void createPaypalOrder(String userId, Integer flux) {
+    public String createPaypalOrder(String userId, Integer flux) {
         String id = StringUtils.nowStr();
         FluxOrder order = new FluxOrder();
         order.setId(id);
+        order.setTradeId(id);
         order.setState(0);
         order.setBuyTime(new Date());
         order.setUserId(userId);
         order.setPlatform("paypal");
-        order.setFlux(flux);
+        //已M为单位存储
+        order.setFlux(flux * 1024);
+        fluxOrderDAO.insert(order);
+        return id;
     }
 
 }
