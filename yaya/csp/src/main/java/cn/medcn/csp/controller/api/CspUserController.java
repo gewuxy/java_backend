@@ -24,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -324,7 +326,9 @@ public class CspUserController extends BaseController {
         } catch (SystemException e) {
             return error(e.getMessage());
         }
-        return success(url);
+        Map<String,String> map = new HashMap<>();
+        map.put("url",url);
+        return success(map);
     }
 
 
