@@ -25,6 +25,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.security.PublicKey;
 import java.security.SignatureException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/9/12.
@@ -167,7 +169,9 @@ public class ChargeController extends BaseController {
     public String createOrder(Integer flux){
         String userId = SecurityUtils.get().getId();
         String orderId = chargeService.createPaypalOrder(userId,flux);
-        return success(orderId);
+        Map<String,String> map = new HashMap<>();
+        map.put("orderId",orderId);
+        return success(map);
     }
 
 
