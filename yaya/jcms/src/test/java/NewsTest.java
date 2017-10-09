@@ -3,8 +3,10 @@ import cn.medcn.article.model.News;
 import cn.medcn.article.model.NewsReadOnly;
 import cn.medcn.article.service.ArticleService;
 import cn.medcn.article.service.NewsService;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.HttpUtils;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.UUIDUtil;
@@ -17,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -34,6 +37,7 @@ public class NewsTest {
 
     @Autowired
     private ArticleService articleService;
+
 
     @Test
     public void testFindMaxId() throws ParseException {
@@ -102,10 +106,38 @@ public class NewsTest {
 
     @Test
     public void testFindAll(){
-        Pageable pageable = new Pageable(1,29);
+       Pageable pageable = new Pageable(1,29);
         MyPage<News> page = newsService.findAllNews(pageable);
         for(News news:page.getDataList()){
             System.out.println(news.getTitle());
         }
     }
+
+    @Test
+    public void testModifyNewsState() {
+        String filePath = "C:\\Users\\Administrator\\Desktop\\其他\\需要删除的新闻0928.txt";
+        File file = new File(filePath);
+        String title = null;
+        try{
+            InputStreamReader isr = new InputStreamReader(new FileInputStream(file), "UTF-8");
+            BufferedReader br = new BufferedReader(isr);
+            while((title = br.readLine())!=null){//使用readLine方法，一次读一行
+                System.out.println("-- "+title);
+                /*List<Article> list = articleService.findArticleByNewsTitle(title);
+                if (!CheckUtils.isEmpty(list)) {
+                   Article article1 = list.get(list.size()-1);
+                   article1.setAuthed(false);
+                   articleService.updateByPrimaryKeySelective(article1);
+
+                }*/
+            }
+            br.close();
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+
+    }
+
+
+
 }

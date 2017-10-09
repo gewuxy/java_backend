@@ -6,7 +6,7 @@ function format(shijianchuo) {
     var time = new Date(shijianchuo);
     var y = time.getFullYear();
     var m = time.getMonth()+1;
-    var d = time.getDate()+1;
+    var d = time.getDate();
     var h = time.getHours()+1;
     var mm = time.getMinutes()+1;
     var s = time.getSeconds()+1;

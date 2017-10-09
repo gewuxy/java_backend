@@ -3,6 +3,7 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.EmailHelper;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.utils.MD5Utils;
@@ -39,6 +40,29 @@ public class EmailController extends BaseController{
     private String appBaseUrl;
 
 
+    /**
+     * 点击验证邮箱 激活链接
+     * @param code
+     * @return
+     * @throws SystemException
+     */
+   @RequestMapping("/active")
+    public String certifiedMail(String code) throws SystemException {
+        String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
+        String email = (String)redisCacheUtils.getCacheObject(key);
+        if (StringUtils.isEmpty(email)) {  //链接超时
+            return localeView("/register/linkTimeOut");
+        } else {
+            CspUserInfo userInfo = cspUserService.findByLoginName(email);
+            if (userInfo != null) {
+                userInfo.setActive(true);
+                cspUserService.updateByPrimaryKey(userInfo);
+            }
+            return localeView("/register/activeOk");
+        }
+
+    }
+
 
 
     /**
@@ -58,7 +82,7 @@ public class EmailController extends BaseController{
         }
 
         try {
-            cspUserService.sendMail(email,null);
+            cspUserService.sendMail(email,null, MailBean.MailTemplate.FIND_PWD.getLabelId());
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -77,10 +101,10 @@ public class EmailController extends BaseController{
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String result = (String)redisCacheUtils.getCacheObject(key);
         if (StringUtils.isEmpty(result)) {  //链接超时
-            return "/test";
+            return localeView("/test");
         } else {
             cspUserService.doBindMail(key, result);
-            return "/register/bindOk";
+            return localeView("/register/bindOk");
         }
 
     }
@@ -97,10 +121,10 @@ public class EmailController extends BaseController{
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String result = (String) redisCacheUtils.getCacheObject(key);
         if(StringUtils.isEmpty(result)) {
-            return "/register/linkTimeOut";
+            return localeView("/register/linkTimeOut");
         }
         model.addAttribute("code", code);
-        return "/register/pwdReset";
+        return localeView("/register/pwdReset");
 
     }
 
@@ -117,12 +141,12 @@ public class EmailController extends BaseController{
     public String doReset(String code, String password, Model model) throws SystemException {
         if(StringUtils.isEmpty(password)){
             model.addAttribute("message", local("user.password.notnull"));
-            return "/register/pwdReset";
+            return localeView("/register/pwdReset");
         }
         String resetPwdKey = Constants.EMAIL_LINK_PREFIX_KEY+code;
         String email = (String) redisCacheUtils.getCacheObject(resetPwdKey);
         if(StringUtils.isEmpty(email)){
-            return "/register/linkTimeOut";
+            return localeView("/register/linkTimeOut");
         }
         CspUserInfo info = cspUserService.findByLoginName(email);
         if(info != null){
@@ -130,6 +154,6 @@ public class EmailController extends BaseController{
             cspUserService.updateByPrimaryKey(info);
             redisCacheUtils.delete(resetPwdKey);
         }
-        return "/register/pwdOk";
+        return localeView("/register/pwdOk");
     }
 }

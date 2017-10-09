@@ -1,12 +1,12 @@
 package cn.medcn.common.utils;
 
+import cn.medcn.common.Constants;
+
 import javax.crypto.Cipher;
-import javax.crypto.SecretKey;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.Key;
-import java.security.SecureRandom;
 import java.security.spec.AlgorithmParameterSpec;
 
 /**
@@ -17,7 +17,7 @@ public class DESUtils {
     /**
      * 这个值必须是8位
      */
-    public static final String IV_PARAMETER_SPEC = "jing_xin";
+    public static final String IV_PARAMETER_SPEC = "qWeRdFgH";
 
     /**
      * DES算法，加密
@@ -103,11 +103,10 @@ public class DESUtils {
     }
 
     public static void main(String[] args) {
-        String pk = "UIwe2389xcDFer%^";
-        String src = "584479243@qq.com";
-        String pw = encode(pk, src);
+        String src = "id=529&abroad=0&_local=zh_CN";
+        String pw = encode(Constants.DES_PRIVATE_KEY, src);
         System.out.println("加密之后="+pw);
-        String plain = decode(pk, pw);
+        String plain = decode(Constants.DES_PRIVATE_KEY, pw);
         System.out.println("解密之后="+plain);
     }
 }

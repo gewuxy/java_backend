@@ -82,4 +82,13 @@ public class BaseController {
         }
     }
 
+    /**
+     * 适合需要跳转到国际化视图的请求使用
+     * @param view
+     * @return
+     */
+    protected String localeView(String view){
+        return LocalUtils.getLocalStr() + view;
+    }
+
 }

@@ -1722,15 +1722,14 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
             meetInfoDTO.setRemainAwardCreditCount(getRewardCreditCount > meetInfoDTO.getAwardCreditLimit() ? 0 : meetInfoDTO.getAwardCreditLimit() - getRewardCreditCount);
         }
 
-
-        /**
-         * TODO 以下是假数据，真实逻辑完成后需要修改
-         *
-         */
-        // 返回会议直播类型
-        meetInfoDTO.setMeetKind(MeetInfoDTO.MeetKind.VIDEO_LIVE.getKind());
         // 返回该会议从哪个单位号转载的
-        meetInfoDTO.setReprintFromUnitUser("YaYa专家讲堂");
+        Integer primitiveId = meetInfoDTO.getPrimitiveId();
+        if (primitiveId != null && primitiveId != 0) {
+            AppUser condition = new AppUser();
+            condition.setId(primitiveId);
+            AppUser unitUser = appUserService.selectByPrimaryKey(condition);
+            meetInfoDTO.setReprintFromUnitUser(unitUser.getNickname());
+        }
 
         MeetCheckHelper.checkMeetInfo(meetInfoDTO, appFileBase);
         return meetInfoDTO;

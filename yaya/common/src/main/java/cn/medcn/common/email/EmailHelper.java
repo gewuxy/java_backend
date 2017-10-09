@@ -66,24 +66,6 @@ public class EmailHelper {
         javaMailSender.send(createMimeMessage(mailBean));
     }
 
-    /**
-     * 发送重置密码或者你绑定邮箱邮件
-     * @param mailBean
-     * @param email
-     * @param url
-     * @param type
-     * @throws IOException
-     * @throws MessagingException
-     * @throws JDOMException
-     */
-    public void sendMailByType(MailBean mailBean, String email, String url,Integer type) throws IOException, MessagingException, JDOMException {
-        mailBean.setFrom(mailUserName);
-        mailBean.setFromName(mailCompanyName);
-        mailBean.setContext(formatByType(email, url,type));
-        mailBean.setToEmails(new String[]{email});
-        javaMailSender.send(createMimeMessage(mailBean));
-    }
-
 
     private MimeMessage createMimeMessage(MailBean mailBean) throws MessagingException, UnsupportedEncodingException, MessagingException {
         MimeMessage mimeMessage = javaMailSender.createMimeMessage();
@@ -135,7 +117,7 @@ public class EmailHelper {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("email.xml");
         String emailContent = null;
         if(type == Constants.NUMBER_ZERO){
-             emailContent = XMLUtils.doParseXML(inputStream,"pwdRest", "load");
+            emailContent = XMLUtils.doParseXML(inputStream,"pwdRest", "load");
         }else if(type == Constants.NUMBER_ONE){
             emailContent = XMLUtils.doParseXML(inputStream,"bindAccount", "load");
         }
@@ -157,6 +139,24 @@ public class EmailHelper {
         javaMailSender.send(createMimeMessage(mailBean));
 
     }
+
+    /**
+     * 发送重置密码或者你绑定邮箱邮件
+     * @param email
+     * @param url
+     * @param type
+     * @throws IOException
+     * @throws MessagingException
+     * @throws JDOMException
+     */
+    public void sendMailByType(MailBean mailBean, String email, String url, Integer type) throws IOException, MessagingException, JDOMException {
+        mailBean.setFrom(mailUserName);
+        mailBean.setFromName(mailCompanyName);
+        mailBean.setContext(formatByType(email, url, type));
+        mailBean.setToEmails(new String[]{email});
+        javaMailSender.send(createMimeMessage(mailBean));
+    }
+
 
 
     public void sendVersionUpdateNotification(String subject, List<String> userNames) {
