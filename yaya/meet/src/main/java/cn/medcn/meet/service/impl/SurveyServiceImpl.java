@@ -145,7 +145,7 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
         //condition.setModuleId(moduleId);
         condition.setMeetId(meetId);
         MeetSurvey survey = meetSurveyDAO.selectOne(condition);
-        if(survey != null&&survey.getPaperId()!=null){
+        if(survey != null && survey.getPaperId() != null){
             survey.setSurveyPaper(findSurveyPaper(survey.getPaperId()));
         }
         return survey;
@@ -178,7 +178,7 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
     @Cacheable(value = DEFAULT_CACHE, key = "'survey_question_'+#paperId")
     public SurveyPaper findSurveyPaper(Integer paperId) {
         SurveyPaper paper = surveyPaperDAO.selectByPrimaryKey(paperId);
-        if(paper!=null){
+        if(paper != null){
             List<SurveyQuestion> questions = findQuestions(paperId);
             paper.setQuestionList(questions);
         }
