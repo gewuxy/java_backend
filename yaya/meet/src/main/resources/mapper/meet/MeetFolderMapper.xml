@@ -10,6 +10,7 @@
         select * from v_meet_folder_final
         WHERE  state BETWEEN 1 AND 3 AND type=1
         AND user_id=#{masterId}
+        ORDER BY type,start_time desc
     </select>
 
     <!-- 查询我关注的所有单位号的文件夹 -->
