@@ -114,6 +114,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioHistory condition = new AudioHistory();
         condition.setUserId(history.getUserId());
         condition.setDetailId(history.getDetailId());
+        condition.setMeetId(history.getMeetId());
         AudioHistory existedHistory = audioHistoryDAO.selectOne(condition);
         if(existedHistory == null){
             history.setEndTime(new Date());
