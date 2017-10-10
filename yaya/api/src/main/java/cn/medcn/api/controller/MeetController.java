@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,9 @@ public class MeetController extends BaseController {
     @Value("${meet.sign.max.distance}")
     private String maxDistance;
 
+    @Value("${app.csp.base}")
+    private String cspBase;
+
     @Autowired
     private AudioService audioService;
 
@@ -73,6 +77,12 @@ public class MeetController extends BaseController {
 
     @Autowired
     private MeetFolderService meetFolderService;
+
+    @Autowired
+    private MeetMessageService meetMessageService;
+
+    @Autowired
+    private LiveService liveService;
 
 
     /**
@@ -342,6 +352,12 @@ public class MeetController extends BaseController {
     }
 
 
+    /**
+     * 进入ppt会议，增加实时会议
+     * @param meetId
+     * @param moduleId
+     * @return
+     */
     @RequestMapping(value = "/toppt")
     @ResponseBody
     public String toppt(String meetId, Integer moduleId) {
@@ -364,8 +380,51 @@ public class MeetController extends BaseController {
                 dto.setAudioUrl(StringUtils.isEmpty(dto.getAudioUrl()) ? "" : appFileBase + dto.getAudioUrl());
             }
         }
+
+        AudioCourse course = meetAudio.getCourse();
+        //实时会议，不是录播语音
+        if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
+            //查询评论数
+            MeetMessage message = new MeetMessage();
+            message.setMeetId(meetId);
+            int count = meetMessageService.selectCount(message);
+            //直播音频webSocket连接地址
+            String socketUrl = cspBase + "/live/order";
+            audioDTO.setCount(count);
+            audioDTO.setSocketUrl(socketUrl);
+            //添加视频直播
+            Live live = liveService.findByCourseId(course.getId());
+            audioDTO.setVideoLive(live);
+        }
+
+
+
+
+
         return APIUtils.success(audioDTO);
     }
+
+    /**
+     * 实时会议
+     * @param meeting
+     * @param courseId
+     * @return
+     */
+    @RequestMapping("/liveMeeting")
+    public String liveMeeting(String meeting,Integer courseId){
+        MeetMessage message = new MeetMessage();
+        message.setMeetId(meeting);
+        int count = meetMessageService.selectCount(message);
+        //直播音频连接地址
+        String socketUrl = cspBase + "/live/order";
+        Live live = liveService.findByCourseId(courseId);
+        Map<String,Object> map = new HashedMap();
+        map.put("count",count);
+        map.put("socketUrl",socketUrl);
+        map.put("live",live);
+        return success(map);
+    }
+
 
 
     @RequestMapping(value = "/audio/record")
@@ -683,6 +742,9 @@ public class MeetController extends BaseController {
         }
         return success(page.getDataList());
     }
+
+
+
 
 
     /**
