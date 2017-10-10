@@ -1,5 +1,6 @@
 package cn.medcn.meet.dto;
 
+import cn.medcn.meet.model.Live;
 import cn.medcn.meet.model.MeetAudio;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,15 @@ public class MeetAudioDTO implements Serializable {
     private Integer courseId;
 
     private AudioCourseDTO course;
+
+    //评论数
+    private Integer count;
+
+    //直播音频webSocket连接地址
+    private String socketUrl;
+
+    //直播视频
+    private Live videoLive;
 
     public static MeetAudioDTO build(MeetAudio meetAudio){
         MeetAudioDTO dto = new MeetAudioDTO();
