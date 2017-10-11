@@ -381,16 +381,17 @@ public class MeetController extends BaseController {
             }
         }
 
+        //查询评论数
+        MeetMessage message = new MeetMessage();
+        message.setMeetId(meetId);
+        int count = meetMessageService.selectCount(message);
+        audioDTO.setCount(count);
+
         AudioCourse course = meetAudio.getCourse();
         //实时会议，不是录播语音
         if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
-            //查询评论数
-            MeetMessage message = new MeetMessage();
-            message.setMeetId(meetId);
-            int count = meetMessageService.selectCount(message);
             //直播音频webSocket连接地址
             String socketUrl = cspBase + "/live/order";
-            audioDTO.setCount(count);
             audioDTO.setSocketUrl(socketUrl);
             //添加视频直播
             Live live = liveService.findByCourseId(course.getId());
@@ -404,26 +405,7 @@ public class MeetController extends BaseController {
         return APIUtils.success(audioDTO);
     }
 
-    /**
-     * 实时会议
-     * @param meeting
-     * @param courseId
-     * @return
-     */
-    @RequestMapping("/liveMeeting")
-    public String liveMeeting(String meeting,Integer courseId){
-        MeetMessage message = new MeetMessage();
-        message.setMeetId(meeting);
-        int count = meetMessageService.selectCount(message);
-        //直播音频连接地址
-        String socketUrl = cspBase + "/live/order";
-        Live live = liveService.findByCourseId(courseId);
-        Map<String,Object> map = new HashedMap();
-        map.put("count",count);
-        map.put("socketUrl",socketUrl);
-        map.put("live",live);
-        return success(map);
-    }
+
 
 
 
