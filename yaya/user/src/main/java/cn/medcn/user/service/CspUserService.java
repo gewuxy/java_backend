@@ -110,4 +110,12 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return 头像地址
      */
     String updateAvatar(MultipartFile file,String userId) throws SystemException;
+
+    /**
+     * 修改密码
+     * @param userId
+     * @param oldPwd
+     * @param newPwd
+     */
+    void resetPwd(String userId, String oldPwd, String newPwd) throws SystemException;
 }
