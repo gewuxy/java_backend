@@ -6,6 +6,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.meet.dto.MeetMessageDTO;
+import cn.medcn.meet.model.MeetMessage;
 import cn.medcn.meet.service.MeetMessageService;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
@@ -72,6 +73,10 @@ public class MeetMessageHandler extends TextWebSocketHandler {
         dto.setMsgType(0);
         dto.setSender(principal.getNickname());
         dto.setMeetId((String) session.getAttributes().get(Constants.MEET_ID_KEY));
+        //FIXME  增加评论数量
+        MeetMessage meetMessage = new MeetMessage();
+        meetMessage.setMeetId((String) session.getAttributes().get(Constants.MEET_ID_KEY));
+        int count = meetMessageService.selectCount(meetMessage);
         meetMessageService.publish(dto);
     }
 
