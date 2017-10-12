@@ -16,6 +16,7 @@ import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
@@ -60,6 +61,8 @@ public class MeetingController extends BaseController {
     @Value("${ZeGo.replay.expire.days}")
     protected int expireDays;
 
+    @Value("${app.file.upload.base}")
+    protected String fileUploadBase;
 
     /**
      * 会议阅览
@@ -160,11 +163,17 @@ public class MeetingController extends BaseController {
         try {
             FileUploadResult result = fileUploadService.upload(file, relativePath);
             Map<String, Object> map = new HashedMap();
+            AudioCourseDetail detail = audioService.findDetail(detailId);
+            if (detail != null) {
+                detail.setAudioUrl(result.getRelativePath());
+                detail.setDuration(FFMpegUtils.duration(fileUploadBase + result.getRelativePath()));
+                audioService.updateDetail(detail);
+            }
             map.put("audioUrl", result.getAbsolutePath());
             return success(result);
         } catch (SystemException e) {
             e.printStackTrace();
-            return error();
+            return error(e.getMessage());
         }
 
     }
