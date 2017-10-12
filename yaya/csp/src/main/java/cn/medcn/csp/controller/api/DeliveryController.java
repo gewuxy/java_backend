@@ -33,7 +33,7 @@ public class DeliveryController extends BaseController {
 
     @RequestMapping(value = "/paginate")
     @ResponseBody
-    public String paginate(Pageable pageable, Integer acceptId){
+    public String paginate(Pageable pageable, Integer acceptId) {
         if (acceptId != null) {
             pageable.put("acceptId", acceptId);
         }
@@ -44,7 +44,7 @@ public class DeliveryController extends BaseController {
 
     @RequestMapping(value = "/user/detail")
     @ResponseBody
-    public String detail(Integer acceptId){
+    public String detail(Integer acceptId) {
         Principal principal = SecurityUtils.get();
         List<CourseDeliveryDTO> list = courseDeliveryService.findByAcceptId(acceptId, principal.getId());
         return success(list);
@@ -53,7 +53,7 @@ public class DeliveryController extends BaseController {
 
     @RequestMapping(value = "/push")
     @ResponseBody
-    public String push(Integer courseId, Integer[] acceptIds){
+    public String push(Integer courseId, Integer[] acceptIds) {
         Principal principal = SecurityUtils.get();
         courseDeliveryService.executeDelivery(courseId, acceptIds, principal.getId());
         return success();
@@ -62,10 +62,10 @@ public class DeliveryController extends BaseController {
 
     @RequestMapping(value = "/acceptors")
     @ResponseBody
-    public String acceptors(Pageable pageable){
+    public String acceptors(Pageable pageable) {
         MyPage<DeliveryAccepterDTO> page = courseDeliveryService.findAcceptors(pageable);
         for (DeliveryAccepterDTO dto : page.getDataList()) {
-            if (CheckUtils.isNotEmpty(dto.getAvatar())){
+            if (CheckUtils.isNotEmpty(dto.getAvatar())) {
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
         }

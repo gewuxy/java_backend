@@ -162,4 +162,10 @@ public class Constants {
     public static final int CSP_ADVERT_COUNT_DOWN = 3;
 
     public static final String DES_PRIVATE_KEY = "2b3e2d604fab436eb7171de397aee892";
+    // 视频会议大小限制
+    public static final int UPLOAD_VIDEO_SIZE_LIMIT = 500;
+    // ppt课件视频大小限制
+    public static final int UPLOAD_PPT_VIDEO_SIZE_LIMIT = 50;
+    //麦瑞单位号ID
+    public static final int MARY_MASTER_ID = 957425;
 }

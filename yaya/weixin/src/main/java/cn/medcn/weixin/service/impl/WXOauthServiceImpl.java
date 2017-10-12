@@ -66,6 +66,20 @@ public class WXOauthServiceImpl extends WXBaseServiceImpl implements WXOauthServ
     }
 
     /**
+     * 通过code获取授权openid
+     *
+     * @param code
+     * @param appKey
+     * @param appSecret
+     * @return
+     */
+    @Override
+    public OAuthDTO getOpenIdAndTokenByCode(String code, String appKey, String appSecret) throws SystemException {
+        OAuthDTO oAuthDTO = oauth(appKey, appSecret, code);
+        return oAuthDTO ;
+    }
+
+    /**
      * 通过网页授权token和openid获取微信用户基本信息
      * @param openId
      * @return

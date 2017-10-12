@@ -27,6 +27,7 @@ import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.google.common.collect.Maps;
+import com.pingplusplus.model.App;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -196,6 +197,14 @@ public class JpushMessageServiceImpl extends BaseServiceImpl<JpushMessage> imple
 
     protected void sendGroup(JpushMessage message, AppUser sender) {
         List<AppUserSimpleDTO> list = appUserService.findAllAttation(message.getSender(), message.getGroupId());
+        for (AppUserSimpleDTO dto : list) {
+            message.setReceiver(dto.getId());
+            sendSingle(message, sender);
+        }
+    }
+
+    protected void sendGroups(JpushMessage message, AppUser sender){
+        List<AppUserSimpleDTO> list = appUserService.findAllAttention(message.getSender(), message.getChoseGroupIds());
         for (AppUserSimpleDTO dto : list) {
             message.setReceiver(dto.getId());
             sendSingle(message, sender);

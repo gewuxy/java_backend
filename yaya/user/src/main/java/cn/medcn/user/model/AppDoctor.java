@@ -33,4 +33,7 @@ public class AppDoctor extends AppUserDetail {
 
     /** 专科名称 */
     private String specialtyName;
+
+    //投稿功能开关，0:关闭，1：开启
+    private Integer deliveryFlag;
 }

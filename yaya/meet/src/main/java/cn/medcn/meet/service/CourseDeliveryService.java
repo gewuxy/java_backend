@@ -43,4 +43,11 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      * @return
      */
     MyPage<DeliveryAccepterDTO> findAcceptors(Pageable pageable);
+
+    /**
+     * 资源平台的投稿列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findDeliveryList(Pageable pageable);
 }

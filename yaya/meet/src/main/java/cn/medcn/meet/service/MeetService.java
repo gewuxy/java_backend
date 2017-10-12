@@ -434,6 +434,8 @@ public interface MeetService extends BaseService<Meet> {
      * @param newModuleId
      */
     void copyMeetSign(String oldMeetId, String newMeetId, Integer oldModuleId, Integer newModuleId);
+
+
 }
 
 

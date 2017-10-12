@@ -95,15 +95,18 @@
                     </div>
                     <hr class="formHr" />
                     <div class="formrow">
-                        <label for="" class="formTitle">选择分组</label>
-                        <span class="formPage-select-item  pr">
-                        <i class="formPage-select-arrow"></i>
-                        <select name="groupId" id="groupId" class="text-input formPage-select formPage-select-hook">
-                                <c:forEach items="${groupList}" var="group">
-                                    <option value="${group.id}">${group.groupName}</option>
-                                </c:forEach>
-                            </select>
-                    </span>
+                        <div class="formControls">
+                            <!--已有目录-->
+                            <div class="fl">
+                                <a href="javascript:;" class="black-button formButton fx-btn-1 " id="choseGroupBtn">选择分组</a>
+                            </div>
+                            <div class="oh" style="line-height: 38px;">
+                                <div class="metting-bootstrap metting-bootstrap-formFile">
+                                    选中的分组<i class="rowSpace">:</i> <span id="choseGroup"></span>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <hr class="formHr" />
                     <div class="btn-wrap">
@@ -132,6 +135,49 @@
     </div>
 
 </div>
+<div class="mask-wrap">
+    <div class="dis-tbcell">
+        <div class="distb-box distb-box-min fx-mask-box-1 " >
+            <div class="mask-hd clearfix">
+                <h3 class="font-size-1">设置分组</h3>
+                <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+            </div>
+            <div class="clearfix hidden-box">
+                <div class="formrow popup-checkbox">
+
+                    <form id="groupForm" name="groupForm">
+                        <ul class="fx-li-box" >
+
+                            <li>
+                                <span class="checkboxIcon">
+                                    <input type="checkbox" id="popup_checkbox_all" class="chk_1 chk-hook">
+                                    <label for="popup_checkbox_all" class="popup_checkbox_all_hook"><i class="ico"></i>&nbsp;全部关注医生</label>
+                                </span>
+                            </li>
+
+                            <c:forEach items="${groupList}" var="g" varStatus="status">
+                                <li>
+                                <span class="checkboxIcon">
+                                    <input type="checkbox" name="groupIds" id="popup_checkbox_${status.index}" value="${g.id    }" class="chk_1 chk-hook">
+                                    <label for="popup_checkbox_${status.index}"  class="popup_checkbox_hook"><i class="ico"></i>&nbsp;${g.groupName}</label>
+                                </span>
+                                </li>
+                            </c:forEach>
+
+                        </ul>
+                    </form>
+
+                </div>
+
+            </div>
+            <div class="sb-btn-box  p-btm-1 t-right">
+                <button class="close-button-fx cur" id="choseBtn">确认</button>
+                <button class="close-button-fx" id="cancelChoseBtn">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function(){
        $("#msgType").change(function(){
@@ -160,8 +206,73 @@
            $("#successView").hide();
            $("#sendView").show();
        });
+
+       $("#choseGroupBtn").click(function(){
+           openChosePopup();
+       });
+
+       $(".close-btn-fx, #cancelChoseBtn").click(function(){
+           closeChosePopup();
+       });
+
+       $("#choseBtn").click(function(){
+           $("#choseGroup").html("");
+           var groupIds = $("#groupForm").find("input[name='groupIds']");
+           if (groupIds.length == 0){
+               layer.msg("请选择分组");
+               return;
+           }
+           for(var i = 0 ; i < groupIds.length ; i ++){
+               $("#choseGroup").append('<input type="hidden" name="choseGroupIds" value="'+$(groupIds[i]).val()+'"/>' + $(groupIds[i]).siblings("label").text());
+               if (i < groupIds.length - 1){
+                   $("#choseGroup").append('&nbsp;&nbsp;,&nbsp;&nbsp;');
+               }
+           }
+           closeChosePopup();
+       });
+
+        var popupCheckbox = $('label.popup_checkbox_hook');
+        var popupCheckboxNum = popupCheckbox.length - 1;
+
+        //弹出窗 - 点击全选触发
+        $('.popup_checkbox_all_hook').on('click',function(){
+            $(this).toggleClass('checkboxAllCurrent');
+            if($(this).hasClass('checkboxAllCurrent')){
+                popupCheckbox.find('.ico').addClass('checkboxCurrent');
+                popupCheckbox.prev().prop("checked","true");
+            } else {
+                popupCheckbox.find('.ico').removeClass('checkboxCurrent');
+                popupCheckbox.prev().removeProp("checked");
+            }
+        });
+        //弹出窗 - 点击每个选项触发
+        popupCheckbox.each(function() {
+            $(this).off('.click').on('click', function () {
+
+                if (!($(this).find('.ico').hasClass('checkboxCurrent')) && $(".popup_checkbox_hook .checkboxCurrent").length == popupCheckboxNum) {
+
+                    $('.popup_checkbox_all_hook').addClass('checkboxAllCurrent').find('.ico').addClass('checkboxCurrent');
+                    $('.popup_checkbox_all_hook').prev().prop("checked","true");
+                } else {
+                    $('.popup_checkbox_all_hook').removeClass('checkboxAllCurrent').find('.ico').removeClass('checkboxCurrent');
+                    $('.popup_checkbox_all_hook').prev().removeProp("checked");
+                }
+            })
+        });
+
+
     });
 
+    function openChosePopup(){
+        $('.mask-wrap').addClass('dis-table');
+        $(".fx-mask-box-1").show();
+    }
+
+
+    function closeChosePopup(){
+        $('.mask-wrap').removeClass('dis-table');
+        $(".fx-mask-box-1").hide();
+    }
 
     function checkForm(){
         var hasFlats = false;

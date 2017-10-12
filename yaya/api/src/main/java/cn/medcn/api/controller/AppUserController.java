@@ -2,6 +2,7 @@ package cn.medcn.api.controller;
 
 import cn.medcn.api.dto.Principal;
 import cn.medcn.api.utils.SecurityUtils;
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.SystemException;
@@ -73,6 +74,12 @@ public class AppUserController extends BaseController {
 
     @Autowired
     private SysPropertiesService sysPropertiesService;
+
+    @Value("${WeChat.mary.app_id}")
+    protected String maryAppId;
+
+    @Value("${WeChat.mary.app_secret}")
+    protected String maryAppSecret;
 
     /**
      * 前端定时请求此接口获取用户信息
@@ -196,7 +203,7 @@ public class AppUserController extends BaseController {
      */
     @RequestMapping("/set_wx_bind_status")
     @ResponseBody
-    public String changeWxBindStatus(String code)  {
+    public String changeWxBindStatus(String code, Integer masterId)  {
 
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
         AppUser user = appUserService.selectByPrimaryKey(userId);
@@ -216,7 +223,13 @@ public class AppUserController extends BaseController {
             //获取unionId
             OAuthDTO oAuthDTO = null;
             try {
-                oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code);
+                //判断是否是麦瑞app用户
+                // todo 暂时用这种方式处理 以后可能需要更加合理的设计
+                if (masterId != null && masterId == Constants.MARY_MASTER_ID) {
+                    oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code, maryAppId, maryAppSecret);
+                } else {
+                    oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code);
+                }
             } catch (SystemException e) {
                 return error(e.getMessage());
             }

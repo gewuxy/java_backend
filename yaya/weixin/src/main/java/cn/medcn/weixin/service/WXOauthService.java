@@ -19,6 +19,15 @@ public interface WXOauthService {
     OAuthDTO getOpenIdAndTokenByCode(String code) throws SystemException;
 
     /**
+     * 通过code获取授权openid
+     * @param code
+     * @param appKey
+     * @param appSecret
+     * @return
+     */
+    OAuthDTO getOpenIdAndTokenByCode(String code, String appKey, String appSecret) throws SystemException;
+
+    /**
      * 通过全局token和openid获取微信用户的昵称
      * @param openId
      * @return

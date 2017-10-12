@@ -60,8 +60,8 @@ public class MessageController extends BaseController {
         if (flats == null || flats.length == 0){
             throw new SystemException("请选择要发送到的平台");
         }
-        if (message.getGroupId() == null && message.getReceiver() == null){
-            throw new SystemException("参数错误:群组ID和用户ID不能同时为空！");
+        if (message.getChoseGroupIds() == null || message.getChoseGroupIds().length == 0){
+            throw new SystemException("请选择分组");
         }
         if (flats.length == 2){
             message.setFlat(JpushMessage.SendFlat.all.ordinal());

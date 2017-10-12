@@ -64,15 +64,15 @@ public class MeetingController extends BaseController {
     protected int expireDays;
 
 
-
     /**
      * 会议阅览
+     *
      * @param courseId
      * @return
      */
     @RequestMapping(value = "/view")
     @ResponseBody
-    public String view(Integer courseId){
+    public String view(Integer courseId) {
         AudioCourse audioCourse = audioService.findAudioCourse(courseId);
         return success(audioCourse);
     }
@@ -80,13 +80,14 @@ public class MeetingController extends BaseController {
 
     /**
      * 课件分享
+     *
      * @param signature 将参数进行DES加密之后的字符串
      * @param model
      * @param request
      * @return
      */
     @RequestMapping("/share")
-    public String share(String signature, Model model, HttpServletRequest request) throws SystemException{
+    public String share(String signature, Model model, HttpServletRequest request) throws SystemException {
 
         Map<String, Object> params = parseParams(signature);
         String id = (String) params.get("id");
@@ -117,7 +118,7 @@ public class MeetingController extends BaseController {
             model.addAttribute("live", live);
         }
 
-        return localeView("/meeting/course_"+course.getPlayType().intValue());
+        return localeView("/meeting/course_" + course.getPlayType().intValue());
     }
 
 
@@ -147,6 +148,7 @@ public class MeetingController extends BaseController {
 
     /**
      * 上传音频
+     *
      * @param file
      * @param courseId
      * @param detailId
@@ -154,7 +156,7 @@ public class MeetingController extends BaseController {
      */
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public String upload(@RequestParam(value = "file", required = false)MultipartFile file, Integer courseId, Integer detailId){
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer detailId) {
         StringBuffer buffer = new StringBuffer(FilePath.COURSE.path);
         buffer.append("/").append(courseId).append("/audio");
         String relativePath = buffer.toString();
@@ -172,12 +174,13 @@ public class MeetingController extends BaseController {
 
     /**
      * 直播指令
+     *
      * @param dto
      * @return
      */
     @RequestMapping(value = "/live")
     @ResponseBody
-    public String live(LiveOrderDTO dto){
+    public String live(LiveOrderDTO dto) {
         dto.setOrder(LiveOrderDTO.ORDER_LIVE);
         liveService.publish(dto);
         return success();
@@ -185,12 +188,13 @@ public class MeetingController extends BaseController {
 
     /**
      * 同步指令 在扫码投屏同步的时候用到
+     *
      * @param dto
      * @return
      */
     @RequestMapping(value = "/sync")
     @ResponseBody
-    public String sync(LiveOrderDTO dto){
+    public String sync(LiveOrderDTO dto) {
         dto.setOrder(LiveOrderDTO.ORDER_SYNC);
         liveService.publish(dto);
         return success();
@@ -198,12 +202,13 @@ public class MeetingController extends BaseController {
 
     /**
      * 扫码投屏直播|录播
+     *
      * @param courseId
      * @return
      */
     @RequestMapping(value = "/scan/callback")
     @ResponseBody
-    public String handleScan(Integer courseId){
+    public String handleScan(Integer courseId) {
         Principal principal = SecurityUtils.get();
         AudioCourse audioCourse = audioService.findAudioCourse(courseId);
         //判断用户是否有权限使用此课件
@@ -223,12 +228,13 @@ public class MeetingController extends BaseController {
 
     /**
      * ZeGo 直播流被创建的时候的回调
+     *
      * @param callback
      * @return
      */
     @RequestMapping(value = "/live/create")
     @ResponseBody
-    public String onCreate(ZeGoCallBack callback){
+    public String onCreate(ZeGoCallBack callback) {
         try {
             callback.signature();
 
@@ -251,12 +257,13 @@ public class MeetingController extends BaseController {
 
     /**
      * ZeGo 直播流被关闭的时候的回调
+     *
      * @param callback
      * @return
      */
     @RequestMapping(value = "/live/close")
     @ResponseBody
-    public String onClose(ZeGoCallBack callback){
+    public String onClose(ZeGoCallBack callback) {
         try {
             callback.signature();
             Integer channelId = Integer.valueOf(callback.getChannel_id());
@@ -274,12 +281,13 @@ public class MeetingController extends BaseController {
 
     /**
      * ZeGo 直播流重播地址获取时回调
+     *
      * @param callback
      * @return
      */
     @RequestMapping(value = "/live/replay")
     @ResponseBody
-    public String onReplay(ZeGoCallBack callback){
+    public String onReplay(ZeGoCallBack callback) {
         try {
             callback.signature();
 
