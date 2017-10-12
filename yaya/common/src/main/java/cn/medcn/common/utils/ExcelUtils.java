@@ -347,7 +347,9 @@ public class ExcelUtils {
                                     while (it.hasNext()){
                                         data = (String) it.next();
                                         fillCellData(sheetRow, excelField.columnIndex()+index, data);
+                                        index++;
                                     }
+
                                 }
                             }
                         }else{
