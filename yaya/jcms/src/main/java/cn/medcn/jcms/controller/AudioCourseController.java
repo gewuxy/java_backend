@@ -8,6 +8,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.ExcelUtils;
@@ -92,10 +93,28 @@ public class AudioCourseController extends BaseController {
     }
 
 
+    protected boolean isPick(String fileName){
+        fileName = fileName.toLowerCase();
+        boolean isPic = fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix)
+                || fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPEG.suffix)
+                || fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix);
+        return isPic;
+    }
+
     @RequestMapping(value = "/changeImg")
     @ResponseBody
-    public String changeImg(@RequestParam(value = "file", required = false)MultipartFile file, String meetId, Integer moduleId, Integer courseId, Integer detailId){
-        String dir = FilePath.COURSE.path+File.separator+courseId+File.separator+"ppt";
+    public String changeImg(@RequestParam(value = "file", required = false) MultipartFile file, String meetId, Integer moduleId, Integer courseId, Integer detailId) {
+        String fileName = file.getOriginalFilename();
+        boolean isPic = isPick(fileName);
+
+        try {
+            checkFileSize(file.getSize(), isPic);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+
+        String dir = FilePath.COURSE.path + "/" + courseId + "/" + (isPic ? "ppt" : "video");
+
         FileUploadResult result;
         try {
             result = fileUploadService.upload(file, dir);
@@ -104,8 +123,8 @@ public class AudioCourseController extends BaseController {
             return APIUtils.error(e.getMessage());
         }
         AudioCourseDetail detail = audioService.findDetail(detailId);
-        fileUploadService.removeFile(detail.getImgUrl());
-        detail.setImgUrl(result.getRelativePath());
+        //fileUploadService.removeFile(detail.getImgUrl());
+        modifyUrl(detail, isPic, result, dir);
         audioService.updateDetail(detail);
         return APIUtils.success();
     }
@@ -118,8 +137,8 @@ public class AudioCourseController extends BaseController {
      */
     @RequestMapping(value = "/changeAudio")
     @ResponseBody
-    public String changeAudio(@RequestParam(value = "file", required = false)MultipartFile file, Integer courseId, Integer detailId){
-        String dir = FilePath.COURSE.path+File.separator+courseId+File.separator+"audio";
+    public String changeAudio(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer detailId) {
+        String dir = FilePath.COURSE.path + File.separator + courseId + File.separator + "audio";
         FileUploadResult result;
         try {
             result = fileUploadService.upload(file, dir);
@@ -135,6 +154,30 @@ public class AudioCourseController extends BaseController {
         detail.setDuration(mediaInfo == null ? 0 : mediaInfo.getDuration());
         audioService.updateDetail(detail);
         return APIUtils.success();
+    }
+
+
+    protected void modifyUrl(AudioCourseDetail detail, boolean isPic, FileUploadResult result, String prefix){
+        if (isPic) {
+            detail.setImgUrl(result.getRelativePath());
+            detail.setVideoUrl("");
+        } else {
+            detail.setImgUrl(prefix + "/" +FFMpegUtils.printScreen(appFileUploadBase + result.getRelativePath()));
+            detail.setVideoUrl(result.getRelativePath());
+        }
+    }
+
+
+    protected void checkFileSize(Long fileSize, boolean isPic) throws SystemException {
+        if (isPic) {
+            if (fileSize > Constants.BYTE_UNIT_M) {
+                throw new SystemException("图片不能大于1M");
+            }
+        } else {
+            if (fileSize > Constants.BYTE_UNIT_M * 50){
+                throw new SystemException("视频不能大于50M");
+            }
+        }
     }
 
     /**
@@ -156,8 +199,15 @@ public class AudioCourseController extends BaseController {
         if (courseId == null) {
             courseId = createCourse(meetId, moduleId);
         }
+        boolean isPic = isPick(file.getOriginalFilename());
 
-        String dir = FilePath.COURSE.path+File.separator+courseId+File.separator+"ppt";
+        try {
+            checkFileSize(file.getSize(), isPic);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+
+        String dir = FilePath.COURSE.path + "/" + courseId + "/" + (isPic ? "ppt" : "video");
         FileUploadResult result;
         try {
             result = fileUploadService.upload(file, dir);
@@ -187,7 +237,7 @@ public class AudioCourseController extends BaseController {
             default:
                 break;
         }
-        detail.setImgUrl(result.getRelativePath());
+        modifyUrl(detail, isPic, result, dir);
         audioService.addDetail(detail);
         return APIUtils.success();
     }
@@ -268,7 +318,7 @@ public class AudioCourseController extends BaseController {
         if (!isMine) {
             return APIUtils.error(SpringUtils.getMessage("meet.notmine"));
         }
-        List<AudioHistoryDTO> audioList ;
+        List<AudioHistoryDTO> audioList;
         Map<String, Object> dataMap = null;
         if (!StringUtils.isEmpty(meetId)) {
             Map<String, Object> map = new HashMap<>();
@@ -374,7 +424,7 @@ public class AudioCourseController extends BaseController {
             conditionMap.put("userId", principal.getId());
             conditionMap.put("meetId", meetId);
 
-            if (userId!=null && userId != 0) {// 导出单个用户ppt明细时 需传入用户ID
+            if (userId != null && userId != 0) {// 导出单个用户ppt明细时 需传入用户ID
                 conditionMap.put("id", userId);
             }
 
@@ -445,12 +495,12 @@ public class AudioCourseController extends BaseController {
                 Integer groupIndex = SeePPTDetailExcelData.columnIndex.GROUP_NAME.getColumnIndex();
                 Integer watchTotalTimeIndex = SeePPTDetailExcelData.columnIndex.WATCH_TOTAL_TIME.getColumnIndex();
                 Integer finishRateIndex = SeePPTDetailExcelData.columnIndex.FINISH_RATE.getColumnIndex();
-                int[] columnIndexArray = new int[]{nameIndex,unitNameIndex,subUnitNameIndex,hosLevelIndex,titleIndex,
-                                provinceIndex,groupIndex,watchTotalTimeIndex,finishRateIndex};
-                if (pptTotalCount>1){
+                int[] columnIndexArray = new int[]{nameIndex, unitNameIndex, subUnitNameIndex, hosLevelIndex, titleIndex,
+                        provinceIndex, groupIndex, watchTotalTimeIndex, finishRateIndex};
+                if (pptTotalCount > 1) {
                     ExcelUtils.createMergeExcel(fileName, workbook, pptTotalCount, columnIndexArray, response);
                 } else {
-                    ExcelUtils.outputWorkBook(fileName,workbook,response);
+                    ExcelUtils.outputWorkBook(fileName, workbook, response);
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -464,10 +514,11 @@ public class AudioCourseController extends BaseController {
 
     /**
      * 填充用户观看ppt记录 excel表格
+     *
      * @param audioRecordDTO
      * @return
      */
-    private SeePPTDetailExcelData fillExcelData(AudioRecordDTO audioRecordDTO){
+    private SeePPTDetailExcelData fillExcelData(AudioRecordDTO audioRecordDTO) {
         UserInfoCheckHelper.checkPPTDetailUserDTO(audioRecordDTO);
 
         SeePPTDetailExcelData excelData = new SeePPTDetailExcelData();
@@ -487,7 +538,6 @@ public class AudioCourseController extends BaseController {
         excelData.setFinishRate("0%");
         return excelData;
     }
-
 
 
     /**

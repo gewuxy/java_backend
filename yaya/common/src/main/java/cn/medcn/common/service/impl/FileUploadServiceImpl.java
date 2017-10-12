@@ -33,22 +33,22 @@ public class FileUploadServiceImpl implements FileUploadService {
      * 文件上传
      *
      * @param file
-     * @param dir 相对路径目录 例如：headimg
+     * @param dir  相对路径目录 例如：headimg
      * @return
      */
     @Override
     public FileUploadResult upload(MultipartFile file, String dir) throws SystemException {
-        if(file == null){
+        if (file == null) {
             throw new SystemException("不能上传空文件");
         }
         String originalName = file.getOriginalFilename();
         String suffix = file.getOriginalFilename().substring(originalName.lastIndexOf("."));
-        if(!uploadAllowed.contains(suffix.substring(1).toLowerCase())){
-            throw new SystemException("文件格式["+suffix+"]不被允许上传");
+        if (!uploadAllowed.contains(suffix.substring(1).toLowerCase())) {
+            throw new SystemException("文件格式[" + suffix + "]不被允许上传");
         }
-        String relativePath = dir+File.separator+UUIDUtil.getNowStringID()+suffix;
-        File saveFile = new File(appUploadBase+File.separator+relativePath);
-        if(!saveFile.exists()){
+        String relativePath = dir + "/" + UUIDUtil.getNowStringID() + suffix;
+        File saveFile = new File(appUploadBase + "/" + relativePath);
+        if (!saveFile.exists()) {
             saveFile.mkdirs();
         }
         try {
@@ -57,7 +57,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             e.printStackTrace();
             throw new SystemException("保存文件出错");
         }
-        FileUploadResult result = new FileUploadResult(relativePath, appFileBase+relativePath);
+        FileUploadResult result = new FileUploadResult(relativePath, appFileBase + relativePath);
         return result;
     }
 
@@ -68,9 +68,9 @@ public class FileUploadServiceImpl implements FileUploadService {
      */
     @Override
     public void removeFile(String relativePath) {
-        if(!StringUtils.isEmpty(relativePath)){
-            File file = new File(appUploadBase+relativePath);
-            if(file.exists()){
+        if (!StringUtils.isEmpty(relativePath)) {
+            File file = new File(appUploadBase + relativePath);
+            if (file.exists()) {
                 file.delete();
             }
         }
@@ -78,12 +78,12 @@ public class FileUploadServiceImpl implements FileUploadService {
 
     @Override
     public FileUploadResult uploadBinaryWav(MultipartFile file, String dir) throws SystemException {
-        if(file == null){
+        if (file == null) {
             throw new SystemException("不能上传空文件");
         }
-        String relativePath = dir+File.separator+UUIDUtil.getNowStringID()+"."+ FileTypeSuffix.AUDIO_SUFFIX_WAV.suffix;
-        File saveFile = new File(appUploadBase+File.separator+relativePath);
-        if(!saveFile.exists()){
+        String relativePath = dir + File.separator + UUIDUtil.getNowStringID() + "." + FileTypeSuffix.AUDIO_SUFFIX_WAV.suffix;
+        File saveFile = new File(appUploadBase + File.separator + relativePath);
+        if (!saveFile.exists()) {
             saveFile.mkdirs();
         }
         try {
@@ -92,7 +92,7 @@ public class FileUploadServiceImpl implements FileUploadService {
             e.printStackTrace();
             throw new SystemException("保存文件出错");
         }
-        FileUploadResult result = new FileUploadResult(relativePath, appFileBase+relativePath);
+        FileUploadResult result = new FileUploadResult(relativePath, appFileBase + relativePath);
         return result;
     }
 }

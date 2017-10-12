@@ -889,5 +889,52 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         return null;
     }
 
+    /**
+     * 关闭或开启投稿功能
+     * @param userId
+     * @param flag
+     */
+    @Override
+    public void doChangeDelivery(Integer userId,Integer flag) {
+        AppDoctor condition = new AppDoctor();
+        condition.setUserId(userId);
+        AppDoctor result = appDoctorDAO.selectOne(condition);
+        if(result != null){
+            result.setDeliveryFlag(flag);
+            appDoctorDAO.updateByPrimaryKey(result);
+        }
+    }
 
+    /**
+     * 查询是否开启投稿功能
+     * @param userId
+     * @return
+     */
+    @Override
+    public int findDeliveryFlag(Integer userId) {
+        AppDoctor condition = new AppDoctor();
+        condition.setUserId(userId);
+        AppDoctor result = appDoctorDAO.selectOne(condition);
+        if(result != null){
+            return result.getDeliveryFlag();
+        }
+        return 0;
+    }
+
+
+    /**
+     * 查询所有的已关注用户
+     *
+     * @param userId
+     * @param groupIds
+     * @return
+     */
+    @Override
+    public List<AppUserSimpleDTO> findAllAttention(Integer userId, Integer[] groupIds) {
+        List<AppUserSimpleDTO> list = new ArrayList<>();
+        for (Integer groupId : groupIds) {
+            list.addAll(findAllAttation(userId, groupId));
+        }
+        return list;
+    }
 }

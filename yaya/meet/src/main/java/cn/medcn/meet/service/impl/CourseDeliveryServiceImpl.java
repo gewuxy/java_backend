@@ -90,4 +90,15 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize());
         return MyPage.page2Mypage((Page) courseDeliveryDAO.findAcceptors());
     }
+
+    /**
+     * 资源平台的投稿列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> findDeliveryList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
+        return MyPage.page2Mypage((Page) courseDeliveryDAO.findDeliveryList(pageable.getParams()));
+    }
 }

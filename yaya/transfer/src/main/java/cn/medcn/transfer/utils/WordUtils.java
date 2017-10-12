@@ -145,14 +145,6 @@ public class WordUtils {
 
 
     public static void main(String[] args)  {
-        String docFilePath = "D:\\临床指南综合\\临床指南综合\\产科\\其他疾病\\2011美国妊娠期可疑肺栓塞评估指南解读.doc";
-        String htmlFilePath = "D:\\converts\\17051915590566189016.html";
 
-        String pdfFilePath = "D:\\converts\\17051915590566189016.pdf";
-
-
-        wordToHtml(docFilePath, htmlFilePath);
-
-        wordToPDF(docFilePath, pdfFilePath);
     }
 }

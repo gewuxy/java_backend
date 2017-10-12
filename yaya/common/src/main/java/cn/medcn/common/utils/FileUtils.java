@@ -1,5 +1,6 @@
 package cn.medcn.common.utils;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.supports.MediaInfo;
 import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
@@ -102,7 +103,7 @@ public class FileUtils {
         if(StringUtils.isEmpty(filePath)){
             return null;
         }
-        if(filePath.toLowerCase().endsWith(".mp3")){
+        if(filePath.toLowerCase().endsWith(".mp4") || filePath.toLowerCase().endsWith(".mp3")){
             return parseMp3(filePath);
         }
         return parseOtherAudio(filePath);
@@ -270,8 +271,46 @@ public class FileUtils {
     }
 
 
+
+    public static String sizeStr(Long size, FileSize format){
+        if (format == null) {
+            format = FileSize.M;
+        }
+        if (format.equals(FileSize.G)) {
+            return gSize(size);
+        } else if (format.equals(FileSize.M)){
+            return mSize(size);
+        } else {
+            return kSize(size);
+        }
+    }
+
+
+    public static String sizeStr(Long size){
+        if (size > Constants.BYTE_UNIT_G) {
+            return sizeStr(size, FileSize.G);
+        } else if (size > Constants.BYTE_UNIT_M && size < Constants.BYTE_UNIT_G){
+            return sizeStr(size, FileSize.M);
+        } else {
+            return sizeStr(size, FileSize.K);
+        }
+    }
+
+    public static String kSize(Long size){
+        return size / Constants.BYTE_UNIT_K + "K";
+    }
+
+    public static String mSize(Long size){
+        return size / Constants.BYTE_UNIT_M + "M";
+    }
+
+    public static String gSize(Long size){
+        return size / Constants.BYTE_UNIT_G + "G";
+    }
+
+
     public static void main(String[] args) {
-        String filePath = "D:/lixuan/test/2651.mp3";
+        String filePath = "D:/lixuan/test/test.mp4";
         MediaInfo mediaInfo = parseAudioMediaInfo(filePath);
         if(mediaInfo != null){
             System.out.println("duration = "+mediaInfo.getDuration()+" - bitrate = "+mediaInfo.getBitRate());

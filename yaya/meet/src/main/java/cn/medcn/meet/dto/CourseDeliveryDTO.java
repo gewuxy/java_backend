@@ -32,4 +32,16 @@ public class CourseDeliveryDTO implements Serializable {
 
     // 正在播放的页码
     protected Integer livePage;
+
+    //ppt资源id
+    private Integer courseId;
+
+    //投稿者头像
+    private String avatar;
+
+    //投稿者姓名
+    private String name;
+
+    //投稿者邮箱
+    private String email;
 }

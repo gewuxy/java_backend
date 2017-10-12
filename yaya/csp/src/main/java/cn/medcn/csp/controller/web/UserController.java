@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  */
 @Controller
 @RequestMapping(value = "/web/user")
-public class CspUserController extends BaseController{
+public class UserController extends BaseController{
 
     @Autowired
     protected CspUserService cspUserService;
