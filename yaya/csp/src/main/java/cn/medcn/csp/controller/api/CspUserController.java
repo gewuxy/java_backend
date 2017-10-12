@@ -24,6 +24,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -324,7 +326,9 @@ public class CspUserController extends BaseController {
         } catch (SystemException e) {
             return error(e.getMessage());
         }
-        return success(url);
+        Map<String,String> map = new HashMap<>();
+        map.put("url",url);
+        return success(map);
     }
 
 
@@ -348,17 +352,17 @@ public class CspUserController extends BaseController {
     @RequestMapping("/resetPwd")
     @ResponseBody
     public String resetPwd(String oldPwd,String newPwd) {
-       if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
-           return error(local("user.empty.password"));
-       }
-       String userId = SecurityUtils.get().getId();
-       CspUserInfo result = cspUserService.selectByPrimaryKey(userId);
-       if(!MD5Utils.md5(oldPwd).equals(result.getPassword())){
-           return error(local("user.error.old.password"));
-       }
-        result.setPassword(MD5Utils.md5(newPwd));
-       cspUserService.updateByPrimaryKeySelective(result);
-       return success();
+
+        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
+            return error(local("user.empty.password"));
+        }
+        String userId = SecurityUtils.get().getId();
+        try {
+            cspUserService.resetPwd(userId,oldPwd,newPwd);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
     }
 
 

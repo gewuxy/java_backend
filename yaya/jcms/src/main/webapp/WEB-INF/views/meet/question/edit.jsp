@@ -16,7 +16,7 @@
             <ul class="xxk_title">
                 <li <c:if test="${qtype == 0}">class="on"</c:if>  data-t="0">单选</li>
                 <li <c:if test="${qtype == 1}">class="on"</c:if> data-t="1">多选</li>
-                <li <c:if test="${qtype == 2}">class="on"</c:if> data-t="2">填空</li>
+                <%--<li <c:if test="${qtype == 2}">class="on"</c:if> data-t="2">填空</li>--%>
                 <input type="hidden" name="qtype" value="${qtype}" id="qtype"/>
                 <span class="fr">分数：&nbsp;<input type="text" class="input_wenbk" name="point" maxlength="3" id="point" value="${question.point}">&nbsp;分</span>
             </ul>

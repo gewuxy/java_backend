@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -49,6 +50,9 @@ public class MeetController extends BaseController {
     @Value("${meet.sign.max.distance}")
     private String maxDistance;
 
+    @Value("${app.csp.base}")
+    private String cspBase;
+
     @Autowired
     private AudioService audioService;
 
@@ -73,6 +77,12 @@ public class MeetController extends BaseController {
 
     @Autowired
     private MeetFolderService meetFolderService;
+
+    @Autowired
+    private MeetMessageService meetMessageService;
+
+    @Autowired
+    private LiveService liveService;
 
 
     /**
@@ -181,7 +191,7 @@ public class MeetController extends BaseController {
     }
 
     /**
-     * 我关注过的公众的会议
+     * 我关注的公众号发布的会议
      *
      * @param state 会议状态
      * @return
@@ -206,6 +216,12 @@ public class MeetController extends BaseController {
                 meetService.setUserLearningRecord(folderDTO, userId);
                 if (folderDTO.getType() == MeetFolderDTO.FolderType.folder.ordinal()) { // 文件夹 设置相应的状态
                     folderDTO.setState(state);
+                } else {// 会议 直播状态为1 设置为直播中
+                    if (folderDTO.getLiveState() != null &&
+                            (folderDTO.getLiveState().intValue() == MeetFolderDTO.LiveLabel.LIVE.getState().intValue())
+                            ) {
+                        folderDTO.setLiveLabel(MeetFolderDTO.LiveLabel.LIVE.getLabel());
+                    }
                 }
             }
         }
@@ -342,6 +358,12 @@ public class MeetController extends BaseController {
     }
 
 
+    /**
+     * 进入ppt会议，增加实时会议
+     * @param meetId
+     * @param moduleId
+     * @return
+     */
     @RequestMapping(value = "/toppt")
     @ResponseBody
     public String toppt(String meetId, Integer moduleId) {
@@ -364,8 +386,33 @@ public class MeetController extends BaseController {
                 dto.setAudioUrl(StringUtils.isEmpty(dto.getAudioUrl()) ? "" : appFileBase + dto.getAudioUrl());
             }
         }
+
+        //查询评论数
+        MeetMessage message = new MeetMessage();
+        message.setMeetId(meetId);
+        int count = meetMessageService.selectCount(message);
+        audioDTO.setCount(count);
+
+        AudioCourse course = meetAudio.getCourse();
+        //实时会议，不是录播语音
+        if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
+            //直播音频webSocket连接地址
+            String socketUrl = cspBase + "/live/order";
+            audioDTO.setSocketUrl(socketUrl);
+            //添加视频直播
+            Live live = liveService.findByCourseId(course.getId());
+            audioDTO.setVideoLive(live);
+        }
+
+
+
+
+
         return APIUtils.success(audioDTO);
     }
+
+
+
 
 
     @RequestMapping(value = "/audio/record")
@@ -683,6 +730,9 @@ public class MeetController extends BaseController {
         }
         return success(page.getDataList());
     }
+
+
+
 
 
     /**

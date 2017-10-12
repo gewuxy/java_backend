@@ -47,7 +47,7 @@
         SELECT  m.id, m.meet_name,m.owner_id as pub_user_id, m.organizer, m.meet_type, m.introduction,m.state,p.start_time, p.end_time,
         ml.title as lecturer_title, ml.hospital as lecturer_hos, ml.depart as lecturer_depart,ml.headimg as lecturer_head,u.headimg,
         ml.name as lecturer, acd.img_url as cover_url, msx.prop_mode as requiredXs,msx.prop_value as xsCredits,msx.reward_limit as awardLimit,
-        mse.prop_mode as rewardCredit,mse.prop_value as eduCredits,mse.reward_limit as awardCreditLimit
+        mse.prop_mode as rewardCredit,mse.prop_value as eduCredits,mse.reward_limit as awardCreditLimit, c.play_type, m.primitive_id
         FROM t_meet m
         LEFT JOIN t_meet_prop p on m.id = p.meet_id
         LEFT JOIN t_meet_setting msx on msx.meet_id = m.id and msx.prop_type = 1
@@ -56,6 +56,7 @@
         LEFT JOIN t_meet_lecturer ml on ml.meet_id=m.id
         LEFT JOIN t_meet_audio ma on ma.meet_id = m.id AND ma.course_id > 0
         LEFT JOIN t_audio_course_detail acd on acd.course_id=ma.course_id AND acd.sort=1
+        LEFT JOIN t_audio_course c ON c.id = acd.course_id
         WHERE m.id = #{meetId}
         limit 1
     </select>

@@ -33,7 +33,7 @@ public class MeetFolderDTO {
     // 结束时间
     private Date endTime;
     //会议发布时间
-    private Data publishTime;
+    private Date publishTime;
     // 是否文件夹0 会议1
     private Integer type;
     // 会议数
@@ -67,9 +67,31 @@ public class MeetFolderDTO {
     /**主讲者头像*/
     private String lecturerHead;
 
+    // 直播状态 0表示未开始 1表示正在直播 2表示已关闭
+    protected Integer liveState;
+    protected String liveLabel;
 
     public enum FolderType{
         folder,
         meet;
+    }
+
+    public enum LiveLabel {
+        LIVE(1, "直播中");
+        private Integer state;
+        private String label;
+
+        public Integer getState() {
+            return state;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        LiveLabel(Integer state, String label) {
+            this.state = state;
+            this.label = label;
+        }
     }
 }

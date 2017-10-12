@@ -50,9 +50,19 @@ public class AudioCourse implements Serializable {
 
 
     public enum PlayType{
-        normal,//录播
-        live_ppt,//ppt直播
-        live_video;//视频直播
+        normal(0),//录播
+        live_ppt(1),//ppt直播
+        live_video(2);//视频直播
+
+        private Integer type;
+
+        public Integer getType(){
+            return type;
+        }
+
+        PlayType(Integer type){
+            this.type = type;
+        }
     }
 
 
