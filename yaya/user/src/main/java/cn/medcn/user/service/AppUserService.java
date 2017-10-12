@@ -249,4 +249,18 @@ public interface AppUserService extends BaseService<AppUser> {
      * @return
      */
     String executeUserRegister(AppUserDTO dto, String invite, Integer[] masterId, AppUser user);
+
+    /**
+     * 关闭或开启投稿功能
+     * @param userId
+     * @param flag
+     */
+    void doChangeDelivery(Integer userId,Integer flag);
+
+    /**
+     * 查询是否开启投稿功能
+     * @param userId
+     * @return
+     */
+    int findDeliveryFlag(Integer userId);
 }
