@@ -398,10 +398,6 @@ public class MeetController extends BaseController {
             audioDTO.setVideoLive(live);
         }
 
-
-
-
-
         return APIUtils.success(audioDTO);
     }
 
