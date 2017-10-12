@@ -179,12 +179,12 @@
     createAll: function(options, elements) {
       var audioElements = elements || document.getElementsByTagName('audio'),
           instances = []
-      options = options || {};
+          options = options || {};
       for (var i = 0, ii = audioElements.length; i < ii; i++) {
-
+        
         if ((" " + audioElements[i].parentNode.className + " ").replace(/[\n\t]/g, " ").indexOf(" audiojs ") > -1)
           continue;
-
+          
         instances.push(this.newInstance(audioElements[i], options));
       }
       return instances;
@@ -345,10 +345,10 @@
         if (audio.settings.preload) audio.element.init(audio.mp3);
         if (audio.settings.autoplay) audio.play.apply(audio);
       }
-      audio['getActiveTime'] = function() {
-        // Load the mp3 specified by the audio element into the swf.
+        audio['getActiveTime'] = function() {
+            // Load the mp3 specified by the audio element into the swf.
 
-      }
+        }
     },
 
     // ### Injecting an swf from a string
@@ -402,7 +402,7 @@
         var prepend = '',
             styles = document.getElementsByTagName('style'),
             css = string.replace(/\$1/g, audio.settings.imageLocation);
-        css = css.replace(/\$2/g, audio.settings.retinaImageLocation);
+            css = css.replace(/\$2/g, audio.settings.retinaImageLocation);
 
         for (var i = 0, ii = styles.length; i < ii; i++) {
           var title = styles[i].getAttribute('title');
@@ -524,19 +524,19 @@
       // As seen here: <https://github.com/dperini/ContentLoaded/>.
       ready: (function() { return function(fn) {
         var win = window, done = false, top = true,
-            doc = win.document, root = doc.documentElement,
-            add = doc.addEventListener ? 'addEventListener' : 'attachEvent',
-            rem = doc.addEventListener ? 'removeEventListener' : 'detachEvent',
-            pre = doc.addEventListener ? '' : 'on',
-            init = function(e) {
-              if (e.type == 'readystatechange' && doc.readyState != 'complete') return;
-              (e.type == 'load' ? win : doc)[rem](pre + e.type, init, false);
-              if (!done && (done = true)) fn.call(win, e.type || e);
-            },
-            poll = function() {
-              try { root.doScroll('left'); } catch(e) { setTimeout(poll, 50); return; }
-              init('poll');
-            };
+        doc = win.document, root = doc.documentElement,
+        add = doc.addEventListener ? 'addEventListener' : 'attachEvent',
+        rem = doc.addEventListener ? 'removeEventListener' : 'detachEvent',
+        pre = doc.addEventListener ? '' : 'on',
+        init = function(e) {
+          if (e.type == 'readystatechange' && doc.readyState != 'complete') return;
+          (e.type == 'load' ? win : doc)[rem](pre + e.type, init, false);
+          if (!done && (done = true)) fn.call(win, e.type || e);
+        },
+        poll = function() {
+          try { root.doScroll('left'); } catch(e) { setTimeout(poll, 50); return; }
+          init('poll');
+        };
         if (doc.readyState == 'complete') fn.call(win, 'lazy');
         else {
           if (doc.createEventObject && root.doScroll) {
@@ -650,10 +650,10 @@
       if (!this.settings.loop) this.pause.apply(this);
       this.settings.trackEnded.apply(this);
     },
-    getActiveTime: function(){
-      var abc = this.element.currentTime;
-      return this
-    }
+      getActiveTime: function(){
+          var abc = this.element.currentTime;
+          return this
+      }
   }
 
   // **getElementsByClassName**

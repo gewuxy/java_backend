@@ -14,7 +14,7 @@ h2 { font-family: 'bpreplay', sans-serif; font-weight: normal; font-size: 24px; 
 hidden; display:none; border-right: 1px solid #e3e3e3; }
 .audiojs p { display: none; width: 25px; height: 25px; margin: 0px; cursor: pointer; }
 .audiojs .play { display: block; }
-.audiojs .scrubber { position: relative; float: left; width: 500px; background:#fff url(../images/audio-scrubber.png) 0 10px repeat-x ; height: 24px; margin:5px
+.audiojs .scrubber { position: relative; float: left; width: 620px; background:#fff url(../images/audio-scrubber.png) 0 10px repeat-x ; height: 24px; margin:5px
 16px; border-top: 1px solid #fff; border-left: 0px; border-bottom: 0px;  }
 .audiojs .progress { position: absolute; top: 10px; left: 0px; height: 6px; width: 0px; background: #3fa9f5;
 z-index: 1; }
