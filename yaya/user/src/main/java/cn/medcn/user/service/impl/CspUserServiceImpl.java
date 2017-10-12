@@ -429,6 +429,22 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return fileBase + relativePath + fileName;
     }
 
+    /**
+     * 修改密码
+     * @param userId
+     * @param oldPwd
+     * @param newPwd
+     */
+    @Override
+    public void resetPwd(String userId, String oldPwd, String newPwd) throws SystemException {
+        CspUserInfo result = selectByPrimaryKey(userId);
+        if(!MD5Utils.md5(oldPwd).equals(result.getPassword())){
+            throw new SystemException(local("user.error.old.password"));
+        }
+        result.setPassword(MD5Utils.md5(newPwd));
+        updateByPrimaryKeySelective(result);
+    }
+
 
     protected interface Type{
         Integer EMAIL = 0;
