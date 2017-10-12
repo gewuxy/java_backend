@@ -150,6 +150,14 @@ public interface AppUserService extends BaseService<AppUser> {
      */
     List<AppUserSimpleDTO> findAllAttation(Integer userId, Integer groupId);
 
+    /**
+     * 查询所有的已关注用户
+     * @param userId
+     * @param groupIds
+     * @return
+     */
+    List<AppUserSimpleDTO> findAllAttention(Integer userId, Integer[] groupIds);
+
 
     /**
      * 获取弹窗信息

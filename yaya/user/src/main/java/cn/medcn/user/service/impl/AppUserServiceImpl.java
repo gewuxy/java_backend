@@ -889,5 +889,19 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         return null;
     }
 
-
+    /**
+     * 查询所有的已关注用户
+     *
+     * @param userId
+     * @param groupIds
+     * @return
+     */
+    @Override
+    public List<AppUserSimpleDTO> findAllAttention(Integer userId, Integer[] groupIds) {
+        List<AppUserSimpleDTO> list = new ArrayList<>();
+        for (Integer groupId : groupIds) {
+            list.addAll(findAllAttation(userId, groupId));
+        }
+        return list;
+    }
 }

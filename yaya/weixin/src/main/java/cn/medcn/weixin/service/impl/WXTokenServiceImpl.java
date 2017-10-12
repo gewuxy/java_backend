@@ -55,6 +55,7 @@ public class WXTokenServiceImpl extends WXBaseServiceImpl implements WXTokenServ
 
     /**
      * 通过url获取token并替换redis中的旧值
+     *
      * @return
      */
     @Override
@@ -67,7 +68,7 @@ public class WXTokenServiceImpl extends WXBaseServiceImpl implements WXTokenServ
     @Override
     public String getGlobalAccessToken() {
         String globalAccessToken = (String) redisCacheUtils.getCacheObject(WeixinConfig.WE_CHAT_GLOBAL_ACCESS_TOKEN_KEY);
-        if (StringUtils.isEmpty(globalAccessToken)){
+        if (StringUtils.isEmpty(globalAccessToken)) {
             globalAccessToken = refreshGlobalAccessToken();
         }
         return globalAccessToken;
@@ -87,17 +88,18 @@ public class WXTokenServiceImpl extends WXBaseServiceImpl implements WXTokenServ
 
     /**
      * 获取全局token
+     *
      * @param currentAppId
      * @param currentSecret
      * @return
      */
     @Override
     public String getTokenByParams(String currentAppId, String currentSecret) {
-        Map<String,Object> params = Maps.newHashMap();
-        params.put(WeixinConfig.PARAM_GRANT_TYPE_KEY,WeixinConfig.GRANT_TYPE_GET_ACCESS_TOKEN);
-        params.put(WeixinConfig.PARAM_APPID_KEY,currentAppId);
-        params.put(WeixinConfig.PARAM_SECRET_KEY,currentSecret);
-        String accessTokenStr = HttpUtils.get(WeixinConfig.GET_ACCESS_TOKEN_URL,params);
+        Map<String, Object> params = Maps.newHashMap();
+        params.put(WeixinConfig.PARAM_GRANT_TYPE_KEY, WeixinConfig.GRANT_TYPE_GET_ACCESS_TOKEN);
+        params.put(WeixinConfig.PARAM_APPID_KEY, currentAppId);
+        params.put(WeixinConfig.PARAM_SECRET_KEY, currentSecret);
+        String accessTokenStr = HttpUtils.get(WeixinConfig.GET_ACCESS_TOKEN_URL, params);
         String accessToken = (String) JsonUtils.getValue(accessTokenStr, WeixinConfig.ACCESS_TOKEN_KEY);
         return accessToken;
     }
@@ -127,8 +129,8 @@ public class WXTokenServiceImpl extends WXBaseServiceImpl implements WXTokenServ
 
     @Override
     public void downloadQR_code(String ticket, String sceneId) {
-        String downloadUrl = WeixinConfig.QRCODE_SHOW_URL+"?ticket="+ticket;
-        String saveDir = fileUploadBase+ FilePath.QRCODE+ File.separator;
-        FileUtils.downloadNetWorkFile(downloadUrl, saveDir, sceneId+"."+ FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix);
+        String downloadUrl = WeixinConfig.QRCODE_SHOW_URL + "?ticket=" + ticket;
+        String saveDir = fileUploadBase + FilePath.QRCODE + File.separator;
+        FileUtils.downloadNetWorkFile(downloadUrl, saveDir, sceneId + "." + FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix);
     }
 }

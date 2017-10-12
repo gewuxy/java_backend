@@ -67,12 +67,20 @@
                 slideDataNum++;
             });
 
+            function isPic(fileName){
+                return fileName.endsWith(".jpg") || fileName.endsWith(".png") || fileName.endsWith(".jpeg")
+            }
+
+            function isVideo(fileName){
+                var isVideo = fileName.endsWith(".mp4") || fileName.endsWith(".avi") || fileName.endsWith(".wmv") || fileName.endsWith("mpg") || fileName.endsWith("flv");
+                return isVideo;
+            }
 
             $("#addImgFile").change(function(){
                 var val = $(this).val();
                 val = val.toLowerCase();
-                if(!val.endsWith(".jpg") && !val.endsWith(".png") && !val.endsWith(".jpeg")){
-                    layer.msg("请上传jpg|png|jpeg文件");
+                if(!isPic(val) && !isVideo(val)){
+                    layer.msg("请上传jpg|png|jpeg<br>或者mp4|avi|wmv|mpg|flv文件");
                     return;
                 }
                 addPpt(addtype);
@@ -89,8 +97,8 @@
 
             $("#changeImgFile").change(function(){
                 var val = $(this).val();
-                if(!val.endsWith(".jpg") && !val.endsWith(".JPG")){
-                    layer.msg("请上传jpg文件");
+                if(!isPic(val) && !isVideo(val)){
+                    layer.msg("请上传jpg|png|jpeg<br>或者mp4|avi|wmv|mpg|flv文件");
                     return;
                 }
                 changePPT();
@@ -161,6 +169,23 @@
                     }
                 });
             });
+
+            //上传Hover 提示
+            $(".changeButton-tipsHover-hook").mouseenter(function(){
+                layer.tips('可更换1M以内的图片文件或50m以内的视频文件', '.changeButton-tipsHover-hook', {
+                    tips: [3, '#333'],
+                    time:2000
+                });
+            });
+
+
+            $(".changeButton-tipsHover2-hook").mouseenter(function(){
+                layer.tips('可添加1M以内的图片文件或50m以内的视频文件', '.changeButton-tipsHover2-hook', {
+                    tips: [3, '#333'],
+                    time:2000
+                });
+            });
+
         });
 
 
@@ -472,7 +497,15 @@
                                 <div class="swiper-wrapper" style="transform: translate3d(297.25px, 0px, 0px); transition-duration: 0ms;">
                                 <c:forEach items="${course.details}" var="detail" varStatus="status">
                                     <div class="swiper-slide swiper-slide-active" data-num="${status.index}" style="width: 544.5px; margin-right: 50px;" detailId="${detail.id}" audio-src="${detail.audioUrl}">
-                                        <img src="${appFileBase}/${detail.imgUrl}" alt="">
+                                        <c:choose>
+                                            <c:when test="${not empty detail.videoUrl}">
+                                                <video src="${appFileBase}/${detail.videoUrl}" width="720" height="280" controls poster="${appFileBase}/${detail.imgUrl}"></video>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <img src="${appFileBase}/${detail.imgUrl}" alt="">
+                                            </c:otherwise>
+                                        </c:choose>
+
                                         <div class="swiper-slide-metting-move" detailId="${detail.id}"><a href="javascript:;" class="delFile fx-btn-3"><span class="icon iconfont icon-minIcon16"></span>删除</a></div>
                                         <%--<div class="swiper-slide-metting-audio">--%>
                                             <%--<audio controls="" src="${appFileBase}/${detail.audioUrl}"></audio>--%>
@@ -485,8 +518,8 @@
                                 <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                                 <div class="metting-btn-item">
                                     <span class="swiper-button-prev metting-button swiper-button-disabled">上一页</span>
-                                    <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
-                                    <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
+                                    <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
+                                    <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover2-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
 
                                     <label><input type="file" name="file" id="changeAudioFile" class="none">
                                         <span class="metting-button bottom-blue"><span class="icon iconfont icon-minIcon9"></span>&nbsp;上传音频</span></label>

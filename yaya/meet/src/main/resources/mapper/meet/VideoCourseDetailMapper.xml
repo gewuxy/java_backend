@@ -3,7 +3,7 @@
 <mapper namespace="cn.medcn.meet.dao.VideoCourseDetailDAO" >
 
     <select id="findRootDetail" resultType="cn.medcn.meet.model.VideoCourseDetail">
-        SELECT id, pre_id, course_id, name, type, url, video_type, duration FROM t_video_course_detail
+        SELECT id, pre_id, course_id, name, type, url, video_type, duration, file_size FROM t_video_course_detail
         WHERE course_id = #{courseId} AND pre_id = 0
         ORDER BY id
     </select>

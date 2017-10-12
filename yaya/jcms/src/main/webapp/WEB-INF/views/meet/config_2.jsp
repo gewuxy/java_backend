@@ -78,9 +78,10 @@
                         </td>
                         <td class="tb-w-6" id="detail_videoType_${detail.id}">
                             <c:choose>
-                                <c:when test="${detail.videoType == 1}">
+                                <c:when test="${detail.fileSize == null}">
                                     外链无流量消耗
                                 </c:when>
+                                <c:otherwise>${detail.fileSizeStr}</c:otherwise>
                             </c:choose>
                         </td>
                         <td class="tb-w-2 p-le-1">
@@ -107,7 +108,7 @@
     <div class="dis-tbcell">
         <div class="distb-box distb-box-min fx-mask-box-1">
             <form id="folderForm" name="folderForm" method="post">
-                <input type="hidden" name="id">
+                <input type="hidden" name="id" >
                 <input type="hidden" name="preId" value="0">
                 <input type="hidden" name="type" value="0">
                 <input type="hidden" name="courseId" value="${course.id}">
@@ -126,40 +127,62 @@
         </div>
         <div class="distb-box distb-box-addViedoBox fx-mask-box-2">
             <form id="videoForm" name="videoForm" method="post">
-                <input type="hidden" name="id">
+                <input type="hidden" name="id" id="videoDetailId">
                 <input type="hidden" name="type" value="1">
                 <input type="hidden" name="videoType" value="1"/>
-                <input type="hidden" name="preId" value="0">
+                <input type="hidden" name="preId" value="0"  id="videoPreId">
                 <input type="hidden" name="courseId" value="${course.id}">
                 <div class="mask-hd clearfix">
                     <h3 class="font-size-1">添加视频</h3>
                     <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
                 </div>
-                <div class="fx-mask-box clearfix">
-                    <div class="formrow clearfix">
-                        <label for="" class="formTitle">文件名</label>
-                        <div class="formControls">
-                            <input type="text" class="textInput" name="name" maxlength="50" placeholder="视频名">
+                <div class="metting-popupbox-bd">
+                    <div class="tj-content clearfix">
+                        <div class="tab-wrap popup-tab-list">
+                            <span class="tab-menu tab-cur" index="0">本地上传</span>
+                            <span class="tab-menu" index="1">URL链接</span>
                         </div>
-                    </div>
-                    <div class="formrow clearfix">
-                        <label for="" class="formTitle">视频URL</label>
-                        <div class="formControls">
-                            <input type="text" class="textInput" name="url" maxlength="250" placeholder="请设置视频的地址">
+                        <div class="tab-con-wrap" style="display: block;" id="localVideoView">
+                            <div class="metting-upload-viedo-item">
+                                <label for="uploadVideo">
+                                    <input type="file" name="file" class="none" id="uploadVideo">
+                                    <h3 class="t-center">添加视频</h3>
+                                    <p class="t-center">视频大小最大500M</p>
+                                </label>
+                            </div>
+                            <!--完成上传后-->
+                            <div class="metting-progreesItem clearfix" id="uploadProgress" style="display: none;">
+                                <p><h4 id="uploadFileName"></h4></p>
+                                <p>上传文件的过程中，请勿关闭网页</p>
+                                <p><span class="metting-progreesBar"><i id="progressI" style="width:0%"></i></span>&nbsp;&nbsp;<span id="progressView">0%</span>&nbsp;&nbsp;<span class="color-blue">上传中...</span></p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="formrow clearfix">
-                        <label for="" class="formTitle">总时间（秒）</label>
-                        <div class="formControls">
-                            <input type="text" class="textInput" maxlength="20" name="duration" placeholder="请设置视频长度">
+                        <div class="tab-con-wrap" style="display: none;" id="normalVideoView">
+                            <div class="formrow clearfix">
+                                <label for="" class="formTitle">文件名</label>
+                                <div class="formControls">
+                                    <input type="text" class="textInput" name="name" maxlength="50" placeholder="视频名">
+                                </div>
+                            </div>
+                            <div class="formrow clearfix">
+                                <label for="" class="formTitle">视频URL</label>
+                                <div class="formControls">
+                                    <input type="text" class="textInput" name="url" maxlength="250" placeholder="请设置视频的地址">
+                                </div>
+                            </div>
+                            <div class="formrow clearfix">
+                                <label for="" class="formTitle">总时间（秒）</label>
+                                <div class="formControls">
+                                    <input type="text" class="textInput" maxlength="20" name="duration" placeholder="请设置视频长度">
+                                </div>
+                            </div>
+                            <div class="sb-btn-box p-btm-1 t-right">
+                                <input type="button" class="close-button-fx cur button" id="videoSubmitBtn" value="确认">
+                                <input type="button" class="close-button-fx button" id="videoCancelBtn" value="取消">
+                            </div>
                         </div>
                     </div>
                 </div>
-                <div class="sb-btn-box p-btm-1">
-                    <input type="button" class="close-button-fx cur button" id="videoSubmitBtn" value="确认">
-                    <input type="button" class="close-button-fx button" id="videoCancelBtn" value="取消">
-                </div>
-
             </form>
         </div>
 
@@ -192,7 +215,7 @@
 
        $("#addVideoBtn").click(function(){
            $("#videoForm").find("input[name='id']").val("");
-           openAddVideo();
+           openAddLocalVideo();
        });
 
        $(".close-btn-fx").click(function(){
@@ -250,7 +273,89 @@
            },'json');
        });
 
+       $(".popup-tab-list span").click(function () {
+           var index = $(this).attr("index");
+           if (index == 0){
+               openAddLocalVideo();
+           } else {
+               openAddVideo();
+           }
+
+       });
+
+       $("#uploadVideo").change(function(){
+            uploadVideo($(this));
+       });
+
     });
+
+    function uploadVideo(e){
+        var fileName = $(e).val().toLowerCase();
+        fileName = fileName.substring(fileName.lastIndexOf("\\") + 1);
+        if (!fileName.endsWith(".mp4") && !fileName.endsWith(".avi")){
+            layer.msg("请上传正确的视频文件");
+            return false;
+        }
+        $("#uploadFileName").text(fileName);
+        var index = layer.load(1, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        var detailId = $("#videoDetailId").val();
+        var preId = $("#videoPreId").val();
+        $("#progressI").css("width", "0%");
+        $("#progressView").text("0%");
+        uploadOver = false;
+        showUploadProgress();
+        $.ajaxFileUpload({
+            url: '${ctx}/func/meet/video/upload?courseId=${course.id}&preId='+preId+'&detailId='+detailId, //用于文件上传的服务器端请求地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: "uploadVideo", //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data)  //服务器成功响应处理函数
+            {
+                layer.close(index);
+                //回调函数传回传完之后的URL地址
+                if(data.code == 0){
+                    addRow(data.data);
+                    $("#uploadProgress").hide();
+                    closeDialog();
+                }else{
+                    layer.msg(data.msg);
+                }
+                $("#uploadVideo").replaceWith('<input type="file" id="uploadVideo" name="file" class="none">');
+                $("#uploadVideo").change(function(){
+                    uploadVideo($("#uploadVideo"));
+                });
+            },
+            error:function(data, status, e){
+                alert(e);
+                layer.close(index);
+            }
+        });
+    }
+
+    var uploadOver = false;
+
+    function showUploadProgress(){
+        $("#uploadProgress").show();
+        if (!uploadOver){
+            $.get('${ctx}/file/uploadStatus', {}, function (data) {
+                var progress = data.data.progress;
+                console.log("progress : "+progress);
+                $("#progressI").css("width", progress);
+                $("#progressView").text(progress);
+                if (progress != '100.0%'){
+                    setTimeout(showUploadProgress(), 200);
+                } else {
+                    uploadOver = true;
+                    $("#uploadProgress").hide();
+                    $.get('${ctx}/file/cleanProgress', {}, function (data) {
+
+                    }, 'json');
+                }
+            }, 'json');
+        }
+    }
 
     function saveFolderOrVideo(form){
         $.post('${ctx}/func/meet/video/save',form.serialize(),function (data) {
@@ -302,7 +407,7 @@
             '</td><td class="tb-w-2" id="detail_duration_'+data.id+'">'+
             (data.type == 0 ?"":(data.duration+"秒"))+
             '</td><td class="tb-w-6" id="detail_videoType_'+data.id+'">'+
-            (data.videoType == 1?"外链无流量消耗":"")+
+            (data.fileSizeStr == null ? "外链无流量消耗" : data.fileSizeStr)+
             '</td><td class="tb-w-2 p-le-1">'+
             '<a style="cursor: pointer;" id="detail_modify_'+data.id+'" detailId="'+data.id+'" class="yl fx-btn-4" onclick="loadDetailInfo('+data.id+')">修改</a><i class="rowSpace">|</i><a class="fx-btn-2 zai" onclick="delFile('+data.id+')" style="cursor: pointer" id="detail_del_'+data.id+'">删除</a>'+
             '</td></tr>';
@@ -328,7 +433,11 @@
             $("#videoForm").find("input[name='duration']").val(detail.duration);
             $("#videoForm").find("input[name='videoType']").val(detail.videoType);
             $("#videoForm").find("input[name='id']").val(detail.id);
-            openAddVideo();
+            if (detail.videoType == '0'){//内部链接
+                openAddLocalVideo();
+            } else {
+                openAddVideo();
+            }
         }
     }
 
@@ -354,9 +463,30 @@
     }
 
     function openAddVideo(){
+        //$("#videoForm")[0].reset();
         $('.mask-wrap').addClass('dis-table');
         $('.fx-mask-box-2').show();
         $("#videoForm").find("input[name='preId']").val(preId);
+        $("#videoForm").find("input[name='videoType']").val(1);
+        $("#normalVideoView").show();
+        $("#localVideoView").hide();
+        $(".popup-tab-list span[index='1']").siblings().removeClass("tab-cur");
+        $(".popup-tab-list span[index='1']").addClass("tab-cur");
+    }
+
+    function openAddLocalVideo() {
+        //$("#videoForm")[0].reset();
+        $('.mask-wrap').addClass('dis-table');
+        $('.fx-mask-box-2').show();
+        $("#videoForm").find("input[name='preId']").val(preId);
+
+        $("#videoForm").find("input[name='videoType']").val(0);
+
+        $("#normalVideoView").hide();
+        $("#localVideoView").show();
+
+        $(".popup-tab-list span[index='0']").siblings().removeClass("tab-cur");
+        $(".popup-tab-list span[index='0']").addClass("tab-cur");
     }
 
     function openConfirm(detailId){

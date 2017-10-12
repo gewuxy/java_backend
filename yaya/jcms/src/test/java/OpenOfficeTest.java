@@ -22,4 +22,11 @@ public class OpenOfficeTest {
 //        String targetFilePath = "course/test/";
 //        openOfficeService.convertPPT(pptFilePath, targetFilePath);
 //    }
+
+    @Test
+    public void testConvertHtml(){
+        String pptFilePath = "D:/lixuan/test/Z11021165.doc";
+        String htmlFilePath = "D:/lixuan/test/";
+        openOfficeService.convert2Html(pptFilePath, htmlFilePath);
+    }
 }

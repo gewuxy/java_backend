@@ -115,6 +115,9 @@ public class JpushMessage implements Serializable{
     private Integer groupId;
 
     @Transient
+    protected Integer[] choseGroupIds;
+
+    @Transient
     private String meetName;
 
     @Transient

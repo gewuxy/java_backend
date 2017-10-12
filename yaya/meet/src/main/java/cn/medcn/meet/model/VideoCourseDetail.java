@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.utils.FileUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -32,9 +33,18 @@ public class VideoCourseDetail implements Serializable{
     private Integer videoType;
     /**视频时长*/
     private Integer duration;
+    /**内部链接文件大小*/
+    protected Long fileSize;
 
     @Transient
     private Integer userdtime;
+
+    @Transient
+    protected String fileSizeStr;
+
+    public String getFileSizeStr(){
+        return fileSize == null ? null : FileUtils.mSize(fileSize);
+    }
 
     /***
      * 视频明细类型

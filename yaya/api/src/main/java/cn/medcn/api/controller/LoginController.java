@@ -73,6 +73,12 @@ public class LoginController extends BaseController{
     @Autowired
     private SysPropertiesService sysPropertiesService;
 
+    @Value("${WeChat.mary.app_id}")
+    protected String maryAppId;
+
+    @Value("${WeChat.mary.app_secret}")
+    protected String maryAppSecret;
+
 
     @RequestMapping(value = "/cas", method = RequestMethod.GET)
     @ResponseBody
@@ -112,7 +118,15 @@ public class LoginController extends BaseController{
         if(StringUtils.isEmpty(code)){
             return error("code不能为空");
         }
-        OAuthDTO oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code);
+        OAuthDTO oAuthDTO ;
+        String masterId = request.getParameter("masterId");
+        //判断是否是麦瑞定制版本
+        // todo 这里只是临时这样处理 以后有更多定制版的时候 需要更加合理的设计
+        if (masterId != null && Integer.valueOf(masterId) == Constants.MARY_MASTER_ID) {
+            oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code, maryAppId, maryAppSecret);
+        } else {
+            oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code);
+        }
         if(oAuthDTO == null){
             return error("获取openid失败");
         }
@@ -334,7 +348,7 @@ public class LoginController extends BaseController{
         //处理极光别名
         try {
             if(principal != null){
-                jPushService.cleanJpushByAlias(jPushService.generateAlias(principal.getUsername()));
+                jPushService.cleanJpushByAlias(jPushService.generateAlias(principal.getId()));
             }
         } catch (APIConnectionException e) {
             e.printStackTrace();
