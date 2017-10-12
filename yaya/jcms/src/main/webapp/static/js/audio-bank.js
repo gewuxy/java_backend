@@ -76,7 +76,7 @@
             <div class="loaded"></div> \
           </div> \
           <div class="time"> \
-            <em class="played">00:00</em>/<strong class="duration">00:00</strong> \
+            <em class="played">00:00</em>/<strong class="duration">00:00</strong>\
           </div> \
           <div class="error-message"></div>',
         playPauseClass: 'play-pause',
@@ -89,7 +89,8 @@
         errorMessageClass: 'error-message',
         playingClass: 'playing',
         loadingClass: 'loading',
-        errorClass: 'error'
+        errorClass: 'error',
+        countDownClass: 'countDown'
       },
       // The css used by the default player. This is is dynamically injected into a `<style>` tag in the top of the head.
       css: '',
@@ -121,7 +122,7 @@
             m = Math.floor(this.duration / 60),
             s = Math.floor(this.duration % 60);
         container[audiojs].helpers.removeClass(this.wrapper, player.loadingClass);
-        duration.innerHTML = ((m<10?'0':'')+m+':'+(s<10?'0':'')+s);
+        duration.innerHTML = ((m<10?'0':'')+m+':'+(s<10?'0':'')+s+'');
       },
       loadProgress: function(percent) {
         var player = this.settings.createPlayer,
@@ -149,12 +150,16 @@
         var player = this.settings.createPlayer,
             progress = getByClass(player.progressClass, this.wrapper);
         progress.style.width = Math.round(100 * percent) + '%';
-
+        //新增
+        this.countDown = this.duration - this.element.currentTime;
         var played = getByClass(player.playedClass, this.wrapper),
             p = this.duration * percent,
+            thism = Math.floor(this.countDown / 60),
+            thiss = Math.floor(this.countDown % 60);
             m = Math.floor(p / 60),
             s = Math.floor(p % 60);
-        played.innerHTML = ((m<10?'0':'')+m+':'+(s<10?'0':'')+s);
+        played.innerHTML = ((thism<10?'0':'')+thism+':'+(thiss<10?'0':'')+thiss);
+
       }
     },
 
@@ -570,6 +575,7 @@
     this.loadedPercent = 0;
     this.duration = 1;
     this.playing = false;
+    this.countDown = 0;
   }
 
   container[audiojsInstance].prototype = {
@@ -616,6 +622,8 @@
         this.loadedPercent = durationLoaded / this.duration;
 
         this.settings.loadProgress.apply(this, [this.loadedPercent]);
+
+
       }
     },
     playPause: function() {

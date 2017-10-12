@@ -19,4 +19,6 @@ public interface CourseDeliveryDAO extends Mapper<CourseDelivery> {
     List<CourseDeliveryDTO> findByAcceptId(Integer acceptId, String authorId);
 
     List<DeliveryAccepterDTO> findAcceptors();
+
+    List<CourseDeliveryDTO> findDeliveryList(Map<String, Object> params);
 }

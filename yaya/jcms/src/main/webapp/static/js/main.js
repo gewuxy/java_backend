@@ -15,7 +15,7 @@ $(function(){
 // 		$('.aside').removeClass('p-re-1');
 // 	}
 // }
-
+	
 // $(window).resize(function(){
 // 	resize();
 // }).resize();
@@ -24,7 +24,7 @@ $('.gz-list-tb a').on('click', function(){
 	$(this).addClass('cur').siblings().removeClass('cur');
 });
 
-//
+// 
 $('.yz-btn-link').on('click', function(){
 	$('.mask-wrap').show();
 });
@@ -116,7 +116,7 @@ if($('.slider-wrap').length>0) {
 }
 
 // 预览、转载点击
-$('.fx-btn-1,.fx-btn-2,.fx-btn-3,.fx-btn-4, .reback-btn').on('click', function(){
+$('.fx-btn-1,.fx-btn-2,.fx-btn-3,.fx-btn-4, .reback-btn, .fx-btn-5').on('click', function(){
 	$('.mask-wrap, .mask-wrap-2').addClass('dis-table');
 	$('.sb-que-box').show();
 });
@@ -133,8 +133,15 @@ $('.fx-btn-4').on('click', function(){
 	$('.fx-mask-box-4').show();
 });
 $('.close-button-fx, .close-btn-fx').on('click', function(){
+	$('.fx-mask-box-1,.fx-mask-box-2,.fx-mask-box-3,.fx-mask-box-4,.fx-mask-box-5').hide();
+	$('.mask-wrap, .mask-wrap-2').removeClass('dis-table');
+});
+$('.fx-btn-5').on('click', function(){
 	$('.fx-mask-box-1,.fx-mask-box-2,.fx-mask-box-3,.fx-mask-box-4').hide();
 	$('.mask-wrap, .mask-wrap-2').removeClass('dis-table');
+	$('.mask-wrap, .mask-wrap-2').addClass('dis-table');
+	$('.sb-que-box').show();
+	$('.fx-mask-box-5').show();
 });
 
 // 日历
@@ -349,16 +356,14 @@ if(leftMenuHeight || rightMainHeightTotal) {
 }
 
 //选框样式改版
-$(".chk-hook").click(function() {
-
-	if($("[name='checkbox']").attr("checked","true")){
+$(".chk-hook").on('click', function() {
+	if($(this).is(":checked")){
 		$(this).next().find(".ico").addClass("checkboxCurrent");
 	} else {
 		$(this).next().find(".ico").removeClass("checkboxCurrent");
 	};//全选
 });
 
-    //console.time("start");
 //自定义下拉
 var formSelect = $(".formPage-select-hook");
 formSelect.each(function(){
@@ -373,7 +378,19 @@ formSelect.each(function(){
         })
     };
 });
-    //console.timeEnd("end");
+
+//适配下拉
+if($(".aside").length || $(".hidden-box").length ){
+	$(".aside").perfectScrollbar();
+	$(".hidden-box").perfectScrollbar();
+};
+
+//
+// 	$('.formPage-select-arrow').click(function(){
+// 		$(this).next('.formPage-select').focus();
+// 	});
+
+
 
 
 });

@@ -7,8 +7,8 @@
 
     var HZRecorder = function (stream, config) {
         config = config || {};
-        config.sampleBits = config.sampleBits || 16;      //采样数位 8, 16
-        config.sampleRate = config.sampleRate || (44100 / 8);   //采样率(1/6 44100)
+        config.sampleBits = config.sampleBits || 8;      //采样数位 8, 16
+        config.sampleRate = config.sampleRate || (44100 / 6);   //采样率(1/6 44100)
 
 
         // var context = new webkitAudioContext();
@@ -24,7 +24,7 @@
             , inputSampleRate: context.sampleRate    //输入采样率
             , inputSampleBits: 16       //输入采样数位 8, 16
             , outputSampleRate: config.sampleRate    //输出采样率
-            , outputSampleBits: config.sampleBits       //输出采样数位 8, 16
+            , oututSampleBits: config.sampleBits       //输出采样数位 8, 16
             , input: function (data) {
                 this.buffer.push(new Float32Array(data));
                 this.size += data.length;
@@ -40,7 +40,8 @@
                 //压缩
                 var compression = parseInt(this.inputSampleRate / this.outputSampleRate);
                 var length = data.length / compression;
-                console.log('length = ' + length);
+                console.log('length' + length);
+                console.log('compression' + compression);
                 var result = new Float32Array(length);
                 var index = 0, j = 0;
                 while (index < length) {
@@ -143,7 +144,7 @@
         //上传
         this.upload = function (url, callback) {
             var fd = new FormData();
-            fd.append("file", this.getBlob());
+            fd.append("audioData", this.getBlob());
             console.log(fd);
             var xhr = new XMLHttpRequest();
             if (callback) {

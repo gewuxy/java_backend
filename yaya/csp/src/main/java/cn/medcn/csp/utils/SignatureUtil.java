@@ -20,7 +20,7 @@ public class SignatureUtil {
 
     private static final String TOKEN_URL = "https://api.sandbox.paypal.com/v1/oauth2/token";
     private static final String PAYMENT_DETAIL = "https://api.sandbox.paypal.com/v1/payments/payment/";
-    private static final String clientId = "clientId";
+    private static final String clientId = "ATBGjclV9GcygEwPz_58PUlxOvh0sJvC_Md3ZuTghMGlGIfQzgID_2zh93Ku44nMV6bcuGyoDvN3GHKv";
     private static final String secret = "secret";
 
     /**
