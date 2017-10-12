@@ -9,10 +9,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.common.utils.AddressUtils;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.DESUtils;
-import cn.medcn.common.utils.LocalUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
@@ -313,6 +310,35 @@ public class MeetingController extends BaseController {
         String cspUserId = principal.getId();
         pageable.put("cspUserId", cspUserId);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+
+        if (!CheckUtils.isEmpty(page.getDataList())) {
+            for (CourseDeliveryDTO deliveryDTO : page.getDataList()) {
+                // 当前播放第几页
+                if (deliveryDTO.getLivePage() == null) {
+                    deliveryDTO.setLivePage(0);
+                }
+
+                // 录播会议
+                if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType().intValue()) {
+                    // 转换录播音频时长格式
+                    deliveryDTO.setPlayTime(CalendarUtils.secToTime(Integer.parseInt(deliveryDTO.getPlayTime())));
+                } else {
+                    // 如果是直播会议 需计算直播时长
+                    int liveState = deliveryDTO.getLiveState().intValue();
+                    if (liveState == Live.LiveState.init.ordinal()) {
+                        // 直播未开始 设置直播开始时间
+                        deliveryDTO.setPlayTime(deliveryDTO.getStartTime().toString());
+                    } else if (liveState == Live.LiveState.usable.ordinal()) {
+                        // 直播中 计算直播开始时间和当前时间的时间差
+                        deliveryDTO.setPlayTime(CalendarUtils.getTimesDiff(deliveryDTO.getStartTime(), new Date()));
+                    } else {
+                        // 直播结束 计算直播开始和结束的时间差
+                        deliveryDTO.setPlayTime(CalendarUtils.getTimesDiff(deliveryDTO.getStartTime(), deliveryDTO.getEndTime()));
+                    }
+                }
+
+            }
+        }
         return success(page.getDataList());
     }
 
