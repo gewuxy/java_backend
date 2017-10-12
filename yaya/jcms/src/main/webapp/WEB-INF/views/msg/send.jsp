@@ -299,8 +299,12 @@
             return false;
         }
 
-        if($("#groupId").val() == '' || $("#groupId").val() == undefined){
-            layer.tips("请选择要发送的群组","#groupId");
+//        if($("#groupId").val() == '' || $("#groupId").val() == undefined){
+//            layer.tips("请选择要发送的群组","#groupId");
+//            return false;
+//        }
+        if($("#choseGroup").text() == ''){
+            layer.tips("请选择分组", "#choseGroup");
             return false;
         }
         return true;

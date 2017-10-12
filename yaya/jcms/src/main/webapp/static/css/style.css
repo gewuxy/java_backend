@@ -273,7 +273,7 @@ input.page-border { width: 40px; }
 .layer-hospital-popup .mettingSwiperBox .metting-swiper .swiper-button-next { background:url(../images/popup-palyer-next.png) right center no-repeat; padding-left:50px;}
 .layer-hospital-popup .mettingSwiperBox .swiper-pagination { position: static; display: inline-block; vertical-align: top; color:#fff; font-size:16px;}
 .layer-hospital-popup .mettingSwiperBox .metting-button {  display: inline-block; width:11px; height:22px; padding:0; border:none;}
-.layer-hospital-popup .mettingSwiperBox .metting-btn-item { top:inherit; position: absolute; bottom:-110px; left:50%; margin-left:-90px; }
+.layer-hospital-popup .mettingSwiperBox .metting-btn-item { top:inherit; position: absolute;/* bottom:-110px;*/ left:50%; margin-left:-90px; }
 .layer-hospital-popup .mettingSwiperBox .audio-metting-box { height:80px;}
 .layer-hospital-popup .mettingSwiperBox .swiper-button-disabled { background-color:transparent !important; opacity: 0.2; -moz-opacity: 0.2; -khtml-opacity: 0.2; filter: alpha(opacity=20);}
 .layer-hospital-popup .mettingSwiperBox .swiper-changeFullSize-button { position: absolute; right:25px; bottom:20px; }
