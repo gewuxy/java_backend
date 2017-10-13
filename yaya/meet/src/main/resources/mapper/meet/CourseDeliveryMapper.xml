@@ -30,7 +30,7 @@
 
 
     <select id="findDeliveryList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT td.id, tc.img_url AS coverUrl, td.source_id, tu.avatar,tu.user_name,tu.email FROM t_csp_delivery td
+        SELECT td.id, tc.img_url AS coverUrl, td.source_id, tu.avatar,tu.user_name as name,tu.email FROM t_csp_delivery td
         INNER JOIN t_audio_course_detail tc ON td.source_id = tc.course_id AND tc.sort = 1
         INNER JOIN t_csp_user_info tu ON td.author_id = tu.id
         WHERE td.accept_id = #{userId} AND td.publish_state = 0

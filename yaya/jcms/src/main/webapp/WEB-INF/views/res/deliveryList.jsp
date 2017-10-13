@@ -3,14 +3,8 @@
 <head>
     <title> 资源平台 - CSP投屏 </title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link href="${ctxStatic}/css/global.css" rel="stylesheet">
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.min.css" />
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
-    <link href="${ctxStatic}/css/style.css" rel="stylesheet">
-    <link rel="stylesheet" href="${ctxStatic}/css/iconfont.css">
-    <!--[if lt IE 9]>
-    <script src="${ctxStatic}/js/html5.js"></script>
-    <![endif]-->
 </head>
 <body>
 
@@ -22,7 +16,7 @@
         <div class="header-content">
             <div class="clearfix">
                 <div class="fl clearfix">
-                    <img src="images/subPage-header-image-03.png" alt="">
+                    <img src="${ctxStatic}/images/subPage-header-image-03.png" alt="">
                 </div>
                 <div class="oh">
                     <p><strong>资源平台</strong></p>
@@ -49,19 +43,51 @@
             <div class="table-top-box clearfix">
                 <div class="formrow t-right">
 					<span class="checkboxIcon">
-						<input type="checkbox" id="popup_checkbox_2" class="chk_1 chk-hook">
+                        <input type="checkbox" id="popup_checkbox_2" <c:if test="${flag == 1}"> checked </c:if> class="chk_1 chk-hook">
 						<label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico"></i>&nbsp;&nbsp;开启CSPmeeting来稿功能</label>
 					</span>&nbsp;
-                    <span class="question-tipsHover-hook"><img src="./images/icon-question.png" alt=""></span>
+                    <span class="question-tipsHover-hook"><img src="${ctxStatic}/images/icon-question.png" alt=""></span>
                 </div>
             </div>
-            <div class="resource-list clearfix">
+            <div class="resource-list clearfix" id="deliveryList">
                 <div class="row clearfix">
+                    <c:forEach items="${page.dataList}" var="d">
+                        <div class="col-lg-response">
+                            <div class="resource-list-box">
+                                <div class="resource-list-item">
+                                    <div class="resource-img ">
+                                        <img src="${d.coverUrl}" alt="" class="img-response">
+                                        <div class="resource-link">
+                                            <a href="#" class="resource-icon-play popup-player-hook">
+                                                <i></i>
+                                                预览
+                                            </a><a href="metting-now-step01.html" class="resource-icon-edit">
+                                            <i></i>
+                                            立即发布
+                                        </a>
+                                        </div>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="fl">
+                                            <img src="${d.avatar}" alt="">
+                                        </div>
+                                        <div class="oh">
+                                            <h3 >${d.name}</h3>
+                                            <p>${d.email}</p>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </c:forEach>
+
                     <div class="col-lg-response">
                         <div class="resource-list-box">
                             <div class="resource-list-item">
                                 <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
+                                    <img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">
                                     <div class="resource-link">
                                         <a href="#" class="resource-icon-play popup-player-hook">
                                             <i></i>
@@ -74,7 +100,7 @@
                                 </div>
                                 <div class="resource-info">
                                     <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
+                                        <img src="${ctxStatic}/img/_metting-min-img.jpg" alt="">
                                     </div>
                                     <div class="oh">
                                         <h3 >赵悦宾</h3>
@@ -89,65 +115,7 @@
                         <div class="resource-list-box">
                             <div class="resource-list-item">
                                 <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                    <span></span>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                    <span></span>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
+                                    <img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">
                                     <div class="resource-link">
                                         <a href="#" class="resource-icon-play popup-player-hook">
                                             <i></i>
@@ -160,151 +128,7 @@
                                 </div>
                                 <div class="resource-info">
                                     <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                    <span></span>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                    <span></span>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                    <span></span>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="./img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                    <span></span>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="img/_metting-min-img.jpg" alt="">
+                                        <img src="${ctxStatic}/img/_metting-min-img.jpg" alt="">
                                     </div>
                                     <div class="oh">
                                         <h3 >赵悦宾</h3>
@@ -317,74 +141,20 @@
                     </div>
                 </div>
             </div>
-            <div class="page-box-re t-right" >
-                <a href="">首页</a>
-                <a href="" class="prev-icon"><i></i></a>
-                <a href="" class="cur">1</a>
-                <a href="">2</a>
-                <a href="">3</a>
-                <a href="">4</a>
-                <a href="">5</a>
-                <span class="dot">...</span>
-                <a href="">352</a>
-                <a href="">353</a>
-                <a href="">354</a>
-                <a href="" class="next-icon"><i></i></a>
-                <a href="">尾页</a>
-                <span class="total-page">共354页</span>
-            </div>
+
+            <%@include file="/WEB-INF/include/pageable.jsp"%>
+
         </div>
     </div>
 </div>
 
-<div class="mask-wrap">
-    <div class="dis-tbcell">
+<form id="pageForm" name="pageForm" action="${ctx}/func/meet/delivery/list" method="post">
+    <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
+    <input type="hidden" name="pageNum" id="pageNum">
+    <input type="hidden" name="isOpen" id="isOpen" value="1">
+</form>
 
-        <div class="distb-box fx-mask-box-2">
-            <div class="mask-hd clearfix">
-                <h3 class="font-size-1">骨科常见通病的处理-会议转载</h3>
-                <span class="close-btn-fx"><img src="images/cha.png"></span>
-            </div>
-            <div class="mask-share-box">
-                <p class="top-txt color-black"><i class="color-blue">免费分享</i>会议转载后可立即使用</p>
-                <p>账户剩余<span class="color-black">350象数</span>，可继续<a href="" class="color-blue">充值</a>增加象数值</p>
-            </div>
-            <div class="sb-btn-box p-btm-1 t-right">
-                <button class="close-button-fx cur">确认</button>
-                <button class="close-button-fx">取消</button>
-            </div>
-        </div>
-        <div class="distb-box fx-mask-box-3">
-            <div class="mask-hd clearfix">
-                <h3 class="font-size-1">全院血糖管理-会议转载</h3>
-                <span class="close-btn-fx"><img src="images/cha.png"></span>
-            </div>
-            <div class="mask-share-box">
-                <p class="top-txt color-black">转载会议需使用<i class="color-blue">5000象数</i>，是否立即支付？</p>
-                <p>账户剩余<span class="color-black">350象数</span>，可继续<a href="" class="c-3">充值</a>增加象数值</p>
-            </div>
-            <div class="sb-btn-box p-btm-1 t-right">
-                <button class="close-button-fx cur">确认</button>
-                <button class="close-button-fx">取消</button>
-            </div>
-        </div>
-        <div class="distb-box fx-mask-box-4">
-            <div class="mask-hd clearfix">
-                <h3 class="font-size-1">2015年度关节质控会议-会议转载</h3>
-                <span class="close-btn-fx"><img src="images/cha.png"></span>
-            </div>
-            <div class="mask-share-box">
-                <p class="top-txt color-black">转载会议需将对每位参与者支付<i class="color-blue">200象数</i></p>
-                <p class="top-txt">请设定参与人数为<input type="text" class="bor-input-box">, 需支付<span>0象数</span></p>
-                <p>账户剩余<span class="color-black">350象数</span>，可继续<a href="" class="color-blue">充值</a>增加象数值</p>
-            </div>
-            <div class="sb-btn-box p-btm-1 t-right">
-                <button class="close-button-fx cur">确认</button>
-                <button class="close-button-fx">取消</button>
-            </div>
-        </div>
-    </div>
-</div>
+
 <!--弹出播放器-->
 <div class="layer-hospital-popup layer-black  layer-hospital-popup-hook">
     <div class="swiperBox mettingSwiperBox clearfix">
@@ -471,15 +241,16 @@
         </div>
     </div>
 </div>
-<script src="js/jquery.min.js"></script>
-<script src="js/slide.js"></script>
-<script src="js/swiper.jquery.min.js"></script>
-<script src="js/audio.js"></script>
-<script src="js/layer/layer.js"></script>
-<script src="js/perfect-scrollbar.jquery.min.js"></script>
-<script src="js/screenfull.min.js"></script>
-<script src="js/main.js"></script>
-<script src="js/popupAudioPalyer.js"></script>
+
+
+<script src="${ctxStatic}/js/jquery.min.js"></script>
+<script src="${ctxStatic}/js/slide.js"></script>
+<script src="${ctxStatic}/js/swiper.jquery.min.js"></script>
+<script src="${ctxStatic}/js/audio.js"></script>
+<script src="${ctxStatic}/js/layer/layer.js"></script>
+<script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+<script src="${ctxStatic}/js/screenfull.min.js"></script>
+<script src="${ctxStatic}/js/popupAudioPalyer.js"></script>
 
 <script>
     $(function(){
@@ -490,6 +261,34 @@
                 time:2000
             });
         });
+
+        $("#popup_checkbox_2").click(function(){
+            var flag = 0;
+            if($('#popup_checkbox_2').is(':checked')){
+                flag = 1;
+            }
+
+            $.ajax({
+                //服务器的地址
+                url:"${ctx}/func/meet/delivery/change?flag="+flag,
+                dataType:'json', //返回数据类型
+                type:'POST', //请求类型
+                contentType: "application/json; charset=utf-8",
+                success: function(data) {
+                    if(data.code == 0){
+                       if(flag == 0){
+                           //关闭投稿
+                           $("#deliveryList").empty();
+                           $(".page-box").empty();
+                       }else{
+                           window.location.href='${ctx}/func/meet/delivery/list?isOpen='+flag;
+                       }
+                    }
+                }
+
+            });
+        });
+
     })
 </script>
 
