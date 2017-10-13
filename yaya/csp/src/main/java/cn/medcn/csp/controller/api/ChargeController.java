@@ -186,6 +186,9 @@ public class ChargeController extends BaseController {
     @ResponseBody
     public String paypalResult(String paymentId,String orderId){
 
+        if(StringUtils.isEmpty(paymentId) || StringUtils.isEmpty(orderId)){
+            return error(local("user.param.empty"));
+        }
         String str = SignatureUtil.getPaymentDetails(paymentId);
         JSONObject detail = JSONObject.parseObject(str);
         //校验订单是否完成
