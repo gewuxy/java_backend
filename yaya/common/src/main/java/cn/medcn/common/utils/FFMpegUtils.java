@@ -1,13 +1,11 @@
 package cn.medcn.common.utils;
 
-import cn.medcn.common.supports.MediaInfo;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import java.io.*;
-import java.text.SimpleDateFormat;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -151,13 +149,13 @@ public class FFMpegUtils {
 
 
     public static void main(String[] args) {
-//        wavToMp3("D:/lixuan/test/0916.wav", "D:/lixuan/test/mp3");
+       wavToMp3("D:/lixuan/test/abc.mp3", "D:/lixuan/test/mp3");
         //System.out.println(duration("D:/lixuan/test/test.mp4"));
         //compress("D:/lixuan/test/2652.mp3", "D:/lixuan/test/mp3/");
         //cuttingAudio("D:/lixuan/test/韩济生.mp3","D:/lixuan/test/mp3/",new AudioPoint[]{new AudioPoint(0,30),new AudioPoint(30,80),new AudioPoint(80,110),new AudioPoint(110,200),new AudioPoint(200,280),new AudioPoint(280,350),new AudioPoint(350,830),new AudioPoint(830,2500)});
         //MediaInfo mediaInfo = parseMedia("D:/lixuan/test/2652.mp3");
         //System.out.println(mediaInfo);
 
-        printScreen("D:/lixuan/test/test.mp4");
+        //printScreen("D:/lixuan/test/test.mp4");
     }
 }
