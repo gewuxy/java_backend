@@ -114,15 +114,15 @@ public class LoginController extends BaseController{
      */
     @RequestMapping("/check_wx_bind")
     @ResponseBody
-    public String weChatLogin(String code,HttpServletRequest request) throws SystemException {
+    public String weChatLogin(String code, HttpServletRequest request) throws SystemException {
+        Integer masterId = TailorMadeUtils.get();
         if(StringUtils.isEmpty(code)){
             return error("code不能为空");
         }
         OAuthDTO oAuthDTO ;
-        String masterId = request.getParameter("masterId");
         //判断是否是麦瑞定制版本
         // todo 这里只是临时这样处理 以后有更多定制版的时候 需要更加合理的设计
-        if (masterId != null && Integer.valueOf(masterId) == Constants.MARY_MASTER_ID) {
+        if (masterId != null && masterId == Constants.MARY_MASTER_ID) {
             oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code, maryAppId, maryAppSecret);
         } else {
             oAuthDTO = wxOauthService.getOpenIdAndTokenByCode(code);
@@ -141,10 +141,17 @@ public class LoginController extends BaseController{
             map.put("openid",oAuthDTO.getOpenid());
             return success(map);
         }
+
         //已绑定，返回用户信息
         AppUser find = new AppUser();
         find.setUnionid(unionId);
         AppUser user = appUserService.selectOne(find);
+
+        //如果有masterId 则给用户增加指定的单位号的关注
+        if (masterId != null && masterId != 0){
+            appUserService.executeAttention(user.getId(), masterId);
+        }
+
         AppUserDTO dto = updateUserInfoAndGetDTO(user,request);
         return success(dto);
     }
@@ -155,7 +162,6 @@ public class LoginController extends BaseController{
      * @param username
      * @param password
      * @param openid 当openid不为空时，执行绑定微信号功能
-     * @param masterId 定制版需要传递的单位号ID
      * @param request
      * @return
      * @throws SystemException
@@ -163,7 +169,8 @@ public class LoginController extends BaseController{
      */
     @RequestMapping(value = "/login")
     @ResponseBody
-    public String login(String username, String password, String openid, Integer masterId, HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
+    public String login(String username, String password, String openid, HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
+        Integer masterId = TailorMadeUtils.get();
         if (StringUtils.isEmpty(username)) {
             return error(SpringUtils.getMessage("user.username.notnull"));
         }
@@ -264,6 +271,9 @@ public class LoginController extends BaseController{
         String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
         Principal principal = SecurityUtils.getCurrentUserInfo();
         String alias = jPushService.generateAlias(principal.getId());
+
+        //System.out.println("regId = "+registionId + " - userId = " + principal.getId() + " - alias = " + alias);
+
         Set<String> tags = Sets.newHashSet();
         try {
             if(!StringUtils.isEmpty(osType)){

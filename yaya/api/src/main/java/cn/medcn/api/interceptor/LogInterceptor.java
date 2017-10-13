@@ -3,6 +3,8 @@ package cn.medcn.api.interceptor;
 import cn.medcn.api.dto.Principal;
 import cn.medcn.api.utils.SecurityUtils;
 import cn.medcn.common.Constants;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.TailorMadeUtils;
 import cn.medcn.user.model.AppInfo;
 import cn.medcn.user.model.AppLog;
 import cn.medcn.user.service.LogService;
@@ -24,6 +26,8 @@ public class LogInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
+        String masterId = httpServletRequest.getHeader(Constants.MASTER_ID_KEY);
+        TailorMadeUtils.set(CheckUtils.isEmpty(masterId) ? null : Integer.valueOf(masterId));
         Long start = System.currentTimeMillis();
         httpServletRequest.setAttribute(Constants.LOG_START_KEY, start);
         return true;
