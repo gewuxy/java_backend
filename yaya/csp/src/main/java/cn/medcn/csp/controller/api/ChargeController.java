@@ -82,7 +82,7 @@ public class ChargeController extends BaseController {
         }
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
-        return success(charge.toString());
+        return success(charge);
 
     }
 
