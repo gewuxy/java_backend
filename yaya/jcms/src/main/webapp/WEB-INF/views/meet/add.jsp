@@ -102,9 +102,13 @@
 						<span class="time-tj">
 							<label for="" id="timeStart">
 								<a href="javascript:;" class="callTimedate timedate-icon">选择日期</a>会议时间：
-                                <input type="text" readonly name="meetProperty.startTime" id="startTime" style="width: 115px;" value="${startTime}" class="timedate-input ">
+                                <input type="text"  name="meetProperty.startTime" id="startTime" style="width: 115px;"
+                                       <c:if test="${not empty liveStartTime}"> value="${liveStartTime}" readonly="readonly"</c:if>
+                                <c:if test="${empty liveStartTime}"> value="${startTime}" readonly </c:if>class="timedate-input ">
                                 <span> ~ </span>
-                                <input type="text" readonly name="meetProperty.endTime" id="endTime" style="width: 115px;" value="${endTime}" class="timedate-input " >
+                                <input type="text"  name="meetProperty.endTime" id="endTime" style="width: 115px;"
+                                        <c:if test="${not empty liveEndTime}"> value="${liveEndTime}" readonly="readonly"</c:if>
+                                <c:if test="${empty liveEndTime}"> value="${endTime}" readonly </c:if>class="timedate-input " >
                                 <span class="formIconTips none" ><img src="${ctxStatic}/images/icon-error.png" alt="">&nbsp;&nbsp;&nbsp;请输入会议起止时间</span>
 							</label>
 						</span>
@@ -612,28 +616,32 @@
         editor.create();
 
         $(".callTimedate").on('click',function(){
-            $('#timeStart').trigger('focus');
-        });
-        $('#timeStart').dateRangePicker({
-            singleMonth: true,
-            showShortcuts: false,
-            showTopbar: false,
-            startOfWeek: 'monday',
-            separator : ' ~ ',
-            format: 'YYYY/MM/DD HH:mm',
-            autoClose: false,
-            time: {
-                enabled: true
+            var isNull = ${empty liveStartTime};
+            if(isNull){
+                $('#timeStart').trigger('focus');
+                $('#timeStart').dateRangePicker({
+                    singleMonth: true,
+                    showShortcuts: false,
+                    showTopbar: false,
+                    startOfWeek: 'monday',
+                    separator : ' ~ ',
+                    format: 'YYYY/MM/DD HH:mm',
+                    autoClose: false,
+                    time: {
+                        enabled: true
+                    }
+                }).bind('datepicker-first-date-selected', function(event, obj){
+                    /*首次点击的时间*/
+                    console.log('first-date-selected',obj);
+                }).bind('datepicker-change',function(event,obj){
+                    /* This event will be triggered when second date is selected */
+                    var timeArr = obj.value.split("~");
+                    $("#startTime").val($.trim(timeArr[0]));
+                    $("#endTime").val($.trim(timeArr[1]));
+                });
             }
-        }).bind('datepicker-first-date-selected', function(event, obj){
-            /*首次点击的时间*/
-            console.log('first-date-selected',obj);
-        }).bind('datepicker-change',function(event,obj){
-            /* This event will be triggered when second date is selected */
-            var timeArr = obj.value.split("~");
-            $("#startTime").val($.trim(timeArr[0]));
-            $("#endTime").val($.trim(timeArr[1]));
         });
+
 
         $(".formImgRadio-item").click(function(){
             if ($(this).hasClass("current")) {
@@ -769,6 +777,7 @@
 
     // 提交表单 检查
     function checkForm(){
+
         $(".formIconTips").addClass("none");
         var meetName = $("#meetName").val();
         var endTime = $("#endTime").val();
@@ -851,6 +860,14 @@
         if(!hasFun){
             top.layer.msg("请至少选中一个功能");
             return false;
+        }
+
+        //csp投稿或者引用资源，必须选择添加课件功能
+        if(${not empty courseId}){
+            if(!$("#radio1").is(':checked')){  //没有选择添加课件
+                top.layer.msg("请选中添加课件功能");
+                return false;
+            }
         }
         return true;
     }
