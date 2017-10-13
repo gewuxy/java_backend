@@ -9,10 +9,13 @@ import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.xml.bind.SchemaOutputResolver;
 
 /**
  * Created by lixuan on 2017/9/26.
@@ -26,6 +29,9 @@ public class DeliveryController extends BaseController {
 
     @Autowired
     private CourseDeliveryService courseDeliveryService;
+
+    @Value("${app.file.base}")
+    private String fileBase;
 
     @RequestMapping(value = "/accept")
     @ResponseBody
@@ -48,24 +54,32 @@ public class DeliveryController extends BaseController {
 
     /**
      *
+     * @param isOpen  翻页时带此参数，说明已经开启投稿
      * @param pageable
+     * @param model
      * @return
      */
     @RequestMapping(value = "/list")
-    @ResponseBody
-    public String users(Pageable pageable, Model model){
+    public String users(Integer isOpen,Pageable pageable, Model model){
         Integer userId = SubjectUtils.getCurrentUserid();
-        //查询用户是否开启投稿功能
-        if(pageable.getPageNum() == 1){
+        if(isOpen == null){  //点击资源平台动作
+            //查询用户是否开启投稿功能
+
             int flag = appUserService.findDeliveryFlag(userId);
             if(flag == 0){  //没有开启投稿功能
-                return success();
+                return "/res/deliveryList";
             }
         }
 
         pageable.put("userId",userId);
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
-        model.addAttribute("list",myPage.getDataList());
-        return "/res/";
+        for(CourseDeliveryDTO dto:myPage.getDataList()){
+            if(dto.getAvatar() != null){
+                dto.setAvatar(fileBase + dto.getAvatar());
+            }
+        }
+        model.addAttribute("page",myPage);
+        model.addAttribute("flag",1);
+        return "/res/deliveryList";
     }
 }
