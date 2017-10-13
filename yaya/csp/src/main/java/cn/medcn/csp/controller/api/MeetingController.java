@@ -326,23 +326,27 @@ public class MeetingController extends BaseController {
                 if (deliveryDTO.getLivePage() == null) {
                     deliveryDTO.setLivePage(0);
                 }
+                if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
+                    deliveryDTO.setCoverUrl(fileUploadBase + deliveryDTO.getCoverUrl());
+                }
 
                 // 录播会议
                 if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType().intValue()) {
                     // 转换录播音频时长格式
-                    deliveryDTO.setPlayTime(CalendarUtils.secToTime(Integer.parseInt(deliveryDTO.getPlayTime())));
+                    long secondTime = Long.parseLong(deliveryDTO.getPlayTime());
+                    deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(null,null, secondTime));
                 } else {
                     // 如果是直播会议 需计算直播时长
                     int liveState = deliveryDTO.getLiveState().intValue();
                     if (liveState == Live.LiveState.init.ordinal()) {
                         // 直播未开始 设置直播开始时间
-                        deliveryDTO.setPlayTime(deliveryDTO.getStartTime().toString());
+                        deliveryDTO.setPlayTime(CalendarUtils.transferLongToDate(deliveryDTO.getStartTime().getTime(),"MM月dd日 HH:mm"));
                     } else if (liveState == Live.LiveState.usable.ordinal()) {
                         // 直播中 计算直播开始时间和当前时间的时间差
-                        deliveryDTO.setPlayTime(CalendarUtils.getTimesDiff(deliveryDTO.getStartTime(), new Date()));
+                        deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(deliveryDTO.getStartTime(), new Date(),0));
                     } else {
                         // 直播结束 计算直播开始和结束的时间差
-                        deliveryDTO.setPlayTime(CalendarUtils.getTimesDiff(deliveryDTO.getStartTime(), deliveryDTO.getEndTime()));
+                        deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(deliveryDTO.getStartTime(), deliveryDTO.getEndTime(),0));
                     }
                 }
 
