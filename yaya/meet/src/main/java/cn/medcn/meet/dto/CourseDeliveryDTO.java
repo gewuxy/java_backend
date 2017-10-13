@@ -27,11 +27,15 @@ public class CourseDeliveryDTO implements Serializable {
 
     // 直播状态 0表示未开始 1表示正在直播 2表示已关闭
     protected Integer liveState;
+
     // ppt总页数
     protected Integer pageCount;
 
     // 正在播放的页码
     protected Integer livePage;
+
+    // 播放时长
+    protected String playTime;
 
     //ppt资源id
     private Integer courseId;

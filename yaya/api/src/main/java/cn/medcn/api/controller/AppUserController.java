@@ -197,14 +197,13 @@ public class AppUserController extends BaseController {
     /**
      * 设置模块下绑定或解绑微信
      * @param code 如果是绑定操作，传递code
-     * @param
      * @return
      *
      */
     @RequestMapping("/set_wx_bind_status")
     @ResponseBody
-    public String changeWxBindStatus(String code, Integer masterId)  {
-
+    public String changeWxBindStatus(String code)  {
+        Integer masterId = TailorMadeUtils.get();
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
         AppUser user = appUserService.selectByPrimaryKey(userId);
         String unionId = user.getUnionid();

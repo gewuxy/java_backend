@@ -14,10 +14,12 @@ import cn.jpush.api.push.model.audience.Audience;
 import cn.jpush.api.push.model.notification.AndroidNotification;
 import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
+import cn.medcn.common.Constants;
 import cn.medcn.common.service.JPushClientCreator;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.TailorMadeUtils;
 import com.google.common.collect.Maps;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -36,7 +38,33 @@ public class JPushServiceImpl implements JPushService {
     private static Log log = LogFactory.getLog(JPushServiceImpl.class);
 
     private JPushClient getJPushClient() {
-        return JPushClientCreator.YAYACLIENT.getClient();
+        Integer masterId = TailorMadeUtils.get();
+        return JPushClientCreator.getInstance(masterId);
+    }
+
+    /**
+     * 循环发送到所有注册过的客户端
+     *
+     * @param pushPayload
+     * @return
+     */
+    protected int loopSend(PushPayload pushPayload) {
+        int result = 0;
+        for (JPushClientCreator creator : JPushClientCreator.values()) {
+            try {
+                JPushClient client = creator.getClient();
+                System.out.println("client = " + client.toString());
+                PushResult pushResult = client.sendPush(pushPayload);
+                if (pushResult.getResponseCode() == 200) {
+                    result = 1;
+                }
+            } catch (APIConnectionException e) {
+                e.printStackTrace();
+            } catch (APIRequestException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
 
     /**
@@ -51,42 +79,21 @@ public class JPushServiceImpl implements JPushService {
      */
     @Override
     public int sendToAlias(String alias, String notification_title, String msg_title, String msg_content, Map<String, String> extrasParam) {
-        int result = 0;
-        try {
-            PushPayload pushPayload = buildPushObject_all_registrationId_alertWithTitle(alias, notification_title, msg_title, msg_content, extrasParam);
-            LogUtils.debug(log, pushPayload.toString());
-            PushResult pushResult = getJPushClient().sendPush(pushPayload);
-            if (pushResult.getResponseCode() == 200) {
-                result = 1;
-            }
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-        } catch (APIRequestException e) {
-            e.printStackTrace();
-        }
-
-        return result;
-
+        PushPayload pushPayload = buildPushObject_all_registrationId_alertWithTitle(alias, notification_title, msg_title, msg_content, extrasParam);
+        LogUtils.debug(log, pushPayload.toString());
+//            PushResult pushResult = getJPushClient().sendPush(pushPayload);
+//            if (pushResult.getResponseCode() == 200) {
+//                result = 1;
+//            }
+        return loopSend(pushPayload);
     }
 
 
     @Override
     public int sendMessageToAlias(String alias, Map<String, String> extrasParam) {
-        int result = 0;
-        try {
-            PushPayload pushPayload = buildPushObject_all_message(alias, extrasParam);
-            LogUtils.debug(log, pushPayload.toString());
-            PushResult pushResult = getJPushClient().sendPush(pushPayload);
-            if (pushResult.getResponseCode() == 200) {
-                result = 1;
-            }
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-        } catch (APIRequestException e) {
-            e.printStackTrace();
-        }
-
-        return result;
+        PushPayload pushPayload = buildPushObject_all_message(alias, extrasParam);
+        LogUtils.debug(log, pushPayload.toString());
+        return loopSend(pushPayload);
     }
 
     /**
@@ -100,20 +107,9 @@ public class JPushServiceImpl implements JPushService {
      */
     @Override
     public int sendToAllAndroid(String notification_title, String msg_title, String msg_content, Map<String, String> extrasParam) {
-        int result = 0;
-        try {
-            PushPayload pushPayload = buildPushObject_android_all_alertWithTitle(notification_title, msg_title, msg_content, extrasParam);
-            LogUtils.debug(log, pushPayload.toString());
-            PushResult pushResult = getJPushClient().sendPush(pushPayload);
-            if (pushResult.getResponseCode() == 200) {
-                result = 1;
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-
-        return result;
+        PushPayload pushPayload = buildPushObject_android_all_alertWithTitle(notification_title, msg_title, msg_content, extrasParam);
+        LogUtils.debug(log, pushPayload.toString());
+        return loopSend(pushPayload);
     }
 
     /**
@@ -127,21 +123,9 @@ public class JPushServiceImpl implements JPushService {
      */
     @Override
     public int sendToAllIos(String notification_title, String msg_title, String msg_content, Map<String, String> extrasParam) {
-        int result = 0;
-        try {
-            PushPayload pushPayload = buildPushObject_ios_all_alertWithTitle(notification_title, msg_title, msg_content, extrasParam);
-            LogUtils.debug(log, pushPayload.toString());
-            //getJPushClient().
-            PushResult pushResult = getJPushClient().sendPush(pushPayload);
-            if (pushResult.getResponseCode() == 200) {
-                result = 1;
-            }
-        } catch (Exception e) {
-
-            e.printStackTrace();
-        }
-
-        return result;
+        PushPayload pushPayload = buildPushObject_ios_all_alertWithTitle(notification_title, msg_title, msg_content, extrasParam);
+        LogUtils.debug(log, pushPayload.toString());
+        return loopSend(pushPayload);
     }
 
     /**
@@ -193,7 +177,7 @@ public class JPushServiceImpl implements JPushService {
      */
     @Override
     public void bindAliasAndTags(String registrationId, String alias, Set<String> tags) throws APIConnectionException, APIRequestException {
-        AliasDeviceListResult result = findAliasDeviceRsultByAlias(alias);
+        AliasDeviceListResult result = findAliasDeviceResultByAlias(alias);
         List<String> registrationIds = result.registration_ids;
         boolean existedAlias = false;
         if (registrationIds.size() > 1) {//有重复别名的时候
@@ -217,9 +201,9 @@ public class JPushServiceImpl implements JPushService {
     }
 
     @Override
-    public AliasDeviceListResult findAliasDeviceRsultByAlias(String alias) throws APIConnectionException, APIRequestException {
-        AliasDeviceListResult resultAndriod = getJPushClient().getAliasDeviceList(alias, "android,ios,winphone");
-        return resultAndriod;
+    public AliasDeviceListResult findAliasDeviceResultByAlias(String alias) throws APIConnectionException, APIRequestException {
+        AliasDeviceListResult result = getJPushClient().getAliasDeviceList(alias, "android,ios,winphone");
+        return result;
     }
 
     /**
@@ -246,7 +230,7 @@ public class JPushServiceImpl implements JPushService {
 
     @Override
     public void cleanJpushByAlias(String alias) throws APIConnectionException, APIRequestException {
-        AliasDeviceListResult result = findAliasDeviceRsultByAlias(alias);
+        AliasDeviceListResult result = findAliasDeviceResultByAlias(alias);
         if (result.registration_ids != null && result.registration_ids.size() > 0) {
             for (String regId : result.registration_ids) {
                 clearRegistrationIdInfo(regId);
@@ -255,28 +239,26 @@ public class JPushServiceImpl implements JPushService {
     }
 
 
-
     @Override
     public int sendCreditsChangeMessage(Integer userId, Integer credits) {
         String alias = generateAlias(userId);
-        if (credits == null){
+        if (credits == null) {
             credits = 0;
         }
         Map<String, String> extraMap = Maps.newHashMap();
         extraMap.put("msgType", "2");
-        extraMap.put("sendTime", System.currentTimeMillis()+"");
+        extraMap.put("sendTime", System.currentTimeMillis() + "");
         extraMap.put("result", String.valueOf(credits));
         int result = sendMessageToAlias(alias, extraMap);
         return result;
     }
 
 
-
     @Override
-    public int sendChangeMessage(Integer userId, String msgType,Object param) {
+    public int sendChangeMessage(Integer userId, String msgType, Object param) {
         String alias = generateAlias(userId);
         Map<String, String> extraMap = Maps.newHashMap();
-        extraMap.put("sendTime", System.currentTimeMillis()+"");
+        extraMap.put("sendTime", System.currentTimeMillis() + "");
         extraMap.put("msgType", msgType);
         extraMap.put("result", String.valueOf(param));
         int result = sendMessageToAlias(alias, extraMap);
@@ -389,11 +371,12 @@ public class JPushServiceImpl implements JPushService {
 
     /**
      * build自定义消息
+     *
      * @param alias
      * @param extrasParam
      * @return
      */
-    protected static PushPayload buildPushObject_all_message(String alias, Map<String, String> extrasParam){
+    protected static PushPayload buildPushObject_all_message(String alias, Map<String, String> extrasParam) {
         return PushPayload.newBuilder()
                 .setPlatform(Platform.all())
                 //指定推送的接收对象，all代表所有人，也可以指定已经设置成功的tag或alias或该应应用客户端调用接口获取到的registration id

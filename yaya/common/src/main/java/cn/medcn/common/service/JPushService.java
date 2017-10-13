@@ -77,7 +77,7 @@ public interface JPushService {
 
     TagAliasResult findTagAliasResultByRegistrationId(String registrationId) throws APIConnectionException, APIRequestException;
 
-    AliasDeviceListResult findAliasDeviceRsultByAlias(String alias) throws APIConnectionException, APIRequestException;
+    AliasDeviceListResult findAliasDeviceResultByAlias(String alias) throws APIConnectionException, APIRequestException;
 
     /**
      * 根据用户名生成别名
