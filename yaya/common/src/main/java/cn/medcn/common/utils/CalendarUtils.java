@@ -1,5 +1,8 @@
 package cn.medcn.common.utils;
 
+import cn.medcn.common.excptions.SystemException;
+
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -298,27 +301,54 @@ public class CalendarUtils {
      */
     public static String getTimesDiff(Date startTime,Date endTime){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        //Date one;
-        // Date two;
         long day = 0;
         long hour = 0;
         long min = 0;
         long sec = 0;
-            //one = df.parse(str1);
-            // two = df.parse(str2);
-            long time1 = startTime.getTime();
-            long time2 = endTime.getTime();
-            long diff ;
-            if(time1<time2) {
-                diff = time2 - time1;
-            } else {
-                diff = time1 - time2;
-            }
+        long time1 = startTime.getTime();
+        long time2 = endTime.getTime();
+        long diff ;
+        if(time1<time2) {
+            diff = time2 - time1;
+        } else {
+            diff = time1 - time2;
+        }
         day = diff / (24 * 60 * 60 * 1000);
         hour = (diff / (60 * 60 * 1000) - day * 24);
         min = ((diff / (60 * 1000)) - day * 24 * 60 - hour * 60);
         sec = (diff/1000-day*24*60*60-hour*60*60-min*60);
         return (day*24+hour) + ":" + min + ":" + sec ;
+    }
+
+    /**
+     * 获取时间差 或者秒数 转换为分′秒″ 格式
+     * @param startTime
+     * @param endTime
+     * @param secondTime
+     * @return
+     */
+    public static String formatTimesDiff(Date startTime, Date endTime, long secondTime){
+        long diff = 0l;
+        if (startTime != null && endTime != null) {
+
+            long stTime = startTime.getTime();
+            long edTime = endTime.getTime();
+
+            if (stTime < edTime) {
+                diff = edTime - stTime;
+            } else {
+                diff = stTime - edTime;
+            }
+
+            diff = diff / 1000;
+        }
+
+        if (secondTime > 0) {
+            diff = secondTime;
+        }
+        long min = diff / 60;
+        long sec = diff % 60;
+        return unitFormat((int) min) + "′" + unitFormat((int) sec) + "″";
     }
 
     /**
@@ -387,12 +417,23 @@ public class CalendarUtils {
        /*Date date = calendarMonth(2);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));*/
         //sec = (diff / Constants.NUMBER_THOUSAND - TimeUnit.DAYS.toSeconds(day) - TimeUnit.MINUTES.toSeconds(min));
-        String[] array = getWeekStartToEndByOffset(1);
+     /*   String[] array = getWeekStartToEndByOffset(1);
         for (String date:array){
             System.out.println(date);
         }
 
         Long s = 996l;
-        System.out.println(secToTime(s.intValue()));
+        System.out.println(secToTime(s.intValue()));*/
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss");
+        String st = "2017-10-13 09:49:54";
+
+        try {
+            Date startTime = sdf.parse(st);
+            Date endTime = new Date();
+            System.out.println("ss: "+formatTimesDiff(startTime, endTime,0));
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
     }
 }
