@@ -469,7 +469,7 @@ public class MeetController extends BaseController {
     private void loadCourseInfo(Integer courseId, Model model) throws SystemException {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         //直播类型会议
-        if(course != null && course.getPlayType() != Meet.PlayType.RECORD.getType()){
+        if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
             Live live = liveService.findByCourseId(courseId);
             //直播没有结束
             if(live.getCloseType() != Live.LiveState.closed.getType()){
