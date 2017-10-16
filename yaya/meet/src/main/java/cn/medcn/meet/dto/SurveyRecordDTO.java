@@ -40,6 +40,9 @@ public class SurveyRecordDTO {
     // 参加问卷总人数
     private Integer totalCount;
 
+    // 主观题 答题人数
+    private Integer answerCount;
+
     @Transient
     private String[] optionArr;
 
