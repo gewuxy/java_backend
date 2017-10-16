@@ -57,6 +57,7 @@
         </div>
     </div>
 
+
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
     <script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
@@ -136,7 +137,6 @@
                         $('#sv_page').html("<div style='text-align:center'>暂无数据</div>");
                     }
 
-
                 }, error: function (data) {
                     alert("获取数据失败");
                 }
@@ -181,18 +181,33 @@
                             }
 
                             var surveyHtml = '<div class="tj-top echarts-faq-row  clearfix">'
-                                +'<h3 class="echart-txt"><span class="color-blue">【'+type+'】-&nbsp;</span>'
-                                +'Q'+datas[i].sort+'：'+datas[i].title+'</h3>'
-                                +'<div id="echarts-'+i+'" class="echarts-faq clearfix"></div>'
-                                +'<div class="echarts-result"><ul id="l"'+i+'>';
+                                +'<h3 class="echart-txt" id="quesId" qid="'+datas[i].id+'" title="'+datas[i].title+'">'
+                                +'<span class="color-blue">【'+type+'】-&nbsp;</span>'
+                                +'Q'+datas[i].sort+'：'+datas[i].title+'</h3>';
+
+                            if(qtype < 2) {
+                                surveyHtml += '<div id="echarts-'+i+'" class="echarts-faq clearfix"></div>'
+                                            + '<div class="echarts-result"><ul id="l"'+i+'>';
                                 $.each(datas[i].surveyRecordItemDTO,function (x,val) {
                                     surveyHtml += '<li><strong>'+datas[i].surveyRecordItemDTO[x].selCount+'人</strong>'
-                                    +'<span>选择'+datas[i].surveyRecordItemDTO[x].optkey+'-</span>'+datas[i].surveyRecordItemDTO[x].option+''
-                                    +'</li>';
+                                        +'<span>选择'+datas[i].surveyRecordItemDTO[x].optkey+'-</span>'+datas[i].surveyRecordItemDTO[x].option+''
+                                        +'</li>';
                                 })
                                 surveyHtml += '</ul></div></div>';
-                                $('#surveyData').append(surveyHtml);
 
+                            } else {
+                                /*surveyHtml += '<p class="clearfix"><a href="javascript:void(0);" onclick="downloadUserAnswer()" class="download-button" '
+                                            + 'id="userAnswer">下载用户答案</a>&nbsp;&nbsp;&nbsp;&nbsp;'
+                                            + '已回答人数：&nbsp;'+datas[i].answerCount+'&nbsp;人</p></div>';*/
+                                surveyHtml += '<p class="clearfix">'
+                                    + '<a href="${ctx}/func/meet/survey/export/answer?questionId='+datas[i].id+'&title='+datas[i].title+'" '
+                                    + ' class="download-button" >下载用户答案</a>&nbsp;&nbsp;&nbsp;&nbsp;'
+                                    + '已回答人数：&nbsp;'+datas[i].answerCount+'&nbsp;人</p></div>';
+
+                            }
+
+                            $('#surveyData').append(surveyHtml);
+                            if (datas[i].surveyRecordItemDTO != null) {
                                 $.each(datas[i].surveyRecordItemDTO,function (v,val) {
                                     optionsArr.push('选择'+datas[i].surveyRecordItemDTO[v].optkey);
                                     optionsArr.join(",");
@@ -202,6 +217,9 @@
                                 if(optionsArr && countsArr){
                                     chartModel('echarts-'+i,optionsArr,countsArr);
                                 }
+                            }
+
+
                         });
 
                         // 分页
@@ -215,7 +233,7 @@
                                 svPageHtml += 'href="javascript:tzpage('+pages+','+(pagenum-1)+',2)"';
                             }
                             svPageHtml +=' class="page-list page-border page-prev"><i></i></a>'
-                                    +'<span class="page-list">'+pagenum+' / '+pages+'</span><a ';
+                                +'<span class="page-list">'+pagenum+' / '+pages+'</span><a ';
                             if(pagenum<pages){
                                 svPageHtml += 'href="javascript:tzpage('+pages+','+(pagenum+1)+',2)"';
                             }
@@ -305,7 +323,28 @@
 
         }
 
+    </script>
 
+    <script>
+        // 下载主观题用户答案
+        function downloadUserAnswer () {
+            var qid = $("#quesId").attr("qid");
+            var title = $("#quesId").attr("title");
+            $.ajax({
+                url:'${ctx}/func/meet/survey/export/answer?questionId='+ qid + '&title='+title,
+                type: "post",
+                dataType: "json",
+                success: function (data) {
+                    var code = data.code;
+                    if (code == "-1" ) {
+                        alert(data.err);
+                    }
+
+                }, error: function (data) {
+                    alert("获取数据失败");
+                }
+            });
+        }
     </script>
 </body>
 </html>

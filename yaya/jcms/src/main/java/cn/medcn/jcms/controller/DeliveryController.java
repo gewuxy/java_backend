@@ -80,7 +80,6 @@ public class DeliveryController extends BaseController {
             if(dto.getCoverUrl() != null){
                 dto.setCoverUrl(fileBase + dto.getCoverUrl());
             }
-
         }
         model.addAttribute("page",myPage);
         model.addAttribute("flag",1);

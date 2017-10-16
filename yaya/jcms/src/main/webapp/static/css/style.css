@@ -330,6 +330,8 @@ input.page-border { width: 40px; }
 .u-pic img { float: left; width: 51px; height: 51px; }
 .u-txt { font-size: 16px; float: left; }
 .u-txt i { display: block; font-weight: 700; white-space: nowrap; }
+.download-button {  display: inline-block;  padding: 10px 20px; margin:5px 0  10px 30px; background: #3fa9f5; border-radius: 4px; color: #fff;}
+.download-button:hover {  color:#fff;}
 
 /*my-mlist-shedow*/
 /*.my-mlist-shedow { box-shadow: 2px 2px 2px #d4d3d3; -moz-box-shadow: 2px 2px 2px #d4d3d3; -webkit-box-shadow:2px 2px 2px #d4d3d3; margin-right: 5px; }*/
@@ -1297,7 +1299,7 @@ a:hover .minIcon { background-position-y:-26px; }
 
 
     /*入院记录*/
-.select-table-box { background:#fff; margin-left:260px; border-left:1px solid #f0f0f0; height:100%;}
+.select-table-box { background:#fff; margin-left:260px; border-left:1px solid #f0f0f0;}
 .select-table-box th { height:55px; font-weight:normal; font-size:15px; }
 .select-table-box td { height:48px; padding:8px 0; border-bottom:1px solid #dbdbdb; overflow: hidden;}
 .select-table-box .tb-edit { padding-left:1%;}
