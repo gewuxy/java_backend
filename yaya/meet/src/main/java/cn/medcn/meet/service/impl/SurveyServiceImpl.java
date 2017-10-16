@@ -487,4 +487,13 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
         }
         return surveyDTOList;
     }
+
+    /**
+     * 查询主观题用户答题记录
+     * @param questionId
+     * @return
+     */
+    public List<SubjQuesAnswerDTO> findSubjQuesAnswerByQuestionId(Integer questionId) {
+        return surveyHistoryItemDAO.findSubjQuesAnswerByQuestionId(questionId);
+    }
 }
