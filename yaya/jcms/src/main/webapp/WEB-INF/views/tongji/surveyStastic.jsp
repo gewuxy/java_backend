@@ -181,7 +181,7 @@
                             }
 
                             var surveyHtml = '<div class="tj-top echarts-faq-row  clearfix">'
-                                +'<h3 class="echart-txt" id="quesId" qid="'+datas[i].id+'" title="'+datas[i].title+'">'
+                                +'<h3 class="echart-txt" style="float:none;" id="quesId" qid="'+datas[i].id+'" title="'+datas[i].title+'">'
                                 +'<span class="color-blue">【'+type+'】-&nbsp;</span>'
                                 +'Q'+datas[i].sort+'：'+datas[i].title+'</h3>';
 
