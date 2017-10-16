@@ -190,6 +190,9 @@ public class ChargeController extends BaseController {
             return error(local("user.param.empty"));
         }
         String str = SignatureUtil.getPaymentDetails(paymentId);
+        if(StringUtils.isEmpty(str)){
+            return error(local("error.data"));
+        }
         JSONObject detail = JSONObject.parseObject(str);
         //校验订单是否完成
         if("approved".equals(detail.getString("state"))){
