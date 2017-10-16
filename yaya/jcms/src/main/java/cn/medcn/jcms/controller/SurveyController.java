@@ -31,6 +31,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -281,6 +282,7 @@ public class SurveyController extends BaseController {
             if (!CheckUtils.isEmpty(questionPage.getDataList())) {
                 for (SurveyQuestion sq : questionPage.getDataList()) {
                     SurveyRecordDTO recordDTO = new SurveyRecordDTO();
+                    recordDTO.setId(sq.getId());
                     recordDTO.setSort(sq.getSort());
                     recordDTO.setTitle(sq.getTitle());
                     recordDTO.setQtype(sq.getQtype());
@@ -290,8 +292,14 @@ public class SurveyController extends BaseController {
 
                     // 根据题目ID 查询所有用户答题记录
                     Integer questionId = sq.getId();
-                    // 用户每道题目选择的答案和正确答案比较，统计出每个选项被选择的次数
-                    assignRecordItemDTOData(questionId, kvList, recordDTO);
+                    if (sq.getQtype().intValue() < SurveyQuestion.QuestionType.FILL_BLANK.getType().intValue()) {
+                        // 选择题 用户每道题目选择的答案和正确答案比较，统计出每个选项被选择的次数
+                        assignRecordItemDTOData(questionId, kvList, recordDTO);
+                    } else {
+                        // 主观题 作答人数
+                        List answerList = surveyService.findSubjQuesAnswerByQuestionId(questionId);
+                        recordDTO.setAnswerCount(answerList.size());
+                    }
 
                     surveyList.add(recordDTO);
                 }
@@ -448,12 +456,18 @@ public class SurveyController extends BaseController {
     private Map<Integer, List> assignDataToMap(List<SurveyRecordDTO> surveyList) {
         Map<Integer, List> questionMap = Maps.newHashMap();
         for (SurveyRecordDTO sv : surveyList) {
-            // 每道题目的所有选项
-            if (questionMap.get(sv.getSort()) == null) {
-                List<KeyValuePair> kvList = sv.getOptionList();
-                questionMap.put(sv.getSort(), kvList);
-            } else {
-                questionMap.get(sv.getSort()).add(sv.getOptionList());
+            if (sv.getQtype().intValue() < SurveyQuestion.QuestionType.MULTIPLE_CHOICE.getType().intValue()) {
+                // 每道题目的所有选项
+                if (questionMap.get(sv.getSort()) == null) {
+                    List<KeyValuePair> kvList = sv.getOptionList();
+                    questionMap.put(sv.getSort(), kvList);
+                } else {
+                    questionMap.get(sv.getSort()).add(sv.getOptionList());
+                }
+            } else { // 主观题
+                // 查询主观题用户答题记录
+                List<SubjQuesAnswerDTO> list = surveyService.findSubjQuesAnswerByQuestionId(sv.getId());
+                questionMap.put(sv.getSort(),list);
             }
         }
         return questionMap;
@@ -471,46 +485,63 @@ public class SurveyController extends BaseController {
         List<KeyValuePair> kvlist = surveyDTO.getOptionList();
         // 根据题目id查询所有用户答题记录
         Integer questionId = surveyDTO.getId();
-        List<SurveyRecordItemDTO> userRecordList = surveyService.findSurveyRecordByQid(questionId);
-        // 遍历所有的答题记录和题目的选项列表遍历 对比用户选择的选项 累加每个选项的选择次数
-        if (!CheckUtils.isEmpty(userRecordList)) {
-            DecimalFormat dft = new DecimalFormat("0%");
+        // 选择题
+        if (surveyDTO.getQtype().intValue() < SurveyQuestion.QuestionType.FILL_BLANK.getType().intValue()){
+            List<SurveyRecordItemDTO> userRecordList = surveyService.findSurveyRecordByQid(questionId);
+            // 遍历所有的答题记录和题目的选项列表遍历 对比用户选择的选项 累加每个选项的选择次数
+            if (!CheckUtils.isEmpty(userRecordList)) {
+                DecimalFormat dft = new DecimalFormat("0%");
 
-            for (KeyValuePair kv : kvlist) {
-                SurveyExcelData excelData = new SurveyExcelData();
-                excelData.setSort(surveyDTO.getSort().toString());
-                excelData.setQuestionTitle(surveyDTO.getTitle());
-                // 选项
-                excelData.setQuestionOption(kv.getKey());
-                // 参加问卷的总人数
-                Integer totalCount = surveyDTO.getTotalCount();
-                // 被选择的次数
-                Integer selectCount = 0;
+                for (KeyValuePair kv : kvlist) {
+                    SurveyExcelData excelData = new SurveyExcelData();
+                    excelData.setSort(surveyDTO.getSort().toString());
+                    excelData.setQuestionTitle(surveyDTO.getTitle());
+                    // 选项
+                    excelData.setQuestionOption(kv.getKey());
+                    // 参加问卷的总人数
+                    Integer totalCount = surveyDTO.getTotalCount();
+                    // 被选择的次数
+                    Integer selectCount = 0;
 
-                for (SurveyRecordItemDTO recordItemDTO : userRecordList) {
-                    if (!StringUtils.isBlank(recordItemDTO.getSelAnswer())) {
-                        // 计算每个选项 选择的人数
-                        selectCount = calculateNumber(kv.getKey(), recordItemDTO.getSelAnswer(), selectCount);
+                    for (SurveyRecordItemDTO recordItemDTO : userRecordList) {
+                        if (!StringUtils.isBlank(recordItemDTO.getSelAnswer())) {
+                            // 计算每个选项 选择的人数
+                            selectCount = calculateNumber(kv.getKey(), recordItemDTO.getSelAnswer(), selectCount);
+                        }
+                        excelData.setSelectionCount(selectCount.toString());
+                        excelData.setSelectance(dft.format((float) selectCount / totalCount));
                     }
-                    excelData.setSelectionCount(selectCount.toString());
-                    excelData.setSelectance(dft.format((float) selectCount / totalCount));
+                    dataList.add(excelData);
+                    selectCount = 0;
                 }
-                dataList.add(excelData);
-                selectCount = 0;
+            } else {
+                // 遍历题目所有选项
+                for (KeyValuePair kv : kvlist) {
+                    String key = kv.getKey();
+                    SurveyExcelData excelData = new SurveyExcelData();
+                    excelData.setSort(surveyDTO.getSort().toString());
+                    excelData.setQuestionTitle(surveyDTO.getTitle());
+                    excelData.setQuestionOption(key);
+                    excelData.setSelectionCount("0");
+                    excelData.setSelectance("0%");
+                    dataList.add(excelData);
+                }
             }
         } else {
-            // 遍历题目所有选项
-            for (KeyValuePair kv : kvlist) {
-                String key = kv.getKey();
-                SurveyExcelData excelData = new SurveyExcelData();
-                excelData.setSort(surveyDTO.getSort().toString());
-                excelData.setQuestionTitle(surveyDTO.getTitle());
-                excelData.setQuestionOption(key);
-                excelData.setSelectionCount("0");
-                excelData.setSelectance("0%");
-                dataList.add(excelData);
+            List<SubjQuesAnswerDTO> answerDTOList = surveyService.findSubjQuesAnswerByQuestionId(questionId);
+            // 主观题用户答案
+            if (!CheckUtils.isEmpty(answerDTOList)) {
+                for (SubjQuesAnswerDTO answerDTO : answerDTOList) {
+                    SurveyExcelData excelData = new SurveyExcelData();
+                    excelData.setSort(surveyDTO.getSort().toString());
+                    excelData.setQuestionTitle(surveyDTO.getTitle());
+                    excelData.setQuestionOption(answerDTO.getAnswer());
+                    excelData.setSelectionCount(answerDTO.getNickName());
+                    dataList.add(excelData);
+                }
             }
         }
+
         return dataList;
     }
 
@@ -534,5 +565,56 @@ public class SurveyController extends BaseController {
         return selectCount;
     }
 
+
+    /**
+     * 导出主观题用户答题记录
+     * @param questionId
+     * @param title 题目内容
+     * @return
+     */
+    @RequestMapping(value = "/export/answer")
+    @ResponseBody
+    public String exportSubjectiveAnswerExcel(Integer questionId, String title, HttpServletResponse response) {
+        if (questionId != null && questionId != 0) {
+            Workbook workbook;
+            // 导出的excel文件名
+            String fileName = SubjQuesAnswerExcelData.ExcelName.excel_name.getTitle() + ".xls";
+
+            List<Object> dataList = Lists.newArrayList();
+            // 查询主观题 所有用户答题记录
+            List<SubjQuesAnswerDTO> answerList = surveyService.findSubjQuesAnswerByQuestionId(questionId);
+            if (!CheckUtils.isEmpty(answerList)) {
+
+                for (SubjQuesAnswerDTO answer : answerList) {
+                    // 将数据赋值给excel填充表格
+                    SubjQuesAnswerExcelData excelData = new SubjQuesAnswerExcelData();
+                    excelData.setTitleName(title);
+                    excelData.setName(answer.getNickName());
+                    excelData.setAnswer(answer.getAnswer());
+                    dataList.add(excelData);
+                }
+
+                try {
+                    workbook = ExcelUtils.writeExcel(fileName, dataList, SubjQuesAnswerExcelData.class);
+                    if (dataList.size() > 1) {
+                        // 需要合并的列的下标
+                        Integer mergeIndex = SubjQuesAnswerExcelData.ColumnIndex.TITLE.getIndex();
+                        int[] mergeIndexArray = new int[]{mergeIndex};
+                        ExcelUtils.createMergeExcel(fileName, workbook, dataList.size(), mergeIndexArray, response);
+                    } else {
+                        ExcelUtils.outputWorkBook(fileName, workbook, response);
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
+                }
+
+            } else {
+                  return APIUtils.error("暂无数据导出");
+            }
+        }
+        return null;
+    }
 
 }

@@ -69,4 +69,28 @@ public class SurveyQuestion implements Serializable{
         }
         return list;
     }
+
+    public enum QuestionType{
+        SINGLE_CHOICE(0,"单选"),
+        MULTIPLE_CHOICE(1,"多选"),
+        FILL_BLANK(2,"填空"),
+        QUESTION_ANSERE(3,"问答");
+
+        private Integer type;
+
+        private String label;
+
+        public Integer getType() {
+            return type;
+        }
+
+        public String getLabel() {
+            return label;
+        }
+
+        QuestionType(Integer type, String label){
+            this.type = type;
+            this.label = label;
+        }
+    }
 }

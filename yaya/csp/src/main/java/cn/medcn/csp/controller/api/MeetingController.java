@@ -64,6 +64,9 @@ public class MeetingController extends BaseController {
     @Value("${app.file.upload.base}")
     protected String fileUploadBase;
 
+    @Value("${app.file.base}")
+    protected String fileBase;
+
     /**
      * 会议阅览
      *
@@ -327,14 +330,16 @@ public class MeetingController extends BaseController {
                     deliveryDTO.setLivePage(0);
                 }
                 if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
-                    deliveryDTO.setCoverUrl(fileUploadBase + deliveryDTO.getCoverUrl());
+                    deliveryDTO.setCoverUrl(fileBase + deliveryDTO.getCoverUrl());
                 }
 
                 // 录播会议
                 if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType().intValue()) {
                     // 转换录播音频时长格式
-                    long secondTime = Long.parseLong(deliveryDTO.getPlayTime());
-                    deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(null,null, secondTime));
+                    if (StringUtils.isNotEmpty(deliveryDTO.getPlayTime())) {
+                        long secondTime = Long.parseLong(deliveryDTO.getPlayTime());
+                        deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(null,null, secondTime));
+                    }
                 } else {
                     // 如果是直播会议 需计算直播时长
                     int liveState = deliveryDTO.getLiveState().intValue();
