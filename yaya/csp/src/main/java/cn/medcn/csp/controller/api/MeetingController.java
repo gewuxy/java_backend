@@ -20,7 +20,6 @@ import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -137,7 +136,7 @@ public class MeetingController extends BaseController {
             throw new SystemException(local("error.param"));
         }
 
-        Map<String, Object> paramMap = new HashedMap();
+        Map<String, Object> paramMap = new HashMap<>();
         for (String param : params) {
             if (param.indexOf("=") < 0) {
                 throw new SystemException(local("error.param"));
@@ -165,7 +164,7 @@ public class MeetingController extends BaseController {
         String relativePath = buffer.toString();
         try {
             FileUploadResult result = fileUploadService.upload(file, relativePath);
-            Map<String, Object> map = new HashedMap();
+            Map<String, Object> map = new HashMap<>();
             AudioCourseDetail detail = audioService.findDetail(detailId);
             if (detail != null) {
                 detail.setAudioUrl(result.getRelativePath());
