@@ -4,7 +4,7 @@
 
     <select id="findDeliveryHistory" resultType="cn.medcn.meet.dto.DeliveryHistoryDTO">
 
-        SELECT u.headimg ,u.id as acceptId u.nickname as acceptName, count(u.id) as acceptCount FROM
+        SELECT u.headimg ,u.id as acceptId ,u.nickname as acceptName, count(u.id) as acceptCount FROM
         t_app_user u INNER JOIN t_csp_delivery d ON d.accept_id = u.id
         WHERE d.author_id = #{authorId}
         GROUP BY u.id
