@@ -453,6 +453,13 @@ public class MeetController extends BaseController {
         //查询出所有医生分组
         List<Group> groups = doctorService.findGroupList(principal.getId());
         model.addAttribute("groups", groups);
+
+        Map<Integer, Group> groupMap = new HashMap<>();
+        for (Group group : groups) {
+            groupMap.put(group.getId(), group);
+        }
+        model.addAttribute("groupMap", groupMap);
+
         //查询会议文件夹列表
         InfinityTree tree = new InfinityTree();
         tree.setUserId(principal.getId());

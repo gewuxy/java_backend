@@ -66,8 +66,8 @@ public class MeetProperty implements Serializable{
         } else {
             StringBuffer buffer = new StringBuffer();
             for (int index = 0 ; index < groupIds.length; index ++) {
-                buffer.append(index == groupIds.length - 1 ? "" : ARRAY_SEPARATOR);
                 buffer.append(groupIds[index]);
+                buffer.append(index == groupIds.length - 1 ? "" : ARRAY_SEPARATOR);
             }
             return buffer.toString();
         }

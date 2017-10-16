@@ -234,21 +234,43 @@
 								<label for="memberLimitType2" ><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;指定医生分组</label>
 							</span>
                             <div class="formRadiobox-item clearfix">
-								<span class="formPage-select-item select-max pr" style="margin-left:30px;" >
-									<i class="formPage-select-arrow"></i>
-									<select name="meetProperty.groupId" class="text-input formPage-select formPage-select-hook" preid="memberLimitType1">
-										<c:choose>
-                                            <c:when test="${group != null && group.id != 0}">
-                                                <option value="${group.id}">${group.groupName}</option>
-                                            </c:when>
-                                        </c:choose>
-                                        <option value="0">全部关注医生</option>
-                                        <c:forEach items="${groups}" var="group">
-                                            <option value="${group.id}" ${meet.meetProperty.memberLimitType == 1 && meet.meetProperty.groupId == group.id?'selected':''}>${group.groupName} [${group.memberCount}]</option>
-                                        </c:forEach>
-									</select>
-								</span>
+                                <div class="formrow">
+                                    <div class="formControls">
+                                        <!--已有目录-->
+                                        <div class="fl">
+                                            <a href="javascript:;" class="black-button formButton fx-btn-1 " id="choseGroupBtn">选择分组</a>
+                                        </div>
+                                        <div class="oh" style="line-height: 32px;">
+                                            <div class="metting-bootstrap metting-bootstrap-formFile">
+                                                选中的分组：<span id="chosedGrups">
+                                                <c:if test="${not empty meet.meetProperty.groupIds}">
+                                                    <c:forEach items="${meet.meetProperty.groupIds}" var="gid" varStatus="gstatus">
+                                                        <input type="hidden" name="meetProperty.groupIds" value="${gid}"/>${groupMap[gid].groupName}${gstatus.index == fn:length(meet.meetProperty.groupIds) - 1 ? "" : ","}&nbsp;&nbsp;
+                                                    </c:forEach>
+                                                </c:if>
+                                            </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
+
+                        <%--<div class="formRadiobox-item clearfix">--%>
+								<%--<span class="formPage-select-item select-max pr" style="margin-left:30px;" >--%>
+									<%--<i class="formPage-select-arrow"></i>--%>
+									<%--<select name="meetProperty.groupId" class="text-input formPage-select formPage-select-hook" preid="memberLimitType1">--%>
+										<%--<c:choose>--%>
+                                            <%--<c:when test="${group != null && group.id != 0}">--%>
+                                                <%--<option value="${group.id}">${group.groupName}</option>--%>
+                                            <%--</c:when>--%>
+                                        <%--</c:choose>--%>
+                                        <%--<option value="0">全部关注医生</option>--%>
+                                        <%--<c:forEach items="${groups}" var="group">--%>
+                                            <%--<option value="${group.id}" ${meet.meetProperty.memberLimitType == 1 && meet.meetProperty.groupId == group.id?'selected':''}>${group.groupName} [${group.memberCount}]</option>--%>
+                                        <%--</c:forEach>--%>
+									<%--</select>--%>
+								<%--</span>--%>
+                            <%--</div>--%>
                         </div>
 
                     </div>
@@ -423,77 +445,118 @@
                 <button class="close-button-fx" id="rechargeFail">充值失败</button>
             </div>
         </div>
-    </div>
 
-    <div class="distb-box distb-box-min fx-mask-box-1 " >
+        <div class="distb-box distb-box-min fx-mask-box-1 " >
             <div class="mask-hd clearfix">
                 <h3 class="font-size-1">移动会议</h3>
                 <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
             </div>
-        <div class="clearfix hidden-box">
-            <ul class="fx-module-list">
-                <li class="folderClass folderRoot">
-                    <div class="fx-module-title">
+            <div class="clearfix hidden-box">
+                <ul class="fx-module-list">
+                    <li class="folderClass folderRoot">
+                        <div class="fx-module-title">
 								<span class="radioboxIcon">
 									<input type="radio" name="folderId" id="0" checked  class="chk_1 chk-hook" value="0">
 									<label class="inline" for="0" ><i class="ico"></i>&nbsp;&nbsp;根目录</label>
 								</span>
-                    </div>
+                        </div>
 
-                </li>
-                <c:forEach var="folder" items="${folderList}">
-                    <li class="folderClass folderSubRow">
-                        <div class="fx-module-title"  data-name=${folder.infinityName}>
+                    </li>
+                    <c:forEach var="folder" items="${folderList}">
+                        <li class="folderClass folderSubRow">
+                            <div class="fx-module-title"  data-name=${folder.infinityName}>
 								<span class="radioboxIcon">
 									<input type="radio" name="folderId" id="${folder.id}" checked  class="chk_1 chk-hook" value="${folder.id}">
 									<label class="inline" for="${folder.id}" ><i class="ico"></i>&nbsp;&nbsp;${folder.infinityName}
 										<c:if test="${not empty folder.treeList}"><span class="fx-drop-icon"></span></c:if>
 										</label>
 								</span>
-                        </div>
+                            </div>
 
 
-                        <div class="fx-module-setBox">
-                            <ul>
-                                <c:if test="${not empty folder.treeList}">
-                                    <c:forEach items="${folder.treeList}" var="fol" >
-                                        <li>
+                            <div class="fx-module-setBox">
+                                <ul>
+                                    <c:if test="${not empty folder.treeList}">
+                                        <c:forEach items="${folder.treeList}" var="fol" >
+                                            <li>
 										<span class="radioboxIcon color-black">
 											<input type="radio" name="folderId" id="${fol.id}" checked  class="chk_1 chk-hook" value="${fol.id}" >
 											<label class="inline" for="${fol.id}" ><i class="ico"></i>&nbsp;&nbsp;${fol.infinityName}</label>
 										</span>
-                                        </li>
-                                    </c:forEach>
+                                            </li>
+                                        </c:forEach>
 
-                                </c:if>
-                            </ul>
-                        </div>
-                    </li>
-                </c:forEach>
-            </ul>
-        </div>
+                                    </c:if>
+                                </ul>
+                            </div>
+                        </li>
+                    </c:forEach>
+                </ul>
+            </div>
             <div class="sb-btn-box  p-btm-1">
                 <button class="close-button-fx cur" id="moveSubmitBtn" value="确认">确认</button>
                 <button class="close-button-fx" name="cancelBtn" value="取消">取消</button>
             </div>
-    </div>
+        </div>
 
-    <div class="distb-box distb-box-min fx-mask-box-2">
-        <form id="folderForm" name="folderForm" method="post">
-            <input type="hidden" name="preid" value="0">
+        <div class="distb-box distb-box-min fx-mask-box-2">
+            <form id="folderForm" name="folderForm" method="post">
+                <input type="hidden" name="preid" value="0">
+                <div class="mask-hd clearfix">
+                    <h3 class="font-size-1">新建文件夹</h3>
+                    <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+                </div>
+                <div class="fx-mask-box clearfix t-center" >
+                    <span class="fSize-max td-title">文件名称</span><span><input type="text" class="text-input"  name="infinityName" maxlength="32" placeholder="32个中文字符以内（必填）" ></span>
+                </div>
+                <div class="sb-btn-box p-btm-1">
+                    <button class="close-button-fx cur" id="folderSubmitBtn" value="确认">确认</button>
+                    <button class="close-button-fx" name="cancelBtn" value="取消">取消</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="distb-box distb-box-min fx-mask-box-6" >
             <div class="mask-hd clearfix">
-                <h3 class="font-size-1">新建文件夹</h3>
+                <h3 class="font-size-1">设置分组</h3>
                 <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
             </div>
-            <div class="fx-mask-box clearfix t-center" >
-                <span class="fSize-max td-title">文件名称</span><span><input type="text" class="text-input"  name="infinityName" maxlength="32" placeholder="32个中文字符以内（必填）" ></span>
+            <div class="clearfix hidden-box">
+                <div class="formrow popup-checkbox">
+
+                    <form action="" id="groupForm" name="groupForm">
+                        <ul class="fx-li-box" >
+
+                            <li>
+                                <span class="checkboxIcon">
+                                    <input type="checkbox" id="popup_checkbox_all" class="chk_1 chk-hook">
+                                    <label for="popup_checkbox_all" class="popup_checkbox_all_hook"><i class="ico"></i>&nbsp;全部关注医生</label>
+                                </span>
+                            </li>
+                            <c:forEach items="${groups}" var="grp" varStatus="status">
+                                <li>
+                                <span class="checkboxIcon">
+                                    <input type="checkbox" name="choseGroupIds" id="popup_checkbox_${status.index}" class="chk_1 chk-hook" sub="true" value="${grp.id}">
+                                    <label for="popup_checkbox_${status.index}"  class="popup_checkbox_hook"><i class="ico"></i>&nbsp;${grp.groupName}</label>
+                                </span>
+                                </li>
+                            </c:forEach>
+
+                        </ul>
+                    </form>
+
+                </div>
+
             </div>
-            <div class="sb-btn-box p-btm-1">
-                <button class="close-button-fx cur" id="folderSubmitBtn" value="确认">确认</button>
-                <button class="close-button-fx" name="cancelBtn" value="取消">取消</button>
+            <div class="sb-btn-box  p-btm-1 t-right">
+                <button class="close-button-fx cur" id="choseGroupOk">确认</button>
+                <button class="close-button-fx" id="choseGroupCancel">取消</button>
             </div>
-        </form>
+        </div>
     </div>
+
+
+
 </div>
 
 <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
@@ -511,7 +574,66 @@
     const boy = "男";
     const girl = "女";
     $(function(){
+        var popupCheckbox = $('label.popup_checkbox_hook');
+        var popupCheckboxNum = popupCheckbox.length - 1;
 
+        //弹出窗 - 点击全选触发
+        $('.popup_checkbox_all_hook').on('click',function(){
+            $(this).toggleClass('checkboxAllCurrent');
+            if($(this).hasClass('checkboxAllCurrent')){
+                popupCheckbox.find('.ico').addClass('checkboxCurrent');
+                popupCheckbox.prev().prop("checked","true");
+            } else {
+                popupCheckbox.find('.ico').removeClass('checkboxCurrent');
+                popupCheckbox.prev().removeProp("checked");
+            }
+        });
+        //弹出窗 - 点击每个选项触发
+        popupCheckbox.each(function() {
+            $(this).off('.click').on('click', function () {
+
+                if (!($(this).find('.ico').hasClass('checkboxCurrent')) && $(".popup_checkbox_hook .checkboxCurrent").length == popupCheckboxNum) {
+
+                    $('.popup_checkbox_all_hook').addClass('checkboxAllCurrent').find('.ico').addClass('checkboxCurrent');
+                    $('.popup_checkbox_all_hook').prev().prop("checked","true");
+                } else {
+                    $('.popup_checkbox_all_hook').removeClass('checkboxAllCurrent').find('.ico').removeClass('checkboxCurrent');
+                    $('.popup_checkbox_all_hook').prev().removeProp("checked");
+                }
+            })
+        });
+
+
+        $("#choseGroupBtn").click(function(){
+            if ($("#memberLimitType2").is(":checked")){
+                $('.mask-wrap').addClass('dis-table');
+                $('.fx-mask-box-6').show();
+            }
+        });
+
+        $("#choseGroupCancel").click(function(){
+            $('.mask-wrap').removeClass('dis-table');
+            $('.fx-mask-box-6').hide();
+        });
+
+        $("#choseGroupOk").click(function(){
+            var groupIds = $("#groupForm").find("input[name='choseGroupIds']:checked");
+            if (groupIds.length == 0){
+                top.layer.msg("请选择分组");
+                //alert("请选择分组");
+                return;
+            }
+            $("#chosedGrups").html("");
+
+            for(var i = 0 ; i < groupIds.length ; i ++){
+                $("#chosedGrups").append('<input type="hidden" name="meetProperty.groupIds" value="'+$(groupIds[i]).val()+'"/>' + $(groupIds[i]).siblings("label").text());
+                if (i < groupIds.length - 1){
+                    $("#chosedGrups").append('&nbsp;&nbsp;,&nbsp;&nbsp;');
+                }
+            }
+            $('.mask-wrap').removeClass('dis-table');
+            $('.fx-mask-box-6').hide();
+        });
 
         //回显文件夹目录
         if(${preName != null}){
@@ -715,9 +837,9 @@
             }
         });
 
-        $("input[type='checkbox']").change(function(){
-            alert(1);
-        });
+//        $("input[type='checkbox']").change(function(){
+//            alert(1);
+//        });
 
         $("#xsbox").click(function(){
             showCreditsDialog();
