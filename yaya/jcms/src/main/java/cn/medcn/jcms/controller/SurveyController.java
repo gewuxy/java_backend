@@ -158,13 +158,14 @@ public class SurveyController extends BaseController {
         return APIUtils.success(page);
     }
 
+
     /**
      * 导出 所有参加问卷调查的用户记录
      *
      * @param response
      * @return
      */
-    @RequestMapping(value = "/exportExcel")
+    @RequestMapping(value = "/export/users/excel")
     @ResponseBody
     public String exportSurveyExcel(String meetId, HttpServletResponse response) throws SystemException {
         Principal principal = SubjectUtils.getCurrentUser();
@@ -173,10 +174,11 @@ public class SurveyController extends BaseController {
         }
 
         if (!StringUtils.isEmpty(meetId)) {
-            Workbook workbook = null;
+            Workbook workbook;
             String fileName = "_参与问卷人员情况.xls";
             List<Object> dataList = Lists.newArrayList();
 
+            // 查询所有参加问卷的用户记录
             List<AttendSurveyUserDataDTO> surveyDataList = findSurveyDataList(principal.getId(), meetId);
             if (!CheckUtils.isEmpty(surveyDataList)) {
                 fileName = surveyDataList.get(0).getMeetName() + fileName;
@@ -196,6 +198,7 @@ public class SurveyController extends BaseController {
 
                     dataList.add(excelData);
                 }
+
             } else {
                 return APIUtils.error("暂无相关数据");
             }
@@ -214,6 +217,47 @@ public class SurveyController extends BaseController {
 
         return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
     }
+
+    /**
+     * 查询 参加问卷的用户记录
+     *
+     * @param userId
+     * @param meetId
+     * @return
+     */
+    private List<AttendSurveyUserDataDTO> findSurveyDataList(Integer userId, String meetId) {
+        Map<String, Object> conditionMap = new HashMap<>();
+        conditionMap.put("meetId", meetId);
+        conditionMap.put("userId", userId);
+        return surveyService.findUserSurveyHis(conditionMap);
+    }
+
+    /**
+     * 填充用户问卷记录到excel表格
+     *
+     * @param userDataDTO
+     * @return
+     */
+    private SurveyHistoryUserExcelData fillDataToSurveyExcel(AttendSurveyUserDataDTO userDataDTO) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SurveyHistoryUserExcelData excelData = new SurveyHistoryUserExcelData();
+        excelData.setName(userDataDTO.getNickname());
+        if (userDataDTO.getAttend()) {
+            excelData.setParticipation("是");
+        } else {
+            excelData.setParticipation("否");
+        }
+        excelData.setUnitName(userDataDTO.getUnitName());
+        excelData.setSubUnitName(userDataDTO.getSubUnitName());
+        excelData.setHosLevel(userDataDTO.getLevel());
+        excelData.setTitle(userDataDTO.getTitle());
+        excelData.setProvince(userDataDTO.getProvince() + userDataDTO.getCity());
+        excelData.setGroupName(userDataDTO.getGroupName() == null ? "未分组" : userDataDTO.getGroupName());
+        excelData.setSubmitTime(userDataDTO.getSubmitTime() == null ? "" : format.format(userDataDTO.getSubmitTime()));
+        excelData.setAnswerList(null);
+        return excelData;
+    }
+
 
     /**
      * 查找用户选择的答案
@@ -242,19 +286,7 @@ public class SurveyController extends BaseController {
         return answerList;
     }
 
-    /**
-     * 查询 参加问卷的用户记录
-     *
-     * @param userId
-     * @param meetId
-     * @return
-     */
-    private List<AttendSurveyUserDataDTO> findSurveyDataList(Integer userId, String meetId) {
-        Map<String, Object> conditionMap = new HashMap<>();
-        conditionMap.put("meetId", meetId);
-        conditionMap.put("userId", userId);
-        return surveyService.findUserSurveyHis(conditionMap);
-    }
+
 
     /**
      * 问卷 选项统计
@@ -273,8 +305,8 @@ public class SurveyController extends BaseController {
 
         if (!StringUtils.isEmpty(id)) {
             List surveyList = Lists.newArrayList();
-
-            pageable.setPageSize(3);// 设置每页显示3条数据
+            // 设置每页显示3条数据
+            pageable.setPageSize(3);
             pageable.put("meetId", id);
             // 查询问卷数据列表
             MyPage<SurveyQuestion> questionPage = surveyService.findSurveyDatas(pageable);
@@ -304,8 +336,8 @@ public class SurveyController extends BaseController {
                     surveyList.add(recordDTO);
                 }
             }
-
             questionPage.setDataList(surveyList);
+
             return APIUtils.success(questionPage);
 
         } else {
@@ -367,31 +399,6 @@ public class SurveyController extends BaseController {
         }
     }
 
-    /**
-     * 填充用户问卷记录到excel表格
-     *
-     * @param userDataDTO
-     * @return
-     */
-    private SurveyHistoryUserExcelData fillDataToSurveyExcel(AttendSurveyUserDataDTO userDataDTO) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        SurveyHistoryUserExcelData excelData = new SurveyHistoryUserExcelData();
-        excelData.setName(userDataDTO.getNickname());
-        if (userDataDTO.getAttend()) {
-            excelData.setParticipation("是");
-        } else {
-            excelData.setParticipation("否");
-        }
-        excelData.setUnitName(userDataDTO.getUnitName());
-        excelData.setSubUnitName(userDataDTO.getSubUnitName());
-        excelData.setHosLevel(userDataDTO.getLevel());
-        excelData.setTitle(userDataDTO.getTitle());
-        excelData.setProvince(userDataDTO.getProvince() + userDataDTO.getCity());
-        excelData.setGroupName(userDataDTO.getGroupName() == null ? "未分组" : userDataDTO.getGroupName());
-        excelData.setSubmitTime(userDataDTO.getSubmitTime() == null ? "" : format.format(userDataDTO.getSubmitTime()));
-        excelData.setAnswerList(null);
-        return excelData;
-    }
 
     /**
      * 导出问卷数据分析Excel
@@ -400,7 +407,7 @@ public class SurveyController extends BaseController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/exportSvyData")
+    @RequestMapping(value = "/export/data/analysis")
     @ResponseBody
     public String exportSurveyDataExcel(String meetId, HttpServletResponse response) throws SystemException {
         Principal principal = SubjectUtils.getCurrentUser();
@@ -409,10 +416,10 @@ public class SurveyController extends BaseController {
         }
 
         if (!StringUtils.isEmpty(meetId)) {
-            Workbook workbook = null;
+            Workbook workbook ;
             String fileName = "_问卷数据分析.xls";
             List<Object> dataList = Lists.newArrayList();
-
+            // 查询所有用户问卷记录
             Map<String, Object> conditionMap = new HashMap<String, Object>();
             conditionMap.put("meetId", meetId);
             List<SurveyRecordDTO> surveyList = surveyService.findSurveyToExcel(conditionMap);
@@ -424,7 +431,8 @@ public class SurveyController extends BaseController {
                 Map<Integer, List> questionMap = assignDataToMap(surveyList);
 
                 for (SurveyRecordDTO survey : surveyList) {
-                    dataList.addAll(assignmentToSurvey(survey));
+                    // 将用户数据赋值到excel相应字段
+                    dataList.addAll(assignDataToExcel(survey));
                 }
 
                 workbook = ExcelUtils.writeExcel(fileName, dataList, SurveyExcelData.class);
@@ -447,6 +455,7 @@ public class SurveyController extends BaseController {
         return APIUtils.error(APIUtils.ERROR_CODE_EXPORT_EXCEL, SpringUtils.getMessage("export.file.error"));
     }
 
+
     /**
      * 赋值数据到map中
      *
@@ -466,12 +475,13 @@ public class SurveyController extends BaseController {
                 }
             } else { // 主观题
                 // 查询主观题用户答题记录
-                List<SubjQuesAnswerDTO> list = surveyService.findSubjQuesAnswerByQuestionId(sv.getId());
-                questionMap.put(sv.getSort(),list);
+                List<SubjQuesAnswerDTO> answerList = surveyService.findSubjQuesAnswerByQuestionId(sv.getId());
+                questionMap.put(sv.getSort(),answerList);
             }
         }
         return questionMap;
     }
+
 
     /**
      * 填充用户问卷记录 excel表格数据
@@ -479,19 +489,20 @@ public class SurveyController extends BaseController {
      * @param surveyDTO
      * @return
      */
-    private List assignmentToSurvey(SurveyRecordDTO surveyDTO) {
+    private List assignDataToExcel(SurveyRecordDTO surveyDTO) {
         List<Object> dataList = Lists.newArrayList();
         // 每道题目的所有选项
         List<KeyValuePair> kvlist = surveyDTO.getOptionList();
+
         // 根据题目id查询所有用户答题记录
         Integer questionId = surveyDTO.getId();
-        // 选择题
-        if (surveyDTO.getQtype().intValue() < SurveyQuestion.QuestionType.FILL_BLANK.getType().intValue()){
-            List<SurveyRecordItemDTO> userRecordList = surveyService.findSurveyRecordByQid(questionId);
-            // 遍历所有的答题记录和题目的选项列表遍历 对比用户选择的选项 累加每个选项的选择次数
-            if (!CheckUtils.isEmpty(userRecordList)) {
-                DecimalFormat dft = new DecimalFormat("0%");
+        List<SurveyRecordItemDTO> userRecordList = surveyService.findSurveyRecordByQid(questionId);
 
+        // 遍历所有的答题记录和题目的选项列表遍历 对比用户选择的选项 累加每个选项的选择次数
+        if (!CheckUtils.isEmpty(userRecordList)) {
+            DecimalFormat dft = new DecimalFormat("0%");
+            // 如果题目类型是选择题
+            if (surveyDTO.getQtype().intValue() < SurveyQuestion.QuestionType.FILL_BLANK.getType().intValue()) {
                 for (KeyValuePair kv : kvlist) {
                     SurveyExcelData excelData = new SurveyExcelData();
                     excelData.setSort(surveyDTO.getSort().toString());
@@ -514,36 +525,46 @@ public class SurveyController extends BaseController {
                     dataList.add(excelData);
                     selectCount = 0;
                 }
+
             } else {
-                // 遍历题目所有选项
-                for (KeyValuePair kv : kvlist) {
-                    String key = kv.getKey();
+                // 填空题或者问答题
+                for (SurveyRecordItemDTO recordItemDTO : userRecordList) {
                     SurveyExcelData excelData = new SurveyExcelData();
                     excelData.setSort(surveyDTO.getSort().toString());
                     excelData.setQuestionTitle(surveyDTO.getTitle());
-                    excelData.setQuestionOption(key);
-                    excelData.setSelectionCount("0");
-                    excelData.setSelectance("0%");
+                    excelData.setQuestionOption(recordItemDTO.getSelAnswer());
+                    excelData.setSelectionCount(recordItemDTO.getNickname());
                     dataList.add(excelData);
                 }
             }
-        } else {
-            List<SubjQuesAnswerDTO> answerDTOList = surveyService.findSubjQuesAnswerByQuestionId(questionId);
-            // 主观题用户答案
-            if (!CheckUtils.isEmpty(answerDTOList)) {
-                for (SubjQuesAnswerDTO answerDTO : answerDTOList) {
-                    SurveyExcelData excelData = new SurveyExcelData();
-                    excelData.setSort(surveyDTO.getSort().toString());
-                    excelData.setQuestionTitle(surveyDTO.getTitle());
-                    excelData.setQuestionOption(answerDTO.getAnswer());
-                    excelData.setSelectionCount(answerDTO.getNickName());
-                    dataList.add(excelData);
-                }
+        } else { // 没有用户答题记录
+            // 设置题目的每个选项的选择人数
+            for (KeyValuePair kv : kvlist) {
+                String key = kv.getKey();
+                SurveyExcelData excelData = createNewExcelData(surveyDTO, key);
+                dataList.add(excelData);
             }
         }
-
         return dataList;
     }
+
+
+    /**
+     *  问卷题目没有作答记录 创建每个选项的默认值
+     * @param surveyDTO
+     * @param opt
+     * @return
+     */
+    private SurveyExcelData createNewExcelData(SurveyRecordDTO surveyDTO, String opt) {
+        SurveyExcelData excelData = new SurveyExcelData();
+        excelData.setSort(surveyDTO.getSort().toString());
+        excelData.setQuestionTitle(surveyDTO.getTitle());
+        excelData.setQuestionOption(opt);
+        excelData.setSelectionCount("0");
+        excelData.setSelectance("0%");
+        return excelData;
+    }
+
 
     /**
      * 计算选项选择人数
