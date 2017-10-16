@@ -43,7 +43,7 @@ public class Pageable {
     }
 
     public int getPageNum() {
-        return pageNum;
+        return pageNum == 0 ? 1 : pageNum;
     }
 
     public void setPageNum(int pageNum) {

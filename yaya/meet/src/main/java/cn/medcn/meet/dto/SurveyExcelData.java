@@ -15,10 +15,10 @@ public class SurveyExcelData {
     @ExcelField(columnIndex = 1,title = "题目")
     private String questionTitle;
 
-    @ExcelField(columnIndex = 2,title = "选项")
+    @ExcelField(columnIndex = 2,title = "选项/主观题用户答案")
     private String questionOption;
 
-    @ExcelField(columnIndex = 3,title = "选择人数")
+    @ExcelField(columnIndex = 3,title = "选择人数/用户姓名")
     private String selectionCount;
 
     @ExcelField(columnIndex = 4,title = "选择率")
