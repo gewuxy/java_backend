@@ -31,4 +31,6 @@ public class CourseDelivery {
     protected Boolean viewState;//是否查看
 
     protected Boolean publishState;//是否发布
+
+    protected String info;//简介
 }

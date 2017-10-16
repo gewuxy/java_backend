@@ -77,6 +77,9 @@ public class DeliveryController extends BaseController {
             if(dto.getAvatar() != null){
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
+            if(dto.getCoverUrl() != null){
+                dto.setCoverUrl(fileBase + dto.getCoverUrl());
+            }
         }
         model.addAttribute("page",myPage);
         model.addAttribute("flag",1);

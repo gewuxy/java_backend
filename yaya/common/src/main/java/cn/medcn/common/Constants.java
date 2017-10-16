@@ -168,4 +168,6 @@ public class Constants {
     public static final int UPLOAD_PPT_VIDEO_SIZE_LIMIT = 50;
     //麦瑞单位号ID
     public static final int MARY_MASTER_ID = 957425;
+    //定制版单位号ID key
+    public static final String MASTER_ID_KEY = "masterId";
 }

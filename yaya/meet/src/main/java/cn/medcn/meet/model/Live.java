@@ -51,8 +51,18 @@ public class Live {
     protected Integer livePage; //正在直播的ppt页码
 
     public enum LiveState{
-        init,//初始状态
-        usable,//可用的直播状态
-        closed;//已关闭
+        init(0),//初始状态
+        usable(1),//可用的直播状态
+        closed(2);//已关闭
+
+        private Integer type;
+
+        public Integer getType(){
+            return type;
+        }
+
+        LiveState(Integer type){
+            this.type = type;
+        }
     }
 }

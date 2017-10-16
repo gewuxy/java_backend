@@ -21,7 +21,7 @@ public class SignatureUtil {
     private static final String TOKEN_URL = "https://api.sandbox.paypal.com/v1/oauth2/token";
     private static final String PAYMENT_DETAIL = "https://api.sandbox.paypal.com/v1/payments/payment/";
     private static final String clientId = "ATBGjclV9GcygEwPz_58PUlxOvh0sJvC_Md3ZuTghMGlGIfQzgID_2zh93Ku44nMV6bcuGyoDvN3GHKv";
-    private static final String secret = "secret";
+    private static final String secret = "EKnYYM97NgsKMPbfoB8ULvKbQr3HLMSxg7aPBuSvx2pFjTVgR78SDctLXWE6WddJDFm_sLVtg-VF09Hv";
 
     /**
      * 获取签名
@@ -173,9 +173,17 @@ public class SignatureUtil {
             //设置请求头header
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", "Bearer "+getAccessToken());
-            // conn.setConnectTimeout(10000);//连接超时 单位毫秒
-            // conn.setReadTimeout(2000);//读取超时 单位毫秒
-            InputStreamReader inStream = new InputStreamReader(conn.getInputStream());
+             conn.setConnectTimeout(10000);//连接超时 单位毫秒
+             conn.setReadTimeout(2000);//读取超时 单位毫秒
+            int code = conn.getResponseCode();
+            InputStreamReader inStream = null;
+            if(code != 200){
+                 inStream = new InputStreamReader(conn.getInputStream());
+
+            }else{
+
+                 inStream = new InputStreamReader(conn.getInputStream());
+            }
             BufferedReader reader = new BufferedReader(inStream);
             StringBuilder result = new StringBuilder();
             String lineTxt = null;

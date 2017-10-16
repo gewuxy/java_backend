@@ -217,7 +217,7 @@
 
        $("#choseBtn").click(function(){
            $("#choseGroup").html("");
-           var groupIds = $("#groupForm").find("input[name='groupIds']");
+           var groupIds = $("#groupForm").find("input[name='groupIds']:checked");
            if (groupIds.length == 0){
                layer.msg("请选择分组");
                return;

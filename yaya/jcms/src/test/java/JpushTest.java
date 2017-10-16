@@ -39,24 +39,11 @@ public class JpushTest {
         jpushMessage.setMsgType(1);
         jpushMessage.setSenderName("敬信单位号");
         jpushMessage.setMeetId("17070414412888880003");
-        jpushMessage.setContent("测试推送消息内容,测试推送消息内容测试推送消息内容测试推送消息内容测试推送消息内容测试推送消息内容测试推送消息内容测试推送消息内容测试推送消息内容");
+        jpushMessage.setContent("测试推送消息内容");
         jpushMessage.setTitle("测试推送消息标题");
         jpushMessage.setMeetName("123123123");
 
-        String username1 = "wucaixiang@medcn.cn";
-        String username2 = "18194529@qq.com";
-        String username3 = "tongyipeng@medcn.cn";
-        //String username4 = "123@qq.com";
-
-        String title = jpushMessage.getTitle();
-        String content = jpushMessage.getContent();
-
-        Map<String, String> extraMap = JpushMessage.generateExtras(jpushMessage);
-        int result = jPushService.sendToAlias(jPushService.generateAlias(username1), title, title, content, extraMap);
-        int result2 = jPushService.sendToAlias(jPushService.generateAlias(username2), title, title, content, extraMap);
-        int result3 = jPushService.sendToAlias(jPushService.generateAlias(username3), title,title, content, extraMap);
-        //int result4 = jPushService.sendToAlias(jPushService.generateAlias(username4), title,title, content, extraMap);
-        //Assert.assertTrue(result3 == 1);
+       jPushService.sendToAlias(jPushService.generateAlias(288733), "test", "", "hahaha", JpushMessage.generateExtras(jpushMessage));
     }
 
 
@@ -72,7 +59,7 @@ public class JpushTest {
     public void testFindTageAlis() throws APIConnectionException, APIRequestException {
         //String username = "tongyipeng@medcn.cn"''
         String username = "wucaixiang@medcn.cn";
-        AliasDeviceListResult result = jPushService.findAliasDeviceRsultByAlias(jPushService.generateAlias(username));
+        AliasDeviceListResult result = jPushService.findAliasDeviceResultByAlias(jPushService.generateAlias(64));
         System.out.println("查询RegId ....");
         for(String registionId : result.registration_ids){
             System.out.println("zhenghang关联的ID="+registionId);
@@ -92,7 +79,7 @@ public class JpushTest {
     public void testCleanAlias() throws APIConnectionException, APIRequestException {
         String username = "wucaixiang@medcn.cn";
         jPushService.cleanJpushByAlias(jPushService.generateAlias(username));
-        AliasDeviceListResult result = jPushService.findAliasDeviceRsultByAlias(jPushService.generateAlias(username));
+        AliasDeviceListResult result = jPushService.findAliasDeviceResultByAlias(jPushService.generateAlias(1200059));
         for(String registionId : result.registration_ids){
             System.out.println("zhenghang关联的ID="+registionId);
         }
