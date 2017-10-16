@@ -372,7 +372,7 @@ public class CspUserController extends BaseController {
     @RequestMapping("/toBind")
     @ResponseBody
     public String toBind(String email) {
-        if(StringUtils.isEmail(email)){
+        if(!StringUtils.isEmail(email)){
             return error(local("user.error.email.format"));
         }
         String userId = SecurityUtils.get().getId();
