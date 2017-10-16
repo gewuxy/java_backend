@@ -20,7 +20,7 @@
             <div class="tj-content clearfix">
                 <div class="tj-top clearfix">
                     <h3>问卷统计</h3>
-                    <a href="${ctx}/func/meet/survey/exportExcel?meetId=${param.id}" class="tj-more">导出Excel</a>
+                    <a href="${ctx}/func/meet/survey/export/users/excel?meetId=${param.id}" class="tj-more">导出Excel</a>
                 </div>
                 <table class="tj-table tj-table-re1 tj-table-maxSize clearfix">
                     <thead>
@@ -43,7 +43,7 @@
         <div class="tj-con subPage-marginTop ">
             <div class="tj-content clearfix">
                 <div class="tj-top clearfix">
-                    <a href="${ctx}/func/meet/survey/exportSvyData?meetId=${param.id}" class="tj-more">导出Excel</a>
+                    <a href="${ctx}/func/meet/survey/export/data/analysis?meetId=${param.id}" class="tj-more">导出Excel</a>
                 </div>
 
                 <div id="surveyData">
