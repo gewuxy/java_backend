@@ -111,6 +111,6 @@ public class Meet implements Serializable{
             this.label = label;
         }
 
-
     }
+
 }
