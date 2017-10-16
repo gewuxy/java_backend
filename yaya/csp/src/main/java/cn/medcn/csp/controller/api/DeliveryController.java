@@ -8,6 +8,7 @@ import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.DeliveryAccepterDTO;
+import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.CourseDeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,11 +35,11 @@ public class DeliveryController extends BaseController {
     @RequestMapping(value = "/paginate")
     @ResponseBody
     public String paginate(Pageable pageable, Integer acceptId) {
-        if (acceptId != null) {
-            pageable.put("acceptId", acceptId);
-        }
+//        if (acceptId != null) {
+//            pageable.put("acceptId", acceptId);
+//        }
         pageable.put("authorId", SecurityUtils.get().getId());
-        MyPage<CourseDelivery> page = courseDeliveryService.page(pageable);
+        MyPage<DeliveryHistoryDTO> page = courseDeliveryService.findDeliveryHistory(pageable);
         return success(page.getDataList());
     }
 
