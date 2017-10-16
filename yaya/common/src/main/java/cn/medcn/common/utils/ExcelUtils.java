@@ -453,6 +453,8 @@ public class ExcelUtils {
                                     startRow = rowNum + mergeRows;
                                     break;
                                 }
+                            } else {
+                                startRow ++;
                             }
                             continue;
                         }
