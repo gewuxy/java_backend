@@ -58,6 +58,9 @@ public class MeetController extends BaseController {
     @Autowired
     private MeetMaterialService meetMaterialService;
 
+    @Autowired
+    private LiveService liveService;
+
     @Value("${app.file.upload.base}")
     private String appUploadBase;
 
@@ -336,11 +339,7 @@ public class MeetController extends BaseController {
             if (course == null) {
                 throw new SystemException("您引用的资源不存在");
             }
-            Principal principal = SubjectUtils.getCurrentUser();
-            //判断资源是否属于当前用户
-            if (principal.getId().intValue() != course.getOwner().intValue()) {
-                throw new SystemException("您无法引用不属于您的资源");
-            }
+
         }
     }
 
@@ -380,7 +379,7 @@ public class MeetController extends BaseController {
         } else {
             meetService.updateMeet(meet, funIds);
         }
-        return "redirect:/func/meet/config?meetId=" + meet.getId();
+        return "redirect:/func/meet/config?meetId=" + meet.getId() + "&courseId=" + courseId;
     }
 
     /**
@@ -469,6 +468,16 @@ public class MeetController extends BaseController {
 
     private void loadCourseInfo(Integer courseId, Model model) throws SystemException {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        //直播类型会议
+        if(course != null && course.getPlayType() != Meet.PlayType.RECORD.getType()){
+            Live live = liveService.findByCourseId(courseId);
+            //直播没有结束
+            if(live.getCloseType() != Live.LiveState.closed.getType()){
+                SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+                model.addAttribute("liveStartTime",format.format(live.getStartTime()));
+                model.addAttribute("liveEndTime",format.format(live.getEndTime()));
+            }
+        }
         model.addAttribute("course", course);
         model.addAttribute("courseId", courseId);
     }
@@ -480,7 +489,7 @@ public class MeetController extends BaseController {
         }
         //加载会议相关的属性
         loadExtraInfo(model);
-        //加载资源引用相关的信息
+        //加载资源引用相关的信息,必须选择添加课件功能
         if (courseId != null && courseId != 0) {
             loadCourseInfo(courseId, model);
         }
@@ -572,6 +581,7 @@ public class MeetController extends BaseController {
                 }
             }
         }
+
         model.addAttribute("module", module);
         model.addAttribute("moduleId", moduleId);
         model.addAttribute("appFileBase", appFileBase);
@@ -619,6 +629,13 @@ public class MeetController extends BaseController {
                 if (meetAudio != null &&
                         (meetAudio.getCourseId() != null && meetAudio.getCourseId() != 0)) {
                     model.addAttribute("course", audioService.findAudioCourse(meetAudio.getCourseId()));
+                }
+                //判断是否是实时直播，如果是直播，不允许上传音频和录音
+                if(meetAudio.getCourseId() != null){
+                    Live live = liveService.findByCourseId(meetAudio.getCourseId());
+                    if(live != null){
+                        model.addAttribute("live",true);
+                    }
                 }
                 break;
             case 2://视频

@@ -61,7 +61,7 @@
                                             <a href="#" class="resource-icon-play popup-player-hook">
                                                 <i></i>
                                                 预览
-                                            </a><a href="metting-now-step01.html" class="resource-icon-edit">
+                                            </a><a href="${ctx}/func/meet/edit?courseId=${d.courseId}" class="resource-icon-edit">
                                             <i></i>
                                             立即发布
                                         </a>
@@ -82,63 +82,6 @@
                         </div>
 
                     </c:forEach>
-
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="${ctxStatic}/img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-response">
-                        <div class="resource-list-box">
-                            <div class="resource-list-item">
-                                <div class="resource-img ">
-                                    <img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">
-                                    <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="metting-now-step01.html" class="resource-icon-edit">
-                                        <i></i>
-                                        立即发布
-                                    </a>
-                                    </div>
-                                </div>
-                                <div class="resource-info">
-                                    <div class="fl">
-                                        <img src="${ctxStatic}/img/_metting-min-img.jpg" alt="">
-                                    </div>
-                                    <div class="oh">
-                                        <h3 >赵悦宾</h3>
-                                        <p>zhaoyuebin@126.com</p>
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 

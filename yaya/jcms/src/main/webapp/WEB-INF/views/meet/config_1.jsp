@@ -521,21 +521,27 @@
                                     <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
                                     <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover2-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
 
-                                    <label><input type="file" name="file" id="changeAudioFile" class="none">
-                                        <span class="metting-button bottom-blue"><span class="icon iconfont icon-minIcon9"></span>&nbsp;上传音频</span></label>
-                                    <a href="javascript:;" class="metting-button bottom-blue record-hook"><span class="icon iconfont icon-minIcon21"></span>&nbsp;开始录音</a>
+                                    <c:if test="${empty live}">
+                                        <label><input type="file" name="file" id="changeAudioFile" class="none">
+                                            <span class="metting-button bottom-blue"><span class="icon iconfont icon-minIcon9"></span>&nbsp;上传音频</span></label>
+                                        <a href="javascript:;" class="metting-button bottom-blue record-hook"><span class="icon iconfont icon-minIcon21"></span>&nbsp;开始录音</a>
+                                    </c:if>
                                     <a href="javascript:;" class="metting-button bottom-blue recordEnd-hook none"><span class="icon iconfont icon-minIcon20"></span>&nbsp;完成录音</a>
                                     <span class="swiper-button-next metting-button">下一页</span>
                                 </div>
 
                         </div>
-                        <div class="clearfix t-center" style="padding: 0 0 40px; min-height: 80px;">
-                            <!--<ul id="recordingslist"></ul>-->
-                            <div class="audio-metting-box" style="">
-                                <audio controls=true id="video1"></audio>
-                            </div>
 
-                        </div>
+                        <c:if test="${empty live}">
+                            <div class="clearfix t-center" style="padding: 0 0 40px; min-height: 80px;">
+                                <!--<ul id="recordingslist"></ul>-->
+                                <div class="audio-metting-box" style="">
+                                    <audio controls=true id="video1"></audio>
+                                </div>
+
+                            </div>
+                        </c:if>
+
                     </c:otherwise>
                 </c:choose>
 
