@@ -198,4 +198,11 @@ public interface SurveyService extends BaseService<MeetSurvey>{
      * @return
      */
     List<AttendSurveyUserDataDTO> findUserSurveyHis(Map<String,Object> map);
+
+    /**
+     * 查询主观题用户答题记录
+     * @param questionId
+     * @return
+     */
+    List<SubjQuesAnswerDTO> findSubjQuesAnswerByQuestionId(Integer questionId);
 }
