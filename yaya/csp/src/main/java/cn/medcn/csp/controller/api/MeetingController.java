@@ -324,22 +324,26 @@ public class MeetingController extends BaseController {
 
         if (!CheckUtils.isEmpty(page.getDataList())) {
             for (CourseDeliveryDTO deliveryDTO : page.getDataList()) {
-                // 当前播放第几页
-                if (deliveryDTO.getLivePage() == null) {
-                    deliveryDTO.setLivePage(0);
-                }
                 if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
                     deliveryDTO.setCoverUrl(fileBase + deliveryDTO.getCoverUrl());
                 }
 
                 // 录播会议
                 if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType().intValue()) {
+                    // 录播 当前播放第几页
+                    if (deliveryDTO.getPlayPage() == null) {
+                        deliveryDTO.setPlayPage(0);
+                    }
                     // 转换录播音频时长格式
                     if (StringUtils.isNotEmpty(deliveryDTO.getPlayTime())) {
                         long secondTime = Long.parseLong(deliveryDTO.getPlayTime());
                         deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(null,null, secondTime));
                     }
                 } else {
+                    // 直播 当前播放第几页
+                    if (deliveryDTO.getLivePage() == null) {
+                        deliveryDTO.setLivePage(0);
+                    }
                     // 如果是直播会议 需计算直播时长
                     int liveState = deliveryDTO.getLiveState().intValue();
                     if (liveState == Live.LiveState.init.ordinal()) {
