@@ -381,7 +381,12 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
             if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_LOCATION.getType()) {
                 checkZone(meetProperty, userId);
             } else if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_GROUP.getType()) {
-                checkMember(meetProperty, meetId, userId);
+                if (meetProperty.getGroupIds() != null) {
+                    boolean userInGroup = userInGroup(meetProperty, meetId, userId);
+                    if (!userInGroup) {
+                        throw new SystemException(SpringUtils.getMessage("meet.member.notexisted"));
+                    }
+                }
             }
             // payCredits(meetId, userId, meet.getOwnerId());
             requiredPayXs(meetId, userId, meet.getOwnerId());
@@ -405,6 +410,25 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
                 throw new SystemException(SpringUtils.getMessage("meet.member.notexisted"));
             }
         }
+    }
+
+    protected boolean hasGroup(Integer groupId, Integer userId){
+        PubUserDocGroup condition = new PubUserDocGroup();
+        condition.setDoctorId(userId);
+        condition.setGroupId(groupId);
+        int memberCount = pubUserDocGroupDAO.selectCount(condition);
+        return memberCount > 0;
+    }
+
+    protected boolean userInGroup(MeetProperty property, String meetId, Integer userId) throws SystemException {
+        if (property.getGroupIds() != null) {
+            for (Integer groupId : property.getGroupIds()) {
+                if (hasGroup(groupId, userId)){
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     protected void checkAttendLimit(MeetProperty property, String meetId) throws SystemException {
