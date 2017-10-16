@@ -23,5 +23,8 @@ public class SurveyRecordItemDTO implements Serializable {
     // 选择的人数
     private Integer selCount;
 
+    // 用户姓名
+    private String nickname;
+
 
 }
