@@ -253,7 +253,7 @@
         }
 
         function openQuote(){
-            $("#quoteFrame").attr("src","${ctx}/func/res/forQuote?meetId=${meetId}&moduleId=${moduleId}");
+            $("#quoteFrame").attr("src","${ctx}/func/meet/delivery/forCSP?meetId=${meetId}&moduleId=${moduleId}");
             $('.mask-wrap').addClass('dis-table');
             $('.fx-mask-box-1').show();
         }
@@ -596,6 +596,11 @@
             <div class="mask-hd clearfix">
                 <h3 class="font-size-1">转载资源</h3>
                 <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+            </div>
+            <div class="tab-wrap popup-tab-list">
+                <span class="tab-menu tab-cur">CSP投屏</span>
+                <span class="tab-menu">共享资源库</span>
+                <span class="tab-menu">获取历史</span>
             </div>
             <iframe id="quoteFrame" name="quoteFrame" frameborder="0" width="100%" height="620" scrolling="false"/>
         </div>

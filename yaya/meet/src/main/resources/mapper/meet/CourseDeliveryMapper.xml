@@ -35,6 +35,13 @@
         INNER JOIN t_audio_course_detail tc ON td.source_id = tc.course_id AND tc.sort = 1
         INNER JOIN t_audio_course t ON tc.course_id = t.id
         INNER JOIN t_csp_user_info tu ON td.author_id = tu.id
-        WHERE td.accept_id = #{userId} AND td.publish_state = 0
+        WHERE td.accept_id = #{userId} ORDER BY td.delivery_time DESC
+    </select>
+
+    <select id="findCSPList"  resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+         SELECT td.id, td.source_id as courseId, t.title,t.play_type,tu.user_name as name FROM t_csp_delivery td
+        INNER JOIN t_audio_course t ON tc.course_id = t.id
+        INNER JOIN t_csp_user_info tu ON td.author_id = tu.id
+        WHERE td.accept_id = #{userId} ORDER BY td.delivery_time DESC
     </select>
 </mapper>
