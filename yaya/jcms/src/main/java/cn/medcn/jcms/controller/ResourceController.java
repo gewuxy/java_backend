@@ -10,17 +10,21 @@ import cn.medcn.goods.model.Credits;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.jcms.security.Principal;
 import cn.medcn.jcms.utils.SubjectUtils;
+import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.CourseReprintDTO;
 import cn.medcn.meet.dto.CourseSharedDTO;
 import cn.medcn.meet.dto.ResourceCategoryDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.CourseDeliveryService;
+import cn.medcn.user.service.AppUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
@@ -36,44 +40,49 @@ public class ResourceController extends BaseController {
     private AudioService audioService;
 
     @Autowired
+    private AppUserService appUserService;
+
+    @Autowired
     private CreditsService creditsService;
 
+    @Autowired
+    private CourseDeliveryService courseDeliveryService;
 
     @Value("${app.file.base}")
     private String appFileBase;
 
-    /**
-     * 查询资源列表
-     * @param pageable
-     * @param category
-     * @param keyword
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/list")
-    public String list(Pageable pageable, String category, String keyword, Model model){
-        if(!StringUtils.isEmpty(category)){
-            pageable.getParams().put("category", category);
-            model.addAttribute("category", category);
-        }
-        if(!StringUtils.isEmpty(keyword)){
-            pageable.getParams().put("keyword", keyword);
-            model.addAttribute("keyword", keyword);
-        }
-        Principal principal = SubjectUtils.getCurrentUser();
-        pageable.getParams().put("userId", principal.getId());
-        MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
-        model.addAttribute("page", page);
-        //查询出所有的分类
-        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys();
-        //查询出我的象数
-
-        model.addAttribute("currentUserId", principal.getId());
-        Credits credits = creditsService.doFindMyCredits(principal.getId());
-        model.addAttribute("credit", credits == null?0:credits.getCredit());
-        model.addAttribute("categoryList", categoryList);
-        return "/res/list";
-    }
+//    /**
+//     * 查询资源列表
+//     * @param pageable
+//     * @param category
+//     * @param keyword
+//     * @param model
+//     * @return
+//     */
+//    @RequestMapping(value = "/list")
+//    public String list(Pageable pageable, String category, String keyword, Model model){
+//        if(!StringUtils.isEmpty(category)){
+//            pageable.getParams().put("category", category);
+//            model.addAttribute("category", category);
+//        }
+//        if(!StringUtils.isEmpty(keyword)){
+//            pageable.getParams().put("keyword", keyword);
+//            model.addAttribute("keyword", keyword);
+//        }
+//        Principal principal = SubjectUtils.getCurrentUser();
+//        pageable.getParams().put("userId", principal.getId());
+//        MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
+//        model.addAttribute("page", page);
+//        //查询出所有的分类
+//        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys();
+//        //查询出我的象数
+//
+//        model.addAttribute("currentUserId", principal.getId());
+//        Credits credits = creditsService.doFindMyCredits(principal.getId());
+//        model.addAttribute("credit", credits == null?0:credits.getCredit());
+//        model.addAttribute("categoryList", categoryList);
+//        return "/res/list";
+//    }
 
     /**
      * 我的转载记录
@@ -209,6 +218,7 @@ public class ResourceController extends BaseController {
         return "/res/forQuote";
     }
 
+
     /**
      * 预览ppt+语音
      * 未转载只能查看查看前5页
@@ -232,4 +242,51 @@ public class ResourceController extends BaseController {
         model.addAttribute("pageLimit", Constants.NOT_ATTENTION_PPT_VIEW_PAGES);
         return "/res/view";
     }
+
+    /**
+     * 关闭或开启投稿功能,页面重新加载
+     * @return
+     */
+    @RequestMapping("/change")
+    @ResponseBody
+    public String close(Integer flag){
+        Integer userId = SubjectUtils.getCurrentUserid();
+        appUserService.doChangeDelivery(userId,flag);
+        return success();
+    }
+
+    /**
+     *
+     * @param isOpen  翻页时带此参数，说明已经开启投稿
+     * @param pageable
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/list")
+    public String users(Integer isOpen,Pageable pageable, Model model){
+        Integer userId = SubjectUtils.getCurrentUserid();
+        if(isOpen == null){  //点击资源平台动作
+            //查询用户是否开启投稿功能
+
+            int flag = appUserService.findDeliveryFlag(userId);
+            if(flag == 0){  //没有开启投稿功能
+                return "/res/deliveryList";
+            }
+        }
+
+        pageable.put("userId",userId);
+        MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
+        for(CourseDeliveryDTO dto:myPage.getDataList()){
+            if(dto.getAvatar() != null){
+                dto.setAvatar(appFileBase + dto.getAvatar());
+            }
+            if(dto.getCoverUrl() != null){
+                dto.setCoverUrl(appFileBase + dto.getCoverUrl());
+            }
+        }
+        model.addAttribute("page",myPage);
+        model.addAttribute("flag",1);
+        return "/res/deliveryList";
+    }
+
 }
