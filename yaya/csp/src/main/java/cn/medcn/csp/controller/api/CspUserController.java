@@ -185,8 +185,8 @@ public class CspUserController extends BaseController {
     public String loginOut(HttpServletRequest request) {
         String token = request.getHeader(Constants.TOKEN);
         if (StringUtils.isNotEmpty(token)) {
-        String cacheKey = Constants.TOKEN+"_"+token;
-//        Principal principal = redisCacheUtils.getCacheObject(cacheKey);
+            String cacheKey = Constants.TOKEN+"_"+token;
+//          Principal principal = redisCacheUtils.getCacheObject(cacheKey);
             redisCacheUtils.delete(cacheKey);
         }
         return success();
