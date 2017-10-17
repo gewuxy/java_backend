@@ -16,9 +16,9 @@ import java.util.Map;
  * Created by lixuan on 2017/8/18.
  */
 public class QRCodeUtils {
-    public static final int QRCODE_DEFAULT_WIDTH = 200;
+    public static final int QRCODE_DEFAULT_WIDTH = 300;
 
-    public static final int QRCODE_DEFAULT_HEIGHT = 200;
+    public static final int QRCODE_DEFAULT_HEIGHT = 300;
 
     public static final String PICTURE_FORMAT = "png";
 
@@ -29,6 +29,9 @@ public class QRCodeUtils {
         try {
             bitMatrix = new MultiFormatWriter().encode(text, BarcodeFormat.QR_CODE, QRCODE_DEFAULT_WIDTH, QRCODE_DEFAULT_HEIGHT,hints);
             File outputFile = new File(outPath);
+            if (!outputFile.exists()) {
+                outputFile.mkdirs();
+            }
             MatrixToImageWriter.writeToFile(bitMatrix, PICTURE_FORMAT, outputFile);
         } catch (WriterException e) {
             e.printStackTrace();

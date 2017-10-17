@@ -12,6 +12,9 @@
     <meta charset="UTF-8">
     <title>邮箱登录</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+
+    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
 <div id="wrapper">
@@ -105,8 +108,10 @@
 
         });
 
-        $(document).keydown(function(){
-            $("#submitBtn").trigger("click");
+        $(document).keydown(function(evt){
+            if (evt.keyCode == 13){
+                $("#submitBtn").trigger("click");
+            }
         });
 
         $(".pwdChange-hook").click(function(){

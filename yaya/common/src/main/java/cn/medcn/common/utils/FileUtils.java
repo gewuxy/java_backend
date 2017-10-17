@@ -296,6 +296,12 @@ public class FileUtils {
         }
     }
 
+
+    public static boolean exists(String path){
+        File file = new File(path);
+        return file.exists();
+    }
+
     public static String kSize(Long size){
         return size / Constants.BYTE_UNIT_K + "K";
     }

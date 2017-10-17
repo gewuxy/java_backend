@@ -231,6 +231,14 @@ public class MeetingController extends BaseController {
             Live live = liveService.findByCourseId(courseId);
             result.put("live", live);
         }
+
+        //发送ws同步指令
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(String.valueOf(courseId));
+        order.setOrder(LiveOrderDTO.ORDER_SYNC);
+        order.setPageNum(0);
+        liveService.publish(order);
+
         return success(result);
     }
 

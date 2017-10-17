@@ -59,9 +59,9 @@
     <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="/web/login"/>
-        <property name="unauthorizedUrl" value="/web/login"/>
-        <property name="successUrl" value="/web/meet/mgr"/>
+        <property name="loginUrl" value="/"/>
+        <property name="unauthorizedUrl" value="/"/>
+        <property name="successUrl" value="/web/meet/list"/>
         <property name="filters">
             <map>
                 <entry key="authc" value-ref="formAuthenticationFilter"/>
@@ -70,11 +70,9 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
-                /logout=logout
+                /web/logout=logout
                 /static/**=anon
                 /web/login=anon
-                /web/logout=anon
-                /=authc
                 /web/**=authc
             </value>
         </property>

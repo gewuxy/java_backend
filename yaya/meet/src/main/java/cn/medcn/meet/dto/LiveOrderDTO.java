@@ -12,13 +12,15 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class LiveOrderDTO implements Serializable{
 
-    public static final int ORDER_LIVE=  0;
+    public static final int ORDER_LIVE=  0;//直播
 
-    public static final int ORDER_SYNC = 1;
+    public static final int ORDER_SYNC = 1;//同步
+
+    public static final int ORDER_SYNC_LIVE = 2;//综合指令 同步和直播
 
     //直播课件ID
     protected String courseId;
-    //指令代码 0表示直播 1表示同步
+    //指令代码 0表示直播 1表示同步 2表示同步和直播
     protected int order;
     //PPT的当前页码
     protected int pageNum;

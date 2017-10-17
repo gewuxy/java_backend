@@ -6,6 +6,7 @@ import cn.medcn.meet.dto.CourseSharedDTO;
 import cn.medcn.meet.dto.ResourceCategoryDTO;
 import cn.medcn.meet.model.AudioCourse;
 import com.github.abel533.mapper.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -55,4 +56,11 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
      * @return
      */
     List<CourseDeliveryDTO> findCspMeetingList(Map<String, Object> params);
+
+    /**
+     * 查询最近未完善的PPT
+     * @param cspUserId
+     * @return
+     */
+    AudioCourse findLastDraft(@Param("cspUserId")String cspUserId);
 }

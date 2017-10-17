@@ -532,4 +532,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
         return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingList(pageable.getParams()));
     }
+
+    @Override
+    public AudioCourse findLastDraft(String cspUserId) {
+        return audioCourseDAO.findLastDraft(cspUserId);
+    }
 }

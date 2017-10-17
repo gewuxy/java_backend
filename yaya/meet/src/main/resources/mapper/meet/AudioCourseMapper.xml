@@ -69,4 +69,9 @@
         WHERE c.csp_user_id = #{cspUserId}
         GROUP BY c.id
     </select>
+
+
+    <select id="findLastDraft" resultType="cn.medcn.meet.model.AudioCourse">
+        SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND published = 0 limit 1
+    </select>
 </mapper>

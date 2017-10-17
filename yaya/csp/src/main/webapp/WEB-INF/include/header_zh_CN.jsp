@@ -19,7 +19,7 @@
                                 <li><a href="newList.html">账号管理</a></li>
                                 <li><a href="newList.html">流量管理</a></li>
                                 <li><a href="newList.html">帮助中心</a></li>
-                                <li class="last"><a href="newList.html">退出账号</a></li>
+                                <li class="last"><a href="${ctx}/web/logout">退出账号</a></li>
                             </ul>
                             <div class="tb-popupBox-border"></div>
                             <div class="tb-popupBox-outerBorder"></div>
@@ -28,7 +28,7 @@
                 </ul>
             </div>
             <div class="message"><a href="#" class="icon-message"><span></span></a></div>
-            <div class="addMetting"><a href="#"  class="icon-addMetting"></a></div>
+            <div class="addMetting"><a href="${ctx}/web/meet/edit"  class="icon-addMetting"></a></div>
         </div>
         <div class="fl">
             <a class="logo" href="/"></a>
