@@ -50,4 +50,11 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      * @return
      */
     MyPage<CourseDeliveryDTO> findDeliveryList(Pageable pageable);
+
+    /**
+     * 引用资源中的csp列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findCSPList(Pageable pageable);
 }
