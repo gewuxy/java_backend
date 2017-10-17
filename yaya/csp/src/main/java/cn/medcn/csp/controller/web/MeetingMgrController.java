@@ -84,19 +84,6 @@ public class MeetingMgrController extends CspBaseController{
         return localeView("/meeting/screen");
     }
 
-    /**
-     * 根据请求生成ws地址
-     * @param request
-     * @return
-     */
-    protected String genWsUrl(HttpServletRequest request, Integer courseId){
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(request.getScheme().toLowerCase().equals("https") ? "wss" : "ws");
-        buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
-        buffer.append("/live/order?courseId=").append(courseId
-        );
-        return buffer.toString();
-    }
 
     /**
      * 生成二维码的地址
