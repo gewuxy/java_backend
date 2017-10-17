@@ -296,11 +296,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      */
     @Override
     public void doUnbindEmailOrMobile(Integer type, String userId) throws SystemException {
-        if(type != Type.EMAIL && type != Type.MOBILE){
+        if(type != BindInfo.Type.MOBILE.getTypeId() && type != BindInfo.Type.EMAIL.getTypeId()){
             throw new SystemException(local("error.param"));
         }
         CspUserInfo info = selectByPrimaryKey(userId);
-        if(type == Type.EMAIL){
+        if(type == BindInfo.Type.EMAIL.getTypeId()){
             //用户没有绑定邮箱
             if(StringUtils.isEmpty(info.getEmail())){
                 throw new SystemException(local("user.not.exist.email"));
@@ -319,7 +319,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
                 throw new SystemException(local("user.only.one.account"));
             }
-            if(type == Type.EMAIL){
+            if(type ==  BindInfo.Type.EMAIL.getTypeId()){
                 info.setEmail("");
             }
             info.setMobile("");
@@ -456,10 +456,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
 
-    protected interface Type{
-        Integer EMAIL = 0;
-        Integer MOBILE = 1;
-    }
 
 
 }
