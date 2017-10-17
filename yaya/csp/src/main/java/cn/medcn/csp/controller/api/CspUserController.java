@@ -413,7 +413,7 @@ public class CspUserController extends BaseController {
     @RequestMapping("/bindMobile")
     @ResponseBody
     public String bindMobile(String mobile,String captcha)  {
-        if(StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
+        if(!StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
             return error(local("error.param"));
         }
         try {
