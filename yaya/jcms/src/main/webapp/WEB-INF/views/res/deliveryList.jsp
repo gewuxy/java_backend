@@ -12,32 +12,8 @@
 <!-- main -->
 <div class="g-main clearfix">
     <!-- header -->
-    <header class="header">
-        <div class="header-content">
-            <div class="clearfix">
-                <div class="fl clearfix">
-                    <img src="${ctxStatic}/images/subPage-header-image-03.png" alt="">
-                </div>
-                <div class="oh">
-                    <p><strong>资源平台</strong></p>
-                    <p>医学会议、科教培训、医学资料跨医院共享的学术共享平台</p>
-                </div>
-            </div>
-        </div>
-    </header>
+    <%@include file="resHeader.jsp"%>
     <!-- header end -->
-
-    <div class="tab-hd">
-
-        <ul class="tab-list clearfix">
-            <li class="cur">
-                <a href="zypt.html">CSP投屏<i></i></a>
-            </li>
-            <li >
-                <a href="hz-gxzy.html">共享资源<i></i></a>
-            </li>
-        </ul>
-    </div>
     <div class="tab-bd">
         <div class="table-box-div1 mar-btm-1">
             <div class="table-top-box clearfix">
