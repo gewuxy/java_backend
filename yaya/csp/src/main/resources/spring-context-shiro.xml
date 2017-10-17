@@ -70,6 +70,7 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
+                /logout=logout
                 /static/**=anon
                 /web/login=anon
                 /web/logout=anon

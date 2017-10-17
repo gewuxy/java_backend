@@ -32,16 +32,19 @@
 
                     <!--切换  邮箱登录-->
                     <div class="login-box-main position-phone-login">
-                        <form action="">
+                        <form action="${ctx}/web/login" method="post" id="loginForm" name="loginForm">
+                            <input type="hidden" name="thirdPartyId" value="7">
                             <div class="login-form-item">
-                                <label for="email" class="cells-block pr"><input id="email" type="text" class="login-formInput" placeholder="邮箱地址"></label>
+                                <label for="email" class="cells-block pr">
+                                    <input id="email" name="username" type="text" value="${username}" class="login-formInput" placeholder="邮箱地址">
+                                </label>
                                 <label for="pwd" class="cells-block pr">
                                     <input type="text" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" type="password" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input id="pwd" name="password" type="password" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
-                                <span class="cells-block error  "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请输入正确的邮箱地址</span>
-                                <input href="#" type="button" class="button login-button buttonBlue last" value="确认登录">
+                                <span class="cells-block error ${not empty error ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
+                                <input type="button" class="button login-button buttonBlue last" id="submitBtn" value="确认登录">
                             </div>
                         </form>
                     </div>
@@ -59,27 +62,64 @@
                 </div>
             </div>
             <div class="login-bottom">
-                <p><%@include file="/WEB-INF/include/copy_right.jsp"%></p>
+                <p>粤ICP备12087993号 © 2012-2017 敬信科技版权所有 </p>
             </div>
         </div>
     </div>
 </div>
-
+<script src="${ctxStatic}/js/util.js"></script>
 <script>
     $(function(){
+
+
+
+        const classPwdOn = "pwdChange-on";
+        const classPwdOff = "pwdChange-off";
+
+        const userNameError = "请输入正确的邮箱地址";
+        const passWordError = "请输入正确的密码";
+
         //让背景撑满屏幕
         $('.login-banner').height($(window).height());
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
 
+        $("#submitBtn").click(function(){
+            var $username = $("#email");
+            var $password = $("#pwd");
+            if (!isEmail($username.val())){
+                $("#errorMessage").text(userNameError);
+                $("#errorMessage").parent().removeClass("none");
+                $username.focus();
+                return false;
+            }
 
+            if($.trim($password.val()).length > 24 || $.trim($password.val()).length < 6){
+                $("#errorMessage").text(passWordError);
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
+            }
+            $("#errorMessage").parent().addClass("none");
+            $("#loginForm").submit();
 
-
-        //调用密码切换
-        $('.pwdChange-hook').on('click',function() {
-            changePassWordStatus($('.hidePassword'));
         });
 
+        $(document).keydown(function(){
+            $("#submitBtn").trigger("click");
+        });
+
+        $(".pwdChange-hook").click(function(){
+            if($(this).hasClass(classPwdOn)){
+                $(this).removeClass(classPwdOn);
+                $(this).addClass(classPwdOff);
+                $("#pwd").prop("type", "text");
+            } else {
+                $(this).removeClass(classPwdOff);
+                $(this).addClass(classPwdOn);
+                $("#pwd").prop("type", "password");
+            }
+        });
     })
 </script>
 </body>

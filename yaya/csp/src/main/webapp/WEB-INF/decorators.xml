@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<decorators defaultdir="/WEB-INF/decorators">
-
-    <!-- 缺省装饰页 -->
-    <decorator name="login" page="decorator_login.jsp">
-        <pattern>/web/login**</pattern>
-    </decorator>
-
-</decorators>
