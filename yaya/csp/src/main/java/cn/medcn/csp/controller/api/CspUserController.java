@@ -6,6 +6,7 @@ import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.Captcha;
@@ -16,6 +17,7 @@ import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -173,6 +175,22 @@ public class CspUserController extends BaseController {
 
     }
 
+    /**
+     * 退出登录
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/logout")
+    @ResponseBody
+    public String loginOut(HttpServletRequest request) {
+        String token = request.getHeader(Constants.TOKEN);
+        if (StringUtils.isNotEmpty(token)) {
+            String cacheKey = Constants.TOKEN+"_"+token;
+//          Principal principal = redisCacheUtils.getCacheObject(cacheKey);
+            redisCacheUtils.delete(cacheKey);
+        }
+        return success();
+    }
 
     /**
      * 邮箱登录
