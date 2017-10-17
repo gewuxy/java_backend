@@ -22,4 +22,6 @@ public interface CourseDeliveryDAO extends Mapper<CourseDelivery> {
     List<DeliveryAccepterDTO> findAcceptors();
 
     List<CourseDeliveryDTO> findDeliveryList(Map<String, Object> params);
+
+    List<CourseDeliveryDTO> findCSPList(Map<String, Object> params);
 }
