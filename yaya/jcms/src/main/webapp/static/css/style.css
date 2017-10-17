@@ -20,6 +20,7 @@
 .table-box-1 .table-td-5 { width:200px; text-align: right; }
 .table-box-1 .table-td-6 {}
 .table-box-1 .table-td-6 .icon{  font-size:17px;}
+.table-box-1 .table-td-6 .icon-minIcon26 { font-size:14px; color:#3fa9f5;}
 .table-box-1 .table-td-6 a { color: #4c4c4c; }
 .table-box-1 .table-td-7 { width:100px; text-align: right; }
 .table-box-1 .table-td-8 { width:240px; }
@@ -330,6 +331,8 @@ input.page-border { width: 40px; }
 .u-pic img { float: left; width: 51px; height: 51px; }
 .u-txt { font-size: 16px; float: left; }
 .u-txt i { display: block; font-weight: 700; white-space: nowrap; }
+.download-button {  display: inline-block;  padding: 10px 20px; margin:5px 0  10px 30px; background: #3fa9f5; border-radius: 4px; color: #fff;}
+.download-button:hover {  color:#fff;}
 
 /*my-mlist-shedow*/
 /*.my-mlist-shedow { box-shadow: 2px 2px 2px #d4d3d3; -moz-box-shadow: 2px 2px 2px #d4d3d3; -webkit-box-shadow:2px 2px 2px #d4d3d3; margin-right: 5px; }*/
@@ -1474,11 +1477,14 @@ a:hover .minIcon { background-position-y:-26px; }
 .resource-list .resource-list-item { border:1px solid #e5e5e5; border-radius: 4px;}
 .resource-list .row { margin-bottom:50px;}
 .resource-list .resource-img { position: relative;}
+.resource-list .resource-img .resource-state {     position: absolute; right: 10px; top: 5px; color: #ffffff; background: rgba(0,0,0,.4); padding: 3px 10px; border-radius: 10px;}
+.resource-list .resource-img .resource-state span { margin-top:2px;}
 .resource-list .resource-info { font-size:14px; padding:15px 20px; color:#b2b2b2;}
 .resource-list .resource-info .fl img { width:40px; height:40px; border-radius:4px; margin-right:15px;}
 .resource-list .resource-info .oh h3{ color:#323333; font-size:18px; margin-bottom:0;}
 .resource-list .resource-info .oh p { font-size:16px;}
 .resource-list .resource-info h3{ font-size:16px; margin-bottom:5px; color:#888888;}
+.resource-list .resource-info .state{ text-align: right; border-left: 1px solid #e6e6e6; margin-top: 10px; color:#3fa9f5; }
 .resource-list .resource-link { position: absolute; top:0; left:0; width:100%; height:100%; display: none; }
 .resource-list .resource-list-item:hover .resource-link { display: block; }
 .resource-list .resource-link a{ display: inline-block; width:50%; height:100%; font-size:16px; color:#fff; text-align: center; vertical-align: middle; }
@@ -1492,6 +1498,7 @@ a:hover .minIcon { background-position-y:-26px; }
 
 
 .resource-list .row { margin-left:-25px; margin-right:-25px;}
+.resource-list .resource-info .row { margin: auto 0 0 0;}
 .col-lg-response {}
 
     /*************会议轮播swiper*********************/
@@ -1605,6 +1612,7 @@ a:hover .minIcon { background-position-y:-26px; }
 .boxAudio .audiojs {    width: 630px;}
 .boxAudio .audiojs .scrubber { width:440px;}
 .boxAudio { background-color:#fff;}
+
 
 
 /*适用于Firefox的CSS hack*/
