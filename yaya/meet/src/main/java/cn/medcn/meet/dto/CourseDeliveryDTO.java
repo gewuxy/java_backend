@@ -54,4 +54,7 @@ public class CourseDeliveryDTO implements Serializable {
 
     //投稿者邮箱
     private String email;
+
+    //录播ppt总时长
+    private Integer duration;
 }

@@ -19,4 +19,6 @@ public class DeliveryHistoryDTO implements Serializable {
     protected String acceptName;//接收方名称
 
     protected int acceptCount;//已投稿数
+
+    protected String sign; //单位号简介
 }
