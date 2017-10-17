@@ -17,10 +17,6 @@
 <div class="metting-pupopbox-bd">
     <table class="table-box-3">
         <thead>
-        <tr style="padding: 15px;">
-            <td class="tb-w-5" style="padding: 15px;"><i>资源名称</i></td>
-            <td class="tb-w-4" style="padding: 15px;">操作</td>
-        </tr>
         </thead>
         <tbody>
         <c:forEach items="${page.dataList}" var="res">

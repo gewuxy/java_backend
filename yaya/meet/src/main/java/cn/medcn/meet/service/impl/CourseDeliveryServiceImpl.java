@@ -101,4 +101,16 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
         return MyPage.page2Mypage((Page) courseDeliveryDAO.findDeliveryList(pageable.getParams()));
     }
+
+
+    /**
+     * 引用资源中的csp列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> findCSPList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
+        return MyPage.page2Mypage((Page) courseDeliveryDAO.findCSPList(pageable.getParams()));
+    }
 }

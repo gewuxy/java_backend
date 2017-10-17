@@ -24,14 +24,11 @@ import javax.xml.bind.SchemaOutputResolver;
 @RequestMapping(value = "/func/meet/delivery")
 public class DeliveryController extends BaseController {
 
-    @Autowired
-    private AppUserService appUserService;
+
 
     @Autowired
     private CourseDeliveryService courseDeliveryService;
 
-    @Value("${app.file.base}")
-    private String fileBase;
 
     @RequestMapping(value = "/accept")
     @ResponseBody
@@ -40,49 +37,23 @@ public class DeliveryController extends BaseController {
         return success();
     }
 
-    /**
-     * 关闭或开启投稿功能,页面重新加载
-     * @return
-     */
-    @RequestMapping("/change")
-    @ResponseBody
-    public String close(Integer flag){
-        Integer userId = SubjectUtils.getCurrentUserid();
-        appUserService.doChangeDelivery(userId,flag);
-        return success();
-    }
 
     /**
-     *
-     * @param isOpen  翻页时带此参数，说明已经开启投稿
+     * 点击引用资源显示csp投稿列表
      * @param pageable
+     * @param meetId
+     * @param moduleId
      * @param model
      * @return
      */
-    @RequestMapping(value = "/list")
-    public String users(Integer isOpen,Pageable pageable, Model model){
-        Integer userId = SubjectUtils.getCurrentUserid();
-        if(isOpen == null){  //点击资源平台动作
-            //查询用户是否开启投稿功能
-
-            int flag = appUserService.findDeliveryFlag(userId);
-            if(flag == 0){  //没有开启投稿功能
-                return "/res/deliveryList";
-            }
-        }
-
-        pageable.put("userId",userId);
-        MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
-        for(CourseDeliveryDTO dto:myPage.getDataList()){
-            if(dto.getAvatar() != null){
-                dto.setAvatar(fileBase + dto.getAvatar());
-            }
-            if(dto.getCoverUrl() != null){
-                dto.setCoverUrl(fileBase + dto.getCoverUrl());
-            }
-        }
+    @RequestMapping("/forCSP")
+    public String forCSP(Pageable pageable,String meetId, Integer moduleId, Model model){
+        pageable.setPageSize(6);
+        model.addAttribute("meetId", meetId);
+        model.addAttribute("moduleId", moduleId);
+        pageable.getParams().put("userId", SubjectUtils.getCurrentUser().getId());
+        MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findCSPList(pageable);
         model.addAttribute("page",myPage);
-        model.addAttribute("flag",1);
-        return "/res/deliveryList";
+        return "";
     }
 }

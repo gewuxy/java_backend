@@ -44,6 +44,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Value("${app.file.base}")
     protected String fileBase;
 
+    @Value("${app.csp.base}")
+    protected String cspBase;
+
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
 
@@ -88,7 +91,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         // 检查用户邮箱是否已经注册过
         CspUserInfo cspUser = cspUserInfoDAO.findByLoginName(username);
         if (cspUser != null) {
-            return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+            // 检查是否有激活
+            if (cspUser.getActive()) {
+                return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+            } else {
+                // 发送激活邮箱链接
+                sendMail(username, userInfo.getId(), MailBean.MailTemplate.REGISTER.getLabelId());
+                return APIUtils.success(local("user.success.register"));
+            }
         }
 
         // 是否海外用户
@@ -218,13 +228,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if (template != null && template.intValue() == registerTemplate) {
             // 发送注册激活邮箱邮件
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = appBase + "/api/email/active?code=" + code;
+            url = cspBase + "/api/email/active?code=" + code;
             subject = "CSPMeeting账号激活";
             templateName = MailBean.MailTemplate.REGISTER.getLabel();
         } else if (template.intValue() == findPwdTemplate) {
             // 发送找回密码邮件
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = appBase + "/api/email/toReset?code=" + code;
+            url = cspBase + "/api/email/toReset?code=" + code;
             subject = "找回密码";
             templateName = MailBean.MailTemplate.FIND_PWD.getLabel();
         } else if (template.intValue() == bindTemplate) {
@@ -238,7 +248,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 throw new SystemException(local("user.has.email"));
             }
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-            url = appBase + "/api/email/bindEmail?code=" + code;
+            url = cspBase + "/api/email/bindEmail?code=" + code;
             subject = "绑定邮箱";
             templateName = MailBean.MailTemplate.BIND.getLabel();
         }

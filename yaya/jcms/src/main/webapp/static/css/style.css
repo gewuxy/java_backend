@@ -20,6 +20,7 @@
 .table-box-1 .table-td-5 { width:200px; text-align: right; }
 .table-box-1 .table-td-6 {}
 .table-box-1 .table-td-6 .icon{  font-size:17px;}
+.table-box-1 .table-td-6 .icon-minIcon26 { font-size:14px; color:#3fa9f5;}
 .table-box-1 .table-td-6 a { color: #4c4c4c; }
 .table-box-1 .table-td-7 { width:100px; text-align: right; }
 .table-box-1 .table-td-8 { width:240px; }
@@ -1299,7 +1300,7 @@ a:hover .minIcon { background-position-y:-26px; }
 
 
     /*入院记录*/
-.select-table-box { background:#fff; margin-left:260px; border-left:1px solid #f0f0f0;}
+.select-table-box { background:#fff; margin-left:260px; border-left:1px solid #f0f0f0; height:100%;}
 .select-table-box th { height:55px; font-weight:normal; font-size:15px; }
 .select-table-box td { height:48px; padding:8px 0; border-bottom:1px solid #dbdbdb; overflow: hidden;}
 .select-table-box .tb-edit { padding-left:1%;}
@@ -1476,11 +1477,14 @@ a:hover .minIcon { background-position-y:-26px; }
 .resource-list .resource-list-item { border:1px solid #e5e5e5; border-radius: 4px;}
 .resource-list .row { margin-bottom:50px;}
 .resource-list .resource-img { position: relative;}
+.resource-list .resource-img .resource-state {     position: absolute; right: 10px; top: 5px; color: #ffffff; background: rgba(0,0,0,.4); padding: 3px 10px; border-radius: 10px;}
+.resource-list .resource-img .resource-state span { margin-top:2px;}
 .resource-list .resource-info { font-size:14px; padding:15px 20px; color:#b2b2b2;}
 .resource-list .resource-info .fl img { width:40px; height:40px; border-radius:4px; margin-right:15px;}
 .resource-list .resource-info .oh h3{ color:#323333; font-size:18px; margin-bottom:0;}
 .resource-list .resource-info .oh p { font-size:16px;}
 .resource-list .resource-info h3{ font-size:16px; margin-bottom:5px; color:#888888;}
+.resource-list .resource-info .state{ text-align: right; border-left: 1px solid #e6e6e6; margin-top: 10px; color:#3fa9f5; }
 .resource-list .resource-link { position: absolute; top:0; left:0; width:100%; height:100%; display: none; }
 .resource-list .resource-list-item:hover .resource-link { display: block; }
 .resource-list .resource-link a{ display: inline-block; width:50%; height:100%; font-size:16px; color:#fff; text-align: center; vertical-align: middle; }
@@ -1494,6 +1498,7 @@ a:hover .minIcon { background-position-y:-26px; }
 
 
 .resource-list .row { margin-left:-25px; margin-right:-25px;}
+.resource-list .resource-info .row { margin: auto 0 0 0;}
 .col-lg-response {}
 
     /*************会议轮播swiper*********************/
@@ -1607,6 +1612,7 @@ a:hover .minIcon { background-position-y:-26px; }
 .boxAudio .audiojs {    width: 630px;}
 .boxAudio .audiojs .scrubber { width:440px;}
 .boxAudio { background-color:#fff;}
+
 
 
 /*适用于Firefox的CSS hack*/
