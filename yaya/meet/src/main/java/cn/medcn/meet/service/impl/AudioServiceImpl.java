@@ -148,8 +148,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     @Override
-    public List<ResourceCategoryDTO> findResourceCategorys() {
-        return audioCourseDAO.findResourceCategorys();
+    public List<ResourceCategoryDTO> findResourceCategorys(Integer userId) {
+        return audioCourseDAO.findResourceCategorys(userId);
     }
 
     /**

@@ -6,6 +6,7 @@ import cn.medcn.meet.dto.CourseSharedDTO;
 import cn.medcn.meet.dto.ResourceCategoryDTO;
 import cn.medcn.meet.model.AudioCourse;
 import com.github.abel533.mapper.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 import java.util.Map;
@@ -26,7 +27,7 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
      * 查询所有的资源类别
      * @return
      */
-    List<ResourceCategoryDTO> findResourceCategorys();
+    List<ResourceCategoryDTO> findResourceCategorys(@Param("userId") Integer userId);
 
     /**
      * 我的转载记录
