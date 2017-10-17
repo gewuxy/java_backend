@@ -9,6 +9,7 @@ import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
+import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.CourseDeliveryService;
 import org.springframework.beans.factory.annotation.Autowired;
