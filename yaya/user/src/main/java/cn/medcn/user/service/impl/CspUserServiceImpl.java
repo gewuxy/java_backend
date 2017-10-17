@@ -88,7 +88,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         // 检查用户邮箱是否已经注册过
         CspUserInfo cspUser = cspUserInfoDAO.findByLoginName(username);
         if (cspUser != null) {
-            return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+            // 检查是否有激活
+            if (cspUser.getActive()) {
+                return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+            } else {
+                // 发送激活邮箱链接
+                sendMail(username, userInfo.getId(), MailBean.MailTemplate.REGISTER.getLabelId());
+            }
         }
 
         // 是否海外用户
