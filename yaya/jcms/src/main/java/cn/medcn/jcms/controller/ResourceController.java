@@ -51,38 +51,41 @@ public class ResourceController extends BaseController {
     @Value("${app.file.base}")
     private String appFileBase;
 
-//    /**
-//     * 查询资源列表
-//     * @param pageable
-//     * @param category
-//     * @param keyword
-//     * @param model
-//     * @return
-//     */
-//    @RequestMapping(value = "/list")
-//    public String list(Pageable pageable, String category, String keyword, Model model){
-//        if(!StringUtils.isEmpty(category)){
-//            pageable.getParams().put("category", category);
-//            model.addAttribute("category", category);
-//        }
-//        if(!StringUtils.isEmpty(keyword)){
-//            pageable.getParams().put("keyword", keyword);
-//            model.addAttribute("keyword", keyword);
-//        }
-//        Principal principal = SubjectUtils.getCurrentUser();
-//        pageable.getParams().put("userId", principal.getId());
-//        MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
-//        model.addAttribute("page", page);
-//        //查询出所有的分类
-//        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys();
-//        //查询出我的象数
-//
-//        model.addAttribute("currentUserId", principal.getId());
-//        Credits credits = creditsService.doFindMyCredits(principal.getId());
-//        model.addAttribute("credit", credits == null?0:credits.getCredit());
-//        model.addAttribute("categoryList", categoryList);
-//        return "/res/list";
-//    }
+    /**
+     * 查询资源列表
+     * @param pageable
+     * @param category
+     * @param keyword
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/list")
+    public String list(Pageable pageable, String category, String keyword, Model model){
+        if(!StringUtils.isEmpty(category)){
+            pageable.put("category", category);
+            model.addAttribute("category", category);
+        }
+        if(!StringUtils.isEmpty(keyword)){
+            pageable.put("keyword", keyword);
+            model.addAttribute("keyword", keyword);
+        }
+
+        Principal principal = SubjectUtils.getCurrentUser();
+        pageable.put("userId", principal.getId());
+        model.addAttribute("currentUserId", principal.getId());
+
+        MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
+        model.addAttribute("page", page);
+
+        // 查询出所有的分类
+        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys();
+        model.addAttribute("categoryList", categoryList);
+
+        // 查询出我的象数
+        Credits credits = creditsService.doFindMyCredits(principal.getId());
+        model.addAttribute("credit", credits == null?0:credits.getCredit());
+        return "/res/shareResource";
+    }
 
     /**
      * 我的转载记录
