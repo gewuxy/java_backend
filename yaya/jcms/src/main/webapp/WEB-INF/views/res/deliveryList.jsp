@@ -91,7 +91,7 @@
     </div>
 </div>
 
-<form id="pageForm" name="pageForm" action="${ctx}/func/meet/delivery/list" method="post">
+<form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
     <input type="hidden" name="pageNum" id="pageNum">
     <input type="hidden" name="isOpen" id="isOpen" value="1">
@@ -213,7 +213,7 @@
 
             $.ajax({
                 //服务器的地址
-                url:"${ctx}/func/meet/delivery/change?flag="+flag,
+                url:"${ctx}/func/res/change?flag="+flag,
                 dataType:'json', //返回数据类型
                 type:'POST', //请求类型
                 contentType: "application/json; charset=utf-8",
@@ -224,7 +224,7 @@
                            $("#deliveryList").empty();
                            $(".page-box").empty();
                        }else{
-                           window.location.href='${ctx}/func/meet/delivery/list?isOpen='+flag;
+                           window.location.href='${ctx}/func/res/list?isOpen='+flag;
                        }
                     }
                 }
