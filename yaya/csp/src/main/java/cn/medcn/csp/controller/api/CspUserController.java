@@ -418,7 +418,7 @@ public class CspUserController extends BaseController {
         }
         try {
             //检查验证码合法性
-            cspUserService.checkCaptchaIsOrNotValid(captcha,mobile);
+            cspUserService.checkCaptchaIsOrNotValid(mobile,captcha);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
