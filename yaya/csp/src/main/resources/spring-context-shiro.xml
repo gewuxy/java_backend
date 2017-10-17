@@ -61,7 +61,7 @@
         <property name="securityManager" ref="securityManager"/>
         <property name="loginUrl" value="/"/>
         <property name="unauthorizedUrl" value="/"/>
-        <property name="successUrl" value="/web/meet/list"/>
+        <property name="successUrl" value="/mgr/meet/list"/>
         <property name="filters">
             <map>
                 <entry key="authc" value-ref="formAuthenticationFilter"/>
@@ -70,10 +70,10 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
-                /web/logout=logout
+                /mgr/logout=logout
                 /static/**=anon
-                /web/login=anon
-                /web/**=authc
+                /mgr/login=anon
+                /mgr/**=authc
             </value>
         </property>
     </bean>

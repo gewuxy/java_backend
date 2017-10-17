@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by LiuLP on 2017/10/11/011.
  */
 @Controller
-@RequestMapping(value = "/web/user")
+@RequestMapping(value = "/mgr/user")
 public class UserController extends BaseController{
 
     @Autowired

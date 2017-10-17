@@ -25,7 +25,7 @@ import javax.servlet.http.HttpServletRequest;
  * Created by lixuan on 2017/10/17.
  */
 @Controller
-@RequestMapping(value = "/web/meet")
+@RequestMapping(value = "/mgr/meet")
 public class MeetingMgrController extends CspBaseController{
 
     @Autowired
@@ -118,7 +118,7 @@ public class MeetingMgrController extends CspBaseController{
         Principal principal = getWebPrincipal();
         AudioCourse course = null;
         if (courseId != null) {
-            course = audioService.selectByPrimaryKey(courseId);
+            course = audioService.findAudioCourse(courseId);
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {

@@ -30,17 +30,17 @@
                             <div class="upload-ppt-area">
                                 <label for="file1">
                                     <input type="file" class="none" id="file1">
-                                    <p class="img"><img src="./images/upload-ppt-area-img.png" alt=""></p>
+                                    <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
                                     <p>或拖动PDF／PPT到此区域上传</p>
                                 </label>
                             </div>
                             <div class="upload-main">
-                                <div class="metting-progreesItem clearfix t-left">
+                                <div class="metting-progreesItem clearfix t-left none">
                                     上传进度<span class="color-blue">30%</span>
                                     <p><span class="metting-progreesBar"><i style="width:30%"></i></span></p>
 
                                 </div>
-                                <div class="admin-button t-center">
+                                <div class="admin-button t-center ${not empty course.details ? '':'none'}">
                                     <a href="javascript:;" class="button min-btn">重新上传</a>&nbsp;&nbsp;&nbsp;
                                     <a href="javascript:;" class="button color-blue min-btn">编辑</a>
                                 </div>
@@ -57,7 +57,7 @@
                             <div class="meeting-form-item login-form-item">
                                 <label for="email2" class="cells-block pr"><input id="email2" type="text" class="login-formInput" placeholder="会议名称" value="${course.title}"></label>
                                 <div class="textarea">
-                                    <textarea name="" id="" cols="30" rows="10">${}</textarea>
+                                    <textarea name="" id="" cols="30" rows="10">${course.info}</textarea>
                                     <p class="t-right">600</p>
                                 </div>
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
@@ -99,7 +99,7 @@
                                     </label>
                                 </div>
 
-                                <span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
+                                <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
                                 <input href="#" type="button" class="button login-button buttonBlue last" value="确认提交">
                             </div>
                         </form>
