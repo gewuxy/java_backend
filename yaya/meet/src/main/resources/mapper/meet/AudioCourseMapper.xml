@@ -14,6 +14,7 @@
             FROM t_audio_course c
             LEFT JOIN t_app_user u ON u.id = c.owner
             LEFT JOIN t_audio_course r on r.primitive_id = c.id  AND r.owner=#{userId}
+            LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
             WHERE c.primitive_id=0 AND c.published = true AND c.shared = true
             <if test="category != null">
                 AND c.category = #{category}
