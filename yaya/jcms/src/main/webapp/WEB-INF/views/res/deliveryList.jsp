@@ -46,7 +46,9 @@
                         <input type="checkbox" id="popup_checkbox_2" <c:if test="${flag == 1}"> checked </c:if> class="chk_1 chk-hook">
 						<label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico"></i>&nbsp;&nbsp;开启CSPmeeting来稿功能</label>
 					</span>&nbsp;
-                    <span class="question-tipsHover-hook"><img src="${ctxStatic}/images/icon-question.png" alt=""></span>
+                    <span class="question-tipsHover-hook">
+                        <img src="${ctxStatic}/images/icon-question.png" alt="">
+                    </span>
                 </div>
             </div>
             <div class="resource-list clearfix" id="deliveryList">
@@ -66,17 +68,29 @@
                                             立即发布
                                         </a>
                                         </div>
+                                        <c:if test="${d.playType == 2}">
+                                            <div class="resource-state"><span class="icon iconfont icon-minIcon26"></span></div>
+                                        </c:if>
                                     </div>
                                     <div class="resource-info">
                                         <div class="fl">
                                             <img src="${d.avatar}" alt="">
                                         </div>
                                         <div class="oh">
-                                            <h3 >${d.name}</h3>
-                                            <p>${d.email}</p>
+                                            <div class="row clearfix">
+                                                <div class="col-lg-10">
+                                                    <h3 >${d.name}</h3>
+                                                    <p>${d.email}</p>
+                                                </div>
+                                                <c:if test="${d.playType != 0}" >
+                                                    <div class="col-lg-2">
+                                                        <div class="state">直播</div>
+                                                    </div>
+                                                </c:if>
+                                            </div>
+
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
