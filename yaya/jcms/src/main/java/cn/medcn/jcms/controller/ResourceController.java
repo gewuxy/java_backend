@@ -59,7 +59,7 @@ public class ResourceController extends BaseController {
      * @param model
      * @return
      */
-    @RequestMapping(value = "/list")
+    @RequestMapping(value = "/share/list")
     public String list(Pageable pageable, String category, String keyword, Model model){
         if(!StringUtils.isEmpty(category)){
             pageable.put("category", category);
@@ -78,7 +78,7 @@ public class ResourceController extends BaseController {
         model.addAttribute("page", page);
 
         // 查询出所有的分类
-        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys();
+        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys(principal.getId());
         model.addAttribute("categoryList", categoryList);
 
         // 查询出我的象数
@@ -155,13 +155,13 @@ public class ResourceController extends BaseController {
             audioService.doReprint(id, principal.getId());
         } catch (NotEnoughCreditsException e) {
             addFlashMessage(redirectAttributes, e.getMessage());
-            return "redirect:/func/res/list";
+            return "redirect:/func/res/share/list";
         } catch (SystemException e) {
             addFlashMessage(redirectAttributes, e.getMessage());
-            return "redirect:/func/res/list";
+            return "redirect:/func/res/share/list";
         }
         addFlashMessage(redirectAttributes, "转载资源成功！");
-        return "redirect:/func/res/list";
+        return "redirect:/func/res/share/list";
     }
 
     /**
