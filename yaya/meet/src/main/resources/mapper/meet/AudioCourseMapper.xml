@@ -30,16 +30,17 @@
             </if>
             GROUP BY c.id
             ORDER BY c.create_time DESC
-        )acs WHERE acs.reprinted = 0
+        )acs WHERE acs.reprinted = #{reprinted}
 
     </select>
 
     <select id="findMyReprints" resultType="cn.medcn.meet.dto.CourseReprintDTO">
-        SELECT  c.id, c.title, u.nickname as pub_user_name
+        SELECT c.id, c.title, u.nickname as pub_user_name, d.img_url as cover_url,u.username,u.headimg
         FROM t_audio_course c
-        LEFT JOIN t_audio_course r on r.id=c.primitive_id
+        LEFT JOIN t_audio_course r on r.id = c.primitive_id
+        LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
         LEFT JOIN t_app_user u ON u.id = r.owner
-        WHERE c.primitive_id>0 AND c.owner = #{userId}
+        WHERE c.primitive_id > 0 AND c.owner = #{userId}
         <if test="keyword != null">
             AND c.title like CONCAT('%',#{keyword}, '%')
         </if>
