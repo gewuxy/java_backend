@@ -159,7 +159,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     protected String sendCaptchaByType(String mobile, int type) throws SystemException{
         String msgId = null;
         try {
-            if (type == Captcha.Type.LOGIN.getTypeId().intValue()) {
+            if (type == Captcha.Type.LOGIN.getTypeId()) {
                 msgId = jSmsService.send(mobile, Constants.CSP_LOGIN_TEMPLATE_ID);
             } else {
                 msgId = jSmsService.send(mobile, Constants.CSP_BIND_TEMPLATE_ID);
