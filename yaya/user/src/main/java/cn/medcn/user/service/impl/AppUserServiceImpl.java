@@ -921,6 +921,17 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         return 0;
     }
 
+    /**
+     * 查询打开了投稿箱的公众号列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<AppUser> findAccepterList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
+        return MyPage.page2Mypage((Page)appUserDAO.findAccepterList());
+    }
+
 
     /**
      * 查询所有的已关注用户
