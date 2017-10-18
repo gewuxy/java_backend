@@ -271,4 +271,12 @@ public interface AppUserService extends BaseService<AppUser> {
      * @return
      */
     int findDeliveryFlag(Integer userId);
+
+    /**
+     * 查询打开了投稿箱的公众号列表
+     * @param pageable
+     * @return
+     */
+    MyPage<AppUser> findAccepterList(Pageable pageable);
+
 }

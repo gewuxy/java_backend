@@ -47,4 +47,7 @@ public interface AppUserDAO extends Mapper<AppUser> {
 
 
     List<TestAccountDTO> findTestAccounts(Map<String, Object> params);
+
+    List<AppUser> findAccepterList();
+
 }
