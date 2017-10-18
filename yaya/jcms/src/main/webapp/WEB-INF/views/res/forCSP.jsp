@@ -36,7 +36,7 @@
                     <span>${res.name}</span>
                 </td>
                 <td class="table-td-7">
-                    <a href="javascript:;" class="popup-player-hook" courseId="${res.courseId}">预览</a><i class="rowSpace">|</i><a href="javascript:;" class="popup-hint" courseId="${res.courseId}">转载</a>
+                    <a href="javascript:;" class="popup-player-hook" courseId="${res.courseId}">预览</a><i class="rowSpace">|</i><a href="javascript:;" class="popup-hint" courseId="${res.courseId}">引用</a>
                 </td>
             </tr>
         </c:forEach>
