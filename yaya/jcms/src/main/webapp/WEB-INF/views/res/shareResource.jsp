@@ -177,6 +177,7 @@
         <input type="hidden" name="pageNum" id="pageNum">
         <input type="hidden" name="keyword" value="${keyword}">
         <input type="hidden" name="category" id="category" value="${category}">
+        <input type="hidden" name="jump" value="0">
     </form>
 
     <div class="mask-wrap">
