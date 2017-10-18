@@ -12,7 +12,7 @@
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.min.css" />
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
-    <script src="${ctxStatic}/js/slide.js"></script>
+
 
     <script>
         var resId = 0;
@@ -49,6 +49,18 @@
                 var courseId = $(this).attr("courseId");
                 // TODO 需完善预览方法
             });
+
+            // 点击充值按钮
+            $("#charge").click(function () {
+                window.open("${ctx}/mng/account/xsInfo");
+                // 切换 是否充值成功的提示框
+                closeDialog();
+                showChargeDialog();
+            });
+            // 关闭充值弹框
+            $("#rechargeBtn,#rechargeOK,#rechargeFail").click(function(){
+                closeChargeDialog();
+            });
         });
 
         // 点击获取按钮 弹出提示框内容
@@ -78,6 +90,16 @@
             $('.fx-mask-box-3').hide();
             $('.mask-wrap').removeClass('dis-table');
         }
+
+        function showChargeDialog() {
+            $('.mask-wrap').addClass('dis-table');
+            $('.fx-mask-box-5').show();
+        }
+
+        function closeChargeDialog() {
+            $('.mask-wrap').removeClass('dis-table');
+            $('.fx-mask-box-5').hide();
+        }
     </script>
 </head>
 
@@ -90,7 +112,7 @@
             <div class="table-box-div1 mar-btm-1">
                 <div class="table-top-box clearfix">
                     <a href="${ctx}/func/res/share/list" class="mask-le cur"><span class="icon iconfont icon-minIcon3"></span>共享资源库</a>
-                    <a href="${ctx}/func/res/share/list" class="mask-le "><span class="icon iconfont icon-minIcon8"></span>已获取</a>
+                    <a href="${ctx}/func/res/acquired/list" class="mask-le "><span class="icon iconfont icon-minIcon8"></span>已获取</a>
                     <form action="${ctx}/func/res/share/list" method="post">
                         <span class="search-box">
                             <input type="text" class="sear-txt" name="keyword" value="${keyword}" placeholder="搜索关键字">
@@ -167,7 +189,7 @@
                 <div class="mask-share-box">
                     <p class="top-txt color-black" id="requiredPrefix">转载该会议需要支付 <span class="color-blue-up" id="requiredCredits">5000象数</span>，是否立即支付？</p>
                     <p>账户剩余<span class="color-black" id="leftCredits">350象数</span>，
-                        可继续<a href="${ctx}/mng/account/xsInfo" class="c-3  fx-btn-5">充值</a>增加象数值</p>
+                        可继续<a href="javascript:;" class="c-3  fx-btn-5" id="charge">充值</a>增加象数值</p>
                 </div>
                 <div class="sb-btn-box p-btm-1 t-right">
                     <button class="close-button-fx cur" id="reprintBtn">确认</button>
@@ -178,15 +200,15 @@
             <div class="distb-box fx-mask-box-5">
                 <div class="mask-hd clearfix">
                     <h3 class="font-size-1">温馨提示</h3>
-                    <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+                    <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png" id="rechargeBtn"></span>
                 </div>
                 <div class="mask-share-box">
                     <p class="top-txt color-black">充值是否成功</p>
                     <p>如未显示相应充值的象数，<span class="color-black">先关闭窗口后，再点击刷新按钮</span></p>
                 </div>
                 <div class="sb-btn-box p-btm-1 t-right">
-                    <button class="close-button-fx cur">充值成功</button>
-                    <button class="close-button-fx">充值失败</button>
+                    <button class="close-button-fx cur" id="rechargeOK">充值成功</button>
+                    <button class="close-button-fx" id="rechargeFail">充值失败</button>
                 </div>
             </div>
         </div>
@@ -280,15 +302,15 @@
         </div>
     </div>
 
-    <script src="js/jquery.min.js"></script>
-    <script src="js/slide.js"></script>
-    <script src="js/swiper.jquery.min.js"></script>
-    <script src="js/audio.js"></script>
-    <script src="js/layer/layer.js"></script>
-    <script src="js/perfect-scrollbar.jquery.min.js"></script>
-    <script src="js/screenfull.min.js"></script>
-    <script src="js/main.js"></script>
-    <script src="js/popupAudioPalyer.js"></script>
+    <script src="${ctxStatic}/js/jquery.min.js"></script>
+    <script src="${ctxStatic}/js/slide.js"></script>
+    <script src="${ctxStatic}/js/swiper.jquery.min.js"></script>
+    <script src="${ctxStatic}/js/audio.js"></script>
+    <script src="${ctxStatic}/js/layer/layer.js"></script>
+    <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="${ctxStatic}/js/screenfull.min.js"></script>
+    <script src="${ctxStatic}/js/main.js"></script>
+    <script src="${ctxStatic}/js/popupAudioPalyer.js"></script>
 
 </body>
 </html>
