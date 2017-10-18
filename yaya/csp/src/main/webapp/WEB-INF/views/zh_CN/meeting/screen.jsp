@@ -153,7 +153,7 @@
         ws.onmessage=function(msg){
             var data = JSON.parse(msg.data);
             console.log("order = "+data.order);
-            if (data.order == 1 || data.order == 2){
+            if (data.order == 1){
                 console.log("skip to page "+data.pageNum);
                 skip(data.pageNum);
             }

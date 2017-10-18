@@ -10,6 +10,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.utils.*;
+import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
@@ -45,7 +46,7 @@ import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
  */
 @Controller
 @RequestMapping(value = "/api/meeting")
-public class MeetingController extends BaseController {
+public class MeetingController extends CspBaseController {
 
 
     @Autowired
@@ -216,20 +217,13 @@ public class MeetingController extends BaseController {
      */
     @RequestMapping(value = "/scan/callback")
     @ResponseBody
-    public String handleScan(Integer courseId) {
-        Principal principal = SecurityUtils.get();
-        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
-        //判断用户是否有权限使用此课件
-        if (!principal.getId().equals(audioCourse.getCspUserId())) {
-            return error(local("course.error.author"));
-        }
+    public String handleScan(Integer courseId, HttpServletRequest request) {
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("course", audioCourse);
-        if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
-            //查询出直播信息
-            Live live = liveService.findByCourseId(courseId);
-            result.put("live", live);
+        String result = null;
+        try {
+            result = courseInfo(courseId, request);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
 
         //发送ws同步指令
@@ -240,6 +234,39 @@ public class MeetingController extends BaseController {
         liveService.publish(order);
 
         return success(result);
+    }
+
+
+    protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException{
+        Principal principal = SecurityUtils.get();
+        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
+        //判断用户是否有权限使用此课件
+        if (!principal.getId().equals(audioCourse.getCspUserId())) {
+            throw new SystemException(local("course.error.author"));
+        }
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("course", audioCourse);
+        result.put("wsUrl", genWsUrl(request, courseId));
+        if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
+            //查询出直播信息
+            Live live = liveService.findByCourseId(courseId);
+            result.put("live", live);
+        } else {//录播查询录播的进度信息
+
+        }
+
+        return success(result);
+    }
+
+    @RequestMapping(value = "/join")
+    @ResponseBody
+    public String join(Integer courseId, HttpServletRequest request){
+        try {
+            return courseInfo(courseId, request);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
     }
 
     /**

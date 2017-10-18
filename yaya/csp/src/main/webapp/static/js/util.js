@@ -285,3 +285,18 @@ function upload(fileId,fileType,limitSize,callback){
     });
 }
 
+
+function fileSize(target) {
+    var isIE = /msie/i.test(navigator.userAgent) && !window.opera;
+    var fileSize = 0;
+    if (isIE && !target.files) {
+        var filePath = target.value;
+        var fileSystem = new ActiveXObject("Scripting.FileSystemObject");
+        var file = fileSystem.GetFile (filePath);
+        fileSize = file.Size;
+    } else {
+        fileSize = target.files[0].size;
+    }
+    return fileSize;
+}
+
