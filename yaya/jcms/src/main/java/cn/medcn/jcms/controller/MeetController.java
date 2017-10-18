@@ -405,7 +405,7 @@ public class MeetController extends BaseController {
 
 
 
-    private void loadMeetInfo(String id, Model model) {
+    private void loadMeetInfo(String id, Model model)  {
         Meet meet = meetService.findMeet(id);
         model.addAttribute("meet", meet);
         //格式化开始时间和结束时间
@@ -479,10 +479,12 @@ public class MeetController extends BaseController {
         if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
             Live live = liveService.findByCourseId(courseId);
             //直播没有结束
-            if(live.getCloseType() != Live.LiveState.closed.getType()){
+            if(live.getLiveState() != Live.LiveState.closed.getType()){
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
                 model.addAttribute("liveStartTime",format.format(live.getStartTime()));
                 model.addAttribute("liveEndTime",format.format(live.getEndTime()));
+            }else{
+                throw new SystemException("该会议已结束");
             }
         }
         model.addAttribute("course", course);

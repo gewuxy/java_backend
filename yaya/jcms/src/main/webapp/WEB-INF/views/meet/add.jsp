@@ -741,7 +741,9 @@
             var isNull = ${empty liveStartTime};
             if(isNull){
                 $('#timeStart').trigger('focus');
-                $('#timeStart').dateRangePicker({
+            }
+        });
+            $('#timeStart').dateRangePicker({
                     singleMonth: true,
                     showShortcuts: false,
                     showTopbar: false,
@@ -752,17 +754,16 @@
                     time: {
                         enabled: true
                     }
-                }).bind('datepicker-first-date-selected', function(event, obj){
+            }).bind('datepicker-first-date-selected', function(event, obj){
                     /*首次点击的时间*/
                     console.log('first-date-selected',obj);
-                }).bind('datepicker-change',function(event,obj){
+            }).bind('datepicker-change',function(event,obj){
                     /* This event will be triggered when second date is selected */
                     var timeArr = obj.value.split("~");
                     $("#startTime").val($.trim(timeArr[0]));
                     $("#endTime").val($.trim(timeArr[1]));
-                });
-            }
-        });
+            });
+
 
 
         $(".formImgRadio-item").click(function(){

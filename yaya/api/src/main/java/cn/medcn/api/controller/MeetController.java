@@ -75,9 +75,6 @@ public class MeetController extends BaseController {
     @Value("${app.file.base}")
     private String appFileBase;
 
-    @Value("${csp.ws.base}")
-    private String wsBase;
-
     @Autowired
     private MeetFolderService meetFolderService;
 
@@ -400,7 +397,7 @@ public class MeetController extends BaseController {
         //实时会议，不是录播语音
         if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
             //直播音频webSocket连接地址
-            String socketUrl = wsBase + "?courseId="+ course.getId();
+            String socketUrl = cspBase + "/live/order";
             audioDTO.setSocketUrl(socketUrl);
             //添加视频直播
             Live live = liveService.findByCourseId(course.getId());
