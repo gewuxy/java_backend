@@ -434,7 +434,7 @@ public class CspUserController extends BaseController {
 
     /**
      *解绑手机或邮箱
-     * @param type 0代表邮箱，1代表手机
+     * @param type 6代表手机,7代表邮箱
      * @return
      */
     @RequestMapping("/unbind")
