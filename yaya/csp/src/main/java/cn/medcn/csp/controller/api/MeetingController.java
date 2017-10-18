@@ -260,6 +260,7 @@ public class MeetingController extends CspBaseController {
     }
 
     @RequestMapping(value = "/join")
+    @ResponseBody
     public String join(Integer courseId, HttpServletRequest request){
         try {
             return courseInfo(courseId, request);
