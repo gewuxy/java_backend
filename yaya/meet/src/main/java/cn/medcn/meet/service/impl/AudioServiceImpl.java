@@ -14,15 +14,14 @@ import cn.medcn.meet.dao.AudioCourseDetailDAO;
 import cn.medcn.meet.dao.AudioHistoryDAO;
 import cn.medcn.meet.dao.MeetAudioDAO;
 import cn.medcn.meet.dto.*;
-import cn.medcn.meet.model.*;
+import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCourseDetail;
+import cn.medcn.meet.model.AudioHistory;
+import cn.medcn.meet.model.MeetAudio;
 import cn.medcn.meet.service.AudioService;
-import cn.medcn.meet.service.MeetService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -531,5 +530,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
         return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingList(pageable.getParams()));
+    }
+
+    @Override
+    public AudioCourse findLastDraft(String cspUserId) {
+        AudioCourse course = audioCourseDAO.findLastDraft(cspUserId);
+        if (course != null) {
+            List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(course.getId());
+            course.setDetails(details);
+        }
+        return course;
     }
 }

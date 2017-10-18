@@ -1,7 +1,9 @@
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.dto.MeetVideoDTO;
 import cn.medcn.meet.dto.VideoCourseDetailDTO;
 import cn.medcn.meet.model.*;
+import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.meet.service.VideoService;
 import org.junit.Test;
@@ -28,6 +30,9 @@ public class VideoTest {
 
     @Autowired
     private MeetService meetService;
+
+    @Autowired
+    protected LiveService liveService;
 
 
     @Test
@@ -122,5 +127,15 @@ public class VideoTest {
         out.close();
         in.close();
 
+    }
+
+
+    @Test
+    public void testSync(){
+        LiveOrderDTO dto = new LiveOrderDTO();
+        dto.setOrder(LiveOrderDTO.ORDER_SYNC);
+        dto.setCourseId("14379");
+        dto.setPageNum(4);
+        liveService.publish(dto);
     }
 }

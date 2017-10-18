@@ -44,6 +44,8 @@ public class AudioCourse implements Serializable {
     protected String cspUserId;
     //课件来源 0或者空为YaYa 1表示csp
     protected Integer sourceType;
+    //课件描述
+    protected String info;
 
     @Transient
     private List<AudioCourseDetail> details;

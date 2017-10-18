@@ -12,7 +12,9 @@
     <meta charset="UTF-8">
     <%@include file="/WEB-INF/include/page_context.jsp"%>
 
+    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
+    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <title>登录界面</title>
 </head>
 <body>

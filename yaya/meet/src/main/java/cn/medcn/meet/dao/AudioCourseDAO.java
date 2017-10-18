@@ -56,4 +56,11 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
      * @return
      */
     List<CourseDeliveryDTO> findCspMeetingList(Map<String, Object> params);
+
+    /**
+     * 查询最近未完善的PPT
+     * @param cspUserId
+     * @return
+     */
+    AudioCourse findLastDraft(@Param("cspUserId")String cspUserId);
 }

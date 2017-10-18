@@ -147,10 +147,10 @@ a.color-wathet-blue:hover{color:#146ee3}
 /*
     单独的组件
 */
-/*header*/
+    /*header*/
 .header { height:900px; position: relative;}
 
-/*index-login*/
+    /*index-login*/
 .index-login { position: absolute; z-index: 4; right:0; top:70px;}
 .index-login a{ color:#fff; line-height: 30px; display: inline-block; font-size:18px;}
 .index-login a:hover { color:#167afe;}
@@ -159,7 +159,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .user-login-button i{ display: inline-block; position: relative; top:7px; width:33px; height:30px;  background:url(../images/index-user-icon.png) no-repeat;}
 .index-login .user-login-button:hover  i { background:url(../images/index-user-icon-cur.png) no-repeat;}
 
-/*banner*/
+    /*banner*/
 .banner {}
 .index-banner-img { background:url(../images/img/index-banner-01.jpg) no-repeat center top; height:100%; }
 .index-banner-content { position: absolute; top:50%; margin-top:-110px; z-index: 2; width:100%; background:url(../images/index-banner-content-adorn.png) no-repeat center top; padding-top:45px;  text-align: center; color:#fff; font-size:16px;}
@@ -170,7 +170,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 
 .index-banner-bg { position: absolute; top:0; left:0;  width:100%; height:100%; background-color:#000;  filter:alpha(opacity=60); -moz-opacity:0.6; -khtml-opacity: 0.6; opacity: 0.6;}
 
-/*index.functional*/
+    /*index.functional*/
 .index-functional { padding-left:20px;}
 .index-functional .shadow-layer-top .col-lg-4 .functional-item-bg{ z-index: 2;}
 .index-functional .shadow-layer-top .col-lg-4 .functional-item:hover .functional-item-bg,
@@ -219,7 +219,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .functional-item:hover .functional-icon-06 ,
 .functional-current .functional-icon-06 { background-position:-113px -388px;}
 
-/*原版本*/
+    /*原版本*/
 
 
 /*index.functional*/
@@ -230,7 +230,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 
 /*.functional-item { position: relative; padding:40px 30px 15px; !*min-height: 267px;*! text-align: center;   }*/
 /*.functional-item-bg {  width: 100%; height: 100%; background: #fff; position: absolute; top: 0; left: 0; z-index: 1;  border-radius: 10px;*/
-/*-moz-box-shadow: 10px 5px 20px #e8e8e8; -webkit-box-shadow: 10px 5px 20px #e8e8e8; box-shadow: 10px 5px 20px #e8e8e8;  }*/
+    /*-moz-box-shadow: 10px 5px 20px #e8e8e8; -webkit-box-shadow: 10px 5px 20px #e8e8e8; box-shadow: 10px 5px 20px #e8e8e8;  }*/
 /*.functional-item .title { color:#167afe; font-size:18px; margin-bottom:10px; position: relative; z-index:6;}*/
 /*.functional-item .main {  position: relative; z-index:6; }*/
 /*.functional-icon-item {    display: table;  margin: 0 auto 20px; position: relative; z-index:6;}*/
@@ -271,7 +271,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 
 
 
-/*index-application*/
+    /*index-application*/
 
 .index-application {}
 .index-application li { float: left; width:50%; margin-bottom:20px;}
@@ -550,7 +550,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 
 .cancel-popup-box { display: none;}
 .cancel-popup-box .layer-hospital-popup{}
-.cancel-popup-box .cancel-popup-main { font-size:20px; color:#3B3A34;}
+.cancel-popup-box .cancel-popup-main { font-size:20px; color:#3B3A34; padding-top:10px;}
 .cancel-popup-box .cancel-popup-main img { margin-right:22px;position: relative; top:9px;}
 .cancel-popup-box .admin-button { margin-top:30px; }
 .cancel-popup-box .admin-button .layui-layer-close { position: static;}
@@ -703,6 +703,14 @@ a.color-wathet-blue:hover{color:#146ee3}
 .metting-classify-popup-tab-item ul li { float:left; width:50%; }
 .metting-classify-popup-tab-item ul .cur a{border-color:#167AFE;  color:#167AFE;}
 .metting-classify-popup-tab-item ul li a { display: inline-block; padding:10px 20px; margin-bottom: 5px; border:1px solid #fff; font-size:18px; -moz-border-radius: 24px; -webkit-border-radius:24px; border-radius: 24px; }
+
+.user-module {}
+.user-userinfo,.user-statistics,.user-menu,.user-content { background-color:#fff;}
+.user-userinfo { margin-bottom:36px; }
+.user-left-box { padding-right:40px;}
+.user-menu { margin-bottom:16px;}
+.user-menu ul li { float:left;}
+.user-content { padding:45px;}
 
 .footer { padding-bottom:50px; }
 .footer h5 { margin-bottom:20px; font-size:20px;}

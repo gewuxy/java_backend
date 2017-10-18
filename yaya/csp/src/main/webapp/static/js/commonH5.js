@@ -3,8 +3,8 @@
  */
 
 /*
- 控制密码框选中处理
- * */
+    控制密码框选中处理
+* */
 var changePassWordStatus =  function( passwordInputDOM ){
     //需要是密码框调用
     var _condition = passwordInputDOM.val() != '' && passwordInputDOM.attr('type') == 'password';
@@ -22,3 +22,4 @@ var changePassWordStatus =  function( passwordInputDOM ){
         console.log('调用失败');
     }
 };
+

@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Created by lixuan on 2017/10/16.
  */
 @Controller
-@RequestMapping(value = "/web")
+@RequestMapping(value = "/mgr")
 public class LoginController extends BaseController {
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -53,12 +53,14 @@ public class LoginController extends BaseController {
     protected String loginByEmail(String username, String password, Model model){
         String errorForwardUrl = localeView("/login/login_" + BindInfo.Type.EMAIL.getTypeId());
         if (CheckUtils.isEmpty(username)) {
-            model.addAttribute("error", SpringUtils.getMessage("user.empty.username"));
+            model.addAttribute("error", local("user.empty.username"));
+            model.addAttribute("username", username);
             return errorForwardUrl;
         }
 
         if (CheckUtils.isEmpty(password)) {
-            model.addAttribute("error", SpringUtils.getMessage("user.empty.password"));
+            model.addAttribute("error", local("user.empty.password"));
+            model.addAttribute("username", username);
             return errorForwardUrl;
         }
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
@@ -67,6 +69,7 @@ public class LoginController extends BaseController {
             subject.login(token);
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
+            model.addAttribute("username", username);
             return errorForwardUrl;
         }
         return "redirect:/web/meet/list";

@@ -16,12 +16,8 @@
 <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
 <link rel="SHORTCUT ICON" href="${ctxStatic}/images/v2/icon.ico" />
 
-<link rel="stylesheet" href="${ctxStatic}/css/global.css">
-<link rel="stylesheet" href="${ctxStatic}/css/animate.min.css">
-<link rel="stylesheet" href="${ctxStatic}/css/style.css">
-
 <!--[if lt IE 9]>
-<script src="js/html5.js"></script>
+<script src="${ctxStatic}js/html5.js"></script>
 <![endif]-->
 
 
