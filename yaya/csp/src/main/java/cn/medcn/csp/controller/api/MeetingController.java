@@ -9,6 +9,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.ZeGoCallBack;
@@ -18,6 +19,7 @@ import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
+import cn.medcn.meet.model.AudioCoursePlay;
 import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
@@ -31,6 +33,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +42,7 @@ import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.ABROAD_KEY;
 import static cn.medcn.common.Constants.LOCAL_KEY;
+import static cn.medcn.common.Constants.OS_TYPE_ANDROID;
 import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
 
 /**
@@ -159,26 +164,51 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer detailId) {
-        StringBuffer buffer = new StringBuffer(FilePath.COURSE.path);
-        buffer.append("/").append(courseId).append("/audio");
-        String relativePath = buffer.toString();
-        try {
-            FileUploadResult result = fileUploadService.upload(file, relativePath);
-            Map<String, Object> map = new HashMap<>();
-            AudioCourseDetail detail = audioService.findDetail(detailId);
-            if (detail != null) {
-                detail.setAudioUrl(result.getRelativePath());
-                detail.setDuration(FFMpegUtils.duration(fileUploadBase + result.getRelativePath()));
-                audioService.updateDetail(detail);
-            }
-            map.put("audioUrl", result.getAbsolutePath());
-            return success(result);
-        } catch (SystemException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer playType, Integer pageNum, Integer detailId, HttpServletRequest request) {
+        String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
+        if (CheckUtils.isEmpty(osType)) {
+            osType = OS_TYPE_ANDROID;
+        }
+        if (file == null) {
+            return error(local("upload.error.null"));
         }
 
+        String suffix =  "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
+
+        String relativePath = FilePath.COURSE.path + "/" + courseId + "/audio/";
+
+        File dir = new File(fileUploadBase + relativePath);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+        String saveFileName = UUIDUtil.getNowStringID();
+        String sourcePath = fileUploadBase + relativePath + saveFileName + suffix;
+        File saveFile = new File(sourcePath);
+        try {
+            file.transferTo(saveFile);
+        } catch (IOException e) {
+            return error(local("upload.error"));
+        }
+        FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
+        AudioCourseDetail detail = audioService.findDetail(detailId);
+        if (detail != null) {
+            detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+            detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
+            audioService.updateDetail(detail);
+        }
+
+        if (playType == null) {
+            playType = 0;
+        }
+        if (playType > AudioCourse.PlayType.normal.ordinal()) {//如果是直播  在上传音频完成之后发送直播指令
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setOrder(LiveOrderDTO.ORDER_LIVE);
+            order.setCourseId(String.valueOf(courseId));
+            order.setAudioUrl(fileBase + detail.getAudioUrl());
+            order.setPageNum(pageNum);
+            liveService.publish(order);
+        }
+        return success();
     }
 
     /**
@@ -229,7 +259,7 @@ public class MeetingController extends CspBaseController {
         //发送ws同步指令
         LiveOrderDTO order = new LiveOrderDTO();
         order.setCourseId(String.valueOf(courseId));
-        order.setOrder(LiveOrderDTO.ORDER_SYNC);
+        order.setOrder(LiveOrderDTO.ORDER_SCAN_SUCCESS);
         order.setPageNum(0);
         liveService.publish(order);
 
@@ -240,6 +270,25 @@ public class MeetingController extends CspBaseController {
     protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException{
         Principal principal = SecurityUtils.get();
         AudioCourse audioCourse = audioService.findAudioCourse(courseId);
+        if (audioCourse == null) {
+            throw new SystemException(local("source.not.exists"));
+        }
+
+        if (!CheckUtils.isEmpty(audioCourse.getDetails())) {
+            for (AudioCourseDetail detail : audioCourse.getDetails()) {
+                if (!CheckUtils.isEmpty(detail.getAudioUrl())){
+                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
+                }
+
+                if (!CheckUtils.isEmpty(detail.getImgUrl())) {
+                    detail.setImgUrl(fileBase + detail.getImgUrl());
+                }
+
+                if (!CheckUtils.isEmpty(detail.getVideoUrl())) {
+                    detail.setVideoUrl(fileBase + detail.getVideoUrl());
+                }
+            }
+        }
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             throw new SystemException(local("course.error.author"));
@@ -248,12 +297,16 @@ public class MeetingController extends CspBaseController {
         Map<String, Object> result = new HashMap<>();
         result.put("course", audioCourse);
         result.put("wsUrl", genWsUrl(request, courseId));
+        if (audioCourse.getPlayType() == null) {
+            audioCourse.setPlayType(0);
+        }
         if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
             //查询出直播信息
             Live live = liveService.findByCourseId(courseId);
             result.put("live", live);
         } else {//录播查询录播的进度信息
-
+            AudioCoursePlay play = audioService.findPlayState(courseId);
+            result.put("record", play);
         }
 
         return success(result);

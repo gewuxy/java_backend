@@ -13,6 +13,7 @@ public enum FileTypeSuffix {
     AUDIO_SUFFIX_MP3("mp3"),
     AUDIO_SUFFIX_WAV("wav"),
     AUDIO_SUFFIX_AAC("aac"),
+    AUDIO_SUFFIX_AMR("amr"),
 
     VIDEO_SUFFIX_MP4("mp4"),
 

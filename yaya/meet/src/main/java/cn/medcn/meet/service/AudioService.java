@@ -208,4 +208,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
     MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) ;
 
     AudioCourse findLastDraft(String cspUserId);
+
+    AudioCoursePlay findPlayState(Integer courseId);
 }

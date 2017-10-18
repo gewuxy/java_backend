@@ -1,9 +1,14 @@
 package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.ctrl.FilePath;
+import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.service.OpenOfficeService;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.FFMpegUtils;
 import cn.medcn.common.utils.FileUtils;
 import cn.medcn.common.utils.QRCodeUtils;
 import cn.medcn.csp.controller.CspBaseController;
@@ -23,6 +28,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/10/17.
@@ -39,6 +46,12 @@ public class MeetingMgrController extends CspBaseController{
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Autowired
+    protected OpenOfficeService openOfficeService;
+
+    @Autowired
+    protected FileUploadService fileUploadService;
 
     /**
      * 查询当前用户的课件列表
@@ -127,8 +140,24 @@ public class MeetingMgrController extends CspBaseController{
 
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public String upload(@RequestParam(value = "file", required = false)MultipartFile file, Integer courseId){
-
+    public String upload(@RequestParam(value = "file")MultipartFile file, Integer courseId, HttpServletRequest request){
+        FileUploadResult result;
+        try {
+            result = fileUploadService.upload(file, FilePath.TEMP.path);
+        } catch (SystemException e) {
+            return local("upload.error");
+        }
+        String imgDir = FilePath.COURSE.path + "/" +courseId + "/ppt/";
+        List<String> imgList = null;
+        if (result.getRelativePath().endsWith(".ppt") || result.getRelativePath().endsWith(".pptx")) {
+            imgList = openOfficeService.convertPPT(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
+        } else if (result.getRelativePath().endsWith(".pdf")) {
+            imgList = openOfficeService.pdf2Images(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
+        }
+        if (CheckUtils.isEmpty(imgList)) {
+            return error(local("upload.convert.error"));
+        }
+        audioService.updateAllDetails(courseId, imgList);
         return success();
     }
 }

@@ -18,6 +18,8 @@ public class LiveOrderDTO implements Serializable{
 
     public static final int ORDER_SYNC_LIVE = 2;//综合指令 同步和直播
 
+    public static final int ORDER_SCAN_SUCCESS = 100;
+
     //直播课件ID
     protected String courseId;
     //指令代码 0表示直播 1表示同步 2表示同步和直播
