@@ -35,7 +35,7 @@
 
                     <!--切换  邮箱登录-->
                     <div class="login-box-main position-phone-login">
-                        <form action="${ctx}/web/login" method="post" id="loginForm" name="loginForm">
+                        <form action="${ctx}/mgr/login" method="post" id="loginForm" name="loginForm">
                             <input type="hidden" name="thirdPartyId" value="7">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
