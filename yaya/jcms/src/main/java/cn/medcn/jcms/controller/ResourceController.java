@@ -51,16 +51,22 @@ public class ResourceController extends BaseController {
     @Value("${app.file.base}")
     private String appFileBase;
 
+    private interface JumpPage {
+        int page_one = 0; // 跳转资源共享页面
+        int page_two = 1; // 跳转至发布会议时转载资源的弹框页
+    }
+
     /**
      * 查询资源列表
      * @param pageable
      * @param category
      * @param keyword
      * @param model
+     * @param jump 跳转页面 0 跳转资源共享页面 1 跳转至发布会议时转载资源的弹框页
      * @return
      */
     @RequestMapping(value = "/share/list")
-    public String list(Pageable pageable, String category, String keyword, Model model){
+    public String list(Pageable pageable, String category, String keyword, String jump, Model model){
         if(!StringUtils.isEmpty(category)){
             pageable.put("category", category);
             model.addAttribute("category", category);
@@ -77,15 +83,22 @@ public class ResourceController extends BaseController {
 
         MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
         model.addAttribute("page", page);
+        if (StringUtils.isEmpty(jump)) {
+            jump = "0";
+        }
+        if (Integer.parseInt(jump) == JumpPage.page_one) {
+            // 查询出所有的分类
+            List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys(principal.getId());
+            model.addAttribute("categoryList", categoryList);
 
-        // 查询出所有的分类
-        List<ResourceCategoryDTO> categoryList = audioService.findResourceCategorys(principal.getId());
-        model.addAttribute("categoryList", categoryList);
+            // 查询出我的象数
+            Credits credits = creditsService.doFindMyCredits(principal.getId());
+            model.addAttribute("credit", credits == null?0:credits.getCredit());
 
-        // 查询出我的象数
-        Credits credits = creditsService.doFindMyCredits(principal.getId());
-        model.addAttribute("credit", credits == null?0:credits.getCredit());
-        return "/res/shareResource";
+            return "/res/shareResource";
+        } else {
+            return "/res/forShare";
+        }
     }
 
     /**
