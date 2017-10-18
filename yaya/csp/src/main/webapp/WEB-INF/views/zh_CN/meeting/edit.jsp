@@ -28,8 +28,8 @@
                     <div class="col-lg-5">
                         <div class="upload-ppt-box">
                             <div class="upload-ppt-area">
-                                <label for="file1">
-                                    <input type="file" class="none" id="file1">
+                                <label for="uploadFile">
+                                    <input type="file" name="file" class="none" id="uploadFile">
                                     <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
                                     <p>或拖动PDF／PPT到此区域上传</p>
                                 </label>
@@ -40,12 +40,16 @@
                                     <p><span class="metting-progreesBar"><i style="width:30%"></i></span></p>
 
                                 </div>
-                                <div class="admin-button t-center ${not empty course.details ? '':'none'}">
-                                    <a href="javascript:;" class="button min-btn">重新上传</a>&nbsp;&nbsp;&nbsp;
-                                    <a href="javascript:;" class="button color-blue min-btn">编辑</a>
-                                </div>
                                 <div class="admin-button t-center">
-                                    <a href="javascript:;" class="button color-blue min-btn">上传演讲文档</a>
+                                <c:choose>
+                                    <c:when test="${not empty course.details}">
+                                            <a href="javascript:;" class="button min-btn" onclick="uploadFile()">重新上传</a>&nbsp;&nbsp;&nbsp;
+                                            <a href="javascript:;" class="button color-blue min-btn">编辑</a>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <a href="javascript:;" class="button color-blue min-btn"  onclick="uploadFile()">上传演讲文档</a>
+                                    </c:otherwise>
+                                </c:choose>
                                 </div>
                                 <p class="color-gray-02">选择小于100M的文件</p>
 
@@ -111,5 +115,43 @@
 
     <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
 </div>
+<script src="${ctxStatic}/js/ajaxfileupload.js"></script>
+<script>
+
+    function uploadFile(){
+        var fileName = $("#uploadFile").val().toLowerCase();
+        if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
+            layer.msg("请选择ppt|pptx|pdf格式文件");
+            return false;
+        }
+        var index = layer.load(1, {
+            shade: [0.1,'#fff'] //0.1透明度的白色背景
+        });
+        $.ajaxFileUpload({
+            url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
+            secureuri: false, //是否需要安全协议，一般设置为false
+            fileElementId: "uploadFile", //文件上传域的ID
+            dataType: 'json', //返回值类型 一般设置为json
+            success: function (data)  //服务器成功响应处理函数
+            {
+                layer.close(index);
+                if (data.code == 0){
+                    //回调函数传回传完之后的URL地址
+                    window.location.reload();
+                } else {
+                    layer.msg(data.err);
+                }
+            },
+            error:function(data, status, e){
+                alert(e);
+                layer.close(index);
+            }
+        });
+    }
+
+    $(function(){
+
+    });
+</script>
 </body>
 </html>

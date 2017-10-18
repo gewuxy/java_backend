@@ -25,7 +25,7 @@
 </head>
 <body>
 <div id="wrapper" >
-    <div class="full-qrcode">
+    <div class="full-qrcode none">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode"><img src="${fileBase}${qrCodeUrl}" alt=""></div>
@@ -101,8 +101,11 @@
 
 
     function skip(pageNo){
-        $(".full-qrcode").addClass("none");
         swiper.slideTo(pageNo, 200, false);
+    }
+
+    function show(){
+        $(".full-qrcode").addClass("none");
     }
 </script>
 <script type="text/javascript">
@@ -156,6 +159,8 @@
             if (data.order == 1){
                 console.log("skip to page "+data.pageNum);
                 skip(data.pageNum);
+            } else if(data.order == 100){//扫码成功
+                show();
             }
         }
 
