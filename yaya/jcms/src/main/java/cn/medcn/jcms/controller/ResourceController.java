@@ -72,6 +72,7 @@ public class ResourceController extends BaseController {
 
         Principal principal = SubjectUtils.getCurrentUser();
         pageable.put("userId", principal.getId());
+        pageable.put("reprinted", CourseReprintDTO.AcquiredStatus.no_get_acquired.ordinal());// 未获取（未转载）
         model.addAttribute("currentUserId", principal.getId());
 
         MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
@@ -85,6 +86,21 @@ public class ResourceController extends BaseController {
         Credits credits = creditsService.doFindMyCredits(principal.getId());
         model.addAttribute("credit", credits == null?0:credits.getCredit());
         return "/res/shareResource";
+    }
+
+    /**
+     * 已获取资源列表
+     * @param pageable
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/acquired/list")
+    public String acquiredList(Pageable pageable, Model model){
+        Integer userId = SubjectUtils.getCurrentUserid();
+        pageable.put("userId", userId);
+        MyPage<CourseReprintDTO> page = audioService.findMyReprints(pageable);
+        model.addAttribute("page", page);
+        return "/res/acquired";
     }
 
     /**
@@ -291,5 +307,7 @@ public class ResourceController extends BaseController {
         model.addAttribute("flag",1);
         return "/res/deliveryList";
     }
+
+
 
 }
