@@ -304,15 +304,9 @@ public class CspUserController extends BaseController {
         if(!StringUtils.isMobile(mobile)){
             return error(local("user.mobile.format"));
         }
-        if (type == null) {
-            return error(local("error.param"));
-        }
 
-        int template = type.intValue();
-        int loginTemplate = Captcha.Type.LOGIN.getTypeId().intValue();
-        int bindTemplate = Captcha.Type.BIND.getTypeId().intValue();
-
-        if (template != loginTemplate && template != bindTemplate) {
+        if (type != Captcha.Type.LOGIN.getTypeId()
+                && type != Captcha.Type.BIND.getTypeId()) {
             return APIUtils.error(local("error.param"));
         }
 

@@ -28,8 +28,7 @@ public class CspBaseController extends BaseController {
         StringBuffer buffer = new StringBuffer();
         buffer.append(request.getScheme().toLowerCase().equals("https") ? "wss" : "ws");
         buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
-        buffer.append("/live/order?courseId=").append(courseId
-        );
+        buffer.append("/live/order?courseId=").append(courseId);
         return buffer.toString();
     }
 }

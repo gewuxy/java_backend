@@ -72,7 +72,7 @@ public class LoginController extends BaseController {
             model.addAttribute("username", username);
             return errorForwardUrl;
         }
-        return "redirect:/web/meet/list";
+        return "redirect:/mgr/meet/list";
     }
 
 }

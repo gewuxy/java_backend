@@ -48,7 +48,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * 查询所有的资源分类
      * @return
      */
-    List<ResourceCategoryDTO> findResourceCategorys();
+    List<ResourceCategoryDTO> findResourceCategorys(Integer userId);
 
     /**
      * 查询我的转载记录

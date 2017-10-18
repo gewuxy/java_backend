@@ -13,7 +13,7 @@ public class OAuthUserDTO {
 
     protected String uid;
 
-    protected String nickname;
+    protected String nickName;
 
     protected String avatar;
 
@@ -32,7 +32,7 @@ public class OAuthUserDTO {
         OAuthUserDTO dto = new OAuthUserDTO();
         if (user != null) {
             dto.setAvatar(fileBase + user.getHeadimg());
-            dto.setNickname(user.getNickname());
+            dto.setNickName(user.getNickname());
             dto.setEmail(user.getUsername());
             dto.setMobile(user.getMobile());
             dto.setGender(user.getGender() == null ? 0 : user.getGender());

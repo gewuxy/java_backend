@@ -48,12 +48,12 @@
 
                             <div class="resource-list-item item-radius clearfix">
                                 <div class="resource-img ">
-                                    <img src="./upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                    <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
                                     <div class="resource-link">
                                         <a href="#" class="resource-icon-play popup-player-hook">
                                             <i></i>
                                             预览
-                                        </a><a href="${ctx}/web/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
+                                        </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
                                         <i></i>
                                         扫码投屏
                                     </a>
