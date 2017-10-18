@@ -44,7 +44,7 @@
                                 <c:choose>
                                     <c:when test="${not empty course.details}">
                                             <a href="javascript:;" class="button min-btn" onclick="uploadFile()">重新上传</a>&nbsp;&nbsp;&nbsp;
-                                            <a href="javascript:;" class="button color-blue min-btn">编辑</a>
+                                            <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">编辑</a>
                                     </c:when>
                                     <c:otherwise>
                                         <a href="javascript:;" class="button color-blue min-btn"  onclick="uploadFile()">上传演讲文档</a>
