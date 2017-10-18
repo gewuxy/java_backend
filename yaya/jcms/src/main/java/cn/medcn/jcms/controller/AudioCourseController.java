@@ -8,13 +8,9 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.common.supports.FileTypeSuffix;
-import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.CalendarUtils;
-import cn.medcn.common.utils.ExcelUtils;
-import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.common.service.OfficeConvertProgress;
 import cn.medcn.common.service.OpenOfficeService;
+import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.supports.MediaInfo;
 import cn.medcn.common.utils.*;
 import cn.medcn.jcms.security.Principal;
@@ -24,6 +20,8 @@ import cn.medcn.meet.dto.AudioRecordDTO;
 import cn.medcn.meet.dto.SeePPTDetailExcelData;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.CourseDeliveryService;
+import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.meet.support.UserInfoCheckHelper;
 import com.google.common.collect.Lists;
@@ -45,7 +43,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.text.DecimalFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/6/2.
@@ -70,6 +71,9 @@ public class AudioCourseController extends BaseController {
     private String appFileUploadBase;
 
     @Autowired
+    private LiveService liveService;
+
+    @Autowired
     private OpenOfficeService openOfficeService;
 
     /**
@@ -82,13 +86,25 @@ public class AudioCourseController extends BaseController {
      */
     @RequestMapping(value = "/quote")
     @ResponseBody
-    public String quote(Integer courseId, String meetId, Integer moduleId) {
-        if (moduleId == null) {
+    public String quote(Integer courseId, String meetId, Integer moduleId,Integer playType) {
+        if (moduleId == null || courseId == null || StringUtils.isEmpty(meetId)) {
             return APIUtils.error("参数错误");
         }
         MeetAudio audio = audioService.findMeetAudio(meetId, moduleId);
         audio.setCourseId(courseId);
         audioService.updateMeetAudio(audio);
+
+        if(playType != null){
+            Live live = liveService.findByCourseId(courseId);
+            MeetProperty property = new MeetProperty();
+            property.setMeetId(meetId);
+            property = meetService.findMeetProperty(meetId);
+            if(property != null){
+                property.setStartTime(live.getStartTime());
+                property.setEndTime(live.getEndTime());
+                meetService.updateMeetProp(property);
+            }
+        }
         return APIUtils.success();
     }
 

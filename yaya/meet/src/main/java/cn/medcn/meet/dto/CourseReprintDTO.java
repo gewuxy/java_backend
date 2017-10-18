@@ -12,7 +12,7 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 public class CourseReprintDTO implements Serializable {
-    // 会议id
+    // 资源id
     private Integer id;
     // 会议标题
     private String title;
@@ -35,7 +35,7 @@ public class CourseReprintDTO implements Serializable {
     // 单位号账号
     private String username;
     // 单位号头像
-    private String headimg;
+    private String avatar;
 
     public enum AcquiredStatus {
         no_get_acquired, // 未获取（未转载）

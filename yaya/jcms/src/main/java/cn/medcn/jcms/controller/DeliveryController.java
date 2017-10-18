@@ -4,7 +4,10 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.jcms.utils.SubjectUtils;
+import cn.medcn.meet.dto.AudioCourseDetailDTO;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
+import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.service.AppUserService;
@@ -54,6 +57,6 @@ public class DeliveryController extends BaseController {
         pageable.getParams().put("userId", SubjectUtils.getCurrentUser().getId());
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findCSPList(pageable);
         model.addAttribute("page",myPage);
-        return "";
+        return "/res/forCSP";
     }
 }
