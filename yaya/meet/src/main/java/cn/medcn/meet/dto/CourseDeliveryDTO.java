@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class CourseDeliveryDTO implements Serializable {
 
+    //courseId
     protected Integer id;
 
     protected String title;//标题
