@@ -7,10 +7,8 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.service.OpenOfficeService;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.FFMpegUtils;
-import cn.medcn.common.utils.FileUtils;
-import cn.medcn.common.utils.QRCodeUtils;
+import cn.medcn.common.supports.FileTypeSuffix;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
@@ -116,7 +114,13 @@ public class MeetingMgrController extends CspBaseController{
         return buffer.toString();
     }
 
-
+    /**
+     * 进入课件编辑页面
+     * 如果courseId为空 则查找最近编辑的未发布的AudioCourse
+     * @param courseId
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/edit")
     public String edit(Integer courseId, Model model){
         Principal principal = getWebPrincipal();
@@ -139,6 +143,13 @@ public class MeetingMgrController extends CspBaseController{
         return localeView("/meeting/edit");
     }
 
+    /**
+     * 上传PPT或者PDF文件 并转换成图片
+     * @param file
+     * @param courseId
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam(value = "file")MultipartFile file, Integer courseId, HttpServletRequest request){
@@ -181,6 +192,13 @@ public class MeetingMgrController extends CspBaseController{
         }
     }
 
+    /**
+     * 进入到PPT明细编辑页面
+     * @param courseId
+     * @param model
+     * @return
+     * @throws SystemException
+     */
     @RequestMapping(value = "/details/{courseId}")
     public String details(@PathVariable Integer courseId, Model model) throws SystemException {
         AudioCourse course = audioService.findAudioCourse(courseId);
@@ -191,5 +209,63 @@ public class MeetingMgrController extends CspBaseController{
         }
         model.addAttribute("course", course);
         return localeView("/meeting/details");
+    }
+
+    /**
+     *
+     * @param file
+     * @param index
+     * @return
+     */
+    @RequestMapping(value = "/detail/add")
+    @ResponseBody
+    public String add(@RequestParam(value = "file")MultipartFile file, Integer courseId, Integer index){
+        boolean isPicture = isPicture(file.getOriginalFilename());
+        String dir = FilePath.COURSE.path + "/" + courseId + "/" + (isPicture ? "ppt" : "video");
+        FileUploadResult result;
+        try {
+            result = fileUploadService.upload(file, dir);
+        } catch (SystemException e) {
+            e.printStackTrace();
+            return APIUtils.error(e.getMessage());
+        }
+        AudioCourseDetail detail = new AudioCourseDetail();
+        detail.setCourseId(courseId);
+        detail.setSort(index + 1);
+
+        if (isPicture) {
+            detail.setImgUrl(result.getRelativePath());
+        } else {
+            detail.setVideoUrl(result.getRelativePath());
+        }
+
+        audioService.addDetail(detail);
+        return success();
+    }
+
+
+    protected boolean isPicture(String fileName){
+        fileName = fileName.toLowerCase();
+        boolean isPic = fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix)
+                || fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPEG.suffix)
+                || fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix);
+        return isPic;
+    }
+
+
+    @RequestMapping(value = "/detail/del/{courseId}/{detailId}")
+    public String del(@PathVariable Integer courseId, @PathVariable Integer detailId){
+        AudioCourseDetail detail = audioService.findDetail(detailId);
+        Integer sort = 1;
+        if (detail != null) {
+            sort = detail.getSort();
+            audioService.deleteDetail(detail.getCourseId(), detailId);
+        }
+        List<AudioCourseDetail> details = audioService.findDetails(detail.getCourseId());
+        sort--;
+        if (sort == details.size()) {
+            sort--;
+        }
+        return "redirect:/mgr/meet/details/" + courseId + "?index=" + sort;
     }
 }

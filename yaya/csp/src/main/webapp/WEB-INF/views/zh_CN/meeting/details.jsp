@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/js/layer/skin/style.css">
 
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
@@ -45,7 +46,7 @@
                                             <img src="${fileBase}${detail.imgUrl}" alt="">
                                         </c:otherwise>
                                     </c:choose>
-                                    <div class="swiper-slide-metting-move"><a href="javascript:;" class="delFile fx-btn-3" title="删除"><span class="icon iconfont icon-minIcon16"></span></a></div>
+                                    <div class="swiper-slide-metting-move"><a href="javascript:;" class="delFile fx-btn-3" title="删除" detailId="${detail.id}"><span class="icon iconfont icon-minIcon16"></span></a></div>
                                 </div>
                             </c:forEach>
                         </div>
@@ -61,8 +62,8 @@
                 </div>
                 <div class="admin-line"></div>
                 <div class="admin-button t-center">
-                    <a href="javascript:;" class="button color-blue min-btn cancel-hook" >返回</a>&nbsp;&nbsp;
-                    <input type="submit" class="button buttonBlue item-radius min-btn" value="保存">
+                    <a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >返回</a>&nbsp;&nbsp;
+                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="保存">
                 </div>
             </div>
         </div>
@@ -93,12 +94,33 @@
     </div>
 </div>
 
+<div class="cancel-popup-box" id="del-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否确定删除？</p>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function(){
 
 
         var added = 105;
-
+        var activeIndex = "${param.index}";
+        if (activeIndex == ''){
+            activeIndex = 0;
+        }
 
         //幻灯片轮播
         var swiper = new Swiper('.swiper-container-metting', {
@@ -113,21 +135,9 @@
             spaceBetween: 62,
             paginationClickable: true,
             paginationType: 'fraction',
+            initialSlide:activeIndex,
             onInit: function(swiper){
-                swiper.wrapper.attr('style','transform: translate3d(175px, 0, 0);transition-duration: 0ms;');
-                //获取默认偏移值
-                var defaultOffset = swiper.snapGrid;
-                for(var i =0; i<defaultOffset.length; i++){
-                    defaultOffset[i] = defaultOffset[i] - added;
-                }
-                //更新偏移值
-                var updateOffset = defaultOffset.slice(1);
-                var newOffset= [-175];
-                newOffset = newOffset.concat(updateOffset);
-                //赋值给插件
-                swiper.snapGrid = newOffset;
-                swiper.slidesGrid = newOffset;
-                console.log(swiper.translate);
+
             },
             onSlideChangeEnd:function(swiper){
             },
@@ -136,22 +146,22 @@
 
         //触发弹出窗
         //投稿
-        $('.cancel-hook').on('click',function(){
-            layer.open({
-                type: 1,
-                area: ['440px', '224px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.cancel-popup-box'),
-                success:function(){
-
-                },
-                cancel :function(){
-
-                },
-            });
-        });
+//        $('.cancel-hook').on('click',function(){
+//            layer.open({
+//                type: 1,
+//                area: ['440px', '224px'],
+//                fix: false, //不固定
+//                title:false,
+//                closeBtn:0,
+//                content: $('.cancel-popup-box'),
+//                success:function(){
+//
+//                },
+//                cancel :function(){
+//
+//                },
+//            });
+//        });
 
 
         $('.copy-hook').on('click',function(){
@@ -171,20 +181,23 @@
             });
         });
 
-        $('.more-hook').on('click',function(){
+        $('.delFile').on('click',function(){
+            var detailId = $(this).attr("detailId");
             layer.open({
                 type: 1,
-                area: ['618px', '378px'],
+                area: ['300px', '250px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
-                content: $('.more-popup-box'),
-                success:function(){
-
+                anim: 5,
+                content: $('#del-popup-box'),
+                btn : ['确定', '取消'],
+                yes :function(){
+                    window.location.href = '${ctx}/mgr/meet/detail/del/${course.id}/'+detailId;
                 },
+
                 cancel :function(){
-
-                },
+                }
             });
         });
 
