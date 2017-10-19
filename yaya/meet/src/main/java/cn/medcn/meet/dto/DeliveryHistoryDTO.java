@@ -21,6 +21,5 @@ public class DeliveryHistoryDTO implements Serializable {
 
     protected int acceptCount;//已投稿数
 
-    @Transient
     protected String sign; //单位号简介
 }
