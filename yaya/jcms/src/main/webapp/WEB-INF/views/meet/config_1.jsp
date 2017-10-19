@@ -624,7 +624,7 @@
                     <div class="tj-content clearfix">
                         <div class="tab-wrap popup-tab-list">
                             <a href="${ctx}/func/meet/delivery/forCSP?meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu tab-cur">CSP投屏</span></a>
-                            <a href="${ctx}/func/res/acquired/list?jump=1" target="quoteFrame"><span class="tab-menu" >获取历史</span></a>
+                            <a href="${ctx}/func/res/acquired/list?jump=1&meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu" >获取历史</span></a>
                         </div>
                         <div class="tab-con-wrap" style="display: block;">
                         <iframe id="quoteFrame" name="quoteFrame" frameborder="0" width="100%" height="620" scrolling="false"/>

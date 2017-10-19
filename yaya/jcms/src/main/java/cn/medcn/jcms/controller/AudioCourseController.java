@@ -90,24 +90,31 @@ public class AudioCourseController extends BaseController {
         if (moduleId == null || courseId == null || StringUtils.isEmpty(meetId)) {
             return APIUtils.error("参数错误");
         }
-        MeetAudio audio = audioService.findMeetAudio(meetId, moduleId);
-        audio.setCourseId(courseId);
-        audioService.updateMeetAudio(audio);
-        //引用直播投稿,修改会议时间
-        if(playType == AudioCourse.PlayType.live_ppt.getType() || playType == AudioCourse.PlayType.live_video.getType()){
-            Live live = liveService.findByCourseId(courseId);
-            MeetProperty property = new MeetProperty();
-            property.setMeetId(meetId);
-            property = meetService.findMeetProperty(meetId);
-            if(property != null){
-                property.setStartTime(live.getStartTime());
-                property.setEndTime(live.getEndTime());
-                meetService.updateMeetProp(property);
+        if (playType == null) {
+            // 引用共享资源库 已获取的会议
+            meetService.copyAudioCourse(courseId, moduleId, meetId);
+
+        } else {
+            MeetAudio audio = audioService.findMeetAudio(meetId, moduleId);
+            audio.setCourseId(courseId);
+            audioService.updateMeetAudio(audio);
+            //引用直播投稿,修改会议时间
+            if(playType == AudioCourse.PlayType.live_ppt.getType() || playType == AudioCourse.PlayType.live_video.getType()){
+                Live live = liveService.findByCourseId(courseId);
+                MeetProperty property = new MeetProperty();
+                property.setMeetId(meetId);
+                property = meetService.findMeetProperty(meetId);
+                if(property != null){
+                    property.setStartTime(live.getStartTime());
+                    property.setEndTime(live.getEndTime());
+                    meetService.updateMeetProp(property);
+                }
             }
         }
 
         return APIUtils.success();
     }
+
 
 
     protected boolean isPick(String fileName){

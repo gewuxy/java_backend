@@ -29,9 +29,9 @@ import java.util.List;
 /**
  * Created by lixuan on 2017/9/26.
  */
-@Controller
-@RequestMapping(value = "/web/delivery")
-public class WebDeliveryController extends BaseController {
+@Controller("webDeliveryController")
+@RequestMapping(value = "/mgr/delivery")
+public class DeliveryController extends BaseController {
 
     @Autowired
     protected CourseDeliveryService courseDeliveryService;
@@ -70,7 +70,6 @@ public class WebDeliveryController extends BaseController {
         }
         return localeView("redirect:/mgr/meet/list");
     }
-
 
     @RequestMapping("/history")
     public String history(Pageable pageable){

@@ -14,6 +14,12 @@ import java.io.Serializable;
 public class CspUserInfoDTO  {
     // 用户id
     protected String uid;
+    // 姓名
+    protected String userName;
+    // 邮箱
+    protected String email;
+    // 手机
+    protected String mobile;
     // 昵称
     protected String nickName;
     // 性别
@@ -49,6 +55,9 @@ public class CspUserInfoDTO  {
         dto.setAvatar(userInfo.getAvatar());
         dto.setInfo(userInfo.getInfo());
         dto.setToken(userInfo.getToken());
+        dto.setEmail(userInfo.getEmail());
+        dto.setMobile(userInfo.getMobile());
+        dto.setUserName(userInfo.getUserName());
         return dto;
     }
 
