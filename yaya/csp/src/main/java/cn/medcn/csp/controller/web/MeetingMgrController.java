@@ -15,6 +15,7 @@ import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.service.AudioService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -159,5 +160,36 @@ public class MeetingMgrController extends CspBaseController{
         }
         audioService.updateAllDetails(courseId, imgList);
         return success();
+    }
+
+
+    protected void handleHttpPath(AudioCourse course) {
+        if (course != null && !CheckUtils.isEmpty(course.getDetails())) {
+            for (AudioCourseDetail detail : course.getDetails()) {
+                if (!CheckUtils.isEmpty(detail.getAudioUrl())) {
+                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
+                }
+
+                if (!CheckUtils.isEmpty(detail.getImgUrl())) {
+                    detail.setImgUrl(fileBase + detail.getImgUrl());
+                }
+
+                if (!CheckUtils.isEmpty(detail.getVideoUrl())) {
+                    detail.setVideoUrl(detail.getVideoUrl());
+                }
+            }
+        }
+    }
+
+    @RequestMapping(value = "/details/{courseId}")
+    public String details(@PathVariable Integer courseId, Model model) throws SystemException {
+        AudioCourse course = audioService.findAudioCourse(courseId);
+        handleHttpPath(course);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equals(course.getCspUserId())){
+            throw new SystemException(local("meeting.error.not_mine"));
+        }
+        model.addAttribute("course", course);
+        return localeView("/meeting/details");
     }
 }
