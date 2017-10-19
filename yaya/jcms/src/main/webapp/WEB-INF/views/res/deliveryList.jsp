@@ -39,7 +39,7 @@
                                             <a href="#" class="resource-icon-play popup-player-hook">
                                                 <i></i>
                                                 预览
-                                            </a><a href="${ctx}/func/meet/edit?courseId=${d.courseId}" class="resource-icon-edit">
+                                            </a><a href="${ctx}/func/meet/edit?courseId=${d.id}" class="resource-icon-edit">
                                             <i></i>
                                             立即发布
                                         </a>
