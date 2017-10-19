@@ -60,7 +60,7 @@
 
         <ul class="tab-list clearfix">
             <li>
-                <a href="${ctx}/func/res/list">资源转载<i></i></a>
+                <a href="${ctx}/func/res/share/list">资源转载<i></i></a>
             </li>
             <li class="cur">
                 <a >我的管理<i></i></a>
