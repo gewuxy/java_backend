@@ -30,8 +30,8 @@ import java.util.List;
  * Created by lixuan on 2017/9/26.
  */
 @Controller
-@RequestMapping(value = "/web/delivery")
-public class DeliveryController extends BaseController {
+@RequestMapping(value = "/mgr/delivery")
+public class DeliveryMgrController extends BaseController {
 
     @Autowired
     protected CourseDeliveryService courseDeliveryService;
