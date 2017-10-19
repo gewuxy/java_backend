@@ -69,7 +69,7 @@
             <p class="mbox-pic"><img src="${ctxStatic}/images/index-itemImg-02.png" alt=""></p>
             <h3 class="mbox-txt">资源平台</h3>
             <p class="mbox-txt-1">医学会议、科教培训、医学资料跨医院共享的学术共享平台</p>
-            <p class="nbox-btn"><a href="${ctx}/func/res/list" class="mbox-button">查看资源</a></p>
+            <p class="nbox-btn"><a href="${ctx}/func/res/share/list" class="mbox-button">查看资源</a></p>
         </li>
         <li>
             <p class="mbox-pic"><img src="${ctxStatic}/images/index-itemImg-03.png" alt=""></p>
