@@ -48,8 +48,6 @@ public class CspUserController extends BaseController {
     @Value("${app.file.base}")
     protected String fileBase;
 
-    @Value("${csp.file.base}")
-    protected String cspFileBase;
 
     /**
      * 注册csp账号
@@ -167,7 +165,7 @@ public class CspUserController extends BaseController {
 
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
             if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
-                dto.setAvatar(cspFileBase + dto.getAvatar());
+                dto.setAvatar(fileBase + dto.getAvatar());
             }
             return success(dto);
 
