@@ -109,8 +109,12 @@
     </select>
 
     <select id="findAccepterList" resultType="cn.medcn.user.model.AppUser">
-        SELECT tu.headimg,tu.nickname,tu.sign FROM  t_app_user tu
+        SELECT tu.id,tu.headimg,tu.nickname,tu.sign FROM  t_app_user tu
         INNER JOIN t_app_user_detail td ON tu.id = td.user_id
         WHERE td.delivery_flag = 1 AND tu.role_id = 1
+        <if test="authorId != null">
+            AND author_id = #{authorId}
+        </if>
+
     </select>
 </mapper>
