@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * Created by lixuan on 2017/9/26.
  */
-@Controller
+@Controller("webDeliveryController")
 @RequestMapping(value = "/mgr/delivery")
 public class DeliveryController extends BaseController {
 
