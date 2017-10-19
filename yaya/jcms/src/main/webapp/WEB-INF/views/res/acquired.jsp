@@ -72,6 +72,7 @@
     <form id="pageForm" name="pageForm" action="${ctx}/func/res/acquired/list" method="post">
         <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
         <input type="hidden" name="pageNum" id="pageNum">
+        <input type="hidden" name="jump" value="0">
     </form>
 
     <div class="mask-wrap">
