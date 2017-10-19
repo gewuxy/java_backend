@@ -31,7 +31,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/web/delivery")
-public class DeliveryController extends BaseController {
+public class WebDeliveryController extends BaseController {
 
     @Autowired
     protected CourseDeliveryService courseDeliveryService;
@@ -82,6 +82,16 @@ public class DeliveryController extends BaseController {
             delivery.setDeliveryTime(new Date());
             courseDeliveryService.insert(delivery);
         }
+        return "";
+    }
+
+
+    @RequestMapping("/history")
+    public String history(Pageable pageable){
+        String authorId = SecurityUtils.get().getId();
+        pageable.put("authorId",authorId);
+        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
+
         return "";
     }
 }
