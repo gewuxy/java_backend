@@ -1922,12 +1922,21 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         }
 
         // 复制PPT语音会议表
-        MeetAudio newAudio = new MeetAudio();
-        newAudio.setId(null);
-        newAudio.setMeetId(newMeetId);
-        newAudio.setModuleId(newModuleId);
-        newAudio.setCourseId(newCourseId);
-        audioService.addMeetAudio(newAudio);
+        MeetAudio condition = new MeetAudio();
+        condition.setMeetId(newMeetId);
+        condition.setModuleId(newModuleId);
+        MeetAudio newAudio = meetAudioDAO.selectOne(condition);
+        if (newAudio == null) { // 从草稿箱复制会议过来
+            newAudio = new MeetAudio();
+            newAudio.setId(null);
+            newAudio.setCourseId(newCourseId);
+            audioService.addMeetAudio(newAudio);
+        } else {
+            // 发布会议从已获取会议 引用复制
+            newAudio.setCourseId(newCourseId);
+            audioService.updateMeetAudio(newAudio);
+        }
+
     }
 
 
