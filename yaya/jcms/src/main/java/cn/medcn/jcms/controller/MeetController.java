@@ -639,12 +639,9 @@ public class MeetController extends BaseController {
                         (meetAudio.getCourseId() != null && meetAudio.getCourseId() != 0)) {
                     model.addAttribute("course", audioService.findAudioCourse(meetAudio.getCourseId()));
                 }
-                //判断是否是实时直播，如果是直播，不允许上传音频和录音
-                if(meetAudio.getCourseId() != null){
-                    Live live = liveService.findByCourseId(meetAudio.getCourseId());
-                    if(live != null){
-                        model.addAttribute("live",true);
-                    }
+                //判断是否是转载会议，如果是转载会议，不允许上传音频和录音,不允许删除，更换，上传ppt
+                if(meetAudio.getCourseId() != null && (meetAudio.getCourseId() != SubjectUtils.getCurrentUserid())){
+                        model.addAttribute("notMe",true);
                 }
                 break;
             case 2://视频

@@ -9,15 +9,9 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.FileUtils;
 import cn.medcn.goods.dto.CreditPayDTO;
 import cn.medcn.goods.service.CreditsService;
-import cn.medcn.meet.dao.AudioCourseDAO;
-import cn.medcn.meet.dao.AudioCourseDetailDAO;
-import cn.medcn.meet.dao.AudioHistoryDAO;
-import cn.medcn.meet.dao.MeetAudioDAO;
+import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.*;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
-import cn.medcn.meet.model.AudioHistory;
-import cn.medcn.meet.model.MeetAudio;
+import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
@@ -59,6 +53,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
+
+    @Autowired
+    protected AudioCoursePlayDAO audioCoursePlayDAO;
 
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
@@ -540,5 +537,12 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             course.setDetails(details);
         }
         return course;
+    }
+
+    @Override
+    public AudioCoursePlay findPlayState(Integer courseId) {
+        AudioCoursePlay cond = new AudioCoursePlay();
+        cond.setCourseId(courseId);
+        return audioCoursePlayDAO.selectOne(cond);
     }
 }

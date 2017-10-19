@@ -13,6 +13,7 @@
 <c:set var="ctxStatic" value="${pageContext.request.contextPath}/static"/>
 <script src="${ctxStatic}/js/jquery-1.12.4.min.js"></script>
 <script src="${ctxStatic}/js/util.js"></script>
+<script src="${ctxStatic}/js/layer/layer.js"></script>
 <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
 <link rel="SHORTCUT ICON" href="${ctxStatic}/images/v2/icon.ico" />
 

@@ -76,9 +76,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
         if (!file.exists()) {
             return null;
         }
-        if (dir.exists()) {
-            FileUtils.deleteSubFiles(dir);
-        } else {
+        if (!dir.exists()) {
             dir.mkdirs();
         }
         PDDocument doc = null;
@@ -94,8 +92,8 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
                 BufferedImage image = renderer.renderImage(i, 1.0f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
-                imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
-                ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
+//                imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
+//                ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 imageNameList.add(imageFilePath);
             }
             return imageNameList;
