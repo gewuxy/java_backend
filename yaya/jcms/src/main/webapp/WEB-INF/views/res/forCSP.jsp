@@ -14,7 +14,7 @@
 
 </head>
 <body>
-<div class="metting-pupopbox-bd">
+    <div class="popup-tab-main clearfix">
     <table class="table-box-1">
         <colgroup>
             <col class="table-td-6">
@@ -43,6 +43,7 @@
         </tbody>
 
     </table>
+    </div>
     <%@include file="/WEB-INF/include/pageable.jsp"%>
 
     <form id="pageForm" name="pageForm" action="${ctx}/func/meet/delivery/forCSP" method="post">
@@ -51,8 +52,6 @@
         <input type="hidden" name="meetId" value="${meetId}">
         <input type="hidden" name="moduleId" id="moduleId" value="${moduleId}">
     </form>
-
-</div>
 
 <div class="mask-wrap">
     <div class="dis-tbcell">
@@ -111,6 +110,7 @@
             $('.mask-wrap').removeClass('dis-table');
             $('.fx-mask-box-2').hide();
         });
+
     });
 </script>
 </body>
