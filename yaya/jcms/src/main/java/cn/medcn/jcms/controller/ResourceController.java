@@ -98,11 +98,13 @@ public class ResourceController extends BaseController {
      * 已获取资源列表
      * @param pageable
      * @param jump 跳转页面 0 跳转资源共享页面 1 跳转至发布会议时转载资源的弹框页
+     * @param meetId 引用转载资源时传该参数
+     * @param moduleId 引用转载资源时传该参数
      * @param model
      * @return
      */
     @RequestMapping(value = "/acquired/list")
-    public String acquiredList(Pageable pageable, String jump, Model model){
+    public String acquiredList(Pageable pageable, String jump, String meetId, Integer moduleId, Model model){
         Integer userId = SubjectUtils.getCurrentUserid();
         pageable.put("userId", userId);
         MyPage<CourseReprintDTO> page = audioService.findMyReprints(pageable);
@@ -113,6 +115,8 @@ public class ResourceController extends BaseController {
         if (Integer.parseInt(jump) == JumpPage.page_one) {
             return "/res/acquired";
         } else {
+            model.addAttribute("meetId", meetId);
+            model.addAttribute("moduleId", moduleId);
             return "/res/forAcquired";
         }
     }
