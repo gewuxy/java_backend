@@ -26,6 +26,7 @@ import cn.medcn.meet.service.LiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -190,6 +191,8 @@ public class MeetingController extends CspBaseController {
             return error(local("upload.error"));
         }
         FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
+        //删除源文件
+        FileUtils.deleteTargetFile(sourcePath);
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if (detail != null) {
             detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
@@ -208,7 +211,10 @@ public class MeetingController extends CspBaseController {
             order.setPageNum(pageNum);
             liveService.publish(order);
         }
-        return success();
+
+        Map<String, String> result = new HashMap<>();
+        result.put("audioUrl", fileBase + relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        return success(result);
     }
 
     /**

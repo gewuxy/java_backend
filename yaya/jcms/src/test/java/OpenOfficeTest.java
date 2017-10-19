@@ -18,15 +18,17 @@ public class OpenOfficeTest {
 
 //    @Test
 //    public void testConverPPT(){
-//        String pptFilePath = "D:\\lixuan\\test\\精神病学-1.ppt";
+//        String pptFilePath = "C:\\Users\\Administrator\\Desktop\\YCY\\v1_产品说明文档.pptx";
 //        String targetFilePath = "course/test/";
 //        openOfficeService.convertPPT(pptFilePath, targetFilePath);
 //    }
 
     @Test
-    public void testConvertHtml(){
-        String pptFilePath = "D:/lixuan/test/Z11021165.doc";
-        String htmlFilePath = "D:/lixuan/test/";
-        openOfficeService.convert2Html(pptFilePath, htmlFilePath);
+    public void testConvertToHtml() {
+        //String pptFilePath = "C:\\Users\\Administrator\\Desktop\\YCY\\v1_产品说明文档.pptx";
+
+        String pptFilePath = "C:\\Users\\Administrator\\Desktop\\YCY\\公众账号申请表(新).doc";
+        String targetFilePath = "C:\\Users\\Administrator\\Desktop\\YCY\\doc.html";
+        openOfficeService.convert2Html(pptFilePath, targetFilePath);
     }
 }

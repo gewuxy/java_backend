@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -186,7 +187,6 @@ public class CspUserController extends BaseController {
     @RequestMapping(value = "/logout")
     @ResponseBody
     public String loginOut(HttpServletRequest request) {
-//        String t1 = request.getParameter(Constants.TOKEN);
         String token = request.getHeader(Constants.TOKEN);
         if (StringUtils.isNotEmpty(token)) {
             String cacheKey = Constants.TOKEN+"_" + token;

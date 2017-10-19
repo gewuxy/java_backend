@@ -117,8 +117,13 @@
 </div>
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script>
-
+    const file_size_limit = 100*1024*1024;
     function uploadFile(){
+        var fSize = fileSize($("#uploadFile").get(0));
+        if (fSize > file_size_limit){
+            layer.msg("请上传小于100M的文件");
+            return false;
+        }
         var fileName = $("#uploadFile").val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
             layer.msg("请选择ppt|pptx|pdf格式文件");
