@@ -23,7 +23,7 @@
         </colgroup>
         <tbody>
         <c:forEach items="${page.dataList}" var="res">
-            <tr id="course_${res.courseId}">
+            <tr id="course_${res.id}">
                 <input type="hidden" id="playType" value="${res.playType}">
                 <input type="hidden" id="startTime" value = "<fmt:formatDate value="${res.startTime}" pattern="MM月dd日 HH:mm"/>">
                 <input type="hidden" id="endTime" value = "<fmt:formatDate value="${res.endTime}" pattern="MM月dd日 HH:mm"/>">
@@ -36,7 +36,7 @@
                     <span>${res.name}</span>
                 </td>
                 <td class="table-td-7">
-                    <a href="javascript:;" class="popup-player-hook" courseId="${res.courseId}">预览</a><i class="rowSpace">|</i><a href="javascript:;" class="popup-hint" courseId="${res.courseId}">引用</a>
+                    <a href="javascript:;" class="popup-player-hook" courseId="${res.id}">预览</a><i class="rowSpace">|</i><a href="javascript:;" class="popup-hint" courseId="${res.id}">引用</a>
                 </td>
             </tr>
         </c:forEach>

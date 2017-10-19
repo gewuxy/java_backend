@@ -15,6 +15,9 @@ import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.user.model.AppUser;
+import cn.medcn.user.service.AppUserService;
+import com.pingplusplus.model.App;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -52,6 +55,9 @@ public class MeetingMgrController extends CspBaseController{
     @Autowired
     protected FileUploadService fileUploadService;
 
+    @Autowired
+    protected AppUserService appUserService;
+
     /**
      * 查询当前用户的课件列表
      * @param pageable
@@ -60,11 +66,16 @@ public class MeetingMgrController extends CspBaseController{
      */
     @RequestMapping(value = "/list")
     public String list(Pageable pageable, Model model){
+        //打开了投稿箱的公众号列表
+        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
+        AppUser.splitUserAvatar(myPage.getDataList(),fileBase);
+        model.addAttribute("accepterList",myPage.getDataList());
         //web获取当前用户信息
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
         pageable.put("cspUserId", principal.getId());
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
         model.addAttribute("page", page);
+
         return localeView("/meeting/list");
     }
 

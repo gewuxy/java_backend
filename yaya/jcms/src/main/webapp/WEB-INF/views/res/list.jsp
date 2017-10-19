@@ -114,7 +114,7 @@
             <div class="table-top-box clearfix">
                 <div class="top-ri-txt">采集资源可作为内容进行管理</div>
                 <a class="mask-le cur"><span class="icon iconfont icon-minIcon3"></span>所有资源</a>
-                <form action="${ctx}/func/res/list" method="post">
+                <form action="${ctx}/func/res/share/list" method="post">
                     <span class="search-box">
                         <input type="text" class="sear-txt" name="keyword" value="${keyword}" placeholder="搜索">
                         <input type="hidden" name="category" value="${category}">
@@ -208,7 +208,7 @@
         </div>
     </div>
 </div>
-<form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
+<form id="pageForm" name="pageForm" action="${ctx}/func/res/share/list" method="post">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
     <input type="hidden" name="pageNum" id="pageNum">
     <input type="hidden" name="keyword" value="${keyword}">

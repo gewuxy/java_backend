@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -164,6 +165,9 @@ public class CspUserController extends BaseController {
             cachePrincipal(userInfo);
 
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
+            if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
+                dto.setAvatar(fileBase + dto.getAvatar());
+            }
             return success(dto);
 
         } catch (SystemException e){
@@ -185,8 +189,7 @@ public class CspUserController extends BaseController {
     public String loginOut(HttpServletRequest request) {
         String token = request.getHeader(Constants.TOKEN);
         if (StringUtils.isNotEmpty(token)) {
-            String cacheKey = Constants.TOKEN+"_"+token;
-//          Principal principal = redisCacheUtils.getCacheObject(cacheKey);
+            String cacheKey = Constants.TOKEN+"_" + token;
             redisCacheUtils.delete(cacheKey);
         }
         return success();

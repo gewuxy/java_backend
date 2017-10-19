@@ -13,6 +13,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class CourseDeliveryDTO implements Serializable {
 
+    //courseId
     protected Integer id;
 
     protected String title;//标题
@@ -43,8 +44,6 @@ public class CourseDeliveryDTO implements Serializable {
     // 录播状态 0表示未开始 1表示录播中 2表示录播结束
     protected Integer playState;
 
-    //ppt资源id
-    private Integer courseId;
 
     //投稿者头像
     private String avatar;
