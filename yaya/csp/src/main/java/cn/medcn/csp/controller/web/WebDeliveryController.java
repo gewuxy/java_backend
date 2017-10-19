@@ -43,20 +43,6 @@ public class WebDeliveryController extends BaseController {
     protected String fileBase;
 
 
-    /**
-     * 打开了投稿箱的公众号列表
-     * @return
-     */
-    @RequestMapping("/accepterList")
-    public String accepterList(Pageable pageable,Integer courseId,Model model) throws SystemException {
-        if(courseId == null){
-            throw new SystemException("courseId不能为空");
-        }
-        model.addAttribute("courseId",courseId);
-        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
-        model.addAttribute("page",myPage);
-        return "";
-    }
 
     /**
      * 投稿
@@ -82,7 +68,7 @@ public class WebDeliveryController extends BaseController {
             delivery.setDeliveryTime(new Date());
             courseDeliveryService.insert(delivery);
         }
-        return "";
+        return localeView("redirect:/mgr/meet/list");
     }
 
 
