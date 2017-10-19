@@ -95,7 +95,7 @@
         <div class="layer-hospital-popup-subName">
             <p>单位号需在“资源平台”打开“投稿箱”功能才能接受投稿。</p>
         </div>
-        <form id="contribute" name="contribute" action="${ctx}/web/delivery/contribute" method="post">
+        <form id="contribute" name="contribute" action="${ctx}/mgr/delivery/contribute" method="post">
             <input type="hidden" id="courseId" name="courseId" value="">
             <div class="layer-hospital-popup-main hidden-box">
                 <div class="row clearfix">
