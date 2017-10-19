@@ -48,6 +48,8 @@ public class CspUserController extends BaseController {
     @Value("${app.file.base}")
     protected String fileBase;
 
+    @Value("${csp.file.base}")
+    protected String cspFileBase;
 
     /**
      * 注册csp账号
@@ -164,6 +166,9 @@ public class CspUserController extends BaseController {
             cachePrincipal(userInfo);
 
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
+            if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
+                dto.setAvatar(cspFileBase + dto.getAvatar());
+            }
             return success(dto);
 
         } catch (SystemException e){
@@ -183,10 +188,10 @@ public class CspUserController extends BaseController {
     @RequestMapping(value = "/logout")
     @ResponseBody
     public String loginOut(HttpServletRequest request) {
+//        String t1 = request.getParameter(Constants.TOKEN);
         String token = request.getHeader(Constants.TOKEN);
         if (StringUtils.isNotEmpty(token)) {
-            String cacheKey = Constants.TOKEN+"_"+token;
-//          Principal principal = redisCacheUtils.getCacheObject(cacheKey);
+            String cacheKey = Constants.TOKEN+"_" + token;
             redisCacheUtils.delete(cacheKey);
         }
         return success();
