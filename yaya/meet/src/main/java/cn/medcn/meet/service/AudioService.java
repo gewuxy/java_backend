@@ -210,4 +210,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
     AudioCourse findLastDraft(String cspUserId);
 
     AudioCoursePlay findPlayState(Integer courseId);
+
+
 }
