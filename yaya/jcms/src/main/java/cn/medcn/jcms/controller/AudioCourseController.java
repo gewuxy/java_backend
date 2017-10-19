@@ -93,8 +93,8 @@ public class AudioCourseController extends BaseController {
         MeetAudio audio = audioService.findMeetAudio(meetId, moduleId);
         audio.setCourseId(courseId);
         audioService.updateMeetAudio(audio);
-
-        if(playType != null){
+        //引用直播投稿,修改会议时间
+        if(playType == AudioCourse.PlayType.live_ppt.getType() || playType == AudioCourse.PlayType.live_video.getType()){
             Live live = liveService.findByCourseId(courseId);
             MeetProperty property = new MeetProperty();
             property.setMeetId(meetId);
@@ -105,6 +105,7 @@ public class AudioCourseController extends BaseController {
                 meetService.updateMeetProp(property);
             }
         }
+
         return APIUtils.success();
     }
 

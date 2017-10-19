@@ -7,7 +7,7 @@ h2 { font-family: 'bpreplay', sans-serif; font-weight: normal; font-size: 24px; 
 .download a em:before { content: '⬇ '; font-size: 0.8em; padding: 0px 4px 0px 0px; }
 .download a { display: block; color: #f6f6f0; width: 190px; margin: 5px auto; padding: 8px 2px 8px 0px; font-size: 14px; border-bottom: 0px; }
 
-.audiojs audio { position: absolute; left: 50%; top:0px; z-index:-1; height:0; filter:alpha(opacity=00); -moz-opacity:0; -khtml-opacity: 0; opacity: 0;   }
+.audiojs audio { position: absolute; left: 50%; top:0px; z-index:-1; height:0; }
 .audiojs { width: 750px; height: 36px; background: #fff; overflow: hidden; font-family: monospace; font-size:
 12px; }
 .audiojs .play-pause { width: 25px; height: 25px; padding: 0px 6px; margin:7px 4px 0; float: left; overflow:

@@ -51,6 +51,11 @@ public class ResourceController extends BaseController {
     @Value("${app.file.base}")
     private String appFileBase;
 
+    private interface JumpPage {
+        int page_one = 0; // 跳转资源共享页面
+        int page_two = 1; // 跳转至发布会议时转载资源的弹框页
+    }
+
     /**
      * 查询资源列表
      * @param pageable
@@ -85,22 +90,31 @@ public class ResourceController extends BaseController {
         // 查询出我的象数
         Credits credits = creditsService.doFindMyCredits(principal.getId());
         model.addAttribute("credit", credits == null?0:credits.getCredit());
+
         return "/res/shareResource";
     }
 
     /**
      * 已获取资源列表
      * @param pageable
+     * @param jump 跳转页面 0 跳转资源共享页面 1 跳转至发布会议时转载资源的弹框页
      * @param model
      * @return
      */
     @RequestMapping(value = "/acquired/list")
-    public String acquiredList(Pageable pageable, Model model){
+    public String acquiredList(Pageable pageable, String jump, Model model){
         Integer userId = SubjectUtils.getCurrentUserid();
         pageable.put("userId", userId);
         MyPage<CourseReprintDTO> page = audioService.findMyReprints(pageable);
         model.addAttribute("page", page);
-        return "/res/acquired";
+        if (StringUtils.isEmpty(jump)) {
+            jump = "0";
+        }
+        if (Integer.parseInt(jump) == JumpPage.page_one) {
+            return "/res/acquired";
+        } else {
+            return "/res/forAcquired";
+        }
     }
 
     /**

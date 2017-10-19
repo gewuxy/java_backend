@@ -431,6 +431,19 @@
 
         });
     </script>
+    <script>
+        // csp 和 获取历史 Tab切换 图标显示高亮
+        $(function() {
+            $(".popup-tab-list a span").each(function(i){
+                $("span.tab-menu").click(function(){
+                    $("span").removeClass("tab-cur");
+                    $(this).addClass("tab-cur");
+                });
+            });
+        });
+
+
+    </script>
 </head>
 <body>
 <div class="g-main  mettingForm mettingSwiperBox clearfix">
@@ -506,7 +519,10 @@
                                             </c:otherwise>
                                         </c:choose>
 
-                                        <div class="swiper-slide-metting-move" detailId="${detail.id}"><a href="javascript:;" class="delFile fx-btn-3"><span class="icon iconfont icon-minIcon16"></span>删除</a></div>
+                                        <c:if test="${empty notMe}">
+                                            <div class="swiper-slide-metting-move" detailId="${detail.id}"><a href="javascript:;" class="delFile fx-btn-3"><span class="icon iconfont icon-minIcon16"></span>删除</a></div>
+                                        </c:if>
+
                                         <%--<div class="swiper-slide-metting-audio">--%>
                                             <%--<audio controls="" src="${appFileBase}/${detail.audioUrl}"></audio>--%>
                                         <%--</div>--%>
@@ -518,10 +534,13 @@
                                 <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                                 <div class="metting-btn-item">
                                     <span class="swiper-button-prev metting-button swiper-button-disabled">上一页</span>
-                                    <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
-                                    <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover2-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
+                                    <c:if test="${empty notMe}">
+                                        <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
+                                        <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover2-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
 
-                                    <c:if test="${empty live}">
+                                    </c:if>
+
+                                    <c:if test="${empty notMe}">
                                         <label><input type="file" name="file" id="changeAudioFile" class="none">
                                             <span class="metting-button bottom-blue"><span class="icon iconfont icon-minIcon9"></span>&nbsp;上传音频</span></label>
                                         <a href="javascript:;" class="metting-button bottom-blue record-hook"><span class="icon iconfont icon-minIcon21"></span>&nbsp;开始录音</a>
@@ -532,7 +551,7 @@
 
                         </div>
 
-                        <c:if test="${empty live}">
+                        <c:if test="${empty notMe}">
                             <div class="clearfix t-center" style="padding: 0 0 40px; min-height: 80px;">
                                 <!--<ul id="recordingslist"></ul>-->
                                 <div class="audio-metting-box" style="">
@@ -549,9 +568,11 @@
         </div>
         <div class="buttonArea clearfix" style="margin: 20px 25px 40px;">
             <div class="formrow">
-                <div class="fr clearfix">
-                    <input type="button" id="uploadPptBtn" class="formButton formButton-max fx-btn-2" value="上传PPT">
-                </div>
+                <c:if test="${empty notMe}">
+                    <div class="fr clearfix">
+                        <input type="button" id="uploadPptBtn" class="formButton formButton-max fx-btn-2" value="上传PPT">
+                    </div>
+                </c:if>
                 <div class="fl clearfix">
                     <input type="button" class="formButton formButton-max" onclick="window.location.href='${ctx}/func/meet/edit?id=${meetId}'" value="上一步">&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="button" class="formButton formButton-max" id="finishBtn" value="下一步">
@@ -592,21 +613,29 @@
             </div>
         </div>
 
-        <div class="distb-box metting-pupop-box distb-box-max fx-mask-box-1">
-            <div class="mask-hd clearfix">
-                <h3 class="font-size-1">转载资源</h3>
-                <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+        <div class="mask-wrap">
+            <div class="dis-tbcell">
+            <div class="distb-box metting-pupop-box distb-box-max fx-mask-box-1">
+                <div class="mask-hd clearfix">
+                    <h3 class="font-size-1">转载资源</h3>
+                    <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+                </div>
+                <div class="metting-popupbox-bd">
+                    <div class="tj-content clearfix">
+                        <div class="tab-wrap popup-tab-list">
+                            <a href="${ctx}/func/meet/delivery/forCSP?meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu tab-cur">CSP投屏</span></a>
+                            <a href="${ctx}/func/res/acquired/list?jump=1" target="quoteFrame"><span class="tab-menu" >获取历史</span></a>
+                        </div>
+                        <div class="tab-con-wrap" style="display: block;">
+                        <iframe id="quoteFrame" name="quoteFrame" frameborder="0" width="100%" height="620" scrolling="false"/>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="tab-wrap popup-tab-list">
-                <span class="tab-menu tab-cur">CSP投屏</span>
-                <span class="tab-menu">共享资源库</span>
-                <span class="tab-menu">获取历史</span>
             </div>
-            <iframe id="quoteFrame" name="quoteFrame" frameborder="0" width="100%" height="620" scrolling="false"/>
         </div>
+
     </div>
 </div>
-
-
 </body>
 </html>
