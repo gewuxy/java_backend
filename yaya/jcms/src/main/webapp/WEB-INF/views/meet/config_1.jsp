@@ -506,7 +506,10 @@
                                             </c:otherwise>
                                         </c:choose>
 
-                                        <div class="swiper-slide-metting-move" detailId="${detail.id}"><a href="javascript:;" class="delFile fx-btn-3"><span class="icon iconfont icon-minIcon16"></span>删除</a></div>
+                                        <c:if test="${empty notMe}">
+                                            <div class="swiper-slide-metting-move" detailId="${detail.id}"><a href="javascript:;" class="delFile fx-btn-3"><span class="icon iconfont icon-minIcon16"></span>删除</a></div>
+                                        </c:if>
+
                                         <%--<div class="swiper-slide-metting-audio">--%>
                                             <%--<audio controls="" src="${appFileBase}/${detail.audioUrl}"></audio>--%>
                                         <%--</div>--%>
@@ -518,10 +521,13 @@
                                 <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                                 <div class="metting-btn-item">
                                     <span class="swiper-button-prev metting-button swiper-button-disabled">上一页</span>
-                                    <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
-                                    <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover2-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
+                                    <c:if test="${empty notMe}">
+                                        <label><input type="file" name="file" id="changeImgFile" class="none"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;更换</span></label>
+                                        <label><input type="file" name="file" class="none" id="addImgFile"><span class="metting-changeImage-btn metting-button bottom-blue changeButton-tipsHover2-hook"><span class="icon iconfont icon-minIcon18"></span>&nbsp;添加</span></label>
 
-                                    <c:if test="${empty live}">
+                                    </c:if>
+
+                                    <c:if test="${empty notMe}">
                                         <label><input type="file" name="file" id="changeAudioFile" class="none">
                                             <span class="metting-button bottom-blue"><span class="icon iconfont icon-minIcon9"></span>&nbsp;上传音频</span></label>
                                         <a href="javascript:;" class="metting-button bottom-blue record-hook"><span class="icon iconfont icon-minIcon21"></span>&nbsp;开始录音</a>
@@ -532,7 +538,7 @@
 
                         </div>
 
-                        <c:if test="${empty live}">
+                        <c:if test="${empty notMe}">
                             <div class="clearfix t-center" style="padding: 0 0 40px; min-height: 80px;">
                                 <!--<ul id="recordingslist"></ul>-->
                                 <div class="audio-metting-box" style="">
@@ -549,9 +555,11 @@
         </div>
         <div class="buttonArea clearfix" style="margin: 20px 25px 40px;">
             <div class="formrow">
-                <div class="fr clearfix">
-                    <input type="button" id="uploadPptBtn" class="formButton formButton-max fx-btn-2" value="上传PPT">
-                </div>
+                <c:if test="${empty notMe}">
+                    <div class="fr clearfix">
+                        <input type="button" id="uploadPptBtn" class="formButton formButton-max fx-btn-2" value="上传PPT">
+                    </div>
+                </c:if>
                 <div class="fl clearfix">
                     <input type="button" class="formButton formButton-max" onclick="window.location.href='${ctx}/func/meet/edit?id=${meetId}'" value="上一步">&nbsp;&nbsp;&nbsp;&nbsp;
                     <input type="button" class="formButton formButton-max" id="finishBtn" value="下一步">
