@@ -1,11 +1,13 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.weixin.model.WXUserInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/4/20.
@@ -95,6 +97,16 @@ public class AppUser {
             return "";
         }
         return AppRole.AppRoleType.values()[this.roleId-1].getRoleName();
+    }
+
+    public static void splitUserAvatar(List<AppUser> userList, String baseUrl){
+        if(userList != null){
+            for(AppUser user:userList){
+                if(!StringUtils.isEmpty(user.getHeadimg())){
+                    user.setHeadimg(baseUrl + user.getHeadimg());
+                }
+            }
+        }
     }
 
 }
