@@ -16,7 +16,13 @@
 
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
+
+    <link rel="stylesheet" href="${ctxStatic}/css/daterangepicker.css">
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <style>
+        html,body { background-color:#F7F9FB;}
+    </style>
+
 </head>
 <body>
 <div id="wrapper">
@@ -68,15 +74,15 @@
                                     <span class="subject">分类&nbsp;&nbsp;|<i>医学类</i></span><span class="office">内科系统</span>
                                 </div>
                                 <div class="meeting-tab clearfix">
-                                    <label for="recorded" class="recorded-btn">
-                                        <input id="recorded" type="radio" name="mettingType">
+                                    <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
+                                        <input id="recorded" type="radio" name="playType">
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
-                                    <label for="live" class="live-btn cur" >
-                                        <input id="live" type="radio" name="mettingType" checked="true">
+                                    <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
+                                        <input id="live" type="radio" name="playType" checked="true">
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
-                                        <div class="meeting-tab-main">
+                                        <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
                                                 <div class="formrow">
                                                     <div class="formControls">
@@ -104,7 +110,7 @@
                                 </div>
 
                                 <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
-                                <input href="#" type="button" class="button login-button buttonBlue last" value="确认提交">
+                                <input type="button" class="button login-button buttonBlue last" value="确认提交">
                             </div>
                         </form>
                     </div>
@@ -116,6 +122,10 @@
     <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
 </div>
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
+<script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
+
+<script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
+
 <script>
     const file_size_limit = 100*1024*1024;
     function uploadFile(){
@@ -155,7 +165,47 @@
     }
 
     $(function(){
+        $("input[name='playType']").click(function(){
+            $(this).parent().siblings().removeClass("cur");
+            $(this).parent().addClass("cur");
 
+            $(this).parent().siblings().find(".meeting-tab-main").addClass("none");
+            $(this).siblings(".meeting-tab-main").removeClass("none");
+        });
+
+        $('#timeStart').dateRangePicker({
+            singleMonth: true,
+            showShortcuts: false,
+            showTopbar: false,
+            startOfWeek: 'monday',
+            separator : ' 至 ',
+            format: 'YYYY-MM-DD HH:mm',
+            autoClose: false,
+            time: {
+                enabled: true
+            }
+        }).bind('datepicker-first-date-selected', function(event, obj){
+            /*首次点击的时间*/
+            alert(123);
+            console.log('first-date-selected',obj);
+        }).bind('datepicker-change',function(event,obj){
+            console.log('change',obj);
+            $(this).find('input').val(obj.value);
+        });
+
+        showLiveMessage();
+
+        function showLiveMessage(){
+            if($(".chk-hook").is(":checked")) {
+                $(".checkbox-main").show();
+            } else {
+                $(".checkbox-main").hide();
+            }
+        }
+
+        $(".chk-hook").change(function(){
+            showLiveMessage();
+        });
     });
 </script>
 </body>

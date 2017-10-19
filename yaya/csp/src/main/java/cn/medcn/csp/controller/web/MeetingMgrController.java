@@ -139,6 +139,9 @@ public class MeetingMgrController extends CspBaseController{
                 audioService.insert(course);
             }
         }
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
         model.addAttribute("course", course);
         return localeView("/meeting/edit");
     }

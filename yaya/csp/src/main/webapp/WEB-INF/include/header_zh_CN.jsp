@@ -11,7 +11,7 @@
             <div class="userInfo">
                 <ul class="sf-menu" >
                     <li class="current">
-                        <a class="first-level" target="_blank" href="javascript:;"></a>
+                        <a class="first-level"></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
                                 <li class="first"><a href="newList.html">我的信息</a></li>
