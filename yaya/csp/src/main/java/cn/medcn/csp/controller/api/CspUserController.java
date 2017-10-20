@@ -212,11 +212,7 @@ public class CspUserController extends BaseController {
         }
 
         // 检查用户是否注册且已经激活
-        CspUserInfo condition = new CspUserInfo();
-        condition.setEmail(email);
-        condition.setActive(true);
-        CspUserInfo userInfo = cspUserService.selectOne(condition);
-
+        CspUserInfo userInfo = cspUserService.findByLoginName(email);
         if (userInfo == null) {
             throw new SystemException(local("user.notexisted"));
         }
@@ -264,6 +260,7 @@ public class CspUserController extends BaseController {
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             cspUserService.insert(userInfo);
+            userInfo.setFlux(0); // 用户流量
         }
 
         return userInfo;
