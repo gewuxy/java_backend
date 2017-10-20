@@ -216,4 +216,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param play
      */
     void updateAudioCoursePlay(AudioCoursePlay play);
+
+    /**
+     * 投稿给指定用户的会议列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findHistoryDeliveryByAcceptId(Pageable pageable);
 }

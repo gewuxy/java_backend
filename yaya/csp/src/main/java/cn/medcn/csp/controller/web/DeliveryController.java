@@ -78,18 +78,17 @@ public class DeliveryController extends CspBaseController {
     @RequestMapping("/history")
     public String history(Model model){
         //接收者列表
-        Pageable pageable1 = new Pageable();
-        String authorId = SecurityUtils.get().getId();
-        pageable1.put("authorId",authorId);
-        MyPage<AppUser> acceptPage = appUserService.findAccepterList(pageable1);
+        Pageable pageable = new Pageable();
+        String authorId = getWebPrincipal().getId();
+        pageable.put("authorId",authorId);
+        MyPage<AppUser> acceptPage = appUserService.findAccepterList(pageable);
         AppUser.splitUserAvatar(acceptPage.getDataList(),fileBase);
         model.addAttribute("acceptList",acceptPage.getDataList());
 
         //投给第一个接收者的会议列表
-        Pageable pageable2 = new Pageable();
         Integer firstAcceptId = acceptPage.getDataList().get(0).getId();
-        pageable2.put("acceptId",firstAcceptId);
-        MyPage<CourseDeliveryDTO> meetPage = audioService.findCspMeetingList(pageable2);
+        pageable.put("acceptId",firstAcceptId);
+        MyPage<CourseDeliveryDTO> meetPage = audioService.findHistoryDeliveryByAcceptId(pageable);
         CourseDeliveryDTO.splitCoverUrl(meetPage.getDataList(),fileBase);
         model.addAttribute("page",meetPage);
         return localeView("/meeting/history");

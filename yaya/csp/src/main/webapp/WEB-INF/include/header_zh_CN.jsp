@@ -34,10 +34,12 @@
             <a class="logo" href="/"></a>
             <div class="nav clearfix">
                 <ul>
-                    <li><a href="admin-01.html" class=" current"><span class="icon-folder"></span>会议管理</a></li>
-                    <li><a href="history-01.html" ><span class="icon-contribute"></span>投稿历史</a></li>
+                    <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span>会议管理</a></li>
+                    <li><a href="${ctx}/mgr/delivery/history" ><span class="icon-contribute"></span>投稿历史</a></li>
                 </ul>
             </div>
         </div>
     </div>
 </div>
+
+
