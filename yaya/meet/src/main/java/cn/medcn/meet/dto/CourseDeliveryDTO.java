@@ -1,6 +1,7 @@
 package cn.medcn.meet.dto;
 
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.meet.model.AudioCourse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
