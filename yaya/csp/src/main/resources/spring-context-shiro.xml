@@ -73,6 +73,7 @@
                 /mgr/logout=logout
                 /static/**=anon
                 /mgr/login=anon
+                /mgr/sendCaptcha=anon
                 /mgr/**=authc
             </value>
         </property>
