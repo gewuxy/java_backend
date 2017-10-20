@@ -67,6 +67,19 @@
                     $("#contribute").submit(function (e) {
                         e.preventDefault();
                     });
+                }else{
+                    $("#contribute").submit(function (e) {
+                        e.preventDefault(); //阻止表单自动提交
+                    });
+                    $.post($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
+                        if (result.code == 0){//成功
+                            layer.msg("投稿成功",{time:300},function () {
+                                window.parent.location.reload();
+                            });
+                        }else{//失败
+                            layer.msg(result.err);
+                        }
+                    },'json');
                 }
             });
 
