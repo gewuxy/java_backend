@@ -38,7 +38,7 @@
                     <input type="hidden" name="province" id="province" value="${appUser.province}">
                     <input type="hidden" name="city" id="city" value="${appUser.city}">
                     <input type="hidden" name="zone" id="zone" value="${appUser.zone}">
-                    <label for="" class="cells-block pr"><a href="javascript:;" class="select-box-item overflowText icon-register-hot" type="text" class="address-hook" id="addressSelect" placeholder=""><span class="select-content" id="addressSpan"></span><span class="select-box-icon icon-sekect-arrows"></span></a></label>
+                    <label for="" class="cells-block pr"><a href="javascript:;" class="select-box-item overflowText icon-register-hot" type="text" class="address-hook" id="addressSelect" placeholder=""><span class="select-content" id="addressSpan">请选择省市区</span><span class="select-box-icon icon-sekect-arrows"></span></a></label>
                     <div class="cells-error none">请选择省市区</div>
                     <label for="" class="cells-block pr">
                         <!--回调用户选中项赋值到Input中-->

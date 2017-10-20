@@ -321,8 +321,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
             if(type ==  BindInfo.Type.EMAIL.getTypeId()){
                 info.setEmail("");
+            }else{
+                info.setMobile("");
             }
-            info.setMobile("");
             updateByPrimaryKeySelective(info);
 
     }
