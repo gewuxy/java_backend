@@ -10,6 +10,12 @@
 
     <title>更多</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+
+
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
+    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
 <div class="layer-hospital-popup-main ">
