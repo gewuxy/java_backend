@@ -170,6 +170,7 @@
         }
         //失败时
         function onError(error){
+	            $("#addressSpan").text("请选择省市区");
             switch(error.code){
                 case 1:
                     alert("位置服务被拒绝,请手动选择位置");
@@ -416,7 +417,7 @@
                     //设置推荐医院
 
                     for (var index in nearBy){
-                        var hospitalDiv = '<div class="search-hospital-list-box '+(index == 0?"last":"")+'" onclick="showHospitalLevel(this)">'
+                        var hospitalDiv = '<div class="search-hospital-list-box '+(index == 0?"last":"")+'" onclick="showHospitalLevel(\''+nearBy[index].name+'\')">'
                             +'<div class="title"><strong>'+nearBy[index].name+'</strong></div>'
                             +'<div class="distance "><span class="icon-address"></span><span>'+nearBy[index].detail_info.distance+'</span>&nbsp;&nbsp;m</div>'
                             +'<div class="address">'+nearBy[index].address+'</div>'
@@ -488,6 +489,9 @@
                 }
             });
         });
+
+
+        
 
 
         $("#searchBtn").click(function(){
