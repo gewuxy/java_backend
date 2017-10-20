@@ -3,6 +3,7 @@ package cn.medcn.meet.dto;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**

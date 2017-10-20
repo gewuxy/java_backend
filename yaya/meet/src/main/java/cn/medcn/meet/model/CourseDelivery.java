@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -32,5 +33,6 @@ public class CourseDelivery {
 
     protected Boolean publishState;//是否发布
 
+    @Transient
     protected String info;//简介
 }

@@ -6,6 +6,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
@@ -31,7 +32,7 @@ import java.util.List;
  */
 @Controller("webDeliveryController")
 @RequestMapping(value = "/mgr/delivery")
-public class DeliveryController extends BaseController {
+public class DeliveryController extends CspBaseController {
 
     @Autowired
     protected CourseDeliveryService courseDeliveryService;
@@ -58,7 +59,7 @@ public class DeliveryController extends BaseController {
         if(accepts.length == 0){
             throw new SystemException("请指定投稿单位号");
         }
-        String authorId = SecurityUtils.get().getId();
+        String authorId = getWebPrincipal().getId();
         for(Integer acceptId:accepts){
             CourseDelivery delivery = new CourseDelivery();
             delivery.setId(StringUtils.nowStr());
@@ -68,8 +69,9 @@ public class DeliveryController extends BaseController {
             delivery.setDeliveryTime(new Date());
             courseDeliveryService.insert(delivery);
         }
-        return localeView("redirect:/mgr/meet/list");
+        return "redirect:/mgr/meet/list";
     }
+
 
     @RequestMapping("/history")
     public String history(Pageable pageable){
