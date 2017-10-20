@@ -17,7 +17,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
-<body>
+<body style="background-color: white;">
 <div class="layer-hospital-popup-main ">
     <div class="more-popup-list clearfix">
         <ul id="more_popup_ul">

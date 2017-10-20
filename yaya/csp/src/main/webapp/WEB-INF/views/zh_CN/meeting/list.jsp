@@ -296,7 +296,7 @@
             <strong>&nbsp;</strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
-        <iframe width="650" height="380" scrolling="no" id="moreFrame" name="moreFrame" frameborder="0"/>
+        <iframe width="550" height="280" scrolling="no" id="moreFrame" name="moreFrame" frameborder="0"/>
     </div>
 </div>
 
