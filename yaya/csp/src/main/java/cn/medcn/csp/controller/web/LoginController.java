@@ -58,7 +58,6 @@ public class LoginController extends BaseController {
             return loginByMobile(mobile, captcha, model);
         }
 
-
         return "";
     }
 
