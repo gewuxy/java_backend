@@ -1,5 +1,6 @@
 package cn.medcn.meet.service;
 
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
@@ -57,4 +58,12 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      * @return
      */
     MyPage<CourseDeliveryDTO> findCSPList(Pageable pageable);
+
+    /**
+     * 投稿
+     * @param courseId
+     * @param accepts
+     * @param authorId
+     */
+    void contribute(Integer courseId, Integer[] accepts, String authorId) throws SystemException;
 }

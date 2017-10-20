@@ -1,5 +1,6 @@
 package cn.medcn.meet.service.impl;
 
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
@@ -10,6 +11,8 @@ import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.CourseDeliveryService;
+import cn.medcn.user.model.AppUser;
+import cn.medcn.user.service.AppUserService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -28,6 +31,9 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
 
     @Autowired
     protected CourseDeliveryDAO courseDeliveryDAO;
+
+    @Autowired
+    protected AppUserService appUserService;
 
     @Override
     public Mapper<CourseDelivery> getBaseMapper() {
@@ -112,5 +118,29 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
     public MyPage<CourseDeliveryDTO> findCSPList(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
         return MyPage.page2Mypage((Page) courseDeliveryDAO.findCSPList(pageable.getParams()));
+    }
+
+    /**
+     * 投稿
+     * @param courseId
+     * @param accepts
+     * @param authorId
+     */
+    @Override
+    public void contribute(Integer courseId, Integer[] accepts, String authorId) throws SystemException {
+        for(Integer acceptId:accepts){
+            CourseDelivery delivery = new CourseDelivery();
+            delivery.setAcceptId(acceptId);
+            delivery.setSourceId(courseId);
+            delivery.setAuthorId(authorId);
+            CourseDelivery result = selectOne(delivery);
+            if(result != null){
+                AppUser user = appUserService.selectByPrimaryKey(acceptId);
+                throw new SystemException("您已投稿过此会议到 " + user.getNickname());
+            }
+            delivery.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            delivery.setDeliveryTime(new Date());
+            insert(delivery);
+        }
     }
 }

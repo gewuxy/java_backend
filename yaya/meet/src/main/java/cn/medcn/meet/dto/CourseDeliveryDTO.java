@@ -1,12 +1,12 @@
 package cn.medcn.meet.dto;
 
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.common.utils.StringUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/9/27.
@@ -60,6 +60,22 @@ public class CourseDeliveryDTO implements Serializable {
     //录播ppt总时长
     private Integer duration;
 
+    //会议是否已查看
+    private boolean viewState;
+
+    //会议是否已发布
+    private boolean publishState;
+
+    public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
+        if(list != null){
+            for(CourseDeliveryDTO dto :list){
+                if(!StringUtils.isEmpty(dto.getCoverUrl())){
+                    dto.setCoverUrl(baseUrl + dto.getCoverUrl());
+                }
+            }
+        }
+    }
+
     public Integer getDuration(){
         if (this.playType == null) {
             this.playType = AudioCourse.PlayType.normal.getType();
@@ -75,3 +91,4 @@ public class CourseDeliveryDTO implements Serializable {
         }
     }
 }
+

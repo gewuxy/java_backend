@@ -70,7 +70,7 @@
 
     <!-- csp method sql -->
     <select id="findCspMeetingList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,l.view_state,l.publish_state,
         cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
         p.play_page,p.play_state
         FROM t_audio_course c
@@ -90,6 +90,9 @@
         </if>
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
+        <if test="acceptId != null">
+            AND l.accept_id = #{acceptId}
         </if>
         GROUP BY c.id
     </select>
