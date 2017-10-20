@@ -290,8 +290,8 @@ public class MeetingMgrController extends CspBaseController{
     }
 
 
-    @RequestMapping(value = "/more")
-    public String more(Integer courseId, Model model){
+    @RequestMapping(value = "/more/{courseId}")
+    public String more(@PathVariable Integer courseId, Model model){
         model.addAttribute("courseId", courseId);
         return localeView("/meeting/more");
     }

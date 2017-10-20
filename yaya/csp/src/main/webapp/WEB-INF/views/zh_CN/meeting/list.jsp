@@ -89,6 +89,8 @@
             });
 
             $('.more-hook').on('click',function(){
+                var courseId = $(this).attr("courseId");
+                $("#moreFrame").attr("src", '${ctx}/mgr/meet/more/'+courseId);
                 layer.open({
                     type: 1,
                     area: ['618px', '398px'],
@@ -221,7 +223,7 @@
                                         <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
                                     </div>
                                     <div class="col-lg-6">
-                                        <a href="javascript:;" class="more more-hook"><i></i>更多</a>
+                                        <a href="javascript:;" class="more more-hook" courseId="${course.id}"><i></i>更多</a>
                                     </div>
                                 </div>
                             </div>
@@ -294,66 +296,7 @@
             <strong>&nbsp;</strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
-        <div class="layer-hospital-popup-main ">
-            <div class="more-popup-list clearfix">
-                <ul id="more_popup_ul">
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
-                            <p>微信好友</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_friends-icon.png" alt="">
-                            <p>朋友圈</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
-                            <p>微博</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
-                            <p>Twitter</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
-                            <p>Facebook</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
-                            <p>复制链接</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;" class="copy-hook">
-                            <img src="${ctxStatic}/images/_copy-icon.png" alt="">
-                            <p>复制副本</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a>
-                            <img src="${ctxStatic}/images/_edit-icon.png" alt="">
-                            <p>编辑</p>
-                        </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>删除</p>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
+        <iframe width="600" height="320" scrolling="no" id="moreFrame" name="moreFrame"/>
     </div>
 </div>
 
