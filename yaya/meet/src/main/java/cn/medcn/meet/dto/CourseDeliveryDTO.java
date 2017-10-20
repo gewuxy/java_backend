@@ -1,5 +1,7 @@
 package cn.medcn.meet.dto;
 
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.meet.model.AudioCourse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,6 +38,7 @@ public class CourseDeliveryDTO implements Serializable {
     protected Integer livePage;
 
     // 播放时长
+    @Deprecated
     protected String playTime;
 
     // 录播 正在播放的页码
@@ -56,4 +59,19 @@ public class CourseDeliveryDTO implements Serializable {
 
     //录播ppt总时长
     private Integer duration;
+
+    public Integer getDuration(){
+        if (this.playType == null) {
+            this.playType = AudioCourse.PlayType.normal.getType();
+        }
+        if (playType.intValue() == AudioCourse.PlayType.normal.getType()) {
+            return duration;
+        } else {
+            if (endTime != null && startTime != null) {
+                Long pt = (endTime.getTime() - startTime.getTime()) / 1000;
+                return pt.intValue();
+            }
+            return 0;
+        }
+    }
 }
