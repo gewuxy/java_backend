@@ -224,7 +224,7 @@ public class JPushServiceImpl implements JPushService {
      * @return
      */
     @Override
-    public String generateAlias(Integer userId) {
+    public String generateAlias(Object userId) {
         return MD5Utils.MD5Encode(JINGXIN_JPUSH_ALIAS_PREFIX + userId);
     }
 
@@ -255,7 +255,7 @@ public class JPushServiceImpl implements JPushService {
 
 
     @Override
-    public int sendChangeMessage(Integer userId, String msgType, Object param) {
+    public int sendChangeMessage(Object userId, String msgType, Object param) {
         String alias = generateAlias(userId);
         Map<String, String> extraMap = Maps.newHashMap();
         extraMap.put("sendTime", System.currentTimeMillis() + "");
