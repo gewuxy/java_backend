@@ -90,11 +90,10 @@ public class AudioCourseController extends BaseController {
         if (moduleId == null || courseId == null || StringUtils.isEmpty(meetId)) {
             return APIUtils.error("参数错误");
         }
-        if (playType == null) {
-            // 引用共享资源库 已获取的会议
+        /*if (playType == null) {
+            // 引用共享资源库 复制已获取的会议
             meetService.copyAudioCourse(courseId, moduleId, meetId);
-
-        } else {
+        } */
             MeetAudio audio = audioService.findMeetAudio(meetId, moduleId);
             audio.setCourseId(courseId);
             audioService.updateMeetAudio(audio);
@@ -110,7 +109,7 @@ public class AudioCourseController extends BaseController {
                     meetService.updateMeetProp(property);
                 }
             }
-        }
+
 
         return APIUtils.success();
     }
