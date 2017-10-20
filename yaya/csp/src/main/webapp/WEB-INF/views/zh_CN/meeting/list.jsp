@@ -317,7 +317,7 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </i><i class="muted">|</i>${course.pageCount}</span>
-                                    <span>03'26''</span>
+                                    <span>${course.playTime}</span>
                                     <span>
                                         <c:choose>
                                             <c:when test="${course.playType == 0}">录播</c:when>

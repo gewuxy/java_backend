@@ -77,12 +77,24 @@ public class CourseDeliveryDTO implements Serializable {
         }
     }
 
+
+    public String getPlayTime(){
+        int pt = getDuration();
+        if (pt == 0) {
+            return  " - ";
+        } else {
+            StringBuffer buffer = new StringBuffer(pt / 60);
+            buffer.append("'").append(pt % 60).append("\"");
+            return buffer.toString();
+        }
+    }
+
     public Integer getDuration(){
         if (this.playType == null) {
             this.playType = AudioCourse.PlayType.normal.getType();
         }
         if (playType.intValue() == AudioCourse.PlayType.normal.getType()) {
-            return duration;
+            return duration == null ? 0 : duration;
         } else {
             if (endTime != null && startTime != null) {
                 Long pt = (endTime.getTime() - startTime.getTime()) / 1000;
