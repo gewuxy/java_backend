@@ -70,7 +70,7 @@
 
     <!-- csp method sql -->
     <select id="findCspMeetingList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,l.view_state,l.publish_state,
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,
         cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as play_time,
         p.play_page,p.play_state
         FROM t_audio_course c
@@ -91,14 +91,17 @@
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
         </if>
-        <if test="acceptId != null">
-            AND l.accept_id = #{acceptId}
-        </if>
         GROUP BY c.id
     </select>
 
-
     <select id="findLastDraft" resultType="cn.medcn.meet.model.AudioCourse">
         SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND published = 0 limit 1
+    </select>
+
+    <select id="findHistoryDeliveryByAcceptId" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+        SELECT FROM t_csp_delivery td
+        INNER JOIN t_audio_course tc ON td.source_id = tc.id
+        INNER JOIN t_audio_course_detail tcd ON tcd.course_id = tc.id AND tcd.sort=1
+        WHERE td.author_id = #{authorId} AND td.accept_id = #{accept_id}
     </select>
 </mapper>
