@@ -65,14 +65,20 @@ public class MeetingMgrController extends CspBaseController{
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Pageable pageable, Model model){
+    public String list(Pageable pageable, Model model, String keyword, Integer playType){
         //打开了投稿箱的公众号列表
         MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
         AppUser.splitUserAvatar(myPage.getDataList(),fileBase);
         model.addAttribute("accepterList",myPage.getDataList());
         //web获取当前用户信息
-        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
+        Principal principal = getWebPrincipal();
+
         pageable.put("cspUserId", principal.getId());
+        pageable.put("keyword", keyword);
+        pageable.put("playType", playType);
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("playType", playType);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
         model.addAttribute("page", page);
 
@@ -281,5 +287,20 @@ public class MeetingMgrController extends CspBaseController{
             sort--;
         }
         return "redirect:/mgr/meet/details/" + courseId + "?index=" + sort;
+    }
+
+
+    @RequestMapping(value = "/more")
+    public String more(Integer courseId, Model model){
+        model.addAttribute("courseId", courseId);
+        return localeView("/meeting/more");
+    }
+
+
+    @RequestMapping(value = "/view/{courseId}")
+    public String view(@PathVariable Integer courseId, Model model){
+        AudioCourse course = audioService.findAudioCourse(courseId);
+        model.addAttribute("course", course);
+        return localeView("/meeting/view");
     }
 }

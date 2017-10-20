@@ -17,6 +17,157 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+
+    <script src="${ctxStatic}/js/audio.js"></script>
+    <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script>
+        $(function(){
+
+            //初始化音频
+            var asAllItem = audiojs.createAll();
+            //切换yi
+            $(".swiper-popup-button-next-hook,.swiper-popup-button-prev-hook").on('click',function(){
+                var dataSrc = $(".swiper-slide-active").attr('audio-src');
+                asAllItem[0].load(dataSrc);
+                asAllItem[0].play();
+            });
+
+
+
+            //超出出现下拉框
+            $(".hidden-box").perfectScrollbar();
+
+            //触发弹出窗
+            //投稿
+            $('.contribute-hook').on('click',function(){
+                var courseId = $(this).attr("courseId");
+                $("#courseId").val(courseId);
+                layer.open({
+                    type: 1,
+                    area: ['1080px', '748px'],
+                    anim:5,
+                    fix: false, //不固定
+                    isOutAnim: true,
+                    title:false,
+                    closeBtn:0,
+                    content: $('.contribute-popup-box'),
+                    success:function(){
+
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+            $("#submitBtn").click(function () {
+                var selectNum = $("input[name='accepts']:checked").length;
+                if(selectNum < 1){
+                    layer.msg("请选择要投稿的单位号");
+                    $("#contribute").submit(function (e) {
+                        e.preventDefault();
+                    });
+                }
+            });
+
+
+            $('.copy-hook').on('click',function(){
+                layer.open({
+                    type: 1,
+                    area: ['609px', '278px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    content: $('.copy-popup-box'),
+                    success:function(){
+
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+            $('.more-hook').on('click',function(){
+                layer.open({
+                    type: 1,
+                    area: ['618px', '398px'],
+                    fix: false, //不固定
+                    title:false,
+                    anim:5,
+                    closeBtn:0,
+                    content: $('.more-popup-box'),
+                    success:function(){
+
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+            $("#more_popup_ul li a").click(function(){
+                alert(123);
+            });
+
+            $('.popup-player-hook').on('click',function(){
+                layer.open({
+                    type: 1,
+                    area: ['1080px', '816px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    content: $('.player-popup-box'),
+                    success:function(){
+
+                        var added = 105;
+
+                        //幻灯片轮播
+                        var swiper = new Swiper('.swiper-container-metting', {
+                            //分页
+                            pagination: '.swiper-pagination',
+
+                            // 按钮
+                            nextButton: '.swiper-popup-button-next-hook',
+                            prevButton: '.swiper-popup-button-prev-hook',
+                            slidesPerView: 'auto',
+                            centeredSlides: true,
+                            spaceBetween: 62,
+                            paginationClickable: true,
+                            paginationType: 'fraction',
+                            onInit: function(swiper){
+                                //设置偏移值
+                                swiper.wrapper.attr('style','-webkit-transform: translate3d(175px, 0, 0);-moz-transform: translate3d(175px, 0, 0);-o-transform: translate3d(175px, 0, 0);-ms-transform: translate3d(175px, 0, 0);transform: translate3d(175px, 0, 0);transition-duration: 0ms;');
+                                //获取默认偏移值
+                                var defaultOffset = swiper.snapGrid;
+                                for(var i =0; i<defaultOffset.length; i++){
+                                    defaultOffset[i] = defaultOffset[i] - added ;
+                                }
+                                //更新偏移值
+                                var updateOffset = defaultOffset.slice(1);
+                                var newOffset= [-175];
+                                newOffset = newOffset.concat(updateOffset);
+                                //赋值给插件
+                                swiper.snapGrid = newOffset;
+                                swiper.slidesGrid = newOffset;
+                            },
+                            onSlideChangeEnd:function(swiper){
+                                var dataSrc = $(".swiper-slide-active").attr('audio-src');
+                                asAllItem[0].load(dataSrc);
+                                asAllItem[0].play();
+                            },
+                        });
+
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+
+        })
+    </script>
 </head>
 <body>
 <div id="wrapper">
@@ -78,7 +229,11 @@
                     </c:forEach>
 
                 </div>
-
+                <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
+                    <input type="hidden" name="pageNum">
+                    <input type="hidden" name="keyword" value="${keyword}">
+                </form>
             </div>
         </div>
     </div>
@@ -120,6 +275,7 @@
                             </div>
                         </div>
                     </c:forEach>
+
                 </div>
             </div>
             <div class="layer-hospital-popup-bottom">
@@ -132,150 +288,76 @@
     </div>
 </div>
 
-<script src="${ctxStatic}/js/audio.js"></script>
-<script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
-<script>
-    $(function(){
-
-        //初始化音频
-        var asAllItem = audiojs.createAll();
-        //切换yi
-        $(".swiper-popup-button-next-hook,.swiper-popup-button-prev-hook").on('click',function(){
-            var dataSrc = $(".swiper-slide-active").attr('audio-src');
-            asAllItem[0].load(dataSrc);
-            asAllItem[0].play();
-        });
-
-
-
-        //超出出现下拉框
-        $(".hidden-box").perfectScrollbar();
-
-        //触发弹出窗
-        //投稿
-        $('.contribute-hook').on('click',function(){
-            var courseId = $(this).attr("courseId");
-            $("#courseId").val(courseId);
-            layer.open({
-                type: 1,
-                area: ['1080px', '748px'],
-                anim:5,
-                fix: false, //不固定
-                isOutAnim: true,
-                title:false,
-                closeBtn:0,
-                content: $('.contribute-popup-box'),
-                success:function(){
-
-                },
-                cancel :function(){
-
-                },
-            });
-        });
-
-        $("#submitBtn").click(function () {
-            var selectNum = $("input[name='accepts']:checked").length;
-            if(selectNum < 1){
-                layer.msg("请选择要投稿的单位号");
-                $("#contribute").submit(function (e) {
-                    e.preventDefault();
-                });
-            }
-        });
-
-
-        $('.copy-hook').on('click',function(){
-            layer.open({
-                type: 1,
-                area: ['609px', '278px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.copy-popup-box'),
-                success:function(){
-
-                },
-                cancel :function(){
-
-                },
-            });
-        });
-
-        $('.more-hook').on('click',function(){
-            layer.open({
-                type: 1,
-                area: ['618px', '378px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.more-popup-box'),
-                success:function(){
-
-                },
-                cancel :function(){
-
-                },
-            });
-        });
-
-        $('.popup-player-hook').on('click',function(){
-            layer.open({
-                type: 1,
-                area: ['1080px', '816px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.player-popup-box'),
-                success:function(){
-
-                    var added = 105;
-
-                    //幻灯片轮播
-                    var swiper = new Swiper('.swiper-container-metting', {
-                        //分页
-                        pagination: '.swiper-pagination',
-
-                        // 按钮
-                        nextButton: '.swiper-popup-button-next-hook',
-                        prevButton: '.swiper-popup-button-prev-hook',
-                        slidesPerView: 'auto',
-                        centeredSlides: true,
-                        spaceBetween: 62,
-                        paginationClickable: true,
-                        paginationType: 'fraction',
-                        onInit: function(swiper){
-                            //设置偏移值
-                            swiper.wrapper.attr('style','-webkit-transform: translate3d(175px, 0, 0);-moz-transform: translate3d(175px, 0, 0);-o-transform: translate3d(175px, 0, 0);-ms-transform: translate3d(175px, 0, 0);transform: translate3d(175px, 0, 0);transition-duration: 0ms;');
-                            //获取默认偏移值
-                            var defaultOffset = swiper.snapGrid;
-                            for(var i =0; i<defaultOffset.length; i++){
-                                defaultOffset[i] = defaultOffset[i] - added ;
-                            }
-                            //更新偏移值
-                            var updateOffset = defaultOffset.slice(1);
-                            var newOffset= [-175];
-                            newOffset = newOffset.concat(updateOffset);
-                            //赋值给插件
-                            swiper.snapGrid = newOffset;
-                            swiper.slidesGrid = newOffset;
-                        },
-                        onSlideChangeEnd:function(swiper){
-                            var dataSrc = $(".swiper-slide-active").attr('audio-src');
-                            asAllItem[0].load(dataSrc);
-                            asAllItem[0].play();
-                        },
-                    });
-
-                },
-                cancel :function(){
-
-                },
-            });
-        });
+<div class="more-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="more-popup-list clearfix">
+                <ul id="more_popup_ul">
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
+                            <p>微信好友</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_friends-icon.png" alt="">
+                            <p>朋友圈</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
+                            <p>微博</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
+                            <p>Twitter</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
+                            <p>Facebook</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
+                            <p>复制链接</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="copy-hook">
+                            <img src="${ctxStatic}/images/_copy-icon.png" alt="">
+                            <p>复制副本</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a>
+                            <img src="${ctxStatic}/images/_edit-icon.png" alt="">
+                            <p>编辑</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_delete-icon.png" alt="">
+                            <p>删除</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
 
 
-    })
-</script>
+
 </body>
 </html>
