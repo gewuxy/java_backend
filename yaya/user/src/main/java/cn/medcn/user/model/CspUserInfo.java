@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -61,6 +62,8 @@ public class CspUserInfo implements Serializable{
     // 是否有激活 未激活=0 已激活=1
     protected Boolean active;
 
+    @Transient
+    protected Integer flux; // 流量
 
     public static CspUserInfo buildToUserInfo(CspUserInfoDTO dto) {
         CspUserInfo userInfo = new CspUserInfo();

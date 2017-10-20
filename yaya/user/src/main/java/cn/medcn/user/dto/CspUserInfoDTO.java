@@ -43,6 +43,8 @@ public class CspUserInfoDTO  {
     protected String info;
     // token
     protected String token;
+    // 用户流量值
+    protected Integer flux;
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
         CspUserInfoDTO dto = new CspUserInfoDTO();
@@ -58,6 +60,11 @@ public class CspUserInfoDTO  {
         dto.setEmail(userInfo.getEmail());
         dto.setMobile(userInfo.getMobile());
         dto.setUserName(userInfo.getUserName());
+        if (userInfo.getFlux() == null) {
+            dto.setFlux(0);
+        } else {
+            dto.setFlux(userInfo.getFlux());
+        }
         return dto;
     }
 
