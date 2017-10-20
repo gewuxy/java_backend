@@ -30,10 +30,13 @@ public class CspRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        final String defaultPwd = "123456";
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String password = new String(token.getPassword());
         if (!CheckUtils.isEmpty(password)) {
             token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
+        } else {
+            token.setPassword(MD5Utils.MD5Encode(defaultPwd).toCharArray());
         }
 
         CspUserInfo cspUser = cspUserService.findByLoginName(token.getUsername());
@@ -51,12 +54,11 @@ public class CspRealm extends AuthorizingRealm {
             if (!MD5Utils.md5(password).equals(cspUser.getPassword())) {
                 throw new AuthenticationException(SpringUtils.getMessage("user.error.password"));
             }
-            password = MD5Utils.md5("123456");
         }
 
         Principal principal = Principal.build(cspUser);
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
-                password, getName());
+                CheckUtils.isEmpty(password) ? MD5Utils.md5(defaultPwd) : cspUser.getPassword(), getName());
 
         return info;
     }
