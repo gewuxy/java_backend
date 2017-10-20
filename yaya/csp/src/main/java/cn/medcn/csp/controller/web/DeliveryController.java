@@ -52,6 +52,7 @@ public class DeliveryController extends CspBaseController {
      * @return
      */
     @RequestMapping("/contribute")
+    @ResponseBody
     public String contribute(Integer courseId,Integer[] accepts) throws SystemException {
         if(courseId == null){
             throw new SystemException("courseId不能为空");
@@ -69,7 +70,7 @@ public class DeliveryController extends CspBaseController {
             delivery.setDeliveryTime(new Date());
             courseDeliveryService.insert(delivery);
         }
-        return "redirect:/mgr/meet/list";
+        return success();
     }
 
 
