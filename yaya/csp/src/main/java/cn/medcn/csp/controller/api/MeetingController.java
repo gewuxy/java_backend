@@ -203,13 +203,27 @@ public class MeetingController extends CspBaseController {
         if (playType == null) {
             playType = 0;
         }
-        if (playType > AudioCourse.PlayType.normal.ordinal()) {//如果是直播  在上传音频完成之后发送直播指令
+        if (playType > AudioCourse.PlayType.normal.ordinal()) {
+            //如果是直播  在上传音频完成之后发送直播指令
             LiveOrderDTO order = new LiveOrderDTO();
             order.setOrder(LiveOrderDTO.ORDER_LIVE);
             order.setCourseId(String.valueOf(courseId));
             order.setAudioUrl(fileBase + detail.getAudioUrl());
             order.setPageNum(pageNum);
             liveService.publish(order);
+
+            //保存直播进度
+            Live live = liveService.findByCourseId(courseId);
+            if (live != null) {
+                live.setLivePage(pageNum);
+                liveService.updateByPrimaryKeySelective(live);
+            }
+        } else {
+            AudioCoursePlay play = audioService.findPlayState(courseId);
+            if (play != null) {
+                play.setPlayPage(pageNum);
+                audioService.updateAudioCoursePlay(play);
+            }
         }
 
         Map<String, String> result = new HashMap<>();
@@ -280,21 +294,7 @@ public class MeetingController extends CspBaseController {
             throw new SystemException(local("source.not.exists"));
         }
 
-        if (!CheckUtils.isEmpty(audioCourse.getDetails())) {
-            for (AudioCourseDetail detail : audioCourse.getDetails()) {
-                if (!CheckUtils.isEmpty(detail.getAudioUrl())){
-                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
-                }
-
-                if (!CheckUtils.isEmpty(detail.getImgUrl())) {
-                    detail.setImgUrl(fileBase + detail.getImgUrl());
-                }
-
-                if (!CheckUtils.isEmpty(detail.getVideoUrl())) {
-                    detail.setVideoUrl(fileBase + detail.getVideoUrl());
-                }
-            }
-        }
+        handlHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             throw new SystemException(local("course.error.author"));

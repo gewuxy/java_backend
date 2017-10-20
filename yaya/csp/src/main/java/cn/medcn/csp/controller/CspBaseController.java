@@ -1,7 +1,10 @@
 package cn.medcn.csp.controller;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCourseDetail;
 import org.apache.shiro.SecurityUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,5 +33,24 @@ public class CspBaseController extends BaseController {
         buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
         buffer.append("/live/order?courseId=").append(courseId);
         return buffer.toString();
+    }
+
+
+    protected void handlHttpUrl(String fileBase, AudioCourse course){
+        if (course != null && !CheckUtils.isEmpty(course.getDetails())) {
+            for (AudioCourseDetail detail : course.getDetails()) {
+                if (!CheckUtils.isEmpty(detail.getAudioUrl())) {
+                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
+                }
+
+                if (!CheckUtils.isEmpty(detail.getImgUrl())) {
+                    detail.setImgUrl(fileBase + detail.getImgUrl());
+                }
+
+                if (!CheckUtils.isEmpty(detail.getVideoUrl())) {
+                    detail.setVideoUrl(fileBase + detail.getVideoUrl());
+                }
+            }
+        }
     }
 }
