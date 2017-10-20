@@ -92,7 +92,7 @@ public interface JPushService {
      * @param userId
      * @return
      */
-    String generateAlias(Integer userId);
+    String generateAlias(Object userId);
 
 
     void cleanJpushByAlias(String alias) throws APIConnectionException, APIRequestException;
@@ -107,6 +107,6 @@ public interface JPushService {
      * @param param
      * @return
      */
-    int sendChangeMessage(Integer userId,String msgType,Object param);
+    int sendChangeMessage(Object userId,String msgType,Object param);
 
 }
