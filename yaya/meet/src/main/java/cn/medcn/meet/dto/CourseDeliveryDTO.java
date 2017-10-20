@@ -1,6 +1,7 @@
 package cn.medcn.meet.dto;
 
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.meet.model.AudioCourse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -38,6 +39,7 @@ public class CourseDeliveryDTO implements Serializable {
     protected Integer livePage;
 
     // 播放时长
+    @Deprecated
     protected String playTime;
 
     // 录播 正在播放的页码
@@ -72,6 +74,21 @@ public class CourseDeliveryDTO implements Serializable {
                     dto.setCoverUrl(baseUrl + dto.getCoverUrl());
                 }
             }
+        }
+    }
+
+    public Integer getDuration(){
+        if (this.playType == null) {
+            this.playType = AudioCourse.PlayType.normal.getType();
+        }
+        if (playType.intValue() == AudioCourse.PlayType.normal.getType()) {
+            return duration;
+        } else {
+            if (endTime != null && startTime != null) {
+                Long pt = (endTime.getTime() - startTime.getTime()) / 1000;
+                return pt.intValue();
+            }
+            return 0;
         }
     }
 }
