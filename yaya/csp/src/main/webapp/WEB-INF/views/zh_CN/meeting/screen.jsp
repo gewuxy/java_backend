@@ -25,7 +25,7 @@
 </head>
 <body>
 <div id="wrapper" >
-    <div class="full-qrcode none">
+    <div class="full-qrcode">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode"><img src="${fileBase}${qrCodeUrl}" alt=""></div>

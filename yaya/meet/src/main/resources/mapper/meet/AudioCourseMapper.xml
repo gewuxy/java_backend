@@ -78,6 +78,19 @@
         INNER JOIN t_audio_course_detail cd ON c.id = cd.course_id
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
         WHERE c.csp_user_id = #{cspUserId}
+        <if test="playType != null">
+            <choose>
+                <when test="playType == 0">
+                    AND c.play_type = 0
+                </when>
+                <otherwise>
+                    AND c.play_type > 0
+                </otherwise>
+            </choose>
+        </if>
+        <if test="keyword != null">
+            AND c.title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
         GROUP BY c.id
     </select>
 

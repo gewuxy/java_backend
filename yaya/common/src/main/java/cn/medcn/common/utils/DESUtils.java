@@ -1,6 +1,7 @@
 package cn.medcn.common.utils;
 
 import cn.medcn.common.Constants;
+import org.apache.commons.codec.binary.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
@@ -38,9 +39,9 @@ public class DESUtils {
             Cipher cipher = Cipher.getInstance(ALGORITHM_DES);
             IvParameterSpec iv = new IvParameterSpec(IV_PARAMETER_SPEC.getBytes());
             AlgorithmParameterSpec paramSpec = iv;
-            cipher.init(Cipher.ENCRYPT_MODE, secretKey,paramSpec);
+            cipher.init(Cipher.ENCRYPT_MODE, secretKey, paramSpec);
             byte[] bytes = cipher.doFinal(data.getBytes());
-            return byte2hex(bytes);
+            return Base64.encodeBase64String(bytes);
         }catch(Exception e){
             e.printStackTrace();
             return data;
@@ -67,7 +68,8 @@ public class DESUtils {
             IvParameterSpec iv = new IvParameterSpec(IV_PARAMETER_SPEC.getBytes());
             AlgorithmParameterSpec paramSpec = iv;
             cipher.init(Cipher.DECRYPT_MODE, secretKey, paramSpec);
-            return new String(cipher.doFinal(hex2byte(data.getBytes())));
+
+            return new String(cipher.doFinal(Base64.decodeBase64(data.getBytes())));
         } catch (Exception e){
             e.printStackTrace();
             return data;
@@ -106,7 +108,7 @@ public class DESUtils {
         String src = "id=529&abroad=0&_local=zh_CN";
         String pw = encode(Constants.DES_PRIVATE_KEY, src);
         System.out.println("加密之后="+pw);
-        String plain = decode(Constants.DES_PRIVATE_KEY, pw);
+        String plain = decode(Constants.DES_PRIVATE_KEY, "ev63jtjZYcn8vC6gSpQ/CcuMdawlOVwVdNoRU6gb8tE=");
         System.out.println("解密之后="+plain);
     }
 }

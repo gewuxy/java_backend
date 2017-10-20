@@ -16,11 +16,17 @@
 
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
+    <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
+
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 
     <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="${ctxStatic}/js/swiper.jquery.js"></script>
     <script>
+        var courseId;
+
         $(function(){
 
             //初始化音频
@@ -102,7 +108,7 @@
             });
 
             $('.more-hook').on('click',function(){
-                var courseId = $(this).attr("courseId");
+                courseId = $(this).attr("courseId");
                 $("#moreFrame").attr("src", '${ctx}/mgr/meet/more/'+courseId);
                 layer.open({
                     type: 1,
@@ -121,17 +127,53 @@
                 });
             });
 
-            $("#more_popup_ul li a").click(function(){
-                alert(123);
-            });
+
+
+            function loadCourseInfo(courseId){
+                var course ;
+                $.ajax({
+                    url:'${ctx}/mgr/meet/view/'+courseId,
+                    dataType:'json',
+                    async:false,
+                    type:'get',
+                    success:function (data) {
+                        course = data.data;
+                    },
+                    error:function(e, n, a){
+                        alert(a);
+                    }
+                });
+                return course;
+            }
+
+            function initSwiper(course){
+                $("#mySwiper").html("");
+                for(var index in course.details){
+                    var detail = course.details[index];
+                    if (detail.videoUrl != undefined){//视频
+                        $("#mySwiper").append('<div class="swiper-slide" data-num="'+index+'"  ><video src="'+detail.videoUrl+'" width="auto" height="264" controls autobuffer></video>'
+                            +'<div class="swiper-slide-metting-audio"></div></div>');
+                    } else {
+                        $("#mySwiper").append('<div class="swiper-slide swiper-slide-active" data-num="'+index+'"  audio-src="'+detail.audioUrl+'">'
+                            +'<img src="'+detail.imgUrl+'" alt=""></div>');
+                    }
+                }
+            }
 
             $('.popup-player-hook').on('click',function(){
+                var course = loadCourseInfo($(this).attr("courseId"));
+                if (course == undefined){
+                    layer.msg("获取会议信息失败");
+                    return false;
+                }
+                initSwiper(course);
                 layer.open({
                     type: 1,
                     area: ['1080px', '816px'],
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
+                    anim:2,
                     content: $('.player-popup-box'),
                     success:function(){
 
@@ -175,13 +217,43 @@
 
                     },
                     cancel :function(){
-
+                        $("#mySwiper").html("");
                     },
                 });
             });
 
+            $("#keyword").onkeydown(function (evt){
+                alert(1);
+            });
+        });
 
-        })
+        const accessUrl = '${ctx}/mgr/meet/list';
+
+        function changePlayType(playType){
+            var targetUrl = accessUrl;
+            if (playType != undefined){
+                targetUrl += '?playType='+playType;
+            }
+            window.location.href = targetUrl;
+        }
+
+        var sortType = '${sortType}';
+
+        function sortList(){
+            sortType = sortType == 'asc' ? 'desc' : 'asc';
+            var targetUrl = accessUrl;
+            targetUrl += '?sortType='+sortType;
+            window.location.href = targetUrl;
+        }
+
+
+        function delCourse(){
+            alert(courseId);
+        }
+
+        function edit(){
+            window.location.href = '${ctx}/mgr/meet/edit?courseId='+courseId;
+        }
     </script>
 </head>
 <body>
@@ -192,16 +264,16 @@
             <div class="admin-row clearfix pr">
                 <div class="admin-screen-area">
                     <ul>
-                        <li class="first cur"><a href="javascript:;" class="screen-all ">全部</a></li>
-                        <li><a href="javascript:;" class="screen-viedo"><i></i>投屏录播</a></li>
-                        <li><a href="javascript:;" class="screen-live"><i></i>投屏直播</a></li>
-                        <li class="last"><a href="javascript:;" class="screen-time"><i></i>创建时间排序</a></li>
+                        <li class="first ${empty playType ? 'cur' : ''}"><a href="javascript:;" class="screen-all " onclick="changePlayType()">全部</a></li>
+                        <li ${playType == 0? "class='cur'" : ''}><a href="javascript:;" class="screen-viedo " onclick="changePlayType(0)"><i></i>投屏录播</a></li>
+                        <li ${playType > 0? "class='cur'" : ''}><a href="javascript:;" class="screen-live " onclick="changePlayType(1)"><i></i>投屏直播</a></li>
+                        <li class="last ${sortType == 'desc' ? 'cur' : ''}"><a href="javascript:;" class="screen-time" onclick="sortList()"><i></i>创建时间排序</a></li>
                     </ul>
                 </div>
                 <div class="admin-search">
-                    <form action="" method="post" id="yPsearchForm" target="_blank" name="yPsearchForm">
+                    <form action="${ctx}/mgr/meet/list" method="post" id="yPsearchForm" name="yPsearchForm">
                         <div class="search-form search-form-responsive item-radius clearfix">
-                            <input type="text" placeholder="搜索会议名字" name="ypname" id="ypname" class="form-text">
+                            <input type="text" placeholder="搜索会议名字" name="keyword" id="keyword" value="${keyword}" class="form-text">
                             <button type="submit" class="form-btn"><span></span></button>
                         </div>
                     </form>
@@ -214,9 +286,17 @@
 
                             <div class="resource-list-item item-radius clearfix">
                                 <div class="resource-img ">
-                                    <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                    <c:choose>
+                                        <c:when test="${not empty course.coverUrl}">
+                                            <img src="${course.coverUrl}" alt="" class="img-response">
+                                        </c:when>
+                                        <c:otherwise>
+                                            <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                        </c:otherwise>
+                                    </c:choose>
+
                                     <div class="resource-link">
-                                        <a href="#" class="resource-icon-play popup-player-hook">
+                                        <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
                                             <i></i>
                                             预览
                                         </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
@@ -227,9 +307,23 @@
                                 </div>
                                 <h3 class="resource-title overflowText">${course.title}</h3>
                                 <div class="resource-label">
-                                    <span><i class="hot">3</i><i class="muted">|</i>12</span>
+                                    <span><i class="hot">
+                                        <c:choose>
+                                            <c:when test="${course.playType == 0}">
+                                                ${course.playPage + 1}
+                                            </c:when>
+                                            <c:otherwise>
+                                                ${course.livePage + 1}
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </i><i class="muted">|</i>${course.pageCount}</span>
                                     <span>03'26''</span>
-                                    <span>录播</span>
+                                    <span>
+                                        <c:choose>
+                                            <c:when test="${course.playType == 0}">录播</c:when>
+                                            <c:otherwise>直播</c:otherwise>
+                                        </c:choose>
+                                    </span>
                                 </div>
                                 <div class="resource-menu">
                                     <div class="col-lg-6">
@@ -309,7 +403,119 @@
             <strong>&nbsp;</strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
-        <iframe width="550" height="280" scrolling="no" id="moreFrame" name="moreFrame" frameborder="0"/>
+        <div class="layer-hospital-popup-main ">
+            <div class="more-popup-list clearfix">
+                <ul id="more_popup_ul">
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
+                            <p>微信好友</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_friends-icon.png" alt="">
+                            <p>朋友圈</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
+                            <p>微博</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
+                            <p>Twitter</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
+                            <p>Facebook</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
+                            <p>复制链接</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" class="copy-hook">
+                            <img src="${ctxStatic}/images/_copy-icon.png" alt="">
+                            <p>复制副本</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" onclick="edit()">
+                            <img src="${ctxStatic}/images/_edit-icon.png" alt="">
+                            <p>编辑</p>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="javascript:;" onclick="delCourse()">
+                            <img src="${ctxStatic}/images/_delete-icon.png" alt="">
+                            <p>删除</p>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="player-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="tab-subPage-bd swiperBox mettingSwiperBox clearfix">
+
+                <div class="metting-swiper">
+                    <!-- Swiper -->
+                    <div class="swiper-container swiper-container-horizontal swiper-container-metting">
+                        <div class="swiper-wrapper" id="mySwiper" style="transform: translate3d(297.25px, 0px, 0px); transition-duration: 0ms;">
+                            <div class="swiper-slide swiper-slide-active" data-num="0"  audio-src="./upload/audio/30179313.mp3">
+                                <img src="./upload/img/_admin_player_01.png" alt="">
+
+                            </div>
+                            <div class="swiper-slide swiper-slide-next" data-num="1"  audio-src="https://raw.githubusercontent.com/kolber/audiojs/master/mp3/bensound-dubstep.mp3">
+                                <img src="./upload/img/_admin_player_01.png" alt="">
+                                <div class="swiper-slide-metting-audio"></div>
+
+                            </div>
+                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3">
+                                <img src="./upload/img/_admin_player_01.png" alt="">
+                                <div class="swiper-slide-metting-audio"></div>
+                            </div>
+                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3"><img src="./upload/img/_admin_player_01.png" alt=""><div class="swiper-slide-metting-audio"></div></div>
+                            <div class="swiper-slide" data-num="2"  >
+                                <video src="http://www.zhangxinxu.com/study/media/cat.mp4" width="auto" height="264" controls autobuffer></video>
+                                <div class="swiper-slide-metting-audio"></div></div>
+                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3"><img src="./upload/img/_admin_player_01.png" alt=""><div class="swiper-slide-metting-audio"></div></div>
+                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3"></div>
+                        </div>
+                        <div class="clearfix t-center player-item" >
+                            <div class="audio-metting-box" style="">
+                                <audio controls=true id="swiperViedo" src="./upload/audio/30179313.mp3"></audio>
+                            </div>
+                        </div>
+                        <!-- Add Pagination -->
+                        <div class="metting-btn-item clearfix">
+                            <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
+                            <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> <i>|</i> <span class="swiper-pagination-total">4</span></div>
+                            <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
     </div>
 </div>
 
