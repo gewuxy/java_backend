@@ -1,10 +1,13 @@
 package cn.medcn.meet.dto;
 
+import cn.medcn.common.utils.StringUtils;
+import cn.medcn.meet.model.AudioCourse;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/9/27.
@@ -36,6 +39,7 @@ public class CourseDeliveryDTO implements Serializable {
     protected Integer livePage;
 
     // 播放时长
+    @Deprecated
     protected String playTime;
 
     // 录播 正在播放的页码
@@ -56,4 +60,49 @@ public class CourseDeliveryDTO implements Serializable {
 
     //录播ppt总时长
     private Integer duration;
+
+    //会议是否已查看
+    private boolean viewState;
+
+    //会议是否已发布
+    private boolean publishState;
+
+    public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
+        if(list != null){
+            for(CourseDeliveryDTO dto :list){
+                if(!StringUtils.isEmpty(dto.getCoverUrl())){
+                    dto.setCoverUrl(baseUrl + dto.getCoverUrl());
+                }
+            }
+        }
+    }
+
+
+    public String getPlayTime(){
+        int pt = getDuration();
+        if (pt == 0) {
+            return  " - ";
+        } else {
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(pt / 60);
+            buffer.append("'").append(pt % 60).append("\"");
+            return buffer.toString();
+        }
+    }
+
+    public Integer getDuration(){
+        if (this.playType == null) {
+            this.playType = AudioCourse.PlayType.normal.getType();
+        }
+        if (playType.intValue() == AudioCourse.PlayType.normal.getType()) {
+            return duration == null ? 0 : duration;
+        } else {
+            if (endTime != null && startTime != null) {
+                Long pt = (endTime.getTime() - startTime.getTime()) / 1000;
+                return pt.intValue();
+            }
+            return 0;
+        }
+    }
 }
+

@@ -65,15 +65,32 @@ public class MeetingMgrController extends CspBaseController{
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Pageable pageable, Model model){
+    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType){
         //打开了投稿箱的公众号列表
         MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
         AppUser.splitUserAvatar(myPage.getDataList(),fileBase);
         model.addAttribute("accepterList",myPage.getDataList());
         //web获取当前用户信息
-        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
+        Principal principal = getWebPrincipal();
+        sortType = CheckUtils.isEmpty(sortType) ? "desc" : "asc";
+
+        pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
+        pageable.put("keyword", keyword);
+        pageable.put("playType", playType);
+
+        model.addAttribute("keyword", keyword);
+        model.addAttribute("playType", playType);
+        model.addAttribute("sortType", sortType);
+
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+
+        for (CourseDeliveryDTO dto : page.getDataList()) {
+            if (!CheckUtils.isEmpty(dto.getCoverUrl())) {
+                dto.setCoverUrl(fileBase + dto.getCoverUrl());
+            }
+        }
+
         model.addAttribute("page", page);
 
         return localeView("/meeting/list");
@@ -150,6 +167,9 @@ public class MeetingMgrController extends CspBaseController{
                 audioService.insert(course);
             }
         }
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
         model.addAttribute("course", course);
         return localeView("/meeting/edit");
     }
@@ -186,21 +206,7 @@ public class MeetingMgrController extends CspBaseController{
 
 
     protected void handleHttpPath(AudioCourse course) {
-        if (course != null && !CheckUtils.isEmpty(course.getDetails())) {
-            for (AudioCourseDetail detail : course.getDetails()) {
-                if (!CheckUtils.isEmpty(detail.getAudioUrl())) {
-                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
-                }
-
-                if (!CheckUtils.isEmpty(detail.getImgUrl())) {
-                    detail.setImgUrl(fileBase + detail.getImgUrl());
-                }
-
-                if (!CheckUtils.isEmpty(detail.getVideoUrl())) {
-                    detail.setVideoUrl(detail.getVideoUrl());
-                }
-            }
-        }
+        handlHttpUrl(fileBase, course);
     }
 
     /**
@@ -278,5 +284,32 @@ public class MeetingMgrController extends CspBaseController{
             sort--;
         }
         return "redirect:/mgr/meet/details/" + courseId + "?index=" + sort;
+    }
+
+    @RequestMapping(value = "/del/{courseId}")
+    @ResponseBody
+    public String del(@PathVariable Integer courseId){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equals(course.getCspUserId())) {
+            return error(local("meeting.error.not_mine"));
+        }
+        return success();
+    }
+
+
+    @RequestMapping(value = "/more/{courseId}")
+    public String more(@PathVariable Integer courseId, Model model){
+        model.addAttribute("courseId", courseId);
+        return localeView("/meeting/more");
+    }
+
+
+    @RequestMapping(value = "/view/{courseId}")
+    @ResponseBody
+    public String view(@PathVariable Integer courseId, Model model){
+        AudioCourse course = audioService.findAudioCourse(courseId);
+        handleHttpPath(course);
+        return success(course);
     }
 }

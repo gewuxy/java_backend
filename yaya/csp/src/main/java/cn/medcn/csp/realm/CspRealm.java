@@ -1,5 +1,6 @@
 package cn.medcn.csp.realm;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;
@@ -29,10 +30,13 @@ public class CspRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        final String defaultPwd = "123456";
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String password = new String(token.getPassword());
         if (!CheckUtils.isEmpty(password)) {
             token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
+        } else {
+            token.setPassword(MD5Utils.MD5Encode(defaultPwd).toCharArray());
         }
 
         CspUserInfo cspUser = cspUserService.findByLoginName(token.getUsername());
@@ -54,7 +58,7 @@ public class CspRealm extends AuthorizingRealm {
 
         Principal principal = Principal.build(cspUser);
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
-                cspUser.getPassword(), getName());
+                CheckUtils.isEmpty(password) ? MD5Utils.md5(defaultPwd) : cspUser.getPassword(), getName());
 
         return info;
     }

@@ -211,5 +211,9 @@ public interface AudioService extends BaseService<AudioCourse>  {
 
     AudioCoursePlay findPlayState(Integer courseId);
 
-
+    /**
+     * 修改录播记录
+     * @param play
+     */
+    void updateAudioCoursePlay(AudioCoursePlay play);
 }

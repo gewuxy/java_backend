@@ -38,7 +38,7 @@
                     <input type="hidden" name="province" id="province" value="${appUser.province}">
                     <input type="hidden" name="city" id="city" value="${appUser.city}">
                     <input type="hidden" name="zone" id="zone" value="${appUser.zone}">
-                    <label for="" class="cells-block pr"><a href="javascript:;" class="select-box-item overflowText icon-register-hot" type="text" class="address-hook" id="addressSelect" placeholder=""><span class="select-content" id="addressSpan"></span><span class="select-box-icon icon-sekect-arrows"></span></a></label>
+                    <label for="" class="cells-block pr"><a href="javascript:;" class="select-box-item overflowText icon-register-hot" type="text" class="address-hook" id="addressSelect" placeholder=""><span class="select-content" id="addressSpan"></span><span class="select-box-icon icon-sekect-arrows">请选择省市区</span></a></label>
                     <div class="cells-error none">请选择省市区</div>
                     <label for="" class="cells-block pr">
                         <!--回调用户选中项赋值到Input中-->
@@ -416,7 +416,7 @@
                     //设置推荐医院
 
                     for (var index in nearBy){
-                        var hospitalDiv = '<div class="search-hospital-list-box '+(index == 0?"last":"")+'" onclick="showHospitalLevel(this)">'
+                        var hospitalDiv = '<div class="search-hospital-list-box '+(index == 0?"last":"")+'" onclick="showHospitalLevel(\''+nearBy[index].name+'\')">'
                             +'<div class="title"><strong>'+nearBy[index].name+'</strong></div>'
                             +'<div class="distance "><span class="icon-address"></span><span>'+nearBy[index].detail_info.distance+'</span>&nbsp;&nbsp;m</div>'
                             +'<div class="address">'+nearBy[index].address+'</div>'
@@ -488,6 +488,9 @@
                 }
             });
         });
+
+
+        
 
 
         $("#searchBtn").click(function(){

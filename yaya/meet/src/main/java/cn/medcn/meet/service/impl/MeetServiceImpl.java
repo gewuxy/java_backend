@@ -140,6 +140,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
     @Autowired
     private SignService signService;
 
+    @Autowired
+    private CourseDeliveryService courseDeliveryService;
+
     @Override
     public Mapper<Meet> getBaseMapper() {
         return meetDAO;
@@ -1225,11 +1228,12 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
     /**
      * 发布会议
      * @param meetId
+     * @param acceptId  csp投稿过来的会议需要根据接收者id更改csp记录的发布状态
      * @return
      */
     @Override
     @CacheEvict(value = DEFAULT_CACHE, key = "'meetinfo_'+#meetId")
-    public void doPublish(String meetId) throws SystemException {
+    public void doPublish(String meetId,Integer acceptId) throws SystemException {
         Meet meet = findMeetInfoById(meetId);
         MeetProperty condition = new MeetProperty();
         condition.setMeetId(meetId);
@@ -1240,6 +1244,18 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
             meet.setState(Meet.MeetType.NOT_START.getState());
         }
         meetDAO.updateByPrimaryKeySelective(meet);
+
+        //如果是转载csp会议，发布完成需要更改csp的发布状态
+        MeetAudio audio = audioService.findMeetAudioByMeetId(meetId);
+        CourseDelivery delivery = new CourseDelivery();
+        delivery.setSourceId(audio.getCourseId());
+        delivery.setAcceptId(acceptId);
+        delivery = courseDeliveryService.selectOne(delivery);
+        if(delivery != null){
+            delivery.setPublishState(true);
+            courseDeliveryService.updateByPrimaryKey(delivery);
+        }
+
     }
 
 

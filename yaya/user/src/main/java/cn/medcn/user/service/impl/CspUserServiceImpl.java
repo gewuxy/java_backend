@@ -321,8 +321,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
             if(type ==  BindInfo.Type.EMAIL.getTypeId()){
                 info.setEmail("");
+            }else{
+                info.setMobile("");
             }
-            info.setMobile("");
             updateByPrimaryKeySelective(info);
 
     }
@@ -401,7 +402,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         updateByPrimaryKeySelective(info);
         redisCacheUtils.delete(key);
         //发送推送通知邮箱已绑定
-        jPushService.sendChangeMessage(Integer.valueOf(userId),"3",email);
+        jPushService.sendChangeMessage(userId,"3",email);
     }
 
 

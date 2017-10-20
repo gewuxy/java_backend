@@ -526,6 +526,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      */
     public MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        PageHelper.orderBy("c.create_time " + (pageable.get("sortType") == null ? "desc" : pageable.get("sortType")));
         return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingList(pageable.getParams()));
     }
 
@@ -544,5 +545,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioCoursePlay cond = new AudioCoursePlay();
         cond.setCourseId(courseId);
         return audioCoursePlayDAO.selectOne(cond);
+    }
+
+    /**
+     * 修改录播记录
+     *
+     * @param play
+     */
+    @Override
+    public void updateAudioCoursePlay(AudioCoursePlay play) {
+        audioCoursePlayDAO.updateByPrimaryKey(play);
     }
 }
