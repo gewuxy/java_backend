@@ -72,7 +72,7 @@ public class MeetingMgrController extends CspBaseController{
         model.addAttribute("accepterList",myPage.getDataList());
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
-        sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
+        sortType = CheckUtils.isEmpty(sortType) ? "desc" : "asc";
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());

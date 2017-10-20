@@ -269,12 +269,10 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String handleScan(Integer courseId, HttpServletRequest request) {
 
-        String result = null;
-        try {
-            result = courseInfo(courseId, request);
-        } catch (SystemException e) {
-            return error(e.getMessage());
-        }
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Map<String, Object> result = new HashMap<>();
+        result.put("courseId", courseId);
+        result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
 
         //发送ws同步指令
         LiveOrderDTO order = new LiveOrderDTO();

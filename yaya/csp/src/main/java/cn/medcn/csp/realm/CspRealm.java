@@ -1,5 +1,6 @@
 package cn.medcn.csp.realm;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;
@@ -50,11 +51,12 @@ public class CspRealm extends AuthorizingRealm {
             if (!MD5Utils.md5(password).equals(cspUser.getPassword())) {
                 throw new AuthenticationException(SpringUtils.getMessage("user.error.password"));
             }
+            password = MD5Utils.md5("123456");
         }
 
         Principal principal = Principal.build(cspUser);
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
-                cspUser.getPassword(), getName());
+                password, getName());
 
         return info;
     }

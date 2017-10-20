@@ -83,7 +83,8 @@ public class CourseDeliveryDTO implements Serializable {
         if (pt == 0) {
             return  " - ";
         } else {
-            StringBuffer buffer = new StringBuffer(pt / 60);
+            StringBuffer buffer = new StringBuffer();
+            buffer.append(pt / 60);
             buffer.append("'").append(pt % 60).append("\"");
             return buffer.toString();
         }
