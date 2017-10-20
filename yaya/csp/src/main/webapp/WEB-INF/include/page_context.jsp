@@ -14,6 +14,11 @@
 <script src="${ctxStatic}/js/jquery-1.12.4.min.js"></script>
 <script src="${ctxStatic}/js/util.js"></script>
 <script src="${ctxStatic}/js/layer/layer.js"></script>
+<link rel="stylesheet" href="${ctxStatic}/css/global.css">
+<link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+<link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
+<link rel="stylesheet" href="${ctxStatic}/css/daterangepicker.css">
+<link rel="stylesheet" href="${ctxStatic}/css/style.css">
 <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
 <link rel="SHORTCUT ICON" href="${ctxStatic}/images/v2/icon.ico" />
 

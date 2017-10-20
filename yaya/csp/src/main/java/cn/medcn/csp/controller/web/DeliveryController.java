@@ -13,6 +13,7 @@ import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.CourseDelivery;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.user.dto.AppUserDTO;
 import cn.medcn.user.model.AppUser;
@@ -40,6 +41,9 @@ public class DeliveryController extends CspBaseController {
     @Autowired
     protected AppUserService appUserService;
 
+    @Autowired
+    protected AudioService audioService;
+
     @Value("${app.file.base}")
     protected String fileBase;
 
@@ -53,33 +57,41 @@ public class DeliveryController extends CspBaseController {
      */
     @RequestMapping("/contribute")
     @ResponseBody
-    public String contribute(Integer courseId,Integer[] accepts) throws SystemException {
+    public String contribute(Integer courseId,Integer[] accepts)  {
         if(courseId == null){
-            throw new SystemException("courseId不能为空");
+            return error("courseId不能为空");
         }
         if(accepts.length == 0){
-            throw new SystemException("请指定投稿单位号");
+            return error("请指定投稿单位号");
         }
         String authorId = getWebPrincipal().getId();
-        for(Integer acceptId:accepts){
-            CourseDelivery delivery = new CourseDelivery();
-            delivery.setId(StringUtils.nowStr());
-            delivery.setAcceptId(acceptId);
-            delivery.setAuthorId(authorId);
-            delivery.setSourceId(courseId);
-            delivery.setDeliveryTime(new Date());
-            courseDeliveryService.insert(delivery);
+        try {
+            //投稿
+            courseDeliveryService.contribute(courseId,accepts,authorId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
         return success();
     }
 
 
     @RequestMapping("/history")
-    public String history(Pageable pageable){
+    public String history(Model model){
+        //接收者列表
+        Pageable pageable1 = new Pageable();
         String authorId = SecurityUtils.get().getId();
-        pageable.put("authorId",authorId);
-        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
+        pageable1.put("authorId",authorId);
+        MyPage<AppUser> acceptPage = appUserService.findAccepterList(pageable1);
+        AppUser.splitUserAvatar(acceptPage.getDataList(),fileBase);
+        model.addAttribute("acceptList",acceptPage.getDataList());
 
-        return "";
+        //投给第一个接收者的会议列表
+        Pageable pageable2 = new Pageable();
+        Integer firstAcceptId = acceptPage.getDataList().get(0).getId();
+        pageable2.put("acceptId",firstAcceptId);
+        MyPage<CourseDeliveryDTO> meetPage = audioService.findCspMeetingList(pageable2);
+        CourseDeliveryDTO.splitCoverUrl(meetPage.getDataList(),fileBase);
+        model.addAttribute("page",meetPage);
+        return localeView("/meeting/history");
     }
 }
