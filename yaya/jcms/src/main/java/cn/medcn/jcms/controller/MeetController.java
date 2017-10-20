@@ -830,7 +830,8 @@ public class MeetController extends BaseController {
             return APIUtils.error("您不能操作不属于您的会议");
         }
         try {
-            meetService.doPublish(meetId);
+            Integer acceptId = principal.getId();
+            meetService.doPublish(meetId,acceptId);
         } catch (SystemException e) {
             e.printStackTrace();
             return APIUtils.error(e.getMessage());

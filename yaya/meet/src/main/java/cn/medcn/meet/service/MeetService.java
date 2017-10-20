@@ -258,9 +258,10 @@ public interface MeetService extends BaseService<Meet> {
     /**
      * 发布会议
      * @param meetId
+     * @param acceptId csp投稿过来的会议需要根据接收者id更改csp记录的发布状态
      * @return
      */
-    void doPublish(String meetId) throws SystemException;
+    void doPublish(String meetId,Integer acceptId) throws SystemException;
 
     /**
      * 保存草稿会议
