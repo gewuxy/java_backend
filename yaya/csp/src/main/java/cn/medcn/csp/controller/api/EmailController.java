@@ -101,7 +101,7 @@ public class EmailController extends BaseController{
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String result = (String)redisCacheUtils.getCacheObject(key);
         if (StringUtils.isEmpty(result)) {  //链接超时
-            return localeView("/test");
+            return localeView("/register/linkTimeOut");
         } else {
             cspUserService.doBindMail(key, result);
             return localeView("/register/bindOk");
