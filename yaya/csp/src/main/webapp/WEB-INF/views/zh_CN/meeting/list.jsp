@@ -279,34 +279,45 @@
                     </form>
                 </div>
             </div>
-            <div class="admin-metting-list">
-                <div class="row clearfix">
-                    <c:forEach items="${page.dataList}" var="course">
-                        <div class="col-lg-4">
+            <c:choose>
+                <c:when test="${empty page.dataList}">
+                    <div class="admin-row clearfix">
+                        <div class="admin-empty-data">
+                            <p><img src="${ctxStatic}/images/admin-empty-data-01.png" alt=""></p>
+                            <p> -无会议内容 -</p>
+                        </div>
+                    </div>
 
-                            <div class="resource-list-item item-radius clearfix">
-                                <div class="resource-img ">
-                                    <c:choose>
-                                        <c:when test="${not empty course.coverUrl}">
-                                            <img src="${course.coverUrl}" alt="" class="img-response">
-                                        </c:when>
-                                        <c:otherwise>
-                                            <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
-                                        </c:otherwise>
-                                    </c:choose>
+                </c:when>
+                <c:otherwise>
+                    <div class="admin-metting-list">
+                        <div class="row clearfix">
+                            <c:forEach items="${page.dataList}" var="course">
+                                <div class="col-lg-4">
 
-                                    <div class="resource-link">
-                                        <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
-                                            <i></i>
-                                            预览
-                                        </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
-                                        <i></i>
-                                        扫码投屏
-                                    </a>
-                                    </div>
-                                </div>
-                                <h3 class="resource-title overflowText">${course.title}</h3>
-                                <div class="resource-label">
+                                    <div class="resource-list-item item-radius clearfix">
+                                        <div class="resource-img ">
+                                            <c:choose>
+                                                <c:when test="${not empty course.coverUrl}">
+                                                    <img src="${course.coverUrl}" alt="" class="img-response">
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                                </c:otherwise>
+                                            </c:choose>
+
+                                            <div class="resource-link">
+                                                <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
+                                                    <i></i>
+                                                    预览
+                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
+                                                <i></i>
+                                                扫码投屏
+                                            </a>
+                                            </div>
+                                        </div>
+                                        <h3 class="resource-title overflowText">${course.title}</h3>
+                                        <div class="resource-label">
                                     <span><i class="hot">
                                         <c:choose>
                                             <c:when test="${course.playType == 0}">
@@ -317,33 +328,36 @@
                                             </c:otherwise>
                                         </c:choose>
                                     </i><i class="muted">|</i>${course.pageCount}</span>
-                                    <span>${course.playTime}</span>
-                                    <span>
+                                            <span>${course.playTime}</span>
+                                            <span>
                                         <c:choose>
                                             <c:when test="${course.playType == 0}">录播</c:when>
                                             <c:otherwise>直播</c:otherwise>
                                         </c:choose>
                                     </span>
-                                </div>
-                                <div class="resource-menu">
-                                    <div class="col-lg-6">
-                                        <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
+                                        </div>
+                                        <div class="resource-menu">
+                                            <div class="col-lg-6">
+                                                <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}"><i></i>更多</a>
+                                            </div>
+                                        </div>
                                     </div>
-                                    <div class="col-lg-6">
-                                        <a href="javascript:;" class="more more-hook" courseId="${course.id}"><i></i>更多</a>
-                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    </c:forEach>
+                            </c:forEach>
 
-                </div>
-                <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
-                <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
-                    <input type="hidden" name="pageNum">
-                    <input type="hidden" name="keyword" value="${keyword}">
-                </form>
-            </div>
+                        </div>
+                        <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                        <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
+                            <input type="hidden" name="pageNum">
+                            <input type="hidden" name="keyword" value="${keyword}">
+                        </form>
+                    </div>
+                </c:otherwise>
+            </c:choose>
+
         </div>
     </div>
     <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
