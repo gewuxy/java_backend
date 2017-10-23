@@ -1,5 +1,6 @@
 package cn.medcn.user.dao;
 
+import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.CspUserInfo;
 import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -24,4 +25,10 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
     CspUserInfo findByLoginName(@Param("username") String username);
 
 
+    /**
+     * csp web端查找用户信息
+     * @param userId
+     * @return
+     */
+    CspUserInfoDTO findCSPUserInfo(String userId);
 }

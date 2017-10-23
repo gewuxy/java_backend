@@ -126,4 +126,11 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param newPwd
      */
     void resetPwd(String userId, String oldPwd, String newPwd) throws SystemException;
+
+    /**
+     * cspweb端查找用户信息
+     * @param userId
+     * @return
+     */
+    CspUserInfoDTO findCSPUserInfo(String userId);
 }

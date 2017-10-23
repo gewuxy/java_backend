@@ -14,7 +14,7 @@
                         <a class="first-level"></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
-                                <li class="first"><a href="newList.html">我的信息</a></li>
+                                <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
                                 <li><a href="newList.html">头像设置</a></li>
                                 <li><a href="newList.html">账号管理</a></li>
                                 <li><a href="newList.html">流量管理</a></li>

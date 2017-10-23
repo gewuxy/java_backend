@@ -21,101 +21,105 @@
 <body>
 <div id="wrapper">
     <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
-    <div class="admin-content bg-gray">
-        <div class="page-width clearfix">
-            <div class="admin-history-list item-radius ">
-                <div class="row clearfix">
-                    <div class="col-lg-4">
-                        <div class="admin-history-tabList">
-                            <ul>
-                                <c:forEach items="${acceptList}" var="accept" varStatus="status">
-                                    <li <c:if test="${status.index == 0}"> class="current" </c:if> <c:if test="${status.end}"> class="last" </c:if>>
-                                        <a href="javascript:;">
-                                            <div class="clearfix">
-                                                <div class="fl">
-                                                    <img src="${accept.headimg}" alt="" height="30" width="30">
+    <c:if test="${fn:length(acceptList) != 0}" >
+        <div class="admin-content bg-gray">
+            <div class="page-width clearfix">
+                <div class="admin-history-list item-radius ">
+                    <div class="row clearfix">
+                        <div class="col-lg-4">
+                            <div class="admin-history-tabList">
+                                <ul>
+                                    <c:forEach items="${acceptList}" var="accept" varStatus="status">
+                                        <li <c:if test="${status.index == 0}"> class="current" </c:if> <c:if test="${status.end}"> class="last" </c:if>>
+                                            <a href="${ctx}/mgr/delivery/history?pageNum=1&pageSize=${page.pageSize}&acceptId=${accept.id}" >
+                                                <div class="clearfix">
+                                                    <div class="fl">
+                                                        <img src="${accept.headimg}" alt="" height="30" width="30">
+                                                    </div>
+                                                    <div class="oh">
+                                                        <h4>${accept.nickname}</h4>
+                                                        <p>${accept.sign}</p>
+                                                    </div>
                                                 </div>
-                                                <div class="oh">
-                                                    <h4>${accept.nickname}</h4>
-                                                    <p>${accept.sign}</p>
+                                            </a>
+                                        </li>
+                                    </c:forEach>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 ">
+                            <c:forEach items="${page.dataList}" varStatus="status" step="2">
+                                <div class="row clearfix">
+                                    <c:forEach items="${page.dataList}"  var="meet" begin="${status.index}" end="${status.index+1}">
+                                        <div class="col-lg-6">
+                                            <div class="resource-list-item item-radius clearfix">
+                                                <div class="resource-img ">
+                                                    <img src="${meet.coverUrl}" alt="" class="img-response">
+                                                    <div class="resource-link">
+                                                        <a href="#" class="resource-icon-play popup-player-hook">
+                                                            <i></i>
+                                                            预览
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                                <h3 class="resource-title overflowText popup-player-hook">${meet.title}</h3>
+                                                <div class="resource-label">
+                                                    <c:if test="${meet.publishState == true}">
+                                                        <span class="issue">已发布</span>
+                                                    </c:if>
+                                                    <c:if test="${ meet.publishState == false && meet.viewState == true}">
+                                                        <span class="look">已查阅</span>
+                                                    </c:if>
+                                                    <c:if test="${ meet.publishState == false && meet.viewState == false}">
+                                                        <span>未查阅</span>
+                                                    </c:if>
+                                                    <c:if test="${meet.playType == 0}">
+                                                        <span>录播</span>
+                                                    </c:if>
+                                                    <c:if test="${meet.playType != 0}">
+                                                        <span>直播</span>
+                                                    </c:if>
                                                 </div>
                                             </div>
-                                        </a>
-                                    </li>
-                                </c:forEach>
-                            </ul>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+
+
+
+                            </c:forEach>
+
                         </div>
                     </div>
-                    <div class="col-lg-8 ">
-                        <c:forEach items="${page.dataList}" var="meet">
-                            <div class="row clearfix">
-                                <div class="col-lg-6">
-                                    <div class="resource-list-item item-radius clearfix">
-                                        <div class="resource-img ">
-                                            <img src="${meet.coverUrl}" alt="" class="img-response">
-                                            <div class="resource-link">
-                                                <a href="#" class="resource-icon-play popup-player-hook">
-                                                    <i></i>
-                                                    预览
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <h3 class="resource-title overflowText popup-player-hook">${meet.title}</h3>
-                                        <div class="resource-label">
-                                            <c:if test="${meet.publishState == true}">
-                                                <span class="issue">已发布</span>
-                                            </c:if>
-                                            <c:if test="${ meet.publishState == false && meet.viewState == true}">
-                                                <span class="look">已查阅</span>
-                                            </c:if>
-                                            <c:if test="${ meet.publishState == false && meet.viewState == false}">
-                                                <span>未查阅</span>
-                                            </c:if>
-                                            <c:if test="${meet.playType == 0}">
-                                                <span>录播</span>
-                                            </c:if>
-                                            <c:if test="${meet.playType != 0}">
-                                                <span>直播</span>
-                                            </c:if>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
+                    <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                    <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/delivery/history">
+                        <input type="hidden" name="pageNum">
+                        <input type="hidden" name="acceptId" value="${current}">
+                    </form>
+                </div>
+            </div>
+        </div>
 
-                        <div class="row clearfix">
-                            <div class="col-lg-6">
+    </c:if>
+    <c:if test="${fn:length(acceptList) == 0}">
+        <div>
+            <div class="admin-content bg-gray">
+                <div class="page-width clearfix">
 
-                                <div class="resource-list-item item-radius clearfix">
-                                    <div class="resource-img ">
-                                        <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
-                                        <div class="resource-link">
-                                            <a href="#" class="resource-icon-play popup-player-hook">
-                                                <i></i>
-                                                预览
-                                            </a>
-                                        </div>
-                                    </div>
-                                    <h3 class="resource-title overflowText popup-player-hook">2017骨科学会研究分析研究</h3>
-                                    <div class="resource-label">
-                                        <span class="issue">已发布</span>
-                                        <span>录播</span>
-                                    </div>
-                                </div>
-                            </div>
-
+                    <div class="admin-row clearfix">
+                        <div class="admin-empty-data">
+                            <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
+                            <p> -无投稿记录 -</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </c:if>
+
 </div>
+
 <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
-
-
-
-
 
 
 
@@ -243,6 +247,8 @@
 
 //            $('.main-nav ul.sf-menu > li').last().addClass('last').end().hover(function(){ $(this).addClass('nav-hover'); },function(){ $(this).removeClass('nav-hover'); });
     })
+
+
 </script>
 </body>
 </html>

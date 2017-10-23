@@ -51,6 +51,11 @@ public class CspUserInfoDTO  {
     // 用户绑定的第三方平台
     protected List<BindInfo> bindInfoList;
 
+    //上传的ppt数量
+    protected int pptCount;
+    //分享的ppt数量
+    protected int shareCount;
+
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
         CspUserInfoDTO dto = new CspUserInfoDTO();
         dto.setUid(userInfo.getId());

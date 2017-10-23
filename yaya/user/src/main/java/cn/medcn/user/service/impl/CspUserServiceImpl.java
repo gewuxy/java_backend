@@ -469,7 +469,15 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         updateByPrimaryKeySelective(result);
     }
 
-
+    /**
+     * csp web端查找用户信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public CspUserInfoDTO findCSPUserInfo(String userId) {
+        return cspUserInfoDAO.findCSPUserInfo(userId);
+    }
 
 
 }
