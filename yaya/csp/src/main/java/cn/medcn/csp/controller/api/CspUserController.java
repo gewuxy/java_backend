@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -383,11 +380,19 @@ public class CspUserController extends BaseController {
      */
     @RequestMapping("/toBind")
     @ResponseBody
-    public String toBind(String email) {
+    public String toBind(String email,String password) {
         if(!StringUtils.isEmail(email)){
             return error(local("user.error.email.format"));
         }
+        if(!StringUtils.isEmail(password)){
+            return error(local("user.password.notnull"));
+        }
         String userId = SecurityUtils.get().getId();
+        //将密码插入到数据库
+        CspUserInfo info = new CspUserInfo();
+        info.setId(userId);
+        info.setPassword(MD5Utils.md5(password));
+        cspUserService.updateByPrimaryKey(info);
         try {
             cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
         } catch (SystemException e) {
