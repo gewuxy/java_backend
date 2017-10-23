@@ -27,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -74,6 +75,18 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public CspUserInfo findBindUserByUniqueId(String uniqueId) {
         return cspUserInfoDAO.findBindUserByUniqueId(uniqueId);
+    }
+
+    /**
+     * 查询用户绑定的第三方平台列表
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BindInfo> findBindListByUserId(String userId) {
+        BindInfo bindInfo = new BindInfo();
+        bindInfo.setUserId(userId);
+        return bindInfoDAO.select(bindInfo);
     }
 
     @Override

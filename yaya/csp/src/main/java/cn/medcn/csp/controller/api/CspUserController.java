@@ -161,10 +161,18 @@ public class CspUserController extends BaseController {
             // 缓存用户信息
             cachePrincipal(userInfo);
 
+            // 用户信息
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
             if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
+
+            // 查询当前用户绑定的第三方平台列表
+            List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userInfo.getId());
+            if (!CheckUtils.isEmpty(bindInfoList)) {
+                dto.setBindInfoList(bindInfoList);
+            }
+
             return success(dto);
 
         } catch (SystemException e){
