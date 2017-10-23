@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -164,10 +161,18 @@ public class CspUserController extends BaseController {
             // 缓存用户信息
             cachePrincipal(userInfo);
 
+            // 用户信息
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
             if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
+
+            // 查询当前用户绑定的第三方平台列表
+            List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userInfo.getId());
+            if (!CheckUtils.isEmpty(bindInfoList)) {
+                dto.setBindInfoList(bindInfoList);
+            }
+
             return success(dto);
 
         } catch (SystemException e){
