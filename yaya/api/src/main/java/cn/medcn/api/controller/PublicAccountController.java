@@ -186,7 +186,7 @@ public class PublicAccountController {
                     // 增加返回html文件路径
                     //  dto.setHtmlUrl(appFileBase + dto.getHtmlUrl());
                     // TODO 测试数据 发布正式线需删除此代码，释放上面注释代码
-                    String testHtml = "17051816413005881649/17082511344000160770/17082511344008521117.html";
+                    String testHtml = "data/17051816413005881649/17082511344000160770/17082511344008521117.html";
                     dto.setHtmlUrl(appFileBase + testHtml);
 
                 }
