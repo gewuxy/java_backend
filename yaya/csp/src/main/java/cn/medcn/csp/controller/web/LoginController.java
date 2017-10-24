@@ -4,6 +4,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
  import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.realm.ThirdPartyToken;
 import cn.medcn.oauth.OAuthConstants;
 import cn.medcn.oauth.decorator.OAuthServiceDecorator;
 import cn.medcn.oauth.decorator.WeChatServiceDecorator;
@@ -203,11 +204,11 @@ public class LoginController extends BaseController {
                         dto.setToken(accessToken.getToken());
                         dto.setThirdPartyId(thirdPartyId);
                         //去添加绑定账号
-                        cspUserService.saveThirdPartyUserInfo(dto);
+                        userInfo = cspUserService.saveThirdPartyUserInfo(dto);
                     }
                 }
 
-                UsernamePasswordToken token = new UsernamePasswordToken(uniqueId, "");
+                ThirdPartyToken token = new ThirdPartyToken(userInfo.getId());
                 Subject subject = SecurityUtils.getSubject();
                 subject.login(token);
             }

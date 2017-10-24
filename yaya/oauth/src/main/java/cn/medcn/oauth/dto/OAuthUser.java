@@ -90,7 +90,7 @@ public class OAuthUser {
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(OAuthUser authUser) {
         CspUserInfoDTO dto = new CspUserInfoDTO();
-        dto.setUid(authUser.getUid());
+        dto.setUniqueId(authUser.getUid());
         dto.setNickName(authUser.getNickname());
         dto.setCountry(authUser.getCountry());
         dto.setProvince(authUser.getProvince());
