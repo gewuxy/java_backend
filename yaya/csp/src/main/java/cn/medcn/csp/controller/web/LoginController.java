@@ -28,6 +28,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static cn.medcn.csp.realm.CspRealm.AUTH_DEFAULT_PASSWORD;
+
 /**
  * Created by lixuan on 2017/10/16.
  */
