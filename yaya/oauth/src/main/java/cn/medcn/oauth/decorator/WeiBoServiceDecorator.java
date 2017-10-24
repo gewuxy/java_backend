@@ -1,6 +1,7 @@
 package cn.medcn.oauth.decorator;
 
 import cn.medcn.oauth.provider.ThirdPartyPlatform;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import cn.medcn.oauth.dto.OAuthUser;
 import org.scribe.model.OAuthRequest;
@@ -17,7 +18,8 @@ public class WeiBoServiceDecorator extends OAuthServiceDecorator {
 
     @Override
     public OAuthUser getOAuthUser(Token accessToken) {
-        OAuthRequest request = new OAuthRequest(Verb.GET, String.format(USER_ACCESS_URL, accessToken.getToken(), accessToken.getSecret()));
+        String uid = (String) JSON.parseObject(accessToken.getRawResponse()).get("uid");
+        OAuthRequest request = new OAuthRequest(Verb.GET, String.format(USER_ACCESS_URL, accessToken.getToken(), uid));
         Response response = request.send();
 
         String body = response.getBody();
@@ -26,8 +28,10 @@ public class WeiBoServiceDecorator extends OAuthServiceDecorator {
         OAuthUser user = new OAuthUser();
         user.setUid(jsonObject.getString("id"));
         user.setNickname(jsonObject.getString("screen_name"));
-        user.setProvince(jsonObject.getString("province"));
-        user.setCity(jsonObject.getString("city"));
+        String location = jsonObject.getString("location");
+        String loc[] = location.split(" ");
+        user.setProvince(loc[0]);
+        user.setCity(loc[1]);
         user.setCountry("cn");
         user.setGender(jsonObject.getString("gender"));
         user.setIconUrl(jsonObject.getString("profile_image_url"));
