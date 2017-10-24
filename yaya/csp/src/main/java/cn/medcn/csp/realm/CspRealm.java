@@ -12,14 +12,21 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+
 
 /**
  * Created by lixuan on 2017/10/16.
  */
 public class CspRealm extends AuthorizingRealm {
 
+    public static final String AUTH_DEFAULT_PASSWORD = "UIwe2389xc@!";
+
     @Autowired
     protected CspUserService cspUserService;
+
+    @Value("${app.file.base}")
+    protected String fileBase;
 
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
@@ -30,20 +37,18 @@ public class CspRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         CspUserInfo cspUser = null;
-        final String defaultPwd = "123456";
-        String password = null;
-        if (authenticationToken instanceof UsernamePasswordToken) {
-            UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-            password = new String(token.getPassword());
-            if (!CheckUtils.isEmpty(password)) {
-                token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
-            } else {
-                token.setPassword(MD5Utils.MD5Encode(defaultPwd).toCharArray());
-            }
-            cspUser = cspUserService.findByLoginName(token.getUsername());
+        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+        String password = new String(token.getPassword());
+        if (!CheckUtils.isEmpty(password)) {
+            token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
         } else {
-            ThirdPartyToken token = (ThirdPartyToken) authenticationToken;
-            cspUser = cspUserService.selectByPrimaryKey(token.getId());
+            token.setPassword(MD5Utils.MD5Encode(AUTH_DEFAULT_PASSWORD).toCharArray());
+        }
+
+        if (!CheckUtils.isEmpty(token.getHost())){
+            cspUser = cspUserService.selectByPrimaryKey(token.getUsername());
+        } else {
+            cspUser = cspUserService.findByLoginName(token.getUsername());
         }
 
         //账号不存在
@@ -63,8 +68,11 @@ public class CspRealm extends AuthorizingRealm {
         }
 
         Principal principal = Principal.build(cspUser);
+        if (!CheckUtils.isEmpty(principal.getAvatar()) && !principal.getAvatar().startsWith("http")){
+            principal.setAvatar(fileBase + principal.getAvatar());
+        }
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
-                CheckUtils.isEmpty(password) ? MD5Utils.md5(defaultPwd) : cspUser.getPassword(), getName());
+                CheckUtils.isEmpty(password) ? MD5Utils.md5(AUTH_DEFAULT_PASSWORD) : cspUser.getPassword(), getName());
 
         return info;
     }

@@ -80,5 +80,21 @@ public class CspUserInfo implements Serializable{
         return userInfo;
     }
 
+    /*public static CspUserInfo buildToCspUserInfoFromOAuthUser(OAuthUser authUser) {
+        CspUserInfoDTO dto = new CspUserInfoDTO();
+        dto.setUid(authUser.getUid());
+        dto.setNickName(authUser.getNickname());
+        dto.setCountry(authUser.getCountry());
+        dto.setProvince(authUser.getProvince());
+        dto.setCity(authUser.getCity());
+        dto.setDistrict("");
+        dto.setAvatar(authUser.getIconUrl());
+        dto.setInfo("");
+        dto.setEmail("");
+        dto.setMobile("");
+        dto.setUserName("");
+        dto.setFlux(0);
+        return dto;
+    }*/
 
 }

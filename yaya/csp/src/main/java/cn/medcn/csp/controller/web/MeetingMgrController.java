@@ -11,6 +11,7 @@ import cn.medcn.common.service.OpenOfficeService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.AudioCourse;
@@ -24,10 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
@@ -348,5 +346,12 @@ public class MeetingMgrController extends CspBaseController {
         Map<String, Object> result = new HashMap<>();
         result.put("shareUrl", buffer2.toString());
         return success(result);
+    }
+
+
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    public String save(CspAudioCourseDTO course, Integer openLive){
+
+        return null;
     }
 }
