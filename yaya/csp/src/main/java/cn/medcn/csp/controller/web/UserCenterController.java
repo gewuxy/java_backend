@@ -5,6 +5,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dto.CspUserInfoDTO;
@@ -96,17 +97,25 @@ public class UserCenterController extends CspBaseController{
         } catch (SystemException e) {
             return error(e.getMessage());
         }
+        Principal principal = getWebPrincipal();
+        principal.setAvatar(url);
+        SecurityUtils.set(principal);
         return success(url);
     }
 
 
+    /**
+     * 跳转到修改密码页面
+     * @param model
+     * @return
+     */
     @RequestMapping("toReset")
     public String toResetPwd(Model model){
         String userId = getWebPrincipal().getId();
         CspUserInfo info = cspUserService.selectByPrimaryKey(userId);
         if(StringUtils.isEmpty(info.getEmail())){
             //没有绑定邮箱
-            model.addAttribute("toBind",1);
+            model.addAttribute("needBind",1);
         }
         return localeView("/userCenter/pwdReset");
 
