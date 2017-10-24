@@ -386,7 +386,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .login-form-item .login-formInput { width:233px; padding: 11px 23px; border:0; background:#EDF3F9;  font-size: 16px; -moz-border-radius: 27px; -webkit-border-radius:27px; border-radius: 27px;  }
 .login-form-item .login-button{  padding:12px 0;}
 .login-form-item input.login-button:focus {border:0;}
-.login-form-item .error { color:#E43939; padding-left: 25px; margin:-15px 0 10px; }
+.login-form-item .error { color:#E43939; padding-left: 25px; margin:-15px 0 10px; font-size:14px; }
+.login-form-item .formControls .error { margin:10px 0 0; display: block;}
 .login-form-item .error img{ position: relative; top:2px;}
 .login-form-item .code{ position: absolute; right:16px; top:8px; font-size:16px; color:#167AFE; cursor: pointer;     z-index: 2; background-color: #EDF3F9;}
 .login-form-item .codeInput {     width: 200px; padding: 11px 56px 11px 23px;}
