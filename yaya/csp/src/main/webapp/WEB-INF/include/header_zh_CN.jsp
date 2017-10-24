@@ -11,13 +11,14 @@
             <div class="userInfo">
                 <ul class="sf-menu" >
                     <li class="current">
-                        <a class="first-level"></a>
+                        <a class="first-level" target="_blank" href="javascript:;" ><img id="head_img"
+                                src="${ctxStatic}/images/admin-userImg.png" alt=""></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
                                 <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
-                                <li><a href="newList.html">头像设置</a></li>
-                                <li><a href="newList.html">账号管理</a></li>
-                                <li><a href="newList.html">流量管理</a></li>
+                                <li><a href="${ctx}/mgr/user/toAvatar">头像设置</a></li>
+                                <li><a href="">账号管理</a></li>
+                                <li><a href="">流量管理</a></li>
                                 <li><a href="newList.html">帮助中心</a></li>
                                 <li class="last"><a href="${ctx}/mgr/logout">退出账号</a></li>
                             </ul>
