@@ -38,7 +38,7 @@ public class CspRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         CspUserInfo cspUser = null;
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        String password = new String(token.getPassword());
+        String password = token.getPassword() == null ? null : new String(token.getPassword());
         if (!CheckUtils.isEmpty(password)) {
             token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
         } else {
@@ -61,7 +61,7 @@ public class CspRealm extends AuthorizingRealm {
             throw new AuthenticationException(SpringUtils.getMessage("user.unActive.email"));
         }
 
-        if (!CheckUtils.isEmpty(password)){
+        if (CheckUtils.isEmpty(token.getHost())){
             if (!MD5Utils.md5(password).equals(cspUser.getPassword())) {
                 throw new AuthenticationException(SpringUtils.getMessage("user.error.password"));
             }
