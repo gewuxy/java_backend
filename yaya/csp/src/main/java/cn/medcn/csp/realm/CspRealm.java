@@ -61,7 +61,7 @@ public class CspRealm extends AuthorizingRealm {
             throw new AuthenticationException(SpringUtils.getMessage("user.unActive.email"));
         }
 
-        if (!CheckUtils.isEmpty(password)){
+        if (CheckUtils.isEmpty(token.getHost())){
             if (!MD5Utils.md5(password).equals(cspUser.getPassword())) {
                 throw new AuthenticationException(SpringUtils.getMessage("user.error.password"));
             }
