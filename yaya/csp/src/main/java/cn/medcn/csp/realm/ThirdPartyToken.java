@@ -1,10 +1,10 @@
 package cn.medcn.csp.realm;
 
+import cn.medcn.common.utils.MD5Utils;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.shiro.authc.HostAuthenticationToken;
-import org.apache.shiro.authc.RememberMeAuthenticationToken;
+import org.apache.shiro.authc.AuthenticationToken;
 
 /**
  * Created by lixuan on 2017/10/24.
@@ -12,19 +12,11 @@ import org.apache.shiro.authc.RememberMeAuthenticationToken;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ThirdPartyToken implements HostAuthenticationToken, RememberMeAuthenticationToken {
+public class ThirdPartyToken implements AuthenticationToken {
+
+    public static final String AUTH_DEFAULT_PASSWORD = "UIwe2389xc@!";
 
     protected String id;
-
-    @Override
-    public String getHost() {
-        return null;
-    }
-
-    @Override
-    public boolean isRememberMe() {
-        return false;
-    }
 
     @Override
     public Object getPrincipal() {
@@ -33,6 +25,6 @@ public class ThirdPartyToken implements HostAuthenticationToken, RememberMeAuthe
 
     @Override
     public Object getCredentials() {
-        return null;
+        return MD5Utils.md5(AUTH_DEFAULT_PASSWORD);
     }
 }

@@ -68,7 +68,7 @@
                             <div class="meeting-form-item login-form-item">
                                 <label for="email2" class="cells-block pr"><input id="email2" type="text" class="login-formInput" placeholder="会议名称" value="${course.title}"></label>
                                 <div class="textarea">
-                                    <textarea name="" id="" cols="30" rows="10">${course.info}</textarea>
+                                    <textarea name="course.info" id="" cols="30" rows="10">${course.info}</textarea>
                                     <p class="t-right">600</p>
                                 </div>
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
@@ -76,12 +76,12 @@
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="playType">
+                                        <input id="recorded" type="radio" name="course.playType" value="1">
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="playType" checked="true">
+                                        <input id="live" type="radio" name="course.playType" checked="true" value="1">
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">

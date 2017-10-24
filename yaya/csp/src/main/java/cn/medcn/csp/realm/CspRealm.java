@@ -13,6 +13,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import static cn.medcn.csp.realm.ThirdPartyToken.AUTH_DEFAULT_PASSWORD;
+
 /**
  * Created by lixuan on 2017/10/16.
  */
@@ -30,7 +32,6 @@ public class CspRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         CspUserInfo cspUser = null;
-        final String defaultPwd = "123456";
         String password = null;
         if (authenticationToken instanceof UsernamePasswordToken) {
             UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
@@ -38,7 +39,7 @@ public class CspRealm extends AuthorizingRealm {
             if (!CheckUtils.isEmpty(password)) {
                 token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
             } else {
-                token.setPassword(MD5Utils.MD5Encode(defaultPwd).toCharArray());
+                token.setPassword(MD5Utils.MD5Encode(AUTH_DEFAULT_PASSWORD).toCharArray());
             }
             cspUser = cspUserService.findByLoginName(token.getUsername());
         } else {
@@ -64,7 +65,7 @@ public class CspRealm extends AuthorizingRealm {
 
         Principal principal = Principal.build(cspUser);
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
-                CheckUtils.isEmpty(password) ? MD5Utils.md5(defaultPwd) : cspUser.getPassword(), getName());
+                CheckUtils.isEmpty(password) ? MD5Utils.md5(AUTH_DEFAULT_PASSWORD) : cspUser.getPassword(), getName());
 
         return info;
     }
