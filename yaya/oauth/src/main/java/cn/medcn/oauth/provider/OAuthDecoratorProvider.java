@@ -58,8 +58,8 @@ public class OAuthDecoratorProvider {
                     config.setApiKey(appKey);
                     config.setApiSecret(secret);
                     config.setCallback(callback);
-                    config.setScope("");
-                    config.setServiceId(serviceId);
+                    config.setScope("snsapi_userinfo");
+                   config.setServiceId(serviceId);
                     break;
                 case 3 : // facebook
 

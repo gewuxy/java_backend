@@ -1,5 +1,7 @@
 package cn.medcn.oauth.dto;
 
+import cn.medcn.user.dto.CspUserInfoDTO;
+
 /**
  * Created by lixuan on 2017/9/15.
  */
@@ -86,4 +88,20 @@ public class OAuthUser {
     }
 
 
+    public static CspUserInfoDTO buildToCspUserInfoDTO(OAuthUser authUser) {
+        CspUserInfoDTO dto = new CspUserInfoDTO();
+        dto.setUid(authUser.getUid());
+        dto.setNickName(authUser.getNickname());
+        dto.setCountry(authUser.getCountry());
+        dto.setProvince(authUser.getProvince());
+        dto.setCity(authUser.getCity());
+        dto.setDistrict("");
+        dto.setAvatar(authUser.getIconUrl());
+        dto.setInfo("");
+        dto.setEmail("");
+        dto.setMobile("");
+        dto.setUserName("");
+        dto.setFlux(0);
+        return dto;
+    }
 }

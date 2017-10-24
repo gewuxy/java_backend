@@ -12,8 +12,10 @@ import cn.medcn.oauth.decorator.YaYaServiceDecorator;
 import cn.medcn.oauth.dto.OAuthUser;
 import cn.medcn.oauth.provider.OAuthDecoratorProvider;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
- import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.service.CspUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
@@ -41,8 +43,11 @@ public class LoginController extends BaseController {
     public String login(Integer thirdPartyId){
         if (thirdPartyId == null || thirdPartyId == 0) {
             return localeView("/login/login");
-        } else {
+        } else if (thirdPartyId > BindInfo.Type.YaYa.getTypeId() ){
             return localeView("/login/login_"+thirdPartyId);
+        } else {
+            // 第三方登录
+            return "redirect:" + jumpThirdPartyAuthorizePage(thirdPartyId);
         }
     }
 
@@ -63,11 +68,8 @@ public class LoginController extends BaseController {
             // 手机登录
             return loginByMobile(mobile, captcha, model);
 
-        } else {
-            // 第三方登录
-           return "redirect:"+jumpThirdPartyAuthorizePage(thirdPartyId);
         }
-
+        return "" ;
     }
 
     /**
@@ -165,7 +167,8 @@ public class LoginController extends BaseController {
      * @return
      */
     protected String jumpThirdPartyAuthorizePage(Integer thirdPartyId) {
-        OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, OAuthConstants.get("WeiBo.oauth.callback"));
+        OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId,
+                OAuthConstants.get("WeiBo.oauth.callback"));
 
         String authorizeUrl = decorator.getAuthorizeUrl();
 
@@ -180,15 +183,31 @@ public class LoginController extends BaseController {
      */
     @RequestMapping(value = "/oauth/callback")
     public String callback(String code, Integer thirdPartyId) {
-        if (!StringUtils.isNotEmpty(code)) {
-            OAuthUser oAuthUser = new OAuthUser();
+        if (StringUtils.isNotEmpty(code)) {
             Token accessToken = null;
             OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, "");
             accessToken = decorator.getAccessToken(accessToken, new Verifier(code));
-            OAuthUser user = decorator.getOAuthUser(accessToken);
+            OAuthUser oAuthUser = decorator.getOAuthUser(accessToken);
 
+            CspUserInfo userInfo = null;
             if (oAuthUser != null) {
-                UsernamePasswordToken token = new UsernamePasswordToken(oAuthUser.getUid(), "");
+                String uniqueId = oAuthUser.getUid();
+
+                if (StringUtils.isNotEmpty(uniqueId)) {
+                    // 根据第三方用户唯一id 查询用户是否存在
+                    userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
+
+                   // 用户不存在，去添加绑定账号及添加csp用户账号
+                    if (userInfo == null) {
+                        CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
+                        dto.setToken(accessToken.getToken());
+                        dto.setThirdPartyId(thirdPartyId);
+                        //去添加绑定账号
+                        cspUserService.saveThirdPartyUserInfo(dto);
+                    }
+                }
+
+                UsernamePasswordToken token = new UsernamePasswordToken(uniqueId, "");
                 Subject subject = SecurityUtils.getSubject();
                 subject.login(token);
             }
