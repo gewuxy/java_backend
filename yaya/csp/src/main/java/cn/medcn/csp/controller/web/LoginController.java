@@ -201,7 +201,6 @@ public class LoginController extends BaseController {
                    // 用户不存在，去添加绑定账号及添加csp用户账号
                     if (userInfo == null) {
                         CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
-                        dto.setToken(accessToken.getToken());
                         dto.setThirdPartyId(thirdPartyId);
                         //去添加绑定账号
                         userInfo = cspUserService.saveThirdPartyUserInfo(dto);

@@ -1,5 +1,6 @@
 package cn.medcn.oauth.dto;
 
+import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.user.dto.CspUserInfoDTO;
 
 /**
@@ -92,6 +93,7 @@ public class OAuthUser {
         CspUserInfoDTO dto = new CspUserInfoDTO();
         dto.setUniqueId(authUser.getUid());
         dto.setNickName(authUser.getNickname());
+        dto.setToken(UUIDUtil.getUUID());
         dto.setCountry(authUser.getCountry());
         dto.setProvince(authUser.getProvince());
         dto.setCity(authUser.getCity());
