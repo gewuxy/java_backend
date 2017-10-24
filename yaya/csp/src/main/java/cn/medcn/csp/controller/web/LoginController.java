@@ -4,7 +4,6 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
  import cn.medcn.common.utils.StringUtils;
-import cn.medcn.csp.realm.ThirdPartyToken;
 import cn.medcn.oauth.OAuthConstants;
 import cn.medcn.oauth.decorator.OAuthServiceDecorator;
 import cn.medcn.oauth.decorator.WeChatServiceDecorator;
@@ -207,7 +206,9 @@ public class LoginController extends BaseController {
                     }
                 }
 
-                ThirdPartyToken token = new ThirdPartyToken(userInfo.getId());
+                UsernamePasswordToken token = new UsernamePasswordToken();
+                token.setHost("thirdParty");
+                token.setUsername(userInfo.getId());
                 Subject subject = SecurityUtils.getSubject();
                 subject.login(token);
             }
