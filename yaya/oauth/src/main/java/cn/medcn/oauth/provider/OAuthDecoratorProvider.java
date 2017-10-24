@@ -81,7 +81,7 @@ public class OAuthDecoratorProvider {
             }
             OAuthServiceDecorator decorator = getDecorator(config);
             decoratorMap.put(serviceId, decorator);
-            return decorator;
+            return getDecorator(config);
         }
     }
 }
