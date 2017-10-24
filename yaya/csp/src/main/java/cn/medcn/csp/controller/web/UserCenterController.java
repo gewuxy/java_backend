@@ -11,12 +11,16 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -47,32 +51,66 @@ public class UserCenterController extends CspBaseController{
      */
     @RequestMapping("/info")
     public String userInfo(Model model){
+        addBaseUserInfo(model);
+        return localeView("/userCenter/userInfo");
+    }
+
+    private void addBaseUserInfo(Model model) {
         String userId = getWebPrincipal().getId();
         CspUserInfoDTO dto = cspUserService.findCSPUserInfo(userId);
-        List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userId);
-        if(!StringUtils.isEmpty(dto.getAvatar())){
+        if (!StringUtils.isEmpty(dto.getAvatar())) {
             dto.setAvatar(fileBase + dto.getAvatar());
         }
+        List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userId);
         dto.setBindInfoList(bindInfoList);
-        model.addAttribute("dto",dto);
-        return localeView("/userCenter/userInfo");
+        model.addAttribute("dto", dto);
+    }
+
+
+    /**
+     * 跳转到头像设置页面
+     * @return
+     */
+    @RequestMapping("/toAvatar")
+    public String toAvatar(Model model){
+        addBaseUserInfo(model);
+        return localeView("/userCenter/setAvatar");
     }
 
     /**
      * 修改用户头像
-     * @param avatar
+     *
      * @return
      */
-    @RequestMapping("/updateAvatar")
+
+    @RequestMapping(value = "/updateAvatar",method = RequestMethod.POST)
     @ResponseBody
-    public String updateAvatar(String avatar){
-        String userId = SecurityUtils.get().getId();
-        CspUserInfo user = cspUserService.selectByPrimaryKey(userId);
-        user.setAvatar(avatar);
-        cspUserService.updateByPrimaryKeySelective(user);
-        return success();
+    public String updateAvatar(@RequestParam(value = "file", required = false) MultipartFile file){
+        if (file == null) {
+            return error(local("upload.error.null"));
+        }
+        String userId = getWebPrincipal().getId();
+        String url = null;
+        try {
+            url = cspUserService.updateAvatar(file,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success(url);
     }
 
+
+    @RequestMapping("toReset")
+    public String toResetPwd(Model model){
+        String userId = getWebPrincipal().getId();
+        CspUserInfo info = cspUserService.selectByPrimaryKey(userId);
+        if(StringUtils.isEmpty(info.getEmail())){
+            //没有绑定邮箱
+            model.addAttribute("toBind",1);
+        }
+        return localeView("/userCenter/pwdReset");
+
+    }
 
     /**
      * 重置密码
