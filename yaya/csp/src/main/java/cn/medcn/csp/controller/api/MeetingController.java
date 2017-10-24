@@ -255,6 +255,7 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String sync(LiveOrderDTO dto) {
         dto.setOrder(LiveOrderDTO.ORDER_SYNC);
+        dto.setOrderFrom("app");
         liveService.publish(dto);
         return success();
     }
@@ -300,7 +301,10 @@ public class MeetingController extends CspBaseController {
 
         Map<String, Object> result = new HashMap<>();
         result.put("course", audioCourse);
-        result.put("wsUrl", genWsUrl(request, courseId));
+
+        String wsUrl = genWsUrl(request, courseId);
+        wsUrl += "&token=" + request.getHeader(Constants.TOKEN);
+        result.put("wsUrl", wsUrl);
         if (audioCourse.getPlayType() == null) {
             audioCourse.setPlayType(0);
         }

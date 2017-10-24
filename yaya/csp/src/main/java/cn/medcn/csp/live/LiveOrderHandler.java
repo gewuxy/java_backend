@@ -1,5 +1,6 @@
 package cn.medcn.csp.live;
 
+import cn.medcn.common.Constants;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.service.LiveService;
 import com.alibaba.fastjson.JSON;
@@ -13,6 +14,7 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -61,12 +63,32 @@ public class LiveOrderHandler extends TextWebSocketHandler {
 
     protected void register(WebSocketSession session) {
         String courseId = (String) session.getAttributes().get(COURSE_ID_KEY);
-        Map<String,WebSocketSession> sessionList = sessionMap.get(courseId);
+        String token = (String) session.getAttributes().get(Constants.TOKEN);
+
+        Map<String, WebSocketSession> sessionList = sessionMap.get(courseId);
         if(sessionList == null){
             sessionList = new ConcurrentHashMap<>();
             sessionList.put(session.getId(), session);
             sessionMap.put(courseId, sessionList);
         }else{
+            if (token != null) {
+                Iterator<String> iterator = sessionList.keySet().iterator();
+                while (iterator.hasNext()) {
+                    String wssKey = iterator.next();
+                    WebSocketSession wss = sessionList.get(wssKey);
+                    if (wss != null && wss.getAttributes().get(Constants.TOKEN) != null ) {
+                        if (token.equals(wss.getAttributes().get(Constants.TOKEN))) {
+                            try {
+                                wss.close();
+                                iterator.remove();
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+
+                        }
+                    }
+                }
+            }
             sessionMap.get(courseId).put(session.getId(), session);
         }
     }

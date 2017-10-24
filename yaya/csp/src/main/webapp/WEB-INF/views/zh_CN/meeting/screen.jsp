@@ -158,8 +158,8 @@
 
         ws.onmessage=function(msg){
             var data = JSON.parse(msg.data);
-            console.log("order = "+data.order);
-            if (data.order == 1){
+            console.log("order = "+data.orderFrom);
+            if (data.order == 1 && data.orderFrom == 'app'){
                 console.log("skip to page "+data.pageNum);
                 if (scaned){
                     skip(data.pageNum);
@@ -173,7 +173,7 @@
     }
 
     function sendOrder(pageNo){
-        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo};
+        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web'};
         myWs.send(JSON.stringify(message));
     }
 

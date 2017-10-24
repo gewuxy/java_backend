@@ -71,6 +71,7 @@
         <property name="filterChainDefinitions">
             <value>
                 /mgr/logout=logout
+                /api/**=anon
                 /static/**=anon
                 /mgr/login=anon
                 /mgr/**=authc

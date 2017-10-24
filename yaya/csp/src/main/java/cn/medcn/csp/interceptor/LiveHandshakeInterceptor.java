@@ -1,6 +1,7 @@
 package cn.medcn.csp.interceptor;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.csp.CspConstants;
 import org.apache.commons.lang.StringUtils;
@@ -32,6 +33,12 @@ public class LiveHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
         if(StringUtils.isBlank(courseId)){
             throw new RuntimeException("parameter courseId required");
         }
+
+        String token = serverRequest.getServletRequest().getParameter(Constants.TOKEN);
+        if (!CheckUtils.isEmpty(token)) {
+            params.put(Constants.TOKEN, token);
+        }
+
         params.put(COURSE_ID_KEY, courseId);
         return super.beforeHandshake(request, response, webSocketHandler, params);
     }
