@@ -451,7 +451,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .admin-header .userInfo .sf-menu a:hover { text-decoration:none; color:#0f71d2; }
 .admin-header .userInfo .sf-menu a { border:none; padding-top:0; padding-bottom:0; display:block; line-height:60px; font-size:14px; font-size:1.4rem; }
 .admin-header .userInfo .sf-menu a strong { font-weight:normal;  }
-.admin-header .userInfo .sf-menu .first-level{ background:url(../images/admin-userImg.png) no-repeat center; width:40px; height:40px; margin:20px 0;  }
+.admin-header .userInfo .sf-menu .first-level{ width:40px; height:40px; margin:20px 0;  }
+.admin-header .userInfo .sf-menu .first-level img{ width:40px; height:40px; -moz-border-radius: 50%; -webkit-border-radius:50%; border-radius: 50%;}
 
 /* 一级 */
 .admin-header .userInfo .sf-menu li {  background-color:transparent;}
@@ -585,9 +586,10 @@ a.color-wathet-blue:hover{color:#146ee3}
 .layer-hospital-popup-bottom .button { color:#fff;}
 .layer-hospital-popup-bottom .min-btn { padding:10px 20px; font-size:16px;  -moz-border-radius: 27px; -webkit-border-radius:27px; border-radius: 27px;}
 .layui-layer .layui-layer-btn { overflow: hidden; padding:30px 30px 30px 10px;}
-.layui-layer .layui-layer-btn a { float:right; font-size: 18px; padding: 5px 20px;     border: 1px solid #fff; background-color: #fff; color: #167afe; -moz-border-radius: 26px; -webkit-border-radius: 26px; border-radius: 26px;}
+.layui-layer .layui-layer-btn a { float:right; font-size: 16px; padding: 5px 20px;     border: 1px solid #fff; background-color: #fff; color: #167afe; -moz-border-radius: 26px; -webkit-border-radius: 26px; border-radius: 26px;}
 .layui-layer .layui-layer-btn .layui-layer-btn0  { background-color:#167afe; color:#fff; border-color:#167afe;}
 .layui-layer-iframe .layui-layer-btn, .layui-layer-page .layui-layer-btn {}
+
 
 
 .more-popup-box { display: none;}

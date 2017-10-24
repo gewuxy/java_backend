@@ -272,7 +272,7 @@ function upload(fileId,fileType,limitSize,callback){
         {
             layer.close(index);
             //回调函数传回传完之后的URL地址
-            if(data.status == 0){
+            if(data.code == 0){
                 callback(data);
             }else{
                 layer.msg(data.msg);

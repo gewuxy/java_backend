@@ -82,7 +82,9 @@ public class ChargeController extends BaseController {
         }
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
-        return success(charge);
+        Map<String,Object> map = new HashMap<>();
+        map.put("charge",charge);
+        return success(map);
 
     }
 
