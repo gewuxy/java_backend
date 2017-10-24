@@ -14,8 +14,8 @@ public enum ThirdPartyPlatform {
 
     we_chat(WeChatApi.class, WeChatServiceDecorator.class),
     wei_bo(SinaWeiboApi20.class, WeiBoServiceDecorator.class),
-    twitter(TwitterApi.class, TwitterServiceDecorator.class),
     facebook(FacebookApi.class, FacebookServiceDecorator.class),
+    twitter(TwitterApi.class, TwitterServiceDecorator.class),
     YaYa(YaYaApi.class, YaYaServiceDecorator.class);
 
 

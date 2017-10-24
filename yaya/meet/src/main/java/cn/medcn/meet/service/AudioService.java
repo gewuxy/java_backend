@@ -218,6 +218,19 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void updateAudioCoursePlay(AudioCoursePlay play);
 
     /**
+     * 删除course以及明细
+     * @param courseId
+     */
+    void deleteAudioCourse(Integer courseId);
+
+    /**
+     * 复制课件 并复制直播和录播信息
+     * @param courseId
+     * @param newTitle
+     */
+    void addCourseCopy(Integer courseId, String newTitle);
+
+    /**
      * 投稿给指定用户的会议列表
      * @param pageable
      * @return

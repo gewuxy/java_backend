@@ -1,5 +1,6 @@
 package cn.medcn.csp.controller.web;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
@@ -31,14 +32,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/10/17.
  */
 @Controller
 @RequestMapping(value = "/mgr/meet")
-public class MeetingMgrController extends CspBaseController{
+public class MeetingMgrController extends CspBaseController {
 
     @Autowired
     protected AudioService audioService;
@@ -60,16 +63,17 @@ public class MeetingMgrController extends CspBaseController{
 
     /**
      * 查询当前用户的课件列表
+     *
      * @param pageable
      * @param model
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType){
+    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType) {
         //打开了投稿箱的公众号列表
         MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
-        AppUser.splitUserAvatar(myPage.getDataList(),fileBase);
-        model.addAttribute("accepterList",myPage.getDataList());
+        AppUser.splitUserAvatar(myPage.getDataList(), fileBase);
+        model.addAttribute("accepterList", myPage.getDataList());
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : "asc";
@@ -92,15 +96,16 @@ public class MeetingMgrController extends CspBaseController{
 
     /**
      * 进入投屏界面
+     *
      * @param courseId
      * @param model
      * @return
      */
     @RequestMapping(value = "/screen/{courseId}")
-    public String screen(@PathVariable Integer courseId, Model model, HttpServletRequest request) throws SystemException{
+    public String screen(@PathVariable Integer courseId, Model model, HttpServletRequest request) throws SystemException {
         AudioCourse course = audioService.findAudioCourse(courseId);
         Principal principal = getWebPrincipal();
-        if (!principal.getId().equals(course.getCspUserId())){
+        if (!principal.getId().equals(course.getCspUserId())) {
             throw new SystemException(local("meeting.error.not_mine"));
         }
         model.addAttribute("course", course);
@@ -124,10 +129,11 @@ public class MeetingMgrController extends CspBaseController{
 
     /**
      * 生成二维码的地址
+     *
      * @param request
      * @return
      */
-    protected String genScanUrl(HttpServletRequest request, Integer courseId){
+    protected String genScanUrl(HttpServletRequest request, Integer courseId) {
         StringBuffer buffer = new StringBuffer();
         buffer.append(request.getScheme());
         buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
@@ -139,12 +145,13 @@ public class MeetingMgrController extends CspBaseController{
     /**
      * 进入课件编辑页面
      * 如果courseId为空 则查找最近编辑的未发布的AudioCourse
+     *
      * @param courseId
      * @param model
      * @return
      */
     @RequestMapping(value = "/edit")
-    public String edit(Integer courseId, Model model){
+    public String edit(Integer courseId, Model model) {
         Principal principal = getWebPrincipal();
         AudioCourse course = null;
         if (courseId != null) {
@@ -170,6 +177,7 @@ public class MeetingMgrController extends CspBaseController{
 
     /**
      * 上传PPT或者PDF文件 并转换成图片
+     *
      * @param file
      * @param courseId
      * @param request
@@ -177,14 +185,14 @@ public class MeetingMgrController extends CspBaseController{
      */
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public String upload(@RequestParam(value = "file")MultipartFile file, Integer courseId, HttpServletRequest request){
+    public String upload(@RequestParam(value = "file") MultipartFile file, Integer courseId, HttpServletRequest request) {
         FileUploadResult result;
         try {
             result = fileUploadService.upload(file, FilePath.TEMP.path);
         } catch (SystemException e) {
             return local("upload.error");
         }
-        String imgDir = FilePath.COURSE.path + "/" +courseId + "/ppt/";
+        String imgDir = FilePath.COURSE.path + "/" + courseId + "/ppt/";
         List<String> imgList = null;
         if (result.getRelativePath().endsWith(".ppt") || result.getRelativePath().endsWith(".pptx")) {
             imgList = openOfficeService.convertPPT(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
@@ -205,6 +213,7 @@ public class MeetingMgrController extends CspBaseController{
 
     /**
      * 进入到PPT明细编辑页面
+     *
      * @param courseId
      * @param model
      * @return
@@ -215,7 +224,7 @@ public class MeetingMgrController extends CspBaseController{
         AudioCourse course = audioService.findAudioCourse(courseId);
         handleHttpPath(course);
         Principal principal = getWebPrincipal();
-        if (!principal.getId().equals(course.getCspUserId())){
+        if (!principal.getId().equals(course.getCspUserId())) {
             throw new SystemException(local("meeting.error.not_mine"));
         }
         model.addAttribute("course", course);
@@ -223,14 +232,13 @@ public class MeetingMgrController extends CspBaseController{
     }
 
     /**
-     *
      * @param file
      * @param index
      * @return
      */
     @RequestMapping(value = "/detail/add")
     @ResponseBody
-    public String add(@RequestParam(value = "file")MultipartFile file, Integer courseId, Integer index){
+    public String add(@RequestParam(value = "file") MultipartFile file, Integer courseId, Integer index) {
         boolean isPicture = isPicture(file.getOriginalFilename());
         String dir = FilePath.COURSE.path + "/" + courseId + "/" + (isPicture ? "ppt" : "video");
         FileUploadResult result;
@@ -255,7 +263,7 @@ public class MeetingMgrController extends CspBaseController{
     }
 
 
-    protected boolean isPicture(String fileName){
+    protected boolean isPicture(String fileName) {
         fileName = fileName.toLowerCase();
         boolean isPic = fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix)
                 || fileName.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPEG.suffix)
@@ -265,7 +273,7 @@ public class MeetingMgrController extends CspBaseController{
 
 
     @RequestMapping(value = "/detail/del/{courseId}/{detailId}")
-    public String del(@PathVariable Integer courseId, @PathVariable Integer detailId){
+    public String del(@PathVariable Integer courseId, @PathVariable Integer detailId) {
         AudioCourseDetail detail = audioService.findDetail(detailId);
         Integer sort = 1;
         if (detail != null) {
@@ -282,18 +290,19 @@ public class MeetingMgrController extends CspBaseController{
 
     @RequestMapping(value = "/del/{courseId}")
     @ResponseBody
-    public String del(@PathVariable Integer courseId){
+    public String del(@PathVariable Integer courseId) {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         Principal principal = getWebPrincipal();
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
+        audioService.deleteAudioCourse(courseId);
         return success();
     }
 
 
     @RequestMapping(value = "/more/{courseId}")
-    public String more(@PathVariable Integer courseId, Model model){
+    public String more(@PathVariable Integer courseId, Model model) {
         model.addAttribute("courseId", courseId);
         return localeView("/meeting/more");
     }
@@ -301,9 +310,43 @@ public class MeetingMgrController extends CspBaseController{
 
     @RequestMapping(value = "/view/{courseId}")
     @ResponseBody
-    public String view(@PathVariable Integer courseId, Model model){
+    public String view(@PathVariable Integer courseId, Model model) {
         AudioCourse course = audioService.findAudioCourse(courseId);
         handleHttpPath(course);
         return success(course);
+    }
+
+
+    @RequestMapping(value = "/copy/{courseId}")
+    @ResponseBody
+    public String copy(@PathVariable Integer courseId, String title) {
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equals(course.getCspUserId())) {
+            return error(local("meeting.error.not_mine"));
+        }
+        audioService.addCourseCopy(courseId, title);
+        return success();
+    }
+
+
+    @RequestMapping(value = "/share/{courseId}")
+    @ResponseBody
+    public String share(@PathVariable Integer courseId, HttpServletRequest request) {
+        String local = LocalUtils.getLocalStr();
+        boolean abroad = LocalUtils.isAbroad();
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
+                .append(local).append("&abroad=" + (abroad ? 1 : 0));
+        String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
+
+        StringBuffer buffer2 = new StringBuffer();
+        buffer2.append(request.getScheme()).append("://").append(request.getServerName()).append(":")
+                .append(request.getServerPort()).append(request.getContextPath()).append("/api/meeting/share?signature=")
+                .append(signature);
+
+        Map<String, Object> result = new HashMap<>();
+        result.put("shareUrl", buffer2.toString());
+        return success(result);
     }
 }

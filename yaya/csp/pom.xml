@@ -73,6 +73,13 @@
             <version>${shiro.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>medcn.cn</groupId>
+            <artifactId>oauth</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
+
         <!-- 页面装饰器 -->
         <!--<dependency>-->
             <!--<groupId>opensymphony</groupId>-->

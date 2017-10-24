@@ -51,8 +51,10 @@ public class WeChatServiceDecorator extends OAuthServiceDecorator {
     public OAuthUser getOAuthUser(Token accessToken) {
         OAuthRequest request = new OAuthRequest(Verb.GET, String.format(USER_INFO_ACCESS_URL, accessToken.getToken(), accessToken.getSecret()));
         Response response = request.send();
+
         String body = response.getBody();
         JSONObject jsonObject = JSON.parseObject(body);
+
         OAuthUser user = new OAuthUser();
         user.setUid(jsonObject.getString("openid"));
         user.setNickname(jsonObject.getString("nickname"));

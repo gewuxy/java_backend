@@ -1,6 +1,5 @@
 package cn.medcn.csp.realm;
 
-import cn.medcn.common.Constants;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;
@@ -30,16 +29,23 @@ public class CspRealm extends AuthorizingRealm {
 
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
+        CspUserInfo cspUser = null;
         final String defaultPwd = "123456";
-        UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
-        String password = new String(token.getPassword());
-        if (!CheckUtils.isEmpty(password)) {
-            token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
+        String password = null;
+        if (authenticationToken instanceof UsernamePasswordToken) {
+            UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
+            password = new String(token.getPassword());
+            if (!CheckUtils.isEmpty(password)) {
+                token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
+            } else {
+                token.setPassword(MD5Utils.MD5Encode(defaultPwd).toCharArray());
+            }
+            cspUser = cspUserService.findByLoginName(token.getUsername());
         } else {
-            token.setPassword(MD5Utils.MD5Encode(defaultPwd).toCharArray());
+            ThirdPartyToken token = (ThirdPartyToken) authenticationToken;
+            cspUser = cspUserService.selectByPrimaryKey(token.getId());
         }
 
-        CspUserInfo cspUser = cspUserService.findByLoginName(token.getUsername());
         //账号不存在
         if (cspUser == null) {
             throw new AuthenticationException(SpringUtils.getMessage("user.error.nonentity"));

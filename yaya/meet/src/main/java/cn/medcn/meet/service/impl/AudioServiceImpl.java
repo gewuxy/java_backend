@@ -13,6 +13,7 @@ import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.LiveService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -56,6 +57,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Autowired
     protected AudioCoursePlayDAO audioCoursePlayDAO;
+
+    @Autowired
+    protected LiveService liveService;
 
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
@@ -206,26 +210,30 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 creditsService.executeAwardCredits(payDTO);
             }
         }
-        doCopyCourse(course, userId);
+        doCopyCourse(course, userId, null);
     }
 
     /**
      * 复制微课信息
      * @param course
      * @param userId
+     * @param newTitle
      */
-    private void doCopyCourse(AudioCourse course, Integer userId){
+    private void doCopyCourse(AudioCourse course, Integer userId, String newTitle){
         List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(course.getId());
         //复制微课信息
         AudioCourse reprintCourse = new AudioCourse();
         reprintCourse.setCredits(0);
-        reprintCourse.setTitle(course.getTitle());
+        reprintCourse.setTitle(CheckUtils.isEmpty(newTitle) ? course.getTitle() : newTitle );
         reprintCourse.setPrimitiveId(course.getId());
-        reprintCourse.setOwner(userId);
+        reprintCourse.setOwner(userId == null ? course.getOwner() : userId);
         reprintCourse.setCategory(course.getCategory());
         reprintCourse.setPublished(course.getPublished());
         reprintCourse.setShared(false);
         reprintCourse.setCreateTime(new Date());
+        reprintCourse.setPlayType(course.getPlayType());
+        reprintCourse.setCspUserId(course.getCspUserId());
+        reprintCourse.setInfo(course.getInfo());
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
         for(AudioCourseDetail detail:details){
@@ -566,5 +574,46 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public MyPage<CourseDeliveryDTO> findHistoryDeliveryByAcceptId(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
         return MyPage.page2Mypage((Page)audioCourseDAO.findHistoryDeliveryByAcceptId(pageable.getParams()));
+    }
+
+    /**
+     * 删除course以及明细
+     *
+     * @param courseId
+     */
+    @Override
+    @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#courseId")
+    public void deleteAudioCourse(Integer courseId) {
+        deleteAllDetails(courseId);
+        audioCourseDAO.deleteByPrimaryKey(courseId);
+    }
+
+    /**
+     * 复制课件 并复制直播和录播信息
+     *
+     * @param courseId
+     */
+    @Override
+    public void addCourseCopy(Integer courseId, String newTitle) {
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        doCopyCourse(course, null, newTitle);
+
+        Live live = liveService.findByCourseId(courseId);
+        if (live != null) {
+            Live copy = new Live();
+            BeanUtils.copyProperties(live, copy);
+            copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            liveService.insert(copy);
+        }
+
+        AudioCoursePlay cond = new AudioCoursePlay();
+        cond.setCourseId(courseId);
+        AudioCoursePlay play = audioCoursePlayDAO.selectOne(cond);
+        if (play != null) {
+            AudioCoursePlay copy = new AudioCoursePlay();
+            BeanUtils.copyProperties(play, copy);
+            copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            audioCoursePlayDAO.insert(copy);
+        }
     }
 }
