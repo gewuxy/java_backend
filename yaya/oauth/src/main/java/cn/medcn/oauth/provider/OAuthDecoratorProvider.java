@@ -31,22 +31,36 @@ public class OAuthDecoratorProvider {
     //todo 未完善其他三方平台创建
     public static OAuthServiceDecorator getDecorator(int serviceId, String callback){
         OAuthServiceConfig config = new OAuthServiceConfig();
+        String appKey = null;
+        String secret = null;
         switch (serviceId) {
-            case 1 :
+            case 1 : // 微信
+                appKey = OAuthConstants.get("WeChat.app_key");
+                secret = OAuthConstants.get("WeChat.app_secret");
+                config.setApiKey(appKey);
+                config.setApiSecret(secret);
+                config.setCallback(callback);
+                config.setScope("snsapi_userinfo");
+                config.setServiceId(serviceId);
+                break;
+            case 2 : // 微博
+                appKey = OAuthConstants.get("WeiBo.app_key");
+                secret = OAuthConstants.get("WeiBo.app_secret");
+                config.setApiKey(appKey);
+                config.setApiSecret(secret);
+                config.setCallback(callback);
+                config.setScope("");
+                config.setServiceId(serviceId);
+                break;
+            case 3 : // facebook
 
                 break;
-            case 2 :
+            case 4 : // twitter
 
                 break;
-            case 3 :
-
-                break;
-            case 4 :
-
-                break;
-            case 5 :
-                String appKey = OAuthConstants.get("YaYa.app_key");
-                String secret = OAuthConstants.get("YaYa.app_secret");
+            case 5 : // YaYa医师
+                appKey = OAuthConstants.get("YaYa.app_key");
+                secret = OAuthConstants.get("YaYa.app_secret");
                 config.setApiKey(appKey);
                 config.setApiSecret(secret);
                 config.setCallback(callback);

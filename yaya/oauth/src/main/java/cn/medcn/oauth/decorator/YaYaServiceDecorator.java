@@ -23,9 +23,11 @@ public class YaYaServiceDecorator extends OAuthServiceDecorator {
     public OAuthUser getOAuthUser(Token accessToken) {
         OAuthRequest request = new OAuthRequest(Verb.GET, String.format(USER_INFO_ACCESS_URL, accessToken.getToken(), accessToken.getSecret()));
         Response response = request.send();
+
         String body = response.getBody();
         JSONObject jsonObject = JSON.parseObject(body);
         JSONObject userJson = jsonObject.getJSONObject("data");
+
         OAuthUser user = new OAuthUser();
         user.setUid(userJson.getString("uid"));
         user.setNickname(userJson.getString("nickname"));

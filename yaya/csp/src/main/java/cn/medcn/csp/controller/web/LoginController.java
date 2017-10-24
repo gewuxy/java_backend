@@ -2,22 +2,27 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.SpringUtils;
-import cn.medcn.common.utils.StringUtils;
+ import cn.medcn.common.utils.CheckUtils;
+ import cn.medcn.common.utils.StringUtils;
+import cn.medcn.oauth.OAuthConstants;
+import cn.medcn.oauth.decorator.OAuthServiceDecorator;
+import cn.medcn.oauth.decorator.WeChatServiceDecorator;
+import cn.medcn.oauth.decorator.WeiBoServiceDecorator;
+import cn.medcn.oauth.decorator.YaYaServiceDecorator;
+import cn.medcn.oauth.dto.OAuthUser;
+import cn.medcn.oauth.provider.OAuthDecoratorProvider;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.service.CspUserService;
+ import cn.medcn.user.service.CspUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.scribe.model.Token;
+import org.scribe.model.Verifier;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
+ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,6 +35,7 @@ public class LoginController extends BaseController {
 
     @Autowired
     protected CspUserService cspUserService;
+
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public String login(Integer thirdPartyId){
@@ -56,9 +62,12 @@ public class LoginController extends BaseController {
         } else if (thirdPartyId == BindInfo.Type.MOBILE.getTypeId()) {
             // 手机登录
             return loginByMobile(mobile, captcha, model);
+
+        } else {
+            // 第三方登录
+           return "redirect:"+jumpThirdPartyAuthorizePage(thirdPartyId);
         }
 
-        return "";
     }
 
     /**
@@ -148,5 +157,44 @@ public class LoginController extends BaseController {
         } catch (SystemException e) {
             return error(e.getMessage());
         }
+    }
+
+    /**
+     * 跳转第三方授权登录页面
+     * @param thirdPartyId
+     * @return
+     */
+    protected String jumpThirdPartyAuthorizePage(Integer thirdPartyId) {
+        OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, OAuthConstants.get("WeiBo.oauth.callback"));
+
+        String authorizeUrl = decorator.getAuthorizeUrl();
+
+        return authorizeUrl;
+    }
+
+    /**
+     * 第三方登录 回调地址
+     * @param code
+     * @param thirdPartyId
+     * @return
+     */
+    @RequestMapping(value = "/oauth/callback")
+    public String callback(String code, Integer thirdPartyId) {
+        if (!StringUtils.isNotEmpty(code)) {
+            OAuthUser oAuthUser = new OAuthUser();
+            Token accessToken = null;
+            OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, "");
+            accessToken = decorator.getAccessToken(accessToken, new Verifier(code));
+            OAuthUser user = decorator.getOAuthUser(accessToken);
+
+            if (oAuthUser != null) {
+                UsernamePasswordToken token = new UsernamePasswordToken(oAuthUser.getUid(), "");
+                Subject subject = SecurityUtils.getSubject();
+                subject.login(token);
+            }
+
+        }
+
+        return "redirect:/mgr/meet/list";
     }
 }
