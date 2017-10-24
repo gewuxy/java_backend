@@ -12,7 +12,7 @@
                 <ul class="sf-menu" >
                     <li class="current">
                         <a class="first-level" target="_blank" href="javascript:;" ><img id="head_img"
-                                src="${ctxStatic}/images/admin-userImg.png" alt=""></a>
+                                src="<shiro:principal property='avatar' defaultValue='${ctxStatic}/images/admin-userImg.png'/>" alt=""></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
                                 <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
