@@ -24,10 +24,21 @@
     <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
+    <script src="${ctxStatic}/js/zclip/jquery.zclip.min.js"></script>
+
+    <script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js"></script>
+
+
     <script>
+        const shareSdkAppKey = "21454499cef00";
         var courseId;
+        var courseTitle = "";
+        var shareUrl = "";
+        var coverUrl = "";
 
         $(function(){
+
+
 
             //初始化音频
             var asAllItem = audiojs.createAll();
@@ -96,10 +107,11 @@
                     area: ['609px', '278px'],
                     fix: false, //不固定
                     title:false,
+                    anim:5,
                     closeBtn:0,
                     content: $('.copy-popup-box'),
                     success:function(){
-
+                        $("#courseTitle").val(courseTitle + "_副本");
                     },
                     cancel :function(){
 
@@ -109,7 +121,23 @@
 
             $('.more-hook').on('click',function(){
                 courseId = $(this).attr("courseId");
-                $("#moreFrame").attr("src", '${ctx}/mgr/meet/more/'+courseId);
+                courseTitle = $(this).attr("courseTitle");
+                shareUrl = getShareUrl();
+                $("#copyShareUrl").val(shareUrl);
+                mobShare.config({
+                    debug: true, // 开启调试，将在浏览器的控制台输出调试信息
+                    appkey: shareSdkAppKey, // appkey
+                    params: {
+                        url: shareUrl, // 分享链接
+                        title: courseTitle, // 分享标题
+                        description: courseTitle, // 分享内容
+                        pic: '', // 分享图片，使用逗号,隔开
+                        reason:'',//自定义评论内容，只应用与QQ,QZone与朋友网
+                    },
+
+                    callback: function( plat, params ) {
+                    }
+                });
                 layer.open({
                     type: 1,
                     area: ['618px', '398px'],
@@ -126,7 +154,6 @@
                     },
                 });
             });
-
 
 
             function loadCourseInfo(courseId){
@@ -220,10 +247,34 @@
                         $("#mySwiper").html("");
                     },
                 });
+
+
             });
 
-            $("#keyword").onkeydown(function (evt){
-                alert(1);
+            $("#copyShareUrlBtn").click(function (){
+                $("#copyShareUrl").show();
+                $("#copyShareUrl")[0].select();
+                var tag = document.execCommand("Copy");
+                if (tag){
+                    layer.msg("已经成功复制到剪切板");
+                }
+                $("#copyShareUrl").hide();
+            });
+
+            $("#copyBtn").click(function(){
+                $.ajax({
+                    url:'${ctx}/mgr/meet/copy/'+courseId,
+                    data:{'title': $("#courseTitle").val()},
+                    type : "POST",
+                    dataType : 'json',
+                    success:function(data){
+                        if (data.code == 0){
+                            window.location.reload();
+                        } else {
+                            layer.msg(data.err);
+                        }
+                    }
+                });
             });
         });
 
@@ -235,6 +286,19 @@
                 targetUrl += '?playType='+playType;
             }
             window.location.href = targetUrl;
+        }
+        
+        function getShareUrl(){
+            var shareUrl = '';
+            $.ajax({
+                url : '${ctx}/mgr/meet/share/'+courseId,
+                dataType:'json',
+                async:false,
+                success : function (data) {
+                    shareUrl = data.data.shareUrl;
+                }
+            });
+            return shareUrl;
         }
 
         var sortType = '${sortType}';
@@ -248,7 +312,29 @@
 
 
         function delCourse(){
-            alert(courseId);
+            layer.open({
+                type: 1,
+                area: ['300px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                anim: 5,
+                content: $('#del-popup-box'),
+                btn : ['确定', '取消'],
+                yes :function(){
+                    $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
+                        if (data.code == 0){
+                            window.location.reload();
+                        } else {
+                            layer.msg(data.err);
+                        }
+                    }, 'json');
+
+                },
+
+                cancel :function(){
+                }
+            });
         }
 
         function edit(){
@@ -341,7 +427,7 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}"><i></i>更多</a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>更多</a>
                                             </div>
                                         </div>
                                     </div>
@@ -417,41 +503,42 @@
             <strong>&nbsp;</strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
+
         <div class="layer-hospital-popup-main ">
             <div class="more-popup-list clearfix">
-                <ul id="more_popup_ul">
-                    <li>
+                <ul id="more_popup_ul" class="-mob-share-list">
+                    <li  class="-mob-share-weixin">
                         <a href="javascript:;">
                             <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
                             <p>微信好友</p>
                         </a>
                     </li>
-                    <li>
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_friends-icon.png" alt="">
-                            <p>朋友圈</p>
-                        </a>
-                    </li>
-                    <li>
+                    <%--<li class="-mob-share-qq">--%>
+                        <%--<a href="javascript:;">--%>
+                            <%--<img src="${ctxStatic}/images/_friends-icon.png" alt="">--%>
+                            <%--<p>朋友圈</p>--%>
+                        <%--</a>--%>
+                    <%--</li>--%>
+                    <li class="-mob-share-weibo">
                         <a href="javascript:;">
                             <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
                             <p>微博</p>
                         </a>
                     </li>
-                    <li>
+                    <li class="-mob-share-twitter">
                         <a href="javascript:;">
                             <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
                             <p>Twitter</p>
                         </a>
                     </li>
-                    <li>
+                    <li  class="-mob-share-facebook">
                         <a href="javascript:;">
                             <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
                             <p>Facebook</p>
                         </a>
                     </li>
                     <li>
-                        <a href="javascript:;">
+                        <a style="cursor: pointer;" id="copyShareUrlBtn">
                             <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
                             <p>复制链接</p>
                         </a>
@@ -475,7 +562,22 @@
                         </a>
                     </li>
                 </ul>
+                <input type="text" style="display: none; width: 485px;" id="copyShareUrl">
             </div>
+        </div>
+    </div>
+</div>
+<div class="copy-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+                <div class="copy-popup-main">
+                    <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" value=""></label>
+                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="确认复制">
+                </div>
         </div>
     </div>
 </div>
@@ -493,29 +595,10 @@
                     <!-- Swiper -->
                     <div class="swiper-container swiper-container-horizontal swiper-container-metting">
                         <div class="swiper-wrapper" id="mySwiper" style="transform: translate3d(297.25px, 0px, 0px); transition-duration: 0ms;">
-                            <div class="swiper-slide swiper-slide-active" data-num="0"  audio-src="./upload/audio/30179313.mp3">
-                                <img src="./upload/img/_admin_player_01.png" alt="">
-
-                            </div>
-                            <div class="swiper-slide swiper-slide-next" data-num="1"  audio-src="https://raw.githubusercontent.com/kolber/audiojs/master/mp3/bensound-dubstep.mp3">
-                                <img src="./upload/img/_admin_player_01.png" alt="">
-                                <div class="swiper-slide-metting-audio"></div>
-
-                            </div>
-                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3">
-                                <img src="./upload/img/_admin_player_01.png" alt="">
-                                <div class="swiper-slide-metting-audio"></div>
-                            </div>
-                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3"><img src="./upload/img/_admin_player_01.png" alt=""><div class="swiper-slide-metting-audio"></div></div>
-                            <div class="swiper-slide" data-num="2"  >
-                                <video src="http://www.zhangxinxu.com/study/media/cat.mp4" width="auto" height="264" controls autobuffer></video>
-                                <div class="swiper-slide-metting-audio"></div></div>
-                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3"><img src="./upload/img/_admin_player_01.png" alt=""><div class="swiper-slide-metting-audio"></div></div>
-                            <div class="swiper-slide" data-num="3"  audio-src="./upload/audio/30179313.mp3"></div>
                         </div>
                         <div class="clearfix t-center player-item" >
                             <div class="audio-metting-box" style="">
-                                <audio controls=true id="swiperViedo" src="./upload/audio/30179313.mp3"></audio>
+                                <audio controls=true id="swiperViedo" src=""></audio>
                             </div>
                         </div>
                         <!-- Add Pagination -->
@@ -529,6 +612,23 @@
                 </div>
 
             </div>
+        </div>
+    </div>
+</div>
+<div class="cancel-popup-box" id="del-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否确定删除？</p>
+
+                </div>
+
+            </form>
         </div>
     </div>
 </div>

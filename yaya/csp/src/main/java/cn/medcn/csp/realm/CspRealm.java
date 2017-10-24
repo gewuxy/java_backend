@@ -1,6 +1,5 @@
 package cn.medcn.csp.realm;
 
-import cn.medcn.common.Constants;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;

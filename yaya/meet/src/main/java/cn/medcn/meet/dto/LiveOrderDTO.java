@@ -28,5 +28,7 @@ public class LiveOrderDTO implements Serializable{
     protected int pageNum;
     //当前的页面音频路径 在直播的时候才有
     protected String audioUrl;
+    //指令来自哪个端 app , web
+    protected String orderFrom;
 
 }
