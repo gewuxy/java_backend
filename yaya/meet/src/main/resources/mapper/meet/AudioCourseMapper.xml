@@ -99,9 +99,9 @@
     </select>
 
     <select id="findHistoryDeliveryByAcceptId" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT FROM t_csp_delivery td
+        SELECT tc.id,tc.title,tc.play_type,tcd.img_url AS cover_url,td.view_state,td.publish_state FROM t_csp_delivery td
         INNER JOIN t_audio_course tc ON td.source_id = tc.id
         INNER JOIN t_audio_course_detail tcd ON tcd.course_id = tc.id AND tcd.sort=1
-        WHERE td.author_id = #{authorId} AND td.accept_id = #{accept_id}
+        WHERE td.author_id = #{authorId} AND td.accept_id = #{acceptId} ORDER BY td.delivery_time DESC
     </select>
 </mapper>

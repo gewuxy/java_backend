@@ -74,6 +74,7 @@
                 /api/**=anon
                 /static/**=anon
                 /mgr/login=anon
+                /mgr/sendCaptcha=anon
                 /mgr/**=authc
             </value>
         </property>

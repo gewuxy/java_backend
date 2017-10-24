@@ -3,14 +3,28 @@
 <mapper namespace="cn.medcn.user.dao.CspUserInfoDAO" >
 
     <select id="findBindUserByUniqueId" resultType="cn.medcn.user.model.CspUserInfo">
-      SELECT u.* FROM t_csp_user_info u
+      SELECT u.*,f.flux FROM t_csp_user_info u
       LEFT JOIN t_csp_bind_info b ON b.user_id = u.id
+      LEFT JOIN t_csp_user_flux f ON f.user_id = u.id
       WHERE b.unique_id = #{uniqueId}
     </select>
 
     <select id="findByLoginName" resultType="cn.medcn.user.model.CspUserInfo">
-        SELECT * FROM t_csp_user_info WHERE mobile = #{username} OR  email = #{username}
+        SELECT u.*,f.flux FROM t_csp_user_info u
+        LEFT JOIN t_csp_user_flux f ON u.id = f.user_id
+        WHERE u.mobile = #{username} OR u.email = #{username}
     </select>
+
+    <select id="findCSPUserInfo" resultType="cn.medcn.user.dto.CspUserInfoDTO">
+        SELECT tu.avatar,tu.email,tu.user_name,tu.info,count(tc.id) AS pptCount,
+        (SELECT count(ts.id)  FROM t_csp_share ts WHERE ts.user_id = #{userId}) AS shareCount
+        FROM t_csp_user_info tu
+         LEFT JOIN t_audio_course tc ON tu.id = tc.csp_user_id
+         WHERE tu.id = #{userId} GROUP BY tc.csp_user_id
+
+    </select>
+
+
 
 
 

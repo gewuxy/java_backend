@@ -25,10 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Date;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -164,10 +161,18 @@ public class CspUserController extends BaseController {
             // 缓存用户信息
             cachePrincipal(userInfo);
 
+            // 用户信息
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
             if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
+
+            // 查询当前用户绑定的第三方平台列表
+            List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userInfo.getId());
+            if (!CheckUtils.isEmpty(bindInfoList)) {
+                dto.setBindInfoList(bindInfoList);
+            }
+
             return success(dto);
 
         } catch (SystemException e){
@@ -212,11 +217,7 @@ public class CspUserController extends BaseController {
         }
 
         // 检查用户是否注册且已经激活
-        CspUserInfo condition = new CspUserInfo();
-        condition.setEmail(email);
-        condition.setActive(true);
-        CspUserInfo userInfo = cspUserService.selectOne(condition);
-
+        CspUserInfo userInfo = cspUserService.findByLoginName(email);
         if (userInfo == null) {
             throw new SystemException(local("user.notexisted"));
         }
@@ -264,6 +265,7 @@ public class CspUserController extends BaseController {
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             cspUserService.insert(userInfo);
+            userInfo.setFlux(0); // 用户流量
         }
 
         return userInfo;
@@ -386,11 +388,19 @@ public class CspUserController extends BaseController {
      */
     @RequestMapping("/toBind")
     @ResponseBody
-    public String toBind(String email) {
+    public String toBind(String email,String password) {
         if(!StringUtils.isEmail(email)){
             return error(local("user.error.email.format"));
         }
+        if(!StringUtils.isEmail(password)){
+            return error(local("user.password.notnull"));
+        }
         String userId = SecurityUtils.get().getId();
+        //将密码插入到数据库
+        CspUserInfo info = new CspUserInfo();
+        info.setId(userId);
+        info.setPassword(MD5Utils.md5(password));
+        cspUserService.updateByPrimaryKey(info);
         try {
             cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
         } catch (SystemException e) {

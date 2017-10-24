@@ -566,6 +566,17 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
     /**
+     * 投稿给指定用户的会议列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> findHistoryDeliveryByAcceptId(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        return MyPage.page2Mypage((Page)audioCourseDAO.findHistoryDeliveryByAcceptId(pageable.getParams()));
+    }
+
+    /**
      * 删除course以及明细
      *
      * @param courseId

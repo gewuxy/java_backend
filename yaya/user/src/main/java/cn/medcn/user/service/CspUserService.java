@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -22,6 +23,13 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     CspUserInfo findBindUserByUniqueId(String uniqueId);
+
+    /**
+     * 查询绑定的第三方平台列表
+     * @param userId
+     * @return
+     */
+    List<BindInfo> findBindListByUserId(String userId);
 
     /**
      * 根据邮箱或者手机号码检查csp账号 是否存在
@@ -118,4 +126,11 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param newPwd
      */
     void resetPwd(String userId, String oldPwd, String newPwd) throws SystemException;
+
+    /**
+     * cspweb端查找用户信息
+     * @param userId
+     * @return
+     */
+    CspUserInfoDTO findCSPUserInfo(String userId);
 }

@@ -229,4 +229,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param newTitle
      */
     void addCourseCopy(Integer courseId, String newTitle);
+
+    /**
+     * 投稿给指定用户的会议列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findHistoryDeliveryByAcceptId(Pageable pageable);
 }

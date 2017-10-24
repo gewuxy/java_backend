@@ -88,13 +88,7 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("sortType", sortType);
 
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
-
-        for (CourseDeliveryDTO dto : page.getDataList()) {
-            if (!CheckUtils.isEmpty(dto.getCoverUrl())) {
-                dto.setCoverUrl(fileBase + dto.getCoverUrl());
-            }
-        }
-
+        CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
 
         return localeView("/meeting/list");

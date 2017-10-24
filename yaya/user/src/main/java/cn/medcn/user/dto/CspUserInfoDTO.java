@@ -1,10 +1,12 @@
 package cn.medcn.user.dto;
 
+import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Liuchangling on 2017/9/22.
@@ -43,6 +45,16 @@ public class CspUserInfoDTO  {
     protected String info;
     // token
     protected String token;
+    // 用户流量值
+    protected Integer flux;
+
+    // 用户绑定的第三方平台
+    protected List<BindInfo> bindInfoList;
+
+    //上传的ppt数量
+    protected int pptCount;
+    //分享的ppt数量
+    protected int shareCount;
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
         CspUserInfoDTO dto = new CspUserInfoDTO();
@@ -58,6 +70,11 @@ public class CspUserInfoDTO  {
         dto.setEmail(userInfo.getEmail());
         dto.setMobile(userInfo.getMobile());
         dto.setUserName(userInfo.getUserName());
+        if (userInfo.getFlux() == null) {
+            dto.setFlux(0);
+        } else {
+            dto.setFlux(userInfo.getFlux());
+        }
         return dto;
     }
 
