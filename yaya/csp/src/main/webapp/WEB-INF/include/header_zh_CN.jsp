@@ -11,7 +11,7 @@
             <div class="userInfo">
                 <ul class="sf-menu" >
                     <li class="current">
-                        <a class="first-level" target="_blank" href="javascript:;" >
+                        <a class="first-level" >
                         <img id="head_img" src="<shiro:principal property='avatar' defaultValue='${ctxStatic}/images/admin-userImg.png'/>" alt=""></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
