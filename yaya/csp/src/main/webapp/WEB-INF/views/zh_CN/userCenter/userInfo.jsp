@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>个人中心 - 我的信息</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
@@ -14,7 +16,7 @@
 </head>
 
 
-
+<body>
 <div id="wrapper">
     <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
     <div class="admin-content bg-gray" >
@@ -57,6 +59,8 @@
 
     $(function () {
 
+        $("#config_1").parent().attr("class","cur");
+
         $("#update").click(function () {
             var userName = $.trim($("#userName").val());
             if(userName == ''){
@@ -77,7 +81,8 @@
     });
 </script>
 
-
+</body>
+</html>
 
 
 
