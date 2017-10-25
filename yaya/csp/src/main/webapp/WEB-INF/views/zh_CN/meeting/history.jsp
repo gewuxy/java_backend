@@ -130,6 +130,9 @@
 <script>
     $(function(){
 
+        $(".icon-folder").parent().removeClass();
+        $(".icon-contribute").parent().attr("class","current");
+
         var asAllItem = audiojs.createAll();
 
         $(".hidden-box").perfectScrollbar();

@@ -44,7 +44,7 @@
                                             <h3>修改密码</h3>
                                             <label for="pwd" class="cells-block pr">
                                                 <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text" placeholder="旧密码" class="login-formInput icon-register-hot last none" maxlength="24">
+                                                <input type="text" placeholder="旧密码" class="login-formInput icon-register-hot last none"  maxlength="24">
                                                 <input id="pwd" type="password" name="oldPwd" required="" placeholder="旧密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                             </label>
@@ -92,37 +92,20 @@
         });
 
         $("#pwd").blur(function () {
-            var password = $("#pwd").val();
-            if ($.trim(password)==''){
-                $("#oldSpan").html("旧密码不能为空");
-                $("#oldSpan").attr("class","cells-block error");
-            }else if($.trim(password)!= password){
-                $("#oldSpan").html("旧密码不能包含空格");
-                $("#oldSpan").attr("class","cells-block error");
-            }else{
-                $("#oldSpan").attr("class","cells-block error none");
-            }
+            oldPwdValid();
         });
 
         $("#rePwd").blur(function () {
-            var newPwd = $("#rePwd").val();
-            if ($.trim(newPwd)==''){
-                $("#newSpan").html("新密码不能为空");
-                $("#newSpan").attr("class","cells-block error");
-            }else if($.trim(newPwd)!= newPwd){
-                $("#newSpan").html("新密码不能包含空格");
-                $("#newSpan").attr("class","cells-block error");
-            }else{
-                $("#newSpan").attr("class","cells-block error none");
-            }
+           newPwdValid();
         });
 
         $("#submitBtn").click(function () {
             if(check()){
                 $.post('${ctx}/mgr/user/resetPwd',$("#submitForm").serialize(),function(result){
                     if (result.code == 0){//成功
-                        layer.msg("修改成功",{time:300},function () {
-                        });
+                        $("#pwd").val("");
+                        $("#rePwd").val("");
+                        layer.msg("修改成功");
                     }else{//失败
                         layer.msg(result.err);
                     }
@@ -135,6 +118,16 @@
 
 
     function check() {
+       if(!oldPwdValid()){
+           return false;
+       }
+       if(!newPwdValid()){
+           return false;
+       }
+        return true;
+    }
+
+    function oldPwdValid() {
         var password = $("#pwd").val();
         if ($.trim(password)==''){
             $("#oldSpan").html("旧密码不能为空");
@@ -144,7 +137,17 @@
             $("#oldSpan").html("旧密码不能包含空格");
             $("#oldSpan").attr("class","cells-block error");
             return false;
+        }else if($.trim(password).length < 6){
+            $("#oldSpan").html("请输入6~24位密码");
+            $("#oldSpan").attr("class","cells-block error");
+
+        }else{
+            $("#oldSpan").attr("class","cells-block error none");
+            return true;
         }
+    }
+
+    function newPwdValid() {
         var newPwd = $("#rePwd").val();
         if ($.trim(newPwd)==''){
             $("#newSpan").html("新密码不能为空");
@@ -154,12 +157,15 @@
             $("#newSpan").html("新密码不能包含空格");
             $("#newSpan").attr("class","cells-block error");
             return false;
+        }else if($.trim(newPwd).length < 6){
+            $("#newSpan").html("请输入6~24位密码");
+            $("#newSpan").attr("class","cells-block error");
+
+        }else{
+            $("#newSpan").attr("class","cells-block error none");
+            return true;
         }
-
-        return true;
-
     }
-
 
 
 </script>
