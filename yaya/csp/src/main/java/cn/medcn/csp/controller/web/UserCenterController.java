@@ -169,5 +169,14 @@ public class UserCenterController extends CspBaseController{
     }
 
 
+    /**
+     * 跳转到账号管理页面
+     * @return
+     */
+    @RequestMapping("/toAccount")
+    public String toAccount(Model model){
+        addBaseUserInfo(model);
+        return localeView("/userCenter/accountBind");
+    }
 
 }
