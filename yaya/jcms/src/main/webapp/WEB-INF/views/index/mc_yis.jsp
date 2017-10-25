@@ -49,7 +49,7 @@
                             <p><a href="http://139.199.170.178/apkfile/YaYa_v7.1.3.apk"> <input name="button" type="button" class="yis-azxz" value="Android下载" /></a></p>
                             <p><a href="https://itunes.apple.com/cn/app/id669352079" target="_blank"><input name="" type="button" class="yis-iosxz" value="iPhone下载" /></a></p>
                         </div>
-                        <a  href="http://www.medcn.cn/return_yis_vers.jsp"><img src="${statics}/images/erweima.png" width="130"/></a>
+                        <a href="http://www.medcn.cn/return_yis_vers.jsp"><img src="${statics}/images/erweima.png" width="130"/></a>
                     </div>
                 </div>
             </div>

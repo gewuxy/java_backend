@@ -52,8 +52,6 @@
                         <div class="login-box-other-main t-center ">
                             <a href="${ctx}/mgr/login?thirdPartyId=6" title="手机登录"><img src="${ctxStatic}/images/login-phone-icon.png" alt="手机登录"></a>
                             <a href="${ctx}/mgr/login?thirdPartyId=7" title="邮箱登录"><img src="${ctxStatic}/images/login-email-icon.png" alt="邮箱登录"></a>
-                            <a href="${ctx}/mgr/login?thirdPartyId=3" title="facebook授权登录"><img src="${ctxStatic}/images/login-facebook-icon.png" alt="facebook授权登录"></a>
-                            <a href="${ctx}/mgr/login?thirdPartyId=4" title="twitter授权登录"><img src="${ctxStatic}/images/login-twitter-icon.png" alt="twitter授权登录"></a>
                         </div>
                     </div>
                     <div class="login-box-info t-center ">
