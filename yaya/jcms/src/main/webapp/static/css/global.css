@@ -144,3 +144,4 @@ header > div > p > span { margin-left: 10px; }
     -webkit-box-flex: 1;
     height: inherit;
 }
+.none { display: none !important; }
