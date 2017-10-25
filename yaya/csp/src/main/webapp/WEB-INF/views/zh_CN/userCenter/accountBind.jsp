@@ -38,34 +38,62 @@
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn ">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
                                         <span class="main">${dto.mobile}</span>
                                     </li>
                                     <li class="wechat">
-                                        <a href="#" class="fr binding-btn ">解绑</a>
-                                        <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
-                                        <span class="status status-on"></span>
-                                        <span class="main">赵悦宾</span>
+                                        <c:if test="${not empty weChat}">
+                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                                            <span class="status status-on"></span>
+                                        </c:if>
+                                        <c:if test="${empty weChat}">
+                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                                            <span class="status status-off"></span>
+                                        </c:if>
+                                        <span class="main">${weChat}</span>
                                     </li>
                                     <li class="weibo">
-                                        <a href="#" class="fr binding-btn ">解绑</a>
-                                        <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
-                                        <span class="status status-on"></span>
-                                        <span class="main">zhaoyeunobin</span>
+                                        <c:if test="${not empty weiBo}">
+                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
+                                            <span class="status status-on"></span>
+                                        </c:if>
+                                        <c:if test="${empty weiBo}">
+                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
+                                            <span class="status status-off"></span>
+                                        </c:if>
+                                        <span class="main">${weiBo}</span>
                                     </li>
                                     <li class="email">
-                                        <a href="#" class="fr binding-btn ">解绑</a>
-                                        <img src="${ctxStatic}/images/icon-user-email.png" alt="">
-                                        <span class="status status-on"></span>
-                                        <span class="main">15646157@126.com</span>
+                                        <c:if test="${not empty dto.email}">
+                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <img src="${ctxStatic}/images/icon-user-email.png" alt="">
+                                            <span class="status status-on"></span>
+                                        </c:if>
+                                        <c:if test="${empty dto.email}">
+                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <img src="${ctxStatic}/images/icon-user-email.png" alt="">
+                                            <span class="status status-off"></span>
+                                        </c:if>
+                                        <span class="main">${dto.email}</span>
                                     </li>
                                     <li class="medcn">
-                                        <a href="#" class="fr binding-btn color-blue">绑定</a>
-                                        <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
-                                        <span class="status status-off"></span>
+                                        <c:if test="${not empty YaYa}">
+                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
+                                            <span class="status status-on"></span>
+                                        </c:if>
+                                        <c:if test="${empty YaYa}">
+                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
+                                            <span class="status status-off"></span>
+                                        </c:if>
                                         <span class="main">敬信数字平台</span>
                                     </li>
                                 </ul>
@@ -84,25 +112,7 @@
 
     $(function () {
 
-        $("#config_1").parent().attr("class","cur");
 
-        $("#update").click(function () {
-            var userName = $.trim($("#userName").val());
-            if(userName == ''){
-                $("#nameSpan").attr("class","cells-block error");
-                return;
-            }
-            var info = $("#info").val();
-            $.get('${ctx}/mgr/user/updateInfo',{"userName":userName,"info":info}, function (data) {
-                if (data.code == 0){
-                    $("#name", window.parent.document).html(userName);
-                    layer.msg("修改成功");
-                }else{
-                    layer.msg("修改失败");
-                }
-            },'json');
-
-        });
     });
 </script>
 

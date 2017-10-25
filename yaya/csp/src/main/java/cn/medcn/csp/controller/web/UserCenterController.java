@@ -64,7 +64,7 @@ public class UserCenterController extends CspBaseController{
      * 左侧的基本用户信息
      * @param model
      */
-    private void addBaseUserInfo(Model model) {
+    private CspUserInfoDTO addBaseUserInfo(Model model) {
         String userId = getWebPrincipal().getId();
         CspUserInfoDTO dto = cspUserService.findCSPUserInfo(userId);
         if (!StringUtils.isEmpty(dto.getAvatar())) {
@@ -73,6 +73,7 @@ public class UserCenterController extends CspBaseController{
         List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userId);
         dto.setBindInfoList(bindInfoList);
         model.addAttribute("dto", dto);
+        return dto;
     }
 
 
@@ -175,7 +176,19 @@ public class UserCenterController extends CspBaseController{
      */
     @RequestMapping("/toAccount")
     public String toAccount(Model model){
-        addBaseUserInfo(model);
+        CspUserInfoDTO dto = addBaseUserInfo(model);
+        List<BindInfo> list = dto.getBindInfoList();
+        for(BindInfo info:list){
+            if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
+                model.addAttribute("weChat",info.getNickName());
+            }
+            if(info.getThirdPartyId() == BindInfo.Type.WEI_BO.getTypeId()){
+                model.addAttribute("weiBo",info.getNickName());
+            }
+            if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
+                model.addAttribute("YaYa",info.getNickName());
+            }
+        }
         return localeView("/userCenter/accountBind");
     }
 
