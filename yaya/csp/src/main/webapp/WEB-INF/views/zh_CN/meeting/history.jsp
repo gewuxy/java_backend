@@ -30,7 +30,7 @@
                             <div class="admin-history-tabList">
                                 <ul>
                                     <c:forEach items="${acceptList}" var="accept" varStatus="status">
-                                        <li <c:if test="${status.index == 0}"> class="current" </c:if> <c:if test="${status.end}"> class="last" </c:if>>
+                                        <li id="${accept.id}" <c:if test="${status.index == 0}">  </c:if> <c:if test="${status.end}"> class="last" </c:if>>
                                             <a href="${ctx}/mgr/delivery/history?pageNum=1&pageSize=${page.pageSize}&acceptId=${accept.id}" >
                                                 <div class="clearfix">
                                                     <div class="fl">
@@ -132,6 +132,15 @@
 
         $(".icon-folder").parent().removeClass();
         $(".icon-contribute").parent().attr("class","current");
+
+        if(${current != null}){
+            if($("#"+${current}).attr("class") == "last"){
+                $("#"+${current}).addClass("current last");
+            }else{
+                $("#"+${current}).addClass("current");
+            }
+        }
+
 
         var asAllItem = audiojs.createAll();
 
