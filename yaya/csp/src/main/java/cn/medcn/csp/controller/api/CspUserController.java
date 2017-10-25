@@ -392,7 +392,7 @@ public class CspUserController extends BaseController {
         if(!StringUtils.isEmail(email)){
             return error(local("user.error.email.format"));
         }
-        if(!StringUtils.isEmail(password)){
+        if(StringUtils.isEmpty(password)){
             return error(local("user.password.notnull"));
         }
         String userId = SecurityUtils.get().getId();

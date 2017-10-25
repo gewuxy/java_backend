@@ -34,11 +34,9 @@ public class OAuthDecoratorProvider {
 
     //todo 未完善其他三方平台创建
     public static OAuthServiceDecorator getDecorator(int serviceId, String callback){
-
         if (decoratorMap.get(serviceId) != null) {
             return decoratorMap.get(serviceId);
         } else {
-
             OAuthServiceConfig config = new OAuthServiceConfig();
             String appKey = null;
             String secret = null;
@@ -79,6 +77,7 @@ public class OAuthDecoratorProvider {
                 default:
                     break;
             }
+
             OAuthServiceDecorator decorator = getDecorator(config);
             decoratorMap.put(serviceId, decorator);
             return getDecorator(config);

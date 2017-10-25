@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
     <title>个人中心 - 我的信息</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
@@ -14,7 +16,7 @@
 </head>
 
 
-
+<body>
 <div id="wrapper">
     <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
     <div class="admin-content bg-gray" >
@@ -27,12 +29,12 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius" >
-                            <div class="formrow">
+                            <div class="formrow login-form-item">
                                 <div class="formTitle">姓名</div>
                                 <div class="formControls">
                                     <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.userName}">
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;姓名不能为空</span>
                                 </div>
-                                <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请输入正确的邮箱地址</span>
                             </div>
                             <div class="formrow">
                                 <div class="formTitle">简介</div>
@@ -57,6 +59,8 @@
 
     $(function () {
 
+        $("#config_1").parent().attr("class","cur");
+
         $("#update").click(function () {
             var userName = $.trim($("#userName").val());
             if(userName == ''){
@@ -77,7 +81,8 @@
     });
 </script>
 
-
+</body>
+</html>
 
 
 

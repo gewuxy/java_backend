@@ -28,6 +28,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import static cn.medcn.csp.realm.CspRealm.AUTH_DEFAULT_PASSWORD;
+
 /**
  * Created by lixuan on 2017/10/16.
  */
@@ -167,12 +169,18 @@ public class LoginController extends BaseController {
      * @return
      */
     protected String jumpThirdPartyAuthorizePage(Integer thirdPartyId) {
-        OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId,
-                OAuthConstants.get("WeiBo.oauth.callback"));
-
-        String authorizeUrl = decorator.getAuthorizeUrl();
-
-        return authorizeUrl;
+        String callback = null;
+        if (thirdPartyId == BindInfo.Type.WE_CHAT.getTypeId()) {
+            callback = OAuthConstants.get("WeChat.oauth.callback");
+        } else if (thirdPartyId == BindInfo.Type.WEI_BO.getTypeId()) {
+            callback = OAuthConstants.get("WeiBo.oauth.callback");
+        } else {
+            callback = OAuthConstants.get("YaYa.oauth.callback");
+        }
+        // 获取授权url
+        OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, callback);
+        // 跳转授权url
+        return decorator.getAuthorizeUrl();
     }
 
     /**
@@ -185,8 +193,10 @@ public class LoginController extends BaseController {
     public String callback(String code, Integer thirdPartyId) {
         if (StringUtils.isNotEmpty(code)) {
             Token accessToken = null;
+            // 获取授权成功token
             OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, "");
             accessToken = decorator.getAccessToken(accessToken, new Verifier(code));
+            // 获取授权成功后用户数据
             OAuthUser oAuthUser = decorator.getOAuthUser(accessToken);
 
             CspUserInfo userInfo = null;
@@ -217,4 +227,6 @@ public class LoginController extends BaseController {
 
         return "redirect:/mgr/meet/list";
     }
+
+
 }

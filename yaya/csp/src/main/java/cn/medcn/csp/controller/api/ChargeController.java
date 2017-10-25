@@ -7,13 +7,11 @@ import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -47,7 +45,7 @@ public class ChargeController extends BaseController {
      */
     @RequestMapping("/toCharge")
     @ResponseBody
-    public String toCharge(Integer flux, String channel, HttpServletRequest request) throws Exception {
+    public String toCharge(Integer flux, String channel, HttpServletRequest request)  {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";

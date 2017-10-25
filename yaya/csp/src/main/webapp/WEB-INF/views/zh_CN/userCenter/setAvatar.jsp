@@ -1,6 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>个人中心 - 我的信息</title>
+    <title>个人中心 - 头像设置</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -13,7 +15,7 @@
 </head>
 
 
-
+<body>
 <div id="wrapper">
     <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
     <div class="admin-content bg-gray" >
@@ -46,6 +48,7 @@
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script>
 
+    $("#config_2").parent().attr("class","cur");
     var fileUploadUrl = "${ctx}/mgr/user/updateAvatar";
     $(function () {
 
@@ -70,7 +73,8 @@
 
 </script>
 
-
+</body>
+</html>
 
 
 

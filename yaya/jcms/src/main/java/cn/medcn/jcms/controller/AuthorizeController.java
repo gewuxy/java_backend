@@ -118,7 +118,7 @@ public class AuthorizeController extends BaseController {
         }
 
         StringBuffer buffer = new StringBuffer("redirect:");
-        buffer.append(redirect_uri).append("?code=").append(createCode(String.valueOf(appUser.getId())));
+        buffer.append(redirect_uri).append("&code=").append(createCode(String.valueOf(appUser.getId())));
         return buffer.toString();
     }
 

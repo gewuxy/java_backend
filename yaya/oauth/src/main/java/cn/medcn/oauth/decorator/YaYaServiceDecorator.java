@@ -30,7 +30,7 @@ public class YaYaServiceDecorator extends OAuthServiceDecorator {
 
         OAuthUser user = new OAuthUser();
         user.setUid(userJson.getString("uid"));
-        user.setNickname(userJson.getString("nickname"));
+        user.setNickname(userJson.getString("nickName"));
         user.setGender(userJson.getString("gender"));
         user.setPlatformId(SERVICE_ID);
         user.setCity(userJson.getString("city"));
