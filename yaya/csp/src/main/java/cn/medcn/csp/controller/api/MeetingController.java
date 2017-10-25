@@ -415,6 +415,7 @@ public class MeetingController extends CspBaseController {
     public String list(Pageable pageable) {
         Principal principal = SecurityUtils.get();
         String cspUserId = principal.getId();
+
         pageable.put("cspUserId", cspUserId);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
 
@@ -424,34 +425,9 @@ public class MeetingController extends CspBaseController {
                     deliveryDTO.setCoverUrl(fileBase + deliveryDTO.getCoverUrl());
                 }
 
-                // 录播会议
-                if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType().intValue()) {
-                    // 录播 当前播放第几页
-                    if (deliveryDTO.getPlayPage() == null) {
-                        deliveryDTO.setPlayPage(0);
-                    }
-                    // 转换录播音频时长格式
-                    if (StringUtils.isNotEmpty(deliveryDTO.getPlayTime())) {
-                        long secondTime = Long.parseLong(deliveryDTO.getPlayTime());
-                        deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(null,null, secondTime));
-                    }
-                } else {
-                    // 直播 当前播放第几页
-                    if (deliveryDTO.getLivePage() == null) {
-                        deliveryDTO.setLivePage(0);
-                    }
-                    // 如果是直播会议 需计算直播时长
-                    int liveState = deliveryDTO.getLiveState().intValue();
-                    if (liveState == Live.LiveState.init.ordinal()) {
-                        // 直播未开始 设置直播开始时间
-                        deliveryDTO.setPlayTime(CalendarUtils.transferLongToDate(deliveryDTO.getStartTime().getTime(),"MM月dd日 HH:mm"));
-                    } else if (liveState == Live.LiveState.usable.ordinal()) {
-                        // 直播中 计算直播开始时间和当前时间的时间差
-                        deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(deliveryDTO.getStartTime(), new Date(),0));
-                    } else {
-                        // 直播结束 计算直播开始和结束的时间差
-                        deliveryDTO.setPlayTime(CalendarUtils.formatTimesDiff(deliveryDTO.getStartTime(), deliveryDTO.getEndTime(),0));
-                    }
+                // 当前播放第几页
+                if (deliveryDTO.getPlayPage() == null) {
+                    deliveryDTO.setPlayPage(0);
                 }
 
             }
