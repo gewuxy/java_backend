@@ -82,7 +82,7 @@ public class CourseDeliveryDTO implements Serializable {
     public String getPlayTime(){
         int pt = getDuration();
         if (pt == 0) {
-            return  " - ";
+            return  "00′00″";
         } else {
             StringBuffer buffer = new StringBuffer();
             buffer.append(pt / 60);
