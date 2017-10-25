@@ -133,11 +133,14 @@
         $(".icon-folder").parent().removeClass();
         $(".icon-contribute").parent().attr("class","current");
 
-        if($("#"+${current}).attr("class") == "last"){
-            $("#"+${current}).addClass("current last");
-        }else{
-            $("#"+${current}).addClass("current");
+        if(${current != null}){
+            if($("#"+${current}).attr("class") == "last"){
+                $("#"+${current}).addClass("current last");
+            }else{
+                $("#"+${current}).addClass("current");
+            }
         }
+
 
         var asAllItem = audiojs.createAll();
 
