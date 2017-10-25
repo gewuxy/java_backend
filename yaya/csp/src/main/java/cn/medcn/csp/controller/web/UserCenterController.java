@@ -2,6 +2,8 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
@@ -38,6 +40,8 @@ public class UserCenterController extends CspBaseController{
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Autowired
+    protected FileUploadService fileUploadService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -90,10 +94,15 @@ public class UserCenterController extends CspBaseController{
 
     @RequestMapping(value = "/updateAvatar",method = RequestMethod.POST)
     @ResponseBody
-    public String updateAvatar(@RequestParam(value = "file", required = false) MultipartFile file){
+    public String updateAvatar(@RequestParam(value = "file", required = false) MultipartFile file,Integer limitSize){
         if (file == null) {
             return error(local("upload.error.null"));
         }
+
+        if (file.getSize() > limitSize ){
+            return error(local("upload.fileSize.err"));
+        }
+
         String userId = getWebPrincipal().getId();
         String url = null;
         try {
