@@ -45,7 +45,7 @@ public class ChargeController extends BaseController {
      */
     @RequestMapping("/toCharge")
     @ResponseBody
-    public String toCharge(Integer flux, String channel, HttpServletRequest request) throws Exception {
+    public String toCharge(Integer flux, String channel, HttpServletRequest request)  {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
         String appId = "app_LiH0mPanX9OGDS04";
@@ -80,9 +80,9 @@ public class ChargeController extends BaseController {
         }
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
-//        Map<String,Object> map = new HashMap<>();
-//        map.put("charge",charge);
-        return success(charge);
+        Map<String,Object> map = new HashMap<>();
+        map.put("charge",charge);
+        return success(map);
 
     }
 
