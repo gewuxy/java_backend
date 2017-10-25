@@ -77,19 +77,45 @@
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/commonH5.js"></script>
 <script>
-
+    const classPwdOn = "pwdChange-on";
+    const classPwdOff = "pwdChange-off";
     $("#config_5").parent().attr("class","cur last");
     var fileUploadUrl = "${ctx}/mgr/user/updateAvatar";
     $(function () {
-        //调用密码切换
-        $('.pwdChange-hook').on('click',function() {
-            changePassWordStatus($('.hidePassword'));
+        $(".pwdChange-hook").click(function(){
+            if($(this).hasClass(classPwdOn)){
+                $(this).removeClass(classPwdOn);
+                $(this).addClass(classPwdOff);
+                $("#pwd").prop("type", "text");
+            } else {
+                $(this).removeClass(classPwdOff);
+                $(this).addClass(classPwdOn);
+                $("#pwd").prop("type", "password");
+            }
         });
 
-        //调用密码切换
-        $('.pwdChange-hook1').on('click',function() {
-            changePassWordStatus($('.hidePassword1'));
+        $(".pwdChange-hook1").click(function(){
+            if($(this).hasClass(classPwdOn)){
+                $(this).removeClass(classPwdOn);
+                $(this).addClass(classPwdOff);
+                $("#rePwd").prop("type", "text");
+            } else {
+                $(this).removeClass(classPwdOff);
+                $(this).addClass(classPwdOn);
+                $("#rePwd").prop("type", "password");
+            }
         });
+
+
+//        //调用密码切换
+//        $('.pwdChange-hook').on('click',function() {
+//            changePassWordStatus($('.hidePassword'));
+//        });
+//
+//        //调用密码切换
+//        $('.pwdChange-hook1').on('click',function() {
+//            changePassWordStatus($('.hidePassword1'));
+//        });
 
         $("#pwd").blur(function () {
             oldPwdValid();
