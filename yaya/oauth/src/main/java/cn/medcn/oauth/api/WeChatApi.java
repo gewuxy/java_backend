@@ -12,9 +12,9 @@ import org.scribe.utils.Preconditions;
  */
 public class WeChatApi extends DefaultApi20{
 
-    private static final String AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_userinfo&state=STATE#wechat_redirect";
+    private static final String AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=snsapi_login&state=medcn";
 
-    private static final String SCOPE_AUTHORIZE_URL = "https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=STATE#wechat_redirect";
+    private static final String SCOPE_AUTHORIZE_URL = "https://open.weixin.qq.com/connect/qrconnect?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=medcn";
 
     @Override
     public AccessTokenExtractor getAccessTokenExtractor() {
