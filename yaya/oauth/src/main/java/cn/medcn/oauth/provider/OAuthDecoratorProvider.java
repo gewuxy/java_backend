@@ -47,7 +47,7 @@ public class OAuthDecoratorProvider {
                     config.setApiKey(appKey);
                     config.setApiSecret(secret);
                     config.setCallback(callback);
-                    config.setScope("snsapi_userinfo");
+                    config.setScope("snsapi_login");
                     config.setServiceId(serviceId);
                     break;
                 case 2 : // 微博
