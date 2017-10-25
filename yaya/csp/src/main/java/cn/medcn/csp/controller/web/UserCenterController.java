@@ -56,6 +56,10 @@ public class UserCenterController extends CspBaseController{
         return localeView("/userCenter/userInfo");
     }
 
+    /**
+     * 左侧的基本用户信息
+     * @param model
+     */
     private void addBaseUserInfo(Model model) {
         String userId = getWebPrincipal().getId();
         CspUserInfoDTO dto = cspUserService.findCSPUserInfo(userId);
@@ -111,11 +115,12 @@ public class UserCenterController extends CspBaseController{
      */
     @RequestMapping("toReset")
     public String toResetPwd(Model model){
+        addBaseUserInfo(model);
         String userId = getWebPrincipal().getId();
         CspUserInfo info = cspUserService.selectByPrimaryKey(userId);
         if(StringUtils.isEmpty(info.getEmail())){
             //没有绑定邮箱
-            model.addAttribute("needBind",1);
+            model.addAttribute("needBind",true);
         }
         return localeView("/userCenter/pwdReset");
 
@@ -128,12 +133,13 @@ public class UserCenterController extends CspBaseController{
      * @return
      */
     @RequestMapping("/resetPwd")
+    @ResponseBody
     public String resetPwd(String oldPwd,String newPwd) {
 
         if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
             return error(local("user.empty.password"));
         }
-        String userId = SecurityUtils.get().getId();
+        String userId = getWebPrincipal().getId();
         try {
             cspUserService.resetPwd(userId,oldPwd,newPwd);
         } catch (SystemException e) {
