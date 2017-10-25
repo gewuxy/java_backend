@@ -123,6 +123,7 @@
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
                 shareUrl = getShareUrl();
+                coverUrl = $("#cover_"+courseId).attr("src");
                 $("#copyShareUrl").val(shareUrl);
                 mobShare.config({
                     debug: true, // 开启调试，将在浏览器的控制台输出调试信息
@@ -130,8 +131,8 @@
                     params: {
                         url: shareUrl, // 分享链接
                         title: courseTitle, // 分享标题
-                        description: courseTitle, // 分享内容
-                        pic: '', // 分享图片，使用逗号,隔开
+                        description: $("#cover_"+courseId).attr("alt"), // 分享内容
+                        pic: coverUrl, // 分享图片，使用逗号,隔开
                         reason:'',//自定义评论内容，只应用与QQ,QZone与朋友网
                     },
 
@@ -385,10 +386,10 @@
                                         <div class="resource-img ">
                                             <c:choose>
                                                 <c:when test="${not empty course.coverUrl}">
-                                                    <img src="${course.coverUrl}" alt="" class="img-response">
+                                                    <img src="${course.coverUrl}" alt="${course.info}" class="img-response" id="cover_${course.id}">
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                                    <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="${course.info}" class="img-response"  id="cover_${course.id}">
                                                 </c:otherwise>
                                             </c:choose>
 
