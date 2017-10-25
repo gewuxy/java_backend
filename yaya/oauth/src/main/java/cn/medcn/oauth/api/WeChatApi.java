@@ -30,7 +30,7 @@ public class WeChatApi extends DefaultApi20{
     public String getAuthorizationUrl(OAuthConfig config) {
         Preconditions.checkValidUrl(config.getCallback(), "Must provide a valid url as callback. WeChat does not support OOB");
         if (config.hasScope()) {
-            return String.format(SCOPE_AUTHORIZE_URL, config.getApiKey(), OAuthEncoder.encode(config.getCallback()), config.getCallback());
+            return String.format(SCOPE_AUTHORIZE_URL, config.getApiKey(), OAuthEncoder.encode(config.getCallback()), config.getScope());
         } else {
             return String.format(AUTHORIZE_URL, config.getApiKey(), OAuthEncoder.encode(config.getCallback()));
         }

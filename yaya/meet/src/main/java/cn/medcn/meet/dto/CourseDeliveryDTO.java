@@ -2,6 +2,7 @@ package cn.medcn.meet.dto;
 
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.Live;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -85,7 +86,7 @@ public class CourseDeliveryDTO implements Serializable {
         } else {
             StringBuffer buffer = new StringBuffer();
             buffer.append(pt / 60);
-            buffer.append("'").append(pt % 60).append("\"");
+            buffer.append("′").append(pt % 60).append("″");
             return buffer.toString();
         }
     }
@@ -97,6 +98,10 @@ public class CourseDeliveryDTO implements Serializable {
         if (playType.intValue() == AudioCourse.PlayType.normal.getType()) {
             return duration == null ? 0 : duration;
         } else {
+            if (liveState.intValue() == Live.LiveState.usable.ordinal()) {
+                // 直播中
+                endTime = new Date();
+            }
             if (endTime != null && startTime != null) {
                 Long pt = (endTime.getTime() - startTime.getTime()) / 1000;
                 return pt.intValue();
