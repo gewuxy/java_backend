@@ -4,18 +4,22 @@
         <div class="img"><img src="${dto.avatar}" id="image" alt="" style="widtH:126px; height:126px;"></div>
         <div class="name" id="name">${dto.userName}</div>
         <div class="email">${dto.email}</div>
-        <c:if test="${fn:length(dto.bindInfoList) != 0}">
-            <div class="binding">
-                <c:forEach items="${dto.bindInfoList}" var="list">
-                    <c:if test="${list.thirdPartyId == 1}">
-                        <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
-                    </c:if>
-                    <c:if test="${list.thirdPartyId == 2}">
-                        <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
-                    </c:if>
-                </c:forEach>
-            </div>
-        </c:if>
+        <div class="binding">
+            <c:if test="${fn:length(dto.bindInfoList) != 0}">
+                    <c:forEach items="${dto.bindInfoList}" var="list">
+                        <c:if test="${list.thirdPartyId == 1}">
+                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                        </c:if>
+                        <c:if test="${list.thirdPartyId == 2}">
+                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
+                        </c:if>
+                    </c:forEach>
+            </c:if>
+            <c:if test="${fn:length(dto.bindInfoList) == 0}">
+                        <img src="${ctxStatic}/images/default_blank.png" alt="" width="34" height="34">
+
+            </c:if>
+        </div>
         <%--<img src="./images/icon-user-facebook.png" alt="">--%>
     </div>
     <div class="user-statistics item-radius">
