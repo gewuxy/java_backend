@@ -82,7 +82,7 @@
     $("#config_5").parent().attr("class","cur last");
     var fileUploadUrl = "${ctx}/mgr/user/updateAvatar";
     $(function () {
-        $(".pwdChange-hook, .pwdChange-hook1").click(function(){
+        $(".pwdChange-hook").click(function(){
             if($(this).hasClass(classPwdOn)){
                 $(this).removeClass(classPwdOn);
                 $(this).addClass(classPwdOff);
@@ -93,6 +93,20 @@
                 $("#pwd").prop("type", "password");
             }
         });
+
+        $(".pwdChange-hook1").click(function(){
+            if($(this).hasClass(classPwdOn)){
+                $(this).removeClass(classPwdOn);
+                $(this).addClass(classPwdOff);
+                $("#rePwd").prop("type", "text");
+            } else {
+                $(this).removeClass(classPwdOff);
+                $(this).addClass(classPwdOn);
+                $("#rePwd").prop("type", "password");
+            }
+        });
+
+
 //        //调用密码切换
 //        $('.pwdChange-hook').on('click',function() {
 //            changePassWordStatus($('.hidePassword'));
