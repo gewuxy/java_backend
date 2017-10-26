@@ -100,12 +100,17 @@ public class CourseDeliveryDTO implements Serializable {
         if (playType.intValue() == AudioCourse.PlayType.normal.getType()) {
             return duration == null ? 0 : duration;
         } else {
-            if (liveState.intValue() == Live.LiveState.usable.ordinal()) {
-                // 直播中
-                endTime = new Date();
+            Long pt = 0l;
+            Date currentTime = new Date();
+            if (liveState != null &&
+                    liveState.intValue() == Live.LiveState.usable.ordinal()) {
+                // 直播中 从开始时间到当前时间 直播的时长
+                pt = (currentTime.getTime() - startTime.getTime()) / 1000;
+                return pt.intValue();
             }
+
             if (endTime != null && startTime != null) {
-                Long pt = (endTime.getTime() - startTime.getTime()) / 1000;
+                pt = (endTime.getTime() - startTime.getTime()) / 1000;
                 return pt.intValue();
             }
             return 0;
