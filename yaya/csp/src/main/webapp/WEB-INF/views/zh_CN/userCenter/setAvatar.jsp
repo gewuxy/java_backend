@@ -38,6 +38,7 @@
                             </div>
                         </div>
                     </div>
+                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
                 </div>
             </div>
         </div>

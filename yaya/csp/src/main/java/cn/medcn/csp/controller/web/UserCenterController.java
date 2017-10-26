@@ -214,6 +214,33 @@ public class UserCenterController extends CspBaseController{
     }
 
     /**
+     * 绑定手机号
+     * @param mobile
+     * @param captcha
+     * @return
+     */
+    @RequestMapping("/bindMobile")
+    @ResponseBody
+    public String bindMobile(String mobile,String captcha)  {
+        if(!StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
+            return error(local("error.param"));
+        }
+        try {
+            //检查验证码合法性
+            cspUserService.checkCaptchaIsOrNotValid(mobile,captcha);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        String userId = getWebPrincipal().getId();
+        try {
+            cspUserService.doBindMobile(mobile,captcha,userId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
+    }
+
+    /**
      * 绑定第三方账号
      * @param info
      * @return
