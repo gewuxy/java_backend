@@ -84,9 +84,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      */
     @Override
     public List<BindInfo> findBindListByUserId(String userId) {
-        BindInfo bindInfo = new BindInfo();
-        bindInfo.setUserId(userId);
-        return bindInfoDAO.select(bindInfo);
+        return bindInfoDAO.findBindUserList(userId);
     }
 
     @Override

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.BindInfoDAO" >
+
+    <select id="findBindUserList" resultType="cn.medcn.user.model.BindInfo">
+        SELECT third_party_id,nick_name FROM t_csp_bind_info WHERE user_id = #{userId}
+    </select>
+</mapper>
