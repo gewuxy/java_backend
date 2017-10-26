@@ -169,7 +169,7 @@ public class CspUserController extends BaseController {
 
             // 用户信息
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
-            if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
+            if (!dto.getAvatar().startsWith(Constants.AVATAR_URL_PREFIX)) {
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
 

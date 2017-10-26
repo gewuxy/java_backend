@@ -170,4 +170,8 @@ public class Constants {
     public static final int MARY_MASTER_ID = 957425;
     //定制版单位号ID key
     public static final String MASTER_ID_KEY = "masterId";
+
+
+    // CSP用户头像地址前缀
+    public static final String AVATAR_URL_PREFIX = "http:";
 }
