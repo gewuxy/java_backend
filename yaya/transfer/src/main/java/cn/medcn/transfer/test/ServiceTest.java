@@ -1,6 +1,8 @@
 package cn.medcn.transfer.test;
 
+import cn.medcn.transfer.email.EmailHelper;
 import cn.medcn.transfer.jobs.TransferThread;
+import cn.medcn.transfer.model.AppUserUserNameBean;
 import cn.medcn.transfer.service.GuideServiceImpl;
 import cn.medcn.transfer.service.MedicineServiceImpl;
 import cn.medcn.transfer.service.TransferService;
@@ -15,6 +17,8 @@ import java.beans.IntrospectionException;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/6/14.
@@ -34,12 +38,12 @@ public class ServiceTest {
 //
 //        // =======================================================================
 
-        String pubUserListStr = PropertyUtils.readPropFromCache("transfer_name_list.properties", "pub.user.list");
-        String[] pubUserArray = pubUserListStr.split(",");
-        for(String pubUserName : pubUserArray){
-            Thread thread = new TransferThread(pubUserName);
-            thread.start();
-        }
+        List<AppUserUserNameBean> list = new ArrayList<>();
+        AppUserUserNameBean aunb = new AppUserUserNameBean();
+        aunb.setUsername("584479243@qq.com");
+
+        list.add(aunb);
+        EmailHelper.send(list);
 
 //        ClinicalGuideCategoryService clinicalGuideCategoryService = new ClinicalGuideCategoryServiceImpl();
 //        clinicalGuideCategoryService.transfer();
