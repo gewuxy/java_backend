@@ -373,15 +373,15 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 解绑第三方账号
-     * @param info
+     * @param thirdPartId
      * @param userId
      * @return
      */
     @Override
-    public void doUnbindThirdAccount(BindInfo info, String userId) throws SystemException {
+    public void doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException {
         BindInfo condition = new BindInfo();
         condition.setUserId(userId);
-        condition.setThirdPartyId(info.getThirdPartyId());
+        condition.setThirdPartyId(thirdPartId);
         condition = bindInfoDAO.selectOne(condition);
         if(condition == null){  //用户没绑定此第三方账号，不能解绑
             throw new SystemException(local("user.notExist.ThirdAccount"));

@@ -33,7 +33,7 @@
                                 <ul>
                                     <li class="phone">
                                         <c:if test="${not empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="6">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
@@ -46,7 +46,7 @@
                                     </li>
                                     <li class="wechat">
                                         <c:if test="${not empty weChat}">
-                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="1">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
@@ -59,7 +59,7 @@
                                     </li>
                                     <li class="weibo">
                                         <c:if test="${not empty weiBo}">
-                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="2">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
@@ -72,7 +72,7 @@
                                     </li>
                                     <li class="email">
                                         <c:if test="${not empty dto.email}">
-                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="7">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
@@ -85,7 +85,7 @@
                                     </li>
                                     <li class="medcn">
                                         <c:if test="${not empty YaYa}">
-                                            <a href="#" class="fr binding-btn ">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="5">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
@@ -111,8 +111,13 @@
 <script>
 
     $(function () {
+        $("#config_3").parent().attr("class","cur");
 
-
+        //解绑操作
+        $(".fr.binding-btn").click(function () {
+            var type = $(this).attr("type");
+            alert(type);
+        });
     });
 </script>
 
