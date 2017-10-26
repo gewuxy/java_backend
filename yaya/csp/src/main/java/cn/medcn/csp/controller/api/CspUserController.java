@@ -1,10 +1,13 @@
 package cn.medcn.csp.controller.api;
 
+import cn.jiguang.common.resp.APIConnectionException;
+import cn.jiguang.common.resp.APIRequestException;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.service.JPushService;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
@@ -14,6 +17,7 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -39,6 +43,8 @@ public class CspUserController extends BaseController {
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Autowired
+    protected JPushService jPushService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -199,6 +205,41 @@ public class CspUserController extends BaseController {
         }
         return success();
     }
+
+
+    /**
+     * 登录成功 绑定极光
+     * @param registrationId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/bindJPush")
+    @ResponseBody
+    public String bindJpush(String registrationId, HttpServletRequest request){
+        String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
+
+        Principal principal = SecurityUtils.get();
+        String alias = jPushService.generateAlias((Object)principal.getId());
+
+        Set<String> tags = Sets.newHashSet();
+        try {
+
+            if(!StringUtils.isEmpty(osType)){
+                tags.add(osType);
+            }
+
+            jPushService.bindAliasAndTags(registrationId, alias, tags);
+
+        } catch (APIConnectionException e) {
+            e.printStackTrace();
+            return error("极光推送连接异常");
+        } catch (APIRequestException e) {
+            e.printStackTrace();
+            return error("极光推送请求异常");
+        }
+        return success();
+    }
+
 
     /**
      * 邮箱登录
