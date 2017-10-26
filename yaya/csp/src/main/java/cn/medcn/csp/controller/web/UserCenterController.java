@@ -9,6 +9,7 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
@@ -42,6 +43,9 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected FileUploadService fileUploadService;
+
+    @Autowired
+    protected OauthService oauthService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -194,6 +198,22 @@ public class UserCenterController extends CspBaseController{
 
 
     /**
+     * 跳转到第三方授权页面
+     * @param type
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/jumpOauth")
+    @ResponseBody
+    public String jumpOauthUrl(Integer type) throws SystemException {
+        if(type == null){
+            return error("请选择要绑定的类型");
+        }
+        String url = oauthService.jumpThirdPartyAuthorizePage(type);
+        return success(url);
+    }
+
+    /**
      * 绑定第三方账号
      * @param info
      * @return
@@ -218,7 +238,7 @@ public class UserCenterController extends CspBaseController{
    @RequestMapping("/unbind")
     @ResponseBody
     public String unbind(Integer type){
-        String userId = getWebPrincipal().getId();
+       String userId = getWebPrincipal().getId();
         //解绑手机或邮箱
         if(type == BindInfo.Type.MOBILE.getTypeId() || type == BindInfo.Type.EMAIL.getTypeId()){
             try {

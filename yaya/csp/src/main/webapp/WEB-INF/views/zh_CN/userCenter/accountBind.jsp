@@ -33,68 +33,68 @@
                                 <ul>
                                     <li class="phone">
                                         <c:if test="${not empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn " type="6">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="6" id="unbind_6" action_type="unbind">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="6" action_type="bind">绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${dto.mobile}</span>
+                                        <span class="main">${empty dto.mobile?"未绑定":dto.mobile}</span>
                                     </li>
                                     <li class="wechat">
                                         <c:if test="${not empty weChat}">
-                                            <a href="#" class="fr binding-btn " type="1">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="1" id="unbind_1" action_type="unbind">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty weChat}">
-                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="1" action_type="bind">绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${weChat}</span>
+                                        <span class="main">${empty weChat ?"未绑定":weChat}</span>
                                     </li>
                                     <li class="weibo">
                                         <c:if test="${not empty weiBo}">
-                                            <a href="#" class="fr binding-btn " type="2">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="2" id="unbind_2" action_type="unbind">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty weiBo}">
-                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="2" action_type="bind">绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${weiBo}</span>
+                                        <span class="main">${empty weiBo ?"未绑定":weiBo}</span>
                                     </li>
                                     <li class="email">
                                         <c:if test="${not empty dto.email}">
-                                            <a href="#" class="fr binding-btn " type="7">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="7" id="unbind_7" action_type="unbind">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty dto.email}">
-                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="7" action_type="bind">绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${dto.email}</span>
+                                        <span class="main">${empty dto.email ?"未绑定":dto.email}</span>
                                     </li>
                                     <li class="medcn">
                                         <c:if test="${not empty YaYa}">
-                                            <a href="#" class="fr binding-btn " type="5">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="5" id="unbind_5" action_type="unbind">解绑</a>
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty YaYa}">
-                                            <a href="#" class="fr binding-btn color-blue">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="5" action_type="bind">绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">敬信数字平台</span>
+                                        <span class="main">${empty YaYa ?"未绑定":"敬信数字平台"}</span>
                                     </li>
                                 </ul>
                                 <span class="line-bg"></span>
@@ -113,11 +113,40 @@
     $(function () {
         $("#config_3").parent().attr("class","cur");
 
+        if(${not empty err}){
+            layer.msg('${err}');
+        }
+
         //解绑操作
-        $(".fr.binding-btn").click(function () {
+        $("a[action_type='unbind']").click(function () {
             var type = $(this).attr("type");
-            alert(type);
+            $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
+                if (data.code == 0){
+                    layer.msg('解绑成功',{
+                        time: 300
+                    },function(){
+                           window.location.href = "${ctx}/mgr/user/toAccount";
+                    });
+                }else{
+                    layer.msg(data.err);
+                }
+            },'json');
         });
+
+
+        //绑定操作
+        $("a[action_type='bind']").click(function () {
+            var type = $(this).attr("type");
+
+            $.get('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
+                if (data.code == 0){
+                    window.location.href=data.data;
+                }else{
+                    layer.msg(data.err);
+                }
+            },'json');
+        });
+
     });
 </script>
 

@@ -2,6 +2,7 @@ package cn.medcn.oauth.dto;
 
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.model.BindInfo;
 
 /**
  * Created by lixuan on 2017/9/15.
@@ -105,5 +106,14 @@ public class OAuthUser {
         dto.setUserName("");
         dto.setFlux(0);
         return dto;
+    }
+
+    public static BindInfo buildToBindInfo(OAuthUser authUser){
+        BindInfo info = new BindInfo();
+        info.setAvatar(authUser.getIconUrl());
+        info.setGender(authUser.getGender());
+        info.setNickName(authUser.getNickname());
+        info.setUniqueId(authUser.getUid());
+        return info;
     }
 }
