@@ -64,7 +64,7 @@ public class UserCenterController extends CspBaseController{
      * 左侧的基本用户信息
      * @param model
      */
-    private void addBaseUserInfo(Model model) {
+    private CspUserInfoDTO addBaseUserInfo(Model model) {
         String userId = getWebPrincipal().getId();
         CspUserInfoDTO dto = cspUserService.findCSPUserInfo(userId);
         if (!StringUtils.isEmpty(dto.getAvatar())) {
@@ -73,6 +73,7 @@ public class UserCenterController extends CspBaseController{
         List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userId);
         dto.setBindInfoList(bindInfoList);
         model.addAttribute("dto", dto);
+        return dto;
     }
 
 
@@ -175,8 +176,66 @@ public class UserCenterController extends CspBaseController{
      */
     @RequestMapping("/toAccount")
     public String toAccount(Model model){
-        addBaseUserInfo(model);
+        CspUserInfoDTO dto = addBaseUserInfo(model);
+        List<BindInfo> list = dto.getBindInfoList();
+        for(BindInfo info:list){
+            if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
+                model.addAttribute("weChat",info.getNickName());
+            }
+            if(info.getThirdPartyId() == BindInfo.Type.WEI_BO.getTypeId()){
+                model.addAttribute("weiBo",info.getNickName());
+            }
+            if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
+                model.addAttribute("YaYa",info.getNickName());
+            }
+        }
         return localeView("/userCenter/accountBind");
     }
 
+
+    /**
+     * 绑定第三方账号
+     * @param info
+     * @return
+     */
+   @RequestMapping("/bind")
+    @ResponseBody
+    public String bind(BindInfo info){
+        String userId = getWebPrincipal().getId();
+       try {
+           cspUserService.doBindThirdAccount(info,userId);
+       } catch (SystemException e) {
+           return error(e.getMessage());
+       }
+        return success();
+   }
+
+    /**
+     * 解绑账号
+     * @param type
+     * @return
+     */
+   @RequestMapping("/unbind")
+    @ResponseBody
+    public String unbind(Integer type){
+        String userId = getWebPrincipal().getId();
+        //解绑手机或邮箱
+        if(type == BindInfo.Type.MOBILE.getTypeId() || type == BindInfo.Type.EMAIL.getTypeId()){
+            try {
+                cspUserService.doUnbindEmailOrMobile(type,userId);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
+            return success();
+        }
+
+        //解绑第三方账号
+       try {
+           cspUserService.doUnbindThirdAccount(type,userId);
+       } catch (SystemException e) {
+           return error(e.getMessage());
+       }
+
+        return success();
+   }
 }
