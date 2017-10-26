@@ -520,7 +520,7 @@ public class CspUserController extends BaseController {
         }else {
             //解绑操作
             try {
-                cspUserService.doUnbindThirdAccount(info,userId);
+                cspUserService.doUnbindThirdAccount(info.getThirdPartyId(),userId);
             } catch (SystemException e) {
                 return error(e.getMessage());
             }

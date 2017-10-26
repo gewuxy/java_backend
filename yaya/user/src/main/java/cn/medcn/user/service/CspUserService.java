@@ -99,11 +99,11 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     /**
      * 解绑第三方账号
-     * @param info
+     * @param thirdPartId
      * @param userId
      * @return
      */
-    void doUnbindThirdAccount(BindInfo info, String userId) throws SystemException;
+    void doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException;
 
     /**
      * 绑定邮箱
