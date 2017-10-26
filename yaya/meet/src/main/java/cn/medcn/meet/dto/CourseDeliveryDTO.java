@@ -101,9 +101,9 @@ public class CourseDeliveryDTO implements Serializable {
             return duration == null ? 0 : duration;
         } else {
             Long pt = 0l;
-            Date currentTime = new Date();
             if (liveState != null &&
                     liveState.intValue() == Live.LiveState.usable.ordinal()) {
+                Date currentTime = new Date();
                 // 直播中 从开始时间到当前时间 直播的时长
                 pt = (currentTime.getTime() - startTime.getTime()) / 1000;
                 return pt.intValue();
