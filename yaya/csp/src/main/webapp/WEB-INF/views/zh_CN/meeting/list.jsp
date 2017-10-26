@@ -37,7 +37,9 @@
         var coverUrl = "";
 
         $(function(){
-
+            if("${err}"){
+                layer.msg("${err}");
+            }
 
 
             //初始化音频
