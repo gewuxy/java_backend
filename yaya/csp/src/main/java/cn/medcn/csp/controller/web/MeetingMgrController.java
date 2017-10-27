@@ -14,10 +14,7 @@ import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
-import cn.medcn.meet.model.CourseCategory;
-import cn.medcn.meet.model.Live;
+import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
 import cn.medcn.meet.service.LiveService;
@@ -37,6 +34,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -198,7 +196,7 @@ public class MeetingMgrController extends CspBaseController {
         if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             model.addAttribute("live", liveService.findByCourseId(course.getId()));
 
-            //todo 查询出流量信息
+            model.addAttribute("flux", userFluxService.selectByPrimaryKey(principal.getId()));
         }
 
         return localeView("/meeting/edit");
@@ -382,7 +380,6 @@ public class MeetingMgrController extends CspBaseController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
-        final String timeSeparator = " - ";
         AudioCourse ac = course.getCourse();
         if (openLive == 1) {
             ac.setPlayType(AudioCourse.PlayType.live_video.getType()); //视频直播
@@ -394,29 +391,9 @@ public class MeetingMgrController extends CspBaseController {
         }
 
         if (ac.getPlayType().intValue() > 0) {// 直播的情况下
-            Live live = liveService.findByCourseId(ac.getId());
-
-            String[] timeArray = liveTime.split(timeSeparator);
-            Date startTime = Date.valueOf(timeArray[0]);
-            Date endTime = Date.valueOf(timeArray[1]);
-            if (live == null) {
-                live = new Live();
-                live.setId(StringUtils.nowStr());
-                live.setCourseId(ac.getId());
-                live.setLiveState(Live.LiveState.init.getType());
-                live.setLivePage(0);
-                live.setVideoLive(ac.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
-                live.setStartTime(startTime);
-                live.setEndTime(endTime);
-
-                liveService.insert(live);
-            } else {
-                live.setVideoLive(ac.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
-                live.setStartTime(startTime);
-                live.setEndTime(endTime);
-
-                liveService.updateByPrimaryKey(live);
-            }
+            audioService.updateAudioCourseInfo(ac, course.getLive());
+        } else {
+            audioService.updateAudioCourseInfo(ac, new AudioCoursePlay());
         }
         addFlashMessage(redirectAttributes, local("operate.success"));
         return "redirect:/mgr/meet/list";

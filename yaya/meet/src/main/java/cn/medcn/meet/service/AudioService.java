@@ -236,4 +236,16 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     MyPage<CourseDeliveryDTO> findHistoryDeliveryByAcceptId(Pageable pageable);
+
+    /**
+     * 修改课件基本信息以及修改直播信息
+     * @param audioCourse
+     */
+    void updateAudioCourseInfo(AudioCourse audioCourse, Live live);
+
+    /**
+     * 修改课件基本信息以及修改录播信息
+     * @param audioCourse
+     */
+    void updateAudioCourseInfo(AudioCourse audioCourse, AudioCoursePlay play);
 }
