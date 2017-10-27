@@ -229,4 +229,19 @@ public class LoginController extends BaseController {
     }
 
 
+    /**
+     * 邮箱注册
+     * @param userInfo
+     * @return
+     */
+    @RequestMapping(value = "/register")
+    @ResponseBody
+    public String register(CspUserInfo userInfo) {
+        try {
+            return cspUserService.register(userInfo);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+    }
+
 }
