@@ -38,7 +38,7 @@
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn color-blue" id="bindPhone" type="6" action_type="bind">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" id="bindPhone" type="6" >绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
@@ -77,7 +77,7 @@
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty dto.email}">
-                                            <a href="#" class="fr binding-btn color-blue" type="7" id="bindEmail" action_type="bind">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="7" id="bindEmail" >绑定</a>
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
@@ -169,7 +169,7 @@
                 <div class="login-message-text">
                     <p>激活账号邮件已发送至您的邮箱，<br />请前往激活完成注册。</p>
                 </div>
-                <input href="#" type="button" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
+                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
             </div>
         </div>
     </div>
@@ -273,26 +273,6 @@
             }
         });
 
-        $("#emailBtn").click(function () {
-            if(isEmail()){
-                var email = $("#email").val();
-                var password = $("#password").val();
-                if(checkPwd()){
-                    <%--$.get('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {--%>
-                        <%--if (data.code == 0){--%>
-                            <%--layer.closeAll();--%>
-                            <%--layer.msg("绑定成功");--%>
-                        <%--}else{--%>
-                            <%--layer.msg(data.err);--%>
-                        <%--}--%>
-                    <%--},'json');--%>
-                }
-
-
-            }
-        });
-
-
         //弹出绑定邮箱step01
         $('#bindEmail').on('click',function(){
             layer.open({
@@ -310,23 +290,49 @@
                 },
             });
         });
-        //弹出绑定邮箱step02
-        $('.email-hook-02').on('click',function(){
-            layer.open({
-                type: 1,
-                area: ['609px', '278px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.email-popup-box-02'),
-                success:function(layero, index){
-                    layer.close(1);
-                },
-                cancel :function(){
-                    layer.closeAll();
-                },
-            });
+
+        $("#emailBtn").click(function () {
+            if(isEmail()){
+                var email = $("#email").val();
+                var password = $("#password").val();
+                if(checkPwd()){
+                    $.get('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
+                        if (data.code == 0){
+                            layer.open({
+                                type: 1,
+                                area: ['609px', '278px'],
+                                fix: false, //不固定
+                                title:false,
+                                closeBtn:0,
+                                content: $('.email-popup-box-02'),
+                                success:function(layero, index){
+                                    layer.close(1);
+                                },
+                                cancel :function(){
+                                    layer.closeAll();
+                                },
+                            });
+
+                        }else{
+                            layer.msg(data.err);
+                        }
+                    },'json');
+                }
+                
+            }
         });
+
+        $("#goToEmail").click(function () {
+            var email = $("#email").val();
+            var url = gainEmailURL(email);
+            if(url != ''){
+                layer.closeAll();
+                window.open( url);
+            }else{
+                layer.msg("抱歉!未找到对应的邮箱登录地址");
+            }
+        });
+
 
     });
 
@@ -412,6 +418,8 @@
             return true;
         }
     }
+
+
 
 
 </script>

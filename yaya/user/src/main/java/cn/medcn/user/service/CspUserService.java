@@ -107,10 +107,10 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     /**
      * 绑定邮箱
-     * @param key
-     * @param result
+     * @param email
+     * @param userId
      */
-    void doBindMail(String key, String result) throws SystemException;
+    void doBindMail(String email, String userId,String key) throws SystemException;
 
     /**
      * 修改头像
@@ -133,6 +133,8 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     CspUserInfoDTO findCSPUserInfo(String userId);
+
+    void insertPassword(String email, String password, String userId) throws SystemException;
 
 
 }
