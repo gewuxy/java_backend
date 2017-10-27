@@ -1,9 +1,11 @@
 package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
@@ -238,6 +240,41 @@ public class UserCenterController extends CspBaseController{
             return error(e.getMessage());
         }
         return success();
+    }
+
+    /**
+     * 发送绑定邮件
+     */
+    @RequestMapping("/bindEmail")
+    @ResponseBody
+    public String toBind(String email,String password) {
+        if(!StringUtils.isEmail(email)){
+            return error(local("user.error.email.format"));
+        }
+        if(StringUtils.isEmpty(password)){
+            return error(local("user.password.notnull"));
+        }
+        String userId = getWebPrincipal().getId();
+        CspUserInfo user = cspUserService.selectByPrimaryKey(userId);
+        if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
+            return error(local("user.has.email"));
+        }
+        CspUserInfo info = cspUserService.findByLoginName(email);
+        if (info != null) { //当前邮箱已被绑定
+            return error(local("user.exist.email"));
+        }
+
+        //将密码插入到数据库
+        user.setId(userId);
+        user.setPassword(MD5Utils.md5(password));
+        cspUserService.updateByPrimaryKey(info);
+        try {
+            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
+
     }
 
     /**

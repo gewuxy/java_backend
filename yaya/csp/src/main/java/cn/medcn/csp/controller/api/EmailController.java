@@ -36,6 +36,9 @@ public class EmailController extends BaseController{
     @Autowired
     protected CspUserService cspUserService;
 
+    @Autowired
+    protected JPushService jPushService;
+
     @Value("${app.yaya.base}")
     private String appBaseUrl;
 
@@ -100,12 +103,17 @@ public class EmailController extends BaseController{
     public String bindEmail(String code) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String result = (String)redisCacheUtils.getCacheObject(key);
-        if (StringUtils.isEmpty(result)) {  //链接超时
-            return localeView("/register/linkTimeOut");
-        } else {
-            cspUserService.doBindMail(key, result);
+        if(!StringUtils.isEmpty(result)){
+            String email = result.substring(0, result.indexOf(","));
+            String userId = result.substring(result.indexOf(",") + 1);
+            cspUserService.doBindMail(email,userId,key);
+            //发送推送通知邮箱已绑定
+            jPushService.sendChangeMessage(userId,"3",email);
             return localeView("/register/bindOk");
+        }else{ //链接超时
+            return localeView("/register/linkTimeOut");
         }
+
 
     }
 

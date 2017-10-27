@@ -45,8 +45,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Value("${app.file.base}")
     protected String fileBase;
 
-    @Value("${app.csp.base}")
-    protected String cspBase;
 
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
@@ -238,27 +236,20 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if (template != null && template.intValue() == registerTemplate) {
             // 发送注册激活邮箱邮件
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = cspBase + "/api/email/active?code=" + code;
+            url = appBase + "/api/email/active?code=" + code;
             subject = "CSPMeeting账号激活";
             templateName = MailBean.MailTemplate.REGISTER.getLabel();
         } else if (template.intValue() == findPwdTemplate) {
             // 发送找回密码邮件
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = cspBase + "/api/email/toReset?code=" + code;
+            url = appBase + "/api/email/toReset?code=" + code;
             subject = "找回密码";
             templateName = MailBean.MailTemplate.FIND_PWD.getLabel();
         } else if (template.intValue() == bindTemplate) {
+
             // 发送绑定邮箱邮件
-            CspUserInfo info = findByLoginName(email);
-            if (info != null) { //当前邮箱已被绑定
-                throw new SystemException(local("user.exist.email"));
-            }
-            CspUserInfo user = selectByPrimaryKey(userId);
-            if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
-                throw new SystemException(local("user.has.email"));
-            }
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-            url = cspBase + "/api/email/bindEmail?code=" + code;
+            url = appBase + "/api/email/bindEmail?code=" + code;
             subject = "绑定邮箱";
             templateName = MailBean.MailTemplate.BIND.getLabel();
         }
@@ -401,9 +392,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public void doBindMail(String key, String result) throws SystemException {
-        String email = result.substring(0, result.indexOf(","));
-        String userId = result.substring(result.indexOf(",") + 1);
+    public void doBindMail(String email, String userId,String key) throws SystemException {
+
         CspUserInfo info = selectByPrimaryKey(userId);
         if (info == null) { //用户不存在
             throw new SystemException(local("user.error.nonentity"));
@@ -411,8 +401,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         info.setEmail(email);
         updateByPrimaryKeySelective(info);
         redisCacheUtils.delete(key);
-        //发送推送通知邮箱已绑定
-        jPushService.sendChangeMessage(userId,"3",email);
+
     }
 
 
