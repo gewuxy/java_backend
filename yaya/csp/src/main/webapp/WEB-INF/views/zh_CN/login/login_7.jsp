@@ -56,7 +56,7 @@
                     <!--登录用-->
                     <div class="login-box-other">
                         <div class="login-box-other-info t-center">
-                            <a href="${ctx}/mgr/to/regist" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">忘记密码</a>
+                            <a href="${ctx}/mgr/to/register" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">忘记密码</a>
                         </div>
                     </div>
                     <div class="login-box-info t-center">
