@@ -465,5 +465,34 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.findCSPUserInfo(userId);
     }
 
+    /**
+     * 将用户密码插入到数据库
+     * @param email
+     * @param password
+     * @param userId
+     */
+    @Override
+    public void insertPassword(String email, String password, String userId) throws SystemException {
+        if(!StringUtils.isEmail(email)){
+            throw  new SystemException(local("user.error.email.format"));
+        }
+        if(StringUtils.isEmpty(password)){
+            throw  new SystemException(local("user.password.notnull"));
+        }
+
+        CspUserInfo user = selectByPrimaryKey(userId);
+        if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
+            throw  new SystemException(local("user.has.email"));
+        }
+        CspUserInfo info = findByLoginName(email);
+        if (info != null) { //当前邮箱已被绑定
+            throw new SystemException(local("user.exist.email"));
+        }
+        //将密码插入到数据库
+        user.setId(userId);
+        user.setPassword(MD5Utils.md5(password));
+        updateByPrimaryKey(user);
+    }
+
 
 }

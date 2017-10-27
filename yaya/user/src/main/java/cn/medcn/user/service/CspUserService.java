@@ -134,5 +134,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      */
     CspUserInfoDTO findCSPUserInfo(String userId);
 
+    void insertPassword(String email, String password, String userId) throws SystemException;
+
 
 }

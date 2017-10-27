@@ -430,19 +430,11 @@ public class CspUserController extends BaseController {
     @RequestMapping("/toBind")
     @ResponseBody
     public String toBind(String email,String password) {
-        if(!StringUtils.isEmail(email)){
-            return error(local("user.error.email.format"));
-        }
-        if(StringUtils.isEmpty(password)){
-            return error(local("user.password.notnull"));
-        }
+
         String userId = SecurityUtils.get().getId();
-        //将密码插入到数据库
-        CspUserInfo info = new CspUserInfo();
-        info.setId(userId);
-        info.setPassword(MD5Utils.md5(password));
-        cspUserService.updateByPrimaryKey(info);
         try {
+            //将密码插入到数据库
+            cspUserService.insertPassword(email, password, userId);
             cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
         } catch (SystemException e) {
             return error(e.getMessage());
@@ -450,6 +442,8 @@ public class CspUserController extends BaseController {
         return success();
 
     }
+
+
 
 
     /**
