@@ -258,8 +258,8 @@ public class LoginController extends CspBaseController {
      * 跳转注册页面
      * @return
      */
-    @RequestMapping(value = "/to/regist")
-    public String toRegistPage() {
+    @RequestMapping(value = "/to/register")
+    public String toRegister() {
         return localeView("/register/register");
     }
 
@@ -277,5 +277,15 @@ public class LoginController extends CspBaseController {
             return error(e.getMessage());
         }
     }
+
+    /**
+     * 忘记密码
+     * @return
+     */
+    @RequestMapping(value = "/to/reset/password")
+    public String toResetPassWd() {
+        return localeView("/register/to_reset_passwd");
+    }
+
 
 }
