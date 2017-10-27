@@ -2982,7 +2982,7 @@ jQuery.event = {
 			run_all = !event.exclusive && !event.namespace,
 			args = Array.prototype.slice.call( arguments, 0 );
 
-		// Use the fix-ed Event rather than the (read-only) native event
+		// Use the fix-ed Event rather than the (isRead-only) native event
 		args[0] = event;
 		event.currentTarget = this;
 
@@ -3024,7 +3024,7 @@ jQuery.event = {
 		}
 
 		// store a copy of the original event object
-		// and "clone" to set read-only properties
+		// and "clone" to set isRead-only properties
 		var originalEvent = event;
 		event = jQuery.Event( originalEvent );
 

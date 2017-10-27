@@ -385,7 +385,7 @@ CKEDITOR.STYLE_OBJECT = 3;
 	};
 
 	// Gets the parent element which blocks the styling for an element. This
-	// can be done through read-only elements (contenteditable=false) or
+	// can be done through isRead-only elements (contenteditable=false) or
 	// elements with the "data-nostyle" attribute.
 	function getUnstylableParent( element )
 	{
@@ -435,11 +435,11 @@ CKEDITOR.STYLE_OBJECT = 3;
 		var def = this._.definition;
 		var isUnknownElement;
 
-		// Indicates that fully selected read-only elements are to be included in the styling range.
+		// Indicates that fully selected isRead-only elements are to be included in the styling range.
 		var ignoreReadonly = def.ignoreReadonly,
 			includeReadonly = ignoreReadonly || def.includeReadonly;
 
-		// If the read-only inclusion is not available in the definition, try
+		// If the isRead-only inclusion is not available in the definition, try
 		// to get it from the document data.
 		if ( includeReadonly == undefined )
 			includeReadonly = document.getCustomData( 'cke_includeReadonly' );
@@ -1671,7 +1671,7 @@ CKEDITOR.editor.prototype.getStylesSet = function( callback )
 };
 
 /**
- * Indicates that fully selected read-only elements will be included when
+ * Indicates that fully selected isRead-only elements will be included when
  * applying the style (for inline styles only).
  * @name CKEDITOR.style.includeReadonly
  * @type Boolean
@@ -1680,7 +1680,7 @@ CKEDITOR.editor.prototype.getStylesSet = function( callback )
  */
 
  /**
-  * Disables inline styling on read-only elements.
+  * Disables inline styling on isRead-only elements.
   * @name CKEDITOR.config.disableReadonlyStyling
   * @type Boolean
   * @default false

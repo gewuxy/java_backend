@@ -161,7 +161,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		editor.tabIndex = editor.config.tabIndex || editor.element.getAttribute( 'tabindex' ) || 0;
 
 		/**
-		 * Indicates the read-only state of this editor. This is a read-only property.
+		 * Indicates the isRead-only state of this editor. This is a isRead-only property.
 		 * @name CKEDITOR.editor.prototype.readOnly
 		 * @type Boolean
 		 * @since 3.6
@@ -739,13 +739,13 @@ CKEDITOR.tools.extend( CKEDITOR.editor.prototype,
 		},
 
 		/**
-		 * Puts or restores the editor into read-only state. When in read-only,
+		 * Puts or restores the editor into isRead-only state. When in isRead-only,
 		 * the user is not able to change the editor contents, but can still use
 		 * some editor features. This function sets the <code>{@link CKEDITOR.config.readOnly}</code>
 		 * property of the editor, firing the <code>{@link CKEDITOR.editor#readOnly}</code> event.<br><br>
 		 * <strong>Note:</strong> the current editing area will be reloaded.
 		 * @param {Boolean} [isReadOnly] Indicates that the editor must go
-		 *		read-only (<code>true</code>, default) or be restored and made editable
+		 *		isRead-only (<code>true</code>, default) or be restored and made editable
 		 * 		(<code>false</code>).
 		 * @since 3.6
 		 */
@@ -892,7 +892,7 @@ CKEDITOR.on( 'loaded', function()
  */
 
 /**
- * If <code>true</code>, makes the editor start in read-only state. Otherwise, it will check
+ * If <code>true</code>, makes the editor start in isRead-only state. Otherwise, it will check
  * if the linked <code>&lt;textarea&gt;</code> element has the <code>disabled</code> attribute.
  * @name CKEDITOR.config.readOnly
  * @see CKEDITOR.editor#setReadOnly

@@ -10,6 +10,7 @@ import cn.medcn.oauth.decorator.OAuthServiceDecorator;
 import cn.medcn.oauth.dto.OAuthUser;
 import cn.medcn.oauth.provider.OAuthDecoratorProvider;
 import cn.medcn.oauth.service.OauthService;
+import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
@@ -44,6 +45,9 @@ public class LoginController extends CspBaseController {
 
     @Autowired
     protected OauthService oauthService;
+
+    @Autowired
+    protected SysNotifyService sysNotifyService;
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -252,7 +256,6 @@ public class LoginController extends CspBaseController {
         Subject subject = SecurityUtils.getSubject();
         subject.login(token);
     }
-
 
 
 

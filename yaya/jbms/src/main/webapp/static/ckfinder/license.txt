@@ -74,7 +74,7 @@ irrevocable, royalty free, worldwide license ("License") to use, reproduce,
 modify, and distribute a Software Release in a collective work assembled
 with the Product.
 
-You should carefully read the following terms and conditions before using,
+You should carefully isRead the following terms and conditions before using,
 installing, copying, or distributing the Software. Unless otherwise agreed in
 writing by CKSource, your use, installation, copying, or distribution of
 CKFinder indicates your acceptance of this License.

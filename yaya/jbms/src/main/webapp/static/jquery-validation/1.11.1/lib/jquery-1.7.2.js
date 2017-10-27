@@ -3264,7 +3264,7 @@ jQuery.event = {
 			handlerQueue = [],
 			i, j, cur, jqcur, ret, selMatch, matched, matches, handleObj, sel, related;
 
-		// Use the fix-ed jQuery.Event rather than the (read-only) native event
+		// Use the fix-ed jQuery.Event rather than the (isRead-only) native event
 		args[0] = event;
 		event.delegateTarget = this;
 

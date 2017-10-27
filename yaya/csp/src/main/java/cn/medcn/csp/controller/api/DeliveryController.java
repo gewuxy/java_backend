@@ -41,6 +41,7 @@ public class DeliveryController extends BaseController {
 //        }
         pageable.put("authorId", SecurityUtils.get().getId());
         MyPage<DeliveryHistoryDTO> page = courseDeliveryService.findDeliveryHistory(pageable);
+        DeliveryHistoryDTO.splitAvatarUrl(page.getDataList(),fileBase);
         return success(page.getDataList());
     }
 
@@ -49,6 +50,7 @@ public class DeliveryController extends BaseController {
     public String detail(Integer acceptId) {
         Principal principal = SecurityUtils.get();
         List<CourseDeliveryDTO> list = courseDeliveryService.findByAcceptId(acceptId, principal.getId());
+        CourseDeliveryDTO.splitCoverUrl(list,fileBase);
         return success(list);
     }
 

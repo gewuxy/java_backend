@@ -5,11 +5,15 @@ import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.email.EmailHelper;
 import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
+import cn.medcn.sys.dao.SystemNotifyDAO;
+import cn.medcn.sys.model.SystemNotify;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dao.CspUserInfoDAO;
 import cn.medcn.user.dto.Captcha;
@@ -18,6 +22,8 @@ import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
 import com.github.abel533.mapper.Mapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +57,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Autowired
     protected BindInfoDAO bindInfoDAO;
+
+    @Autowired
+    protected SystemNotifyDAO systemNotifyDAO;
 
     @Autowired
     protected RedisCacheUtils redisCacheUtils;
@@ -493,6 +502,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         user.setPassword(MD5Utils.md5(password));
         updateByPrimaryKey(user);
     }
+
+
+
+
 
 
 }
