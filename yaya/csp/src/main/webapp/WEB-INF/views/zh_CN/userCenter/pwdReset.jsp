@@ -30,7 +30,7 @@
                         <c:if test="${not empty needBind}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
-                                    <a href="user-05-binding.html" type="button" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+                                    <a href="user-05-binding.html" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
                                         src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;修改密码需绑定邮箱后才能继续操作。
                                 </div>
 
@@ -67,6 +67,7 @@
                         </c:if>
 
                     </div>
+                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
                 </div>
             </div>
         </div>
@@ -106,16 +107,61 @@
             }
         });
 
+        $("#emailBtn").click(function () {
+            if(isEmail()){
+                var email = $("#email").val();
+                var password = $("#password").val();
+                if(checkPwd()){
+                    <%--$.get('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {--%>
+                    <%--if (data.code == 0){--%>
+                    <%--layer.closeAll();--%>
+                    <%--layer.msg("绑定成功");--%>
+                    <%--}else{--%>
+                    <%--layer.msg(data.err);--%>
+                    <%--}--%>
+                    <%--},'json');--%>
+                }
 
-//        //调用密码切换
-//        $('.pwdChange-hook').on('click',function() {
-//            changePassWordStatus($('.hidePassword'));
-//        });
-//
-//        //调用密码切换
-//        $('.pwdChange-hook1').on('click',function() {
-//            changePassWordStatus($('.hidePassword1'));
-//        });
+
+            }
+        });
+
+
+        //弹出绑定邮箱step01
+        $('#bindEmail').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['609px', '340px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('.email-popup-box'),
+                success:function(layero, index){
+
+                },
+                cancel :function(){
+
+                },
+            });
+        });
+        //弹出绑定邮箱step02
+        $('.email-hook-02').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['609px', '278px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('.email-popup-box-02'),
+                success:function(layero, index){
+                    layer.close(1);
+                },
+                cancel :function(){
+                    layer.closeAll();
+                },
+            });
+        });
+
 
         $("#pwd").blur(function () {
             oldPwdValid();
@@ -191,6 +237,42 @@
             $("#newSpan").attr("class","cells-block error none");
             return true;
         }
+    }
+
+    function checkPwd() {
+        var password = $("#password").val();
+        if ($.trim(password)==''){
+            $("#passwordSpan").html("密码不能为空");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        }else if($.trim(password)!= password){
+            $("#passwordSpan").html("密码不能包含空格");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        }else if($.trim(password).length < 6){
+            $("#passwordSpan").html("请输入6~24位密码");
+            $("#passwordSpan").attr("class","cells-block error");
+
+        }else{
+            $("#passwordSpan").attr("class","cells-block error none");
+            return true;
+        }
+    }
+
+    function isEmail() {
+        var email = $("#email").val();
+        if($.trim(email) == ''){
+            $("#emailSpan").attr("class","cells-block error ");
+            $("#emailSpan").html("邮箱不能为空");
+            return false;
+        }
+        if(!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
+            $("#emailSpan").attr("class","cells-block error ");
+            $("#emailSpan").html("邮箱格式不正确");
+            return false;
+        }
+        $("#emailSpan").attr("class","cells-block error none");
+        return true;
     }
 
 
