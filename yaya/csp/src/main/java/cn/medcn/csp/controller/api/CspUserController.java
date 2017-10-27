@@ -155,7 +155,10 @@ public class CspUserController extends BaseController {
             }
 
             // 当前登录的用户不是海外用户
-            if (userInfo.getAbroad() != LocalUtils.isAbroad()) {
+            if (userInfo.getAbroad() == null) {
+                userInfo.setAbroad(false);
+            }
+            if (userInfo.getAbroad().booleanValue() != LocalUtils.isAbroad()) {
                 return error(local("user.login.error"));
             }
 
