@@ -21,13 +21,13 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
             <div class="login-header">
-                <a href="${ctx}/mgr/login?thirdPartyId=7" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="images/login-user-icon.png" alt=""></span></a>
+                <a href="${ctx}/mgr/login?thirdPartyId=7" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="${ctxStatic}/images/login-user-icon.png" alt=""></span></a>
                 <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
             </div>
             <div class="login-box clearfix">
                 <div class="col-lg-5">
                     <div class="login-box-logo">
-                        <img src="images/login-logo.png" alt="">
+                        <img src="${ctxStatic}/images/login-logo.png" alt="">
                     </div>
                 </div>
                 <div class="col-lg-2">&nbsp;</div>
