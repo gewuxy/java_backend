@@ -72,8 +72,8 @@
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议名称</span>
 
                                 <div class="textarea">
-                                    <textarea name="course.info" id="courseInfo" cols="30" rows="10">${course.info}</textarea>
-                                    <p class="t-right">600</p>
+                                    <textarea name="course.info" id="courseInfo" cols="30" maxlength="600" rows="10">${course.info}</textarea>
+                                    <p class="t-right" id="leftInfoCount">600</p>
                                 </div>
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议简介</span>
 
@@ -98,23 +98,25 @@
                                                             <span class="time-tj">
                                                                 <label for="" id="timeStart">
                                                                     时间<input type="text" readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
-                                                                    <c:if test="${not empty live.startTime}">value="${live.startTime} - ${live.endTime}"</c:if>
+                                                                    <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
                                                         <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
+                                                        <input type="hidden" name="live.startTime" id="liveStartTime" value="${live.startTime}">
+                                                        <input type="hidden" name="live.endTime" id="liveEndTime" value="${live.endTime}">
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <div class="cells-block clearfix checkbox-box">
                                                     <span class="checkboxIcon">
-                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook">
+                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''}>
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">20</span>G <a href="${ctx}/mgr/" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <div class="text">流量剩余<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -237,6 +239,17 @@
     }
 
     $(function(){
+        showInfoLeftCount();
+
+        function showInfoLeftCount(){
+            var usedLen = $("#courseInfo").val().length;
+            $("#leftInfoCount").text(600 - usedLen);
+        }
+
+        $("#courseInfo").keyup(function(){
+            showInfoLeftCount();
+        });
+
         $("input[name='course.playType']").click(function(){
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
@@ -345,8 +358,8 @@
             showShortcuts: false,
             showTopbar: false,
             startOfWeek: 'monday',
-            separator : ' - ',
-            format: 'YYYY-MM-DD HH:mm',
+            separator : ' 至 ',
+            format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
             time: {
                 enabled: true
@@ -356,6 +369,9 @@
             console.log('first-date-selected',obj);
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
+            var timeArray = obj.value.split(" 至 ");
+            $("#liveStartTime").val(timeArray[0]);
+            $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);
         });
 

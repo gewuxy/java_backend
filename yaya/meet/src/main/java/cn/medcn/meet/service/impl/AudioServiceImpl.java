@@ -219,7 +219,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param userId
      * @param newTitle
      */
-    private void doCopyCourse(AudioCourse course, Integer userId, String newTitle){
+    private Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
         List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(course.getId());
         //复制微课信息
         AudioCourse reprintCourse = new AudioCourse();
@@ -243,6 +243,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             reprintDetail.setCourseId(reprintCourse.getId());
             audioCourseDetailDAO.insert(reprintDetail);
         }
+        return reprintCourse.getId();
     }
 
 
@@ -596,13 +597,14 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public void addCourseCopy(Integer courseId, String newTitle) {
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
-        doCopyCourse(course, null, newTitle);
+        Integer newCourseId = doCopyCourse(course, null, newTitle);
 
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
             Live copy = new Live();
             BeanUtils.copyProperties(live, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            copy.setCourseId(newCourseId);
             liveService.insert(copy);
         }
 
@@ -613,7 +615,65 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             AudioCoursePlay copy = new AudioCoursePlay();
             BeanUtils.copyProperties(play, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            copy.setCourseId(newCourseId);
             audioCoursePlayDAO.insert(copy);
         }
+    }
+
+    /**
+     * 修改课件基本信息以及直播信息
+     *
+     * @param audioCourse
+     * @param live
+     */
+    @Override
+    @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#audioCourse.id")
+    public void updateAudioCourseInfo(AudioCourse audioCourse, Live live) {
+        Live oldLive = liveService.findByCourseId(audioCourse.getId());
+
+        if (oldLive == null) {
+            oldLive = new Live();
+            oldLive.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            oldLive.setCourseId(audioCourse.getId());
+            oldLive.setLiveState(Live.LiveState.init.getType());
+            oldLive.setLivePage(0);
+            oldLive.setVideoLive(audioCourse.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
+            oldLive.setStartTime(live.getStartTime());
+            oldLive.setEndTime(live.getEndTime());
+
+            liveService.insert(oldLive);
+        } else {
+            oldLive.setVideoLive(audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
+            oldLive.setStartTime(live.getStartTime());
+            oldLive.setEndTime(live.getEndTime());
+
+            liveService.updateByPrimaryKeySelective(oldLive);
+        }
+
+        updateByPrimaryKeySelective(audioCourse);
+    }
+
+
+    /**
+     * 修改课件基本信息以及修改录播信息
+     *
+     * @param audioCourse
+     * @param play
+     */
+    @Override
+    public void updateAudioCourseInfo(AudioCourse audioCourse, AudioCoursePlay play) {
+        AudioCoursePlay oldPlay = findPlayState(audioCourse.getId());
+
+        if (oldPlay == null) {
+            oldPlay = new AudioCoursePlay();
+            oldPlay.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            oldPlay.setCourseId(audioCourse.getId());
+            oldPlay.setPlayPage(0);
+            oldPlay.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
+
+            audioCoursePlayDAO.insert(oldPlay);
+        }
+
+        updateByPrimaryKeySelective(audioCourse);
     }
 }
