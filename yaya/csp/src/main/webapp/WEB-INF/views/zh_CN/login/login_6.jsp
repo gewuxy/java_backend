@@ -22,7 +22,7 @@
     <div class="login login-banner" >
         <div class="page-width pr">
             <div class="login-header">
-                <%@include file="/WEB-INF/include/switch_language.jsp"%>
+                <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
             </div>
             <div class="login-box clearfix">
                 <div class="col-lg-5">
