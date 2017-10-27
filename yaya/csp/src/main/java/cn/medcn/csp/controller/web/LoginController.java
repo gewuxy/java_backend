@@ -1,27 +1,20 @@
 package cn.medcn.csp.controller.web;
 
-import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
  import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
-import cn.medcn.oauth.decorator.OAuthServiceDecorator;
 import cn.medcn.oauth.dto.OAuthUser;
-import cn.medcn.oauth.provider.OAuthDecoratorProvider;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
-import cn.medcn.weixin.dto.OAuthDTO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.scribe.model.Token;
-import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +22,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Date;
 
 /**
  * Created by lixuan on 2017/10/16.
