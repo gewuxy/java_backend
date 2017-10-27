@@ -254,9 +254,14 @@ public class LoginController extends CspBaseController {
     }
 
 
-
-
-
+    /**
+     * 跳转注册页面
+     * @return
+     */
+    @RequestMapping(value = "/to/regist")
+    public String toRegistPage() {
+        return localeView("/register/register");
+    }
 
     /**
      * 邮箱注册
