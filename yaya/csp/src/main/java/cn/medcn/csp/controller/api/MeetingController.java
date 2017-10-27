@@ -425,9 +425,18 @@ public class MeetingController extends CspBaseController {
                     deliveryDTO.setCoverUrl(fileBase + deliveryDTO.getCoverUrl());
                 }
 
-                // 当前播放第几页
-                if (deliveryDTO.getPlayPage() == null) {
-                    deliveryDTO.setPlayPage(0);
+                // 录播会议
+                if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+                    // 录播 当前播放第几页
+                    if (deliveryDTO.getPlayPage() == null) {
+                        deliveryDTO.setPlayPage(0);
+                    }
+                } else {
+                    // 直播 当前播放第几页
+                    if (deliveryDTO.getLivePage() == null) {
+                        deliveryDTO.setLivePage(0);
+                    }
+
                 }
 
             }

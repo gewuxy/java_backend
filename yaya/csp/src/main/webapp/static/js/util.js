@@ -196,7 +196,7 @@ function checkItem(submitAble, cur){
 }
 
 function isPassword(val){
-    var reg = /^[a-zA-Z0-9]{6,32}$/;
+    var reg = /^[a-zA-Z0-9]{6,24}$/;
     return reg.test(val);
 }
 
