@@ -4,41 +4,46 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
  import cn.medcn.common.utils.StringUtils;
-import cn.medcn.oauth.OAuthConstants;
+import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.security.Principal;
 import cn.medcn.oauth.decorator.OAuthServiceDecorator;
-import cn.medcn.oauth.decorator.WeChatServiceDecorator;
-import cn.medcn.oauth.decorator.WeiBoServiceDecorator;
-import cn.medcn.oauth.decorator.YaYaServiceDecorator;
 import cn.medcn.oauth.dto.OAuthUser;
 import cn.medcn.oauth.provider.OAuthDecoratorProvider;
+import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.weixin.dto.OAuthDTO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.scribe.model.Token;
 import org.scribe.model.Verifier;
+import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
  import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import static cn.medcn.csp.realm.CspRealm.AUTH_DEFAULT_PASSWORD;
+import java.util.Date;
 
 /**
  * Created by lixuan on 2017/10/16.
  */
 @Controller
 @RequestMapping(value = "/mgr")
-public class LoginController extends BaseController {
+public class LoginController extends CspBaseController {
 
     @Autowired
     protected CspUserService cspUserService;
+
+    @Autowired
+    protected OauthService oauthService;
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -49,7 +54,8 @@ public class LoginController extends BaseController {
             return localeView("/login/login_"+thirdPartyId);
         } else {
             // 第三方登录
-            return "redirect:" + jumpThirdPartyAuthorizePage(thirdPartyId);
+            String url = oauthService.jumpThirdPartyAuthorizePage(thirdPartyId);
+            return "redirect:" + url;
         }
     }
 
@@ -163,70 +169,93 @@ public class LoginController extends BaseController {
         }
     }
 
-    /**
-     * 跳转第三方授权登录页面
-     * @param thirdPartyId
-     * @return
-     */
-    protected String jumpThirdPartyAuthorizePage(Integer thirdPartyId) {
-        String callback = null;
-        if (thirdPartyId == BindInfo.Type.WE_CHAT.getTypeId()) {
-            callback = OAuthConstants.get("WeChat.oauth.callback");
-        } else if (thirdPartyId == BindInfo.Type.WEI_BO.getTypeId()) {
-            callback = OAuthConstants.get("WeiBo.oauth.callback");
-        } else {
-            callback = OAuthConstants.get("YaYa.oauth.callback");
-        }
-        // 获取授权url
-        OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, callback);
-        // 跳转授权url
-        return decorator.getAuthorizeUrl();
-    }
 
     /**
-     * 第三方登录 回调地址
+     * 第三方登录,绑定 回调地址
      * @param code
      * @param thirdPartyId
      * @return
      */
     @RequestMapping(value = "/oauth/callback")
-    public String callback(String code, Integer thirdPartyId) {
+    public String callback(String code, Integer thirdPartyId,RedirectAttributes redirectAttributes) throws SystemException {
+        Principal principal =  getWebPrincipal();
         if (StringUtils.isNotEmpty(code)) {
-            Token accessToken = null;
-            // 获取授权成功token
-            OAuthServiceDecorator decorator = OAuthDecoratorProvider.getDecorator(thirdPartyId, "");
-            accessToken = decorator.getAccessToken(accessToken, new Verifier(code));
-            // 获取授权成功后用户数据
-            OAuthUser oAuthUser = decorator.getOAuthUser(accessToken);
+            //获取第三方用户信息
+            OAuthUser oAuthUser = oauthService.getOauthUser(code, thirdPartyId);
 
-            CspUserInfo userInfo = null;
             if (oAuthUser != null) {
                 String uniqueId = oAuthUser.getUid();
-
                 if (StringUtils.isNotEmpty(uniqueId)) {
-                    // 根据第三方用户唯一id 查询用户是否存在
-                    userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
 
-                   // 用户不存在，去添加绑定账号及添加csp用户账号
-                    if (userInfo == null) {
-                        CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
-                        dto.setThirdPartyId(thirdPartyId);
-                        //去添加绑定账号
-                        userInfo = cspUserService.saveThirdPartyUserInfo(dto);
+                    // 根据第三方用户唯一id 查询用户是否存在
+                    CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
+
+                    if(principal != null){
+                        //第三方绑定操作
+                        doThirdPartWebBind(oAuthUser,thirdPartyId,redirectAttributes);
+                        return "redirect:/mgr/user/toAccount";
+                    }else{
+                        //第三方登录操作
+                        doThirdPartWebLogin(thirdPartyId, oAuthUser, userInfo);
+                        return "redirect:/mgr/meet/list";
                     }
                 }
-
-                UsernamePasswordToken token = new UsernamePasswordToken();
-                token.setHost("thirdParty");
-                token.setUsername(userInfo.getId());
-                Subject subject = SecurityUtils.getSubject();
-                subject.login(token);
             }
-
         }
 
-        return "redirect:/mgr/meet/list";
+       return "";
+
     }
+
+    /**
+     * 绑定第三方账号
+     * @param oAuthUser
+     * @param thirdPartId
+     * @param redirectAttributes
+     * @return
+     */
+    private void doThirdPartWebBind(OAuthUser oAuthUser,Integer thirdPartId,RedirectAttributes redirectAttributes) {
+            String userId = getWebPrincipal().getId();
+            BindInfo info = OAuthUser.buildToBindInfo(oAuthUser);
+            info.setThirdPartyId(thirdPartId);
+            info.setId(StringUtils.nowStr());
+
+        try {
+            cspUserService.doBindThirdAccount(info,userId);
+            addFlashMessage(redirectAttributes,"绑定成功");
+        } catch (SystemException e) {
+           addFlashMessage(redirectAttributes,e.getMessage());
+        }
+
+
+    }
+
+
+    /**
+     * 第三方登录需要做的操作
+     * @param thirdPartyId
+     * @param oAuthUser
+     * @param userInfo
+     */
+    private void doThirdPartWebLogin(Integer thirdPartyId, OAuthUser oAuthUser, CspUserInfo userInfo) {
+        // 用户不存在，去添加绑定账号及添加csp用户账号
+        if (userInfo == null) {
+            CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
+            dto.setThirdPartyId(thirdPartyId);
+            //去添加绑定账号
+            userInfo = cspUserService.saveThirdPartyUserInfo(dto);
+        }
+
+        UsernamePasswordToken token = new UsernamePasswordToken();
+        token.setHost("thirdParty");
+        token.setUsername(userInfo.getId());
+        Subject subject = SecurityUtils.getSubject();
+        subject.login(token);
+    }
+
+
+
+
 
 
     /**

@@ -18,6 +18,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/daterangepicker.css">
 
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <style>
@@ -64,19 +65,26 @@
                         </div>
                     </div>
                     <div class="col-lg-7">
-                        <form action="">
+                        <form action="${ctx}/mgr/meet/save" method="post" id="courseForm" name="courseForm">
+                            <input type="hidden" name="course.id" value="${course.id}">
                             <div class="meeting-form-item login-form-item">
-                                <label for="email2" class="cells-block pr"><input id="email2" type="text" class="login-formInput" placeholder="会议名称" value="${course.title}"></label>
+                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="会议名称" value="${course.title}"></label>
+                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议名称</span>
+
                                 <div class="textarea">
-                                    <textarea name="course.info" id="" cols="30" rows="10">${course.info}</textarea>
-                                    <p class="t-right">600</p>
+                                    <textarea name="course.info" id="courseInfo" cols="30" maxlength="600" rows="10">${course.info}</textarea>
+                                    <p class="t-right" id="leftInfoCount">600</p>
                                 </div>
+                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议简介</span>
+
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject">分类&nbsp;&nbsp;|<i>医学类</i></span><span class="office">内科系统</span>
+                                    <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
+                                    <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${course.categoryId}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${course.category}">
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="course.playType" value="1">
+                                        <input id="recorded" type="radio" name="course.playType" value="0">
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
@@ -89,21 +97,26 @@
                                                     <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="" id="timeStart">
-                                                                    时间<input type="text" disabled="" class="timedate-input " placeholder="2017-01-01 00:00 至 2017-01-01 00:00">
+                                                                    时间<input type="text" readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
+                                                                    <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
+                                                                >
                                                                 </label>
                                                             </span>
+                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
+                                                        <input type="hidden" name="live.startTime" id="liveStartTime" value="${live.startTime}">
+                                                        <input type="hidden" name="live.endTime" id="liveEndTime" value="${live.endTime}">
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <div class="cells-block clearfix checkbox-box">
                                                     <span class="checkboxIcon">
-                                                        <input type="checkbox" id="popup_checkbox_2" class="chk_1 chk-hook">
+                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''}>
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>流量消耗每人约0.5G/1小时，本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">20</span>G <a href="javascript:;" class="cancel-hook">立即充值</a></div>
+                                                    <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
+                                                    <div class="text">流量剩余<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -122,6 +135,66 @@
 
     <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
 </div>
+
+<div class="meeting-classify-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>选择分类</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="metting-classify-popup-main">
+                <div class="fl clearfix">
+
+                    <div class="metting-classify-popup-tab">
+                        <ul id="rootList">
+                            <c:set var="rootId" value="${rootList[0].id}"/>
+                            <c:forEach items="${rootList}" var="c" varStatus="status">
+                                <li cid="${c.id}" <c:if test="${status.index == 0}">class="cur"</c:if> ><a href="javascript:void (0);">${c.nameCn}</a></li>
+                            </c:forEach>
+                        </ul>
+                    </div>
+                </div>
+                <div class="oh clearfix">
+
+                    <div class="metting-classify-popup-tab-item">
+                        <ul id="subList">
+
+                            <c:forEach items="${subList}" var="cc" varStatus="status">
+                            <li parentId="${cc.parentId}" categoryId="${cc.id}" <c:if test="${status.index == 0}">class="cur"</c:if> <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if> ><a href="javascript:void (0);">${cc.nameCn}</a></li>
+                            </c:forEach>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--弹出 充值-->
+<div class="cancel-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <div class="admin-button t-right">
+                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <input type="submit" class="button buttonBlue item-radius min-btn" value="我已付款成功">
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
 
@@ -166,7 +239,18 @@
     }
 
     $(function(){
-        $("input[name='playType']").click(function(){
+        showInfoLeftCount();
+
+        function showInfoLeftCount(){
+            var usedLen = $("#courseInfo").val().length;
+            $("#leftInfoCount").text(600 - usedLen);
+        }
+
+        $("#courseInfo").keyup(function(){
+            showInfoLeftCount();
+        });
+
+        $("input[name='course.playType']").click(function(){
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
 
@@ -174,23 +258,120 @@
             $(this).siblings(".meeting-tab-main").removeClass("none");
         });
 
+        $('.cancel-hook').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['560px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                anim:5,
+                content: $('.cancel-popup-box'),
+                success:function(){
+
+                },
+                cancel :function(){
+
+                },
+            });
+        });
+
+
+        $(".login-button").click(function(){
+            var $courseTitle = $("#courseTitle");
+            var $courseInfo = $("#courseInfo");
+            var $timedate = $(".timedate-input");
+            if ($.trim($courseTitle.val()) == ''){
+                $courseTitle.focus();
+                $courseTitle.parent().next(".error").removeClass("none");
+                return;
+            } else {
+                $courseTitle.parent().next(".error").addClass("none");
+            }
+
+            if ($.trim($courseInfo.val()) == ''){
+                $courseInfo.focus();
+                $courseInfo.parent().next(".error").removeClass("none");
+                return;
+            } else {
+                $courseInfo.parent().next(".error").addClass("none");
+            }
+
+            var playType = $("input[name='course.playType']:checked").val();
+
+            if ($.trim($timedate.val()) == '' && playType == 1){
+                $timedate.focus();
+                $timedate.parent().parent().next(".error").removeClass("none");
+                return;
+            } else {
+                $timedate.parent().parent().next(".error").addClass("none");
+            }
+
+            $("#courseForm").submit();
+        });
+
+        $("#rootList>li").click(function(){
+            $("#rootList>li").removeClass("cur");
+            $(this).addClass("cur");
+            $("#rootCategory").text($(this).find("a").text());
+            $("#subList>li").hide();
+            $("#subList>li[parentId='"+$(this).attr("cid")+"']").show();
+        });
+
+        $("#subList>li").click(function(){
+            $("#subList>li").removeClass("cur");
+            var categoryId = $(this).attr("categoryId");
+            var category = $(this).find("a").text();
+            $(this).addClass("cur");
+            $("#subCategory").text(category);
+
+            $("#courseCategoryId").val(categoryId);
+            $("#courseCategoryName").val(category);
+            layer.closeAll();
+        });
+
+
+
+        $('.meeting-classify-hook').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['732px', '916px'],
+                fix: false, //不固定
+                title:false,
+                anim:5,
+                closeBtn:0,
+                content: $('.meeting-classify-popup-box'),
+                success:function(){
+
+
+
+                },
+                cancel :function(){
+
+                },
+            });
+        });
+
+
         $('#timeStart').dateRangePicker({
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
             startOfWeek: 'monday',
             separator : ' 至 ',
-            format: 'YYYY-MM-DD HH:mm',
+            format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
             time: {
                 enabled: true
             }
         }).bind('datepicker-first-date-selected', function(event, obj){
             /*首次点击的时间*/
-            alert(123);
             console.log('first-date-selected',obj);
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
+            var timeArray = obj.value.split(" 至 ");
+            $("#liveStartTime").val(timeArray[0]);
+            $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);
         });
 

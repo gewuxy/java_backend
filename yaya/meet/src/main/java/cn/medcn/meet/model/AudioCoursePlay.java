@@ -24,4 +24,11 @@ public class AudioCoursePlay implements Serializable {
     // 录播状态 0表示未开始 1表示录播中 2表示录播结束
     protected Integer playState;
 
+
+    public enum PlayState{
+        init,
+        playing,
+        over;
+    }
+
 }

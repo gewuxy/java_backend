@@ -14,11 +14,14 @@ import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
+import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.CourseCategoryService;
+import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.UserFluxService;
 import com.pingplusplus.model.App;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,8 +30,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,6 +64,15 @@ public class MeetingMgrController extends CspBaseController {
 
     @Autowired
     protected AppUserService appUserService;
+
+    @Autowired
+    protected CourseCategoryService courseCategoryService;
+
+    @Autowired
+    protected LiveService liveService;
+
+    @Autowired
+    protected UserFluxService userFluxService;
 
     /**
      * 查询当前用户的课件列表
@@ -169,7 +184,21 @@ public class MeetingMgrController extends CspBaseController {
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
+
+        model.addAttribute("rootList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.root.depth));
+        model.addAttribute("subList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.sub.depth));
         model.addAttribute("course", course);
+
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
+
+        if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+            model.addAttribute("live", liveService.findByCourseId(course.getId()));
+
+            model.addAttribute("flux", userFluxService.selectByPrimaryKey(principal.getId()));
+        }
+
         return localeView("/meeting/edit");
     }
 
@@ -350,8 +379,23 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course, Integer openLive){
+    public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+        AudioCourse ac = course.getCourse();
+        if (openLive == 1) {
+            ac.setPlayType(AudioCourse.PlayType.live_video.getType()); //视频直播
+            //判断是否有足够的流量
+            UserFlux flux = userFluxService.selectByPrimaryKey(getWebPrincipal().getId());
+            if (flux == null || flux.getFlux() < 2 * Constants.BYTE_UNIT_K) {
+                throw new SystemException(local("user.flux.not.enough"));
+            }
+        }
 
-        return null;
+        if (ac.getPlayType().intValue() > 0) {// 直播的情况下
+            audioService.updateAudioCourseInfo(ac, course.getLive());
+        } else {
+            audioService.updateAudioCourseInfo(ac, new AudioCoursePlay());
+        }
+        addFlashMessage(redirectAttributes, local("operate.success"));
+        return "redirect:/mgr/meet/list";
     }
 }

@@ -26,7 +26,7 @@
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/js/zclip/jquery.zclip.min.js"></script>
 
-    <script id="-mob-share" src="http://f1.webshare.mob.com/code/mob-share.js"></script>
+    <script id="-mob-share" src="//f1.webshare.mob.com/code/mob-share.js"></script>
 
 
     <script>
@@ -37,7 +37,9 @@
         var coverUrl = "";
 
         $(function(){
-
+            if("${err}"){
+                layer.msg("${err}");
+            }
 
 
             //初始化音频
@@ -378,8 +380,9 @@
                 </c:when>
                 <c:otherwise>
                     <div class="admin-metting-list">
-                        <div class="row clearfix">
-                            <c:forEach items="${page.dataList}" var="course">
+
+                            <c:forEach items="${page.dataList}" var="course" varStatus="status">
+                                ${(status.index) % 3 == 0 ? '<div class="row clearfix">':''}
                                 <div class="col-lg-4">
 
                                     <div class="resource-list-item item-radius clearfix">
@@ -433,9 +436,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </c:forEach>
+                                ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
 
-                        </div>
+                            </c:forEach>
                         <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
                         <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
                             <input type="hidden" name="pageNum">

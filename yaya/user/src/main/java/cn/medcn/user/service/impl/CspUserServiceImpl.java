@@ -139,7 +139,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if(captcha == null){ //第一次获取
             // 发送短信
             String msgId = sendCaptchaByType(mobile, type);
-
             Captcha firstCaptcha = new Captcha();
             firstCaptcha.setFirstTime(new Date());
             firstCaptcha.setCount(Constants.NUMBER_ZERO);
@@ -149,7 +148,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         }else {
             Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
             if(captcha.getCount() == 2 && between < TimeUnit.MINUTES.toMillis(10)){
-                return APIUtils.error("获取验证码次数频繁，请稍后");
+               throw new SystemException(local("获取验证码次数频繁，请稍后"));
             }
             // 发送短信
             String msgId = sendCaptchaByType(mobile, type);

@@ -46,6 +46,8 @@ public class AudioCourse implements Serializable {
     protected Integer sourceType;
     //课件描述
     protected String info;
+    //新增的csp课件分类ID
+    protected Integer categoryId;
 
     @Transient
     private List<AudioCourseDetail> details;
