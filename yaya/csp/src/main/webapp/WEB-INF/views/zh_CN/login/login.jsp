@@ -5,15 +5,12 @@
   Time: 16:39
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <title>登录界面</title>
 </head>
@@ -22,7 +19,7 @@
     <div class="login login-banner" >
         <div class="page-width pr">
             <div class="login-header">
-                <a href="#" class="login-language" title="切换语言">中文</a>
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
             <div class="login-box clearfix">
                 <div class="col-lg-5">
@@ -39,8 +36,6 @@
                         <a href="${ctx}/mgr/login?thirdPartyId=2" title="微博授权登录" class=" login-button buttonRed">微博授权登录</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信数字平台授权登录" class=" login-button buttonBlue last">敬信数字平台授权登录</a>
                     </div>
-
-
 
                     <!--登录用-->
                     <div class="login-box-other">
@@ -59,6 +54,7 @@
                     </div>
                 </div>
             </div>
+
             <div class="login-bottom">
                 <p><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
             </div>
