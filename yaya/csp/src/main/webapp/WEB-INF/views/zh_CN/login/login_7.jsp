@@ -56,7 +56,7 @@
                     <!--登录用-->
                     <div class="login-box-other">
                         <div class="login-box-other-info t-center">
-                            <a href="#" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="#" class="color-wathet-blue">忘记密码</a>
+                            <a href="${ctx}/mgr/to/regist" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">忘记密码</a>
                         </div>
                     </div>
                     <div class="login-box-info t-center">
@@ -65,7 +65,7 @@
                 </div>
             </div>
             <div class="login-bottom">
-                <p>粤ICP备12087993号 © 2012-2017 敬信科技版权所有 </p>
+                <p><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
             </div>
         </div>
     </div>
