@@ -13,6 +13,7 @@ import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.ZeGoCallBack;
+import cn.medcn.csp.live.LiveOrderHandler;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
@@ -200,6 +201,16 @@ public class MeetingController extends CspBaseController {
             audioService.updateDetail(detail);
         }
 
+        handleLiveOrRecord(courseId, playType, pageNum, detail);
+
+
+        Map<String, String> result = new HashMap<>();
+        result.put("audioUrl", fileBase + relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        return success(result);
+    }
+
+
+    protected void handleLiveOrRecord(Integer courseId, Integer playType, Integer pageNum, AudioCourseDetail detail){
         if (playType == null) {
             playType = 0;
         }
@@ -221,14 +232,11 @@ public class MeetingController extends CspBaseController {
         } else {
             AudioCoursePlay play = audioService.findPlayState(courseId);
             if (play != null) {
+                play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
                 play.setPlayPage(pageNum);
                 audioService.updateAudioCoursePlay(play);
             }
         }
-
-        Map<String, String> result = new HashMap<>();
-        result.put("audioUrl", fileBase + relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
-        return success(result);
     }
 
     /**
@@ -270,19 +278,28 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String handleScan(Integer courseId, HttpServletRequest request) {
 
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        Map<String, Object> result = new HashMap<>();
-        result.put("courseId", courseId);
-        result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
+        boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
+        if (hasDuplicate) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("wsUrl", genWsUrl(request, courseId));
+            result.put("duplicate", "1");
+            return success(result);
+        } else {
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            Map<String, Object> result = new HashMap<>();
+            result.put("courseId", courseId);
+            result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
+            result.put("duplicate", "0");
 
-        //发送ws同步指令
-        LiveOrderDTO order = new LiveOrderDTO();
-        order.setCourseId(String.valueOf(courseId));
-        order.setOrder(LiveOrderDTO.ORDER_SCAN_SUCCESS);
-        order.setPageNum(0);
-        liveService.publish(order);
+            //发送ws同步指令
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setCourseId(String.valueOf(courseId));
+            order.setOrder(LiveOrderDTO.ORDER_SCAN_SUCCESS);
+            order.setPageNum(0);
+            liveService.publish(order);
+            return success(result);
+        }
 
-        return success(result);
     }
 
 
@@ -293,7 +310,7 @@ public class MeetingController extends CspBaseController {
             throw new SystemException(local("source.not.exists"));
         }
 
-        handlHttpUrl(fileBase, audioCourse);
+        handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             throw new SystemException(local("course.error.author"));
@@ -303,7 +320,7 @@ public class MeetingController extends CspBaseController {
         result.put("course", audioCourse);
 
         String wsUrl = genWsUrl(request, courseId);
-        wsUrl += "&token=" + request.getHeader(Constants.TOKEN);
+
         result.put("wsUrl", wsUrl);
         if (audioCourse.getPlayType() == null) {
             audioCourse.setPlayType(0);
@@ -436,4 +453,50 @@ public class MeetingController extends CspBaseController {
     }
 
 
+    /**
+     * 退出录播
+     * @param courseId
+     * @param pageNum
+     * @param over
+     * @return
+     */
+    @RequestMapping(value = "/record/exit")
+    @ResponseBody
+    public String exit(Integer courseId, Integer pageNum, Integer over){
+        if (over == null) {
+            over = 0;
+        }
+
+        AudioCoursePlay play = audioService.findPlayState(courseId);
+        if (play != null) {
+            play.setPlayPage(pageNum);
+            play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
+            if (over == 1) {
+                play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
+            }
+            audioService.updateAudioCoursePlay(play);
+        }
+
+        return success();
+    }
+
+    /**
+     * 检测是否有重复登录
+     * @param courseId
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/join/check")
+    @ResponseBody
+    public String joinCheck(Integer courseId, HttpServletRequest request){
+        boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
+        Map<String, Object> result = new HashMap<>();
+        if (hasDuplicate) {
+            result.put("wsUrl", genWsUrl(request, courseId));
+            result.put("duplicate", "1");
+        } else {
+            result.put("duplicate", "0");
+        }
+        return success(result);
+    }
 }

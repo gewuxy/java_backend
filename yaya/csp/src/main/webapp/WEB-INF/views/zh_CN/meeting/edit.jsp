@@ -89,7 +89,7 @@
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" checked="true" value="1">
+                                        <input id="live" type="radio" name="course.playType" value="1">
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
@@ -97,14 +97,14 @@
                                                     <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="" id="timeStart">
-                                                                    时间<input type="text" readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
+                                                                    时间<input type="text"  readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
                                                                     <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
                                                         <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
-                                                        <input type="hidden" name="live.startTime" id="liveStartTime" value="${live.startTime}">
-                                                        <input type="hidden" name="live.endTime" id="liveEndTime" value="${live.endTime}">
+                                                        <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.startTime" id="liveStartTime" value="${live.startTime}">
+                                                        <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.endTime" id="liveEndTime" value="${live.endTime}">
                                                     </div>
 
                                                 </div>
@@ -150,7 +150,18 @@
                         <ul id="rootList">
                             <c:set var="rootId" value="${rootList[0].id}"/>
                             <c:forEach items="${rootList}" var="c" varStatus="status">
-                                <li cid="${c.id}" <c:if test="${status.index == 0}">class="cur"</c:if> ><a href="javascript:void (0);">${c.nameCn}</a></li>
+                                <li cid="${c.id}"
+                                    <c:choose>
+                                        <c:when test="${not empty courseCategory}">
+                                            <c:if test="${courseCategory.parentId == c.id }">
+                                                class="cur"
+                                            </c:if>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <c:if test="${status.index == 0}">class="cur"</c:if>
+                                        </c:otherwise>
+                                    </c:choose>
+                                ><a href="javascript:void (0);">${c.nameCn}</a></li>
                             </c:forEach>
                         </ul>
                     </div>
@@ -161,7 +172,20 @@
                         <ul id="subList">
 
                             <c:forEach items="${subList}" var="cc" varStatus="status">
-                            <li parentId="${cc.parentId}" categoryId="${cc.id}" <c:if test="${status.index == 0}">class="cur"</c:if> <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if> ><a href="javascript:void (0);">${cc.nameCn}</a></li>
+                            <li parentId="${cc.parentId}" categoryId="${cc.id}"
+                                <c:choose>
+                                    <c:when test="${not empty courseCategory}">
+                                        <c:if test="${cc.id == courseCategory.id}">
+                                            class="cur"
+                                        </c:if>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <c:if test="${status.index == 0}">class="cur"</c:if>
+                                    </c:otherwise>
+                                </c:choose>
+
+                                <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if>
+                            ><a href="javascript:void (0);">${cc.nameCn}</a></li>
                             </c:forEach>
 
                         </ul>
@@ -251,6 +275,16 @@
         });
 
         $("input[name='course.playType']").click(function(){
+            var playType = $(this).val();
+            $("input[name='course.playType]").removeAttr("checked");
+            $(this).prop("checked", "true");
+            if (playType == 0){
+                $("#liveStartTime").attr("disabled", "true");
+                $("#endStartTime").attr("disabled", "true");
+            } else {
+                $("#liveStartTime").removeAttr("disabled");
+                $("#endStartTime").removeAttr("disabled");
+            }
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
 
@@ -298,7 +332,6 @@
             }
 
             var playType = $("input[name='course.playType']:checked").val();
-
             if ($.trim($timedate.val()) == '' && playType == 1){
                 $timedate.focus();
                 $timedate.parent().parent().next(".error").removeClass("none");

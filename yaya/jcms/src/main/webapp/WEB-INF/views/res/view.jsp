@@ -5,77 +5,69 @@
   Time: 13:37
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
     <title></title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
-    <link rel="stylesheet" href="css/iconfont.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/swiper.min.css" />
+    <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
+    <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/slide.js"></script>
+    <script src="${ctxStatic}/js/swiper.jquery.min.js"></script>
     <script src="${ctxStatic}/js/audio.js"></script>
-    <script src="${ctxStatic}/js/main.js"></script>
-
-    <style>
-        .audio-metting-reSetPlay { display: none;}
-        .swiper-slide-active .swiper-slide-metting-audio { visibility: visible !important;}
-        .swiper-slide-metting-audio audio { display: block;  }
-        .btn-metting-box{ margin: 30px auto 10px;}
-        .audiojs div.play-pause { display: block }
-        .audiojs .scrubber { width:580px;}
-        .icon-audio-error.png { margin-bottom:50px;}
-
-
-        /*.g-main { padding:0;}*/
-        /*.aside { display:none;}*/
-    </style>
+    <script src="${ctxStatic}/js/layer/layer.js"></script>
+    <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="${ctxStatic}/js/screenfull.min.js"></script>
+    <script src="${ctxStatic}/js/popupAudioPalyer.js"></script>
 
 </head>
-<body style="background-color: #FFF;">
-<div class="slider-box slider-wrap fx-mask-box-1">
-    <ul class="slides clearfix">
-        <c:forEach items="${course.details}" var="d" varStatus="status">
-            <li audioUrl="${d.audioUrl}">
-                <img src="${appFileBase}${d.imgUrl}">
-                <div class="popup-metting-audio">
+<body>
+<div class="layer-hospital-popup layer-black  layer-hospital-popup-hook" style="height: 800px;">
+    <div class="swiperBox mettingSwiperBox clearfix"  style="height: 760px;">
+        <!--预览弹出层-->
+        <div class="metting-swiper">
+            <!-- Swiper -->
+            <div class="swiper-container swiper-container-horizontal swiper-container-hook">
+                <!--根据ID 切换 PPT列表-->
+                <div class="swiper-wrapper" >
+                    <c:forEach items="${course.details}" var="detail">
+                        <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="${appFileBase}${detail.audioUrl}">
+                            <div class="swiper-picture" style=" background-image:url('${appFileBase}${detail.imgUrl}')"></div>
+                        </div>
+                    </c:forEach>
+
                 </div>
-            </li>
-        </c:forEach>
-    </ul>
+                <!-- Add Pagination -->
 
-</div>
-<div class="boxAudio clearfix t-center" >
+                <div class="metting-btn-item clearfix" style="z-index: 12">
+                    <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
+                    <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
+                    <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
+                </div>
 
-    <div class="audio-metting-box" style="">
-        <audio controls=true id="video1"  src="${appFileBase}${course.details[0].audioUrl}"></audio>
+            </div>
+        </div>
+        <!--音频文件-->
+        <div class="clearfix boxAudio t-center" style="z-index: 11">
+            <div class="audio-metting-box" style="">
+                <audio controls=true id="video1" src=""></audio>
+            </div>
+        </div>
+        <!--切换全屏按钮-->
+        <!--<button class="swiper-changeFullSize-button changeFullSize-icon changeFull-hook" title="全屏观看"><span></span></button>-->
+
+        <!--标题栏-->
+        <div class="swiper-slide-title" style="z-index: 11">
+            <div class="title overflowText">${course.title}</div>
+        </div>
+
     </div>
 </div>
 
+
 <script>
-    var currentIndex = 1;
-    var asAllItem;
-    var audio;
-    var audioArr = [];
-    $(function(){
-        <c:forEach items="${course.details}" var="detail">
-        audioArr.push('${appFileBase}${detail.audioUrl}');
-        </c:forEach>
-
-        //初始化生成描点
-        asAllItem = audiojs.createAll();
-        audio = asAllItem[0];
-        audio.play();
-
-        $("li>a").click(function(){
-            var audioUrl = audioArr[currentIndex-1];
-            console.log("current audio stop..."+currentIndex);
-            currentIndex = $(".active").text();
-            audio.load(audioUrl);
-            audio.play();
-        });
-    });
+    $(".layer-hospital-popup-hook").show();
 </script>
 </body>
 </html>
