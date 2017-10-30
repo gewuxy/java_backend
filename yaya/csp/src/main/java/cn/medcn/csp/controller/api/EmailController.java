@@ -54,12 +54,13 @@ public class EmailController extends BaseController{
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String email = (String)redisCacheUtils.getCacheObject(key);
         if (StringUtils.isEmpty(email)) {  //链接超时
-            return localeView("/register/linkTimeOut");
+            return localeView("/register/activeFail");
         } else {
             CspUserInfo userInfo = cspUserService.findByLoginName(email);
             if (userInfo != null) {
                 userInfo.setActive(true);
                 cspUserService.updateByPrimaryKey(userInfo);
+                redisCacheUtils.delete(key);
             }
             model.addAttribute("email", email);
             return localeView("/register/activeOk");
