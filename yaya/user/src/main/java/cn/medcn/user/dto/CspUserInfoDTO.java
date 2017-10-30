@@ -78,7 +78,4 @@ public class CspUserInfoDTO  {
         return dto;
     }
 
-    public String ObjectToString (){
-        return "CspUserInfoDTO["+thirdPartyId+",uniqueId:"+uniqueId+","+nickName+","+avatar+"]";
-    }
 }
