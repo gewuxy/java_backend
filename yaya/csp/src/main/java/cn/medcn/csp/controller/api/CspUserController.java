@@ -2,6 +2,8 @@ package cn.medcn.csp.controller.api;
 
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
+import cn.medcn.article.model.AppVideo;
+import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.MailBean;
@@ -49,6 +51,9 @@ public class CspUserController extends BaseController {
 
     @Autowired
     protected JPushService jPushService;
+
+    @Autowired
+    protected CspAppVideoService appVideoService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -527,7 +532,23 @@ public class CspUserController extends BaseController {
     }
 
 
-
+    /**
+     * 获取csp登录页面的背景视频
+     * @param version 前端传过来的版本号 不等于当前视频的版本号 才会返回视频url，反之不返回数据
+     * @return
+     */
+    @RequestMapping("/login/video")
+    @ResponseBody
+    public String cspLoginVideo(Integer version) {
+        if (version != null) {
+            return error(local("user.param.empty"));
+        }
+        AppVideo video = appVideoService.findCspAppVideo();
+        if (video != null && version < video.getVersion()) {
+            return success(video);
+        }
+        return success();
+    }
 
 
 }
