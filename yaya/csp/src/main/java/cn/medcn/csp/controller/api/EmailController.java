@@ -50,18 +50,19 @@ public class EmailController extends BaseController{
      * @throws SystemException
      */
    @RequestMapping("/active")
-    public String certifiedMail(String code) throws SystemException {
+    public String certifiedMail(String code, Model model) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String email = (String)redisCacheUtils.getCacheObject(key);
         if (StringUtils.isEmpty(email)) {  //链接超时
-            return localeView("/register/linkTimeOut?email="+email);
+            return localeView("/register/linkTimeOut");
         } else {
             CspUserInfo userInfo = cspUserService.findByLoginName(email);
             if (userInfo != null) {
                 userInfo.setActive(true);
                 cspUserService.updateByPrimaryKey(userInfo);
             }
-            return localeView("/register/activeOk?email="+email);
+            model.addAttribute("email", email);
+            return localeView("/register/activeOk");
         }
 
     }

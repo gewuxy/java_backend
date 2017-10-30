@@ -24,7 +24,6 @@
         <div class="page-width pr">
             <div class="login-header">
                <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
-
             </div>
             <div class="login-box clearfix">
                 <div class="col-lg-5">
@@ -40,7 +39,7 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${param.email}</span></p>
+                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${email}</span></p>
                                     <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
                                 </div>
                                 <input href="${ctx}/mgr/login?thirdPartyId=7" type="button" class="button login-button buttonBlue last" value="请点击此处登录">
