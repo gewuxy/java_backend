@@ -43,7 +43,7 @@
                                     <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
                                     <p class="t-center">密码重置成功</p>
                                 </div>
-                                <input href="${ctx}/mgr/login?thirdPartyId=7" type="button" class="button login-button buttonBlue last" value="重新登录">
+                                <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="重新登录">
                             </div>
                         </form>
                     </div>
@@ -64,7 +64,9 @@
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
 
-
+        $("#loginBtn").click(function () {
+            window.location.href = "${ctx}/mgr/login?thirdPartyId=7";
+        });
 
     })
 </script>

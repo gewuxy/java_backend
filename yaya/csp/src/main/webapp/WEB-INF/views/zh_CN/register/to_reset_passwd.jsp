@@ -43,7 +43,7 @@
                                 <label for="email" class="cells-block pr">
                                     <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
                                 </label>
-                                <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="" id="errorMessage">&nbsp;${error}</span>
+                                <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
                                 <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="重置密码">
                             </div>
                         </form>
@@ -84,7 +84,7 @@
                 $("#email").focus();
                 return false;
             }
-            $("#errorMessage").parent().addClass("none");
+          //  $("#errorMessage").parent().addClass("none");
 
             $.ajax({
                 url: '${ctx}/api/email/findPwd?email=' + email, //目标地址
