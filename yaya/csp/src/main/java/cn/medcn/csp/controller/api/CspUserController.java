@@ -18,6 +18,8 @@ import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
 import com.google.common.collect.Sets;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -37,6 +39,8 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/api/user")
 public class CspUserController extends BaseController {
+    private static Log log = LogFactory.getLog(CspUserController.class);
+
     @Autowired
     protected CspUserService cspUserService;
 
@@ -147,9 +151,6 @@ public class CspUserController extends BaseController {
                 userInfo = loginByMobile(mobile, captcha);
 
             } else if (type <= BindInfo.Type.YaYa.getTypeId()) {
-                if (userInfoDTO != null) {
-                    userInfoDTO.setThirdPartyId(type);
-                }
                 // 第三方账号登录 含YaYa医师登录
                 userInfo = loginByThirdParty(userInfoDTO);
             }
@@ -334,7 +335,6 @@ public class CspUserController extends BaseController {
         }
         // 检查用户是否存在
         CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
-
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
