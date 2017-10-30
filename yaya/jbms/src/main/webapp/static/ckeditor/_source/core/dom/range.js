@@ -1888,7 +1888,7 @@ CKEDITOR.dom.range = function( document )
 		},
 
 		/**
-		 * Check if elements at which the range boundaries anchor are read-only,
+		 * Check if elements at which the range boundaries anchor are isRead-only,
 		 * with respect to "contenteditable" attribute.
 		 */
 		checkReadOnly : ( function()

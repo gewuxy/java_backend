@@ -74,6 +74,9 @@
                 /api/**=anon
                 /static/**=anon
                 /mgr/login=anon
+                /mgr/to/register=anon
+                /mgr/register=anon
+                /mgr/to/reset/password=anon
                 /mgr/oauth/callback=anon
                 /mgr/sendCaptcha=anon
                 /mgr/**=authc

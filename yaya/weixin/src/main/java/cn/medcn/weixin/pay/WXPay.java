@@ -78,7 +78,7 @@ public class WXPay {
             throw new Exception("http connect timeout is too small");
         }
         if (this.config.getHttpReadTimeoutMs() < 10) {
-            throw new Exception("http read timeout is too small");
+            throw new Exception("http isRead timeout is too small");
         }
 
     }

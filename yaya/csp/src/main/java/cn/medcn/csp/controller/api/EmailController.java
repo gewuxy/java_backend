@@ -36,6 +36,9 @@ public class EmailController extends BaseController{
     @Autowired
     protected CspUserService cspUserService;
 
+    @Autowired
+    protected JPushService jPushService;
+
     @Value("${app.yaya.base}")
     private String appBaseUrl;
 
@@ -47,17 +50,19 @@ public class EmailController extends BaseController{
      * @throws SystemException
      */
    @RequestMapping("/active")
-    public String certifiedMail(String code) throws SystemException {
+    public String certifiedMail(String code, Model model) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String email = (String)redisCacheUtils.getCacheObject(key);
         if (StringUtils.isEmpty(email)) {  //链接超时
-            return localeView("/register/linkTimeOut");
+            return localeView("/register/activeFail");
         } else {
             CspUserInfo userInfo = cspUserService.findByLoginName(email);
             if (userInfo != null) {
                 userInfo.setActive(true);
                 cspUserService.updateByPrimaryKey(userInfo);
+                redisCacheUtils.delete(key);
             }
+            model.addAttribute("email", email);
             return localeView("/register/activeOk");
         }
 
@@ -100,12 +105,17 @@ public class EmailController extends BaseController{
     public String bindEmail(String code) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String result = (String)redisCacheUtils.getCacheObject(key);
-        if (StringUtils.isEmpty(result)) {  //链接超时
-            return localeView("/register/linkTimeOut");
-        } else {
-            cspUserService.doBindMail(key, result);
+        if(!StringUtils.isEmpty(result)){
+            String email = result.substring(0, result.indexOf(","));
+            String userId = result.substring(result.indexOf(",") + 1);
+            cspUserService.doBindMail(email,userId,key);
+            //发送推送通知邮箱已绑定
+            jPushService.sendChangeMessage(userId,"3",email);
             return localeView("/register/bindOk");
+        }else{ //链接超时
+            return localeView("/register/linkTimeOut");
         }
+
 
     }
 

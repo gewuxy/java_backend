@@ -1088,7 +1088,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 				else if ( !cache.ranges )
 					cache.ranges = new CKEDITOR.dom.rangeList( func.call( this ) );
 
-				// Split range into multiple by read-only nodes.
+				// Split range into multiple by isRead-only nodes.
 				if ( onlyEditables )
 				{
 					var ranges = cache.ranges;
@@ -1157,7 +1157,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 								var newRange = range.clone();
 								range.setEndBefore( node );
 
-								// Drop collapsed range around read-only elements,
+								// Drop collapsed range around isRead-only elements,
 								// it make sure the range list empty when selecting
 								// only non-editable elements.
 								if ( range.collapsed )

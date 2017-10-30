@@ -75,7 +75,7 @@
         p.play_page,p.play_state, c.info,c.category_id
         FROM t_audio_course c
         LEFT JOIN t_csp_live l ON l.course_id = c.id
-        INNER JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
         WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
         <if test="playType != null">

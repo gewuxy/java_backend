@@ -30,7 +30,7 @@
                         <c:if test="${not empty needBind}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
-                                    <a href="user-05-binding.html" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
                                         src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;修改密码需绑定邮箱后才能继续操作。
                                 </div>
 
@@ -75,6 +75,48 @@
 
 </div>
 
+<!--弹出绑定邮箱step01-->
+<div class="email-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="login-form-item">
+                <label for="email" class="cells-block pr">
+                    <input id="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                </label>
+                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
+                <label for="password" class="cells-block pr">
+                    <input type="text" required="" placeholder="密码" class="login-formInput icon-register-hot last none" maxlength="24">
+                    <input id="password" type="password" required="" placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                    <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
+                </label>
+                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
+                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="绑定邮箱">
+            </div>
+        </div>
+    </div>
+</div>
+<!--弹出绑定邮箱step02-->
+<div class="email-popup-box-02">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="login-form-item">
+                <div class="login-message-text">
+                    <p>激活账号邮件已发送至您的邮箱，<br />请前往激活完成注册。</p>
+                </div>
+                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/commonH5.js"></script>
 <script>
@@ -112,17 +154,40 @@
                 var email = $("#email").val();
                 var password = $("#password").val();
                 if(checkPwd()){
-                    <%--$.get('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {--%>
-                    <%--if (data.code == 0){--%>
-                    <%--layer.closeAll();--%>
-                    <%--layer.msg("绑定成功");--%>
-                    <%--}else{--%>
-                    <%--layer.msg(data.err);--%>
-                    <%--}--%>
-                    <%--},'json');--%>
+                    $.get('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
+                        if (data.code == 0){
+                            layer.open({
+                                type: 1,
+                                area: ['609px', '278px'],
+                                fix: false, //不固定
+                                title:false,
+                                closeBtn:0,
+                                content: $('.email-popup-box-02'),
+                                success:function(layero, index){
+                                    layer.close(1);
+                                },
+                                cancel :function(){
+                                    layer.closeAll();
+                                },
+                            });
+
+                        }else{
+                            layer.msg(data.err);
+                        }
+                    },'json');
                 }
 
+            }
+        });
 
+        $("#goToEmail").click(function () {
+            var email = $("#email").val();
+            var url = gainEmailURL(email);
+            if(url != ''){
+                layer.closeAll();
+                window.open( url);
+            }else{
+                layer.msg("抱歉!未找到对应的邮箱登录地址");
             }
         });
 
@@ -144,23 +209,7 @@
                 },
             });
         });
-        //弹出绑定邮箱step02
-        $('.email-hook-02').on('click',function(){
-            layer.open({
-                type: 1,
-                area: ['609px', '278px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.email-popup-box-02'),
-                success:function(layero, index){
-                    layer.close(1);
-                },
-                cancel :function(){
-                    layer.closeAll();
-                },
-            });
-        });
+
 
 
         $("#pwd").blur(function () {

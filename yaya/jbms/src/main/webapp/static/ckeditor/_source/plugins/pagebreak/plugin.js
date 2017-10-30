@@ -121,7 +121,7 @@ CKEDITOR.plugins.pagebreakCmd =
 	{
 		var label = editor.lang.pagebreakAlt;
 
-		// Create read-only element that represents a print break.
+		// Create isRead-only element that represents a print break.
 		var pagebreak = CKEDITOR.dom.element.createFromHtml(
 			'<div style="' +
 			'page-break-after: always;"' +

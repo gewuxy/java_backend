@@ -1,27 +1,21 @@
 package cn.medcn.csp.controller.web;
 
-import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
  import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
-import cn.medcn.oauth.decorator.OAuthServiceDecorator;
 import cn.medcn.oauth.dto.OAuthUser;
-import cn.medcn.oauth.provider.OAuthDecoratorProvider;
 import cn.medcn.oauth.service.OauthService;
+import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
-import cn.medcn.weixin.dto.OAuthDTO;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.scribe.model.Token;
-import org.scribe.model.Verifier;
-import org.scribe.oauth.OAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,8 +23,6 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import java.util.Date;
 
 /**
  * Created by lixuan on 2017/10/16.
@@ -44,6 +36,9 @@ public class LoginController extends CspBaseController {
 
     @Autowired
     protected OauthService oauthService;
+
+    @Autowired
+    protected SysNotifyService sysNotifyService;
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -254,8 +249,37 @@ public class LoginController extends CspBaseController {
     }
 
 
+    /**
+     * 跳转注册页面
+     * @return
+     */
+    @RequestMapping(value = "/to/register")
+    public String toRegister() {
+        return localeView("/register/register");
+    }
 
+    /**
+     * 邮箱注册
+     * @param userInfo
+     * @return
+     */
+    @RequestMapping(value = "/register")
+    @ResponseBody
+    public String register(CspUserInfo userInfo) {
+        try {
+            return cspUserService.register(userInfo);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+    }
 
-
+    /**
+     * 忘记密码
+     * @return
+     */
+    @RequestMapping(value = "/to/reset/password")
+    public String toResetPassWd() {
+        return localeView("/register/to_reset_passwd");
+    }
 
 }

@@ -177,7 +177,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		<li><a href="http://dev.ckeditor.com/ticket/7900">#7900</a> : [FF] Copy/Paste operations for table cells no longer break the Table Properties dialog window.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/7243">#7243</a> : Inline JavaScript events may become corrupted.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/7448">#7448</a> : List creation in RTL blocks is wrongly merged with the above LTR block.</li>
-		<li><a href="http://dev.ckeditor.com/ticket/6957">#6957</a> : Highlighting of searched terms does not reach read-only blocks.</li>
+		<li><a href="http://dev.ckeditor.com/ticket/6957">#6957</a> : Highlighting of searched terms does not reach isRead-only blocks.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/7948">#7948</a> : Tooltips with information about correct length units are now displayed for the Width/Height fields of the Table Properties dialog window.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6212">#6212</a> : [WebKit] Editor resize may scroll the host page.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6540">#6540</a> : [Safari] Editor loses focus on resizing.</li>
@@ -297,7 +297,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		<li><a href="http://dev.ckeditor.com/ticket/5647">#5647</a> : Accessibility enhancements to the structure of the toolbar.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5647">#5647</a> : The Kama skin now presents separators for the toolbar items, making it easier to group buttons and have a cleaner layout.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5647">#5647</a> : Usability enhancements to keyboard navigation on the toolbar. The <em>Tab</em> key is now used to jump between toolbar groups, while the <em>Arrow</em> keys can be used to cycle within the group. The new <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.toolbarGroupCycling">toolbarGroupCycling</a></code> setting can be used to change the <em>Arrow</em> keys behavior.</li>
-		<li><a href="http://dev.ckeditor.com/ticket/1376">#1376</a> : It is now possible to put the editor in the "read-only" state, so that the users would not be able to introduce changes to the contents. Check out the new <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setReadOnly">CKEDITOR.editor::setReadOnly</a></code> method, the <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#readOnly">CKEDITOR.editor::readOnly</a></code> property, the <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#event:readOnly">CKEDITOR.editor::readOnly</a></code> event, and the <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.readOnly">readOnly</a></code> setting.</li>
+		<li><a href="http://dev.ckeditor.com/ticket/1376">#1376</a> : It is now possible to put the editor in the "isRead-only" state, so that the users would not be able to introduce changes to the contents. Check out the new <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#setReadOnly">CKEDITOR.editor::setReadOnly</a></code> method, the <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#readOnly">CKEDITOR.editor::readOnly</a></code> property, the <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#event:readOnly">CKEDITOR.editor::readOnly</a></code> event, and the <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.readOnly">readOnly</a></code> setting.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3582">#3582</a> : New presentation of anchor elements in the WYSIWYG mode.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6737">#6737</a> : The Format drop-down list will now display the preview of its contents exactly as defined in their style configurations.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6654">#6654</a> : A new <code><a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.autoParagraph">autoParagraph</a></code> configuration setting is added to disable the auto paragraphing feature.</li>
@@ -504,7 +504,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		<li><a href="http://dev.ckeditor.com/ticket/6860">#6860</a> : [FF] Double-clicking the placeholder element in order to open a Placeholder dialog window throws a JavaScript error.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6630">#6630</a> : Empty <code>pre</code> elements are output differently in various browsers.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6568">#6568</a> : Insert table row/column does not work with spanning.</li>
-		<li><a href="http://dev.ckeditor.com/ticket/6735">#6735</a> : Inaccurate read-only selection detection.</li>
+		<li><a href="http://dev.ckeditor.com/ticket/6735">#6735</a> : Inaccurate isRead-only selection detection.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6728">#6728</a> : BIDI: Change direction does not work with list nested inside a blockquote.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6432">#6432</a> : Inserting a table in place of a fully selected list results in a JavaScript error.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6438">#6438</a> : [IE] Performance enhancement when typing inside an element with many child nodes.</li>
@@ -531,7 +531,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		<li><a href="http://dev.ckeditor.com/ticket/6010">#6010</a> : The Automatic option of the font/background color panel now represents the real color.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5654">#5654</a> : New "placeholder" plugin.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6334">#6334</a> : CKEditor now uses <a href="http://www.w3.org/TR/2010/WD-html5-20101019/elements.html#embedding-custom-non-visible-data-with-the-data-attributes">HTML5's data-* attributes</a> for its internal attributes.</li>
-		<li><a href="http://dev.ckeditor.com/ticket/6103">#6103</a> : It's now possible to control the styling of inline read-only elements with the <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.disableReadonlyStyling">disableReadonlyStyling</a> setting. It's also possible to avoid inline-styling any element by setting its "data-cke-nostyle" attribute to "1".</li>
+		<li><a href="http://dev.ckeditor.com/ticket/6103">#6103</a> : It's now possible to control the styling of inline isRead-only elements with the <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.disableReadonlyStyling">disableReadonlyStyling</a> setting. It's also possible to avoid inline-styling any element by setting its "data-cke-nostyle" attribute to "1".</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5404">#5404</a> : <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.fillEmptyBlocks">fillEmptyBlocks</a> configuration option of v2 is now available.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5367">#5367</a> : New <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.editor.html#insertText">CKEDITOR.editor#insertText</a> method (check api.html sample page for usages) is now provided to insert plain text into editor.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5367">#5915</a> : New <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.removeDialogTabs">removeDialogTabs</a> configuration option to hide certain dialog tabs.</li>
@@ -739,7 +739,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		<li><a href="http://dev.ckeditor.com/ticket/5268">#5268</a> : Introducing the "tableresize" plugin, which makes it possible to resize tables columns by mouse drag. It's not enabled by default, so it must be enabled in the configurations file.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/979">#979</a> : New <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.enableTabKeyTools">enableTabKeyTools</a> configuration to allow using the TAB key to navigate through table cells.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/4606">#4606</a> : Introduce the "autogrow" plugin, which makes the editor resize automatically, based on the contents size.</li>
-		<li><a href="http://dev.ckeditor.com/ticket/5737">#5737</a> : Added support for the <a href="http://www.w3.org/TR/html5/editing.html#contenteditable">HTML5 contenteditable attribute</a>, making it possible to define read only regions into the editor contents.</li>
+		<li><a href="http://dev.ckeditor.com/ticket/5737">#5737</a> : Added support for the <a href="http://www.w3.org/TR/html5/editing.html#contenteditable">HTML5 contenteditable attribute</a>, making it possible to define isRead only regions into the editor contents.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/5418">#5418</a> : New "Advanced" tab introduced on the Table Properties dialog. It's based on the new dialogadvtab plugin.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/6082">#6082</a> : Introduced the <a href="http://docs.cksource.com/ckeditor_api/symbols/CKEDITOR.config.html#.useComputedState">useComputedState</a> setting, making it possible to control whether toolbar features, like alignment and direction, should reflect the "computed" selection states, even when the effective feature value is not applied.</li>
 	</ul>
@@ -1371,7 +1371,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 			after click on 'newpage'; and safari is not putting focus on document also.
 			</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3821">#3821</a> : Fixed an issue with JAWS in which
-			toolbar items are read inconsistently between virtual cursor modes.</li>
+			toolbar items are isRead inconsistently between virtual cursor modes.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3789">#3789</a> : The &quot;src&quot; attribute
 			was getting duplicated in some situations.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3591">#3591</a> : Protecting flash related elements
@@ -1409,7 +1409,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 		<li><a href="http://dev.ckeditor.com/ticket/3896">#3896</a> : The editing area was
 			flashing when switching forth and back to source view.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3894">#3894</a> : Fixed an issue where editor failed to initialize when using the on-demand loading way.</li>
-		<li><a href="http://dev.ckeditor.com/ticket/3903">#3903</a> : Color button plugin doesn't read config entry from editor instance correctly.</li>
+		<li><a href="http://dev.ckeditor.com/ticket/3903">#3903</a> : Color button plugin doesn't isRead config entry from editor instance correctly.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3801">#3801</a> : Comments at the start of the document was lost in IE.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3871">#3871</a> : Unable to redo when undos to the front of snapshots stack.</li>
 		<li><a href="http://dev.ckeditor.com/ticket/3909">#3909</a> : Move focus from editor into a text input control is broken.</li>

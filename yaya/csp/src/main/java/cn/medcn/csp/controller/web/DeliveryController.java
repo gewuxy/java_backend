@@ -68,7 +68,6 @@ public class DeliveryController extends CspBaseController {
 
     @RequestMapping("/history")
     public String history(Pageable pageable,Integer acceptId,Model model){
-        pageable.setPageSize(3);
         //接收者列表
         Pageable regular = new Pageable();
         List<AppUser> userList = addAcceptList(regular,model);
