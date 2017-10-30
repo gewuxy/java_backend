@@ -548,7 +548,7 @@ public class CspUserController extends BaseController {
             video.setVideoUrl(fileBase + video.getVideoUrl());
             return success(video);
         }
-        return success();
+        return success(new AppVideo());
     }
 
 
