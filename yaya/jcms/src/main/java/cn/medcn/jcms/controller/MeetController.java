@@ -643,7 +643,6 @@ public class MeetController extends BaseController {
 
                 if(meetAudio.getCourseId() != null ){
                     AudioCourse course = audioService.findAudioCourse(meetAudio.getCourseId());
-                    System.out.println(SubjectUtils.getCurrentUserid());
                     if(course.getOwner().intValue() != SubjectUtils.getCurrentUserid().intValue()){
                         model.addAttribute("notMe",true);
                     }
