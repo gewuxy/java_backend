@@ -54,6 +54,7 @@
             <mvc:exclude-mapping path="/api/user/logout"/>
             <mvc:exclude-mapping path="/api/user/register"/>
             <mvc:exclude-mapping path="/api/user/sendCaptcha"/>
+            <mvc:exclude-mapping path="/api/user/login/video"/>
             <mvc:exclude-mapping path="/api/advert/**"/>
             <mvc:exclude-mapping path="/api/user/bindEmail"/>
             <mvc:exclude-mapping path="/api/meeting/live/**"/>
