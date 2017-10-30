@@ -5,10 +5,11 @@
   Time: 9:22
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>激活邮件</title>
+    <title>激活邮件超时提示</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -21,7 +22,7 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
             <div class="login-header">
-                <a href="${ctx}/mgr/login?thirdPartyId=7" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="${ctxStatic}/images/login-user-icon.png" alt=""></span></a>
+                <%@include file="/WEB-INF/include/login_header_zh_CN.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
             </div>
             <div class="login-box clearfix">
@@ -38,12 +39,19 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${param.email}</span></p>
-                                    <p style="font-size:16px;">认证链接已超时，请重新验证！</p>
+                                    <div class="fl" style="margin-right:30px;">
+                                        <img src="${ctxStatic}/images/login-error-icon-02.png" alt="" style="margin-top:10px;">
+                                    </div>
+                                    <div class="oh">
+                                        <p class="color-red">链接已超时</p>
+                                        <p class="color-red">请重新验证！</p>
+                                    </div>
                                 </div>
                             </div>
                         </form>
                     </div>
+
+
 
                 </div>
             </div>

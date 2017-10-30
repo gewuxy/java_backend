@@ -24,7 +24,7 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
             <div class="login-header">
-                <a href="${ctx}/mgr/login?thirdPartyId=7" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="${ctxStatic}/images/login-user-icon.png" alt=""></span></a>
+                <%@include file="/WEB-INF/include/login_header_zh_CN.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
             </div>
             <div class="login-box clearfix">
@@ -43,7 +43,7 @@
                                 <label for="email" class="cells-block pr">
                                     <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
                                 </label>
-                                <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="" id="errorMessage">&nbsp;${error}</span>
+                                <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
                                 <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="重置密码">
                             </div>
                         </form>
@@ -84,7 +84,7 @@
                 $("#email").focus();
                 return false;
             }
-            $("#errorMessage").parent().addClass("none");
+          //  $("#errorMessage").parent().addClass("none");
 
             $.ajax({
                 url: '${ctx}/api/email/findPwd?email=' + email, //目标地址

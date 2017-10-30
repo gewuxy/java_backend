@@ -2,6 +2,8 @@ package cn.medcn.csp.controller.api;
 
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
+import cn.medcn.article.model.AppVideo;
+import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.MailBean;
@@ -18,6 +20,8 @@ import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
 import com.google.common.collect.Sets;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -37,6 +41,8 @@ import java.util.*;
 @Controller
 @RequestMapping(value = "/api/user")
 public class CspUserController extends BaseController {
+    private static Log log = LogFactory.getLog(CspUserController.class);
+
     @Autowired
     protected CspUserService cspUserService;
 
@@ -45,6 +51,9 @@ public class CspUserController extends BaseController {
 
     @Autowired
     protected JPushService jPushService;
+
+    @Autowired
+    protected CspAppVideoService appVideoService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -147,9 +156,6 @@ public class CspUserController extends BaseController {
                 userInfo = loginByMobile(mobile, captcha);
 
             } else if (type <= BindInfo.Type.YaYa.getTypeId()) {
-                if (userInfoDTO != null) {
-                    userInfoDTO.setThirdPartyId(type);
-                }
                 // 第三方账号登录 含YaYa医师登录
                 userInfo = loginByThirdParty(userInfoDTO);
             }
@@ -334,7 +340,6 @@ public class CspUserController extends BaseController {
         }
         // 检查用户是否存在
         CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
-
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
@@ -527,7 +532,23 @@ public class CspUserController extends BaseController {
     }
 
 
-
+    /**
+     * 获取csp登录页面的背景视频
+     * @param version 前端传过来的版本号 不等于当前视频的版本号 才会返回视频url，反之不返回数据
+     * @return
+     */
+    @RequestMapping("/login/video")
+    @ResponseBody
+    public String cspLoginVideo(Integer version) {
+        if (version != null) {
+            return error(local("user.param.empty"));
+        }
+        AppVideo video = appVideoService.findCspAppVideo();
+        if (video != null && version < video.getVersion()) {
+            return success(video);
+        }
+        return success();
+    }
 
 
 }
