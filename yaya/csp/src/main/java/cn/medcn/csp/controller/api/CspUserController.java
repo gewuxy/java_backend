@@ -545,6 +545,7 @@ public class CspUserController extends BaseController {
         }
         AppVideo video = appVideoService.findCspAppVideo();
         if (video != null && version < video.getVersion()) {
+            video.setVideoUrl(fileBase + video.getVideoUrl());
             return success(video);
         }
         return success();
