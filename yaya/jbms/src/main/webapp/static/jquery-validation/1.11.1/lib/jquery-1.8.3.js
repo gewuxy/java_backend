@@ -2995,7 +2995,7 @@ jQuery.event = {
 			special = jQuery.event.special[ event.type ] || {},
 			handlerQueue = [];
 
-		// Use the fix-ed jQuery.Event rather than the (read-only) native event
+		// Use the fix-ed jQuery.Event rather than the (isRead-only) native event
 		args[0] = event;
 		event.delegateTarget = this;
 

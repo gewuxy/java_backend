@@ -43,7 +43,7 @@ Copyright (C) 2007-2012, CKSource - Frederico Knabben. All rights reserved.
 Security Release: fixed filtering of unsafe characters for IIS6 web server.
 - HTML5 multiple file uploads introduced.
 - Files can now be uploaded by using the drag&drop in Firefox and Chrome.
-- Added a read-only mode (config.readOnly), which if enabled, lets the user browse the files but not upload or modify them.
+- Added a isRead-only mode (config.readOnly), which if enabled, lets the user browse the files but not upload or modify them.
 - CKFinder now supports common lightbox plugins by default when viewing files, and will use Colorbox to show images if no other lightbox plugin is loaded.
 - "Upload" button in the toolbar now remains active after a file has been uploaded if the Upload Pane is still open.
 - Improved formatting of file sizes.

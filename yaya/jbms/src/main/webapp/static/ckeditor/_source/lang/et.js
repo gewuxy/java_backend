@@ -318,7 +318,7 @@ CKEDITOR.lang['et'] =
 			menu			: 'Rida',
 			insertBefore	: 'Sisesta rida enne',
 			insertAfter		: 'Sisesta rida peale',
-			deleteRow		: 'Eemalda read'
+			deleteRow		: 'Eemalda isRead'
 		},
 
 		column :

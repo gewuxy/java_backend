@@ -1,7 +1,10 @@
 package cn.medcn.user.service;
 
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
+import cn.medcn.sys.model.SystemNotify;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
@@ -135,6 +138,9 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     CspUserInfoDTO findCSPUserInfo(String userId);
 
     void insertPassword(String email, String password, String userId) throws SystemException;
+
+
+
 
 
 }

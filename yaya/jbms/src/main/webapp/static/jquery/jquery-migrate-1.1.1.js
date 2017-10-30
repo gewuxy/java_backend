@@ -10,7 +10,7 @@
 
 var warnedAbout = {};
 
-// List of warnings already given; public read only
+// List of warnings already given; public isRead only
 jQuery.migrateWarnings = [];
 
 // Set to true to prevent console output; migrateWarnings still maintained

@@ -3,13 +3,13 @@
 <mapper namespace="cn.medcn.meet.dao.JpushMessageDAO" >
 
     <select id="findMessage" resultType="cn.medcn.meet.dto.JpushMessageDTO">
-        SELECT m.id, m.title, m.content, m.send_time, m.sender, m.receiver, m.msg_type, m.meet_id, count(h.id) as read
+        SELECT m.id, m.title, m.content, m.send_time, m.sender, m.receiver, m.msg_type, m.meet_id, count(h.id) as isRead
         FROM t_jpush_message m LEFT JOIN t_jpush_message_history h on m.id = h.message_id
         WHERE m.receiver = #{userId}
     </select>
 
     <select id="findHistories" resultType="cn.medcn.meet.dto.JpushMessageDTO">
-        select  m.id,m.title, m.content, m.msg_type, m.send_time, u.linkman as receiveName,m.state, meet.meet_name, m.meet_id, count(h.id) as `read` from t_jpush_message m
+        select  m.id,m.title, m.content, m.msg_type, m.send_time, u.linkman as receiveName,m.state, meet.meet_name, m.meet_id, count(h.id) as `isRead` from t_jpush_message m
         LEFT JOIN t_app_user u ON u.id = receiver
         LEFT JOIN t_meet meet ON meet.id = m.meet_id
         LEFT JOIN t_jpush_message_history h on m.id = h.message_id

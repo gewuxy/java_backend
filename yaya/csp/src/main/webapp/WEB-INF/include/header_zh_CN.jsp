@@ -28,7 +28,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="message"><a href="#" class="icon-message"><span></span></a></div>
+            <div class="message"><a href="${ctx}/mgr/message/list" class="icon-message"><span id="msg"></span></a></div>
             <div class="addMetting"><a href="${ctx}/mgr/meet/edit"  class="icon-addMetting"></a></div>
         </div>
         <div class="fl">
@@ -43,4 +43,17 @@
     </div>
 </div>
 
+<script>
+
+    $(function () {
+        $.get('${ctx}/mgr/message/status', function (data) {
+            if (data.code == 0){
+                var unreadCount = data.data;
+                if(unreadCount == 0){
+                    $("#msg").attr("class","none");
+                }
+            }
+        },'json');
+    });
+</script>
 

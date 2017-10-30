@@ -649,7 +649,7 @@ CKEDITOR.tools.extend( CKEDITOR.dom.node.prototype,
 		},
 
 		/**
-		 * Checks if this node is read-only (should not be changed).
+		 * Checks if this node is isRead-only (should not be changed).
 		 * @returns {Boolean}
 		 * @since 3.5
 		 * @example

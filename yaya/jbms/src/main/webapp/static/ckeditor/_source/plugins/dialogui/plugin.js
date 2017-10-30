@@ -1460,7 +1460,7 @@ CKEDITOR.plugins.add( 'dialogui' );
 
 				/***
 				 * The default value of input type="file" is an empty string, but during initialization
-				 * of this UI element, the iframe still isn't ready so it can't be read from that object
+				 * of this UI element, the iframe still isn't ready so it can't be isRead from that object
 				 * Setting it manually prevents later issues about the current value ("") being different
 				 * of the initial value (undefined as it asked for .value of a div)
 				 */

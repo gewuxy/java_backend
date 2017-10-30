@@ -39,7 +39,7 @@ test("group error messages", function() {
 	ok( form.find(".errorContainer label.error").is(":hidden") );
 });
 
-test("read messages from metadata", function() {
+test("isRead messages from metadata", function() {
 	var form = $("#testForm9");
 	form.validate();
 	var e = $("#testEmail9");
@@ -50,7 +50,7 @@ test("read messages from metadata", function() {
 });
 
 
-test("read messages from metadata, with meta option specified, but no metadata in there", function() {
+test("isRead messages from metadata, with meta option specified, but no metadata in there", function() {
 	var form = $("#testForm1clean");
 	form.validate({
 		meta: "validate",

@@ -3043,7 +3043,7 @@ jQuery.event = {
 			handlers = ( jQuery._data( this, "events" ) || {} )[ event.type ] || [],
 			special = jQuery.event.special[ event.type ] || {};
 
-		// Use the fix-ed jQuery.Event rather than the (read-only) native event
+		// Use the fix-ed jQuery.Event rather than the (isRead-only) native event
 		args[0] = event;
 		event.delegateTarget = this;
 
@@ -7111,7 +7111,7 @@ function css_defaultDisplay( nodeName ) {
 	if ( !display ) {
 		display = actualDisplay( nodeName, doc );
 
-		// If the simple way fails, read from inside an iframe
+		// If the simple way fails, isRead from inside an iframe
 		if ( display === "none" || !display ) {
 			// Use the already-created iframe if possible
 			iframe = ( iframe ||

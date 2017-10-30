@@ -705,7 +705,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 							} );
 						}
 
-						// Prevent the browser opening links in read-only blocks. (#6032)
+						// Prevent the browser opening links in isRead-only blocks. (#6032)
 						domDocument.on( 'click', function( ev )
 							{
 								ev = ev.data;
@@ -1244,7 +1244,7 @@ For licensing, see LICENSE.html or http://ckeditor.com/license
 				{
 					if ( editor.mode == 'wysiwyg' )
 					{
-						// Symply reload the wysiwyg area. It'll take care of read-only.
+						// Symply reload the wysiwyg area. It'll take care of isRead-only.
 						var wysiwyg = editor.getMode();
 						wysiwyg.loadData( wysiwyg.getData() );
 					}

@@ -351,7 +351,7 @@ CKEDITOR.plugins.scayt =
 		{
 			var uiTabs = [];
 
-			// read UI tabs value from websocket
+			// isRead UI tabs value from websocket
 			var configUiTabs = editor.config.scayt_uiTabs || "1,1,1";
 
 			// convert string to array
