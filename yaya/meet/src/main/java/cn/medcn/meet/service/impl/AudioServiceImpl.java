@@ -649,7 +649,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
             liveService.updateByPrimaryKeySelective(oldLive);
         }
-
+        audioCourse.setPublished(true);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -673,7 +673,12 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
             audioCoursePlayDAO.insert(oldPlay);
         }
-
+        audioCourse.setPublished(true);
         updateByPrimaryKeySelective(audioCourse);
+    }
+
+    @Override
+    public void insertAudioCoursePlay(AudioCoursePlay play) {
+        audioCoursePlayDAO.insert(play);
     }
 }

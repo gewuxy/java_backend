@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 
@@ -16,6 +17,7 @@ import java.io.Serializable;
 @Table(name = "t_csp_audio_course_play")
 public class AudioCoursePlay implements Serializable {
 
+    @Id
     protected String id;
     // 课程id
     protected Integer courseId;

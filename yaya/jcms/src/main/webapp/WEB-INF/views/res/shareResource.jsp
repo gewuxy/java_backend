@@ -47,7 +47,15 @@
             // 点击预览按钮
             $(".popup-player-hook").click(function(){
                 var courseId = $(this).attr("courseId");
-                // TODO 需完善预览方法
+                layer.open({
+                    type:2,
+                    area: ['860px', '800px'],
+                    fix: false, //不固定
+                    fixed:true,
+                    offset: '100px',
+                    title:false,
+                    content:'${ctx}/func/res/view?courseId='+courseId
+                });
             });
 
             // 点击充值按钮
@@ -214,93 +222,6 @@
         </div>
     </div>
 
-    <!--弹出播放器-->
-    <div class="layer-hospital-popup layer-black  layer-hospital-popup-hook">
-        <div class="swiperBox mettingSwiperBox clearfix">
-            <!--预览弹出层-->
-            <div class="metting-swiper">
-                <!-- Swiper -->
-                <div class="swiper-container swiper-container-horizontal swiper-container-hook">
-                    <!--根据ID 切换 PPT列表-->
-                    <div class="swiper-wrapper" >
-                        <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="./upload/audio/30179313.mp3">
-                            <div class="swiper-picture" style=" background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div>
-                        </div>
-                        <div class="swiper-slide swiper-slide-next" data-num="1"  audio-src="https://raw.githubusercontent.com/kolber/audiojs/master/mp3/bensound-dubstep.mp3">
-                            <div class="swiper-picture" style="background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div>
-                        </div>
-                        <div class="swiper-slide" data-num="2" audio-src="./upload/audio/30179313.mp3"><div class="swiper-picture" style="display:block; background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div><div class="swiper-slide-metting-audio"></div></div>
-                        <div class="swiper-slide" data-num="3" audio-src="./upload/audio/30179313.mp3"><div class="swiper-picture" style="display:block; background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div><div class="swiper-slide-metting-audio"></div></div>
-                    </div>
-                    <!-- Add Pagination -->
-
-                    <div class="metting-btn-item clearfix">
-                        <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
-                        <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">4</span></div>
-                        <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
-                    </div>
-
-                </div>
-            </div>
-            <!--音频文件-->
-            <div class="clearfix boxAudio t-center" >
-                <div class="audio-metting-box" style="">
-                    <audio controls=true id="video1" src=""></audio>
-                </div>
-            </div>
-            <!--切换全屏按钮-->
-            <button class="swiper-changeFullSize-button changeFullSize-icon changeFull-hook" title="全屏观看"><span></span></button>
-
-            <!--标题栏-->
-            <div class="swiper-slide-title">
-                <a href="#" class="fr">立即发布</a>
-                <div class="title overflowText">赛默飞联合阜外医院分子诊断中心安塞物共建精诊断中心安塞物共建精诊断中赛默飞联合阜外医院分子诊断中心安塞物共建精诊断中心安塞物共建精诊断中</div>
-            </div>
-
-        </div>
-    </div>
-
-    <div class="layer-hospital-popup layer-black  layer-hospital-popup-fullSize">
-        <div class="swiperBox mettingSwiperBox clearfix">
-            <!--预览弹出层-->
-            <div class="metting-swiper">
-                <!-- Swiper -->
-                <div class="swiper-container swiper-container-horizontal swiper-full-container-hook">
-                    <!--根据ID 切换 PPT列表-->
-                    <div class="swiper-wrapper" >
-                        <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="./upload/audio/30179313.mp3">
-                            <div class="swiper-picture" style=" background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div>
-                        </div>
-                        <div class="swiper-slide swiper-slide-next" data-num="1"  audio-src="https://raw.githubusercontent.com/kolber/audiojs/master/mp3/bensound-dubstep.mp3">
-                            <div class="swiper-picture" style="background-image:url('./upload/images/_hyfb-03-1-img.jpg"></div>
-                        </div>
-                        <div class="swiper-slide" data-num="2" audio-src="./upload/audio/30179313.mp3"><div class="swiper-picture" style="display:block; background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div><div class="swiper-slide-metting-audio"></div></div>
-                        <div class="swiper-slide" data-num="3" audio-src="./upload/audio/30179313.mp3"><div class="swiper-picture" style="display:block; background-image:url('./upload/images/_hyfb-03-1-img.jpg')"></div><div class="swiper-slide-metting-audio"></div></div>
-                    </div>
-                    <!-- Add Pagination -->
-                    <span class="swiper-button-prev metting-button swiper-popup-full-button-prev swiper-button-disabled"></span>
-                    <div class="metting-btn-item clearfix">
-                        <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">4</span></div>
-                    </div>
-                    <span class="swiper-button-next metting-button swiper-popup-full-button-next"></span>
-
-                </div>
-            </div>
-            <!--音频文件-->
-            <div class="clearfix boxAudio t-center" >
-                <div class="audio-metting-box" style="">
-                    <audio controls=true id="video2" src=""></audio>
-                </div>
-            </div>
-            <!--切换全屏按钮-->
-            <button class="swiper-changeFullSize-button changeFullSize-icon changeFull-hook" title="全屏观看"><span></span></button>
-            <!--标题栏-->
-            <div class="swiper-slide-title">
-                <a href="#" class="fr">立即发布</a>
-                <div class="title overflowText">赛默飞联合阜外医院分子诊断中心安塞物共建精诊断中心安塞物共建精诊断中赛默飞联合阜外医院分子诊断中心安塞物共建精诊断中心安塞物共建精诊断中</div>
-            </div>
-        </div>
-    </div>
 
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/slide.js"></script>

@@ -248,4 +248,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param audioCourse
      */
     void updateAudioCourseInfo(AudioCourse audioCourse, AudioCoursePlay play);
+
+    void insertAudioCoursePlay(AudioCoursePlay play);
 }
