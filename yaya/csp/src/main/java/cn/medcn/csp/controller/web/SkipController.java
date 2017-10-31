@@ -14,4 +14,10 @@ public class SkipController extends CspBaseController {
     public String index(){
         return localeView("/index/index");
     }
+
+    @RequestMapping(value = "/login")
+    public String login() {
+        return localeView("/login/login");
+    }
+
 }
