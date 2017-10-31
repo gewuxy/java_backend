@@ -540,14 +540,15 @@ public class CspUserController extends BaseController {
     @RequestMapping("/login/video")
     @ResponseBody
     public String cspLoginVideo(Integer version) {
-        if (version != null) {
+        if (version == null) {
             return error(local("user.param.empty"));
         }
         AppVideo video = appVideoService.findCspAppVideo();
         if (video != null && version < video.getVersion()) {
+            video.setVideoUrl(fileBase + video.getVideoUrl());
             return success(video);
         }
-        return success();
+        return success(new AppVideo());
     }
 
 
