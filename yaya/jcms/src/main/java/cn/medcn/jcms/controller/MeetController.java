@@ -640,8 +640,12 @@ public class MeetController extends BaseController {
                     model.addAttribute("course", audioService.findAudioCourse(meetAudio.getCourseId()));
                 }
                 //判断是否是转载会议，如果是转载会议，不允许上传音频和录音,不允许删除，更换，上传ppt
-                if(meetAudio.getCourseId() != null && (meetAudio.getCourseId() != SubjectUtils.getCurrentUserid())){
+
+                if(meetAudio.getCourseId() != null ){
+                    AudioCourse course = audioService.findAudioCourse(meetAudio.getCourseId());
+                    if(course.getOwner().intValue() != SubjectUtils.getCurrentUserid().intValue()){
                         model.addAttribute("notMe",true);
+                    }
                 }
                 break;
             case 2://视频

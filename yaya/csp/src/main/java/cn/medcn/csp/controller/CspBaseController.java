@@ -1,5 +1,6 @@
 package cn.medcn.csp.controller;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.csp.security.Principal;
@@ -32,11 +33,12 @@ public class CspBaseController extends BaseController {
         buffer.append(request.getScheme().toLowerCase().equals("https") ? "wss" : "ws");
         buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
         buffer.append("/live/order?courseId=").append(courseId);
+        buffer.append("&token=").append(request.getHeader(Constants.TOKEN));
         return buffer.toString();
     }
 
 
-    protected void handlHttpUrl(String fileBase, AudioCourse course){
+    protected void handleHttpUrl(String fileBase, AudioCourse course){
         if (course != null && !CheckUtils.isEmpty(course.getDetails())) {
             for (AudioCourseDetail detail : course.getDetails()) {
                 if (!CheckUtils.isEmpty(detail.getAudioUrl())) {

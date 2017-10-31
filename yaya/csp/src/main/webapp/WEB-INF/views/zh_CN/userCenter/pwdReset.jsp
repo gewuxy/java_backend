@@ -48,7 +48,7 @@
                                                 <input id="pwd" type="password" name="oldPwd" required="" placeholder="旧密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                             </label>
-                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请输入正确的邮箱地址</span>
+                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
 
                                             <label for="rePwd" class="cells-block pr">
                                                     <%--class 为隐藏状态不能添加required属性--%>
@@ -56,7 +56,7 @@
                                                 <input id="rePwd" type="password" name="newPwd" required="" placeholder="新密码" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook1 "></a>
                                             </label>
-                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请输入正确的邮箱地址</span>
+                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
                                             <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value="修改">
                                         </div>
                                     </form>
@@ -87,13 +87,13 @@
                 <label for="email" class="cells-block pr">
                     <input id="email" type="text" class="login-formInput" placeholder="邮箱地址">
                 </label>
-                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
+                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
                 <label for="password" class="cells-block pr">
                     <input type="text" required="" placeholder="密码" class="login-formInput icon-register-hot last none" maxlength="24">
                     <input id="password" type="password" required="" placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                 </label>
-                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
+                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
                 <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="绑定邮箱">
             </div>
         </div>
@@ -251,15 +251,15 @@
     function oldPwdValid() {
         var password = $("#pwd").val();
         if ($.trim(password)==''){
-            $("#oldSpan").html("旧密码不能为空");
+            $("#oldSpan").find('span').html("旧密码不能为空");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#oldSpan").html("旧密码不能包含空格");
+            $("#oldSpan").find('span').html("旧密码不能包含空格");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#oldSpan").html("请输入6~24位密码");
+            $("#oldSpan").find('span').html("请输入6~24位密码");
             $("#oldSpan").attr("class","cells-block error");
 
         }else{
@@ -271,15 +271,15 @@
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
         if ($.trim(newPwd)==''){
-            $("#newSpan").html("新密码不能为空");
+            $("#newSpan").find('span').html("新密码不能为空");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd)!= newPwd){
-            $("#newSpan").html("新密码不能包含空格");
+            $("#newSpan").find('span').html("新密码不能包含空格");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd).length < 6){
-            $("#newSpan").html("请输入6~24位密码");
+            $("#newSpan").find('span').html("请输入6~24位密码");
             $("#newSpan").attr("class","cells-block error");
 
         }else{
@@ -291,15 +291,15 @@
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password)==''){
-            $("#passwordSpan").html("密码不能为空");
+            $("#passwordSpan").find('span').html("密码不能为空");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#passwordSpan").html("密码不能包含空格");
+            $("#passwordSpan").find('span').html("密码不能包含空格");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#passwordSpan").html("请输入6~24位密码");
+            $("#passwordSpan").find('span').html("请输入6~24位密码");
             $("#passwordSpan").attr("class","cells-block error");
 
         }else{
@@ -312,12 +312,12 @@
         var email = $("#email").val();
         if($.trim(email) == ''){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").html("邮箱不能为空");
+            $("#emailSpan").find('span').html("邮箱不能为空");
             return false;
         }
         if(!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").html("邮箱格式不正确");
+            $("#emailSpan").find('span').html("邮箱格式不正确");
             return false;
         }
         $("#emailSpan").attr("class","cells-block error none");

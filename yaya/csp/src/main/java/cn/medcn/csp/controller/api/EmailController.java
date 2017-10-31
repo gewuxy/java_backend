@@ -102,7 +102,7 @@ public class EmailController extends BaseController{
      * @throws SystemException
      */
     @RequestMapping("/bindEmail")
-    public String bindEmail(String code) throws SystemException {
+    public String bindEmail(String code,Model model) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String result = (String)redisCacheUtils.getCacheObject(key);
         if(!StringUtils.isEmpty(result)){
@@ -111,9 +111,10 @@ public class EmailController extends BaseController{
             cspUserService.doBindMail(email,userId,key);
             //发送推送通知邮箱已绑定
             jPushService.sendChangeMessage(userId,"3",email);
-            return localeView("/register/bindOk");
+            model.addAttribute("user",email);
+            return localeView("/userCenter/bindOk");
         }else{ //链接超时
-            return localeView("/register/linkTimeOut");
+            return localeView("/userCenter/linkTimeOut");
         }
 
 
