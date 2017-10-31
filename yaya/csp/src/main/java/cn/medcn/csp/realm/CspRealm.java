@@ -22,6 +22,8 @@ public class CspRealm extends AuthorizingRealm {
 
     public static final String AUTH_DEFAULT_PASSWORD = "UIwe2389xc@!";
 
+    public static final String LOGIN_MOBILE = "mobile";
+
     @Autowired
     protected CspUserService cspUserService;
 
@@ -45,7 +47,7 @@ public class CspRealm extends AuthorizingRealm {
             token.setPassword(MD5Utils.MD5Encode(AUTH_DEFAULT_PASSWORD).toCharArray());
         }
 
-        if (!CheckUtils.isEmpty(token.getHost())){
+        if (!CheckUtils.isEmpty(token.getHost()) && !token.getHost().equals(LOGIN_MOBILE)){
             cspUser = cspUserService.selectByPrimaryKey(token.getUsername());
         } else {
             cspUser = cspUserService.findByLoginName(token.getUsername());

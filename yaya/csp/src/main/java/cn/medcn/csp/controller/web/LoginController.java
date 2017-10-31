@@ -14,6 +14,7 @@ import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
 import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,15 +130,24 @@ public class LoginController extends CspBaseController {
         }
 
         try {
-            // 检查验证码是否有效
-            cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
 
             UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
+            token.setHost("mobile");
             Subject subject = SecurityUtils.getSubject();
             subject.login(token);
 
-        } catch (Exception e) {
+            // 检查验证码是否有效
+            cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+
+        } catch (AuthenticationException e) {
             model.addAttribute("error", e.getMessage());
+            model.addAttribute("mobile", mobile);
+            return errorForwardUrl;
+        } catch (SystemException ex) {
+            Subject subject = SecurityUtils.getSubject();
+            subject.logout();
+
+            model.addAttribute("error", ex.getMessage());
             model.addAttribute("mobile", mobile);
             return errorForwardUrl;
         }
@@ -157,11 +167,12 @@ public class LoginController extends CspBaseController {
         }
 
         try {
-            return cspUserService.sendCaptcha(mobile, Captcha.Type.LOGIN.getTypeId());
+            cspUserService.sendCaptcha(mobile, Captcha.Type.LOGIN.getTypeId());
 
         } catch (SystemException e) {
             return error(e.getMessage());
         }
+        return success();
     }
 
 
