@@ -138,4 +138,11 @@ public class VideoTest {
         dto.setPageNum(4);
         liveService.publish(dto);
     }
+
+    @Test
+    public void testKick(){
+        LiveOrderDTO dto = LiveOrderDTO.buildKickOrder("14383");
+        dto.setSid("b");
+        liveService.publish(dto);
+    }
 }

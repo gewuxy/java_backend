@@ -613,25 +613,21 @@
             </div>
         </div>
 
-        <div class="mask-wrap">
-            <div class="dis-tbcell">
-            <div class="distb-box metting-pupop-box distb-box-max fx-mask-box-1">
-                <div class="mask-hd clearfix">
-                    <h3 class="font-size-1">转载资源</h3>
-                    <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
-                </div>
-                <div class="metting-popupbox-bd">
-                    <div class="tj-content clearfix">
-                        <div class="tab-wrap popup-tab-list">
-                            <a href="${ctx}/func/meet/delivery/forCSP?meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu tab-cur">CSP投屏</span></a>
-                            <a href="${ctx}/func/res/acquired/list?jump=1&meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu" >获取历史</span></a>
-                        </div>
-                        <div class="tab-con-wrap" style="display: block;">
-                        <iframe id="quoteFrame" name="quoteFrame" frameborder="0" width="100%" height="620" scrolling="false"/>
-                        </div>
+        <div class="distb-box metting-pupop-box distb-box-max fx-mask-box-1">
+            <div class="mask-hd clearfix">
+                <h3 class="font-size-1">转载资源</h3>
+                <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
+            </div>
+            <div class="metting-popupbox-bd">
+                <div class="tj-content clearfix">
+                    <div class="tab-wrap popup-tab-list">
+                        <a href="${ctx}/func/meet/delivery/forCSP?meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu tab-cur">CSP投屏</span></a>
+                        <a href="${ctx}/func/res/acquired/list?jump=1&meetId=${meetId}&moduleId=${moduleId}" target="quoteFrame"><span class="tab-menu" >获取历史</span></a>
+                    </div>
+                    <div class="tab-con-wrap" style="display: block;">
+                    <iframe id="quoteFrame" name="quoteFrame" frameborder="0" width="100%" height="620" scrolling="false"/>
                     </div>
                 </div>
-            </div>
             </div>
         </div>
 
