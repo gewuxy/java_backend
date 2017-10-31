@@ -54,7 +54,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
         List<String> imageList = null;
         try {
             String pdfFileName = sourceFilePath.substring(sourceFilePath.lastIndexOf(File.separator) + 1, sourceFilePath.lastIndexOf(".")) + "." + FileTypeSuffix.PDF_SUFFIX.suffix;
-            imageList = pdf2Images(pdfFilePath + pdfFileName, targetDir, courseId, request);
+            imageList = pdf2Images(pdfFileName, targetDir, courseId, request);
         } catch (Exception e) {
             e.printStackTrace();
         }

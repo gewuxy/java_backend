@@ -36,7 +36,7 @@
                             <span class="color-orange">共享资源库</span>
                         </td>
                         <td class="table-td-7">
-                            <a href="javascript:;" class="popup-player-hook">预览</a><i class="rowSpace">|</i><a href="javascript:;" class="popup-hint" courseId="${a.id}">引用</a>
+                            <a href="javascript:;" class="popup-player-hook" courseId="${a.id}">预览</a><i class="rowSpace">|</i><a href="javascript:;" class="popup-hint" courseId="${a.id}">引用</a>
                         </td>
                     </tr>
                 </c:forEach>
@@ -90,6 +90,20 @@
                             top.layer.msg(data.err);
                         }
                     },'json');
+                });
+            });
+
+            // 点击预览按钮
+            $(".popup-player-hook").click(function(){
+                var courseId = $(this).attr("courseId");
+                top.layer.open({
+                    type:2,
+                    area: ['860px', '800px'],
+                    fix: false, //不固定
+                    fixed:true,
+                    offset: '100px',
+                    title:false,
+                    content:'${ctx}/func/res/view?courseId='+courseId
                 });
             });
         })

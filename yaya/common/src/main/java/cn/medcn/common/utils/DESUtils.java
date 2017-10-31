@@ -110,5 +110,8 @@ public class DESUtils {
         System.out.println("加密之后="+pw);
         String plain = decode(Constants.DES_PRIVATE_KEY, "ev63jtjZYcn8vC6gSpQ/CcuMdawlOVwVdNoRU6gb8tE=");
         System.out.println("解密之后="+plain);
+
+        String text = "oAbX2Mf+QHYbxsAJFoxwcA+ygOJEtb5nxLkLp8PHhSc=";
+        System.out.println("iOS解密之后=" + decode(Constants.DES_PRIVATE_KEY, text));
     }
 }

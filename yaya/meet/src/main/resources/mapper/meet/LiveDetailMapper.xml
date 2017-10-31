@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.LiveDetailDAO" >
+
+    <select id="findByCourseId" resultType="cn.medcn.meet.model.AudioCourseDetail">
+        SELECT * FROM t_csp_live_detail WHERE course_id = #{courseId} ORDER BY sort
+    </select>
+
+
+    <select id="findMaxLiveDetailSort" resultType="java.lang.Integer">
+        SELECT count(sort) FROM t_csp_live_detail WHERE course_id = #{courseId}
+    </select>
+</mapper>

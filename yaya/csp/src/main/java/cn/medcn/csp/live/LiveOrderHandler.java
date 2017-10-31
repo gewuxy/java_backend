@@ -77,7 +77,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (duplicateSession != null) {
                     try {
                         //存在重复的token信息 向之前登录的人发送被踢指令
-                        duplicateSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickOrder(courseId))));
+                        duplicateSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickOrder(courseId, session.getId()))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -100,17 +100,17 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (currentSession != null) {
                     WebSocketSession otherSession = getDuplicate(dto.getCourseId(), (String) currentSession.getAttributes().get(Constants.TOKEN), currentSession);
                     try {
-                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickRefuseOrder(dto.getCourseId()))));
+                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickRefuseOrder(dto.getCourseId(), otherSession.getId()))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            } else if (dto.getOrder() == LiveOrderDTO.ORDER_KICK_ACCEPT){
+            } else if (dto.getOrder() == LiveOrderDTO.ORDER_KICK_ACCEPT || dto.getOrder() == LiveOrderDTO.ORDER_KICK){
                 WebSocketSession currentSession = sessionMap.get(dto.getCourseId()).get(dto.getSid());
                 if (currentSession != null) {
                     WebSocketSession otherSession = getDuplicate(dto.getCourseId(), (String) currentSession.getAttributes().get(Constants.TOKEN), currentSession);
                     try {
-                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickAcceptOrder(dto.getCourseId()))));
+                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickAcceptOrder(dto.getCourseId(), otherSession.getId()))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

@@ -385,6 +385,10 @@ public class MeetController extends BaseController {
         MeetAudio meetAudio = audioService.findMeetAudio(meetId, moduleId);
         if (meetAudio != null && meetAudio.getCourseId() != null) {
             meetAudio.setCourse(audioService.findAudioCourse(meetAudio.getCourseId()));
+            if (meetAudio.getCourse().getPlayType() != null && meetAudio.getCourse().getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                //直播查询返回直播的明细 而不是返回初始的素材
+                meetAudio.getCourse().setDetails(audioService.findLiveDetails(meetAudio.getCourseId()));
+            }
         }
         MeetAudioDTO audioDTO = MeetAudioDTO.build(meetAudio);
         if (audioDTO.getCourse() != null && audioDTO.getCourse().getDetails() != null) {
