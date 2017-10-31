@@ -97,15 +97,15 @@
             success: function (data){
                 lefttime = lt;
                 if (data.code == 0){
-                    alert("验证码已经发送到您的手机,请注意查收");
+                    layer.msg("验证码已经发送到您的手机,请注意查收");
                     $("#btnSendCode").unbind("click",checkMobile);
                     window.setTimeout("checktime()",1000);
                 } else {
-                    alert("验证码发送失败, 请确认您的手机号");
+                    layer.msg("验证码发送失败, 请确认您的手机号");
                 }
             },
             error: function (a, n, e) {
-                alert("获取数据异常："+a + " - "+n+" - "+e);
+                layer.msg("获取数据异常："+a + " - "+n+" - "+e);
             }
 
         });
