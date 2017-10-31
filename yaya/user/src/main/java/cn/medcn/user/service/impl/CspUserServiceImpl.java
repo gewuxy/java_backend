@@ -16,10 +16,13 @@ import cn.medcn.sys.dao.SystemNotifyDAO;
 import cn.medcn.sys.model.SystemNotify;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dao.CspUserInfoDAO;
+import cn.medcn.user.dao.UserFluxDAO;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.CspUserService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
@@ -72,6 +75,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Autowired
     protected JPushService jPushService;
+
+    @Autowired
+    protected UserFluxDAO userFluxDAO;
 
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
@@ -363,6 +369,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         }
 
         //插入到数据库
+        info.setId(UUIDUtil.getNowStringID());
         info.setUserId(userId);
         info.setBindDate(new Date());
         bindInfoDAO.insert(info);
@@ -503,9 +510,28 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         updateByPrimaryKey(user);
     }
 
+    /**
+     * 视频直播记录
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<VideoLiveRecordDTO> findVideoLiveRecord(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
+        List<VideoLiveRecordDTO> list = cspUserInfoDAO.findVideoLiveRecord(pageable.getParams());
+        return MyPage.page2Mypage((Page)list);
+    }
 
-
-
+    /**
+     * 用户流量
+     * @param userId
+     * @return
+     */
+    @Override
+    public int findFlux(String userId) {
+        UserFlux flux = userFluxDAO.selectByPrimaryKey(userId);
+        return flux == null? 0:flux.getFlux();
+    }
 
 
 }

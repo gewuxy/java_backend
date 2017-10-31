@@ -33,8 +33,8 @@
                                 <div class="resource-list-box">
                                     <div class="resource-list-item">
                                         <div class="resource-img ">
-                                            <img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">
-                                            <%--<img src="${r.coverUrl}">--%>
+                                            <%--<img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">--%>
+                                            <img src="${r.coverUrl}" alt="" class="img-response">
                                             <div class="resource-link">
                                                 <a href="#" class="resource-icon-play popup-player-hook" courseId="${r.id}">
                                                     <i></i>
@@ -47,8 +47,7 @@
                                         </div>
                                         <div class="resource-info">
                                             <div class="fl">
-                                                <img src="${ctxStatic}/img/_metting-min-img.jpg" alt="">
-                                                    <%--<img src="${r.avatar}" alt="">--%>
+                                                <img src="${r.avatar}" alt="">
                                             </div>
                                             <div class="oh">
                                                 <h3 >${r.pubUserName}</h3>

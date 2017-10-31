@@ -142,8 +142,7 @@
                             <div class="resource-list-box">
                                 <div class="resource-list-item">
                                     <div class="resource-img ">
-                                        <%--<img src="${res.coverUrl}" alt="" class="img-response">--%>
-                                        <img src="${ctxStatic}/img/_resource-img-01.jpg" alt="" class="img-response">
+                                        <img src="${res.coverUrl}" alt="" class="img-response">
                                         <div class="resource-link">
                                             <a href="javascript:;" class="resource-icon-play popup-player-hook" courseId="${res.id}">
                                                 <i></i>预览
@@ -154,7 +153,7 @@
                                         <span></span>
                                     </div>
                                     <div class="resource-info">
-                                        <h3>${res.title}</h3>
+                                        <h3 class="overflowText">${res.title}</h3>
                                         <p>${res.category}
                                             <c:choose>
                                                 <c:when test="${res.shareType == 1}">

@@ -25,6 +25,12 @@
     </select>
 
 
+    <select id="findVideoLiveRecord" resultType="cn.medcn.user.dto.VideoLiveRecordDTO">
+        SELECT tu.id,tu.expense,tu.video_down_url,tu.expire_time,t.meet_name FROM  t_csp_user_flux_usage tu
+        LEFT JOIN t_meet t ON t.id = tu.meeting_id
+        WHERE tu.user_id = #{userId}
+    </select>
+
 
 
 

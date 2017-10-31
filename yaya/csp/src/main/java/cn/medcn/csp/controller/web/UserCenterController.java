@@ -3,6 +3,8 @@ package cn.medcn.csp.controller.web;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.MD5Utils;
@@ -14,6 +16,7 @@ import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
@@ -28,6 +31,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -306,4 +310,27 @@ public class UserCenterController extends CspBaseController{
 
         return success();
    }
+
+    /**
+     * 跳转到流量管理页面
+     * @param pageable
+     * @param model
+     * @return
+     */
+   @RequestMapping("/toFlux")
+    public String toFlux(Pageable pageable,Model model){
+        addBaseUserInfo(model);
+        String userId = getWebPrincipal().getId();
+        pageable.put("userId",userId);
+        int flux = cspUserService.findFlux(userId);
+        model.addAttribute("flux",flux);
+        model.addAttribute("now",new Date());
+        //直播视频记录
+        MyPage<VideoLiveRecordDTO> myPage = cspUserService.findVideoLiveRecord(pageable);
+        VideoLiveRecordDTO.transExpireDay(myPage.getDataList());
+        model.addAttribute("page",myPage);
+       return localeView("/userCenter/toFlux");
+   }
+
+
 }

@@ -6,6 +6,7 @@ import cn.medcn.common.excptions.NotEnoughCreditsException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.model.Credits;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.jcms.security.Principal;
@@ -22,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -78,9 +78,17 @@ public class ResourceController extends BaseController {
         Principal principal = SubjectUtils.getCurrentUser();
         pageable.put("userId", principal.getId());
         pageable.put("reprinted", CourseReprintDTO.AcquiredStatus.no_get_acquired.ordinal());// 未获取（未转载）
+        pageable.setPageSize(16);
         model.addAttribute("currentUserId", principal.getId());
 
         MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
+        if (page != null && page.getDataList() != null) {
+            for (CourseReprintDTO dto : page.getDataList()) {
+                if (StringUtils.isNotEmpty(dto.getCoverUrl())) {
+                    dto.setCoverUrl(appFileBase + dto.getCoverUrl());
+                }
+            }
+        }
         model.addAttribute("page", page);
 
         // 查询出所有的分类
@@ -108,7 +116,19 @@ public class ResourceController extends BaseController {
         Integer userId = SubjectUtils.getCurrentUserid();
         pageable.put("userId", userId);
         MyPage<CourseReprintDTO> page = audioService.findMyReprints(pageable);
+        if (page != null && page.getDataList() != null) {
+            for (CourseReprintDTO dto : page.getDataList()) {
+                if (dto.getCoverUrl() != null) {
+                    dto.setCoverUrl(appFileBase + dto.getCoverUrl());
+                }
+                if (dto.getAvatar() != null) {
+                    dto.setAvatar(appFileBase + dto.getAvatar());
+                }
+            }
+        }
+
         model.addAttribute("page", page);
+
         if (StringUtils.isEmpty(jump)) {
             jump = "0";
         }
