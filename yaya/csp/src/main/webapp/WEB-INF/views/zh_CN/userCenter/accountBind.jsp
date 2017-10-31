@@ -262,7 +262,9 @@
                     $.get('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {
                         if (data.code == 0){
                             layer.closeAll();
-                            layer.msg("绑定成功");
+                            layer.msg("绑定成功",{ time: 800},function () {
+                               window.location.href="${ctx}/mgr/user/toAccount";
+                            });
                         }else{
                             layer.msg(data.err);
                         }
