@@ -69,6 +69,11 @@ public class MessageController extends CspBaseController {
         return localeView("/notify/detail");
     }
 
+
+    /**
+     * 是否有未读通知
+     * @return
+     */
     @RequestMapping("/status")
     @ResponseBody
     public String notifyStatus(){

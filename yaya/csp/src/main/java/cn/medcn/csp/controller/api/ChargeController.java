@@ -12,6 +12,7 @@ import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -38,7 +39,11 @@ public class ChargeController extends BaseController {
     @Autowired
     protected ChargeService chargeService;
 
+    @Value("${apiKey}")
+    private String apiKey;
 
+    @Value("${appId}")
+    private String appId;
 
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
@@ -47,14 +52,12 @@ public class ChargeController extends BaseController {
     @ResponseBody
     public String toCharge(Integer flux, String channel, HttpServletRequest request)  {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
-        Pingpp.apiKey = "sk_test_nz1yT0O8mjT4yf1WjPvbrDm1";
-        String appId = "app_LiH0mPanX9OGDS04";
+        Pingpp.apiKey = apiKey;
         String orderNo = StringUtils.nowStr();
         String userId = SecurityUtils.get().getId();
         String ip = request.getRemoteAddr();
         Pingpp.privateKeyPath = path;
         Charge charge = null;
-
 
         try {
             //生成Charge对象
@@ -86,10 +89,7 @@ public class ChargeController extends BaseController {
 
     }
 
-    @RequestMapping("/test")
-    public String testCharge() {
-        return "/charge/toCharge";
-    }
+
 
     /**
      * 异步回调

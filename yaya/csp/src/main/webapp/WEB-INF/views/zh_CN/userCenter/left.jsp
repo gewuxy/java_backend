@@ -3,7 +3,7 @@
     <div class="user-userinfo clearfix item-radius">
         <div class="img"><img src="${dto.avatar}" id="image" alt="" style="widtH:126px; height:126px;"></div>
         <div class="name" id="name">${dto.userName}</div>
-        <div class="email">${dto.email}</div>
+        <div class="email">${dto.email == null ? dto.mobile:dto.email}</div>
         <div class="binding">
             <c:if test="${fn:length(dto.bindInfoList) != 0}">
                     <c:forEach items="${dto.bindInfoList}" var="list">

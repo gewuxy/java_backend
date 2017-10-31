@@ -6,6 +6,7 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.sys.model.SystemNotify;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import org.jdom.JDOMException;
@@ -140,7 +141,17 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     void insertPassword(String email, String password, String userId) throws SystemException;
 
 
+    /**
+     * 视频直播记录
+     * @param pageable
+     * @return
+     */
+    MyPage<VideoLiveRecordDTO> findVideoLiveRecord(Pageable pageable);
 
-
-
+    /**
+     * 用户流量
+     * @param userId
+     * @return
+     */
+    int findFlux(String userId);
 }
