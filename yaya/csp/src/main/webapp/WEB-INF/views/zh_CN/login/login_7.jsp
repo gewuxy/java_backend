@@ -13,25 +13,20 @@
     <title>邮箱登录</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-
+    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
 <div id="wrapper">
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
-            <div class="login-header">
-                <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
-            </div>
-            <div class="login-box clearfix">
-                <div class="col-lg-5">
-                    <div class="login-box-logo">
-                        <img src="${ctxStatic}/images/login-logo.png" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-2">&nbsp;</div>
-                <div class="col-lg-5 login-box-item">
 
+              <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+
+            <div class="login-box clearfix">
+                <%@include file="/WEB-INF/include/login_left.jsp"%>
+
+                <div class="col-lg-5 login-box-item">
 
                     <!--切换  邮箱登录-->
                     <div class="login-box-main position-phone-login">
@@ -59,22 +54,19 @@
                             <a href="${ctx}/mgr/to/register" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">忘记密码</a>
                         </div>
                     </div>
-                    <div class="login-box-info t-center">
-                        <p>登录即表示您已同意 <a href="subPage-service.html" class="color-blue">《CSPmeeting服务协议》</a> </p>
-                    </div>
+
+                    <%@include file="/WEB-INF/include/login_service.jsp"%>
+
                 </div>
             </div>
-            <div class="login-bottom">
-                <p><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
-            </div>
+
+            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
+
         </div>
     </div>
 </div>
-<script src="${ctxStatic}/js/util.js"></script>
 <script>
     $(function(){
-
-
 
         const classPwdOn = "pwdChange-on";
         const classPwdOff = "pwdChange-off";

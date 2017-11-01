@@ -25,15 +25,11 @@
         <div class="page-width pr">
             <div class="login-header">
                 <%@include file="/WEB-INF/include/login_header_zh_CN.jsp"%>
-                <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+                <%@include file="/WEB-INF/include/language_zh_CN.jsp"%>
             </div>
             <div class="login-box clearfix">
-                <div class="col-lg-5">
-                    <div class="login-box-logo">
-                        <img src="${ctxStatic}/images/login-logo.png" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-2">&nbsp;</div>
+                <%@include file="/WEB-INF/include/login_left.jsp"%>
+
                 <div class="col-lg-5 login-box-item">
 
                     <!--切换 -->
@@ -63,9 +59,9 @@
 
                 </div>
             </div>
-            <div class="login-bottom">
-                <p><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
-            </div>
+
+            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
+
         </div>
     </div>
 </div>

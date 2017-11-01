@@ -1,15 +1,14 @@
+import cn.medcn.article.model.AppVideo;
 import cn.medcn.article.model.Article;
 import cn.medcn.article.model.News;
 import cn.medcn.article.model.NewsReadOnly;
 import cn.medcn.article.service.ArticleService;
+import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.article.service.NewsService;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.HttpUtils;
-import cn.medcn.common.utils.LogUtils;
-import cn.medcn.common.utils.UUIDUtil;
+import cn.medcn.common.utils.*;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang.StringUtils;
@@ -38,6 +37,8 @@ public class NewsTest {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    protected CspAppVideoService appVideoService;
 
     @Test
     public void testFindMaxId() throws ParseException {
@@ -106,7 +107,7 @@ public class NewsTest {
 
     @Test
     public void testFindAll(){
-       Pageable pageable = new Pageable(1,29);
+        Pageable pageable = new Pageable(1,29);
         MyPage<News> page = newsService.findAllNews(pageable);
         for(News news:page.getDataList()){
             System.out.println(news.getTitle());
@@ -138,6 +139,19 @@ public class NewsTest {
 
     }
 
+    @Test
+    public void testfindvideo() {
+        Integer version = 2;
+        AppVideo video = appVideoService.findCspAppVideo();
+        if (video != null) {
+            if (version < video.getVersion()) {
+                System.out.println(APIUtils.success(video));
+            } else {
+                System.out.println(APIUtils.success(new AppVideo()));
+            }
+        }
+
+    }
 
 
 }
