@@ -250,12 +250,9 @@
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/slide.js"></script>
     <script src="${ctxStatic}/js/swiper.jquery.min.js"></script>
-    <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/layer/layer.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="${ctxStatic}/js/screenfull.min.js"></script>
-    <script src="${ctxStatic}/js/main.js"></script>
-    <script src="${ctxStatic}/js/popupAudioPalyer.js"></script>
 <script>
     $(function(){
         // 点击预览按钮
