@@ -51,6 +51,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     private CreditsService creditsService;
 
+    @Autowired
+    protected LiveDetailDAO liveDetailDAO;
+
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
@@ -83,6 +86,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Cacheable(value = DEFAULT_CACHE, key = "'audio_course_'+#courseId")
     public AudioCourse findAudioCourse(Integer courseId) {
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+
         List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
         course.setDetails(details);
         return course;
@@ -680,5 +684,31 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public void insertAudioCoursePlay(AudioCoursePlay play) {
         audioCoursePlayDAO.insert(play);
+    }
+
+    @Override
+    @CacheEvict(value = DEFAULT_CACHE,  key = "'audio_course_'+#liveDetail.courseId")
+    public void addLiveDetail(LiveDetail liveDetail) {
+        liveDetailDAO.insert(liveDetail);
+    }
+
+    @Override
+    public Integer findMaxLiveDetailSort(Integer courseId) {
+        return liveDetailDAO.findMaxLiveDetailSort(courseId);
+    }
+
+    @Override
+    public List<AudioCourseDetail> findLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        if (details.size() == 0) {//直播未开始的时候  加入第一张
+            AudioCourseDetail cond = new AudioCourseDetail();
+            cond.setCourseId(courseId);
+            cond.setSort(1);
+
+            AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
+            details.add(firstDetail);
+
+        }
+        return liveDetailDAO.findByCourseId(courseId);
     }
 }

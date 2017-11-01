@@ -1,4 +1,4 @@
-package cn.medcn.jcms.controller.file;
+package cn.medcn.common.supports.upload;
 
 import lombok.Data;
 

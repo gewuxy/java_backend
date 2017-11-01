@@ -7,6 +7,9 @@ import javax.crypto.Cipher;
 import javax.crypto.SecretKeyFactory;
 import javax.crypto.spec.DESKeySpec;
 import javax.crypto.spec.IvParameterSpec;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.security.Key;
 import java.security.spec.AlgorithmParameterSpec;
 
@@ -104,11 +107,18 @@ public class DESUtils {
         return b2;
     }
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UnsupportedEncodingException {
         String src = "id=529&abroad=0&_local=zh_CN";
         String pw = encode(Constants.DES_PRIVATE_KEY, src);
         System.out.println("加密之后="+pw);
         String plain = decode(Constants.DES_PRIVATE_KEY, "ev63jtjZYcn8vC6gSpQ/CcuMdawlOVwVdNoRU6gb8tE=");
         System.out.println("解密之后="+plain);
+
+        String text = "u3RQdAQFGWEFXRnf6mjwAWSDYmKT9IXmemhvl/8+j38=";
+
+        String str2 = "oAbX2Mf%2BQHYbxsAJFoxwcA%2BygOJEtb5nxLkLp8PHhSc%3D";
+        System.out.println(URLEncoder.encode(text, "utf-8"));
+
+        System.out.println(URLDecoder.decode(str2, "utf-8"));
     }
 }

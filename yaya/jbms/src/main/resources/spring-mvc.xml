@@ -59,7 +59,7 @@
     <!--<mvc:resources location="/upload/" mapping="/upload/**"/>-->
 
     <!-- 上传文件的解析器 -->
-    <bean id="multipartResolver" class="cn.medcn.jbms.file.CustomMultipartResolver">
+    <bean id="multipartResolver" class="cn.medcn.common.supports.upload.CustomMultipartResolver">
         <property name="defaultEncoding" value="utf-8"/>
         <property name="maxUploadSize" value="10485760000"/>
         <property name="maxInMemorySize" value="40960"/>

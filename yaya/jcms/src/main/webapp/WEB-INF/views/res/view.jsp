@@ -31,9 +31,16 @@
             <div class="swiper-container swiper-container-horizontal swiper-container-hook">
                 <!--根据ID 切换 PPT列表-->
                 <div class="swiper-wrapper" >
-                    <c:forEach items="${course.details}" var="detail">
-                        <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="${appFileBase}${detail.audioUrl}">
-                            <div class="swiper-picture" style=" background-image:url('${appFileBase}${detail.imgUrl}')"></div>
+                    <c:forEach items="${course.details}" var="detail" varStatus="status">
+                        <div class="swiper-slide ${status.index == 0 ? 'swiper-slide-active' : ''}" data-num="0" audio-src="${appFileBase}${detail.audioUrl}">
+                            <c:choose>
+                                <c:when test="${not empty detail.videoUrl}">
+                                    <video src="${appFileBase}${detail.videoUrl}" width="auto" height="264" controls="" autobuffer=""></video>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="swiper-picture" style=" background-image:url('${appFileBase}${detail.imgUrl}')"></div>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </c:forEach>
 
@@ -67,7 +74,66 @@
 
 
 <script>
-    $(".layer-hospital-popup-hook").show();
+    var asAllItem = audiojs.createAll();
+    var popupPalyer;
+    $(function(){
+        $(".layer-hospital-popup-hook").show();
+
+        if(asAllItem.length != 0) {
+            popupPalyer = asAllItem[0];
+        }
+
+        //播放器切换加载对应的路径
+        var swiperChangeAduio = function (current) {
+            var swiperCurrent;
+
+            popupPalyer.pause();
+            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            if (current.find(".swiper-slide-active")) {
+                swiperCurrent = current.find(".swiper-slide-active");
+            } else if (current.parents('.swiper-container-horizontal').find(".swiper-slide-active")) {
+                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            }
+            var dataSrc = swiperCurrent.attr('audio-src');
+            popupPalyer.load(dataSrc);
+
+
+            popupPalyer.play();
+        }
+
+
+        var swiperPopup = new Swiper('.swiper-container-hook', {
+            //分页
+            pagination: '.swiper-pagination',
+            // 按钮
+            nextButton: '.swiper-popup-button-next-hook',
+            prevButton: '.swiper-popup-button-prev-hook',
+            slidesPerView:1,
+            initialSlide: 0,
+            spaceBetween: 0,
+            paginationType: 'fraction',
+            centeredSlides: false,
+            inltialSlide:0,
+            slidesOffsetBefore:0,
+            onSlideChangeEnd:function(swiper){
+                swiperChangeAduio(swiper.wrapper.prevObject);
+            },
+            onSlideNextEnd: function(swiper){
+                swiperChangeAduio(swiper.wrapper.prevObject);
+
+            },
+            onSlidePrevEnd: function(swiper){
+                swiperChangeAduio(swiper.wrapper.prevObject);
+            },
+            onInit: function(swiper){
+                swiper.wrapper.attr('style','transform: translate3d(0, 0, 0);transition-duration: 0ms;');
+            }
+        });
+
+        var audioDefaultLoad = $('.layer-hospital-popup-hook').find('.swiper-slide-active').attr('audio-src');
+        popupPalyer.load(audioDefaultLoad);
+        popupPalyer.play();
+    });
 </script>
 </body>
 </html>

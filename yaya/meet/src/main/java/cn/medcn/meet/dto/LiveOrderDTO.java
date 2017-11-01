@@ -32,8 +32,12 @@ public class LiveOrderDTO implements Serializable{
     protected int order;
     //PPT的当前页码
     protected int pageNum;
+    //当前页面的图片地址 直播时才有
+    protected String imgUrl;
     //当前的页面音频路径 在直播的时候才有
     protected String audioUrl;
+    //当前页视频路径 直播时才有
+    protected String videoUrl;
     //指令来自哪个端 app , web
     protected String orderFrom;
     //消息内容
@@ -42,25 +46,28 @@ public class LiveOrderDTO implements Serializable{
     protected String sid;
 
 
-    public static LiveOrderDTO buildKickOrder(String courseId){
+    public static LiveOrderDTO buildKickOrder(String courseId, String sid){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setOrder(ORDER_KICK);
+        order.setSid(sid);
         order.setCourseId(courseId);
         return order;
     }
 
 
-    public static LiveOrderDTO buildKickAcceptOrder(String courseId){
+    public static LiveOrderDTO buildKickAcceptOrder(String courseId, String sid){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setOrder(ORDER_KICK_ACCEPT);
         order.setCourseId(courseId);
+        order.setSid(sid);
         return order;
     }
 
-    public static LiveOrderDTO buildKickRefuseOrder(String courseId){
+    public static LiveOrderDTO buildKickRefuseOrder(String courseId, String sid){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setOrder(ORDER_KICK_REFUSE);
         order.setCourseId(courseId);
+        order.setSid(sid);
         return order;
     }
 

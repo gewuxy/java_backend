@@ -1,9 +1,12 @@
 package cn.medcn.csp.live;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.utils.LogUtils;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.service.LiveService;
 import com.alibaba.fastjson.JSON;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -27,6 +30,8 @@ import static cn.medcn.csp.CspConstants.COURSE_ID_KEY;
 public class LiveOrderHandler extends TextWebSocketHandler {
 
     public static Map<String, Map<String, WebSocketSession>> sessionMap = new ConcurrentHashMap<>();
+
+    private static final Log log = LogFactory.getLog(LiveOrderHandler.class);
 
 
     @Value("${app.file.base}")
@@ -55,6 +60,9 @@ public class LiveOrderHandler extends TextWebSocketHandler {
 
     @Override
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+
+        LogUtils.debug(log, String.format("user with sessionId (%s) exit !!!", session.getId()));
+
         String courseId = (String) session.getAttributes().get(COURSE_ID_KEY);
         if(sessionMap !=null && sessionMap.get(courseId) != null){
             sessionMap.get(courseId).remove(session.getId());
@@ -63,8 +71,12 @@ public class LiveOrderHandler extends TextWebSocketHandler {
 
 
     protected void register(WebSocketSession session) {
+
+
         String courseId = (String) session.getAttributes().get(COURSE_ID_KEY);
         String token = (String) session.getAttributes().get(Constants.TOKEN);
+
+        LogUtils.debug(log, String.format("user login in meeting with courseId = %s and token = %s", courseId, token));
 
         Map<String, WebSocketSession> sessionList = sessionMap.get(courseId);
         if(sessionList == null){
@@ -77,7 +89,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (duplicateSession != null) {
                     try {
                         //存在重复的token信息 向之前登录的人发送被踢指令
-                        duplicateSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickOrder(courseId))));
+                        duplicateSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickOrder(courseId, session.getId()))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -100,17 +112,17 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (currentSession != null) {
                     WebSocketSession otherSession = getDuplicate(dto.getCourseId(), (String) currentSession.getAttributes().get(Constants.TOKEN), currentSession);
                     try {
-                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickRefuseOrder(dto.getCourseId()))));
+                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickRefuseOrder(dto.getCourseId(), otherSession.getId()))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
                 }
-            } else if (dto.getOrder() == LiveOrderDTO.ORDER_KICK_ACCEPT){
+            } else if (dto.getOrder() == LiveOrderDTO.ORDER_KICK_ACCEPT || dto.getOrder() == LiveOrderDTO.ORDER_KICK){
                 WebSocketSession currentSession = sessionMap.get(dto.getCourseId()).get(dto.getSid());
                 if (currentSession != null) {
                     WebSocketSession otherSession = getDuplicate(dto.getCourseId(), (String) currentSession.getAttributes().get(Constants.TOKEN), currentSession);
                     try {
-                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickAcceptOrder(dto.getCourseId()))));
+                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickAcceptOrder(dto.getCourseId(), otherSession.getId()))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

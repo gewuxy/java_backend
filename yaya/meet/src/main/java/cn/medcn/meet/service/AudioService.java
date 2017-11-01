@@ -250,4 +250,10 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void updateAudioCourseInfo(AudioCourse audioCourse, AudioCoursePlay play);
 
     void insertAudioCoursePlay(AudioCoursePlay play);
+
+    void addLiveDetail(LiveDetail liveDetail);
+
+    Integer findMaxLiveDetailSort(Integer courseId);
+
+    List<AudioCourseDetail> findLiveDetails(Integer courseId);
 }

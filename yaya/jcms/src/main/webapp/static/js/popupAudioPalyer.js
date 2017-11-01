@@ -8,7 +8,6 @@ var asAllItem = audiojs.createAll();
 $(function(){
 
     if(asAllItem.length != 0) {
-
         var popupSize = $('.layer-hospital-popup').height();
         var popupPlayHeight = $('.layer-hospital-popup .boxAudio').height() + $('.swiper-slide-title').height();
         var target = $('.layer-hospital-popup-fullSize')[0];

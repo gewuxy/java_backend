@@ -111,6 +111,20 @@
             $('.fx-mask-box-2').hide();
         });
 
+        // 点击预览按钮
+        $(".popup-player-hook").click(function(){
+            var courseId = $(this).attr("courseId");
+            top.layer.open({
+                type:2,
+                area: ['860px', '800px'],
+                fix: false, //不固定
+                fixed:true,
+                offset: '100px',
+                title:false,
+                content:'${ctx}/func/res/view?courseId='+courseId
+            });
+        });
+
     });
 </script>
 </body>

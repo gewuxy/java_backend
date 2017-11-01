@@ -69,7 +69,7 @@
                 return;
             }
             var info = $("#info").val();
-            $.get('${ctx}/mgr/user/updateInfo',{"userName":userName,"info":info}, function (data) {
+            $.post('${ctx}/mgr/user/updateInfo',{"userName":userName,"info":info}, function (data) {
                 if (data.code == 0){
                     $("#name", window.parent.document).html(userName);
                     layer.msg("修改成功");
