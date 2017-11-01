@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.24.1/js/client.min.js"></script>
+    <script src="https://js.braintreegateway.com/web/3.24.1/js/paypal-checkout.min.js"></script>
+    <script src="https://www.paypalobjects.com/api/checkout.js" data-version-4></script>
 
 </head>
 
@@ -79,7 +82,7 @@
                             <div class="formrow " style="margin-bottom:20px;" >
                                 <div class="formTitle color-black">充值方式</div>
                                 <div class="formControls">
-                                    <div class="pay-mode-list" style="width:80%">
+                                    <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
                                         <label for="id1" class="item item-radius pay-on">
                                             <input type="radio" name="channel" class="none" value="alipay_pc_direct" checked="checked" id="id1">
                                             <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -92,8 +95,8 @@
                                             <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
                                             <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                         </label>
-                                        <label for="id5" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="paypal" id="id5">
+                                        <label for="paypal" class="item item-radius">
+                                            <input type="radio" name="channel" class="none" value="paypal" id="paypal">
                                             <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                         </label>
                                     </div>
@@ -119,12 +122,16 @@
 
 </div>
 
+<form target="_blank" action="${ctx}/mgr/charge/createOrder" name="paypalForm" id="paypalForm" method="post">
+    <input type="hidden" class="flux" name="flux" value="0">
+</form>
+
 <!--弹出 充值-->
 <div class="cancel-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form >
@@ -142,14 +149,19 @@
 
 
 
+
 <script>
 
     $(function(){
+        $.ajaxSetup({
+            async : false
+        });
+
         $("#config_4").parent().attr("class", "cur");
 
         $(".pay-mode-list label").click(function(){
             $(this).addClass('pay-on').siblings().removeClass('pay-on');
-            console.log($('input[name="payMode"]:checked').val());
+            console.log($('input[name="channel"]:checked').val());
         });
         
         $("#flux").blur(function () {
@@ -159,7 +171,16 @@
 
         $("#submitBtn").click(function () {
             if(checkFlux()){
-                $("#submitForm").submit();
+                var channel = $('input[name="channel"]:checked').val();
+                if(channel != "paypal"){
+                    $("#submitForm").submit();
+                }else{
+                    var flux = $("#flux").val();
+                    $(".flux").val(flux);
+                    $("#paypalForm").submit();
+
+                }
+
                 //触发弹出窗
                 //投稿
                     layer.open({
@@ -182,13 +203,29 @@
             window.location.href="${ctx}/mgr/user/toFlux";
         });
 
+
+
     });
 
     function fill(){
         if(checkFlux()){
-            $("#money").html(($("#flux").val())*2 + ".00");
+            var channel = $('input[name="channel"]:checked').val();
+            if(channel != "paypal"){
+                $("#money").html(($("#flux").val())*2 + ".00");
+            }else{
+                $("#money").html(($("#flux").val())*1 + ".00");
+            }
         }else{
             $("#money").html("0.00");
+        }
+    }
+
+    function checkChannel() {
+        var channel = $('input[name="channel"]:checked').val();
+        if(channel != "paypal"){
+            $("#money").html(($("#flux").val())*2 + ".00");
+        }else{
+            $("#money").html(($("#flux").val())*1 + ".00");
         }
     }
 

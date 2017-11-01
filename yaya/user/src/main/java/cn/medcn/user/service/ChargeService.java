@@ -23,4 +23,13 @@ public interface ChargeService extends BaseService<FluxOrder> {
      * @param flux
      */
     String createPaypalOrder(String userId, Integer flux);
+
+    /**
+     * 创建web paypal订单
+     * @param userId
+     * @param flux
+     * @param paymentId
+     * @return
+     */
+    void createPaypalWebOrder(String userId, Integer flux, String paymentId);
 }

@@ -185,7 +185,6 @@ public class ChargeController extends BaseController {
     @RequestMapping("/paypalCallback")
     @ResponseBody
     public String paypalResult(String paymentId,String orderId){
-
         if(StringUtils.isEmpty(paymentId) || StringUtils.isEmpty(orderId)){
             return error(local("user.param.empty"));
         }
