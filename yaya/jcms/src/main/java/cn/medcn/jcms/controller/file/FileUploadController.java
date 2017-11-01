@@ -2,6 +2,7 @@ package cn.medcn.jcms.controller.file;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.APIUtils;
 import org.apache.commons.io.FileUtils;
 import org.springframework.beans.factory.annotation.Value;

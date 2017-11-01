@@ -355,6 +355,9 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/join")
     @ResponseBody
     public String join(Integer courseId, HttpServletRequest request){
+        if (courseId == null || courseId == 0){
+            return error(local("error.param"));
+        }
         try {
             return courseInfo(courseId, request);
         } catch (SystemException e) {

@@ -84,7 +84,6 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
             doc = PDDocument.load(file);
             PDFRenderer renderer = new PDFRenderer(doc);
             int pageCount = doc.getNumberOfPages();
-            request.getSession().setAttribute(Constants.OFFICE_CONVERT_PROGRESS, new OfficeConvertProgress(pageCount, 0, courseId));
             List<String> imageNameList = Lists.newArrayList();
             String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
             String imageFilePath;
@@ -92,6 +91,8 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
                 BufferedImage image = renderer.renderImage(i, 1.0f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
+                request.getSession().setAttribute(Constants.OFFICE_CONVERT_PROGRESS, new OfficeConvertProgress(pageCount, i + 1, courseId));
+                System.out.println(request.getSession().getAttribute(Constants.OFFICE_CONVERT_PROGRESS));
 //                imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
 //                ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 imageNameList.add(imageFilePath);

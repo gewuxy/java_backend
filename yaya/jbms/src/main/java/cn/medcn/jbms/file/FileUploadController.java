@@ -1,6 +1,7 @@
 package cn.medcn.jbms.file;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.jbms.Constants;
 import com.google.common.collect.Maps;

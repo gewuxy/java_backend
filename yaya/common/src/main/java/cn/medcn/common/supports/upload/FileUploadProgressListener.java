@@ -1,6 +1,6 @@
-package cn.medcn.jbms.file;
+package cn.medcn.common.supports.upload;
 
-import cn.medcn.jbms.Constants;
+import cn.medcn.common.Constants;
 import org.apache.commons.fileupload.ProgressListener;
 
 import javax.servlet.http.HttpSession;

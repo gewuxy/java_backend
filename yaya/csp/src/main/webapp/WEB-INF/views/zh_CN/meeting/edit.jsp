@@ -44,8 +44,8 @@
                             </div>
                             <div class="upload-main">
                                 <div class="metting-progreesItem clearfix t-left none">
-                                    上传进度<span class="color-blue">30%</span>
-                                    <p><span class="metting-progreesBar"><i style="width:30%"></i></span></p>
+                                    <span id="uploadAlt">上传进度</span> <span class="color-blue" id="progressS">0%</span>
+                                    <p><span class="metting-progreesBar"><i style="width:0%" id="progressI"></i></span></p>
 
                                 </div>
                                 <div class="admin-button t-center">
@@ -226,6 +226,7 @@
 
 <script>
     const file_size_limit = 100*1024*1024;
+
     function uploadFile(){
         var fSize = fileSize($("#uploadFile").get(0));
         if (fSize > file_size_limit){
@@ -240,6 +241,8 @@
         var index = layer.load(1, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
+        $(".metting-progreesItem").removeClass("none");
+        showUploadProgress();
         $.ajaxFileUpload({
             url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
             secureuri: false, //是否需要安全协议，一般设置为false
@@ -260,6 +263,38 @@
                 layer.close(index);
             }
         });
+    }
+
+    function showUploadProgress(){
+        $.get('${ctx}/mgr/meet/upload/progress', {}, function (data) {
+            $("#progressS").text(data.data.progress);
+            $("#progressI").css("width", data.data.progress);
+            if (data.data.progress.indexOf("100") != -1){
+                $.get('${ctx}/mgr/meet/upload/clear', {}, function (data1) {
+                }, 'json');
+                showConvertProgress();
+                $("#progressS").text("0%");
+                $("#progressI").css("width", "0%");
+            } else {
+                setTimeout(showUploadProgress, 200);
+            }
+        }, 'json');
+    }
+
+
+    function showConvertProgress(){
+        $.get('${ctx}/mgr/meet/convert/progress', {}, function (data) {
+            console.log("convert progress = "+data.data.progress);
+            $("#uploadAlt").text("转换进度");
+            $("#progressS").text(data.data.progress);
+            $("#progressI").css("width", data.data.progress);
+            if (data.data.progress.indexOf("100") != -1){
+                $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
+                }, 'json');
+            } else {
+                setTimeout(showConvertProgress, 500);
+            }
+        }, 'json');
     }
 
     $(function(){

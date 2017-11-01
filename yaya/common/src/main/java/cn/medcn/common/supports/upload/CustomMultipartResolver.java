@@ -1,4 +1,4 @@
-package cn.medcn.jbms.file;
+package cn.medcn.common.supports.upload;
 
 import org.apache.commons.fileupload.*;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;

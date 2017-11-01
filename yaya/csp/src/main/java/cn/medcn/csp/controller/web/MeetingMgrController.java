@@ -7,8 +7,10 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.service.OfficeConvertProgress;
 import cn.medcn.common.service.OpenOfficeService;
 import cn.medcn.common.supports.FileTypeSuffix;
+import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
@@ -164,7 +166,10 @@ public class MeetingMgrController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/edit")
-    public String edit(Integer courseId, Model model) {
+    public String edit(Integer courseId, Model model, HttpServletRequest request) {
+        uploadClear(request);
+        convertClear(request);
+
         Principal principal = getWebPrincipal();
         AudioCourse course = null;
         if (courseId != null) {
@@ -401,5 +406,43 @@ public class MeetingMgrController extends CspBaseController {
         }
         addFlashMessage(redirectAttributes, local("operate.success"));
         return "redirect:/mgr/meet/list";
+    }
+
+
+    @RequestMapping(value = "/upload/progress")
+    @ResponseBody
+    public String uploadProgress(HttpServletRequest request){
+        FileUploadProgress progress = (FileUploadProgress) request.getSession().getAttribute(Constants.UPLOAD_PROGRESS_KEY);
+        if(progress == null){
+            progress = new FileUploadProgress();
+        }
+        return success(progress);
+    }
+
+
+    @RequestMapping(value = "/upload/clear")
+    @ResponseBody
+    public String uploadClear(HttpServletRequest request){
+        request.getSession().removeAttribute(Constants.UPLOAD_PROGRESS_KEY);
+        return success();
+    }
+
+
+    @RequestMapping(value = "/convert/progress")
+    @ResponseBody
+    public String convertProgress(HttpServletRequest request){
+        OfficeConvertProgress progress = (OfficeConvertProgress) request.getSession().getAttribute(Constants.OFFICE_CONVERT_PROGRESS);
+        if (progress == null) {
+            progress = new OfficeConvertProgress(0, 0, 0);
+        }
+        return success(progress);
+    }
+
+
+    @RequestMapping(value = "/convert/clear")
+    @ResponseBody
+    public String convertClear(HttpServletRequest request){
+        request.getSession().removeAttribute(Constants.OFFICE_CONVERT_PROGRESS);
+        return success();
     }
 }
