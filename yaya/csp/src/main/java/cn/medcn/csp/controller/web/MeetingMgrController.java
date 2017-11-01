@@ -36,6 +36,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -222,6 +224,7 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam(value = "file") MultipartFile file, Integer courseId, HttpServletRequest request) {
+        String fileName = file.getOriginalFilename();
         FileUploadResult result;
         try {
             result = fileUploadService.upload(file, FilePath.TEMP.path);
@@ -237,6 +240,10 @@ public class MeetingMgrController extends CspBaseController {
         }
         if (CheckUtils.isEmpty(imgList)) {
             return error(local("upload.convert.error"));
+        }
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course != null) {
+            course.setTitle(fileName.substring(0, fileName.lastIndexOf(".")));
         }
         audioService.updateAllDetails(courseId, imgList);
         return success();
@@ -377,9 +384,13 @@ public class MeetingMgrController extends CspBaseController {
         String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
 
         StringBuffer buffer2 = new StringBuffer();
-        buffer2.append(request.getScheme()).append("://").append(request.getServerName()).append(":")
-                .append(request.getServerPort()).append(request.getContextPath()).append("/api/meeting/share?signature=")
-                .append(signature);
+        try {
+            buffer2.append(request.getScheme()).append("://").append(request.getServerName()).append(":")
+                    .append(request.getServerPort()).append(request.getContextPath()).append("/api/meeting/share?signature=")
+                    .append(URLEncoder.encode(signature, Constants.CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
 
         Map<String, Object> result = new HashMap<>();
         result.put("shareUrl", buffer2.toString());

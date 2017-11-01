@@ -699,6 +699,16 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Override
     public List<AudioCourseDetail> findLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        if (details.size() == 0) {//直播未开始的时候  加入第一张
+            AudioCourseDetail cond = new AudioCourseDetail();
+            cond.setCourseId(courseId);
+            cond.setSort(1);
+
+            AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
+            details.add(firstDetail);
+
+        }
         return liveDetailDAO.findByCourseId(courseId);
     }
 }

@@ -34,6 +34,8 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -94,8 +96,7 @@ public class MeetingController extends CspBaseController {
      * @return
      */
     @RequestMapping("/share")
-    public String share(String signature, Model model, HttpServletRequest request) throws SystemException {
-
+    public String share(String signature, Model model, HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
         Map<String, Object> params = parseParams(signature);
         String id = (String) params.get("id");
         String local = (String) params.get(LOCAL_KEY);
@@ -121,6 +122,7 @@ public class MeetingController extends CspBaseController {
             course.setPlayType(0);
         }
         if (AudioCourse.PlayType.normal.ordinal() < course.getPlayType()) {//直播
+            course.setDetails(audioService.findLiveDetails(courseId));
             Live live = liveService.findByCourseId(courseId);
             model.addAttribute("live", live);
         }
@@ -324,6 +326,10 @@ public class MeetingController extends CspBaseController {
         if (audioCourse == null) {
             throw new SystemException(local("source.not.exists"));
         }
+
+//        if (audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+//            audioCourse.setDetails(audioService.findLiveDetails(courseId));
+//        }
 
         handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
