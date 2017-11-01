@@ -9,27 +9,22 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <title>登录界面</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
-    <title>登录界面</title>
 </head>
 <body>
 <div id="wrapper">
     <div class="login login-banner" >
         <div class="page-width pr">
-            <div class="login-header">
-                <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
-            </div>
-            <div class="login-box clearfix">
-                <div class="col-lg-5">
-                    <div class="login-box-logo">
-                        <img src="${ctxStatic}/images/login-logo.png" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-2">&nbsp;</div>
-                <div class="col-lg-5 login-box-item">
 
+            <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+
+            <div class="login-box clearfix">
+                <%@include file="/WEB-INF/include/login_left.jsp"%>
+
+                <div class="col-lg-5 login-box-item">
                     <!--切换 登录-->
                     <div class="login-box-main position-button-login">
                         <a href="${ctx}/mgr/login?thirdPartyId=1" title="微信授权登录" class=" login-button buttonGreen-02">微信授权登录</a>
@@ -49,15 +44,12 @@
                             <a href="${ctx}/mgr/login?thirdPartyId=7" title="邮箱登录"><img src="${ctxStatic}/images/login-email-icon.png" alt="邮箱登录"></a>
                         </div>
                     </div>
-                    <div class="login-box-info t-center ">
-                        <p>登录即表示您已同意 <a href="subPage-service.html" class="color-blue">《CSPmeeting服务协议》</a> </p>
-                    </div>
+
+                    <%@include file="/WEB-INF/include/login_service.jsp"%>
                 </div>
             </div>
 
-            <div class="login-bottom">
-                <p><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
-            </div>
+            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
         </div>
     </div>
 </div>

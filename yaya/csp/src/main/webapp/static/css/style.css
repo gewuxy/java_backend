@@ -71,6 +71,15 @@ a.color-wathet-blue:hover{color:#146ee3}
 .table-box-1 .col-w-3 { width:20%;}
 .table-box-1 .col-w-4 {}
 
+
+.table-box-2 { width:100%; color:#414851;}
+.table-box-2 tr {  padding:10px 20px; height:65px; line-height:1.6;}
+.table-box-2 tr td { font-size:16px; border:1px solid #dce3ea; padding:0 15px;  }
+.table-box-2 tr th { padding:0 15px; border:1px solid #dce3ea;}
+.table-box-2 .bg-gary { background:#f1f2f6; font-weight: bold; }
+.table-box-2 .bg-green { background:#b2df92; font-weight: bold; color:#414851;}
+.table-box-2 .bg-blue { background:#a2caff; font-weight: bold; color:#414851; }
+
 .checkboxIcon .chk_1 {position: absolute; position: static\9; left: -9999px;}
 .checkboxIcon label { display: block; width:100%; }
 .checkboxIcon label.inline { display: inline-block; *display: inline; width:auto;  }
@@ -308,6 +317,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .subPage-head .icon { width:23px; height:23px; margin-right:10px; position: relative; top: 4px;}
 .subPage-head .icon-header-message { background:url(../images/icon-subPage-message.png) no-repeat center;  }
 .subPage-head .icon-header-help {  background:url(../images/icon-subPage-help.png) no-repeat center;  }
+.subPage-head .icon-header-point {background:url(../images/icon-subPage-point.png) no-repeat center;}
 .subPage-main { padding:40px; min-height: 500px; background-color:#fff; font-size:18px; color:#7a8b9f;}
 .subPage-main .centerTitle { margin-bottom:40px; text-align: center;}
 .subPage-main h3 { font-size:24px; font-weight: normal;}

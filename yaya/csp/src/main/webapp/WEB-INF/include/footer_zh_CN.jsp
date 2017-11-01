@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="admin-bottom">
     <div class="page-width clearfix">
-        <p class="t-center">粤ICP备12087993号 © 2012-2017 敬信科技版权所有 </p>
+        <p class="t-center"><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
     </div>
 
 </div>

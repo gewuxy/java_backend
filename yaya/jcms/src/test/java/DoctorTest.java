@@ -1,11 +1,14 @@
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.APIUtils;
 import cn.medcn.meet.dto.MeetHistoryDTO;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.dao.AppUserDAO;
 import cn.medcn.user.dto.PublicAccountDTO;
+import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.Group;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.DoctorService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import javax.persistence.Transient;
 import java.util.List;
 
 
@@ -26,7 +30,8 @@ public class DoctorTest {
    @Autowired
    private MeetService meetService;
 
-
+@Autowired
+   private CspUserService cspUserService;
 
    @Test
     public void testGroup(){
@@ -45,5 +50,10 @@ public class DoctorTest {
 //       }
    }
 
+   @Test
+   public void testFindBind() {
+      List<BindInfo> bindInfoList = cspUserService.findBindListByUserId("17101210221415956422");
+      System.out.println(APIUtils.success(bindInfoList));
+   }
 
 }
