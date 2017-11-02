@@ -107,7 +107,7 @@ public class WebChargeController extends CspBaseController {
         if(flux == null){
             throw new SystemException("流量值不能为空");
         }
-        //正式线mode为production，测试线mode为sandbox
+        //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         //TODO  删除下行代码
         appBase = "http://medcn.synology.me:8889/";
@@ -167,7 +167,8 @@ public class WebChargeController extends CspBaseController {
             throw new SystemException(e.getMessage());
         }
 
-        if(paymentId.equals(createdPayment.getId())){
+        //支付成功
+        if(createdPayment.getState().equals("approved")){
                 //查找订单
                 FluxOrder order = new FluxOrder();
                 order.setTradeId(paymentId);
