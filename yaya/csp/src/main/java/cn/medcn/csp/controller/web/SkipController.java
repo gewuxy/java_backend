@@ -19,7 +19,7 @@ public class SkipController extends CspBaseController {
     // CSP 服务协议id
     public static final String SERVICE_PROTOCOL_ID = "17103116062545591360";
     // CSP 关于我们id
-    public static final String ABOUT_ID = "17103116215880292674";
+    public static final String ABOUT_US_ID = "17103116215880292674";
 
     @Autowired
     protected CspArticleService articleService;
@@ -37,16 +37,27 @@ public class SkipController extends CspBaseController {
     @RequestMapping(value = "/index/{id}")
     public String index(@PathVariable String id, Model model) {
         if (StringUtils.isNotEmpty(id)) {
-            CspArticle condition = new CspArticle();
-            condition.setId(id);
-            CspArticle article = articleService.selectOne(condition);
+            CspArticle article = articleService.selectByPrimaryKey(id);
             model.addAttribute("article", article);
         }
-        if (id.equals(SERVICE_PROTOCOL_ID) || id.equals(ABOUT_ID)) {
+        if (id.equals(SERVICE_PROTOCOL_ID) || id.equals(ABOUT_US_ID)) {
             return localeView("/index/about");
         }  else {
             return localeView("/index/view");
         }
     }
 
+
+    /**
+     * app端静态页面显示
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/view/{id}")
+    public String apiIndex(@PathVariable String id, Model model) {
+        CspArticle article = articleService.selectByPrimaryKey(id);
+        model.addAttribute("article", article);
+        return localeView("/index/app_view");
+    }
 }
