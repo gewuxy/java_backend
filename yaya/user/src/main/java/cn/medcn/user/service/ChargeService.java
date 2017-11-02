@@ -1,7 +1,6 @@
 package cn.medcn.user.service;
 
 import cn.medcn.common.service.BaseService;
-import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.FluxOrder;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;

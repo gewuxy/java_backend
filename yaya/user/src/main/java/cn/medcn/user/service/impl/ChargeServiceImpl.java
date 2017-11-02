@@ -1,5 +1,6 @@
 package cn.medcn.user.service.impl;
 
+import cn.jiguang.common.resp.APIConnectionException;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.FluxOrderDAO;
@@ -50,8 +51,8 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws InvalidRequestException
      * @throws APIConnectionException
      * @throws AuthenticationException
-     */
-    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException {
+     */  //TODO
+    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
