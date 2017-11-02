@@ -42,6 +42,15 @@ public class WebChargeController extends CspBaseController {
     @Value("${appId}")
     private String appId;
 
+    @Value("${paypal_clientId}")
+    protected String clientId;
+
+    @Value("${paypal_secret}")
+    protected String clientSecret;
+
+    @Value("${paypal_mode}")
+    protected String mode;
+
 
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
@@ -89,7 +98,7 @@ public class WebChargeController extends CspBaseController {
 
 
     /**
-     * paypal支付创建订单
+     * 创建paypal支付订单
      * @param flux 流量值
      * @return
      */
@@ -98,19 +107,21 @@ public class WebChargeController extends CspBaseController {
         if(flux == null){
             throw new SystemException("流量值不能为空");
         }
-        APIContext apiContext = new APIContext("AeSVNO9AifaUTa0UEl1wZ2x0uIdE-CCPENpM-z9xOnVsS2hDW2XoaDzn9P_lh4FJzBEVMjVIBky_N9cR", "EOdCsjuJj1RnU90_2eS5PHrinLO-v61cm6k7ulBlOcVL4IvCg09coXP4P0pH9Zz4da2EFMAlZ_myt8M2", "sandbox");
-
+        //正式线mode为production，测试线mode为sandbox
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
+        //TODO  删除下行代码
         appBase = "http://medcn.synology.me:8889/";
-        Payment payment = generatePayment(flux);
-        Payment createdPayment;
+        Payment payment = chargeService.generatePayment(flux,appBase);
+        Payment responsePayment;
         String url = null;
         try {
-            createdPayment = payment.create(apiContext);
-            Iterator links = createdPayment.getLinks().iterator();
+            //响应对象
+            responsePayment = payment.create(apiContext);
+            Iterator links = responsePayment.getLinks().iterator();
             while (links.hasNext()) {
                 Links link = (Links) links.next();
-                //用户登录地址
                 if (link.getRel().equalsIgnoreCase("approval_url")) {
+                    //用户登录paypal页面 url
                     url = link.getHref();
                     break;
                 }
@@ -122,7 +133,7 @@ public class WebChargeController extends CspBaseController {
         if(url != null){
             //创建订单
             String userId = getWebPrincipal().getId();
-            String paymentId = createdPayment.getId();
+            String paymentId = responsePayment.getId();
             chargeService.createPaypalWebOrder(userId,flux,paymentId);
             return "redirect:" + url;
         }
@@ -130,34 +141,7 @@ public class WebChargeController extends CspBaseController {
         return error();
     }
 
-    private Payment generatePayment(Integer flux) {
-        Payment createdPayment = null;
 
-        //建立金额与币种
-        Amount amount = new Amount();
-        amount.setCurrency("USD");
-        amount.setTotal(flux + ".00");
-        Transaction transaction = new Transaction();
-        transaction.setAmount(amount);
-        List<Transaction> transactions = new ArrayList<>();
-        transactions.add(transaction);
-
-        //建立支付方式
-        Payer payer = new Payer();
-        payer.setPaymentMethod("paypal");
-
-        Payment payment = new Payment();
-        payment.setIntent("sale");
-        payment.setPayer(payer);
-        payment.setTransactions(transactions);
-        payment.setNoteToPayer("Pay Order ");
-
-        RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(appBase + "mgr/charge/cancel");
-        redirectUrls.setReturnUrl(appBase + "mgr/charge/callback");//回调路径
-        payment.setRedirectUrls(redirectUrls);
-        return payment;
-    }
 
 
     /**
@@ -169,7 +153,7 @@ public class WebChargeController extends CspBaseController {
      */
     @RequestMapping("/callback")
     public String callback(String paymentId,String PayerID ) throws SystemException {
-        APIContext apiContext = new APIContext("AeSVNO9AifaUTa0UEl1wZ2x0uIdE-CCPENpM-z9xOnVsS2hDW2XoaDzn9P_lh4FJzBEVMjVIBky_N9cR", "EOdCsjuJj1RnU90_2eS5PHrinLO-v61cm6k7ulBlOcVL4IvCg09coXP4P0pH9Zz4da2EFMAlZ_myt8M2", "sandbox");
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         Payment payment = new Payment();
         payment.setId(paymentId);
 
@@ -194,6 +178,7 @@ public class WebChargeController extends CspBaseController {
                 }
                 //更新订单状态，修改用户流量值
                 chargeService.updateOrderAndUserFlux(order);
+                //TODO 修改支付成功地址
                 return localeView("/userCenter/toFlux");
         }
 
