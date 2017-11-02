@@ -1,8 +1,8 @@
 package cn.medcn.user.service;
 
 import cn.medcn.common.service.BaseService;
-import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.FluxOrder;
+import com.paypal.api.payments.Payment;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
 
@@ -32,4 +32,12 @@ public interface ChargeService extends BaseService<FluxOrder> {
      * @return
      */
     void createPaypalWebOrder(String userId, Integer flux, String paymentId);
+
+    /**
+     * 生成paypal支付对象
+     * @param flux
+     * @param appBase
+     * @return
+     */
+    Payment generatePayment(Integer flux,String appBase);
 }

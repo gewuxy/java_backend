@@ -15,14 +15,12 @@ import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.*;
-import cn.medcn.user.dto.MeetingDTO;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.service.AppUserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -411,9 +409,6 @@ public class MeetController extends BaseController {
             //直播音频webSocket连接地址
             String socketUrl = wsBase + "?courseId="+ course.getId();
             audioDTO.setSocketUrl(socketUrl);
-            //添加视频直播
-            Live live = liveService.findByCourseId(course.getId());
-            audioDTO.setVideoLive(live);
         }
 
         return APIUtils.success(audioDTO);
