@@ -30,8 +30,6 @@ public class MeetAudioDTO implements Serializable {
     //直播音频webSocket连接地址
     private String socketUrl;
 
-    //直播视频
-    private Live videoLive;
 
     public static MeetAudioDTO build(MeetAudio meetAudio){
         MeetAudioDTO dto = new MeetAudioDTO();
