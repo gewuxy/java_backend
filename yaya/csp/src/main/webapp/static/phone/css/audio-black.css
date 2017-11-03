@@ -1,0 +1,65 @@
+
+.video-countDown .audiojs { }
+/*h2 { font-family: 'bpreplay', sans-serif; font-weight: normal; font-size: 24px; margin-bottom: 10px; line-height: 1.6; }*/
+
+.video-countDown .download { background: url('../images/divider.png') top center no-repeat, url('../images/divider.png') bottom center no-repeat; margin: 30px 0px; padding: 20px 0px; text-align: center; }
+.video-countDown .download a em { color: rgba(255, 255, 255, 0.8); font-style: normal; }
+.video-countDown .download a em:before { content: '⬇ '; font-size: 0.8em; padding: 0px 4px 0px 0px; }
+.video-countDown .download a { display: block; color: #f6f6f0; width: 190px; margin: 5px auto; padding: 8px 2px 8px 0px; font-size: 14px; border-bottom: 0px; }
+
+.video-countDown .audiojs audio { position: absolute; left: -1px; top:0px; z-index:-1;-moz-opacity:0; opacity: 0;   }
+.video-countDown .audiojs {  position: relative; z-index: 20;  overflow: hidden; font-family: monospace; font-size: 12px; }
+.video-countDown .audiojs .play-pause { width: 25px; height: 25px; padding: 0px 6px; margin:7px 4px 0; float: left; overflow: hidden; display:none;  }
+.video-countDown .audiojs p { display: none; width: 25px; height: 25px; margin: 0px; cursor: pointer; }
+.video-countDown .audiojs .play { display: block; }
+.video-countDown .audiojs .scrubber { position: relative; float: left; width: 620px;/* background:#000 url(../images/audio-scrubber-black.png) 0 10px repeat-x ;*/ height: 24px; margin:5px 0; border-top: 1px solid #000; border-left: 0px; border-bottom: 0px; display: none;  }
+.video-countDown .audiojs .progress { position: absolute; top: 10px; left: 0px; height: 4px; width: 0px; background: #3fa9f5;  z-index: 1; }
+.video-countDown .audiojs .progressDot { cursor:pointer; position:absolute; top:-6px; right:-8px; height: 16px; width: 16px;  background-color: #3fa9f5; border-radius: 8px;  pointer-events: all;  box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);}
+.video-countDown .audiojs .loaded { position: absolute; top: 10px; left: 0px; height: 4px; width: 0px; background: #666666; }
+/*.video-countDown .audiojs .time { float: left; height: 36px; line-height: 36px; margin: 0px 0px 9px 55px; padding: 0px 12px 0px 6px; border-left: 1px solid #000; color: #55606E;  user-select:none; -ms-user-select:none;  -moz-user-select:none; -webkit-user-select:none; font-size:16px; }*/
+.video-countDown .audiojs .time { background:rgba(0,0,0,.5); padding:.05rem .2rem; border-radius: .3rem;}
+.video-countDown .audiojs .time em { padding: 0px 0 0px .1rem; color: #fff; font-style: normal; font-size:.24rem; font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif; }
+.video-countDown .audiojs .time strong { padding: 0px 0px 0px 2px; font-weight: normal; display: none; }
+.video-countDown .audiojs .time img { width:.24rem; height:.20rem;}
+.video-countDown .audiojs .error-message { display: none; background:rgba(0,0,0,.5); padding:.05rem .2rem; border-radius: .3rem; color: #fff; font-size:.24rem; opacity: 0;  }
+/*.video-countDown .audiojs .error-message { float: left; display: none; margin: 0px 10px; height: 36px; width: 400px; overflow: hidden; line-height: 36px; white-space: nowrap; color: #000;  text-overflow: ellipsis; -o-text-overflow: ellipsis; -icab-text-overflow: ellipsis; -khtml-text-overflow: ellipsis; -moz-text-overflow: ellipsis; -webkit-text-overflow: ellipsis; }*/
+.video-countDown .audiojs .error-message a { color: #fff; font-size:.24rem;  }
+
+.video-countDown .audiojs .play { background: url(../images/icon-audio-play.png) center center no-repeat; }
+.video-countDown .audiojs .loading {  width: 18px; height: 18px; background-image: url(../images/icon-audio-loading.png); background-size: cover; background-repeat: no-repeat; animation: spin 0.4s linear infinite;}
+.video-countDown .audiojs .error { background: url(../images/icon-audio-error.png) center center no-repeat; }
+.video-countDown .audiojs .pause { background: url(../images/icon-audio-stop.png) center center no-repeat; }
+
+/*@media only screen and (-webkit-min-device-pixel-ratio: 2),*/
+    /*only screen and (min--moz-device-pixel-ratio: 2),*/
+    /*only screen and (min-moz-device-pixel-ratio: 2),*/
+    /*only screen and (-o-min-device-pixel-ratio: 2/1),*/
+    /*only screen and (min-device-pixel-ratio: 2) {*/
+    /*.audiojs .play, .audiojs .loading, .audiojs .error, .audiojs .pause {*/
+    /*background-image: url("$2");*/
+    /*-webkit-background-size: 30px 120px;*/
+    /*-moz-background-size: 30px 120px;*/
+    /*-o-background-size: 30px 120px;*/
+    /*background-size: 30px 120px;*/
+    /*}*/
+/*}*/
+
+.video-countDown .playing .play, .video-countDown .playing .loading, .video-countDown .playing .error { display: none; }
+.video-countDown .playing .pause { display: block; }
+
+.video-countDown .loading .play, .video-countDown .loading .pause, .video-countDown .loading .error { display: none; }
+.video-countDown .loading .loading { display: block; }
+
+.video-countDown .error .time, .video-countDown .error .play, .video-countDown .error .pause, .video-countDown .error .scrubber, .video-countDown .error .loading { display: none; }
+.video-countDown .error  .error { display: block; }
+.video-countDown .error .play-pause p { cursor: auto; }
+.video-countDown .error .error-message { display: block; }
+
+@keyframes spin {
+    from {
+        transform: rotateZ(0);
+    }
+    to {
+        transform: rotateZ(1turn);
+    }
+}

@@ -134,15 +134,20 @@ public class VideoTest {
     public void testSync(){
         LiveOrderDTO dto = new LiveOrderDTO();
         dto.setOrder(LiveOrderDTO.ORDER_SYNC);
-        dto.setCourseId("14379");
+        dto.setImgUrl("http://10.0.0.250/14410/1.jpg");
+        dto.setAudioUrl("http://10.0.0.250/14410/1.mp3");
+        dto.setVideoUrl("http://10.0.0.250/14410/1.mp4");
+        dto.setDetailId(123456);
+        dto.setOrderFrom("app");
+        dto.setCourseId("14410");
         dto.setPageNum(4);
         liveService.publish(dto);
     }
 
     @Test
     public void testKick(){
-//        LiveOrderDTO dto = LiveOrderDTO.buildKickOrder("14383", );
-//        dto.setSid("b");
-//        liveService.publish(dto);
+        LiveOrderDTO dto = LiveOrderDTO.buildKickOrder("14379", "1");
+        dto.setSid("b");
+        liveService.publish(dto);
     }
 }

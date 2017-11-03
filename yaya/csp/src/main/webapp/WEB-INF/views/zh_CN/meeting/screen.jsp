@@ -141,8 +141,9 @@
         }
 
         clearInterval( heartbeat_timer );
-        console.log("Connecting ...");
+        console.log("try to connect to ws url " + to_url);
         var ws = new WebSocket( to_url );
+
         ws.onopen=function(){
             console.log("Connected !!!")
             heartbeat_timer = setInterval( function(){keepalive(ws)}, 5000 );

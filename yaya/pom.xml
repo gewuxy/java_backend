@@ -24,6 +24,7 @@
         <module>search</module>
         <module>csp</module>
         <module>oauth</module>
+        <module>csp_admin</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

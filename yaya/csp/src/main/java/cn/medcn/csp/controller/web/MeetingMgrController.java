@@ -87,6 +87,8 @@ public class MeetingMgrController extends CspBaseController {
      */
     @RequestMapping(value = "/list")
     public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType) {
+        pageable.setPageSize(6);
+
         //打开了投稿箱的公众号列表
         MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
         AppUser.splitUserAvatar(myPage.getDataList(), fileBase);
@@ -185,6 +187,7 @@ public class MeetingMgrController extends CspBaseController {
                 course.setShared(false);
                 course.setCspUserId(principal.getId());
                 course.setTitle("");
+                course.setSourceType(AudioCourse.SourceType.csp.ordinal());
                 audioService.insert(course);
             }
         }
