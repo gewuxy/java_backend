@@ -487,6 +487,27 @@ public class MeetingController extends CspBaseController {
 
 
     /**
+     * 删除会议
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public String delete(Integer id) {
+        Principal principal = SecurityUtils.get();
+
+        if (id == null || id == 0) {
+            return error(local("error.param"));
+        } else {
+            AudioCourse course = new AudioCourse();
+            course.setId(id);
+            course.setDeleted(true);
+            audioService.updateByPrimaryKeySelective(course);
+            return success();
+        }
+    }
+
+    /**
      * 退出录播
      * @param courseId
      * @param pageNum
