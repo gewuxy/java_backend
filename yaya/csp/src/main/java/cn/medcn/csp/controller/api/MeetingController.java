@@ -116,17 +116,21 @@ public class MeetingController extends CspBaseController {
         if (course == null) {
             throw new SystemException(local("source.not.exists"));
         }
-
-        model.addAttribute("course", course);
         if (course.getPlayType() == null) {
             course.setPlayType(0);
         }
-        if (AudioCourse.PlayType.normal.ordinal() < course.getPlayType()) {//直播
+
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            course.setDetails(audioService.findLiveDetails(courseId));
+
             course.setDetails(audioService.findLiveDetails(courseId));
             Live live = liveService.findByCourseId(courseId);
             model.addAttribute("live", live);
         }
 
+        handleHttpUrl(fileBase, course);
+
+        model.addAttribute("course", course);
         return localeView("/meeting/course_" + course.getPlayType().intValue());
     }
 
@@ -209,43 +213,47 @@ public class MeetingController extends CspBaseController {
     }
 
 
+    protected void handleLiveDetail(Integer courseId, AudioCourseDetail detail){
+        //添加直播明细
+        Integer maxSort = audioService.findMaxLiveDetailSort(courseId);
+        if (maxSort == null) {
+            maxSort = 0;
+        }
+        LiveDetail liveDetail = new LiveDetail();
+        liveDetail.setCourseId(courseId);
+        liveDetail.setVideoUrl(detail.getVideoUrl());
+        liveDetail.setAudioUrl(detail.getAudioUrl());
+        liveDetail.setImgUrl(detail.getImgUrl());
+        liveDetail.setDuration(detail.getDuration());
+        liveDetail.setSort(maxSort);
+        audioService.addLiveDetail(liveDetail);
+
+        //如果是直播  在上传音频完成之后发送直播指令
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setOrder(LiveOrderDTO.ORDER_LIVE);
+        order.setDetailId(detail.getId());
+        order.setCourseId(String.valueOf(courseId));
+        order.setImgUrl(CheckUtils.isEmpty(detail.getImgUrl()) ? null : (fileBase + detail.getImgUrl()));
+        order.setAudioUrl(CheckUtils.isEmpty(detail.getAudioUrl()) ? null : (fileBase + detail.getAudioUrl()));
+        order.setVideoUrl(CheckUtils.isEmpty(detail.getVideoUrl()) ? null : (fileBase + detail.getVideoUrl()));
+        order.setPageNum(maxSort);
+        liveService.publish(order);
+
+        //保存直播进度
+        Live live = liveService.findByCourseId(courseId);
+        if (live != null) {
+            live.setLivePage(maxSort);
+            liveService.updateByPrimaryKeySelective(live);
+        }
+    }
+
+
     protected void handleLiveOrRecord(Integer courseId, Integer playType, Integer pageNum, AudioCourseDetail detail){
         if (playType == null) {
             playType = 0;
         }
         if (playType > AudioCourse.PlayType.normal.ordinal()) {
-            //如果是直播  在上传音频完成之后发送直播指令
-            LiveOrderDTO order = new LiveOrderDTO();
-            order.setOrder(LiveOrderDTO.ORDER_LIVE);
-            order.setCourseId(String.valueOf(courseId));
-            order.setImgUrl(CheckUtils.isEmpty(detail.getImgUrl()) ? null : (fileBase + detail.getImgUrl()));
-            order.setAudioUrl(CheckUtils.isEmpty(detail.getAudioUrl()) ? null : (fileBase + detail.getAudioUrl()));
-            order.setVideoUrl(CheckUtils.isEmpty(detail.getVideoUrl()) ? null : (fileBase + detail.getVideoUrl()));
-            order.setPageNum(pageNum);
-            liveService.publish(order);
-
-            //添加直播明细
-            Integer maxSort = audioService.findMaxLiveDetailSort(courseId);
-            if (maxSort == null) {
-                maxSort = 1;
-            } else {
-                maxSort ++;
-            }
-            LiveDetail liveDetail = new LiveDetail();
-            liveDetail.setCourseId(courseId);
-            liveDetail.setVideoUrl(detail.getVideoUrl());
-            liveDetail.setAudioUrl(detail.getAudioUrl());
-            liveDetail.setImgUrl(detail.getImgUrl());
-            liveDetail.setDuration(detail.getDuration());
-            liveDetail.setSort(maxSort);
-            audioService.addLiveDetail(liveDetail);
-
-            //保存直播进度
-            Live live = liveService.findByCourseId(courseId);
-            if (live != null) {
-                live.setLivePage(pageNum);
-                liveService.updateByPrimaryKeySelective(live);
-            }
+            handleLiveDetail(courseId, detail);
         } else {
             AudioCoursePlay play = audioService.findPlayState(courseId);
             if (play != null) {
@@ -356,6 +364,15 @@ public class MeetingController extends CspBaseController {
         }
 
         return success(result);
+    }
+
+
+    @RequestMapping(value = "/video/next")
+    @ResponseBody
+    public String videoNext(Integer courseId, Integer detailId){
+        AudioCourseDetail detail = audioService.findDetail(detailId);
+        handleLiveDetail(courseId, detail);
+        return success();
     }
 
     @RequestMapping(value = "/join")

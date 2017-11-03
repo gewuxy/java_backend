@@ -1,0 +1,92 @@
+body {
+    font-size:.34rem;
+    background-color:#f8f8f8;
+}
+.warp {
+    position: relative;
+    /*max-width: 12.8rem;*/
+    margin: 0 auto;
+    background-color:#f8f8f8;
+}
+
+.img-responsive {
+    width: 100%;
+    max-width: 100%;
+    border-radius: 5px;
+}
+
+img { vertical-align: middle; max-width: 100%; _max-width: none; height: auto !important;}
+h2 { font-size:.46rem;}
+h3 { font-size:.4rem; }
+
+.t-center { text-align: center;}
+.button { display: inline-block;}
+.fl { float:left;}
+.oh { overflow: hidden;}
+.border-t-b { border-top:#e7e7e7 1px solid; border-bottom:#e7e7e7 1px solid;}
+.border-b {  border-bottom:#e7e7e7 1px solid; }
+
+.logo { padding:1.6rem .5rem; display: inline-block;}
+.item { }
+.item .item-area { padding:0.4rem .8rem;}
+.pr { position:relative; }
+
+
+.blue-button { background:#0f71d2; color:#fff; }
+.blue-button:hover { background:#5096db;  }
+.disabled-button { background:#aeaeae; color:#fff; }
+
+.color-blue { color:#0f71d2;}
+.color-red { color:#ff5544;}
+.color-gray { color:#9c9c9c;}
+.button { width:100%; padding:.2rem 0; font-size:.4rem; border:none; }
+.radius { -webkit-border-radius:10px; -moz-border-radius:10px; border-radius:10px; }
+.m-top { margin-top:10px;}
+
+.header h3{ color:#fff; padding:.4rem .8rem; font-size:0.5rem;}
+.formrow {margin-bottom:.5rem;}
+.formrow input{ width:100%; }
+.formrow button { }
+.formrow input.min-input {width:50%; border-radius: 0 0 0 10px;}
+.formrow .yzm { float:right; padding:.32rem 15px; border-left: 1px solid #e4e4e4; }
+.formrow .formTitle { float:left; display: block; width: 120px; text-align: center; }
+.formrow .formControls { overflow: hidden;}
+
+/*header*/
+.header { background:#2176d6;}
+.header .logo-left img{ margin-right:20px; width:1rem;}
+
+/*login*/
+.login-input {}
+.login-input input{ border:0;}
+.login-input-item { border:1px solid #e4e4e4; border-radius: 5px; background-color:#fff;}
+.login-input-item input { }
+.login-input-item .last { border-bottom:0; border-radius: 0 0 10px 10px;}
+.login-input-item input { padding:.4rem 0 .4rem .2rem;  margin:0; border-bottom:1px solid #e4e4e4;  border-radius: 10px 10px 0 0; font-size:.3rem; }
+.login-input .yzm { position:absolute; right:0; width:120px; }
+.login-input .pr {display:block;}
+
+/*account*/
+.account-header {padding:.4rem;}
+.account-header img{ width:100px; margin-right:.4rem;}
+.account-header h2{ padding-top:.1rem;}
+.account-header .info { overflow: hidden;}
+
+.account-info { padding:.8rem .4rem; background-color:#fff;}
+.account-list {  background-color:#fff; color:#666; padding:.2rem 0 3rem;}
+.account-list li { border-bottom:1px solid #bbbbbc; padding:.4rem;}
+.account-list li img { width:225px;}
+.account-list li .fl { margin-right:20px;}
+.account-list li .info { overflow: hidden;}
+.account-list li h3 { font-size:.4rem; margin-bottom:10px; }
+.account-list li h3 a:hover { color:#0f71d2;}
+
+.doctor-details .fl img{ width:90px; margin-right:.4rem; }
+.doctor-details .doctor-item { background-color:#fff; padding:.4rem;}
+.doctor-details .title { font-size:.4rem; margin-bottom:15px; color:#000;}
+.doctor-details h4 {margin:.3rem .4rem .16rem .4rem; font-size:.4rem; color:#717171;}
+
+
+@media screen and (max-width:360px) {
+    .account-header img { width:.1rem;}
+}

@@ -33,7 +33,10 @@ public class CspBaseController extends BaseController {
         buffer.append(request.getScheme().toLowerCase().equals("https") ? "wss" : "ws");
         buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
         buffer.append("/live/order?courseId=").append(courseId);
-        buffer.append("&token=").append(request.getHeader(Constants.TOKEN));
+        String token = request.getHeader(Constants.TOKEN);
+        if (CheckUtils.isNotEmpty(token)) {
+            buffer.append("&token=").append(request.getHeader(Constants.TOKEN));
+        }
         return buffer.toString();
     }
 
