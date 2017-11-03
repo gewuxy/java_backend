@@ -28,6 +28,8 @@ public class LiveOrderDTO implements Serializable{
 
     //直播课件ID
     protected String courseId;
+
+    protected Integer detailId;
     //指令代码 0表示直播 1表示同步 2表示踢人指令 3表示拒绝被踢 4表示接受被踢
     protected int order;
     //PPT的当前页码

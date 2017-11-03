@@ -16,7 +16,7 @@ import java.util.Date;
 @Table(name = "t_app_log")
 public class AppLog {
     private Long id;
-    /**所属APPID*/
+    /**所属APPID 1是YaYa医师 2是合理用药 3是csp*/
     private Integer appId;
     /**用户操作*/
     private String action;
