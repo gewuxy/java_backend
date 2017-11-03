@@ -127,7 +127,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                         e.printStackTrace();
                     }
                 }
-            }else {
+            } else {
                 try {
                     for (WebSocketSession session : sessionMap.get(dto.getCourseId()).values()) {
                         session.sendMessage(new TextMessage(JSON.toJSONString(dto)));

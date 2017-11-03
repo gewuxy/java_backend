@@ -404,11 +404,17 @@ public class MeetController extends BaseController {
         audioDTO.setCount(count);
 
         AudioCourse course = meetAudio.getCourse();
-        //实时会议，不是录播语音
-        if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
-            //直播音频webSocket连接地址
-            String socketUrl = wsBase + "?courseId="+ course.getId();
-            audioDTO.setSocketUrl(socketUrl);
+
+        if(course != null ){
+            course.setPlayType(course.getPlayType() == null ? 0 : course.getPlayType());
+            if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {//实时会议，不是录播语音
+                //直播音频webSocket连接地址
+                String socketUrl = wsBase + "?courseId="+ course.getId();
+                audioDTO.setSocketUrl(socketUrl);
+//                //添加视频直播
+//                Live live = liveService.findByCourseId(course.getId());
+//                audioDTO.setVideoLive(live);
+            }
         }
 
         return APIUtils.success(audioDTO);
