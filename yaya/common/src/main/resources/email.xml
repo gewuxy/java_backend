@@ -25,6 +25,7 @@
         </load>
     </email>
 
+
     <email id="pwdRest">
         <load>
             <![CDATA[
@@ -108,4 +109,141 @@
 	]]>
         </load>
     </email>
+
+    <email id="cspPwdReset">
+    <load>
+
+        <![CDATA[
+            <p style="text-align: left;">
+    <span style="font-size: 36px; color:#1F7FFE;"><strong>C</strong></span><span style="font-size: 36px; color: #4C5776;"><strong>S</strong><strong>P&nbsp;</strong></span><span style="font-size: 24px;"><strong>meeting</strong></span><br/>
+</p>
+
+    <p>
+        <br/>
+    </p>
+    <p>
+        <span style="font-size: 20px;">尊敬的用户@user:</span>
+    </p>
+    <p>
+        <br/>
+    </p>
+    <p>
+        您好 ! 请点击以下链接重置您的密码。
+    </p>
+    <p>
+       <a href="@url">@url</a>
+    </p>
+    <p>
+        如果该链接无法点击，请直接拷贝以上链接到浏览器地址栏中访问。
+    </p>
+    <p>
+        (注意:请在收到邮件24个小时内使用，否则该链接将失效。)
+    </p>
+    <p>
+        本邮件由敬信科技系统发出,请勿回复，如有疑问请联系我们。
+    </p>
+    <p>
+        <br/>
+    </p>
+    <p>
+        敬信科技
+    </p>
+    <p>
+        @date
+    </p>
+       ]]>
+    </load>
+</email>
+
+    <email id="cspRegister">
+        <load>
+
+            <![CDATA[
+            <p style="text-align: left;">
+    <span style="font-size: 36px; color:#1F7FFE;"><strong>C</strong></span><span style="font-size: 36px; color: #4C5776;"><strong>S</strong><strong>P&nbsp;</strong></span><span style="font-size: 24px;"><strong>meeting</strong></span><br/>
+</p>
+
+    <p>
+        <br/>
+    </p>
+    <p>
+        <span style="font-size: 20px;">尊敬的用户@user:</span>
+    </p>
+    <p>
+        <br/>
+    </p>
+    <p>
+        您好，感谢注册CSPmeeting云回放系统，您申请的帐号资料已通过审核，请点击以下链接进行帐号认证。
+    </p>
+    <p>
+       <a href="@url">@url</a>
+    </p>
+    <p>
+        如果该链接无法点击，请直接拷贝以上链接到浏览器地址栏中访问。
+    </p>
+    <p>
+        (注意:请在收到邮件24个小时内使用，否则该链接将失效。)
+    </p>
+    <p>
+        本邮件由敬信科技系统发出,请勿回复，如有疑问请联系我们。
+    </p>
+    <p>
+        <br/>
+    </p>
+    <p>
+        敬信科技
+    </p>
+    <p>
+        @date
+    </p>
+       ]]>
+        </load>
+    </email>
+
+    <email id="cspBindEmail">
+        <load>
+
+            <![CDATA[
+            <p style="text-align: left;">
+    <span style="font-size: 36px; color:#1F7FFE;"><strong>C</strong></span><span style="font-size: 36px; color: #4C5776;"><strong>S</strong><strong>P&nbsp;</strong></span><span style="font-size: 24px;"><strong>meeting</strong></span><br/>
+</p>
+
+    <p>
+        <br/>
+    </p>
+    <p>
+        <span style="font-size: 20px;">尊敬的用户@user:</span>
+    </p>
+    <p>
+        <br/>
+    </p>
+    <p>
+        您正在申请绑定CSPmeeting账号，点击以下链接完成验证绑定。
+    </p>
+    <p>
+       <a href="@url">@url</a>
+    </p>
+    <p>
+        如果该链接无法点击，请直接拷贝以上链接到浏览器地址栏中访问。
+    </p>
+    <p>
+        (注意:请在收到邮件24个小时内使用，否则该链接将失效。)
+    </p>
+    <p>
+        本邮件由敬信科技系统发出,请勿回复，如有疑问请联系我们。
+    </p>
+    <p>
+        <br/>
+    </p>
+    <p>
+        敬信科技
+    </p>
+    <p>
+        @date
+    </p>
+       ]]>
+        </load>
+    </email>
+
+
 </emails>
