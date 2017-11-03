@@ -1,5 +1,6 @@
 package cn.medcn.user.service.impl;
 
+import cn.jiguang.common.resp.APIConnectionException;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.FluxOrderDAO;
@@ -8,14 +9,13 @@ import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.ChargeService;
 import com.github.abel533.mapper.Mapper;
+import com.paypal.api.payments.*;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by LiuLP on 2017/9/25.
@@ -50,8 +50,8 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws InvalidRequestException
      * @throws APIConnectionException
      * @throws AuthenticationException
-     */
-    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException {
+     */  //TODO
+    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
@@ -163,6 +163,63 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         order.setFlux(flux * 1024);
         fluxOrderDAO.insert(order);
         return id;
+    }
+
+    /**
+     * 创建web paypal订单
+     * @param userId
+     * @param flux
+     * @param paymentId
+     * @return
+     */
+    @Override
+    public void createPaypalWebOrder(String userId, Integer flux, String paymentId) {
+        String id = StringUtils.nowStr();
+        FluxOrder order = new FluxOrder();
+        order.setId(id);
+        order.setTradeId(paymentId);
+        order.setState(0);
+        order.setBuyTime(new Date());
+        order.setUserId(userId);
+        order.setPlatform("paypal");
+        //已M为单位存储
+        order.setFlux(flux * 1024);
+        fluxOrderDAO.insert(order);
+    }
+
+
+    /**
+     * 生成paypal支付对象
+     * @param flux
+     * @param appBase
+     * @return
+     */
+    @Override
+    public Payment generatePayment(Integer flux, String appBase) {
+        //建立金额与币种
+        Amount amount = new Amount();
+        amount.setCurrency("USD");
+        amount.setTotal(flux + ".00");
+        Transaction transaction = new Transaction();
+        transaction.setAmount(amount);
+        List<Transaction> transactions = new ArrayList<>();
+        transactions.add(transaction);
+
+        //建立支付方式
+        Payer payer = new Payer();
+        payer.setPaymentMethod("paypal");
+
+        Payment payment = new Payment();
+        payment.setIntent("sale");
+        payment.setPayer(payer);
+        payment.setTransactions(transactions);
+        payment.setNoteToPayer("Pay Order ");
+
+        RedirectUrls redirectUrls = new RedirectUrls();
+        redirectUrls.setCancelUrl(appBase + "mgr/charge/cancel");
+        redirectUrls.setReturnUrl(appBase + "mgr/charge/callback");//回调路径
+        payment.setRedirectUrls(redirectUrls);
+        return payment;
     }
 
 }

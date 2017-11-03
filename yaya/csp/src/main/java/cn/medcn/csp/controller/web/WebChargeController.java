@@ -1,8 +1,14 @@
 package cn.medcn.csp.controller.web;
 
+import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.utils.HttpUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
+import com.paypal.api.payments.*;
+import com.paypal.base.rest.APIContext;
+import com.paypal.base.rest.PayPalRESTException;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
@@ -14,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by lixuan on 2017/9/12.
@@ -28,11 +33,23 @@ public class WebChargeController extends CspBaseController {
     @Autowired
     protected ChargeService chargeService;
 
+    @Value("${app.yaya.base}")
+    protected String appBase;
+
     @Value("${apiKey}")
     private String apiKey;
 
     @Value("${appId}")
     private String appId;
+
+    @Value("${paypal_clientId}")
+    protected String clientId;
+
+    @Value("${paypal_secret}")
+    protected String clientSecret;
+
+    @Value("${paypal_mode}")
+    protected String mode;
 
 
     /**
@@ -81,21 +98,99 @@ public class WebChargeController extends CspBaseController {
 
 
     /**
-     * paypal支付创建订单
+     * 创建paypal支付订单
      * @param flux 流量值
      * @return
      */
     @RequestMapping("/createOrder")
-    @ResponseBody
-    public String createOrder(Integer flux){
-        String userId = getWebPrincipal().getId();
-        String orderId = chargeService.createPaypalOrder(userId,flux);
-        Map<String,String> map = new HashMap<>();
-        map.put("orderId",orderId);
-        return success(map);
+    public String createOrder(Integer flux) throws SystemException {
+        if(flux == null){
+            throw new SystemException("流量值不能为空");
+        }
+        //正式线mode为live，测试线mode为sandbox
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
+        //TODO  删除下行代码
+        appBase = "http://medcn.synology.me:8889/";
+        Payment payment = chargeService.generatePayment(flux,appBase);
+        Payment responsePayment;
+        String url = null;
+        try {
+            //响应对象
+            responsePayment = payment.create(apiContext);
+            Iterator links = responsePayment.getLinks().iterator();
+            while (links.hasNext()) {
+                Links link = (Links) links.next();
+                if (link.getRel().equalsIgnoreCase("approval_url")) {
+                    //用户登录paypal页面 url
+                    url = link.getHref();
+                    break;
+                }
+            }
+        } catch (PayPalRESTException e) {
+            throw new SystemException(e.getMessage());
+        }
+
+        if(url != null){
+            //创建订单
+            String userId = getWebPrincipal().getId();
+            String paymentId = responsePayment.getId();
+            chargeService.createPaypalWebOrder(userId,flux,paymentId);
+            return "redirect:" + url;
+        }
+
+        return error();
     }
 
 
+
+
+    /**
+     * paypal支付回调
+     * @param paymentId
+     * @param PayerID
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/callback")
+    public String callback(String paymentId,String PayerID ) throws SystemException {
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
+        Payment payment = new Payment();
+        payment.setId(paymentId);
+
+        PaymentExecution paymentExecution = new PaymentExecution();
+        paymentExecution.setPayerId(PayerID);
+
+        Payment createdPayment = null;
+        try {
+            createdPayment = payment.execute(apiContext, paymentExecution);
+        } catch (PayPalRESTException e) {
+            throw new SystemException(e.getMessage());
+        }
+
+        //支付成功
+        if(createdPayment.getState().equals("approved")){
+                //查找订单
+                FluxOrder order = new FluxOrder();
+                order.setTradeId(paymentId);
+                order = chargeService.selectOne(order);
+                //没有相关订单
+                if(order == null ){
+                   throw new SystemException("没有相关订单");
+                }
+                //更新订单状态，修改用户流量值
+                chargeService.updateOrderAndUserFlux(order);
+                //TODO 修改支付成功地址
+                return localeView("/userCenter/toFlux");
+        }
+
+
+        return "";
+    }
+
+    @RequestMapping("/cancel")
+    public String cancel(){
+        return "";
+    }
 }
 
 

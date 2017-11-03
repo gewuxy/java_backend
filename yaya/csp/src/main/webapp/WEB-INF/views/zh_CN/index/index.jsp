@@ -1,4 +1,4 @@
-<%--
+<%@ page import="java.net.URLDecoder" %><%--
   Created by IntelliJ IDEA.
   User: Liuchangling
   Date: 2017/10/31
@@ -25,7 +25,7 @@
         <div class="page-width pr">
             <div class=" index-login">
                 <div class="fr clearfix">
-                    <a href="javascript:;" class="language fr"><strong>中文</strong></a>&nbsp;&nbsp;&nbsp;
+                    <a href="javascript:;" class="language fr" id="lang"></a>&nbsp;&nbsp;&nbsp;
                     <a href="${ctx}/login" class="user-login-button"><strong>登录</strong>&nbsp;&nbsp;<i></i> </a>
                     <a href="javascript:;" class="index-download">下载App</a>
                 </div>
@@ -286,8 +286,6 @@
         </div>
 
 
-
-
         <div class="module-section">
             <div class="module-section-inner">
 
@@ -406,6 +404,10 @@
 <script type="text/javascript" src="//api.map.baidu.com/api?key=&v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj"></script>
 <script type="text/javascript">
     $(function(){
+        // 获取当前语言
+        var local = '${cookie.local.value}';
+        $('#lang').html('<strong>'+decodeURI(local)+'</strong>');
+
         //内容加载后的运动效果
         dataAnimate();
 
@@ -427,6 +429,8 @@
 
 
     });
+
+
 
 </script>
 </body>

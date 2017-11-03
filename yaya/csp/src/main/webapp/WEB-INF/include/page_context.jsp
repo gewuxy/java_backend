@@ -9,7 +9,8 @@
 <%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ taglib prefix="shiro" uri="http://shiro.apache.org/tags" %>
-
+<%@ page import="cn.medcn.common.utils.CookieUtils" %>
+<%@ page import="cn.medcn.common.Constants" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}"/>
 <c:set var="ctxStatic" value="${pageContext.request.contextPath}/static"/>
 <script src="${ctxStatic}/js/jquery-1.12.4.min.js"></script>
@@ -21,6 +22,16 @@
 <!--[if lt IE 9]>
 <script src="${ctxStatic}js/html5.js"></script>
 <![endif]-->
+<script>
+    $(function () {
+        // 获取当前语言
+        var local = '${cookie.local.value}';
+        $('#lang').text(decodeURI(local));
+    })
 
-
+</script>
+<%
+//    CookieUtils.clearCookie(request, "zh_TW");
+//    CookieUtils.setCookie(response, Constants.LOCAL_KEY, "zh_CN");
+%>
 
