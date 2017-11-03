@@ -315,6 +315,14 @@ public class MeetingController extends CspBaseController {
             result.put("courseId", courseId);
             result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
             result.put("duplicate", "0");
+            result.put("title", course.getTitle());
+            if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+                Live live = liveService.findByCourseId(courseId);
+                if (live != null) {
+                    result.put("startTime", live.getStartTime());
+                    result.put("endTime", live.getEndTime());
+                }
+            }
 
             //发送ws同步指令
             LiveOrderDTO order = new LiveOrderDTO();

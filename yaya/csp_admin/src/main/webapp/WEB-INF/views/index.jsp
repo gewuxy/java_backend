@@ -153,6 +153,67 @@
                                             class="icon-circle-arrow-right"></i>&nbsp;表单示例
                                     </a>
                                     </li>
+
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;管理员账号
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;CSP账号管理
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;日志管理
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;审议会议
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;消息公告
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;账号数据统计
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;APP上架
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;帮助与反馈
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;数据统计
+                                    </a>
+                                    </li>
+                                    <li><a
+                                            href="${ctx}/example/form"
+                                            target="mainFrame"><i
+                                            class="icon-circle-arrow-right"></i>&nbsp;流量订单管理
+                                    </a>
+                                    </li>
                                 </ul>
                             </div>
                         </div>

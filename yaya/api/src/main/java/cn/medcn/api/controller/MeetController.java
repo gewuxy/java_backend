@@ -411,9 +411,9 @@ public class MeetController extends BaseController {
                 //直播音频webSocket连接地址
                 String socketUrl = wsBase + "?courseId="+ course.getId();
                 audioDTO.setSocketUrl(socketUrl);
-                //添加视频直播
-                Live live = liveService.findByCourseId(course.getId());
-                audioDTO.setVideoLive(live);
+//                //添加视频直播
+//                Live live = liveService.findByCourseId(course.getId());
+//                audioDTO.setVideoLive(live);
             }
         }
 
