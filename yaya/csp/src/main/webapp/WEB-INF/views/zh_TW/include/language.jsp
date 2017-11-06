@@ -6,7 +6,4 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
-<div class="login-header">
-    <%@include file="language_zh_CN.jsp"%>
-</div>
+    <a href="#" class="login-language" title="切换语言" id="lang"></a>

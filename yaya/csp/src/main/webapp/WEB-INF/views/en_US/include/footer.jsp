@@ -9,7 +9,7 @@
 
 <div class="admin-bottom">
     <div class="page-width clearfix">
-        <p class="t-center"><%@include file="/WEB-INF/include/copy_right_en_US.jsp"%></p>
+        <p class="t-center"><%@include file="../include/copy_right.jsp"%></p>
     </div>
 
 </div>

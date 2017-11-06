@@ -18,7 +18,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -48,7 +48,7 @@
 
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+                    <%@include file="../include/footer.jsp"%>
                 </div>
             </div>
         </div>

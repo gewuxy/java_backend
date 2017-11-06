@@ -13,7 +13,7 @@
             <!--登录前-->
             <div class="login-header">
                 <a href="${ctx}/login" class="login-header-button" title="login">login&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
-                <%@include file="switch_language.jsp"%>
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
         </div>
         <div class="fl">

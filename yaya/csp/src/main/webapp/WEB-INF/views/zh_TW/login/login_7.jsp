@@ -21,10 +21,10 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
 
-              <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+              <%@include file="/WEB-INF/include/switch_language.jsp"%>
 
             <div class="login-box clearfix">
-                <%@include file="/WEB-INF/include/login_left.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
 
                 <div class="col-lg-5 login-box-item">
 
@@ -55,12 +55,12 @@
                         </div>
                     </div>
 
-                    <%@include file="/WEB-INF/include/login_service.jsp"%>
+                    <%@include file="../include/login_service.jsp"%>
 
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
+            <%@include file="../include/login_footer.jsp"%>
 
         </div>
     </div>

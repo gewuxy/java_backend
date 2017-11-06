@@ -347,7 +347,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix">
             <div class="admin-row clearfix pr">
@@ -450,7 +450,7 @@
 
         </div>
     </div>
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <!--弹出 投稿平台-->
