@@ -1,4 +1,4 @@
-<%@ page import="java.net.URLDecoder" %><%--
+<%--
   Created by IntelliJ IDEA.
   User: Liuchangling
   Date: 2017/10/31
@@ -17,6 +17,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <script src="${ctxStatic}/js/animate.min.js"></script>
 </head>
 <body>
@@ -25,7 +26,7 @@
         <div class="page-width pr">
             <div class=" index-login">
                 <div class="fr clearfix">
-                    <a href="javascript:;" class="language fr" id="lang"></a>&nbsp;&nbsp;&nbsp;
+                    <%@include file="/WEB-INF/include/switch_language.jsp"%>
                     <a href="${ctx}/login" class="user-login-button"><strong>登录</strong>&nbsp;&nbsp;<i></i> </a>
                     <a href="javascript:;" class="index-download">下载App</a>
                 </div>
@@ -37,7 +38,7 @@
                 <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">你的智慧，将被更多人看见</h2>
                 <p class="not-animated" data-animate="fadeIn" data-delay="500">CSPmeeting（Cloud Synchronization & Playback Meeting），全球领先的云同步回放会议系统，<br />提供会议录播、投屏直播、视频直播三种线上会议服务，满足不同用户群体多场景内容传播需求。 </p>
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
-                    <a href="javascript:;" class="button item-radius">免费试用</a>
+                    <a href="${ctx}/login" class="button item-radius">免费公测</a>
                 </div>
             </div>
         </div>
@@ -297,7 +298,7 @@
                         </div>
                     </div>
                     <div class="module-section-content index-buy clearfix">
-                        <div class="index-buy-item index-buy-item-current ">
+                        <div class="index-buy-item ">
                             <div class="index-buy-header">
                                 <h4>体验版</h4>
                                 <h3 class="price">免费</h3>
@@ -316,7 +317,7 @@
                                     </ul>
                                 </div>
                                 <div class="index-button">
-                                    <a href="${ctx}/login" class="button ">立即体验</a>
+                                    <a href="${ctx}/login" class="button ">敬请期待</a>
                                 </div>
                             </div>
                         </div>
