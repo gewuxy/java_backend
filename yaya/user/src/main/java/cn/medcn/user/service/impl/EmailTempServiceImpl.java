@@ -35,6 +35,7 @@ public class EmailTempServiceImpl extends BaseServiceImpl<EmailTemplate> impleme
         EmailTemplate template = new EmailTemplate();
         template.setLangType(localStr);
         template.setTempType(tempType);
+        template.setUseType(1);
         return selectOne(template);
     }
 }

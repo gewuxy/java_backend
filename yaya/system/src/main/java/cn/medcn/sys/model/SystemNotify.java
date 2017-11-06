@@ -3,12 +3,13 @@ package cn.medcn.sys.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 /** csp 通知
  * Created by LiuLP on 2017/5/2.
@@ -45,6 +46,16 @@ public class SystemNotify implements Serializable {
 
     //是否已读
     private Boolean isRead;
+
+    @Transient
+    private String sendTimeStr;
+
+    public static void tranEnglishTime(List<SystemNotify> list){
+        DateFormat format = new SimpleDateFormat("MMM d", Locale.ENGLISH);
+        for(SystemNotify notify:list){
+            notify.setSendTimeStr(format.format(notify.getSendTime()));
+        }
+    }
 
 
 }

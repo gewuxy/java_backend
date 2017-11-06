@@ -27,16 +27,16 @@
                     </div>
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
-                        <c:if test="${empty email}">
+                        <c:if test="${not empty needBind}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
-                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
-                                        src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;修改密码需绑定邮箱后才能继续操作。
+                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >Bind E-mail Address</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+                                        src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;Please bind your e-mail address before changing password.
                                 </div>
 
                             </div>
                         </c:if>
-                        <c:if test="${not empty email}">
+                        <c:if test="${empty needBind}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="user-resetPassword clearfix">
                                     <form id="submitForm" action="" method="post">
@@ -85,16 +85,16 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <label for="email" class="cells-block pr">
-                    <input id="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                    <input id="email" type="text" class="login-formInput" placeholder="E-mail Address">
                 </label>
-                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
+                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>Enter the correct password</span></span>
                 <label for="password" class="cells-block pr">
-                    <input type="text" required="" placeholder="密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                    <input id="password" type="password" required="" placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                    <input type="text" required="" placeholder="Password" class="login-formInput icon-register-hot last none" maxlength="24">
+                    <input id="password" type="password" required="" placeholder="Password" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                 </label>
-                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
-                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="绑定邮箱">
+                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>Enter the correct password</span></span>
+                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="Bind E-mail Address">
             </div>
         </div>
     </div>
@@ -109,9 +109,9 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <div class="login-message-text">
-                    <p>激活账号邮件已发送至您的邮箱，<br />请前往激活完成注册。</p>
+                    <p> Activation e-mail has been sent to your mail box. Please proceed，activation in e-mail and complete your registration.</p>
                 </div>
-                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
+                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="Go to My E-mail Box">
             </div>
         </div>
     </div>
@@ -187,7 +187,7 @@
                 layer.closeAll();
                 window.open( url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("email login address not found");
             }
         });
 
@@ -226,7 +226,7 @@
                     if (result.code == 0){//成功
                         $("#pwd").val("");
                         $("#rePwd").val("");
-                        layer.msg("修改成功");
+                        layer.msg("update success");
                     }else{//失败
                         layer.msg(result.err);
                     }
@@ -251,15 +251,15 @@
     function oldPwdValid() {
         var password = $("#pwd").val();
         if ($.trim(password)==''){
-            $("#oldSpan").find('span').html("旧密码不能为空");
+            $("#oldSpan").find('span').html("please enter old password");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#oldSpan").find('span').html("旧密码不能包含空格");
+            $("#oldSpan").find('span').html("old password can't contain blank");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#oldSpan").find('span').html("请输入6~24位密码");
+            $("#oldSpan").find('span').html("Please enter the 6~24 digit password");
             $("#oldSpan").attr("class","cells-block error");
 
         }else{
@@ -271,15 +271,15 @@
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
         if ($.trim(newPwd)==''){
-            $("#newSpan").find('span').html("新密码不能为空");
+            $("#newSpan").find('span').html("please enter new password");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd)!= newPwd){
-            $("#newSpan").find('span').html("新密码不能包含空格");
+            $("#newSpan").find('span').html("new password can't contain blank");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd).length < 6){
-            $("#newSpan").find('span').html("请输入6~24位密码");
+            $("#newSpan").find('span').html("Please enter the 6~24 digit password");
             $("#newSpan").attr("class","cells-block error");
 
         }else{
@@ -291,15 +291,15 @@
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password)==''){
-            $("#passwordSpan").find('span').html("密码不能为空");
+            $("#passwordSpan").find('span').html("please enter password");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#passwordSpan").find('span').html("密码不能包含空格");
+            $("#passwordSpan").find('span').html("password can't contain blank");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#passwordSpan").find('span').html("请输入6~24位密码");
+            $("#passwordSpan").find('span').html("Please enter the 6~24 digit password");
             $("#passwordSpan").attr("class","cells-block error");
 
         }else{
@@ -312,12 +312,12 @@
         var email = $("#email").val();
         if($.trim(email) == ''){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").find('span').html("邮箱不能为空");
+            $("#emailSpan").find('span').html("please enter email address");
             return false;
         }
         if(!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").find('span').html("邮箱格式不正确");
+            $("#emailSpan").find('span').html("please enter true email address");
             return false;
         }
         $("#emailSpan").attr("class","cells-block error none");

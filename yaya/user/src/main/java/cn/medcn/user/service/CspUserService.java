@@ -166,4 +166,13 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @throws SystemException
      */
     void sendMail(String email, String userId, EmailTemplate template) throws SystemException;
+
+    /**
+     * 发送绑定邮件
+     * @param email
+     * @param password
+     * @param userId
+     * @param localStr
+     */
+    void sendBindMail(String email, String password, String userId, String localStr) throws SystemException;
 }
