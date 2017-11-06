@@ -31,7 +31,6 @@
             </div>
             <div class="login-box clearfix">
                 <%@include file="../include/login_left.jsp"%>
-
                 <div class="col-lg-5 login-box-item">
 
                     <!--切换  重置密码-->

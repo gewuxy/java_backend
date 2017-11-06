@@ -91,7 +91,7 @@
 
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                    <%@include file="../include/pageable.jsp"%>
                     <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/delivery/history">
                         <input type="hidden" name="pageNum">
                         <input type="hidden" name="acceptId" value="${current}">

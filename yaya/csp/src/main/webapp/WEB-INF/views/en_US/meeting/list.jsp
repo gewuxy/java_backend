@@ -439,7 +439,7 @@
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
 
                             </c:forEach>
-                        <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                        <%@include file="../include/pageable.jsp"%>
                         <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
                             <input type="hidden" name="pageNum">
                             <input type="hidden" name="keyword" value="${keyword}">
