@@ -3,6 +3,7 @@ package cn.medcn.csp.controller.web;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.sys.model.SystemNotify;
@@ -13,6 +14,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Locale;
 
 /**
  * 平台通知
@@ -40,6 +45,10 @@ public class MessageController extends CspBaseController {
         String userId = getWebPrincipal().getId();
         pageable.put("acceptId",userId);
         MyPage<SystemNotify> myPage = sysNotifyService.findNotifyList(pageable);
+        //英文版本，格式化日期
+        if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
+            SystemNotify.tranEnglishTime(myPage.getDataList());
+        }
         model.addAttribute("page",myPage);
         int unreadCount = sysNotifyService.findUnreadMsgCount(userId);
         model.addAttribute("unreadCount",unreadCount);
@@ -58,9 +67,15 @@ public class MessageController extends CspBaseController {
         }
         SystemNotify notify = sysNotifyService.selectByPrimaryKey(id);
         //改为已读状态
-        if(notify != null){
+        if(notify != null && notify.getIsRead() == false){
             notify.setIsRead(true);
             sysNotifyService.updateByPrimaryKeySelective(notify);
+        }
+
+        //英文版，格式化日期
+        if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
+            DateFormat format = new SimpleDateFormat("MMM d", Locale.ENGLISH);
+            notify.setSendTimeStr(format.format(notify.getSendTime()));
         }
         model.addAttribute("notify",notify);
         String userId = getWebPrincipal().getId();

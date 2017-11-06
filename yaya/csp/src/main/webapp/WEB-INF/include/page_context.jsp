@@ -16,22 +16,12 @@
 <script src="${ctxStatic}/js/jquery-1.12.4.min.js"></script>
 <script src="${ctxStatic}/js/util.js"></script>
 <script src="${ctxStatic}/js/layer/layer.js"></script>
+<script src="${ctxStatic}/js/jquery.cookie.js"></script>
+
 <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
 <link rel="SHORTCUT ICON" href="${ctxStatic}/images/v2/icon.ico" />
 
 <!--[if lt IE 9]>
 <script src="${ctxStatic}js/html5.js"></script>
 <![endif]-->
-<script>
-    $(function () {
-        // 获取当前语言
-        var local = '${cookie.local.value}';
-        $('#lang').text(decodeURI(local));
-    })
-
-</script>
-<%
-//    CookieUtils.clearCookie(request, "zh_TW");
-//    CookieUtils.setCookie(response, Constants.LOCAL_KEY, "zh_CN");
-%>
 

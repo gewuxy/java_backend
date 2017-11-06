@@ -12,8 +12,8 @@
         <div class="fr">
             <!--登录前-->
             <div class="login-header">
-                <a href="${ctx}/mgr/login?thirdPartyId=7" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
-                <%@include file="language_zh_CN.jsp"%>
+                <a href="${ctx}/mgr/login" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
+                <%@include file="switch_language.jsp"%>
             </div>
         </div>
         <div class="fl">

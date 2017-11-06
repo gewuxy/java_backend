@@ -13,6 +13,15 @@
                         <c:if test="${list.thirdPartyId == 2}">
                             <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
                         </c:if>
+                        <c:if test="${list.thirdPartyId == 5}">
+                            <img src="${ctxStatic}/images/icon-user-medcn.png"  alt="">
+                        </c:if>
+                        <c:if test="${not empty dto.email}">
+                            <img src="${ctxStatic}/images/icon-user-email.png"  alt="">
+                        </c:if>
+                        <c:if test="${not empty dto.mobile}">
+                            <img src="${ctxStatic}/images/icon-user-phone.png"  alt="">
+                        </c:if>
                     </c:forEach>
             </c:if>
             <c:if test="${fn:length(dto.bindInfoList) == 0}">

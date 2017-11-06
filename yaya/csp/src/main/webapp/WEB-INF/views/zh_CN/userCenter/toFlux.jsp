@@ -32,7 +32,7 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content item-radius">
-                            <h4>视频直播记录 <span>剩余流量 <i>${flux == 0 ? 0:flux/1024}</i>G</span></h4>
+                            <h4>视频直播记录 <span>剩余流量 <i>${flux == 0 || empty flux? 0:flux/1024}</i>G</span></h4>
                             <table class="table-box-1">
                                 <colgroup>
                                     <col class="col-w-4">

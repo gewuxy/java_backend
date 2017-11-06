@@ -2,16 +2,17 @@ package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.EmailHelper;
 import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.RegexUtils;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -38,6 +39,9 @@ public class EmailController extends BaseController{
 
     @Autowired
     protected JPushService jPushService;
+
+    @Autowired
+    protected EmailTempService tempService;
 
     @Value("${app.yaya.base}")
     private String appBaseUrl;
@@ -86,8 +90,10 @@ public class EmailController extends BaseController{
             return error(local("user.notexisted"));
         }
 
+        //获取邮件模板对象
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.FIND_PWD.getLabelId());
         try {
-            cspUserService.sendMail(email,null, MailBean.MailTemplate.FIND_PWD.getLabelId());
+            cspUserService.sendMail(email,null, template);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

@@ -132,7 +132,7 @@ public class MeetTest {
     @Test
     public void testFindCspMeet() {
         Pageable pageable = new Pageable();
-        String cspUserId = "17101210221415956422";
+        String cspUserId = "1";
         pageable.put("cspUserId", cspUserId);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
 
@@ -144,5 +144,14 @@ public class MeetTest {
             }
         }
         System.out.println(APIUtils.success(page.getDataList()));
+    }
+
+    @Test
+    public void testdelete() {
+        AudioCourse course = new AudioCourse();
+        course.setId(14423);
+        course.setDeleted(true);
+        audioService.updateByPrimaryKeySelective(course);
+        System.out.println(APIUtils.success());
     }
 }

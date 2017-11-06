@@ -6,7 +6,6 @@ import cn.medcn.article.model.AppVideo;
 import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
@@ -18,14 +17,15 @@ import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +54,9 @@ public class CspUserController extends BaseController {
 
     @Autowired
     protected CspAppVideoService appVideoService;
+
+    @Autowired
+    protected EmailTempService tempService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -91,9 +94,11 @@ public class CspUserController extends BaseController {
             return error("user.linkman.notnull");
         }
 
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
+
         try {
 
-            return cspUserService.register(userInfo);
+            return cspUserService.register(userInfo,template);
 
         } catch (SystemException e){
             return error(e.getMessage());
@@ -441,13 +446,13 @@ public class CspUserController extends BaseController {
     public String toBind(String email,String password) {
 
         String userId = SecurityUtils.get().getId();
+        String localStr = LocalUtils.getLocalStr();
         try {
-            //将密码插入到数据库
-            cspUserService.insertPassword(email, password, userId);
-            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
+            cspUserService.sendBindMail(email,password,userId,localStr);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
+
         return success();
 
     }

@@ -77,7 +77,7 @@
         LEFT JOIN t_csp_live l ON l.course_id = c.id
         LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
-        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
+        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1 AND c.deleted = 0
         <if test="playType != null">
             <choose>
                 <when test="playType == 0">

@@ -5,18 +5,20 @@ import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.XMLUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.mail.MailSendException;
-import org.springframework.util.StringUtils;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.MailSendException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -102,9 +104,9 @@ public class EmailHelper {
         return emailContent;
     }
 
-    public String formatContent(String username, String url, String templateId) throws JDOMException, IOException {
+    public String formatContent(String username, String url, String templateName) throws JDOMException, IOException {
         InputStream inputStream = getClass().getClassLoader().getResourceAsStream("email.xml");
-        String emailContent = XMLUtils.doParseXML(inputStream,templateId, "load");
+        String emailContent = XMLUtils.doParseXML(inputStream, templateName, "load");
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_USER, StringUtils.isEmpty(username)?" -- ":username);
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_URL, StringUtils.isEmpty(url)?" -- ":url);
         DateFormat format= new SimpleDateFormat("yyyy年MM月dd日");

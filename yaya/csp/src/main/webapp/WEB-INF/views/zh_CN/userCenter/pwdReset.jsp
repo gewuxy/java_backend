@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
-                        <c:if test="${not empty needBind}">
+                        <c:if test="${empty email}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
                                     <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
@@ -36,7 +36,7 @@
 
                             </div>
                         </c:if>
-                        <c:if test="${empty needBind}">
+                        <c:if test="${not empty email}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="user-resetPassword clearfix">
                                     <form id="submitForm" action="" method="post">

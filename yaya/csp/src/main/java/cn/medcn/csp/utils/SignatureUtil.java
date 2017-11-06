@@ -173,8 +173,8 @@ public class SignatureUtil {
             //设置请求头header
             conn.setRequestProperty("Accept", "application/json");
             conn.setRequestProperty("Authorization", "Bearer "+getAccessToken());
-             conn.setConnectTimeout(10000);//连接超时 单位毫秒
-             conn.setReadTimeout(2000);//读取超时 单位毫秒
+//             conn.setConnectTimeout(10000);//连接超时 单位毫秒
+//             conn.setReadTimeout(2000);//读取超时 单位毫秒
             int code = conn.getResponseCode();
             InputStreamReader inStream = null;
             if(code != 200){
