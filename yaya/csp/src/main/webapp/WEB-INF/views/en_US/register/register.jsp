@@ -24,11 +24,11 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
             <div class="login-header">
-                <%@include file="/WEB-INF/include/login_header_en_US.jsp"%>
+                <%@include file="../include/login_header.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
             <div class="login-box clearfix">
-                <%@include file="/WEB-INF/include/login_left.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
 
                 <div class="col-lg-5 login-box-item">
 
@@ -66,11 +66,11 @@
                         </form>
                     </div>
 
-                    <%@include file="/WEB-INF/include/login_service_en_US.jsp"%>
+                    <%@include file="../include/login_service.jsp"%>
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_en_US.jsp"%>
+            <%@include file="../include/login_footer.jsp"%>
 
         </div>
     </div>

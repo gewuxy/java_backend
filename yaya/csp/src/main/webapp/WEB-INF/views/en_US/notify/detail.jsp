@@ -19,7 +19,7 @@
     </style>
 </head>
 <body >
-<%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+<%@include file="../include/header.jsp" %>
     <div id="wrapper">
         <div class="admin-content bg-gray" >
             <div class="page-width clearfix">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+        <%@include file="../include/footer.jsp"%>
     </div>
 
 

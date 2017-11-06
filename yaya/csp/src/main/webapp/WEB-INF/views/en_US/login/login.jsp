@@ -28,7 +28,7 @@
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
             <div class="login-box clearfix">
-                <%@include file="/WEB-INF/include/login_left_en_US.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
 
 
                 <div class="col-lg-5 login-box-item">
@@ -41,12 +41,12 @@
                         <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Digital Platform" class=" login-button buttonBlue-04 last">Login with Jingxin Digital Platform</a>
                     </div>
 
-                    <%@include file="/WEB-INF/include/login_service_en_US.jsp"%>
+                    <%@include file="../include/login_service.jsp"%>
 
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_en_US.jsp"%>
+            <%@include file="../include/login_footer.jsp"%>
         </div>
     </div>
 </div>

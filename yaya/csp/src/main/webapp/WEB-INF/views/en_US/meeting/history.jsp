@@ -20,7 +20,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <c:if test="${fn:length(acceptList) != 0}" >
         <div class="admin-content bg-gray">
             <div class="page-width clearfix">
@@ -119,7 +119,7 @@
 
 </div>
 
-<%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+<%@include file="../include/footer.jsp"%>
 
 
 
