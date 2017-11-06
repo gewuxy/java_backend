@@ -28,7 +28,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="../include/header_zh_CN.jsp"%>
+    <%@include file="../include/header.jsp"%>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix">
             <div class="admin-module clearfix item-radius admin-metting-player">
@@ -68,7 +68,7 @@
             </div>
         </div>
     </div>
-    <%@include file="../include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 

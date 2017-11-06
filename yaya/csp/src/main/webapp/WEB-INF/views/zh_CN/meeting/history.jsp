@@ -20,7 +20,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="../include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <c:if test="${fn:length(acceptList) != 0}" >
         <div class="admin-content bg-gray">
             <div class="page-width clearfix">
@@ -91,7 +91,7 @@
 
                         </div>
                     </div>
-                    <%@include file="../include/pageable_zh_CN.jsp"%>
+                    <%@include file="../include/pageable.jsp"%>
                     <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/delivery/history">
                         <input type="hidden" name="pageNum">
                         <input type="hidden" name="acceptId" value="${current}">
@@ -119,7 +119,7 @@
 
 </div>
 
-<%@include file="../include/footer_zh_CN.jsp"%>
+<%@include file="../include/footer.jsp"%>
 
 
 

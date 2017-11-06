@@ -7,5 +7,5 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="login-bottom">
-    <%@include file="copy_right_zh_CN.jsp"%>
+    <%@include file="copy_right.jsp"%>
 </div>
