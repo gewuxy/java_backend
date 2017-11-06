@@ -1,5 +1,6 @@
 package cn.medcn.common.email;
 
+import cn.medcn.common.utils.LocalUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jdom.JDOMException;
@@ -59,7 +60,7 @@ public class CSPEmailHelper {
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_URL, StringUtils.isEmpty(url)?" -- ":url);
         DateFormat format = null;
         //转换英文日期
-       if("en_US".equals(local)){
+       if(LocalUtils.Local.en_US.name().equals(local)){
              format = new SimpleDateFormat("MMM.d,yyyy",Locale.ENGLISH);
        }else{
              format= new SimpleDateFormat("yyyy年MM月dd日");

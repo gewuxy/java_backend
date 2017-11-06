@@ -6,7 +6,6 @@ import cn.medcn.article.model.AppVideo;
 import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
@@ -447,15 +446,13 @@ public class CspUserController extends BaseController {
     public String toBind(String email,String password) {
 
         String userId = SecurityUtils.get().getId();
+        String localStr = LocalUtils.getLocalStr();
         try {
-            //将密码插入到数据库
-            cspUserService.insertPassword(email, password, userId);
-            //获取邮件模板对象
-            EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.BIND.getLabelId());
-            cspUserService.sendMail(email,userId, template);
+            cspUserService.sendBindMail(email,password,userId,localStr);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
+
         return success();
 
     }

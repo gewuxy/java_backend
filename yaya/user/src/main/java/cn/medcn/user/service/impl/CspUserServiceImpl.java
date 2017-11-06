@@ -25,6 +25,7 @@ import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -65,6 +66,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Value("${csp_mail_server_host}")
     private String serverHost;
+
+    @Autowired
+    private EmailTempService tempService;
 
 
     @Autowired
@@ -337,6 +341,22 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             e.printStackTrace();
             throw new SystemException(local("email.error.send"));
         }
+    }
+
+    /**
+     * 发送绑定邮件
+     * @param email
+     * @param password
+     * @param userId
+     * @param localStr
+     */
+    @Override
+    public void sendBindMail(String email, String password, String userId, String localStr) throws SystemException {
+        //将密码插入到数据库
+        insertPassword(email,password,userId);
+        //获取邮件模板对象
+        EmailTemplate template = tempService.getTemplate(localStr,EmailTemplate.Type.BIND.getLabelId());
+        sendMail(email,userId, template);
     }
 
 

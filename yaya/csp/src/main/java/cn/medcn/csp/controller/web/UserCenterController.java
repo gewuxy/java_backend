@@ -10,12 +10,12 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.meet.model.Meet;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -137,13 +137,8 @@ public class UserCenterController extends CspBaseController{
      */
     @RequestMapping("toReset")
     public String toResetPwd(Model model){
-        addBaseUserInfo(model);
-        String userId = getWebPrincipal().getId();
-        CspUserInfo info = cspUserService.selectByPrimaryKey(userId);
-        if(StringUtils.isEmpty(info.getEmail())){
-            //没有绑定邮箱
-            model.addAttribute("needBind",true);
-        }
+        CspUserInfoDTO dto = addBaseUserInfo(model);
+        model.addAttribute("email",dto.getEmail());
         return localeView("/userCenter/pwdReset");
 
     }
@@ -190,13 +185,26 @@ public class UserCenterController extends CspBaseController{
     public String toAccount(Model model){
         CspUserInfoDTO dto = addBaseUserInfo(model);
         List<BindInfo> list = dto.getBindInfoList();
+        String localStr = LocalUtils.getLocalStr();
+
         for(BindInfo info:list){
-            if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
-                model.addAttribute("weChat",info.getNickName());
+            //英文版
+            if(LocalUtils.Local.en_US.name().equals(localStr)){
+                if(info.getThirdPartyId() == BindInfo.Type.FACEBOOK.getTypeId()){
+                    model.addAttribute("facebook",info.getNickName());
+                }
+                if(info.getThirdPartyId() == BindInfo.Type.TWITTER.getTypeId()){
+                    model.addAttribute("twitter",info.getNickName());
+                }
+            }else{
+                if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
+                    model.addAttribute("weChat",info.getNickName());
+                }
+                if(info.getThirdPartyId() == BindInfo.Type.WEI_BO.getTypeId()){
+                    model.addAttribute("weiBo",info.getNickName());
+                }
             }
-            if(info.getThirdPartyId() == BindInfo.Type.WEI_BO.getTypeId()){
-                model.addAttribute("weiBo",info.getNickName());
-            }
+
             if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
                 model.addAttribute("YaYa",info.getNickName());
             }
@@ -256,12 +264,9 @@ public class UserCenterController extends CspBaseController{
     public String toBind(String email,String password) {
 
         String userId = getWebPrincipal().getId();
+        String localStr = LocalUtils.getLocalStr();
         try {
-            //将密码插入到数据库
-            cspUserService.insertPassword(email,password,userId);
-            //获取邮件模板对象
-            EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.BIND.getLabelId());
-            cspUserService.sendMail(email,userId, template);
+            cspUserService.sendBindMail(email,password,userId,localStr);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
