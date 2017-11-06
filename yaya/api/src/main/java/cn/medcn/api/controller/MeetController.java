@@ -386,14 +386,30 @@ public class MeetController extends BaseController {
             if (meetAudio.getCourse().getPlayType() != null && meetAudio.getCourse().getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
                 //直播查询返回直播的明细 而不是返回初始的素材
                 meetAudio.getCourse().setDetails(audioService.findLiveDetails(meetAudio.getCourseId()));
+                LiveOrderDTO orderDTO = liveService.findCachedOrder(meetAudio.getCourseId());
+                if (orderDTO != null) {
+                    AudioCourseDetail detail = new AudioCourseDetail();
+                    detail.setId(orderDTO.getDetailId());
+                    detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
+                    detail.setImgUrl(orderDTO.getImgUrl());
+                    detail.setAudioUrl(orderDTO.getAudioUrl());
+                    detail.setVideoUrl(orderDTO.getVideoUrl());
+                    meetAudio.getCourse().getDetails().add(detail);
+                }
             }
         }
         MeetAudioDTO audioDTO = MeetAudioDTO.build(meetAudio);
         if (audioDTO.getCourse() != null && audioDTO.getCourse().getDetails() != null) {
             for (AudioCourseDetailDTO dto : audioDTO.getCourse().getDetails()) {
-                dto.setVideoUrl(StringUtils.isEmpty(dto.getVideoUrl()) ? "" : appFileBase + dto.getVideoUrl());
-                dto.setImgUrl(StringUtils.isEmpty(dto.getImgUrl()) ? "" : appFileBase + dto.getImgUrl());
-                dto.setAudioUrl(StringUtils.isEmpty(dto.getAudioUrl()) ? "" : appFileBase + dto.getAudioUrl());
+                if (CheckUtils.isNotEmpty(dto.getAudioUrl()) && !dto.getAudioUrl().startsWith("http")) {
+                    dto.setAudioUrl(appFileBase + dto.getAudioUrl());
+                }
+                if (CheckUtils.isNotEmpty(dto.getImgUrl()) && !dto.getImgUrl().startsWith("http")) {
+                    dto.setImgUrl(appFileBase + dto.getImgUrl());
+                }
+                if (CheckUtils.isNotEmpty(dto.getVideoUrl()) && !dto.getVideoUrl().startsWith("http")) {
+                    dto.setVideoUrl(appFileBase + dto.getVideoUrl());
+                }
             }
         }
 

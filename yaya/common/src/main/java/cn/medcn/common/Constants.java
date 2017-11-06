@@ -174,4 +174,5 @@ public class Constants {
 
     // CSP用户头像地址前缀
     public static final String AVATAR_URL_PREFIX = "http:";
+
 }
