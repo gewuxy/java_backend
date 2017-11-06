@@ -24,7 +24,13 @@ public class LiveOrderDTO implements Serializable{
 
     public static final int ORDER_DUPLICATE = 5;//存在重复登录
 
+    public static final int ORDER_USER_JOIN = 6;//用户进入
+
     public static final int ORDER_SCAN_SUCCESS = 100;
+
+    public static final String LIVE_TYPE_PPT = "0";
+
+    public static final String LIVE_TYPE_VIDEO = "1";
 
     //直播课件ID
     protected String courseId;
@@ -46,28 +52,45 @@ public class LiveOrderDTO implements Serializable{
     protected String msg;
     //消息发送人的会话ID
     protected String sid;
+    //在线人数
+    protected int onLines;
+
+    protected String liveType;
 
 
-    public static LiveOrderDTO buildKickOrder(String courseId, String sid){
+    public static LiveOrderDTO buildUserJoinOrder(String courseId, String sid, int onLines){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setOrder(ORDER_USER_JOIN);
+        order.setCourseId(courseId);
+        order.setSid(sid);
+        order.setOnLines(onLines);
+        return order;
+    }
+
+
+    public static LiveOrderDTO buildKickOrder(String courseId, String sid, String liveType){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setOrder(ORDER_KICK);
         order.setSid(sid);
+        order.setLiveType(liveType);
         order.setCourseId(courseId);
         return order;
     }
 
 
-    public static LiveOrderDTO buildKickAcceptOrder(String courseId, String sid){
+    public static LiveOrderDTO buildKickAcceptOrder(String courseId, String sid, String liveType){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setOrder(ORDER_KICK_ACCEPT);
+        order.setLiveType(liveType);
         order.setCourseId(courseId);
         order.setSid(sid);
         return order;
     }
 
-    public static LiveOrderDTO buildKickRefuseOrder(String courseId, String sid){
+    public static LiveOrderDTO buildKickRefuseOrder(String courseId, String sid, String liveType){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setOrder(ORDER_KICK_REFUSE);
+        order.setLiveType(liveType);
         order.setCourseId(courseId);
         order.setSid(sid);
         return order;

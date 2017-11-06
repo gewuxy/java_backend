@@ -29,10 +29,11 @@ public class EmailHelper {
 
     private static final int PAGE_SIZE = 500;
 
-    public static String MAIL_SERVER_HOST = "smtp.qiye.163.com";
-    public static String MAIL_USER_NAME = "service@medcn.cn";
-    public static String MAIL_PASS_WORD = "JINGXIN@88";
-    public static int MAIL_SERVER_PORT = 25;
+    //public static String MAIL_SERVER_HOST = "smtp.qiye.163.com";
+    public static String MAIL_SERVER_HOST = "smtp.exmail.qq.com";
+    public static String MAIL_USER_NAME = "csp@cspmeeting.com";
+    public static String MAIL_PASS_WORD = "JINGXINkeji2017@";
+    public static int MAIL_SERVER_PORT = 465;
     public static String COMPANY_NAME = "敬信药草园";
     private static String MAIL_SUBJECT = "【YaYa医师升级啦】花60秒更新版本，享受更好的服务";
 

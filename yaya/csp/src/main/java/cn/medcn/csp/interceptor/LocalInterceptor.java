@@ -25,6 +25,7 @@ public class LocalInterceptor implements HandlerInterceptor {
             local = CookieUtils.getCookieValue(httpServletRequest, LOCAL_KEY);
             if (CheckUtils.isEmpty(local)) {
                 local = DEFAULT_LOCAL;
+                CookieUtils.setCookie(httpServletResponse, LOCAL_KEY, DEFAULT_LOCAL);
             }
         }
 

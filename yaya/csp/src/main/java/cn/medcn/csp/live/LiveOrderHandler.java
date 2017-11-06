@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.medcn.csp.CspConstants.COURSE_ID_KEY;
+import static cn.medcn.csp.CspConstants.LIVE_TYPE_KEY;
 
 /**
  * Created by lixuan on 2017/9/27.
@@ -67,6 +68,8 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         if(sessionMap !=null && sessionMap.get(courseId) != null){
             sessionMap.get(courseId).remove(session.getId());
         }
+
+        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionMap.get(courseId) == null ? 0 : sessionMap.get(courseId).size()));
     }
 
 
@@ -75,6 +78,10 @@ public class LiveOrderHandler extends TextWebSocketHandler {
 
         String courseId = (String) session.getAttributes().get(COURSE_ID_KEY);
         String token = (String) session.getAttributes().get(Constants.TOKEN);
+        String liveType = (String) session.getAttributes().get(LIVE_TYPE_KEY);
+        if (liveType == null) {
+            liveType = LiveOrderDTO.LIVE_TYPE_PPT;
+        }
 
         LogUtils.debug(log, String.format("user login in meeting with courseId = %s and token = %s", courseId, token));
 
@@ -89,7 +96,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (duplicateSession != null) {
                     try {
                         //存在重复的token信息 向之前登录的人发送被踢指令
-                        duplicateSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickOrder(courseId, session.getId()))));
+                        duplicateSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickOrder(courseId, session.getId(), liveType))));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -97,6 +104,8 @@ public class LiveOrderHandler extends TextWebSocketHandler {
             }
             sessionMap.get(courseId).put(session.getId(), session);
         }
+
+        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionList == null ? 0 : sessionList.size()));
     }
 
     /**
@@ -107,12 +116,16 @@ public class LiveOrderHandler extends TextWebSocketHandler {
      */
     public static void broadcast(LiveOrderDTO dto) {
         if (!StringUtils.isEmpty(dto.getCourseId())) {
+            Map<String, WebSocketSession> currentMap = sessionMap.get(dto.getCourseId());
+            dto.setOnLines(currentMap == null ? 0 : currentMap.size());
             if (dto.getOrder() == LiveOrderDTO.ORDER_KICK_REFUSE) {//当指令为拒绝被踢
                 WebSocketSession currentSession = sessionMap.get(dto.getCourseId()).get(dto.getSid());
                 if (currentSession != null) {
                     WebSocketSession otherSession = getDuplicate(dto.getCourseId(), (String) currentSession.getAttributes().get(Constants.TOKEN), currentSession);
                     try {
-                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickRefuseOrder(dto.getCourseId(), otherSession.getId()))));
+                        if (otherSession != null) {
+                            otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickRefuseOrder(dto.getCourseId(), otherSession.getId(), dto.getLiveType()))));
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -122,7 +135,9 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (currentSession != null) {
                     WebSocketSession otherSession = getDuplicate(dto.getCourseId(), (String) currentSession.getAttributes().get(Constants.TOKEN), currentSession);
                     try {
-                        otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickAcceptOrder(dto.getCourseId(), otherSession.getId()))));
+                        if (otherSession != null) {
+                            otherSession.sendMessage(new TextMessage(JSON.toJSONString(LiveOrderDTO.buildKickAcceptOrder(dto.getCourseId(), otherSession.getId(), dto.getLiveType()))));
+                        }
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -174,12 +189,21 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         }
         Map<String, WebSocketSession> sMap = sessionMap.get(courseId);
         WebSocketSession duplicateSession = null;
+
+        String liveType = (String) currentSession.getAttributes().get(LIVE_TYPE_KEY);
         if (sMap != null) {
             for (String key : sMap.keySet()) {
                 if (token.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))
                         && !sMap.get(key).getId().equals(currentSession.getId())) {
-                    duplicateSession = sMap.get(key);
-                    break;
+                    if (liveType == null) {
+                        liveType = LiveOrderDTO.LIVE_TYPE_PPT;
+                    }
+
+                    if (liveType.equals(sMap.get(key).getAttributes().get(LIVE_TYPE_KEY))) {
+                        duplicateSession = sMap.get(key);
+                        break;
+                    }
+
                 }
             }
         }
@@ -195,7 +219,29 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         boolean hasDuplicate = false;
         if (sMap != null) {
             for (String key : sMap.keySet()) {
-                if (token.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))) {
+                if (token.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))
+                        && LiveOrderDTO.LIVE_TYPE_PPT.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))) {
+                    hasDuplicate = true;
+                    break;
+                }
+            }
+        }
+        return hasDuplicate;
+    }
+
+    public static boolean hasDuplicate(String courseId, String token, String liveType){
+        if (liveType == null) {
+            return hasDuplicate(courseId, token);
+        }
+        if (courseId == null) {
+            return false;
+        }
+        Map<String, WebSocketSession> sMap = sessionMap.get(courseId);
+        boolean hasDuplicate = false;
+        if (sMap != null) {
+            for (String key : sMap.keySet()) {
+                if (token.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))
+                        && liveType.equals(sMap.get(key).getAttributes().get(LIVE_TYPE_KEY))) {
                     hasDuplicate = true;
                     break;
                 }

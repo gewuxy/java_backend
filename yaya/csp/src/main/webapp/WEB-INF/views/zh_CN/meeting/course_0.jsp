@@ -122,6 +122,7 @@
     var asAllItem = audiojs.createAll();
     var playing = false;
     $(function(){
+        var isVideo = $('.swiper-slide-active').find('video');
 
         function slideToNext(){
             setTimeout(function(){galleryTop.slideNext();}, 3000);
@@ -141,17 +142,21 @@
                 slideToNext();
             }
         });
-
+//
         $("#audioPlayer")[0].addEventListener("error", function(){
             console.log("load audio source error ...");
             if (playing){
-                slideToNext();
+                if (isVideo.length == 0){
+                    slideToNext();
+                }
             } else {
-                $('.html5ShadePlay').hide();
-                popupPalyer.play();
-                playing = true;
-                changePlayerStete(false);
-                slideToNext();
+                if (isVideo.length == 0){
+                    $('.html5ShadePlay').hide();
+                    popupPalyer.play();
+                    playing = true;
+                    changePlayerStete(false);
+                    slideToNext();
+                }
             }
         });
 
