@@ -15,6 +15,7 @@ import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * Created by lixuan on 2017/1/10.
@@ -46,15 +47,23 @@ public class CSPEmailHelper {
 
 
     public void sendMail(String url,String emailContent,JavaMailSender sender,MailBean bean) throws JDOMException, IOException, MessagingException {
-        bean.setContext(formatContent(bean.getToEmails()[0],url,emailContent));
+        bean.setContext(formatContent(bean,url,emailContent));
         sender.send(createMimeMessage(bean,sender));
 
     }
 
-    public String formatContent(String username, String url, String emailContent) throws JDOMException, IOException {
+    public String formatContent(MailBean bean, String url, String emailContent) throws JDOMException, IOException {
+        String username = bean.getToEmails()[0];
+        String local = bean.getLocalStr();
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_USER, StringUtils.isEmpty(username)?" -- ":username);
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_URL, StringUtils.isEmpty(url)?" -- ":url);
-        DateFormat format= new SimpleDateFormat("yyyy年MM月dd日");
+        DateFormat format = null;
+        //转换英文日期
+       if("en_US".equals(local)){
+             format = new SimpleDateFormat("MMM.d,yyyy",Locale.ENGLISH);
+       }else{
+             format= new SimpleDateFormat("yyyy年MM月dd日");
+        }
         emailContent = emailContent.replaceAll(REPLACE_HOLDER_DATE,format.format(new Date()));
         return emailContent;
     }

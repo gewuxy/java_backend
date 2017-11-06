@@ -63,6 +63,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Value("${csp_mail_password}")
     private String password;
 
+    @Value("${csp_mail_server_host}")
+    private String serverHost;
+
 
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
@@ -320,10 +323,12 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             bean.setFrom(template.getSender());
             bean.setFromName(template.getSenderName());
             bean.setSubject(template.getSubject());
+            bean.setLocalStr(template.getLangType());
             bean.setToEmails(new String[]{email});
         try {
             cspMailSender.setUsername(sender);
             cspMailSender.setPassword(password);
+            cspMailSender.setHost(serverHost);
             emailHelper.sendMail(url,template.getContent(),cspMailSender,bean);
         } catch (JDOMException e) {
             e.printStackTrace();

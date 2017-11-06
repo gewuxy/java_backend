@@ -16,6 +16,7 @@ public class MailBean {
     private String[] toEmails;
     private String subject;
     private String context;
+    private String localStr;
 
     /**
      * 邮箱模板内容
