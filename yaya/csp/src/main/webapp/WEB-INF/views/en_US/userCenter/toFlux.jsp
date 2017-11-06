@@ -57,7 +57,7 @@
                                             </c:if>
                                         </tr>
                                     </c:forEach>
-                                    <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                                    <%@include file="../include/pageable.jsp"%>
                                     <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
                                         <input type="hidden" name="pageNum">
                                     </form>

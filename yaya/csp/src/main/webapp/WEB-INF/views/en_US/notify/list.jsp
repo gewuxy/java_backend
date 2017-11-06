@@ -42,7 +42,7 @@
                                 </c:forEach>
                             </ul>
                         </div>
-                        <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                        <%@include file="../include/pageable.jsp"%>
                         <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/message/list">
                             <input type="hidden" name="pageNum">
                         </form>
