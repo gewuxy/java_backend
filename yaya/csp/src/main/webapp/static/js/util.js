@@ -35,7 +35,8 @@ var emailMap = {
     'eyou.com': 'http://www.eyou.com/',
     '21cn.com': 'http://mail.21cn.com/',
     '188.com': 'http://www.188.com/',
-    'foxmail.com': 'http://www.foxmail.com'
+    'foxmail.com': 'http://www.foxmail.com',
+    'medcn.cn':'http://mail.medcn.cn/'
 };
 
 /**
