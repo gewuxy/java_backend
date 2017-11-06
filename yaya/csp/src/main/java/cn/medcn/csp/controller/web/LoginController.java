@@ -288,7 +288,7 @@ public class LoginController extends CspBaseController {
         try {
             return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
-            return error(e.getMessage());
+            return error(local(e.getMessage()));
         }
     }
 
