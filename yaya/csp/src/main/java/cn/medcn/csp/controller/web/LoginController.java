@@ -2,7 +2,8 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
- import cn.medcn.common.utils.StringUtils;
+import cn.medcn.common.utils.LocalUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.oauth.dto.OAuthUser;
@@ -12,7 +13,9 @@ import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -40,6 +43,9 @@ public class LoginController extends CspBaseController {
 
     @Autowired
     protected SysNotifyService sysNotifyService;
+
+    @Autowired
+    protected EmailTempService tempService;
 
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
@@ -278,8 +284,9 @@ public class LoginController extends CspBaseController {
     @RequestMapping(value = "/register")
     @ResponseBody
     public String register(CspUserInfo userInfo) {
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
         try {
-            return cspUserService.register(userInfo);
+            return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

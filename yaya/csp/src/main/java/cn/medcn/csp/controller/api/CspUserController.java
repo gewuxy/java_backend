@@ -18,14 +18,15 @@ import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -54,6 +55,9 @@ public class CspUserController extends BaseController {
 
     @Autowired
     protected CspAppVideoService appVideoService;
+
+    @Autowired
+    protected EmailTempService tempService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -91,9 +95,11 @@ public class CspUserController extends BaseController {
             return error("user.linkman.notnull");
         }
 
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
+
         try {
 
-            return cspUserService.register(userInfo);
+            return cspUserService.register(userInfo,template);
 
         } catch (SystemException e){
             return error(e.getMessage());
@@ -444,7 +450,9 @@ public class CspUserController extends BaseController {
         try {
             //将密码插入到数据库
             cspUserService.insertPassword(email, password, userId);
-            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
+            //获取邮件模板对象
+            EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.BIND.getLabelId());
+            cspUserService.sendMail(email,userId, template);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

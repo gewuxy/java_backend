@@ -1,26 +1,23 @@
 package cn.medcn.csp.controller.web;
 
-import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.oauth.service.OauthService;
-import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+import cn.medcn.user.service.EmailTempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -52,6 +49,11 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected OauthService oauthService;
+
+    @Autowired
+    protected EmailTempService tempService;
+
+
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -257,7 +259,9 @@ public class UserCenterController extends CspBaseController{
         try {
             //将密码插入到数据库
             cspUserService.insertPassword(email,password,userId);
-            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
+            //获取邮件模板对象
+            EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.BIND.getLabelId());
+            cspUserService.sendMail(email,userId, template);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
