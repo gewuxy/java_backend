@@ -1,17 +1,20 @@
 <%--
   Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/10/16
-  Time: 17:02
+  User: Liuchangling
+  Date: 2017/11/3
+  Time: 17:04
+  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>邮箱登录</title>
+    <title>login by E-mail</title>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
@@ -21,11 +24,9 @@
 <div id="wrapper">
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
-
             <div class="login-header">
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
-
             <div class="login-box clearfix">
                 <%@include file="/WEB-INF/include/login_left.jsp"%>
 
@@ -33,19 +34,19 @@
 
                     <!--切换  邮箱登录-->
                     <div class="login-box-main position-phone-login">
-                        <form action="${ctx}/mgr/login" method="post" id="loginForm" name="loginForm">
+                        <form action="${ctx}/mgr/login"  method="post" id="loginForm" name="loginForm">
                             <input type="hidden" name="thirdPartyId" value="7">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="username" type="text" value="${username}" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="username" type="text" value="${username}" class="login-formInput" placeholder="E-mail Address">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
-                                    <input type="text" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" name="password" type="password" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input type="text" required placeholder="Password" class="login-formInput icon-register-hot last none" maxlength="24">
+                                    <input id="pwd" name="password" type="password" required placeholder="Password" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
-                                <span class="cells-block error ${not empty error ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
-                                <input type="button" class="button login-button buttonBlue last" id="submitBtn" value="确认登录">
+                                <span class="cells-block error ${not empty error ? '':'none'} "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
+                                <input href="#" type="button" class="button login-button buttonBlue last" id="submitBtn" value="Login">
                             </div>
                         </form>
                     </div>
@@ -54,17 +55,17 @@
                     <!--登录用-->
                     <div class="login-box-other">
                         <div class="login-box-other-info t-center">
-                            <a href="${ctx}/mgr/to/register" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">忘记密码</a>
+                            <a href="${ctx}/mgr/to/register" class="color-wathet-blue">Register</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">Forgot Password</a>
                         </div>
                     </div>
 
-                    <%@include file="/WEB-INF/include/login_service.jsp"%>
+
+                    <%@include file="/WEB-INF/include/login_service_en_US.jsp"%>
 
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
-
+            <%@include file="/WEB-INF/include/footer_en_US.jsp"%>
         </div>
     </div>
 </div>
@@ -74,8 +75,8 @@
         const classPwdOn = "pwdChange-on";
         const classPwdOff = "pwdChange-off";
 
-        const userNameError = "请输入正确的邮箱地址";
-        const passWordError = "请输入正确的密码";
+        const userNameError = "Please enter email address";
+        const passWordError = "Please enter password";
 
         //让背景撑满屏幕
         $('.login-banner').height($(window).height());

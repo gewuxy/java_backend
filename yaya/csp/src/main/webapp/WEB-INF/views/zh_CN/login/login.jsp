@@ -12,14 +12,16 @@
     <title>登录界面</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
 <div id="wrapper">
     <div class="login login-banner" >
         <div class="page-width pr">
-
-            <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+            <div class="login-header">
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
+            </div>
 
             <div class="login-box clearfix">
                 <%@include file="/WEB-INF/include/login_left.jsp"%>

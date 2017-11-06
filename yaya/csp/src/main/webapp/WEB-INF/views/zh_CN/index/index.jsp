@@ -15,9 +15,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <script src="${ctxStatic}/js/animate.min.js"></script>
 </head>
 <body>
@@ -405,9 +405,6 @@
 <script type="text/javascript" src="//api.map.baidu.com/api?key=&v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj"></script>
 <script type="text/javascript">
     $(function(){
-        // 获取当前语言
-        var local = '${cookie.local.value}';
-        $('#lang').html('<strong>'+decodeURI(local)+'</strong>');
 
         //内容加载后的运动效果
         dataAnimate();
