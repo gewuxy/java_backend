@@ -29,7 +29,7 @@
 
             <div class="login-box clearfix">
 
-                <%@include file="/WEB-INF/include/login_left.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
 
                 <div class="col-lg-5 login-box-item">
 
@@ -54,12 +54,12 @@
                     </div>
 
 
-                    <%@include file="/WEB-INF/include/login_service.jsp"%>
+                    <%@include file="../include/login_service.jsp"%>
 
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/views/zh_CN/include/login_footer.jsp"%>
+            <%@include file="../include/login_footer.jsp"%>
 
         </div>
     </div>

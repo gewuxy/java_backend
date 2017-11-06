@@ -24,10 +24,10 @@
         <div class="page-width pr">
             <div class="login-header">
                 <%@include file="../include/login_header.jsp"%>
-                <%@include file="../include/language.jsp"%>
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
             <div class="login-box clearfix">
-                <%@include file="/WEB-INF/include/login_left.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
 
                 <div class="col-lg-5 login-box-item">
 
