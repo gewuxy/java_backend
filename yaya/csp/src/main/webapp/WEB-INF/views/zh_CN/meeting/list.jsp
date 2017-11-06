@@ -347,7 +347,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header_zh_CN.jsp" %>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix">
             <div class="admin-row clearfix pr">
@@ -439,7 +439,7 @@
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
 
                             </c:forEach>
-                        <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                        <%@include file="../include/pageable_zh_CN.jsp"%>
                         <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
                             <input type="hidden" name="pageNum">
                             <input type="hidden" name="keyword" value="${keyword}">
@@ -450,7 +450,7 @@
 
         </div>
     </div>
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer_zh_CN.jsp"%>
 </div>
 
 <!--弹出 投稿平台-->

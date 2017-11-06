@@ -19,7 +19,7 @@
     </style>
 </head>
 <body >
-<%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+<%@include file="../include/header_zh_CN.jsp" %>
     <div id="wrapper">
         <div class="admin-content bg-gray" >
             <div class="page-width clearfix">
@@ -42,7 +42,7 @@
                                 </c:forEach>
                             </ul>
                         </div>
-                        <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                        <%@include file="../include/pageable_zh_CN.jsp"%>
                         <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/message/list">
                             <input type="hidden" name="pageNum">
                         </form>
@@ -60,7 +60,7 @@
                 </div>
             </div>
         </div>
-        <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+        <%@include file="../include/footer_zh_CN.jsp"%>
     </div>
 
 

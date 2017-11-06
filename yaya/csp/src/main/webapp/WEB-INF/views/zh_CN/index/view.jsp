@@ -27,7 +27,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/index_header_zh_CN.jsp"%>
+    <%@include file="/WEB-INF/views/zh_CN/include/index_header_zh_CN.jsp"%>
 
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="/WEB-INF/views/zh_CN/include/footer_zh_CN.jsp"%>
 </div>
 <script>
     $(function(){

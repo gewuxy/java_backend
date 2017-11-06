@@ -21,7 +21,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header_zh_CN.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -57,7 +57,7 @@
                                             </c:if>
                                         </tr>
                                     </c:forEach>
-                                    <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                                    <%@include file="../include/pageable_zh_CN.jsp"%>
                                     <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
                                         <input type="hidden" name="pageNum">
                                     </form>
@@ -114,7 +114,7 @@
                             </form>
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+                    <%@include file="../include/footer_zh_CN.jsp"%>
                 </div>
             </div>
         </div>

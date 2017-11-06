@@ -63,7 +63,7 @@
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
+            <%@include file="/WEB-INF/views/zh_CN/include/login_footer_zh_CN.jsp"%>
 
         </div>
     </div>

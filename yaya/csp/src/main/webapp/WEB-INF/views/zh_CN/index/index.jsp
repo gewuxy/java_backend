@@ -397,7 +397,7 @@
         <div class="page-width">
             <p class="t-center"><a href="${ctx}/index/17103116215880292674" class="color-black">关于我们</a><span class="muted">|</span><a href="${ctx}/index/17103116063862386794" class="color-black">帮助中心</a></p>
             <p class="t-center icon-row"><a href="${ctx}/mgr/login?thirdPartyId=1"><img src="${ctxStatic}/images/index-icon-wechat.png" alt=""></a><a href="${ctx}/mgr/login?thirdPartyId=2"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a><a href="${ctx}/mgr/login?thirdPartyId=3"><img src="${ctxStatic}/images/index-icon-facebook.png" alt=""></a><a href="${ctx}/mgr/login?thirdPartyId=4"><img src="${ctxStatic}/images/index-icon-twitter.png" alt=""></a></p>
-            <p class="t-center"><%@include file="/WEB-INF/include/copy_right_zh_CN.jsp"%></p>
+            <p class="t-center"><%@include file="/WEB-INF/views/zh_CN/include/copy_right_zh_CN.jsp"%></p>
         </div>
     </div>
 </div>
