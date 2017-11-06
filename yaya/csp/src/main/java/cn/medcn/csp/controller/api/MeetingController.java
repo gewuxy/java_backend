@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -135,6 +136,24 @@ public class MeetingController extends CspBaseController {
 
         model.addAttribute("course", course);
         return localeView("/meeting/course_" + course.getPlayType().intValue());
+    }
+
+    /**
+     * 复制副本
+     * @param courseId
+     * @param title
+     * @return
+     */
+    @RequestMapping("/share/copy")
+    @ResponseBody
+    public String copy(@PathVariable Integer courseId, String title) {
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = SecurityUtils.get();
+        if (!principal.getId().equals(course.getCspUserId())) {
+            return error(local("meeting.error.not_mine"));
+        }
+        audioService.addCourseCopy(courseId, title);
+        return success();
     }
 
 
