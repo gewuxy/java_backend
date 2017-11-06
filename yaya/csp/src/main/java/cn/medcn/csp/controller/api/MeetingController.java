@@ -162,6 +162,12 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
+        if (courseId == null || courseId ==0) {
+            return error(local("error.param"));
+        }
+        if (StringUtils.isEmpty(title)) {
+            return error(local("error.param"));
+        }
         audioService.addCourseCopy(courseId, title);
         return success();
     }
