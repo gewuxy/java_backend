@@ -60,12 +60,13 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text">
-                                    <p>激活账号邮件已发送至您的邮箱，请前往激活完成注册。</p>
+                                    <p style="font-size:16px;"> Activation e-mail has been sent to your mail box. Please proceed activation in e-mail and complete your registration.</p>
                                 </div>
-                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="前往邮箱">
+                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="Go to My E-mail Box">
                             </div>
                         </form>
                     </div>
+
 
                     <%@include file="../include/login_service.jsp"%>
                 </div>
@@ -104,7 +105,7 @@
             }
 
             if (isEmpty($nickname.val())) {
-                $("#errorMessage").text("请输入昵称");
+                $("#errorMessage").text("Please enter your nickname");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
@@ -124,7 +125,7 @@
                         $(".position-message-login").removeClass("none");
                     } else {
                         $(".position-message-login").addClass("none");
-                        alert(data.err);
+                        layer.msg(data.err);
                     }
                 },
                 error: function (a, n, e) {
@@ -137,7 +138,7 @@
         $("#toEmailUrl").click(function () {
             var email = $("#email").val();
             var url = gainEmailURL(email);
-            if(url != ''){
+            if(url != '' && url != 'error'){
                 layer.closeAll();
                 window.open(url);
             }else{
