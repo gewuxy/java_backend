@@ -130,7 +130,7 @@ public class LoginController extends CspBaseController {
         }
 
         try {
-
+            // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常 浪费短信验证码）
             UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
             token.setHost("mobile");
             Subject subject = SecurityUtils.getSubject();
@@ -144,6 +144,7 @@ public class LoginController extends CspBaseController {
             model.addAttribute("mobile", mobile);
             return errorForwardUrl;
         } catch (SystemException ex) {
+           // 登录异常，需退出登录
             Subject subject = SecurityUtils.getSubject();
             subject.logout();
 
@@ -183,7 +184,7 @@ public class LoginController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/oauth/callback")
-    public String callback(String code, Integer thirdPartyId,RedirectAttributes redirectAttributes) throws SystemException {
+    public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes) throws SystemException {
         Principal principal =  getWebPrincipal();
         if (StringUtils.isNotEmpty(code)) {
             //获取第三方用户信息
