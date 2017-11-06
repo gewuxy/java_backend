@@ -9,11 +9,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>忘记密码 - 成功</title>
+    <title>Reset password success</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
@@ -37,9 +38,9 @@
                             <div class="login-form-item">
                                 <div class="login-message-text">
                                     <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
-                                    <p class="t-center">密码重置成功</p>
+                                    <p class="t-center">Password reset successfully.</p>
                                 </div>
-                                <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="重新登录">
+                                <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="Login">
                             </div>
                         </form>
                     </div>

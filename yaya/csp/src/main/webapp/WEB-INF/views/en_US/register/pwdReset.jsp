@@ -8,6 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
@@ -30,12 +31,12 @@
                             <input type="hidden" name="code" value="${code}">
                             <div class="login-form-item">
                                 <label for="pwd" class="cells-block pr">
-                                    <input type="text" required placeholder="输入新密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" type="password" name="password" required placeholder="输入新密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input type="text" required placeholder="New Password" class="login-formInput icon-register-hot last none" maxlength="24">
+                                    <input id="pwd" type="password" name="password" required placeholder="New Password" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
                                 <span class="cells-block error ${not empty message ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${message}</span></span>
-                                <input id="submitBtn" type="button" class="button login-button buttonBlue last" value="确认密码">
+                                <input id="submitBtn" type="button" class="button login-button buttonBlue last" value="Confirm New Password">
                             </div>
                         </form>
                     </div>
@@ -62,7 +63,7 @@
             var passwd = $("#pwd").val();
 
             if(!isPassword($.trim(passwd))){
-                $("#errorMessage").text("请输入符合格式的密码");
+                $("#errorMessage").text("Please enter a password that conforms to the format");
                 $("#errorMessage").parent().removeClass("none");
                 $("#pwd").focus();
                 return false;
