@@ -13,7 +13,7 @@
             <div class="tb-popupBox-bg clearfix" id="change">
                 <ul class="item-radius" id="ulitem">
                     <li class="first"><a href="#">简体</a></li>
-                    <li><a href="#">繁体</a></li>
+                    <li><a href="#">繁體</a></li>
                     <li class="last"><a href="#">EN</a></li>
                 </ul>
                 <div class="tb-popupBox-border"></div>
@@ -29,7 +29,7 @@ $(function () {
     if (cookie_local == "en_US") {
         cookie_local = "EN";
     } else if (cookie_local == "zh_TW") {
-        cookie_local = "繁体";
+        cookie_local = "繁體";
     } else {
         cookie_local = "简体";
     }
@@ -51,7 +51,7 @@ $(function () {
         var local = $(this).text();
         if(local == "EN"){
             local = "en_US";
-        } else if (local == "繁体"){
+        } else if (local == "繁體"){
             local = "zh_TW";
         } else {
             local = "zh_CN";
@@ -63,7 +63,7 @@ $(function () {
         $.cookie('_local', local, { expires: 1 });
 
         // 读取cookie:
-        alert($.cookie('_local'));
+        //alert($.cookie('_local'));
 
     })
 
