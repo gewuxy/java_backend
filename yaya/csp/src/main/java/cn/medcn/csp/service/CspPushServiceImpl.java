@@ -2,6 +2,7 @@ package cn.medcn.csp.service;
 
 import cn.jpush.api.JPushClient;
 import cn.medcn.common.provider.PushClientProvider;
+import cn.medcn.common.service.PushService;
 import cn.medcn.common.service.impl.CommonPushServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -12,7 +13,7 @@ import static cn.medcn.csp.CspConstants.JI_GUANG_SECRET;
  * Created by lixuan on 2017/11/7.
  */
 @Service("cspPushService")
-public class CspPushServiceImpl extends CommonPushServiceImpl{
+public class CspPushServiceImpl extends CommonPushServiceImpl implements PushService{
 
 
     @Override
