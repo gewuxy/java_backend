@@ -12,7 +12,7 @@
     <title>登錄</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/main.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
@@ -42,8 +42,8 @@
                             <span class="login-box-other-line-r"></span>
                         </div>
                         <div class="login-box-other-main t-center ">
-                            <a href="${ctx}/mgr/login?thirdPartyId=6" title="手机登录"><img src="${ctxStatic}/images/login-phone-icon.png" alt="手机登录"></a>
-                            <a href="${ctx}/mgr/login?thirdPartyId=7" title="邮箱登录"><img src="${ctxStatic}/images/login-email-icon.png" alt="邮箱登录"></a>
+                            <a href="${ctx}/mgr/login?thirdPartyId=6" title="手機登錄"><img src="${ctxStatic}/images/login-phone-icon.png" alt="手機登錄"></a>
+                            <a href="${ctx}/mgr/login?thirdPartyId=7" title="郵箱登錄"><img src="${ctxStatic}/images/login-email-icon.png" alt="郵箱登錄"></a>
                         </div>
                     </div>
 
@@ -51,7 +51,7 @@
                 </div>
             </div>
 
-            <%@include file=""%>
+            <%@include file="../include/login_footer.jsp"%>
         </div>
     </div>
 </div>

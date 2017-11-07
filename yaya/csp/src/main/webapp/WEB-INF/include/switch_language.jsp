@@ -10,7 +10,7 @@
     <ul class="sf-menu" >
         <li class="current">
             <a class="first-level" target="_blank" href="javascript:;"></a>
-            <div class="tb-popupBox-bg clearfix" id="change">
+            <div class="tb-popupBox-bg clearfix">
                 <ul class="item-radius" id="ulitem">
                     <li class="first"><a href="#">简体</a></li>
                     <li><a href="#">繁體</a></li>
@@ -26,6 +26,7 @@
 $(function () {
     // 先读取缓存
     var cookie_local = $.cookie('_local');
+    alert("cookie: "+cookie_local);
     if (cookie_local == "en_US") {
         cookie_local = "EN";
     } else if (cookie_local == "zh_TW") {
@@ -63,7 +64,7 @@ $(function () {
         $.cookie('_local', local, { expires: 1 });
 
         // 读取cookie:
-        //alert($.cookie('_local'));
+        alert('change: '+$.cookie('_local'));
 
     })
 

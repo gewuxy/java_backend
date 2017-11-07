@@ -9,7 +9,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="now" class="java.util.Date" scope="page"/>
 
-粤ICP备12087993号 © 2012-<fmt:formatDate value="${now}" pattern="yyyy"/> 敬信科技版权所有
+粵ICP備12087993號 © 2012-<fmt:formatDate value="${now}" pattern="yyyy"/> 敬信科技版權所有
 
 
 
