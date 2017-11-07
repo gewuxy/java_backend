@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>头像设置-个人中心-CSPmeeting</title>
+    <title>頭像設置-個人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -30,11 +30,11 @@
                         <div class="user-content user-content-levelHeight item-radius">
                             <div class="user-portrait-upload">
                                 <div class="user-portrait-area item-radius">
-                                    <p>上传头像</p>
+                                    <p>上傳頭像</p>
                                 </div>
-                                <p>选择JPG、PNG格式，小于1M的图片</p>
+                                <p>選擇JPG、PNG格式，小於1M的圖片</p>
                                 <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
-                                <input href="#" type="button"  class="button login-button buttonBlue last" onclick="headimg.click()" value="上传头像">
+                                <input href="#" type="button"  class="button login-button buttonBlue last" onclick="headimg.click()" value="上傳頭像">
                             </div>
                         </div>
                     </div>
@@ -59,9 +59,9 @@
         var extStart = filename.lastIndexOf(".");
         var ext = filename.substring(extStart,filename.length).toUpperCase();
         if(ext != ".BMP" && ext != ".PNG" && ext != ".JPG" && ext != ".JPEG"&&ext != ".TIFF"){
-            layer.msg("文件格式不支持，请上传图片类型的文件");
+            layer.msg("文件格式不支持，請上傳圖片類型的文件");
         }else{
-            //ajaxFileUpload的回调要改为data.code，之前是data.status，会报错
+            //ajaxFileUpload的回調要改為data.code，之前是data.status，會報錯
             upload("headimg","headimg",1*1024*1024,uploadHandler);
         }
     }

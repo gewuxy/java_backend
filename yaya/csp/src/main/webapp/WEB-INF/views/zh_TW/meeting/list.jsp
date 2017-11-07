@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>会议管理-CSPmeeting</title>
+    <title>會議管理-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
@@ -82,7 +82,7 @@
             $("#submitBtn").click(function () {
                 var selectNum = $("input[name='accepts']:checked").length;
                 if(selectNum < 1){
-                    layer.msg("请选择要投稿的单位号");
+                    layer.msg("請選擇要投稿的單位號");
                     $("#contribute").submit(function (e) {
                         e.preventDefault();
                     });
@@ -193,7 +193,7 @@
             $('.popup-player-hook').on('click',function(){
                 var course = loadCourseInfo($(this).attr("courseId"));
                 if (course == undefined){
-                    layer.msg("获取会议信息失败");
+                    layer.msg("獲取會議信息失敗");
                     return false;
                 }
                 initSwiper(course);
@@ -259,7 +259,7 @@
                 $("#copyShareUrl")[0].select();
                 var tag = document.execCommand("Copy");
                 if (tag){
-                    layer.msg("已经成功复制到剪切板");
+                    layer.msg("已經成功複製到剪切板");
                 }
                 $("#copyShareUrl").hide();
             });
@@ -323,7 +323,7 @@
                 closeBtn:0,
                 anim: 5,
                 content: $('#del-popup-box'),
-                btn : ['确定', '取消'],
+                btn : ['確定', '取消'],
                 yes :function(){
                     $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                         if (data.code == 0){
@@ -354,15 +354,15 @@
                 <div class="admin-screen-area">
                     <ul>
                         <li class="first ${empty playType ? 'cur' : ''}"><a href="javascript:;" class="screen-all " onclick="changePlayType()">全部</a></li>
-                        <li ${playType == 0? "class='cur'" : ''}><a href="javascript:;" class="screen-viedo " onclick="changePlayType(0)"><i></i>投屏录播</a></li>
+                        <li ${playType == 0? "class='cur'" : ''}><a href="javascript:;" class="screen-viedo " onclick="changePlayType(0)"><i></i>投屏錄播</a></li>
                         <li ${playType > 0? "class='cur'" : ''}><a href="javascript:;" class="screen-live " onclick="changePlayType(1)"><i></i>投屏直播</a></li>
-                        <li class="last ${sortType == 'desc' ? 'cur' : ''}"><a href="javascript:;" class="screen-time" onclick="sortList()"><i></i>创建时间排序</a></li>
+                        <li class="last ${sortType == 'desc' ? 'cur' : ''}"><a href="javascript:;" class="screen-time" onclick="sortList()"><i></i>創建時間排序</a></li>
                     </ul>
                 </div>
                 <div class="admin-search">
                     <form action="${ctx}/mgr/meet/list" method="post" id="yPsearchForm" name="yPsearchForm">
                         <div class="search-form search-form-responsive item-radius clearfix">
-                            <input type="text" placeholder="搜索会议名字" name="keyword" id="keyword" value="${keyword}" class="form-text">
+                            <input type="text" placeholder="搜索會議名字" name="keyword" id="keyword" value="${keyword}" class="form-text">
                             <button type="submit" class="form-btn"><span></span></button>
                         </div>
                     </form>
@@ -373,7 +373,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-01.png" alt=""></p>
-                            <p> -无会议内容 -</p>
+                            <p> -無會議內容 -</p>
                         </div>
                     </div>
 
@@ -399,10 +399,10 @@
                                             <div class="resource-link">
                                                 <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
                                                     <i></i>
-                                                    预览
+                                                    預覽
                                                 </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
                                                 <i></i>
-                                                扫码投屏
+                                                掃碼投屏
                                             </a>
                                             </div>
                                         </div>
@@ -421,7 +421,7 @@
                                             <span>${course.playTime}</span>
                                             <span>
                                         <c:choose>
-                                            <c:when test="${course.playType == 0}">录播</c:when>
+                                            <c:when test="${course.playType == 0}">錄播</c:when>
                                             <c:otherwise>直播</c:otherwise>
                                         </c:choose>
                                     </span>
@@ -457,11 +457,11 @@
 <div class="contribute-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
-            <strong>投稿平台</strong>
+            <strong>投稿平臺</strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-subName">
-            <p>单位号需在“资源平台”打开“投稿箱”功能才能接受投稿。</p>
+            <p>單位號需在“資源平臺”打開“投稿箱”功能才能接受投稿。</p>
         </div>
         <form id="contribute" name="contribute" action="${ctx}/mgr/delivery/contribute" method="post">
             <input type="hidden" id="courseId" name="courseId" value="">
@@ -493,7 +493,7 @@
             </div>
             <div class="layer-hospital-popup-bottom">
                 <div class="fr">
-                    <input type="submit" class="button buttonBlue min-btn" id="submitBtn" value="确认投稿">
+                    <input type="submit" class="button buttonBlue min-btn" id="submitBtn" value="確認投稿">
                 </div>
             </div>
         </form>
@@ -544,19 +544,19 @@
                     <li>
                         <a style="cursor: pointer;" id="copyShareUrlBtn">
                             <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
-                            <p>复制链接</p>
+                            <p>復制鏈接</p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
-                            <p>复制副本</p>
+                            <p>復制副本</p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
-                            <p>编辑</p>
+                            <p>編輯</p>
                         </a>
                     </li>
                     <li>
@@ -580,7 +580,7 @@
         <div class="layer-hospital-popup-main ">
                 <div class="copy-popup-main">
                     <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" value=""></label>
-                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="确认复制">
+                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="確認復制">
                 </div>
         </div>
     </div>
@@ -628,7 +628,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否确定删除？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否確定刪除？</p>
 
                 </div>
 

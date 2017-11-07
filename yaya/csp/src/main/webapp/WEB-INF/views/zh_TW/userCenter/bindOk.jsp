@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>邮箱绑定成功-CSPmeeting</title>
+    <title>郵箱綁定成功-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -39,9 +39,9 @@
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
                                     <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${user}</span></p>
-                                    <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
+                                    <p style="font-size:16px;">感謝您成為CSPmeeting的註冊會員</p>
                                 </div>
-                                <input  type="button" id="login" class="button login-button buttonBlue last" value="请点击此处登录">
+                                <input  type="button" id="login" class="button login-button buttonBlue last" value="請點擊此處登錄">
                             </div>
                         </form>
                     </div>

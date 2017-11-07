@@ -26,7 +26,6 @@
 $(function () {
     // 先读取缓存
     var cookie_local = $.cookie('_local');
-    alert("cookie: "+cookie_local);
     if (cookie_local == "en_US") {
         cookie_local = "EN";
     } else if (cookie_local == "zh_TW") {
@@ -64,7 +63,7 @@ $(function () {
         $.cookie('_local', local, { expires: 1 });
 
         // 读取cookie:
-        alert('change: '+$.cookie('_local'));
+//        alert('change: '+$.cookie('_local'));
 
     })
 

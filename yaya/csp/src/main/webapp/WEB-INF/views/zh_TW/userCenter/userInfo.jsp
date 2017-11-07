@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>我的信息-个人中心-CSPmeeting</title>
+    <title>我的信息-個人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -33,11 +33,11 @@
                                 <div class="formTitle">姓名</div>
                                 <div class="formControls">
                                     <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.userName}">
-                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;姓名不能为空</span>
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;姓名不能為空</span>
                                 </div>
                             </div>
                             <div class="formrow">
-                                <div class="formTitle">简介</div>
+                                <div class="formTitle">簡介</div>
                                 <div class="formControls">
                                     <textarea name="" id="info" cols="30" rows="10" class="textInput" placeholder="" maxlength="300">${dto.info}</textarea>
                                 </div>
@@ -74,7 +74,7 @@
                     $("#name", window.parent.document).html(userName);
                     layer.msg("修改成功");
                 }else{
-                    layer.msg("修改失败");
+                    layer.msg("修改失敗");
                 }
             },'json');
 
