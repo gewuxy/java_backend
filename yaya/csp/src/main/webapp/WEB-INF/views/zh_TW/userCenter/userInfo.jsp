@@ -32,7 +32,7 @@
                             <div class="formrow login-form-item">
                                 <div class="formTitle">暱稱</div>
                                 <div class="formControls">
-                                    <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
+                                    <input type="text" id="nickName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
                                     <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;暱稱不能為空</span>
                                 </div>
                             </div>
@@ -63,15 +63,15 @@
         $("#config_1").parent().attr("class","cur");
 
         $("#update").click(function () {
-            var userName = $.trim($("#userName").val());
-            if(userName == ''){
+            var nickName = $.trim($("#nickName").val());
+            if(nickName == ''){
                 $("#nameSpan").attr("class","cells-block error");
                 return;
             }
             var info = $("#info").val();
-            $.post('${ctx}/mgr/user/updateInfo',{"userName":userName,"info":info}, function (data) {
+            $.post('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info}, function (data) {
                 if (data.code == 0){
-                    $("#name", window.parent.document).html(userName);
+                    $("#name", window.parent.document).html(nickName);
                     layer.msg("修改成功");
                 }else{
                     layer.msg("修改失敗");
