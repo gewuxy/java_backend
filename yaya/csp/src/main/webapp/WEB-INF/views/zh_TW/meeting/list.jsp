@@ -562,7 +562,7 @@
                     <li>
                         <a href="javascript:;" onclick="delCourse()">
                             <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>删除</p>
+                            <p>刪除</p>
                         </a>
                     </li>
                 </ul>

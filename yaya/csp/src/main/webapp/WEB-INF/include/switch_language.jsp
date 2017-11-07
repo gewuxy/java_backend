@@ -24,8 +24,23 @@
 </div>
 <script>
 $(function () {
+
     // 先读取缓存
-    var cookie_local = $.cookie('_local');
+    function getCookie(cookieName){
+        var temp ;
+        $.ajax({
+            url:'${ctx}/cookie/get',
+            data:{'cookieName':cookieName},
+            async:false,
+            success:function (data) {
+                temp = data;
+            }
+        });
+        return temp;
+    }
+
+    var cookie_local = getCookie('_local');
+
     if (cookie_local == "en_US") {
         cookie_local = "EN";
     } else if (cookie_local == "zh_TW") {
@@ -57,15 +72,26 @@ $(function () {
             local = "zh_CN";
         }
         // 链接跳转相应的字体页面
-        $(this).attr("href",window.location.href);
+        //$(this).attr("href",window.location.href);
 
-        // 创建一个cookie并设置有效时间为1天:
-        $.cookie('_local', local, { expires: 1 });
-
-        // 读取cookie:
-//        alert('change: '+$.cookie('_local'));
+        if (setCookie('_local', local)){
+            window.location.reload();
+        }
 
     })
+
+    function setCookie(cookieName, cookieValue){
+        var flag = false;
+        $.ajax({
+            url:'${ctx}/cookie/modify',
+            data:{'cookieName':cookieName, 'cookieValue':cookieValue},
+            async:false,
+            success:function () {
+                flag = true;
+            }
+        });
+        return flag;
+    }
 
 })
 

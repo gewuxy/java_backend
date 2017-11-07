@@ -2,6 +2,7 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.article.model.CspArticle;
 import cn.medcn.article.service.CspArticleService;
+import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -60,4 +65,24 @@ public class SkipController extends CspBaseController {
         model.addAttribute("article", article);
         return localeView("/index/app_view");
     }
+
+
+
+    @RequestMapping(value = "/cookie/modify")
+    @ResponseBody
+    public String modifyCookie(String cookieName, String cookieValue, HttpServletResponse response){
+        CookieUtils.setCookie(response, cookieName, cookieValue);
+        return success();
+    }
+
+
+    @RequestMapping(value = "/cookie/get")
+    @ResponseBody
+    public String cookie(String cookieName, HttpServletRequest request){
+        String cookie = CookieUtils.getCookieValue(request, cookieName);
+        return cookie;
+    }
+
+
+
 }
