@@ -70,7 +70,7 @@ public class CspUserController extends BaseController {
      *
      * @param userInfo
      */
-    @RequestMapping("/register")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public String register(CspUserInfo userInfo) {
         if (userInfo == null) {
