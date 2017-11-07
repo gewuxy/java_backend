@@ -6,11 +6,11 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="page-box-re">
-    <a <c:if test="${page.pageNum > 1}"> href="javascript:page(1)"</c:if> >首页</a>
+    <a <c:if test="${page.pageNum > 1}"> href="javascript:page(1)"</c:if> >首頁</a>
     <c:forEach begin="1" step="1" end="${page.pages}" var="pageN">
     <a <c:if test="${page.pageNum != pageN}"> href="javascript: page(${pageN})" </c:if> <c:if test="${page.pageNum == pageN}" >class="cur"</c:if>>${pageN}</a>
     </c:forEach>
-    <a <c:if test="${page.pageNum < page.pages}"> href="javascript:page(${page.pages})"</c:if> >尾页</a>
+    <a <c:if test="${page.pageNum < page.pages}"> href="javascript:page(${page.pages})"</c:if> >尾頁</a>
 </div>
 
 <script>
