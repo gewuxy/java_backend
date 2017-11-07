@@ -9,6 +9,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
+import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
@@ -50,7 +51,9 @@ public class CspUserController extends BaseController {
     protected RedisCacheUtils<String> redisCacheUtils;
 
     @Autowired
-    protected JPushService jPushService;
+    protected PushService cspPushService;
+
+
 
     @Autowired
     protected CspAppVideoService appVideoService;
@@ -70,7 +73,7 @@ public class CspUserController extends BaseController {
      *
      * @param userInfo
      */
-    @RequestMapping("/register")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public String register(CspUserInfo userInfo) {
         if (userInfo == null) {
@@ -234,7 +237,7 @@ public class CspUserController extends BaseController {
         String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
 
         Principal principal = SecurityUtils.get();
-        String alias = jPushService.generateAlias((Object)principal.getId());
+        String alias = cspPushService.generateAlias(principal.getId());
 
         Set<String> tags = Sets.newHashSet();
         try {
@@ -243,7 +246,7 @@ public class CspUserController extends BaseController {
                 tags.add(osType);
             }
 
-            jPushService.bindAliasAndTags(registrationId, alias, tags);
+            cspPushService.bindAliasAndTags(registrationId, alias, tags);
 
         } catch (APIConnectionException e) {
             e.printStackTrace();

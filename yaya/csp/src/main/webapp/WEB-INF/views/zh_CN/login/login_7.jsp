@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>邮箱登录</title>
+    <title>邮箱登录-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -23,6 +23,7 @@
         <div class="page-width pr">
 
             <div class="login-header">
+                <%@include file="../include/login_header.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
 
