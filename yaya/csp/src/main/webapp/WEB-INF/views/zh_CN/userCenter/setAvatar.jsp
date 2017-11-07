@@ -38,12 +38,11 @@
                             </div>
                         </div>
                     </div>
-                    <%@include file="../include/footer.jsp"%>
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>

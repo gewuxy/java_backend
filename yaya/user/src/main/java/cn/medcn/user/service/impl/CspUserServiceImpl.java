@@ -183,7 +183,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         }else {
             Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
             if(captcha.getCount() == 2 && between < TimeUnit.MINUTES.toMillis(10)){
-               throw new SystemException(local("获取验证码次数频繁，请稍后"));
+               throw new SystemException(local("sms.frequency.send"));
             }
             // 发送短信
             String msgId = sendCaptchaByType(mobile, type);

@@ -67,12 +67,12 @@
                         </c:if>
 
                     </div>
-                    <%@include file="../include/footer.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <!--弹出绑定邮箱step01-->

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
 
 </head>
 
@@ -41,23 +41,23 @@
                                 <div class="user-resetPassword clearfix">
                                     <form id="submitForm" action="" method="post">
                                         <div class="login-form-item">
-                                            <h3>修改密码</h3>
+                                            <h3>Change Password</h3>
                                             <label for="pwd" class="cells-block pr">
                                                 <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text" placeholder="旧密码" class="login-formInput icon-register-hot last none"  maxlength="24">
-                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder="旧密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                                <input type="text" placeholder="Original Password" class="login-formInput icon-register-hot last none"  maxlength="24">
+                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder="Original Password" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                             </label>
-                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
+                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>Please enter the correct email address</span></span>
 
                                             <label for="rePwd" class="cells-block pr">
                                                     <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text"  placeholder="新密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder="新密码" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
+                                                <input type="text"  placeholder="New Password" class="login-formInput icon-register-hot last none" maxlength="24">
+                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder="New Password" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook1 "></a>
                                             </label>
-                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
-                                            <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value="修改">
+                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>Please enter the correct email address</span></span>
+                                            <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value="Confirm New Password">
                                         </div>
                                     </form>
                                 </div>
@@ -67,12 +67,12 @@
                         </c:if>
 
                     </div>
-                    <%@include file="../include/footer.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <!--弹出绑定邮箱step01-->

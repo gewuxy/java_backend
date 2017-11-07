@@ -54,7 +54,12 @@
                                         <div class="col-lg-6">
                                             <div class="resource-list-item item-radius clearfix">
                                                 <div class="resource-img ">
-                                                    <img src="${meet.coverUrl}" alt="" class="img-response">
+                                                    <c:if test="${empty meet.coverUrl}">
+                                                        <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                                    </c:if>
+                                                    <c:if test="${not empty meet.coverUrl}">
+                                                        <img src="${meet.coverUrl}" alt="" class="img-response">
+                                                    </c:if>
                                                     <div class="resource-link">
                                                         <a href="#" class="resource-icon-play popup-player-hook">
                                                             <i></i>

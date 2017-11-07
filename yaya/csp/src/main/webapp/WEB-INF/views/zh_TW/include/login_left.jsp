@@ -8,7 +8,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="col-lg-5">
     <div class="login-box-logo">
-        <img src="${ctxStatic}/images/login-logo.png" alt="">
+        <img src="${ctxStatic}/images/login-logo-tw.png" alt="">
     </div>
 </div>
 <div class="col-lg-2">&nbsp;</div>

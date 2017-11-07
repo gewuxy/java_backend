@@ -10,10 +10,10 @@
     <ul class="sf-menu" >
         <li class="current">
             <a class="first-level" target="_blank" href="javascript:;"></a>
-            <div class="tb-popupBox-bg clearfix" id="change">
+            <div class="tb-popupBox-bg clearfix">
                 <ul class="item-radius" id="ulitem">
                     <li class="first"><a href="#">简体</a></li>
-                    <li><a href="#">繁体</a></li>
+                    <li><a href="#">繁體</a></li>
                     <li class="last"><a href="#">EN</a></li>
                 </ul>
                 <div class="tb-popupBox-border"></div>
@@ -23,16 +23,13 @@
     </ul>
 </div>
 <script>
-
-    <c:set var="domain" value="${pageContext.request.serverName}"/>
-    var domain = '${domain}';
 $(function () {
     // 先读取缓存
     var cookie_local = $.cookie('_local');
     if (cookie_local == "en_US") {
         cookie_local = "EN";
     } else if (cookie_local == "zh_TW") {
-        cookie_local = "繁体";
+        cookie_local = "繁體";
     } else {
         cookie_local = "简体";
     }
@@ -54,18 +51,16 @@ $(function () {
         var local = $(this).text();
         if(local == "EN"){
             local = "en_US";
-        } else if (local == "繁体"){
+        } else if (local == "繁體"){
             local = "zh_TW";
         } else {
             local = "zh_CN";
         }
-
-        // 创建一个cookie并设置有效时间为1天:
-        //$.removeCookie('_local');
-        $.cookie('_local', local, { expires: 7, domain:domain});
-
         // 链接跳转相应的字体页面
-        window.location.reload();
+        $(this).attr("href",window.location.href);
+
+        //$.removeCookie('_local');
+        $.cookie('_local', local, { expires: 7});
 
     })
 

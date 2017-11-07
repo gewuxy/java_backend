@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 
 </head>
@@ -88,12 +88,12 @@
                             </div>
                         </div>
                     </div>
-                    <%@include file="../include/footer.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 
