@@ -82,16 +82,16 @@ public class CspUserController extends BaseController {
         String nickName = userInfo.getNickName();
 
         if (StringUtils.isEmpty(email)) {
-            return error("user.username.notnull");
+            return error(local("user.username.notnull"));
         }
         if (!StringUtils.isEmail(email)) {
-            return error("user.email.format");
+            return error(local("user.email.format"));
         }
         if (StringUtils.isEmpty(password)) {
-            return error("user.password.notnull");
+            return error(local("user.password.notnull"));
         }
         if (StringUtils.isEmpty(nickName)) {
-            return error("user.linkman.notnull");
+            return error(local("user.linkman.notnull"));
         }
 
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
