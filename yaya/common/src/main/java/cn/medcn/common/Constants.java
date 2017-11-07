@@ -150,7 +150,7 @@ public class Constants {
 
 
     /* CSP短信验证码发送模板id */
-    public static final Integer CSP_LOGIN_TEMPLATE_ID = 1;
+    public static final Integer CSP_LOGIN_TEMPLATE_ID = 145643;
 
     /* CSP绑定手机短信验证码模板id*/
     public static final Integer CSP_BIND_TEMPLATE_ID =  1;
