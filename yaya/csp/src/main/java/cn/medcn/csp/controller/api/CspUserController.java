@@ -410,6 +410,7 @@ public class CspUserController extends BaseController {
     @RequestMapping(value="/updateInfo",method = RequestMethod.POST)
     @ResponseBody
     public String updateInfo(CspUserInfo info) {
+
         //修改昵称,昵称为空
         if(info.getInfo() == null && StringUtils.isEmpty(info.getNickName())){
             return error(local("user.empty.nickname"));
