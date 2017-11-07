@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>忘记密码</title>
+    <title>Reset Password - CSPmeeting</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -38,7 +38,7 @@
                         <form id="resetForm" name="resetForm">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="New Password">
+                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="E-mail address">
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
                                 <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="Submit">
