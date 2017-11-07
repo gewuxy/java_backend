@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>上传预览</title>
+    <title>Browse Meeting - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -103,7 +103,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Are you sure you want to delete？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Confirm delete?</p>
 
                 </div>
 
@@ -191,7 +191,7 @@
                 closeBtn:0,
                 anim: 5,
                 content: $('#del-popup-box'),
-                btn : ['Sure', 'Cancel'],
+                btn : ['Confirm', 'Cancel'],
                 yes :function(){
                     window.location.href = '${ctx}/mgr/meet/detail/del/${course.id}/'+detailId;
                 },

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>会议管理</title>
+    <title>Meeting Management - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
@@ -193,7 +193,7 @@
             $('.popup-player-hook').on('click',function(){
                 var course = loadCourseInfo($(this).attr("courseId"));
                 if (course == undefined){
-                    layer.msg("获取会议信息失败");
+                    layer.msg("Load meeting infomation fail");
                     return false;
                 }
                 initSwiper(course);
@@ -259,7 +259,7 @@
                 $("#copyShareUrl")[0].select();
                 var tag = document.execCommand("Copy");
                 if (tag){
-                    layer.msg("已经成功复制到剪切板");
+                    layer.msg("Successfully copied to clipboard");
                 }
                 $("#copyShareUrl").hide();
             });
@@ -323,7 +323,7 @@
                 closeBtn:0,
                 anim: 5,
                 content: $('#del-popup-box'),
-                btn : ['确定', '取消'],
+                btn : ['Confirm', 'Cancel'],
                 yes :function(){
                     $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                         if (data.code == 0){
@@ -511,22 +511,10 @@
         <div class="layer-hospital-popup-main ">
             <div class="more-popup-list clearfix">
                 <ul id="more_popup_ul" class="-mob-share-list">
-                    <li  class="-mob-share-weixin">
+                    <li  class="-mob-share-facebook">
                         <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
-                            <p>微信好友</p>
-                        </a>
-                    </li>
-                    <%--<li class="-mob-share-qq">--%>
-                        <%--<a href="javascript:;">--%>
-                            <%--<img src="${ctxStatic}/images/_friends-icon.png" alt="">--%>
-                            <%--<p>朋友圈</p>--%>
-                        <%--</a>--%>
-                    <%--</li>--%>
-                    <li class="-mob-share-weibo">
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
-                            <p>微博</p>
+                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
+                            <p>Facebook</p>
                         </a>
                     </li>
                     <li class="-mob-share-twitter">
@@ -535,38 +523,52 @@
                             <p>Twitter</p>
                         </a>
                     </li>
-                    <li  class="-mob-share-facebook">
+                    <%--<li  class="-mob-share-WhatsApp" >--%>
+                        <%--<a href="javascript:;">--%>
+                            <%--<img src="${ctxStatic}/images/icon-user-whatsapp.png" alt="">--%>
+                            <%--<p>WhatsApp</p>--%>
+                        <%--</a>--%>
+                    <%--</li>--%>
+                    <%--<li class="-mob-share-line" >--%>
+                        <%--<a href="javascript:;">--%>
+                            <%--<img src="${ctxStatic}/images/icon-user-line.png" alt="">--%>
+                            <%--<p>Line</p>--%>
+                        <%--</a>--%>
+                    <%--</li>--%>
+                    <li class="-mob-share-linkedin" >
                         <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
-                            <p>Facebook</p>
+                            <img src="${ctxStatic}/images/icon-user-linkedin.png" alt="">
+                            <p>LinkedIn</p>
                         </a>
                     </li>
                     <li>
                         <a style="cursor: pointer;" id="copyShareUrlBtn">
                             <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
-                            <p>复制链接</p>
+                            <p>Copy Link</p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
-                            <p>复制副本</p>
+                            <p>Duplicate</p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
-                            <p>编辑</p>
+                            <p>Edit</p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" onclick="delCourse()">
                             <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>删除</p>
+                            <p>Delete</p>
                         </a>
                     </li>
+
                 </ul>
-                <input type="text" style="display: none; width: 485px;" id="copyShareUrl">
+
+                <input type="text" style="display: none; width: 100px; " id="copyShareUrl">
             </div>
         </div>
     </div>
@@ -580,7 +582,7 @@
         <div class="layer-hospital-popup-main ">
                 <div class="copy-popup-main">
                     <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" value=""></label>
-                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="确认复制">
+                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="Complete Duplication">
                 </div>
         </div>
     </div>
@@ -628,7 +630,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否确定删除？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Confirm delete?</p>
 
                 </div>
 

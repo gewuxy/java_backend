@@ -23,6 +23,9 @@
     </ul>
 </div>
 <script>
+
+    <c:set var="domain" value="${pageContext.request.serverName}"/>
+    var domain = '${domain}';
 $(function () {
     // 先读取缓存
     var cookie_local = $.cookie('_local');
@@ -56,14 +59,13 @@ $(function () {
         } else {
             local = "zh_CN";
         }
-        // 链接跳转相应的字体页面
-        $(this).attr("href",window.location.href);
 
         // 创建一个cookie并设置有效时间为1天:
-        $.cookie('_local', local, { expires: 1 });
+        //$.removeCookie('_local');
+        $.cookie('_local', local, { expires: 7, domain:domain});
 
-        // 读取cookie:
-        alert($.cookie('_local'));
+        // 链接跳转相应的字体页面
+        window.location.reload();
 
     })
 
