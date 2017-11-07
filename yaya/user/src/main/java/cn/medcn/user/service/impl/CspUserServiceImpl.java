@@ -9,6 +9,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.service.JSmsService;
+import cn.medcn.common.service.SMSService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
@@ -83,14 +84,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Autowired
     protected RedisCacheUtils redisCacheUtils;
 
-    @Autowired
-    protected JSmsService jSmsService;
 
     @Autowired
     protected CSPEmailHelper emailHelper;
-
-    @Autowired
-    protected JPushService jPushService;
 
     @Autowired
     protected UserFluxDAO userFluxDAO;
@@ -100,6 +96,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Autowired
     protected JavaMailSenderImpl cspMailSender;
+
+    @Autowired
+    protected SMSService cspSMSService;
 
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
@@ -205,9 +204,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         String msgId = null;
         try {
             if (type == Captcha.Type.LOGIN.getTypeId()) {
-                msgId = jSmsService.send(mobile, Constants.CSP_LOGIN_TEMPLATE_ID);
+                msgId = cspSMSService.send(mobile, Constants.CSP_LOGIN_TEMPLATE_ID);
             } else {
-                msgId = jSmsService.send(mobile, Constants.CSP_BIND_TEMPLATE_ID);
+                msgId = cspSMSService.send(mobile, Constants.CSP_BIND_TEMPLATE_ID);
             }
 
         } catch (Exception e) {
@@ -223,7 +222,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         Captcha result = (Captcha) redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
         try {
 
-            Boolean bool = jSmsService.verify(result.getMsgId(),captcha);
+            Boolean bool = cspSMSService.verify(result.getMsgId(),captcha);
             if (!bool) {
                 throw new SystemException(local("sms.error.captcha"));
             }
@@ -251,58 +250,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return userInfo;
     }
 
-//    /**
-//     * 缓存信息和发送绑定或找回密码邮件
-//     * @param email
-//     * @param userId
-//     * @param template
-//     * @return
-//     */             //TODO 模板
-//    @Override
-//    public void sendMail(String email, String userId, Integer template) throws SystemException {
-//        String code = StringUtils.uniqueStr();
-//        String url = null;
-//        String subject = null;
-//        String templateName = null;
-//
-//        // 邮件模板类型
-//        int registerTemplate = MailBean.MailTemplate.REGISTER.getLabelId().intValue();
-//        int findPwdTemplate = MailBean.MailTemplate.FIND_PWD.getLabelId().intValue();
-//        int bindTemplate = MailBean.MailTemplate.BIND.getLabelId().intValue();
-//
-//        if (template != null && template.intValue() == registerTemplate) {
-//            // 发送注册激活邮箱邮件
-//            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-//            url = appBase + "/api/email/active?code=" + code;
-//            subject = "CSPMeeting账号激活";
-//            templateName = MailBean.MailTemplate.CSP_REGISTER.getLabel();
-//        } else if (template.intValue() == findPwdTemplate) {
-//            // 发送找回密码邮件
-//            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-//            url = appBase + "/api/email/toReset?code=" + code;
-//            subject = "找回密码";
-//            templateName = MailBean.MailTemplate.CSP_PWD.getLabel();
-//        } else if (template.intValue() == bindTemplate) {
-//
-//            // 发送绑定邮箱邮件
-//            redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
-//            url = appBase + "/api/email/bindEmail?code=" + code;
-//            subject = "绑定邮箱";
-//            templateName = MailBean.MailTemplate.CSP_BIND.getLabel();
-//        }
-//
-//        try {
-//            emailHelper.sendMail(email, subject, url, templateName);
-//        } catch (JDOMException e) {
-//            e.printStackTrace();
-//            throw new SystemException(local("email.address.error"));
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//            throw new SystemException(local("email.error.send"));
-//        }
-//    }
-
-
+    /**
+     * 缓存信息和发送绑定或找回密码邮件
+     * @param email
+     * @param userId
+     * @param template
+     * @return
+     */
+    @Override
     public void sendMail(String email, String userId,EmailTemplate template) throws SystemException {
         String code = StringUtils.uniqueStr();
         String url = null;
