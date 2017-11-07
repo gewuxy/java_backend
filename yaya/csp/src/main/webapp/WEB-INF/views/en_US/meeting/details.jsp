@@ -215,13 +215,13 @@
         $("#addPPTFile").change(function(){
             var fSize = fileSize($("#addPPTFile").get(0));
             if (fSize > file_size_limit){
-                layer.msg("请上传小于50M的文件");
+                layer.msg("Please upload files less than 50M");
                 return false;
             }
             var pageIndex = (parseInt(swiper.activeIndex) + 1);
             var fileName = $("#addPPTFile").val().toLowerCase();
             if (!isVideo(fileName) && !isPic(fileName)){
-                layer.msg("请选择图片(jpg,png,jpeg)或视频(mp4,avi,wmv)");
+                layer.msg("Please select a picture (jpg, PNG, JPEG) or video (MP4, avi, wmv)");
                 return false;
             }
             var index = layer.load(1, {

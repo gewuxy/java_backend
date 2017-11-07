@@ -230,12 +230,12 @@
     function uploadFile(){
         var fSize = fileSize($("#uploadFile").get(0));
         if (fSize > file_size_limit){
-            layer.msg("请上传小于100M的文件");
+            layer.msg("Please upload files less than 100M");
             return false;
         }
         var fileName = $("#uploadFile").val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
-            layer.msg("请选择ppt|pptx|pdf格式文件");
+            layer.msg("Please select the ppt|pptx|pdf format file");
             return false;
         }
         var index = layer.load(1, {
