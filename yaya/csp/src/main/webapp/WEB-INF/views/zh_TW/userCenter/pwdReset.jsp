@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>修改密码-个人中心-CSPmeeting</title>
+    <title>修改密碼-個人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -30,8 +30,8 @@
                         <c:if test="${empty email}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
-                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
-                                        src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;修改密码需绑定邮箱后才能继续操作。
+                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >綁定郵箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+                                        src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;修改密碼需綁定郵箱後才能繼續操作。
                                 </div>
 
                             </div>
@@ -41,22 +41,22 @@
                                 <div class="user-resetPassword clearfix">
                                     <form id="submitForm" action="" method="post">
                                         <div class="login-form-item">
-                                            <h3>修改密码</h3>
+                                            <h3>修改密碼</h3>
                                             <label for="pwd" class="cells-block pr">
                                                 <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text" placeholder="旧密码" class="login-formInput icon-register-hot last none"  maxlength="24">
-                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder="旧密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                                <input type="text" placeholder="舊密碼" class="login-formInput icon-register-hot last none"  maxlength="24">
+                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder="舊密碼" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                             </label>
-                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
+                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>請輸入正確的郵箱地址</span></span>
 
                                             <label for="rePwd" class="cells-block pr">
                                                     <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text"  placeholder="新密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder="新密码" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
+                                                <input type="text"  placeholder="新密碼" class="login-formInput icon-register-hot last none" maxlength="24">
+                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder="新密碼" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook1 "></a>
                                             </label>
-                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
+                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>請輸入正確的郵箱地址</span></span>
                                             <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value="修改">
                                         </div>
                                     </form>
@@ -85,16 +85,16 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <label for="email" class="cells-block pr">
-                    <input id="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                    <input id="email" type="text" class="login-formInput" placeholder="郵箱地址">
                 </label>
-                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
+                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>輸入正確密碼</span></span>
                 <label for="password" class="cells-block pr">
-                    <input type="text" required="" placeholder="密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                    <input id="password" type="password" required="" placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                    <input type="text" required="" placeholder="密碼" class="login-formInput icon-register-hot last none" maxlength="24">
+                    <input id="password" type="password" required="" placeholder="密碼" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                 </label>
-                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
-                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="绑定邮箱">
+                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>輸入正確密碼</span></span>
+                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="綁定郵箱">
             </div>
         </div>
     </div>
@@ -109,9 +109,9 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <div class="login-message-text">
-                    <p>激活账号邮件已发送至您的邮箱，<br />请前往激活完成注册。</p>
+                    <p>激活賬號郵件已發送至您的郵箱，<br />請前往激活完成註冊。</p>
                 </div>
-                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
+                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往郵箱">
             </div>
         </div>
     </div>
@@ -187,7 +187,7 @@
                 layer.closeAll();
                 window.open( url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("抱歉！未找到對應的郵箱登錄地址");
             }
         });
 
@@ -251,15 +251,15 @@
     function oldPwdValid() {
         var password = $("#pwd").val();
         if ($.trim(password)==''){
-            $("#oldSpan").find('span').html("旧密码不能为空");
+            $("#oldSpan").find('span').html("舊密碼不能為空");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#oldSpan").find('span').html("旧密码不能包含空格");
+            $("#oldSpan").find('span').html("舊密碼不能包含空格");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#oldSpan").find('span').html("请输入6~24位密码");
+            $("#oldSpan").find('span').html("請輸入6〜24位密碼");
             $("#oldSpan").attr("class","cells-block error");
 
         }else{
@@ -271,15 +271,15 @@
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
         if ($.trim(newPwd)==''){
-            $("#newSpan").find('span').html("新密码不能为空");
+            $("#newSpan").find('span').html("新密碼不能為空");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd)!= newPwd){
-            $("#newSpan").find('span').html("新密码不能包含空格");
+            $("#newSpan").find('span').html("新密碼不能包含空格");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd).length < 6){
-            $("#newSpan").find('span').html("请输入6~24位密码");
+            $("#newSpan").find('span').html("請輸入6〜24位密碼");
             $("#newSpan").attr("class","cells-block error");
 
         }else{
@@ -291,15 +291,15 @@
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password)==''){
-            $("#passwordSpan").find('span').html("密码不能为空");
+            $("#passwordSpan").find('span').html("密碼不能為空");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#passwordSpan").find('span').html("密码不能包含空格");
+            $("#passwordSpan").find('span').html("密碼不能包含空格");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#passwordSpan").find('span').html("请输入6~24位密码");
+            $("#passwordSpan").find('span').html("請輸入6〜24位密碼");
             $("#passwordSpan").attr("class","cells-block error");
 
         }else{
@@ -312,12 +312,12 @@
         var email = $("#email").val();
         if($.trim(email) == ''){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").find('span').html("邮箱不能为空");
+            $("#emailSpan").find('span').html("郵箱不能為空");
             return false;
         }
         if(!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").find('span').html("邮箱格式不正确");
+            $("#emailSpan").find('span').html("郵箱格式不正確");
             return false;
         }
         $("#emailSpan").attr("class","cells-block error none");

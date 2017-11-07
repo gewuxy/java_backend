@@ -9,16 +9,16 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>邮箱绑定成功-CSPmeeting</title>
+    <title>郵箱綁定超時-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
-
-    <script src="${ctxStatic}/js/commonH5.js"></script>
+    <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 
 </head>
 <body>
@@ -26,6 +26,7 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
             <div class="login-header">
+                <%@include file="../include/login_header.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
             <div class="login-box clearfix">
@@ -38,10 +39,14 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${user}</span></p>
-                                    <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
+                                    <div class="fl" style="margin-right:30px;">
+                                        <img src="${ctxStatic}/images/login-error-icon-02.png" alt="" style="margin-top:10px;">
+                                    </div>
+                                    <div class="oh">
+                                        <p class="color-red">鏈接已超時</p>
+                                        <p class="color-red">請重新驗證！</p>
+                                    </div>
                                 </div>
-                                <input  type="button" id="login" class="button login-button buttonBlue last" value="请点击此处登录">
                             </div>
                         </form>
                     </div>
@@ -60,9 +65,6 @@
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
 
-        $("#login").click(function () {
-            window.location.href="${ctx}/mgr/login";
-        });
 
 
     })

@@ -259,7 +259,7 @@
                 $("#copyShareUrl")[0].select();
                 var tag = document.execCommand("Copy");
                 if (tag){
-                    layer.msg("已經成功復制到剪切板");
+                    layer.msg("已經成功複製到剪切板");
                 }
                 $("#copyShareUrl").hide();
             });

@@ -407,7 +407,7 @@ public class CspUserController extends BaseController {
     /**
      * 更新个人信息中的姓名和简介
      */
-    @RequestMapping("/updateInfo")
+    @RequestMapping(value="/updateInfo",method = RequestMethod.POST)
     @ResponseBody
     public String updateInfo(CspUserInfo info) {
        info.setId(SecurityUtils.get().getId());

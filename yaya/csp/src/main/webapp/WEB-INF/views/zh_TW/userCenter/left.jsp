@@ -7,11 +7,11 @@
         <div class="binding">
             <c:if test="${fn:length(dto.bindInfoList) != 0}">
                     <c:forEach items="${dto.bindInfoList}" var="list">
-                        <c:if test="${list.thirdPartyId == 4}">
-                            <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
+                        <c:if test="${list.thirdPartyId == 1}">
+                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
                         </c:if>
-                        <c:if test="${list.thirdPartyId == 3}">
-                            <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
+                        <c:if test="${list.thirdPartyId == 2}">
+                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
                         </c:if>
                         <c:if test="${list.thirdPartyId == 5}">
                             <img src="${ctxStatic}/images/icon-user-medcn.png"  alt="">
@@ -32,9 +32,9 @@
         <%--<img src="./images/icon-user-facebook.png" alt="">--%>
     </div>
     <div class="user-statistics item-radius">
-        <div class="title">Statistics of PPT</div>
-        <div class="main line"> <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.pptCount}</span>file(s) uploaded</span></div>
-        <div class="main"><img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.shareCount}</span>item(s) shared</span></div>
+        <div class="title">PPT統計</div>
+        <div class="main line">上傳數量 <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.pptCount}</span>個</span></div>
+        <div class="main">分享次數 <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.shareCount}</span>個</span></div>
     </div>
 </div>
 

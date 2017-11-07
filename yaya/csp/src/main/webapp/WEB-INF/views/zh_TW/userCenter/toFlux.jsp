@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>流量管理-个人中心-CSPmeeting</title>
+    <title>流量管理-個人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -32,7 +32,7 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content item-radius">
-                            <h4>视频直播记录 <span>剩余流量 <i>${flux == 0 || empty flux? 0:flux/1024}</i>G</span></h4>
+                            <h4>視頻直播記錄 <span>剩余流量 <i>${flux == 0 || empty flux? 0:flux/1024}</i>G</span></h4>
                             <table class="table-box-1">
                                 <colgroup>
                                     <col class="col-w-4">
@@ -48,11 +48,11 @@
                                             <td class="col-w-3">消耗${v.expense}M</td>
                                             <c:if test="${v.expireDay > 0}">
 
-                                                <td class="col-w-2"><a href="${v.downloadUrl}" class="color-blue">下载视频</a></td>
-                                                <td class="col-w-2 color-green1">${v.expireDay}天后过期</td>
+                                                <td class="col-w-2"><a href="${v.downloadUrl}" class="color-blue">下載視頻</a></td>
+                                                <td class="col-w-2 color-green1">${v.expireDay}天後過期</td>
                                             </c:if>
                                             <c:if test="${v.expireDay == 0}">
-                                                <td class="col-w-2"><span class="color-gray">已过期</span></td>
+                                                <td class="col-w-2"><span class="color-gray">已過期</span></td>
                                                 <td class="col-w-2 color-green1">&nbsp;</td>
                                             </c:if>
                                         </tr>
@@ -68,48 +68,48 @@
                         </div>
                         <div class="user-content item-radius pay-mode">
                             <form action="${ctx}/mgr/charge/toCharge" name="submitForm" id="submitForm" method="post" target="_blank">
-                            <div class="formrow flow login-form-item">
-                                <div class="formTitle color-black">充值流量</div>
-                                <div class="formControls">
-                                    <label for="" class="pr">
-                                        <input type="text" class="textInput" placeholder="输入需充值的流量" id="flux" name="flux" oninput="fill()">
-                                        <span >G</span>
-                                    </label>
-                                    <p ><span class="explain">1G流量=2元</span></p>
-                                    <span class="cells-block error none" id="errSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>姓名不能为空</span> </span>
-                                </div>
-                            </div>
-                            <div class="formrow " style="margin-bottom:20px;" >
-                                <div class="formTitle color-black">充值方式</div>
-                                <div class="formControls">
-                                    <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
-                                        <label for="id1" class="item item-radius pay-on">
-                                            <input type="radio" name="channel" class="none" value="alipay_pc_direct" checked="checked" id="id1">
-                                            <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
+                                <div class="formrow flow login-form-item">
+                                    <div class="formTitle color-black">充值流量</div>
+                                    <div class="formControls">
+                                        <label for="" class="pr">
+                                            <input type="text" class="textInput" placeholder="輸入需充值的流量" id="flux" name="flux" oninput="fill()">
+                                            <span >G</span>
                                         </label>
-                                        <label for="id2" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="wx_wap" id="id2">
-                                            <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
-                                        </label>
-                                        <label for="id3" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
-                                            <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                        </label>
-                                        <label for="paypal" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="paypal" id="paypal">
-                                            <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
-                                        </label>
+                                        <p ><span class="explain">1G流量=2元</span></p>
+                                        <span class="cells-block error none" id="errSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>姓名不能為空</span> </span>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="formrow money">
-                                <div class="formTitle color-black">支付&nbsp;&nbsp;¥</div>
-                                <div class="formControls">
-                                    <div class="payNum" id="money">0.00</div>
+                                <div class="formrow " style="margin-bottom:20px;" >
+                                    <div class="formTitle color-black">充值方式</div>
+                                    <div class="formControls">
+                                        <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
+                                            <label for="id1" class="item item-radius pay-on">
+                                                <input type="radio" name="channel" class="none" value="alipay_pc_direct" checked="checked" id="id1">
+                                                <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
+                                            </label>
+                                            <label for="id2" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="wx_wap" id="id2">
+                                                <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
+                                            </label>
+                                            <label for="id3" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
+                                                <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                            </label>
+                                            <label for="paypal" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="paypal" id="paypal">
+                                                <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
+                                            </label>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="formrow money">
+                                    <div class="formTitle color-black">支付&nbsp;&nbsp;¥</div>
+                                    <div class="formControls">
+                                        <div class="payNum" id="money">0.00</div>
+                                    </div>
+                                </div>
                                 <div class="formrow last">
-                                    <input type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="确认支付">
+                                    <input type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="確認支付">
                                 </div>
                             </form>
                         </div>
@@ -126,7 +126,7 @@
     <input type="hidden" class="flux" name="flux" value="0">
 </form>
 
-<!--弹出 充值-->
+<!--彈出 充值-->
 <div class="cancel-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
@@ -136,9 +136,9 @@
         <div class="layer-hospital-popup-main ">
             <form >
                 <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <p>請在充值頁面完成付款，付款完成前請不要關閉此窗口</p>
                     <div class="admin-button t-right">
-                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到問題，重試</a>
                         <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn" value="我已付款成功">
                     </div>
                 </div>
@@ -163,11 +163,11 @@
             $(this).addClass('pay-on').siblings().removeClass('pay-on');
             console.log($('input[name="channel"]:checked').val());
         });
-        
+
         $("#flux").blur(function () {
             checkFlux();
         });
-        
+
 
         $("#submitBtn").click(function () {
             if(checkFlux()){
@@ -181,20 +181,20 @@
 
                 }
 
-                //触发弹出窗
+                //觸發彈出窗
                 //投稿
-                    layer.open({
-                        type: 1,
-                        area: ['560px', '250px'],
-                        fix: false, //不固定
-                        title:false,
-                        closeBtn:0,
-                        content: $('.cancel-popup-box'),
-                        success:function(){
-                        },
-                        cancel :function(){
-                        },
-                    });
+                layer.open({
+                    type: 1,
+                    area: ['560px', '250px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    content: $('.cancel-popup-box'),
+                    success:function(){
+                    },
+                    cancel :function(){
+                    },
+                });
             }
 
         });
@@ -232,14 +232,14 @@
     function checkFlux() {
         if(!Number.isInteger($("#flux").val()/1)){
             $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").find('span').html("请输入整数");
+            $("#errSpan").find('span').html("請輸入整數");
             return false;
         }else if(($("#flux").val()/1)<1){
             $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").html("充值流量必须大于1G");
+            $("#errSpan").html("充值流量必須大於1G");
             return false;
         } else if(($("#flux").val()/1)>100000){
-            layer.msg("充值流量不能超过10万");
+            layer.msg("充值流量不能超過10萬");
             return false;
         }else{
             $("#errSpan").attr("class","cells-block error none");

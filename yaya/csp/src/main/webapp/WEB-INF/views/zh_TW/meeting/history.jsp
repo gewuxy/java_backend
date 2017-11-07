@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>投稿历史</title>
+    <title>投稿歷史-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -63,23 +63,23 @@
                                                     <div class="resource-link">
                                                         <a href="#" class="resource-icon-play popup-player-hook">
                                                             <i></i>
-                                                            预览
+                                                            預覽
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <h3 class="resource-title overflowText popup-player-hook">${meet.title}</h3>
                                                 <div class="resource-label">
                                                     <c:if test="${meet.publishState == true}">
-                                                        <span class="issue">已发布</span>
+                                                        <span class="issue">已發布</span>
                                                     </c:if>
                                                     <c:if test="${ meet.publishState == false && meet.viewState == true}">
-                                                        <span class="look">已查阅</span>
+                                                        <span class="look">已查閱</span>
                                                     </c:if>
                                                     <c:if test="${ meet.publishState == false && meet.viewState == false}">
-                                                        <span>未查阅</span>
+                                                        <span>未查閱</span>
                                                     </c:if>
                                                     <c:if test="${meet.playType == 0}">
-                                                        <span>录播</span>
+                                                        <span>錄播</span>
                                                     </c:if>
                                                     <c:if test="${meet.playType != 0}">
                                                         <span>直播</span>
@@ -114,7 +114,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                            <p> -无投稿记录 -</p>
+                            <p> - 無投稿記錄 -</p>
                         </div>
                     </div>
                 </div>

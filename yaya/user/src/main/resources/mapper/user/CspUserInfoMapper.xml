@@ -16,7 +16,7 @@
     </select>
 
     <select id="findCSPUserInfo" resultType="cn.medcn.user.dto.CspUserInfoDTO">
-        SELECT tu.avatar,tu.email,tu.user_name,tu.mobile,tu.info,count(tc.id) AS pptCount,
+        SELECT tu.avatar,tu.email,tu.nick_name,tu.mobile,tu.info,count(tc.id) AS pptCount,
         (SELECT count(ts.id)  FROM t_csp_share ts WHERE ts.user_id = #{userId}) AS shareCount
         FROM t_csp_user_info tu
          LEFT JOIN t_audio_course tc ON tu.id = tc.csp_user_id
