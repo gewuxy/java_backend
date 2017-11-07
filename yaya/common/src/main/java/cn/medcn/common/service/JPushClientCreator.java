@@ -14,9 +14,7 @@ public enum JPushClientCreator {
 
     YAYACLIENT("88391aa0f118d8646d1fb6e3", "52acc10b88c19bd680e92083"),
 
-    MARY_CLIENT("948085aa03fc30293fec9fff", "da5668db7b73e7e0c1afbef0"),
-
-    CSP_CLIENT("","");
+    MARY_CLIENT("948085aa03fc30293fec9fff", "da5668db7b73e7e0c1afbef0");
 
     private String appkey;
 

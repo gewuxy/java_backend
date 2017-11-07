@@ -234,6 +234,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setCategory(course.getCategory());
         reprintCourse.setPublished(course.getPublished());
         reprintCourse.setShared(false);
+        reprintCourse.setDeleted(false);
         reprintCourse.setCreateTime(new Date());
         reprintCourse.setSourceType(course.getSourceType());
         reprintCourse.setPlayType(course.getPlayType());

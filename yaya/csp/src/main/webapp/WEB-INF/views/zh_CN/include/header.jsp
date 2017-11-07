@@ -18,8 +18,8 @@
                                 <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
                                 <li><a href="${ctx}/mgr/user/toAvatar">头像设置</a></li>
                                 <li><a href="${ctx}/mgr/user/toAccount">账号管理</a></li>
-                                <li><a href="">流量管理</a></li>
-                                <li><a href="newList.html">帮助中心</a></li>
+                                <li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>
+                                <li><a href="${ctx}/index/17103116063862386794">帮助中心</a></li>
                                 <li class="last"><a href="${ctx}/mgr/logout">退出账号</a></li>
                             </ul>
                             <div class="tb-popupBox-border"></div>

@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Browse Meeting - CSPmeeting</title>
+    <title>會議預覽-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -52,7 +52,7 @@
                         </div>
 
                         <div class="metting-btn-item clearfix pr">
-                            <div class="addppt-button"><label for="addPPTFile"><input type="file" class="none" name="file" id="addPPTFile">Insert PPT</label></div>
+                            <div class="addppt-button"><label for="addPPTFile"><input type="file" class="none" name="file" id="addPPTFile">插入幻燈片</label></div>
                             <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
                             <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> <i>|</i> <span class="swiper-pagination-total">4</span></div>
                             <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
@@ -62,8 +62,8 @@
                 </div>
                 <div class="admin-line"></div>
                 <div class="admin-button t-center">
-                    <a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >Return</a>&nbsp;&nbsp;
-                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="Save">
+                    <a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >返回</a>&nbsp;&nbsp;
+                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="保存">
                 </div>
             </div>
         </div>
@@ -82,10 +82,10 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否放弃修改？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否放棄修改？</p>
                     <div class="admin-button t-right">
                         <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >取消</a>
-                        <input type="submit" class="button buttonBlue item-radius min-btn" value="确认">
+                        <input type="submit" class="button buttonBlue item-radius min-btn" value="確認">
                     </div>
                 </div>
 
@@ -103,7 +103,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Confirm delete?</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否確定刪除？</p>
 
                 </div>
 
@@ -185,13 +185,13 @@
             var detailId = $(this).attr("detailId");
             layer.open({
                 type: 1,
-                area: ['300px', '280px'],
+                area: ['300px', '250px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
                 anim: 5,
                 content: $('#del-popup-box'),
-                btn : ['Confirm', 'Cancel'],
+                btn : ['確定', '取消'],
                 yes :function(){
                     window.location.href = '${ctx}/mgr/meet/detail/del/${course.id}/'+detailId;
                 },
@@ -215,13 +215,13 @@
         $("#addPPTFile").change(function(){
             var fSize = fileSize($("#addPPTFile").get(0));
             if (fSize > file_size_limit){
-                layer.msg("Please upload files less than 50M");
+                layer.msg("請上傳小於50M的文件");
                 return false;
             }
             var pageIndex = (parseInt(swiper.activeIndex) + 1);
             var fileName = $("#addPPTFile").val().toLowerCase();
             if (!isVideo(fileName) && !isPic(fileName)){
-                layer.msg("Please select a picture (jpg, PNG, JPEG) or video (MP4, avi, wmv)");
+                layer.msg("請選擇圖片(jpg,png,jpeg)或視頻(mp4,avi,wmv)");
                 return false;
             }
             var index = layer.load(1, {

@@ -53,7 +53,6 @@ public class JPushServiceImpl implements JPushService {
         for (JPushClientCreator creator : JPushClientCreator.values()) {
             try {
                 JPushClient client = creator.getClient();
-                System.out.println("client = " + client.toString());
                 PushResult pushResult = client.sendPush(pushPayload);
                 if (pushResult.getResponseCode() == 200) {
                     result = 1;
