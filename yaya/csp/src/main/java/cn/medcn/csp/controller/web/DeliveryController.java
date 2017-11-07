@@ -103,8 +103,8 @@ public class DeliveryController extends CspBaseController {
         MyPage<AppUser> acceptPage = appUserService.findAccepterList(pageable);
         List<AppUser> userList = acceptPage.getDataList();
         AppUser.splitUserAvatar(userList,fileBase);
-        model.addAttribute("acceptList",acceptPage.getDataList());
-        return acceptPage.getDataList();
+        model.addAttribute("acceptList",userList);
+        return userList;
     }
 
     private void addMeetList(Integer acceptId,Pageable pageable,Model model){
