@@ -27,6 +27,7 @@ import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.UserFluxService;
+import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -90,7 +91,8 @@ public class MeetingMgrController extends CspBaseController {
         pageable.setPageSize(6);
 
         //打开了投稿箱的公众号列表
-        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
+        Pageable pageable2 = new Pageable();
+        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable2);
         AppUser.splitUserAvatar(myPage.getDataList(), fileBase);
         model.addAttribute("accepterList", myPage.getDataList());
         //web获取当前用户信息

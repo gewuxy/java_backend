@@ -141,8 +141,10 @@ public class SignatureUtil {
             // conn.setReadTimeout(2000);//读取超时 单位毫秒
             conn.setDoOutput(true);// 是否输入参数
             String params = "grant_type=client_credentials";
-            conn.getOutputStream().write(params.getBytes());// 输入参数
-
+            System.setProperty("https.protocols", "TLSv1.2,TLSv1.1,SSLv3");
+            conn.connect();
+            OutputStream outputStream =  conn.getOutputStream();
+            outputStream.write(params.getBytes());// 输入参数
             InputStreamReader inStream = new InputStreamReader(conn.getInputStream());
             BufferedReader reader = new BufferedReader(inStream);
             StringBuilder result = new StringBuilder();

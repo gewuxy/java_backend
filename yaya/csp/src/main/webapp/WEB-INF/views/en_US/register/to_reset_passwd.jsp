@@ -15,6 +15,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
@@ -37,10 +38,10 @@
                         <form id="resetForm" name="resetForm">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="New Password">
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
-                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="重置密码">
+                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="Submit">
                             </div>
                         </form>
                     </div>
@@ -50,9 +51,9 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text">
-                                    <p>重置密码链接已发送至您的邮箱，请设置密码后再重新登录</p>
+                                    <p style="font-size:16px;">Password-reset link has been sent to your e-mail address.Please reset your password and log in again.</p>
                                 </div>
-                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="前往邮箱">
+                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="Go to My E-mail Box">
                             </div>
                         </form>
                     </div>
@@ -75,7 +76,7 @@
         $("#submitBtn").click(function () {
             var email = $("#email").val();
             if (!isEmail(email)) {
-                $("#errorMessage").text("请输入正确的邮箱地址");
+                $("#errorMessage").text("Please enter the correct email address");
                 $("#errorMessage").parent().removeClass("none");
                 $("#email").focus();
                 return false;
@@ -92,7 +93,7 @@
                         $(".position-message-login").removeClass("none");
                     } else {
                         $(".position-message-login").addClass("none");
-                        alert(data.err);
+                        layer.msg(data.err);
                     }
                 },
                 error: function (a, n, e) {
@@ -104,7 +105,7 @@
         $("#toEmailUrl").click(function () {
             var email = $("#email").val();
             var url = gainEmailURL(email);
-            if(url != ''){
+            if(url != '' && url != 'error'){
                 layer.closeAll();
                 window.open(url);
             }else{

@@ -14,6 +14,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
@@ -34,10 +35,9 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${email}</span></p>
-                                    <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
+                                    <p style="font-size:16px;">Dear&nbsp;&nbsp;<span class="color-blue">${email}</span>,<br /> Welcome aboard!
+                                        <a id="loginBtn" href="#" class="color-blue">Please click here to log in CSPmeeting.</a> </p>
                                 </div>
-                                <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="请点击此处登录">
                             </div>
                         </form>
                     </div>
