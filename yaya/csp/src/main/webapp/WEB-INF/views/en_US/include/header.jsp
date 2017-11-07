@@ -15,12 +15,12 @@
                         <img id="head_img" src="<shiro:principal property='avatar' defaultValue='${ctxStatic}/images/admin-userImg.png'/>" alt=""></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
-                                <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
-                                <li><a href="${ctx}/mgr/user/toAvatar">头像设置</a></li>
-                                <li><a href="${ctx}/mgr/user/toAccount">账号管理</a></li>
-                                <li><a href="">流量管理</a></li>
-                                <li><a href="newList.html">帮助中心</a></li>
-                                <li class="last"><a href="${ctx}/mgr/logout">退出账号</a></li>
+                                <li class="first"><a href="${ctx}/mgr/user/info">Me</a></li>
+                                <li><a href="${ctx}/mgr/user/toAvatar">Head-Portrait</a></li>
+                                <li><a href="${ctx}/mgr/user/toAccount">Account</a></li>
+                                <li><a href="${ctx}/mgr/user/toFlux">Network Flow</a></li>
+                                <li><a href="${ctx}/index/17103116063862386794">Support</a></li>
+                                <li class="last"><a href="${ctx}/mgr/logout">Log Out</a></li>
                             </ul>
                             <div class="tb-popupBox-border"></div>
                             <div class="tb-popupBox-outerBorder"></div>
@@ -35,8 +35,8 @@
             <a class="logo" href="/"></a>
             <div class="nav clearfix">
                 <ul>
-                    <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span>会议管理</a></li>
-                    <li><a href="${ctx}/mgr/delivery/history" ><span class="icon-contribute"></span>投稿历史</a></li>
+                    <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span>Meetings</a></li>
+                    <li><a href="${ctx}/mgr/delivery/history" ><span class="icon-contribute"></span>History</a></li>
                 </ul>
             </div>
         </div>

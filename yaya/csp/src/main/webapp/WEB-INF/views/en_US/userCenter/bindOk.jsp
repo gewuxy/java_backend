@@ -37,10 +37,8 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${user}</span></p>
-                                    <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
+                                    <p style="font-size:16px;">Dear&nbsp;&nbsp;<span class="color-blue">${user}</span>,<br /> Welcome aboard! <a href="${ctx}/mgr/login" class="color-blue">Please click here to log in CSPmeeting.</a> </p>
                                 </div>
-                                <input  type="button" id="login" class="button login-button buttonBlue last" value="请点击此处登录">
                             </div>
                         </form>
                     </div>
@@ -58,11 +56,6 @@
         $('.login-banner').height($(window).height());
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
-
-        $("#login").click(function () {
-            window.location.href="${ctx}/mgr/login";
-        });
-
 
     })
 </script>

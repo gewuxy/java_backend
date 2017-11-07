@@ -42,8 +42,8 @@
                                         <img src="${ctxStatic}/images/login-error-icon-02.png" alt="" style="margin-top:10px;">
                                     </div>
                                     <div class="oh">
-                                        <p class="color-red">链接已超时</p>
-                                        <p class="color-red">请重新验证！</p>
+                                        <p class="color-red">Link expired. </p>
+                                        <p class="color-red">Please try again.</p>
                                     </div>
                                 </div>
                             </div>

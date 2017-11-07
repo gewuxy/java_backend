@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>发布会议-CSPmeeting</title>
+    <title>Release Meeting - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
@@ -39,27 +39,27 @@
                                 <label for="uploadFile">
                                     <input type="file" name="file" class="none" id="uploadFile">
                                     <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
-                                    <p>或拖动PDF／PPT到此区域上传</p>
+                                    <p>You can drag PDF/PPT into this area to upload.</p>
                                 </label>
                             </div>
                             <div class="upload-main">
                                 <div class="metting-progreesItem clearfix t-left none">
-                                    <span id="uploadAlt">上传进度</span> <span class="color-blue" id="progressS">0%</span>
+                                    <span id="uploadAlt">Progress of Uploading</span> <span class="color-blue" id="progressS">0%</span>
                                     <p><span class="metting-progreesBar"><i style="width:0%" id="progressI"></i></span></p>
 
                                 </div>
                                 <div class="admin-button t-center">
                                 <c:choose>
                                     <c:when test="${not empty course.details}">
-                                            <a href="javascript:;" class="button min-btn" onclick="uploadFile()">重新上传</a>&nbsp;&nbsp;&nbsp;
-                                            <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">编辑</a>
+                                            <a href="javascript:;" class="button min-btn" onclick="uploadFile()">Upload Again</a>&nbsp;&nbsp;&nbsp;
+                                            <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">Edit</a>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="javascript:;" class="button color-blue min-btn"  onclick="uploadFile()">上传演讲文档</a>
+                                        <a href="javascript:;" class="button color-blue min-btn"  onclick="uploadFile()">Upload Presentation File</a>
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
-                                <p class="color-gray-02">选择小于100M的文件</p>
+                                <p class="color-gray-02">Please select a file less than 100M.</p>
 
                             </div>
                         </div>
@@ -68,41 +68,41 @@
                         <form action="${ctx}/mgr/meet/save" method="post" id="courseForm" name="courseForm">
                             <input type="hidden" name="course.id" value="${course.id}">
                             <div class="meeting-form-item login-form-item">
-                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="会议名称" value="${course.title}"></label>
-                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议名称</span>
+                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="Meeting Name" value="${course.title}"></label>
+                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Input meeting name</span>
 
                                 <div class="textarea">
                                     <textarea name="course.info" id="courseInfo" cols="30" maxlength="600" rows="10">${course.info}</textarea>
                                     <p class="t-right" id="leftInfoCount">600</p>
                                 </div>
-                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议简介</span>
+                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Input session introduction</span>
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
+                                    <span class="subject">Category&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameEn : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${course.categoryId}">
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${course.category}">
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
                                         <input id="recorded" type="radio" name="course.playType" value="0">
-                                        <div class="meeting-tab-btn"><i></i>投屏录播</div>
+                                        <div class="meeting-tab-btn"><i></i>Projective Recording</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
                                         <input id="live" type="radio" name="course.playType" value="1">
-                                        <div class="meeting-tab-btn"><i></i>投屏直播</div>
+                                        <div class="meeting-tab-btn"><i></i>Projective Live Stream</div>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
                                                 <div class="formrow">
                                                     <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="" id="timeStart">
-                                                                    时间<input type="text"  readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
-                                                                    <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
+                                                                    Time<input type="text"  readonly class="timedate-input " name="liveTime" placeholder="Start Time - End time"
+                                                                    <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> to <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
-                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
+                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Please select the beginning time and end time.</span>
                                                         <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.startTime" id="liveStartTime" value="${live.startTime}">
                                                         <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.endTime" id="liveEndTime" value="${live.endTime}">
                                                     </div>
@@ -112,11 +112,11 @@
                                             <div class="cells-block clearfix checkbox-box">
                                                     <span class="checkboxIcon">
                                                         <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''}>
-                                                        <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
+                                                        <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;Video Live Stream</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <p>Generally 1 audience takes 0.5G network flow per hour. Your live is set to 30 minutes. It is estimated to take 25G network flow given 100 audience(s) online.</p>
+                                                    <div class="text">Network Flow Balance<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -124,7 +124,7 @@
                                 </div>
 
                                 <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
-                                <input type="button" class="button login-button buttonBlue last" value="确认提交">
+                                <input type="button" class="button login-button buttonBlue last" value="Submit">
                             </div>
                         </form>
                     </div>
@@ -139,7 +139,7 @@
 <div class="meeting-classify-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
-            <strong>选择分类</strong>
+            <strong>Select</strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-main ">
@@ -161,7 +161,7 @@
                                             <c:if test="${status.index == 0}">class="cur"</c:if>
                                         </c:otherwise>
                                     </c:choose>
-                                ><a href="javascript:void (0);">${c.nameCn}</a></li>
+                                ><a href="javascript:void (0);">${c.nameEn}</a></li>
                             </c:forEach>
                         </ul>
                     </div>
@@ -185,7 +185,7 @@
                                 </c:choose>
 
                                 <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if>
-                            ><a href="javascript:void (0);">${cc.nameCn}</a></li>
+                            ><a href="javascript:void (0);">${cc.nameEn}</a></li>
                             </c:forEach>
 
                         </ul>
@@ -206,10 +206,10 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <p>Please complete the payment in the recharge page, please don't close the window before the completion of the payment</p>
                     <div class="admin-button t-right">
-                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit" class="button buttonBlue item-radius min-btn" value="我已付款成功">
+                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >Payment problems, try again</a>
+                        <input type="submit" class="button buttonBlue item-radius min-btn" value="I have paid successfully">
                     </div>
                 </div>
 
@@ -285,7 +285,7 @@
     function showConvertProgress(){
         $.get('${ctx}/mgr/meet/convert/progress', {}, function (data) {
             console.log("convert progress = "+data.data.progress);
-            $("#uploadAlt").text("转换进度");
+            $("#uploadAlt").text("Progress of converting");
             $("#progressS").text(data.data.progress);
             $("#progressI").css("width", data.data.progress);
             if (data.data.progress.indexOf("100") != -1){
@@ -330,7 +330,7 @@
         $('.cancel-hook').on('click',function(){
             layer.open({
                 type: 1,
-                area: ['560px', '250px'],
+                area: ['660px', '350px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
@@ -426,7 +426,7 @@
             showShortcuts: false,
             showTopbar: false,
             startOfWeek: 'monday',
-            separator : ' 至 ',
+            separator : ' to ',
             format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
             time: {
@@ -437,7 +437,7 @@
             console.log('first-date-selected',obj);
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
-            var timeArray = obj.value.split(" 至 ");
+            var timeArray = obj.value.split(" to ");
             $("#liveStartTime").val(timeArray[0]);
             $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);

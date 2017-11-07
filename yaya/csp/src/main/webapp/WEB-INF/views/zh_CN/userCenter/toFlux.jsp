@@ -114,12 +114,12 @@
                             </form>
                         </div>
                     </div>
-                    <%@include file="../include/footer.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <form target="_blank" action="${ctx}/mgr/charge/createOrder" name="paypalForm" id="paypalForm" method="post">

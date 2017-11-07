@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>投屏扫码-CSPmeeting</title>
+    <title>Scan-to-Project - CSPmeeting</title>
 
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
@@ -29,7 +29,7 @@
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode"><img src="${fileBase}${qrCodeUrl}" alt=""></div>
-                <p class="t-center">请使用 CSPmeeting App 扫码继续</p>
+                <p class="t-center">Please scan with CSPmeeting App to continue.</p>
             </div>
         </div>
     </div>
