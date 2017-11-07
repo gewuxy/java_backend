@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>忘记密码</title>
+    <title>忘記密碼</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -38,10 +38,10 @@
                         <form id="resetForm" name="resetForm">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="郵箱地址">
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
-                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="重置密码">
+                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="重置密碼">
                             </div>
                         </form>
                     </div>
@@ -76,7 +76,7 @@
         $("#submitBtn").click(function () {
             var email = $("#email").val();
             if (!isEmail(email)) {
-                $("#errorMessage").text("请输入正确的邮箱地址");
+                $("#errorMessage").text("請輸入正確的郵箱地址");
                 $("#errorMessage").parent().removeClass("none");
                 $("#email").focus();
                 return false;
@@ -97,7 +97,7 @@
                     }
                 },
                 error: function (a, n, e) {
-                    alert("获取数据异常："+a + " - "+n+" - "+e);
+                    alert("獲取數據異常："+a + " - "+n+" - "+e);
                 }
             })
         });
@@ -109,7 +109,7 @@
                 layer.closeAll();
                 window.open(url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("抱歉!未找到對應的郵箱登錄地址");
             }
         });
     })

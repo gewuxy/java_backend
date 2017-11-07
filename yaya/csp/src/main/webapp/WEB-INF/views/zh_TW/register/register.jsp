@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>注册</title>
+    <title>註冊</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -38,19 +38,19 @@
                         <form action="" method="post" id="registerForm" name="registerForm">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="郵箱地址">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
-                                    <input type="text" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" type="password" name="password" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input type="text" required placeholder="輸入6~24位密碼" class="login-formInput icon-register-hot last none" maxlength="24">
+                                    <input id="pwd" type="password" name="password" required placeholder="輸入6~24位密碼" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
                                 <label for="nickname" class="cells-block pr">
-                                    <input id="nickname" name="nickName" type="text" class="login-formInput" placeholder="昵称">
+                                    <input id="nickname" name="nickName" type="text" class="login-formInput" placeholder="昵稱">
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
 
-                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="注册">
+                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="註冊">
                             </div>
                         </form>
                     </div>
@@ -91,21 +91,21 @@
             var $nickname = $("#nickname");
 
             if (!isEmail($username.val())){
-                $("#errorMessage").text("请输入正确的邮箱地址");
+                $("#errorMessage").text("請輸入正確的郵箱地址");
                 $("#errorMessage").parent().removeClass("none");
                 $username.focus();
                 return false;
             }
 
             if(!isPassword($.trim($password.val()))){
-                $("#errorMessage").text("请输入正确的密码");
+                $("#errorMessage").text("請輸入正確的密碼");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }
 
             if (isEmpty($nickname.val())) {
-                $("#errorMessage").text("请输入昵称");
+                $("#errorMessage").text("請輸入昵稱");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
@@ -130,7 +130,7 @@
                     }
                 },
                 error: function (a, n, e) {
-                    alert("获取数据异常："+a + " - "+n+" - "+e);
+                    alert("獲取數據異常："+a + " - "+n+" - "+e);
                 }
             })
 
@@ -139,11 +139,11 @@
         $("#toEmailUrl").click(function () {
             var email = $("#email").val();
             var url = gainEmailURL(email);
-            if(url != ''){
+            if(url != '' && url!='error'){
                 layer.closeAll();
                 window.open(url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("抱歉!未找到對應的郵箱登錄地址");
             }
         });
 

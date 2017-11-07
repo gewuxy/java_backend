@@ -36,9 +36,9 @@
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
                                     <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${email}</span></p>
-                                    <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
+                                    <p style="font-size:16px;">感謝您成為CSPmeeting的註冊會員</p>
                                 </div>
-                                <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="请点击此处登录">
+                                <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="請點擊此處登錄">
                             </div>
                         </form>
                     </div>

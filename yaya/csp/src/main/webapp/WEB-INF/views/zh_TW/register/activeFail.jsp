@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>激活邮件超时提示</title>
+    <title>激活郵件超時提示</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -40,8 +40,8 @@
                                         <img src="${ctxStatic}/images/login-error-icon-02.png" alt="" style="margin-top:10px;">
                                     </div>
                                     <div class="oh">
-                                        <p class="color-red">链接已超时</p>
-                                        <p class="color-red">请重新验证！</p>
+                                        <p class="color-red">鏈接已超時</p>
+                                        <p class="color-red">請重新驗證！</p>
                                     </div>
                                 </div>
                             </div>
