@@ -31,10 +31,10 @@
                         <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius" >
                             <div class="formrow login-form-item">
-                                <div class="formTitle">Name</div>
+                                <div class="formTitle">nickName</div>
                                 <div class="formControls">
-                                    <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.userName}">
-                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;name can't empty</span>
+                                    <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;nickName can't empty</span>
                                 </div>
                             </div>
                             <div class="formrow">

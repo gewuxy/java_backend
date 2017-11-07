@@ -30,10 +30,10 @@
                         <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius" >
                             <div class="formrow login-form-item">
-                                <div class="formTitle">姓名</div>
+                                <div class="formTitle">昵称</div>
                                 <div class="formControls">
-                                    <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.userName}">
-                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;姓名不能为空</span>
+                                    <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;昵称不能为空</span>
                                 </div>
                             </div>
                             <div class="formrow">
