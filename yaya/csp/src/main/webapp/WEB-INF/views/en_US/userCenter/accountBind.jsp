@@ -33,12 +33,12 @@
                                 <ul>
                                     <li class="facebook">
                                         <c:if test="${not empty facebook}">
-                                            <a href="#" class="fr binding-btn " type="3"  action_type="unbind_3">Unbind</a>
+                                            <a href="#" class="fr binding-btn " type="3"  action_type="unbind">Unbind</a>
                                             <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty facebook}">
-                                            <a href="#" class="fr binding-btn color-blue" id="" type="3" >Bind</a>
+                                            <a href="#" class="fr binding-btn color-blue" id="" type="3" action_type="bind">Bind</a>
                                             <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
