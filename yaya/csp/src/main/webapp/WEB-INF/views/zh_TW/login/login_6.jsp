@@ -23,6 +23,7 @@
     <div class="login login-banner" >
         <div class="page-width pr">
             <div class="login-header">
+                <%@include file="../include/login_header.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
 

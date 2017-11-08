@@ -228,7 +228,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param courseId
      * @param newTitle
      */
-    void addCourseCopy(Integer courseId, String newTitle);
+    int addCourseCopy(Integer courseId, String newTitle);
 
     /**
      * 投稿给指定用户的会议列表
