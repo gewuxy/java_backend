@@ -5,13 +5,12 @@ import cn.jiguang.common.resp.APIRequestException;
 import cn.medcn.article.model.AppVideo;
 import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.common.Constants;
-import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.service.JPushService;
 import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.dto.Captcha;
@@ -36,24 +35,21 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
+import static cn.medcn.common.Constants.*;
+
 /**
  * Created by Liuchangling on 2017/9/27.
  */
 @Controller
 @RequestMapping(value = "/api/user")
-public class CspUserController extends BaseController {
+public class CspUserController extends CspBaseController {
     private static Log log = LogFactory.getLog(CspUserController.class);
 
     @Autowired
     protected CspUserService cspUserService;
 
     @Autowired
-    protected RedisCacheUtils<String> redisCacheUtils;
-
-    @Autowired
     protected PushService cspPushService;
-
-
 
     @Autowired
     protected CspAppVideoService appVideoService;
@@ -64,8 +60,10 @@ public class CspUserController extends BaseController {
     @Value("${app.file.upload.base}")
     protected String uploadBase;
 
+
     @Value("${app.file.base}")
     protected String fileBase;
+
 
 
     /**
@@ -311,10 +309,13 @@ public class CspUserController extends BaseController {
         if (StringUtils.isEmpty(captcha)) {
             throw new SystemException(local("user.empty.captcha"));
         }
+
         // 检查验证码是否有效
-        cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+        checkCaptchaIsOrNotValid(mobile, captcha);
+
         // 根据手机号码检查用户是否存在
         CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+
         if (userInfo == null) {
             // 注册新用户
             userInfo = new CspUserInfo();
@@ -359,12 +360,15 @@ public class CspUserController extends BaseController {
 
     /**
      * 发送手机验证码
-     * type 发送短信验证码模板内容区分 0=登录 1=绑定
+     * type 0=登录 1=绑定 根据短信模板类型 获取不同的短信内容
+     *
+     * @param mobile
+     * @param type
      */
     @RequestMapping("/sendCaptcha")
     @ResponseBody
     public String sendCaptcha(String mobile, Integer type) {
-        if(!StringUtils.isMobile(mobile)){
+        if (!StringUtils.isMobile(mobile)) {
             return error(local("user.mobile.format"));
         }
 
@@ -374,12 +378,17 @@ public class CspUserController extends BaseController {
         }
 
         try {
-            return cspUserService.sendCaptcha(mobile, type);
+            if (type == Captcha.Type.LOGIN.getTypeId()) {
+                return sendMobileCaptcha(mobile, CSP_LOGIN_TEMPLATE_ID);
+            } else {
+                return sendMobileCaptcha(mobile, CSP_BIND_TEMPLATE_ID);
+            }
 
         } catch (SystemException e) {
             return error(e.getMessage());
         }
     }
+
 
 
     /**
@@ -482,7 +491,7 @@ public class CspUserController extends BaseController {
         }
         try {
             //检查验证码合法性
-            cspUserService.checkCaptchaIsOrNotValid(mobile,captcha);
+            checkCaptchaIsOrNotValid(mobile,captcha);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

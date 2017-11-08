@@ -243,7 +243,7 @@ public class UserCenterController extends CspBaseController{
         }
         try {
             //检查验证码合法性
-            cspUserService.checkCaptchaIsOrNotValid(mobile,captcha);
+            checkCaptchaIsOrNotValid(mobile,captcha);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
