@@ -90,7 +90,7 @@
 
     function getVerifyCode(mobile) {
         $.ajax({
-            url: '${ctx}/mgr/sendCaptcha?mobile='+mobile, //目标地址
+            url: '${ctx}/api/user/sendCaptcha?mobile=' + mobile + '&type=0', //目标地址
             type: "post",
             dataType: "json",
             success: function (data){
