@@ -5,6 +5,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
+import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
@@ -38,7 +39,7 @@ public class EmailController extends BaseController{
     protected CspUserService cspUserService;
 
     @Autowired
-    protected JPushService jPushService;
+    protected PushService cspPushService;
 
     @Autowired
     protected EmailTempService tempService;
@@ -116,7 +117,7 @@ public class EmailController extends BaseController{
             String userId = result.substring(result.indexOf(",") + 1);
             cspUserService.doBindMail(email,userId,key);
             //发送推送通知邮箱已绑定
-            jPushService.sendChangeMessage(userId,"3",email);
+            cspPushService.sendChangeMessage(userId,"3",email);
             model.addAttribute("user",email);
             return localeView("/userCenter/bindOk");
         }else{ //链接超时
