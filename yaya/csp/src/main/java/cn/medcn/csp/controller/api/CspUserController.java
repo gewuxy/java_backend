@@ -6,10 +6,10 @@ import cn.medcn.article.model.AppVideo;
 import cn.medcn.article.service.CspAppVideoService;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
+import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
@@ -18,14 +18,15 @@ import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.*;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -50,10 +51,15 @@ public class CspUserController extends BaseController {
     protected RedisCacheUtils<String> redisCacheUtils;
 
     @Autowired
-    protected JPushService jPushService;
+    protected PushService cspPushService;
+
+
 
     @Autowired
     protected CspAppVideoService appVideoService;
+
+    @Autowired
+    protected EmailTempService tempService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -67,7 +73,7 @@ public class CspUserController extends BaseController {
      *
      * @param userInfo
      */
-    @RequestMapping("/register")
+    @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
     public String register(CspUserInfo userInfo) {
         if (userInfo == null) {
@@ -79,21 +85,23 @@ public class CspUserController extends BaseController {
         String nickName = userInfo.getNickName();
 
         if (StringUtils.isEmpty(email)) {
-            return error("user.username.notnull");
+            return error(local("user.username.notnull"));
         }
         if (!StringUtils.isEmail(email)) {
-            return error("user.email.format");
+            return error(local("user.email.format"));
         }
         if (StringUtils.isEmpty(password)) {
-            return error("user.password.notnull");
+            return error(local("user.password.notnull"));
         }
         if (StringUtils.isEmpty(nickName)) {
-            return error("user.linkman.notnull");
+            return error(local("user.linkman.notnull"));
         }
+
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
 
         try {
 
-            return cspUserService.register(userInfo);
+            return cspUserService.register(userInfo,template);
 
         } catch (SystemException e){
             return error(e.getMessage());
@@ -229,7 +237,7 @@ public class CspUserController extends BaseController {
         String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
 
         Principal principal = SecurityUtils.get();
-        String alias = jPushService.generateAlias((Object)principal.getId());
+        String alias = cspPushService.generateAlias(principal.getId());
 
         Set<String> tags = Sets.newHashSet();
         try {
@@ -238,7 +246,7 @@ public class CspUserController extends BaseController {
                 tags.add(osType);
             }
 
-            jPushService.bindAliasAndTags(registrationId, alias, tags);
+            cspPushService.bindAliasAndTags(registrationId, alias, tags);
 
         } catch (APIConnectionException e) {
             e.printStackTrace();
@@ -402,9 +410,14 @@ public class CspUserController extends BaseController {
     /**
      * 更新个人信息中的姓名和简介
      */
-    @RequestMapping("/updateInfo")
+    @RequestMapping(value="/updateInfo",method = RequestMethod.POST)
     @ResponseBody
     public String updateInfo(CspUserInfo info) {
+
+        //修改昵称,昵称为空
+        if(info.getInfo() == null && StringUtils.isEmpty(info.getNickName())){
+            return error(local("user.empty.nickname"));
+        }
        info.setId(SecurityUtils.get().getId());
        cspUserService.updateByPrimaryKeySelective(info);
        return success();
@@ -441,13 +454,13 @@ public class CspUserController extends BaseController {
     public String toBind(String email,String password) {
 
         String userId = SecurityUtils.get().getId();
+        String localStr = LocalUtils.getLocalStr();
         try {
-            //将密码插入到数据库
-            cspUserService.insertPassword(email, password, userId);
-            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
+            cspUserService.sendBindMail(email,password,userId,localStr);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
+
         return success();
 
     }

@@ -16,7 +16,7 @@ public class StringUtils {
     // 手机号码正则表达式
     public static final String MOBILE_REG = "^1[3|4|5|7|8][0-9]{9}$";
     // 电子邮箱检测正则表达式
-    public static final String EMAIL_REG = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
+    public static final String EMAIL_REG = "^[a-z0-9]+([._\\-]*[a-z0-9])*@([a-z0-9]+[-a-z0-9]*[a-z0-9]+.){1,63}[a-z0-9]+$";
 
     public static final int MAX_NUMBER_LEN = 8;
 
@@ -124,6 +124,8 @@ public class StringUtils {
 
 
     public static void main(String[] args) {
-        System.out.println(uniqueStr());
+        String email = "121.123@qq.com";
+        System.out.println(isEmail(email));
+//        System.out.println(uniqueStr());
     }
 }

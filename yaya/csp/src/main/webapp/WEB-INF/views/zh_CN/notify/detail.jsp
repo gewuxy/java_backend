@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>通知 - 详情</title>
+    <title>通知详情-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -19,7 +19,7 @@
     </style>
 </head>
 <body >
-<%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+<%@include file="../include/header.jsp" %>
     <div id="wrapper">
         <div class="admin-content bg-gray" >
             <div class="page-width clearfix">
@@ -44,7 +44,7 @@
                 </div>
             </div>
         </div>
-        <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+        <%@include file="../include/footer.jsp"%>
     </div>
 
 

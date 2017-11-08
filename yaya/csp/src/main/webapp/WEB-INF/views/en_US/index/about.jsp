@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>${article.titleUs}</title>
+    <title>${article.titleUs} - CSPmeeting</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -25,13 +25,13 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/index_header_zh_CN.jsp"%>
+    <%@include file="../include/index_header.jsp"%>
 
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="subPage-head item-shadow item-radius clearfix">
                 <h3 class="title">
-                    <c:if test="${article.titleUs eq 'About Us'}">
+                    <c:if test="${article.id eq '17103116215880292674'}">
                         <i class="icon icon-header-point"></i>
                     </c:if>
                         ${article.titleUs}
@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 
 </div>
 

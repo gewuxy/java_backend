@@ -1,26 +1,23 @@
 package cn.medcn.csp.controller.web;
 
-import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.meet.model.Meet;
 import cn.medcn.oauth.service.OauthService;
-import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
+import cn.medcn.user.service.EmailTempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -52,6 +49,11 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected OauthService oauthService;
+
+    @Autowired
+    protected EmailTempService tempService;
+
+
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -135,13 +137,8 @@ public class UserCenterController extends CspBaseController{
      */
     @RequestMapping("toReset")
     public String toResetPwd(Model model){
-        addBaseUserInfo(model);
-        String userId = getWebPrincipal().getId();
-        CspUserInfo info = cspUserService.selectByPrimaryKey(userId);
-        if(StringUtils.isEmpty(info.getEmail())){
-            //没有绑定邮箱
-            model.addAttribute("needBind",true);
-        }
+        CspUserInfoDTO dto = addBaseUserInfo(model);
+        model.addAttribute("email",dto.getEmail());
         return localeView("/userCenter/pwdReset");
 
     }
@@ -188,13 +185,26 @@ public class UserCenterController extends CspBaseController{
     public String toAccount(Model model){
         CspUserInfoDTO dto = addBaseUserInfo(model);
         List<BindInfo> list = dto.getBindInfoList();
+        String localStr = LocalUtils.getLocalStr();
+
         for(BindInfo info:list){
-            if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
-                model.addAttribute("weChat",info.getNickName());
+            //英文版
+            if(LocalUtils.Local.en_US.name().equals(localStr)){
+                if(info.getThirdPartyId() == BindInfo.Type.FACEBOOK.getTypeId()){
+                    model.addAttribute("facebook",info.getNickName());
+                }
+                if(info.getThirdPartyId() == BindInfo.Type.TWITTER.getTypeId()){
+                    model.addAttribute("twitter",info.getNickName());
+                }
+            }else{
+                if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
+                    model.addAttribute("weChat",info.getNickName());
+                }
+                if(info.getThirdPartyId() == BindInfo.Type.WEI_BO.getTypeId()){
+                    model.addAttribute("weiBo",info.getNickName());
+                }
             }
-            if(info.getThirdPartyId() == BindInfo.Type.WEI_BO.getTypeId()){
-                model.addAttribute("weiBo",info.getNickName());
-            }
+
             if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
                 model.addAttribute("YaYa",info.getNickName());
             }
@@ -254,10 +264,9 @@ public class UserCenterController extends CspBaseController{
     public String toBind(String email,String password) {
 
         String userId = getWebPrincipal().getId();
+        String localStr = LocalUtils.getLocalStr();
         try {
-            //将密码插入到数据库
-            cspUserService.insertPassword(email,password,userId);
-            cspUserService.sendMail(email,userId, MailBean.MailTemplate.BIND.getLabelId());
+            cspUserService.sendBindMail(email,password,userId,localStr);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

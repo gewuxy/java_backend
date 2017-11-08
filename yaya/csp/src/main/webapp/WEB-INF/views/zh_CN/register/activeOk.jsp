@@ -9,11 +9,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>激活邮件</title>
+    <title>激活邮箱-CSPmeeting</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
@@ -22,10 +23,10 @@
 <div id="wrapper">
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
-           <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+           <%@include file="/WEB-INF/include/switch_language.jsp"%>
            
             <div class="login-box clearfix">
-                <%@include file="/WEB-INF/include/login_left.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
                 
                 <div class="col-lg-5 login-box-item">
 
@@ -45,7 +46,7 @@
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
+            <%@include file="../include/login_footer.jsp"%>
         </div>
     </div>
 </div>

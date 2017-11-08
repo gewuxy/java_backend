@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>投稿历史</title>
+    <title>投稿历史-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -20,7 +20,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <c:if test="${fn:length(acceptList) != 0}" >
         <div class="admin-content bg-gray">
             <div class="page-width clearfix">
@@ -54,7 +54,12 @@
                                         <div class="col-lg-6">
                                             <div class="resource-list-item item-radius clearfix">
                                                 <div class="resource-img ">
-                                                    <img src="${meet.coverUrl}" alt="" class="img-response">
+                                                    <c:if test="${empty meet.coverUrl}">
+                                                        <img src="${ctxStatic}/upload/img/_admin_metting_01.png" alt="" class="img-response">
+                                                    </c:if>
+                                                    <c:if test="${not empty meet.coverUrl}">
+                                                        <img src="${meet.coverUrl}" alt="" class="img-response">
+                                                    </c:if>
                                                     <div class="resource-link">
                                                         <a href="#" class="resource-icon-play popup-player-hook">
                                                             <i></i>
@@ -91,7 +96,7 @@
 
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                    <%@include file="../include/pageable.jsp"%>
                     <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/delivery/history">
                         <input type="hidden" name="pageNum">
                         <input type="hidden" name="acceptId" value="${current}">
@@ -119,7 +124,7 @@
 
 </div>
 
-<%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+<%@include file="../include/footer.jsp"%>
 
 
 
@@ -129,6 +134,7 @@
 
 <script>
     $(function(){
+
 
         $(".icon-folder").parent().removeClass();
         $(".icon-contribute").parent().attr("class","current");

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 流量管理</title>
+    <title>流量管理-个人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -21,7 +21,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -32,7 +32,7 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content item-radius">
-                            <h4>视频直播记录 <span>剩余流量 <i>${flux == 0 ? 0:flux/1024}</i>G</span></h4>
+                            <h4>视频直播记录 <span>剩余流量 <i>${flux == 0 || empty flux? 0:flux/1024}</i>G</span></h4>
                             <table class="table-box-1">
                                 <colgroup>
                                     <col class="col-w-4">
@@ -57,7 +57,7 @@
                                             </c:if>
                                         </tr>
                                     </c:forEach>
-                                    <%@include file="/WEB-INF/include/pageable_zh_CN.jsp"%>
+                                    <%@include file="../include/pageable.jsp"%>
                                     <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
                                         <input type="hidden" name="pageNum">
                                     </form>
@@ -114,12 +114,12 @@
                             </form>
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <form target="_blank" action="${ctx}/mgr/charge/createOrder" name="paypalForm" id="paypalForm" method="post">

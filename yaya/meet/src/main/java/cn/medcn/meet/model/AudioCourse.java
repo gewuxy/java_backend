@@ -48,6 +48,8 @@ public class AudioCourse implements Serializable {
     protected String info;
     //新增的csp课件分类ID
     protected Integer categoryId;
+    // 是否删除(csp可以删除会议)
+    protected Boolean deleted;
 
     @Transient
     private List<AudioCourseDetail> details;

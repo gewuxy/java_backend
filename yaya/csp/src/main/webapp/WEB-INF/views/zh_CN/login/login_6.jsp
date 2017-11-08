@@ -10,9 +10,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>手机登录</title>
+    <title>手机登录-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
@@ -22,11 +23,14 @@
     <div class="login login-banner" >
         <div class="page-width pr">
 
-            <%@include file="/WEB-INF/include/switch_language_zh_CN.jsp"%>
+            <div class="login-header">
+                <%@include file="../include/login_header.jsp"%>
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
+            </div>
 
             <div class="login-box clearfix">
 
-                <%@include file="/WEB-INF/include/login_left.jsp"%>
+                <%@include file="../include/login_left.jsp"%>
 
                 <div class="col-lg-5 login-box-item">
 
@@ -51,12 +55,12 @@
                     </div>
 
 
-                    <%@include file="/WEB-INF/include/login_service.jsp"%>
+                    <%@include file="../include/login_service.jsp"%>
 
                 </div>
             </div>
 
-            <%@include file="/WEB-INF/include/login_footer_zh_CN.jsp"%>
+            <%@include file="../include/login_footer.jsp"%>
 
         </div>
     </div>

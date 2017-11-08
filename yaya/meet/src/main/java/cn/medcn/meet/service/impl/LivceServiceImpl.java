@@ -38,4 +38,10 @@ public class LivceServiceImpl extends BaseServiceImpl<Live> implements LiveServi
         cond.setCourseId(courseId);
         return liveDAO.selectOne(cond);
     }
+
+    @Override
+    public LiveOrderDTO findCachedOrder(Integer courseId) {
+        LiveOrderDTO dto = (LiveOrderDTO) redisCacheUtils.getCacheObject(SYNC_CACHE_PREFIX + courseId);
+        return dto;
+    }
 }

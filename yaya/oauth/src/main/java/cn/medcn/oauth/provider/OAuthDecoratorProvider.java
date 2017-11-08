@@ -60,7 +60,11 @@ public class OAuthDecoratorProvider {
 
                     break;
                 case 4 : // twitter
-
+                    appKey = OAuthConstants.get("Twitter.app_key");
+                    secret = OAuthConstants.get("Twitter.app_secret");
+                    config.setApiKey(appKey);
+                    config.setApiSecret(secret);
+                    config.setServiceId(serviceId);
                     break;
                 case 5 : // YaYa医师
                     appKey = OAuthConstants.get("YaYa.app_key");

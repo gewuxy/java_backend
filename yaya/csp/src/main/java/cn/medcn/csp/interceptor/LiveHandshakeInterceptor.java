@@ -15,6 +15,7 @@ import org.springframework.web.socket.server.support.HttpSessionHandshakeInterce
 import java.util.Map;
 
 import static cn.medcn.csp.CspConstants.COURSE_ID_KEY;
+import static cn.medcn.csp.CspConstants.LIVE_TYPE_KEY;
 
 /**
  * Created by lixuan on 2017/9/27.
@@ -30,6 +31,9 @@ public class LiveHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
                                    Map<String, Object> params) throws Exception {
         ServletServerHttpRequest serverRequest = (ServletServerHttpRequest) request;
         String courseId = serverRequest.getServletRequest().getParameter(COURSE_ID_KEY);
+
+        String liveType = serverRequest.getServletRequest().getParameter(LIVE_TYPE_KEY);
+
         if(StringUtils.isBlank(courseId)){
             throw new RuntimeException("parameter courseId required");
         }
@@ -38,7 +42,9 @@ public class LiveHandshakeInterceptor extends HttpSessionHandshakeInterceptor {
         if (!CheckUtils.isEmpty(token)) {
             params.put(Constants.TOKEN, token);
         }
-
+        if (CheckUtils.isNotEmpty(liveType)) {
+            params.put(LIVE_TYPE_KEY, liveType);
+        }
         params.put(COURSE_ID_KEY, courseId);
         return super.beforeHandshake(request, response, webSocketHandler, params);
     }

@@ -25,13 +25,13 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/index_header_zh_CN.jsp"%>
+    <%@include file="../include/index_header.jsp"%>
 
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="subPage-head item-shadow item-radius clearfix">
                 <h3 class="title">
-                    <c:if test="${article.titleTw eq '關於我們'}">
+                    <c:if test="${article.id eq '17103116215880292674'}">
                         <i class="icon icon-header-point"></i>
                     </c:if>
                         ${article.titleTw}
@@ -43,7 +43,7 @@
         </div>
     </div>
 
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 
 </div>
 

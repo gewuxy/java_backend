@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 我的信息</title>
+    <title>我的信息-个人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -18,7 +18,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -30,10 +30,10 @@
                         <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius" >
                             <div class="formrow login-form-item">
-                                <div class="formTitle">姓名</div>
+                                <div class="formTitle">昵称</div>
                                 <div class="formControls">
-                                    <input type="text" id="userName" class="textInput" placeholder="" maxlength="18" value="${dto.userName}">
-                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;姓名不能为空</span>
+                                    <input type="text" id="nickName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;昵称不能为空</span>
                                 </div>
                             </div>
                             <div class="formrow">
@@ -48,12 +48,12 @@
 
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <script>
@@ -63,15 +63,15 @@
         $("#config_1").parent().attr("class","cur");
 
         $("#update").click(function () {
-            var userName = $.trim($("#userName").val());
-            if(userName == ''){
+            var nickName = $.trim($("#nickName").val());
+            if(nickName == ''){
                 $("#nameSpan").attr("class","cells-block error");
                 return;
             }
             var info = $("#info").val();
-            $.post('${ctx}/mgr/user/updateInfo',{"userName":userName,"info":info}, function (data) {
+            $.post('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info}, function (data) {
                 if (data.code == 0){
-                    $("#name", window.parent.document).html(userName);
+                    $("#name", window.parent.document).html(nickName);
                     layer.msg("修改成功");
                 }else{
                     layer.msg("修改失败");

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 修改密码</title>
+    <title>修改密码-个人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -17,7 +17,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -27,7 +27,7 @@
                     </div>
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
-                        <c:if test="${not empty needBind}">
+                        <c:if test="${empty email}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
                                     <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
@@ -36,7 +36,7 @@
 
                             </div>
                         </c:if>
-                        <c:if test="${empty needBind}">
+                        <c:if test="${not empty email}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="user-resetPassword clearfix">
                                     <form id="submitForm" action="" method="post">
@@ -67,12 +67,12 @@
                         </c:if>
 
                     </div>
-                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <!--弹出绑定邮箱step01-->

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 账号绑定</title>
+    <title>账号管理-个人中心-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -18,7 +18,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -101,12 +101,12 @@
                             </div>
                         </div>
                     </div>
-                    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+
                 </div>
             </div>
         </div>
     </div>
-
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <!--弹出绑定手机-->

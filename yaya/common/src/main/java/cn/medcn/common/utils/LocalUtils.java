@@ -47,4 +47,10 @@ public class LocalUtils {
         return new Locale(array[0], array[1]);
 
     }
+
+    public enum Local {
+        en_US(),
+        zh_CN(),
+        zh_TW();
+    }
 }

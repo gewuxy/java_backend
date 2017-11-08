@@ -28,4 +28,10 @@ public class LiveRecord {
     protected Integer onlineCount;//在线人数
 
     protected Integer playCount;//播放总人数
+
+
+    public static void main(String[] args) {
+        String url = "asdfadfafdadfasfasfafdfadf.mp4";
+        System.out.println(url.substring(url.lastIndexOf(".")));
+    }
 }

@@ -16,6 +16,7 @@ public class MailBean {
     private String[] toEmails;
     private String subject;
     private String context;
+    private String localStr;
 
     /**
      * 邮箱模板内容
@@ -23,7 +24,7 @@ public class MailBean {
     public enum MailTemplate{
         REGISTER(0, "register"), // 注册
         FIND_PWD(1, "pwdRest"), // 找回密码
-        BIND(2, "bindEmail"); // 绑定
+        BIND(2, "bindEmail");// 绑定
 
         private Integer labelId;
         private String label;

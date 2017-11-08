@@ -146,8 +146,8 @@ public class VideoTest {
 
     @Test
     public void testKick(){
-        LiveOrderDTO dto = LiveOrderDTO.buildKickOrder("14379", "1");
-        dto.setSid("b");
-        liveService.publish(dto);
+//        LiveOrderDTO dto = LiveOrderDTO.buildKickOrder("14379", "1");
+//        dto.setSid("b");
+//        liveService.publish(dto);
     }
 }

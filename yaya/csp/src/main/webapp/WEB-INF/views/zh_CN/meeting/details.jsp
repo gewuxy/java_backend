@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>上传预览</title>
+    <title>会议预览-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -28,7 +28,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp"%>
+    <%@include file="../include/header.jsp"%>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix">
             <div class="admin-module clearfix item-radius admin-metting-player">
@@ -68,7 +68,7 @@
             </div>
         </div>
     </div>
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 

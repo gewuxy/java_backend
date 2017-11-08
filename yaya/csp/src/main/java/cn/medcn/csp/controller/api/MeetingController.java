@@ -26,6 +26,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -104,12 +105,12 @@ public class MeetingController extends CspBaseController {
         LocalUtils.setLocalStr(local);
 
         String abroad = (String) params.get(ABROAD_KEY);
-        boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
-
-        AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
-        if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
-            throw new SystemException(local("source.access.deny"));
-        }
+        //boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
+        boolean isAbroad = false;
+//        AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
+//        if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
+//            throw new SystemException(local("source.access.deny"));
+//        }
 
         Integer courseId = Integer.valueOf(id);
         AudioCourse course = audioService.findAudioCourse(courseId);
@@ -122,8 +123,21 @@ public class MeetingController extends CspBaseController {
 
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
             course.setDetails(audioService.findLiveDetails(courseId));
+            String wsUrl = genWsUrl(request, courseId);
+            wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
+            model.addAttribute("wsUrl", wsUrl);
 
             course.setDetails(audioService.findLiveDetails(courseId));
+            LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
+            if (orderDTO != null) {
+                AudioCourseDetail tempDetail = new AudioCourseDetail();
+                tempDetail.setImgUrl(orderDTO.getImgUrl());
+                tempDetail.setVideoUrl(orderDTO.getVideoUrl());
+                tempDetail.setCourseId(Integer.valueOf(courseId));
+                tempDetail.setId(orderDTO.getDetailId());
+                course.getDetails().add(tempDetail);
+            }
+
             Live live = liveService.findByCourseId(courseId);
             model.addAttribute("live", live);
         }
@@ -132,6 +146,30 @@ public class MeetingController extends CspBaseController {
 
         model.addAttribute("course", course);
         return localeView("/meeting/course_" + course.getPlayType().intValue());
+    }
+
+    /**
+     * 复制副本
+     * @param courseId
+     * @param title
+     * @return
+     */
+    @RequestMapping("/share/copy")
+    @ResponseBody
+    public String copy(Integer courseId, String title) {
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = SecurityUtils.get();
+        if (!principal.getId().equals(course.getCspUserId())) {
+            return error(local("meeting.error.not_mine"));
+        }
+        if (courseId == null || courseId ==0) {
+            return error(local("error.param"));
+        }
+        if (StringUtils.isEmpty(title)) {
+            return error(local("error.param"));
+        }
+        audioService.addCourseCopy(courseId, title);
+        return success();
     }
 
 
@@ -306,7 +344,9 @@ public class MeetingController extends CspBaseController {
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
         if (hasDuplicate) {
             Map<String, Object> result = new HashMap<>();
-            result.put("wsUrl", genWsUrl(request, courseId));
+            String wsUrl = genWsUrl(request, courseId);
+            wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
+            result.put("wsUrl", wsUrl);
             result.put("duplicate", "1");
             return success(result);
         } else {
@@ -327,6 +367,7 @@ public class MeetingController extends CspBaseController {
             //发送ws同步指令
             LiveOrderDTO order = new LiveOrderDTO();
             order.setCourseId(String.valueOf(courseId));
+            order.setLiveType(LiveOrderDTO.LIVE_TYPE_PPT);
             order.setOrder(LiveOrderDTO.ORDER_SCAN_SUCCESS);
             order.setPageNum(0);
             liveService.publish(order);
@@ -357,6 +398,7 @@ public class MeetingController extends CspBaseController {
         result.put("course", audioCourse);
 
         String wsUrl = genWsUrl(request, courseId);
+        wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
 
         result.put("wsUrl", wsUrl);
         if (audioCourse.getPlayType() == null) {
@@ -464,7 +506,27 @@ public class MeetingController extends CspBaseController {
             Integer channelId = Integer.valueOf(callback.getChannel_id());
             Live live = liveService.findByCourseId(channelId);
             if (live != null) {
-                live.setReplayUrl(callback.getReplay_url());
+
+                String replayUrl = callback.getReplay_url();
+                String suffix = replayUrl.substring(replayUrl.lastIndexOf("."));
+
+                String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + channelId + suffix;
+                //检测是否有之前的直播视频
+                File file = new File(fileUploadBase + finalReplayPath);
+                if (file.exists()) {
+                    StringBuffer buffer = new StringBuffer(fileUploadBase);
+                    buffer.append(FilePath.COURSE.path).append("/").
+                            append(channelId).append("/replay/").
+                            append(channelId).append("_").
+                            append(StringUtils.nowStr()).
+                            append(replayUrl.substring(replayUrl.lastIndexOf(".")));
+                    HttpUtils.copyFromNetwork(callback.getReplay_url(), buffer.toString());
+                } else {
+                    HttpUtils.copyFromNetwork(callback.getReplay_url(), fileUploadBase + finalReplayPath);
+                }
+
+                live.setReplayUrl(fileBase + finalReplayPath);
+
                 live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expireDays)));
                 live.setPlayCount(callback.getPlayer_count());
                 live.setOnlineCount(callback.getOnline_nums());
@@ -512,6 +574,27 @@ public class MeetingController extends CspBaseController {
 
 
     /**
+     * 删除会议
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/delete")
+    @ResponseBody
+    public String delete(Integer id) {
+        Principal principal = SecurityUtils.get();
+
+        if (id == null || id == 0) {
+            return error(local("error.param"));
+        } else {
+            AudioCourse course = new AudioCourse();
+            course.setId(id);
+            course.setDeleted(true);
+            audioService.updateByPrimaryKeySelective(course);
+            return success();
+        }
+    }
+
+    /**
      * 退出录播
      * @param courseId
      * @param pageNum
@@ -546,14 +629,25 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/join/check")
     @ResponseBody
-    public String joinCheck(Integer courseId, HttpServletRequest request){
-        boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
+    public String joinCheck(Integer courseId, HttpServletRequest request, String liveType){
+        boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);
         Map<String, Object> result = new HashMap<>();
+
+        if (liveType == null) {
+            liveType = LiveOrderDTO.LIVE_TYPE_PPT;
+        }
+
+        String wsUrl = genWsUrl(request, courseId);
+        wsUrl += "&liveType=" + liveType;
+
         if (hasDuplicate) {
-            result.put("wsUrl", genWsUrl(request, courseId));
+            result.put("wsUrl", wsUrl);
             result.put("duplicate", "1");
         } else {
             result.put("duplicate", "0");
+            if (liveType.equals(LiveOrderDTO.LIVE_TYPE_VIDEO)) {
+                result.put("wsUrl", wsUrl);
+            }
         }
         return success(result);
     }

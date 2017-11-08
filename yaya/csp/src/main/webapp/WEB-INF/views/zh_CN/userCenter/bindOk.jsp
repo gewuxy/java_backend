@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>邮件绑定成功</title>
+    <title>邮箱绑定成功-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -26,16 +26,11 @@
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
             <div class="login-header">
-
-                <a href="#" class="login-language" title="切换语言">中文</a>
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
             <div class="login-box clearfix">
-                <div class="col-lg-5">
-                    <div class="login-box-logo">
-                        <img src="${ctxStatic}/images/login-logo.png" alt="">
-                    </div>
-                </div>
-                <div class="col-lg-2">&nbsp;</div>
+                <%@include file="../include/login_left.jsp"%>
+
                 <div class="col-lg-5 login-box-item">
 
                     <!--切换  重置密码-->
@@ -53,7 +48,7 @@
 
                 </div>
             </div>
-            <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+            <%@include file="../include/footer.jsp"%>
         </div>
     </div>
 </div>

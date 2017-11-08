@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>会议管理</title>
+    <title>发布会议-CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
@@ -28,7 +28,7 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_zh_CN.jsp" %>
+    <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="admin-module clearfix item-radius">
@@ -116,7 +116,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <div class="text">流量剩余<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -133,7 +133,7 @@
         </div>
     </div>
 
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 </div>
 
 <div class="meeting-classify-popup-box">

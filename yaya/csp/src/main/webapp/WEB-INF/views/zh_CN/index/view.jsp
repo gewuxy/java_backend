@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>${article.titleCn}</title>
+    <title>${article.titleCn}-CSPmeeting</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -27,7 +27,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/index_header_zh_CN.jsp"%>
+    <%@include file="../include/index_header.jsp"%>
 
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 </div>
 <script>
     $(function(){

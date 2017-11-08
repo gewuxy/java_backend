@@ -9,7 +9,9 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
 import org.jdom.JDOMException;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.MessagingException;
@@ -46,7 +48,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * 注册用户
      * @param userInfo
      */
-    String register(CspUserInfo userInfo) throws SystemException;
+    String register(CspUserInfo userInfo,EmailTemplate template) throws SystemException;
 
     /**
      * 发送手机验证码
@@ -69,13 +71,13 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      */
     CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO);
 
-    /**
-     * 缓存信息和发送绑定或找回密码邮件
-     * @param email
-     * @param userId
-     * @param template 模板
-     */
-    void sendMail(String email, String userId, Integer template) throws SystemException;
+//    /**
+//     * 缓存信息和发送绑定或找回密码邮件
+//     * @param email
+//     * @param userId
+//     * @param template 模板
+//     */
+//    void sendMail(String email, String userId, Integer template) throws SystemException;
 
     /**
      * 绑定手机号
@@ -154,4 +156,23 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     int findFlux(String userId);
+
+
+    /**
+     * 发送邮件
+     * @param email
+     * @param userId
+     * @param template
+     * @throws SystemException
+     */
+    void sendMail(String email, String userId, EmailTemplate template) throws SystemException;
+
+    /**
+     * 发送绑定邮件
+     * @param email
+     * @param password
+     * @param userId
+     * @param localStr
+     */
+    void sendBindMail(String email, String password, String userId, String localStr) throws SystemException;
 }

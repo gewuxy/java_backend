@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>${article.titleUs}</title>
+    <title>${article.titleUs} - CSPmeeting</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -27,15 +27,15 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/index_header_zh_CN.jsp"%>
+    <%@include file="../include/index_header.jsp"%>
 
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="subPage-head item-shadow item-radius clearfix">
                 <ul id="menu">
-                    <li ><a href="${ctx}/index/17103116063862386794">常见问题</a></li>
-                    <li ><a href="${ctx}/index/17103116065640899342">使用指南</a></li>
-                    <li ><a href="${ctx}/index/17103116070973422540">服务与收费</a></li>
+                    <li ><a href="${ctx}/index/17103116063862386794">FAQ</a></li>
+                    <li ><a href="${ctx}/index/17103116065640899342">Guide</a></li>
+                    <li ><a href="${ctx}/index/17103116070973422540">Services & Charge</a></li>
                 </ul>
             </div>
             <div class="subPage-main item-shadow item-radius" >
@@ -44,7 +44,7 @@
         </div>
     </div>
 
-    <%@include file="/WEB-INF/include/footer_zh_CN.jsp"%>
+    <%@include file="../include/footer.jsp"%>
 </div>
 <script>
     $(function(){
