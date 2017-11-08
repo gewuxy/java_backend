@@ -13,8 +13,7 @@ public class IndexController extends BaseController {
 
     @RequestMapping(value = "/")
     public String index(){
-        System.out.println("hello world !");
-        return "/index";
+        return "/login";
     }
 
 
