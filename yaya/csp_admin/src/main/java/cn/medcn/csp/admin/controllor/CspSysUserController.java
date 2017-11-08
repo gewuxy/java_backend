@@ -28,12 +28,12 @@ public class CspSysUserController extends BaseController {
 
     @RequestMapping(value = "/user/pwd")
     public String resetPwd(){
-        return "/system/resetPwd";
+        return "/sys/resetPwd";
     }
 
     @RequestMapping(value = "/user/addAdmin")
     public String updateUserInfo() {
-        return "/system/addAdminForm";
+        return "/sys/addAdminForm";
     }
 
     /**
@@ -51,7 +51,7 @@ public class CspSysUserController extends BaseController {
         }
         MyPage<CspSysUser> page = cspSysUserService.findCspSysUser(pageable);
         model.addAttribute("page", page);
-        return "/system/userList";
+        return "/sys/userList";
     }
 
     /**
@@ -64,7 +64,7 @@ public class CspSysUserController extends BaseController {
         Integer userId = SubjectUtils.getCurrentUserid();
         CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
         model.addAttribute("user", user);
-        return "/system/userInfo";
+        return "/sys/userInfo";
     }
 
     /**
@@ -77,7 +77,7 @@ public class CspSysUserController extends BaseController {
         CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
         if (!user.getPassword().equals(MD5Utils.MD5Encode(oldPassword))) {
             model.addAttribute("passwordErrpor","旧密码错误");
-            return "/system/resetPwd";
+            return "/sys/resetPwd";
         }
         user.setPassword(MD5Utils.MD5Encode(newPassword));
         cspSysUserService.updateByPrimaryKey(user);
@@ -99,7 +99,7 @@ public class CspSysUserController extends BaseController {
         newOne.setMobile(mobile);
         cspSysUserService.updateByPrimaryKey(newOne);
         model.addAttribute("user", newOne);
-        return "/system/userInfo";
+        return "/sys/userInfo";
     }
 
     /**

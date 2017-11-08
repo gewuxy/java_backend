@@ -58,8 +58,6 @@ public class LoginController extends BaseController{
      */
     @RequestMapping(value="/logout")
     public String logout(){
-        Subject subject = SecurityUtils.getSubject();
-        subject.logout();
         return "redirect:/";
     }
 
