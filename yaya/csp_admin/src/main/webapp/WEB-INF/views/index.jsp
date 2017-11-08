@@ -90,13 +90,14 @@
                         <shiro:principal property="nickname"/>&nbsp;<span id="notifyNum"
                                                                           class="label label-info hide"></span></a>
                     <ul class="dropdown-menu">
-                        <li><a href="${ctx}/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a>
+                        <li><a href="${ctx}/csp/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a>
                         </li>
-                        <li><a href="${ctx}/sys/user/pwd" target="mainFrame"><i class="icon-lock"></i>&nbsp; 修改密码</a>
+                        <li>
+                            <a target="mainFrame" href="${ctx}/csp/sys/user/pwd" ><i class="icon-lock"></i>&nbsp; 修改密码</a>
                         </li>
                     </ul>
                 </li>
-                <li><a href="${ctx}/logout" title="退出登录"><i class="icon-off"></i>&nbsp;退出</a></li>
+                <li><a data-href="${ctx}/logout" title="退出登录" onclick="layerConfirm('确认退出吗？', this)"><i class="icon-off"></i>&nbsp;退出</a></li>
                 <li>&nbsp;</li>
             </ul>
 
@@ -155,7 +156,7 @@
                                     </li>
 
                                     <li><a
-                                            href="${ctx}/example/form"
+                                            href="${ctx}/csp/sys/user/list"
                                             target="mainFrame"><i
                                             class="icon-circle-arrow-right"></i>&nbsp;管理员账号
                                     </a>
@@ -167,7 +168,7 @@
                                     </a>
                                     </li>
                                     <li><a
-                                            href="${ctx}/example/form"
+                                            href="${ctx}/csp/sys/log/list"
                                             target="mainFrame"><i
                                             class="icon-circle-arrow-right"></i>&nbsp;日志管理
                                     </a>
@@ -260,6 +261,7 @@
         }
     }
 </script>
-<script src="${ctxStatic}/common/wsize.min.js" type="text/javascript"></script>
+<script src="${ctxStatic}/common/wsize.js" type="text/javascript"></script>
+
 </body>
 </html>
