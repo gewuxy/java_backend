@@ -280,7 +280,7 @@ public class MeetingController extends CspBaseController {
         //保存直播进度
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
-            live.setLivePage(maxSort);
+            live.setLivePage(detail.getSort() - 1);
             liveService.updateByPrimaryKeySelective(live);
         }
     }
@@ -341,6 +341,12 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String handleScan(Integer courseId, HttpServletRequest request) {
 
+        Principal principal = SecurityUtils.get();
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (!principal.getId().equals(course.getCspUserId())) {
+            return error(local("meeting.error.not_mine"));
+        }
+
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
         if (hasDuplicate) {
             Map<String, Object> result = new HashMap<>();
@@ -350,7 +356,7 @@ public class MeetingController extends CspBaseController {
             result.put("duplicate", "1");
             return success(result);
         } else {
-            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+
             Map<String, Object> result = new HashMap<>();
             result.put("courseId", courseId);
             result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
