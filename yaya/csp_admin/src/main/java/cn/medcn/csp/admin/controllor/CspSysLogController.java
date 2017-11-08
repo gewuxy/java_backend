@@ -31,6 +31,6 @@ public class CspSysLogController extends BaseController {
         }
         MyPage<CspSysLog> page = cspSysLogService.findCspSysLog(pageable);
         model.addAttribute("page", page);
-        return "/system/logList";
+        return "/sys/logList";
     }
 }

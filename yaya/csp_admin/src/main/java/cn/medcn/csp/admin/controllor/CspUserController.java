@@ -32,7 +32,7 @@ public class CspUserController extends BaseController {
         }
         MyPage<CspSysUser> page = cspSysUserService.findCspSysUser(pageable);
         model.addAttribute("page", page);
-        return "/system/userList";
+        return "/sys/userList";
     }
 
 
