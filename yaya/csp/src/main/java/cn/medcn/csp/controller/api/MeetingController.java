@@ -157,19 +157,18 @@ public class MeetingController extends CspBaseController {
     @RequestMapping("/share/copy")
     @ResponseBody
     public String copy(Integer courseId, String title) {
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
         Principal principal = SecurityUtils.get();
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-        if (courseId == null || courseId ==0) {
+        if (courseId == null || courseId == 0) {
             return error(local("error.param"));
         }
         if (StringUtils.isEmpty(title)) {
             return error(local("error.param"));
         }
-        audioService.addCourseCopy(courseId, title);
-        return success();
+        return success(audioService.addCourseCopy(courseId, title));
     }
 
 

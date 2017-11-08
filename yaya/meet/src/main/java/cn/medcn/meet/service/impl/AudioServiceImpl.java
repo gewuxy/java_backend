@@ -601,7 +601,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param courseId
      */
     @Override
-    public void addCourseCopy(Integer courseId, String newTitle) {
+    public int addCourseCopy(Integer courseId, String newTitle) {
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
         Integer newCourseId = doCopyCourse(course, null, newTitle);
 
@@ -624,6 +624,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             copy.setCourseId(newCourseId);
             audioCoursePlayDAO.insert(copy);
         }
+
+        return newCourseId;
     }
 
     /**
