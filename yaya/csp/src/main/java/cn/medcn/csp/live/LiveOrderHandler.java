@@ -17,12 +17,15 @@ import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import static cn.medcn.csp.CspConstants.COURSE_ID_KEY;
 import static cn.medcn.csp.CspConstants.LIVE_TYPE_KEY;
+import static cn.medcn.meet.dto.LiveOrderDTO.LIVE_TYPE_PPT;
+import static cn.medcn.meet.dto.LiveOrderDTO.LIVE_TYPE_VIDEO;
 
 /**
  * Created by lixuan on 2017/9/27.
@@ -56,7 +59,14 @@ public class LiveOrderHandler extends TextWebSocketHandler {
 
     @Override
     public void handleTransportError(WebSocketSession session, Throwable exception) throws Exception {
+        LogUtils.debug(log, String.format("client connection error with sessionId (%s) !!!", session.getId()));
 
+        String courseId = (String) session.getAttributes().get(COURSE_ID_KEY);
+        if(sessionMap !=null && sessionMap.get(courseId) != null){
+            sessionMap.get(courseId).remove(session.getId());
+        }
+
+        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionMap.get(courseId) == null ? 0 : sessionMap.get(courseId).size()));
     }
 
     @Override
@@ -80,7 +90,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         String token = (String) session.getAttributes().get(Constants.TOKEN);
         String liveType = (String) session.getAttributes().get(LIVE_TYPE_KEY);
         if (liveType == null) {
-            liveType = LiveOrderDTO.LIVE_TYPE_PPT;
+            liveType = LIVE_TYPE_PPT;
         }
 
         LogUtils.debug(log, String.format("user login in meeting with courseId = %s and token = %s", courseId, token));
@@ -196,7 +206,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
                 if (token.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))
                         && !sMap.get(key).getId().equals(currentSession.getId())) {
                     if (liveType == null) {
-                        liveType = LiveOrderDTO.LIVE_TYPE_PPT;
+                        liveType = LIVE_TYPE_PPT;
                     }
 
                     if (liveType.equals(sMap.get(key).getAttributes().get(LIVE_TYPE_KEY))) {
@@ -220,7 +230,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         if (sMap != null) {
             for (String key : sMap.keySet()) {
                 if (token.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))
-                        && LiveOrderDTO.LIVE_TYPE_PPT.equals(sMap.get(key).getAttributes().get(Constants.TOKEN))) {
+                        && LIVE_TYPE_PPT.equals(sMap.get(key).getAttributes().get(LIVE_TYPE_KEY))) {
                     hasDuplicate = true;
                     break;
                 }
@@ -230,7 +240,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
     }
 
     public static boolean hasDuplicate(String courseId, String token, String liveType){
-        if (liveType == null) {
+        if (liveType == null || LIVE_TYPE_PPT.equals(liveType)) {
             return hasDuplicate(courseId, token);
         }
         if (courseId == null) {
@@ -248,6 +258,32 @@ public class LiveOrderHandler extends TextWebSocketHandler {
             }
         }
         return hasDuplicate;
+    }
+
+
+    public static Map<String, WebSocketSession> findVideoLiveSessions(){
+        Map<String, WebSocketSession> map = null;
+        if (sessionMap != null && sessionMap.size() > 0) {
+            map = new HashMap<>();
+
+            Map<String, WebSocketSession> currentSessionMap = null;
+            for (String courseId : sessionMap.keySet()) {
+                currentSessionMap = sessionMap.get(courseId);
+                if (currentSessionMap != null && currentSessionMap.size() > 0) {
+
+                    for (String sid : currentSessionMap.keySet()) {
+                        String liveType = (String) currentSessionMap.get(sid).getAttributes().get(LIVE_TYPE_KEY);
+                        if (liveType != null && liveType.equals(LIVE_TYPE_VIDEO)) {
+                            map.put(courseId, currentSessionMap.get(sid));
+                            break;
+                        }
+                    }
+
+                }
+            }
+        }
+
+        return map;
     }
 
 }

@@ -21,4 +21,7 @@ public class CspConstants {
 
     public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
 
+
+    public static final int FLUX_MONITOR_SPACE = 5;
+
 }

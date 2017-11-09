@@ -128,14 +128,17 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("wsUrl", wsUrl);
 
             course.setDetails(audioService.findLiveDetails(courseId));
-            LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
-            if (orderDTO != null) {
-                AudioCourseDetail tempDetail = new AudioCourseDetail();
-                tempDetail.setImgUrl(orderDTO.getImgUrl());
-                tempDetail.setVideoUrl(orderDTO.getVideoUrl());
-                tempDetail.setCourseId(Integer.valueOf(courseId));
-                tempDetail.setId(orderDTO.getDetailId());
-                course.getDetails().add(tempDetail);
+
+            if (course.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType()) {
+                LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
+                if (orderDTO != null) {
+                    AudioCourseDetail tempDetail = new AudioCourseDetail();
+                    tempDetail.setImgUrl(orderDTO.getImgUrl());
+                    tempDetail.setVideoUrl(orderDTO.getVideoUrl());
+                    tempDetail.setCourseId(Integer.valueOf(courseId));
+                    tempDetail.setId(orderDTO.getDetailId());
+                    course.getDetails().add(tempDetail);
+                }
             }
 
             Live live = liveService.findByCourseId(courseId);

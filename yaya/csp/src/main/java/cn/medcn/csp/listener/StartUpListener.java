@@ -25,6 +25,7 @@ public class StartUpListener extends ContextLoaderListener {
     public void contextInitialized(ServletContextEvent servletContextEvent) {
         super.contextInitialized(servletContextEvent);
 
+
         LogUtils.info(log, "init context successed ! ");
     }
 

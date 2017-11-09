@@ -8,4 +8,5 @@ import cn.medcn.user.model.UserFlux;
  */
 public interface UserFluxService extends BaseService<UserFlux> {
 
+    UserFlux findByCourseId(Integer courseId);
 }

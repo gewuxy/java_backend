@@ -9,6 +9,8 @@ import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.supports.Validate;
 import cn.medcn.common.utils.*;
+import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.dto.AppUserDTO;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.model.AppUser;
@@ -60,6 +62,9 @@ public class BindController extends BaseController {
 
     @Autowired
     private JSmsService jSmsService;
+
+    @Autowired
+    protected MeetService meetService;
 
     @Value("${app.file.upload.base}")
     protected String appFileUploadBase;
@@ -282,4 +287,5 @@ public class BindController extends BaseController {
         }
         return null;
     }
+
 }
