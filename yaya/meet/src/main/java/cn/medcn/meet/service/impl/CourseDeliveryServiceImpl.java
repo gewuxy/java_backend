@@ -71,17 +71,20 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
      * @param acceptIds
      */
     @Override
-    public void executeDelivery(Integer courseId, Integer[] acceptIds, String authorId)  {
-        for (Integer acceptId : acceptIds) {
+    public void executeDelivery(Integer courseId, Integer[] acceptIds, String authorId) throws SystemException {
+        for(Integer acceptId:acceptIds){
             CourseDelivery delivery = new CourseDelivery();
             delivery.setAcceptId(acceptId);
-            delivery.setAuthorId(authorId);
-            delivery.setDeliveryTime(new Date());
-            delivery.setId(UUIDUtil.getNowStringID());
             delivery.setSourceId(courseId);
-            delivery.setViewState(false);
-            delivery.setPublishState(false);
-            courseDeliveryDAO.insert(delivery);
+            delivery.setAuthorId(authorId);
+            CourseDelivery result = selectOne(delivery);
+            if(result != null){
+                AppUser user = appUserService.selectByPrimaryKey(acceptId);
+                throw new SystemException(local("cannot.repeat.delivery"));
+            }
+            delivery.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            delivery.setDeliveryTime(new Date());
+            insert(delivery);
         }
     }
 
@@ -120,27 +123,5 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
         return MyPage.page2Mypage((Page) courseDeliveryDAO.findCSPList(pageable.getParams()));
     }
 
-    /**
-     * 投稿
-     * @param courseId
-     * @param accepts
-     * @param authorId
-     */
-    @Override
-    public void contribute(Integer courseId, Integer[] accepts, String authorId) throws SystemException {
-        for(Integer acceptId:accepts){
-            CourseDelivery delivery = new CourseDelivery();
-            delivery.setAcceptId(acceptId);
-            delivery.setSourceId(courseId);
-            delivery.setAuthorId(authorId);
-            CourseDelivery result = selectOne(delivery);
-            if(result != null){
-                AppUser user = appUserService.selectByPrimaryKey(acceptId);
-                throw new SystemException("您已投稿过此会议到 " + user.getNickname());
-            }
-            delivery.setId(cn.medcn.common.utils.StringUtils.nowStr());
-            delivery.setDeliveryTime(new Date());
-            insert(delivery);
-        }
-    }
+
 }

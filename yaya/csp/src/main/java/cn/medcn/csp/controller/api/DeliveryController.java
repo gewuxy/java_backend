@@ -1,6 +1,7 @@
 package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.CheckUtils;
@@ -59,7 +60,11 @@ public class DeliveryController extends BaseController {
     @ResponseBody
     public String push(Integer courseId, Integer[] acceptIds) {
         Principal principal = SecurityUtils.get();
-        courseDeliveryService.executeDelivery(courseId, acceptIds, principal.getId());
+        try {
+            courseDeliveryService.executeDelivery(courseId, acceptIds, principal.getId());
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
         return success();
     }
 

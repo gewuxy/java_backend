@@ -37,7 +37,7 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      * @param acceptIds
      * @param authorId
      */
-    void executeDelivery(Integer courseId, Integer[] acceptIds, String authorId);
+    void executeDelivery(Integer courseId, Integer[] acceptIds, String authorId) throws SystemException;
 
     /**
      * 返回所有开发投稿的单位号
@@ -59,11 +59,5 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      */
     MyPage<CourseDeliveryDTO> findCSPList(Pageable pageable);
 
-    /**
-     * 投稿
-     * @param courseId
-     * @param accepts
-     * @param authorId
-     */
-    void contribute(Integer courseId, Integer[] accepts, String authorId) throws SystemException;
+
 }
