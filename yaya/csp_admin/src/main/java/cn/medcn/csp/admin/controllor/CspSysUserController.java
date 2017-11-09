@@ -80,21 +80,18 @@ public class CspSysUserController extends BaseController {
             return "/sys/resetPwd";
         }
         user.setPassword(MD5Utils.MD5Encode(newPassword));
-        cspSysUserService.updateByPrimaryKey(user);
+        cspSysUserService.updateByPrimaryKeySelective(user);
         return "redirect:/logout";
     }
 
     /**
      * 修改用户信息
-     * @param model
      * @return
      */
     @RequestMapping(value = "/user/update")
-    public String updateUserInfo(CspSysUser user, Model model) {
+    public String updateUserInfo(CspSysUser user) {
         cspSysUserService.updateByPrimaryKeySelective(user);
-
-        model.addAttribute("user", user);
-        return "/sys/userInfo";
+        return "redirect:/csp/sys/user/info";
     }
 
     /**

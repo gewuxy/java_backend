@@ -72,7 +72,7 @@
     <div class="control-group">
         <label class="control-label">激活状态:</label>
         <div class="controls">
-            <select id="active" name="active" >
+            <select id="active" name="active" style="width: 80px;">
                 <option value="0" ${user.active == false|| user.active == null?'selected':''}>未激活</option>
                 <option value="1" ${user.active == true ?'selected':''}>激活</option>
             </select>
@@ -91,10 +91,11 @@
         <div class="control-group">
             <label class="control-label">是否重置密码:</label>
             <div class="controls">
-                <select  name="isReset">
+                <select  name="isReset" style="width: 80px;" onchange="showMes(this.options[this.options.selectedIndex].value)">
                     <option value="0">不重置</option>
                     <option value="1">重置</option>
                 </select>
+                <span id="mess"></span>
             </div>
         </div>
     </c:if>
@@ -122,6 +123,10 @@
     $(document).ready(function() {
         initFormValidate();
     });
+
+    function showMes(value){
+        value == 1? $("#mess").html("重置默认密码为“111111”") : $("#mess").html("");
+    }
 
     //根据省份城市更改选项
     function changeOption(name,id){

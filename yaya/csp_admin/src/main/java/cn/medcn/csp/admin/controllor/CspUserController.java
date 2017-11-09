@@ -68,12 +68,14 @@ public class CspUserController extends BaseController {
         if(actionType == 3){ //更新或者查看
             CspUserInfo userInfo = cspUserService.selectByPrimaryKey(user);
             model.addAttribute("user",userInfo);
-            String province = user.getProvince();
-            List<SystemRegion> citys = systemRegionService.findRegionByPreName(userInfo.getProvince());
-            model.addAttribute("city", citys);
-            if(!province.equals("北京") || !province.equals("天津")){   //此此省份没有2级
-                List<SystemRegion> districts = systemRegionService.findRegionByPreName(userInfo.getCity());
-                model.addAttribute("district", districts);
+            String province = userInfo.getProvince();
+            if(province != null){
+                List<SystemRegion> citys = systemRegionService.findRegionByPreName(userInfo.getProvince());
+                model.addAttribute("city", citys);
+                if(!province.equals("北京") || !province.equals("天津")){   //此此省份没有2级
+                    List<SystemRegion> districts = systemRegionService.findRegionByPreName(userInfo.getCity());
+                    model.addAttribute("district", districts);
+                }
             }
         }
         return "/user/userInfo";

@@ -20,8 +20,15 @@
     <div class="control-group">
         <label class="control-label">新密码:</label>
         <div class="controls">
-            <input type="password" name="newPassword"  maxlength="50" class="required abc"/>
+            <input type="password" id="newPassword" name="newPassword"  minlength="5" class="required"/>
             <span class="help-inline"><font color="red">*</font> </span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">确认新密码:</label>
+        <div class="controls">
+            <input type="password"  name="confirm_password" equalTo="#newPassword" minlength="5" class="required'"/>
+            <span class="help-inline"></span><font color="red">*</font>
         </div>
     </div>
     <div class="form-actions">

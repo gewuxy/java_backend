@@ -13,28 +13,13 @@
         <label class="control-label">账号:</label>
         <div class="controls">
             <input type="search" name="account" maxlength="50" class="required userName" />
-            <span class="help-inline"><font color="red">*</font> </span>
+            <span class="help-inline"><font color="red">*</font> </span><span>${sameAccountError}</span>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">姓名:</label>
         <div class="controls">
             <input type="search" name="userName" htmlEscape="false" maxlength="50" class="required realName"/>
-            <span class="help-inline"><font color="red">*</font> </span>
-        </div>
-    </div>
-
-    <div class="control-group">
-        <label class="control-label">密码:</label>
-        <div class="controls">
-            <input type="password" id="password" name="password" htmlEscape="false" minlength="5" class="required"/>
-            <span class="help-inline"><font color="red">*</font> </span>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">确认密码:</label>
-        <div class="controls">
-            <input type="password" name="confirm_password" htmlEscape="false" minlength="5" class="{required equalTo:'#password'}"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
@@ -48,6 +33,20 @@
         <label class="control-label">手机:</label>
         <div class="controls">
             <input type="search" name="mobile"  maxlength="50" class="mobile"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">密码:</label>
+        <div class="controls">
+            <input type="password" id="password" name="password"  minlength="5" class="required"/>
+            <span class="help-inline"><font color="red">*</font> </span>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">确认密码:</label>
+        <div class="controls">
+            <input type="password"  name="confirm_password" equalTo="#password" minlength="5" class="required'"/>
+            <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
     <div class="form-actions">
