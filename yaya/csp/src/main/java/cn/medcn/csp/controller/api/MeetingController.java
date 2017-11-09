@@ -418,9 +418,17 @@ public class MeetingController extends CspBaseController {
         if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
             //查询出直播信息
             Live live = liveService.findByCourseId(courseId);
+            if (live != null) {//改变直播状态
+                live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+                liveService.updateByPrimaryKey(live);
+            }
             result.put("live", live);
         } else {//录播查询录播的进度信息
             AudioCoursePlay play = audioService.findPlayState(courseId);
+            if (play != null) {
+                play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
+                audioService.updateAudioCoursePlay(play);
+            }
             result.put("record", play);
         }
 
@@ -619,15 +627,31 @@ public class MeetingController extends CspBaseController {
             over = 0;
         }
 
-        AudioCoursePlay play = audioService.findPlayState(courseId);
-        if (play != null) {
-            play.setPlayPage(pageNum);
-            play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
-            if (over == 1) {
-                play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course != null) {
+            if (course.getPlayType() == null) {
+                course.setPlayType(AudioCourse.PlayType.normal.getType());
             }
-            audioService.updateAudioCoursePlay(play);
+
+            if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                Live live = liveService.findByCourseId(courseId);
+                if (live != null) {
+                    live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+                    liveService.updateByPrimaryKey(live);
+                }
+            } else {
+                AudioCoursePlay play = audioService.findPlayState(courseId);
+                if (play != null) {
+                    play.setPlayPage(pageNum);
+                    play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
+                    if (over == 1) {
+                        play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
+                    }
+                    audioService.updateAudioCoursePlay(play);
+                }
+            }
         }
+
 
         return success();
     }
