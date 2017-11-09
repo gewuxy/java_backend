@@ -23,12 +23,12 @@
     <thead><tr><th>帐号</th><th>姓名</th><th>操作url路径</th><th>操作时间</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
-        <c:forEach items="${page.dataList}" var="user">
+        <c:forEach items="${page.dataList}" var="log">
             <tr>
-                <td>${user.account}</td>
-                <td>${user.userName}</td>
-                <td>${user.action}</td>
-                <td><fmt:formatDate value="${user.logDate}" type="both" dateStyle="full"/></td>
+                <td>${log.account}</td>
+                <td>${log.userName}</td>
+                <td>${log.action}</td>
+                <td><fmt:formatDate value="${log.logDate}" type="both" dateStyle="full"/></td>
             </tr>
         </c:forEach>
     </c:if>

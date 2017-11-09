@@ -80,26 +80,18 @@ public class CspSysUserController extends BaseController {
             return "/sys/resetPwd";
         }
         user.setPassword(MD5Utils.MD5Encode(newPassword));
-        cspSysUserService.updateByPrimaryKey(user);
+        cspSysUserService.updateByPrimaryKeySelective(user);
         return "redirect:/logout";
     }
 
     /**
      * 修改用户信息
-     * @param model
      * @return
      */
     @RequestMapping(value = "/user/update")
-    public String updateUserInfo(String email,String mobile, Model model) {
-        Integer userId = SubjectUtils.getCurrentUserid();
-        CspSysUser user =  new CspSysUser();
-        user.setId(userId);
-        CspSysUser newOne = cspSysUserService.selectByPrimaryKey(user);
-        newOne.setEmail(email);
-        newOne.setMobile(mobile);
-        cspSysUserService.updateByPrimaryKey(newOne);
-        model.addAttribute("user", newOne);
-        return "/sys/userInfo";
+    public String updateUserInfo(CspSysUser user) {
+        cspSysUserService.updateByPrimaryKeySelective(user);
+        return "redirect:/csp/sys/user/info";
     }
 
     /**
@@ -110,6 +102,11 @@ public class CspSysUserController extends BaseController {
      */
     @RequestMapping(value = "/user/add")
     public String addUserInfo(CspSysUser user, Model model,RedirectAttributes redirectAttributes) {
+        String account = SubjectUtils.getCurrentAccount();
+        if(account.equals(user.getAccount())){
+            model.addAttribute("sameAccountError","此用户名已存在");
+            return "/sys/addAdminForm";
+        }
         user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
         cspSysUserService.insert(user);
         addFlashMessage(redirectAttributes, "添加成功");

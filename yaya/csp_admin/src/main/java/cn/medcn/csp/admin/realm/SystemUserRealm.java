@@ -66,7 +66,7 @@ public class SystemUserRealm extends AuthorizingRealm {
             }
             user.setLastLoginIp(((UsernamePasswordToken) authenticationToken).getHost());
             user.setLastLoginDate(new Date());
-            cspSysUserService.updateByPrimaryKey(user);
+            cspSysUserService.updateByPrimaryKeySelective(user);
             //登录成功
             return info;
         } else {

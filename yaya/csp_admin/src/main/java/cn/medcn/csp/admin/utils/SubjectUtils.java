@@ -12,9 +12,9 @@ public class SubjectUtils {
         return (Principal) SecurityUtils.getSubject().getPrincipal();
     }
 
-    public static String getCurrentUsername(){
+    public static String getCurrentAccount(){
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        return principal == null?null:principal.getUsername();
+        return principal == null?null:principal.getAccount();
     }
 
     public static Integer getCurrentUserid(){
