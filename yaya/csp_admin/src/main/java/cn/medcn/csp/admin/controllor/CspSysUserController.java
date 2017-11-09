@@ -90,15 +90,10 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/update")
-    public String updateUserInfo(String email,String mobile, Model model) {
-        Integer userId = SubjectUtils.getCurrentUserid();
-        CspSysUser user =  new CspSysUser();
-        user.setId(userId);
-        CspSysUser newOne = cspSysUserService.selectByPrimaryKey(user);
-        newOne.setEmail(email);
-        newOne.setMobile(mobile);
-        cspSysUserService.updateByPrimaryKey(newOne);
-        model.addAttribute("user", newOne);
+    public String updateUserInfo(CspSysUser user, Model model) {
+        cspSysUserService.updateByPrimaryKeySelective(user);
+
+        model.addAttribute("user", user);
         return "/sys/userInfo";
     }
 
@@ -110,6 +105,11 @@ public class CspSysUserController extends BaseController {
      */
     @RequestMapping(value = "/user/add")
     public String addUserInfo(CspSysUser user, Model model,RedirectAttributes redirectAttributes) {
+        String account = SubjectUtils.getCurrentAccount();
+        if(account.equals(user.getAccount())){
+            model.addAttribute("sameAccountError","此用户名已存在");
+            return "/sys/addAdminForm";
+        }
         user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
         cspSysUserService.insert(user);
         addFlashMessage(redirectAttributes, "添加成功");
