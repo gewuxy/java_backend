@@ -2,6 +2,7 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.excptions.SystemException;
  import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.JsonUtils;
 import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
@@ -27,6 +28,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.Date;
 
 /**
  * Created by lixuan on 2017/10/16.
@@ -198,6 +201,47 @@ public class LoginController extends CspBaseController {
 
         return "";
 
+    }
+
+    /**
+     * 推特回调
+     * @param str
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/twitterCallback")
+    public String twitterCallback(String str) throws SystemException {
+
+        if(StringUtils.isEmpty(str)){
+            return "";
+        }
+
+        Principal principal =  getWebPrincipal();
+        //登录回调
+        if(principal == null){
+            //将json转为OauthUser对象
+            String uid = (String)JsonUtils.getValue(str,"id_str");
+            OAuthUser oAuthUser = new OAuthUser();
+            oAuthUser.setIconUrl((String)JsonUtils.getValue(str,"profile_image_url"));
+            oAuthUser.setNickname((String)JsonUtils.getValue(str,"name"));
+            oAuthUser.setUid(uid);
+            // 根据第三方用户唯一id 查询用户是否存在
+            CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uid);
+            doThirdPartWebLogin(BindInfo.Type.TWITTER.getTypeId(), oAuthUser, userInfo);
+            return "redirect:/mgr/meet/list";
+        }else{  //绑定回调
+
+            //将json转为BindInfo对象
+            BindInfo info = new BindInfo();
+            info.setThirdPartyId(BindInfo.Type.TWITTER.getTypeId());
+            info.setUniqueId((String)JsonUtils.getValue(str,"id_str"));
+            info.setId(StringUtils.nowStr());
+            info.setBindDate(new Date());
+            info.setAvatar((String)JsonUtils.getValue(str,"profile_image_url"));
+            info.setNickName((String)JsonUtils.getValue(str,"name"));
+            cspUserService.doBindThirdAccount(info,principal.getId());
+            return "redirect:/mgr/user/toAccount";
+        }
     }
 
     /**
