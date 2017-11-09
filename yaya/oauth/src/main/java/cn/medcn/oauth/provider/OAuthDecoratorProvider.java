@@ -57,7 +57,13 @@ public class OAuthDecoratorProvider {
                    config.setServiceId(serviceId);
                     break;
                 case 3 : // facebook
-
+                    appKey = OAuthConstants.get("FaceBook.app_key");
+                    secret = OAuthConstants.get("FaceBook.app_secret");
+                    config.setApiKey(appKey);
+                    config.setApiSecret(secret);
+                    config.setCallback(callback);
+                    config.setScope("public_profile");
+                    config.setServiceId(serviceId);
                     break;
                 case 4 : // twitter
                     appKey = OAuthConstants.get("Twitter.app_key");

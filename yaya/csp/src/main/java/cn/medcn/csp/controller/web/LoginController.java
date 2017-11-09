@@ -209,7 +209,7 @@ public class LoginController extends CspBaseController {
      * @return
      * @throws SystemException
      */
-    @RequestMapping("/twitterCallback")
+    @RequestMapping(value="/twitterCallback",method = RequestMethod.POST)
     public String twitterCallback(String str) throws SystemException {
 
         if(StringUtils.isEmpty(str)){
