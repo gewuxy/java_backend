@@ -30,6 +30,7 @@ public interface PushService {
      */
     int sendToAlias(String alias, String notification_title, String msg_title, String msg_content, Map<String,String> extrasParam) ;
 
+    int sendChangeMessage(Object userId, String msgType, Object param);
 
     int sendMessageToAlias(String alias, Map<String,String> extrasParam);
 

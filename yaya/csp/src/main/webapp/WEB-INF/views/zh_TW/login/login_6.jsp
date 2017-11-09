@@ -23,6 +23,7 @@
     <div class="login login-banner" >
         <div class="page-width pr">
             <div class="login-header">
+                <%@include file="../include/login_header.jsp"%>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
 
@@ -88,7 +89,7 @@
 
     function getVerifyCode(mobile) {
         $.ajax({
-            url: '${ctx}/mgr/sendCaptcha?mobile='+mobile, //目标地址
+            url: '${ctx}/api/user/sendCaptcha?mobile=' + mobile + '&type=0', //目标地址
             type: "post",
             dataType: "json",
             success: function (data){

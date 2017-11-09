@@ -143,7 +143,7 @@ public class LoginController extends CspBaseController {
             subject.login(token);
 
             // 检查验证码是否有效
-            cspUserService.checkCaptchaIsOrNotValid(mobile, captcha);
+            checkCaptchaIsOrNotValid(mobile, captcha);
 
         } catch (AuthenticationException e) {
             model.addAttribute("error", e.getMessage());
@@ -161,26 +161,6 @@ public class LoginController extends CspBaseController {
         return "redirect:/mgr/meet/list";
     }
 
-    /**
-     * 获取手机验证码
-     * @param mobile
-     * @return
-     */
-    @RequestMapping(value = "/sendCaptcha")
-    @ResponseBody
-    public String sendCaptcha(String mobile) {
-        if(!StringUtils.isMobile(mobile)){
-            return error(local("user.mobile.format"));
-        }
-
-        try {
-            cspUserService.sendCaptcha(mobile, Captcha.Type.LOGIN.getTypeId());
-
-        } catch (SystemException e) {
-            return error(e.getMessage());
-        }
-        return success();
-    }
 
 
     /**

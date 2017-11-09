@@ -4,7 +4,10 @@ import cn.jpush.api.JPushClient;
 import cn.medcn.common.provider.PushClientProvider;
 import cn.medcn.common.service.PushService;
 import cn.medcn.common.service.impl.CommonPushServiceImpl;
+import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
+
+import java.util.Map;
 
 import static cn.medcn.csp.CspConstants.JI_GUANG_APP_KEY;
 import static cn.medcn.csp.CspConstants.JI_GUANG_SECRET;
@@ -20,4 +23,6 @@ public class CspPushServiceImpl extends CommonPushServiceImpl implements PushSer
     public JPushClient getClient() {
         return PushClientProvider.getClient(JI_GUANG_APP_KEY, JI_GUANG_SECRET);
     }
+
+
 }

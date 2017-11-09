@@ -15,6 +15,7 @@ import cn.jpush.api.push.model.notification.IosNotification;
 import cn.jpush.api.push.model.notification.Notification;
 import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.MD5Utils;
+import com.google.common.collect.Maps;
 
 import java.util.List;
 import java.util.Map;
@@ -65,6 +66,7 @@ public abstract class CommonPushServiceImpl implements PushService {
         return doSend(pushPayload);
     }
 
+
     /**
      * 清除唯一码对应的别名和tags
      *
@@ -110,6 +112,16 @@ public abstract class CommonPushServiceImpl implements PushService {
     @Override
     public AliasDeviceListResult findAliasDeviceResultByAlias(String alias) throws APIConnectionException, APIRequestException {
         AliasDeviceListResult result = getClient().getAliasDeviceList(alias, "android,ios,winphone");
+        return result;
+    }
+    @Override
+    public int sendChangeMessage(Object userId, String msgType, Object param) {
+        String alias = generateAlias(userId);
+        Map<String, String> extraMap = Maps.newHashMap();
+        extraMap.put("sendTime", System.currentTimeMillis() + "");
+        extraMap.put("msgType", msgType);
+        extraMap.put("result", String.valueOf(param));
+        int result = sendMessageToAlias(alias, extraMap);
         return result;
     }
 

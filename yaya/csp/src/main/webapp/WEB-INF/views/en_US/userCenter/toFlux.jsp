@@ -68,7 +68,7 @@
                         </div>
                         <div class="user-content item-radius pay-mode">
                             <form action="${ctx}/mgr/charge/toCharge" name="submitForm" id="submitForm" method="post" target="_blank">
-                            <div class="formrow flow">
+                            <div class="formrow flow login-form-item">
                                 <div class="formTitle color-black" style="line-height: 1.3;">Recharge Network Flow</div>
                                 <div class="formControls">
                                     <label for="" class="pr">
@@ -207,14 +207,14 @@
     function checkFlux() {
         if(!Number.isInteger($("#flux").val()/1)){
             $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").find('span').html("请输入整数");
+            $("#errSpan").find('span').html("Please Enter Integer");
             return false;
         }else if(($("#flux").val()/1)<1){
             $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").html("充值流量必须大于1G");
+            $("#errSpan").find('span').html("Recharge flow must be greater than 1G");
             return false;
         } else if(($("#flux").val()/1)>100000){
-            layer.msg("充值流量不能超过10万");
+            layer.msg("Recharge flow can not exceed 100 thousand ");
             return false;
         }else{
             $("#errSpan").attr("class","cells-block error none");
