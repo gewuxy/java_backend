@@ -70,7 +70,7 @@ public class AdvertController {
 
         Map<String, Object> map = Maps.newHashMap();
         if(advert != null){
-            if (CheckUtils.isNotEmpty(advert.getPageUrl())) {
+            if (CheckUtils.isNotEmpty(advert.getImageUrl())) {
                 map.put("imageUrl", appFileBase + advert.getImageUrl());
             }
 
