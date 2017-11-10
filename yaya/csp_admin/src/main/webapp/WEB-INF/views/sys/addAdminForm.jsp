@@ -8,12 +8,13 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/csp/sys/user/info">添加管理员</a></li>
 </ul><br/>
+<%@include file="/WEB-INF/include/message.jsp"%>
 <form id="inputForm" action="${ctx}/csp/sys/user/add" method="post" class="form-horizontal">
     <div class="control-group">
         <label class="control-label">账号:</label>
         <div class="controls">
-            <input type="search" name="account" maxlength="50" class="required userName" />
-            <span class="help-inline"><font color="red">*</font> </span><span>${sameAccountError}</span>
+            <input type="search" id="account" name="account" maxlength="50" class="required userName" />
+            <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
     <div class="control-group">

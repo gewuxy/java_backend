@@ -76,7 +76,7 @@ public class CspSysUserController extends BaseController {
         Integer userId = SubjectUtils.getCurrentUserid();
         CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
         if (!user.getPassword().equals(MD5Utils.MD5Encode(oldPassword))) {
-            model.addAttribute("passwordErrpor","旧密码错误");
+            model.addAttribute("err","旧密码错误");
             return "/sys/resetPwd";
         }
         user.setPassword(MD5Utils.MD5Encode(newPassword));
@@ -104,7 +104,7 @@ public class CspSysUserController extends BaseController {
     public String addUserInfo(CspSysUser user, Model model,RedirectAttributes redirectAttributes) {
         String account = SubjectUtils.getCurrentAccount();
         if(account.equals(user.getAccount())){
-            model.addAttribute("sameAccountError","此用户名已存在");
+            model.addAttribute("err","此用户名已存在");
             return "/sys/addAdminForm";
         }
         user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
