@@ -97,6 +97,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Autowired
     protected JavaMailSenderImpl cspMailSender;
 
+    @Autowired
+    protected SMSService cspSMSService;
+
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
         return cspUserInfoDAO;
@@ -158,6 +161,76 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return APIUtils.success(local("user.success.register"));
     }
 
+    /**
+     * 发送手机验证码
+     * @param mobile
+     * @param type 发送短信验证码模板内容区分 0=登录 1=绑定
+     */
+    @Override
+    public String sendCaptcha(String mobile, Integer type) throws SystemException {
+        //10分钟内最多允许获取3次验证码
+        Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
+        if(captcha == null){ //第一次获取
+            // 发送短信
+            String msgId = sendCaptchaByType(mobile, type);
+            Captcha firstCaptcha = new Captcha();
+            firstCaptcha.setFirstTime(new Date());
+            firstCaptcha.setCount(Constants.NUMBER_ZERO);
+            firstCaptcha.setMsgId(msgId);
+            redisCacheUtils.setCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile,firstCaptcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
+
+        }else {
+            Long between = System.currentTimeMillis() - captcha.getFirstTime().getTime();
+            if(captcha.getCount() == 2 && between < TimeUnit.MINUTES.toMillis(10)){
+                throw new SystemException(local("sms.frequency.send"));
+            }
+            // 发送短信
+            String msgId = sendCaptchaByType(mobile, type);
+
+            captcha.setMsgId(msgId);
+            captcha.setCount(captcha.getCount() + 1);
+            redisCacheUtils.setCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME);
+        }
+
+        return APIUtils.success();
+    }
+
+    /**
+     * 根据 短信模板类型  获取不同的短信内容
+     * @param mobile
+     * @param type 短信模板类型 0=登录 1=绑定
+     */
+    protected String sendCaptchaByType(String mobile, int type) throws SystemException{
+        String msgId = null;
+        try {
+            if (type == Captcha.Type.LOGIN.getTypeId()) {
+                msgId = cspSMSService.send(mobile, Constants.CSP_LOGIN_TEMPLATE_ID);
+            } else {
+                msgId = cspSMSService.send(mobile, Constants.CSP_BIND_TEMPLATE_ID);
+            }
+
+        } catch (Exception e) {
+            throw new SystemException(local("sms.error.send"));
+        }
+
+        return msgId;
+    }
+
+    @Override
+    public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException {
+        // 从缓存获取此号码的短信记录
+        Captcha result = (Captcha) redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
+        try {
+
+            Boolean bool = cspSMSService.verify(result.getMsgId(),captcha);
+            if (!bool) {
+                throw new SystemException(local("sms.error.captcha"));
+            }
+
+        } catch (Exception e) {
+            throw new SystemException(local("sms.invalid.captcha"));
+        }
+    }
 
     /**
      * 添加第三方平台用户及绑定用户信息
@@ -193,24 +266,24 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
             url = appBase + "/api/email/active?code=" + code;
 
-        // 发送找回密码邮件
+            // 发送找回密码邮件
         } else if (template.getTempType() == EmailTemplate.Type.FIND_PWD.getLabelId()) {
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
             url = appBase + "/api/email/toReset?code=" + code;
 
-        // 发送绑定邮箱邮件
+            // 发送绑定邮箱邮件
         } else if (template.getTempType() == EmailTemplate.Type.BIND.getLabelId()) {
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
             url = appBase + "/api/email/bindEmail?code=" + code;
         }
 
 
-            MailBean bean = new MailBean();
-            bean.setFrom(template.getSender());
-            bean.setFromName(template.getSenderName());
-            bean.setSubject(template.getSubject());
-            bean.setLocalStr(template.getLangType());
-            bean.setToEmails(new String[]{email});
+        MailBean bean = new MailBean();
+        bean.setFrom(template.getSender());
+        bean.setFromName(template.getSenderName());
+        bean.setSubject(template.getSubject());
+        bean.setLocalStr(template.getLangType());
+        bean.setToEmails(new String[]{email});
         try {
             cspMailSender.setUsername(sender);
             cspMailSender.setPassword(password);
@@ -240,7 +313,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         EmailTemplate template = tempService.getTemplate(localStr,EmailTemplate.Type.BIND.getLabelId());
         sendMail(email,userId, template);
     }
-
 
     @Override
     public MyPage<CspUserInfo> findCspUserList(Pageable pageable) {
@@ -297,19 +369,19 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
         }
 
-            BindInfo bindInfo = new BindInfo();
-            bindInfo.setUserId(userId);
-            int count = bindInfoDAO.selectCount(bindInfo);
-            //用户没有绑定第三方账号，并且只绑定了手机或邮箱的情况下不能解绑
-            if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
-                throw new SystemException(local("user.only.one.account"));
-            }
-            if(type ==  BindInfo.Type.EMAIL.getTypeId()){
-                info.setEmail("");
-            }else{
-                info.setMobile("");
-            }
-            updateByPrimaryKeySelective(info);
+        BindInfo bindInfo = new BindInfo();
+        bindInfo.setUserId(userId);
+        int count = bindInfoDAO.selectCount(bindInfo);
+        //用户没有绑定第三方账号，并且只绑定了手机或邮箱的情况下不能解绑
+        if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
+            throw new SystemException(local("user.only.one.account"));
+        }
+        if(type ==  BindInfo.Type.EMAIL.getTypeId()){
+            info.setEmail("");
+        }else{
+            info.setMobile("");
+        }
+        updateByPrimaryKeySelective(info);
 
     }
 

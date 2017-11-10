@@ -50,6 +50,19 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      */
     String register(CspUserInfo userInfo,EmailTemplate template) throws SystemException;
 
+    /**
+     * 发送手机验证码
+     * @param mobile
+     * @param type
+     */
+    String sendCaptcha(String mobile, Integer type) throws SystemException ;
+
+    /**
+     * 检查验证码是否有效
+     * @param captcha
+     * @param mobile
+     */
+    void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
 
     /**
      * 添加第三方平台用户及绑定用户信息
@@ -58,6 +71,13 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      */
     CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO);
 
+//    /**
+//     * 缓存信息和发送绑定或找回密码邮件
+//     * @param email
+//     * @param userId
+//     * @param template 模板
+//     */
+//    void sendMail(String email, String userId, Integer template) throws SystemException;
 
     /**
      * 绑定手机号
@@ -157,7 +177,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     void sendBindMail(String email, String password, String userId, String localStr) throws SystemException;
 
     /**
-     * 管理平台查询用户列表
+     * 获取用户列表
      * @param pageable
      * @return
      */
