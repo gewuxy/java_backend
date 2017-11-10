@@ -270,6 +270,7 @@
 
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
+        var password = $("#pwd").val();
         if ($.trim(newPwd)==''){
             $("#newSpan").find('span').html("新密碼不能為空");
             $("#newSpan").attr("class","cells-block error");
@@ -280,6 +281,10 @@
             return false;
         }else if($.trim(newPwd).length < 6){
             $("#newSpan").find('span').html("請輸入6〜24位密碼");
+            $("#newSpan").attr("class","cells-block error");
+
+        }else if(password == newPwd){
+            $("#newSpan").find('span').html("新密碼和舊密碼相同");
             $("#newSpan").attr("class","cells-block error");
 
         }else{

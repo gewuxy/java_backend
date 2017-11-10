@@ -107,7 +107,7 @@ public class WebChargeController extends CspBaseController {
         if(flux == null){
             throw new SystemException("please enter flux amount");
         }
-        //正式线mode为live，测试线mode为sandboxTODO
+        //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         Payment payment = chargeService.generatePayment(flux,appBase);
         Payment responsePayment;
