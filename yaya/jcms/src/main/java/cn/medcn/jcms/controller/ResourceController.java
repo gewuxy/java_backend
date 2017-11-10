@@ -6,6 +6,7 @@ import cn.medcn.common.excptions.NotEnoughCreditsException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.model.Credits;
 import cn.medcn.goods.service.CreditsService;
@@ -28,6 +29,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
+
+import static cn.medcn.common.Constants.SHARE_PAGE_SIZE;
 
 /**
  * Created by lixuan on 2017/5/25.
@@ -52,12 +55,13 @@ public class ResourceController extends BaseController {
     private String appFileBase;
 
     private interface JumpPage {
-        int page_one = 0; // 跳转资源共享页面
-        int page_two = 1; // 跳转至发布会议时转载资源的弹框页
+        int share_page = 0; // 跳转资源共享页面
+        int publish_reprint_page = 1; // 跳转至发布会议时转载资源的弹框页
     }
 
     /**
      * 查询资源列表
+     *
      * @param pageable
      * @param category
      * @param keyword
@@ -66,6 +70,8 @@ public class ResourceController extends BaseController {
      */
     @RequestMapping(value = "/share/list")
     public String list(Pageable pageable, String category, String keyword, Model model){
+        Principal principal = SubjectUtils.getCurrentUser();
+
         if(!StringUtils.isEmpty(category)){
             pageable.put("category", category);
             model.addAttribute("category", category);
@@ -75,12 +81,12 @@ public class ResourceController extends BaseController {
             model.addAttribute("keyword", keyword);
         }
 
-        Principal principal = SubjectUtils.getCurrentUser();
         pageable.put("userId", principal.getId());
         pageable.put("reprinted", CourseReprintDTO.AcquiredStatus.no_get_acquired.ordinal());// 未获取（未转载）
-        pageable.setPageSize(16);
-        model.addAttribute("currentUserId", principal.getId());
+        pageable.setPageSize(SHARE_PAGE_SIZE);
 
+        model.addAttribute("currentUserId", principal.getId());
+        // 查询未获取的资源库数据
         MyPage<CourseReprintDTO> page = audioService.findResource(pageable);
         if (page != null && page.getDataList() != null) {
             for (CourseReprintDTO dto : page.getDataList()) {
@@ -104,6 +110,7 @@ public class ResourceController extends BaseController {
 
     /**
      * 已获取资源列表
+     *
      * @param pageable
      * @param jump 跳转页面 0 跳转资源共享页面 1 跳转至发布会议时转载资源的弹框页
      * @param meetId 引用转载资源时传该参数
@@ -112,11 +119,15 @@ public class ResourceController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/acquired/list")
-    public String acquiredList(Pageable pageable, String jump, String meetId, Integer moduleId, Model model){
+    public String acquiredList(Pageable pageable, Integer jump, String meetId, Integer moduleId, Model model){
         Integer userId = SubjectUtils.getCurrentUserid();
         pageable.put("userId", userId);
+        pageable.setPageSize(SHARE_PAGE_SIZE);
+
+        // 查询我获取的资源列表
         MyPage<CourseReprintDTO> page = audioService.findMyReprints(pageable);
-        if (page != null && page.getDataList() != null) {
+
+        if (!CheckUtils.isEmpty(page.getDataList())) {
             for (CourseReprintDTO dto : page.getDataList()) {
                 if (dto.getCoverUrl() != null) {
                     dto.setCoverUrl(appFileBase + dto.getCoverUrl());
@@ -129,10 +140,10 @@ public class ResourceController extends BaseController {
 
         model.addAttribute("page", page);
 
-        if (StringUtils.isEmpty(jump)) {
-            jump = "0";
+        if (jump == null) {
+            jump = JumpPage.share_page;
         }
-        if (Integer.parseInt(jump) == JumpPage.page_one) {
+        if (jump == JumpPage.share_page) {
             return "/res/acquired";
         } else {
             model.addAttribute("meetId", meetId);
