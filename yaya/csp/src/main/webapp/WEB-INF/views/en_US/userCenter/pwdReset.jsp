@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 修改密码</title>
+    <title>Change Password - Profile - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -270,6 +270,7 @@
 
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
+        var password = $("#pwd").val();
         if ($.trim(newPwd)==''){
             $("#newSpan").find('span').html("please enter new password");
             $("#newSpan").attr("class","cells-block error");
@@ -280,6 +281,10 @@
             return false;
         }else if($.trim(newPwd).length < 6){
             $("#newSpan").find('span').html("Please enter the 6~24 digit password");
+            $("#newSpan").attr("class","cells-block error");
+
+        }else if(newPwd == password){
+            $("#newSpan").find('span').html("The new password is the same as the old password");
             $("#newSpan").attr("class","cells-block error");
 
         }else{

@@ -68,7 +68,7 @@ public class WebChargeController extends CspBaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip);
+            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip,appBase);
         } catch (RateLimitException e) {
             e.printStackTrace();
             return error(e.getMessage());
@@ -105,12 +105,10 @@ public class WebChargeController extends CspBaseController {
     @RequestMapping("/createOrder")
     public String createOrder(Integer flux) throws SystemException {
         if(flux == null){
-            throw new SystemException("流量值不能为空");
+            throw new SystemException("please enter flux amount");
         }
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
-        //TODO  删除下行代码
-        appBase = "http://medcn.synology.me:8889/";
         Payment payment = chargeService.generatePayment(flux,appBase);
         Payment responsePayment;
         String url = null;
@@ -175,12 +173,11 @@ public class WebChargeController extends CspBaseController {
                 order = chargeService.selectOne(order);
                 //没有相关订单
                 if(order == null ){
-                   throw new SystemException("没有相关订单");
+                   throw new SystemException("No related orders");
                 }
                 //更新订单状态，修改用户流量值
                 chargeService.updateOrderAndUserFlux(order);
-                //TODO 修改支付成功地址
-                return localeView("/userCenter/toFlux");
+                return "redirect:/mgr/charge/success?money="+(order.getFlux()/1024);
         }
 
 
@@ -190,6 +187,19 @@ public class WebChargeController extends CspBaseController {
     @RequestMapping("/cancel")
     public String cancel(){
         return "";
+    }
+
+
+    /**
+     * 支付成功跳转页面
+     * @param money
+     * @param model
+     * @return
+     */
+    @RequestMapping("/success")
+    public String success(Integer money,Model model){
+        model.addAttribute("money",money);
+        return localeView("/userCenter/paySuccess");
     }
 }
 

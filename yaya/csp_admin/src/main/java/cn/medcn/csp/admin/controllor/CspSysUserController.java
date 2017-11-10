@@ -27,12 +27,12 @@ public class CspSysUserController extends BaseController {
    private CspSysUserService cspSysUserService;
 
     @RequestMapping(value = "/user/pwd")
-    public String resetPwd(){
+    public String resetView(){
         return "/sys/resetPwd";
     }
 
     @RequestMapping(value = "/user/addAdmin")
-    public String updateUserInfo() {
+    public String addView() {
         return "/sys/addAdminForm";
     }
 
@@ -60,7 +60,7 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/info")
-    public String cspSysUserSearch(Model model) {
+    public String searchUserInfo(Model model) {
         Integer userId = SubjectUtils.getCurrentUserid();
         CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
         model.addAttribute("user", user);

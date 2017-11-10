@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 头像设置</title>
+    <title>Head-Portrait - Profile - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -70,6 +70,7 @@
     function uploadHandler(result){
         $("#image").attr("src",result.data);
         $("#head_img").attr("src",result.data);
+        layer.msg("update success");
     }
 
 </script>

@@ -11,7 +11,7 @@ import com.pingplusplus.model.Charge;
  */
 public interface ChargeService extends BaseService<FluxOrder> {
 
-    Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
+    Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip,String appBase) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
 
     void createOrder(String id, String orderNo, Integer amount, String channel);
 

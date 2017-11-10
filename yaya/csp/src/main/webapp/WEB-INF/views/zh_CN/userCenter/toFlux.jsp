@@ -95,10 +95,6 @@
                                             <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
                                             <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                         </label>
-                                        <label for="paypal" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="paypal" id="paypal">
-                                            <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
-                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -122,9 +118,6 @@
     <%@include file="../include/footer.jsp"%>
 </div>
 
-<form target="_blank" action="${ctx}/mgr/charge/createOrder" name="paypalForm" id="paypalForm" method="post">
-    <input type="hidden" class="flux" name="flux" value="0">
-</form>
 
 <!--弹出 充值-->
 <div class="cancel-popup-box">
@@ -172,14 +165,8 @@
         $("#submitBtn").click(function () {
             if(checkFlux()){
                 var channel = $('input[name="channel"]:checked').val();
-                if(channel != "paypal"){
                     $("#submitForm").submit();
-                }else{
-                    var flux = $("#flux").val();
-                    $(".flux").val(flux);
-                    $("#paypalForm").submit();
 
-                }
 
                 //触发弹出窗
                 //投稿

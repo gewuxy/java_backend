@@ -77,6 +77,7 @@ public class HomeController extends BaseController{
         //查询出最新资源
         pageable = new Pageable(1, 6);
         pageable.getParams().put("userId", principal.getId());
+        pageable.put("reprinted", CourseReprintDTO.AcquiredStatus.no_get_acquired.ordinal());// 未获取（未转载）
         MyPage<CourseReprintDTO> resPage = audioService.findResource(pageable);
         model.addAttribute("resList", resPage.getDataList());
         return "/index/index";

@@ -1479,6 +1479,7 @@ a:hover .minIcon { background-position-y:-26px; }
 .resource-list .resource-img { position: relative;}
 .resource-list .resource-img .resource-state {     position: absolute; right: 10px; top: 5px; color: #ffffff; background: rgba(0,0,0,.4); padding: 3px 10px; border-radius: 10px;}
 .resource-list .resource-img .resource-state span { margin-top:2px;}
+.resource-list .resource-img img{ width:100%; height:245px !important;}
 .resource-list .resource-info { font-size:14px; padding:15px 20px; color:#b2b2b2;}
 .resource-list .resource-info .fl img { width:40px; height:40px; border-radius:4px; margin-right:15px;}
 .resource-list .resource-info .oh h3{ color:#323333; font-size:18px; margin-bottom:0;}
@@ -1709,11 +1710,13 @@ a:hover .minIcon { background-position-y:-26px; }
 @media screen and (max-width:1600px) {
     .resource-list .resource-link a i { margin:50% auto 20px;}
     .resource-list .row .col-lg-response { width: 33.33333333%;  }
+    .resource-list .resource-img img{ height:276px !important;}
 }
 
 @media screen and (max-width:1300px) {
     .resource-list .resource-link a i { margin:65% auto 20px;}
     .resource-list .row .col-lg-response { width: 50%;  }
+    .resource-list .resource-img img{ height:340px !important;}
 }
 
 @media screen and (max-width:1200px) {

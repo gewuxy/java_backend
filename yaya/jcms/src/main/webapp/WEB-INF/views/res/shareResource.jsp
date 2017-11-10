@@ -137,41 +137,53 @@
                 </div>
                 <div class="resource-list clearfix">
                     <div class="row clearfix">
-                    <c:forEach items="${page.dataList}" var="res">
-                        <div class="col-lg-response">
-                            <div class="resource-list-box">
-                                <div class="resource-list-item">
-                                    <div class="resource-img ">
-                                        <img src="${res.coverUrl}" alt="" class="img-response">
-                                        <div class="resource-link">
-                                            <a href="javascript:;" class="resource-icon-play popup-player-hook" courseId="${res.id}">
-                                                <i></i>预览
-                                            </a><a style="cursor: pointer;"  class="resource-icon-download fx-btn-3" resId="${res.id}" credits="${res.credits}" shareType="${res.shareType}" >
+                    <c:choose>
+                        <c:when test="${page.dataList != null && page.dataList.size()!=0}">
+                        <c:forEach items="${page.dataList}" var="res">
+                            <div class="col-lg-response">
+                                <div class="resource-list-box">
+                                    <div class="resource-list-item">
+                                        <div class="resource-img ">
+                                            <img src="${res.coverUrl}" alt="" class="img-response">
+                                            <div class="resource-link">
+                                                <a href="javascript:;" class="resource-icon-play popup-player-hook" courseId="${res.id}">
+                                                    <i></i>预览
+                                                </a><a style="cursor: pointer;"  class="resource-icon-download fx-btn-3" resId="${res.id}" credits="${res.credits}" shareType="${res.shareType}" >
                                                 <i></i>
-                                            获取</a>
+                                                获取</a>
+                                            </div>
+                                            <span></span>
                                         </div>
-                                        <span></span>
-                                    </div>
-                                    <div class="resource-info">
-                                        <h3 class="overflowText">${res.title}</h3>
-                                        <p>${res.category}
-                                            <c:choose>
-                                                <c:when test="${res.shareType == 1}">
-                                                    <i class="rowSpace">|</i>
-                                                    <span class="color-green-up">支付象数：${res.credits}</span>
-                                                </c:when>
-                                                <c:when test="${res.shareType == 2}">
-                                                    <i class="rowSpace">|</i>
-                                                    <span class="color-yellow-up">奖励象数：${res.credits}</span>
-                                                </c:when>
-                                            </c:choose>
-                                        </p>
-                                    </div>
+                                        <div class="resource-info">
+                                            <h3 class="overflowText">${res.title}</h3>
+                                            <p>${res.category}
+                                                <c:choose>
+                                                    <c:when test="${res.shareType == 1}">
+                                                        <i class="rowSpace">|</i>
+                                                        <span class="color-green-up">支付象数：${res.credits}</span>
+                                                    </c:when>
+                                                    <c:when test="${res.shareType == 2}">
+                                                        <i class="rowSpace">|</i>
+                                                        <span class="color-yellow-up">奖励象数：${res.credits}</span>
+                                                    </c:when>
+                                                </c:choose>
+                                            </p>
+                                        </div>
 
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                    </c:forEach>
+                        </c:forEach>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="normalBoxItem">
+                                <p><img src="${ctxStatic}/images/not-search.png" alt=""></p>
+                                <p style="color:#acacac; font-size:16px;">搜索不到结果</p>
+                            </div>
+                        </c:otherwise>
+
+                    </c:choose>
+
                     </div>
                 </div>
 

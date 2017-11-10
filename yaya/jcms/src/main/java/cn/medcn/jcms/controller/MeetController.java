@@ -506,14 +506,17 @@ public class MeetController extends BaseController {
     }
 
     private void findMemberLimit(Meet meet, Model model) {
+        // 指定省份参与
         String specifyProvince = meet.getMeetProperty().getSpecifyProvince();
+        // 参与人员限制类型
         Integer memberLimitType = meet.getMeetProperty().getMemberLimitType();
         Integer groupId = meet.getMeetProperty().getGroupId();
-        if (memberLimitType == null) {
+
+        if (memberLimitType == null) {// 默认不限制人员参与
             memberLimitType = MeetProperty.MemberLimit.NOT_LIMIT.getType();
         }
 
-        if (memberLimitType == MeetProperty.MemberLimit.LIMIT_BY_LOCATION.getType()
+        if (memberLimitType.intValue() == MeetProperty.MemberLimit.LIMIT_BY_LOCATION.getType()
                 && !StringUtils.isEmpty(specifyProvince)) {
             List<SystemRegion> cities = systemRegionService.findRegionByPreName(specifyProvince);
             model.addAttribute("cities", cities);

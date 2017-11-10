@@ -193,24 +193,24 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
             url = appBase + "/api/email/active?code=" + code;
 
-        // 发送找回密码邮件
+            // 发送找回密码邮件
         } else if (template.getTempType() == EmailTemplate.Type.FIND_PWD.getLabelId()) {
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
             url = appBase + "/api/email/toReset?code=" + code;
 
-        // 发送绑定邮箱邮件
+            // 发送绑定邮箱邮件
         } else if (template.getTempType() == EmailTemplate.Type.BIND.getLabelId()) {
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email + "," + userId, (int) TimeUnit.DAYS.toSeconds(1));
             url = appBase + "/api/email/bindEmail?code=" + code;
         }
 
 
-            MailBean bean = new MailBean();
-            bean.setFrom(template.getSender());
-            bean.setFromName(template.getSenderName());
-            bean.setSubject(template.getSubject());
-            bean.setLocalStr(template.getLangType());
-            bean.setToEmails(new String[]{email});
+        MailBean bean = new MailBean();
+        bean.setFrom(template.getSender());
+        bean.setFromName(template.getSenderName());
+        bean.setSubject(template.getSubject());
+        bean.setLocalStr(template.getLangType());
+        bean.setToEmails(new String[]{email});
         try {
             cspMailSender.setUsername(sender);
             cspMailSender.setPassword(password);
@@ -289,19 +289,19 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
         }
 
-            BindInfo bindInfo = new BindInfo();
-            bindInfo.setUserId(userId);
-            int count = bindInfoDAO.selectCount(bindInfo);
-            //用户没有绑定第三方账号，并且只绑定了手机或邮箱的情况下不能解绑
-            if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
-                throw new SystemException(local("user.only.one.account"));
-            }
-            if(type ==  BindInfo.Type.EMAIL.getTypeId()){
-                info.setEmail("");
-            }else{
-                info.setMobile("");
-            }
-            updateByPrimaryKeySelective(info);
+        BindInfo bindInfo = new BindInfo();
+        bindInfo.setUserId(userId);
+        int count = bindInfoDAO.selectCount(bindInfo);
+        //用户没有绑定第三方账号，并且只绑定了手机或邮箱的情况下不能解绑
+        if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
+            throw new SystemException(local("user.only.one.account"));
+        }
+        if(type ==  BindInfo.Type.EMAIL.getTypeId()){
+            info.setEmail("");
+        }else{
+            info.setMobile("");
+        }
+        updateByPrimaryKeySelective(info);
 
     }
 
@@ -494,5 +494,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return flux == null? 0:flux.getFlux();
     }
 
+
+
+    @Override
+    public MyPage<CspUserInfo> findCspUserList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<CspUserInfo> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
+        return page;
+    }
 
 }

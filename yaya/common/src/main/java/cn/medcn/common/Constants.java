@@ -175,4 +175,6 @@ public class Constants {
     // CSP用户头像地址前缀
     public static final String AVATAR_URL_PREFIX = "http:";
 
+    // 资源平台 共享资源页面每页显示条数
+    public static final int SHARE_PAGE_SIZE = 16;
 }

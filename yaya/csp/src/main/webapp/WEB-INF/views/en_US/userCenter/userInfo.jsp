@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>个人中心 - 我的信息</title>
+    <title>Me - Profile - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -69,6 +69,7 @@
                 $("#nameSpan").attr("class","cells-block error");
                 return;
             }
+            $("#nameSpan").attr("class","cells-block error none");
             var info = $("#info").val();
             $.post('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info}, function (data) {
                 if (data.code == 0){
