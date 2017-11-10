@@ -68,6 +68,7 @@
                 $("#nameSpan").attr("class","cells-block error");
                 return;
             }
+            $("#nameSpan").attr("class","cells-block error none");
             var info = $("#info").val();
             $.post('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info}, function (data) {
                 if (data.code == 0){
