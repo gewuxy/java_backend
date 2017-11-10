@@ -70,6 +70,7 @@
     function uploadHandler(result){
         $("#image").attr("src",result.data);
         $("#head_img").attr("src",result.data);
+        layer.msg("update success");
     }
 
 </script>

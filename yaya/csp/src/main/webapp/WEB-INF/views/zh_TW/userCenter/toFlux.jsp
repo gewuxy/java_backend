@@ -95,10 +95,6 @@
                                                 <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
                                                 <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                             </label>
-                                            <label for="paypal" class="item item-radius">
-                                                <input type="radio" name="channel" class="none" value="paypal" id="paypal">
-                                                <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
-                                            </label>
                                         </div>
                                     </div>
                                 </div>

@@ -177,7 +177,6 @@ public class WebChargeController extends CspBaseController {
                 }
                 //更新订单状态，修改用户流量值
                 chargeService.updateOrderAndUserFlux(order);
-                //TODO 修改支付成功地址
                 return "redirect:/mgr/charge/success?money="+(order.getFlux()/1024);
         }
 
@@ -191,6 +190,12 @@ public class WebChargeController extends CspBaseController {
     }
 
 
+    /**
+     * 支付成功跳转页面
+     * @param money
+     * @param model
+     * @return
+     */
     @RequestMapping("/success")
     public String success(Integer money,Model model){
         model.addAttribute("money",money);
