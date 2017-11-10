@@ -253,35 +253,45 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
                 meetAudio.setMeetId(module.getMeetId());
                 meetAudio.setModuleId(module.getId());
                 MeetAudio oldAudio = meetAudioDAO.selectOne(meetAudio);
-                courseId = oldAudio.getCourseId();
+                if (oldAudio != null) {
+                    courseId = oldAudio.getCourseId();
+                }
                 break;
             case 2:
                 MeetVideo meetVideo = new MeetVideo();
                 meetVideo.setMeetId(module.getMeetId());
                 meetVideo.setModuleId(module.getId());
                 MeetVideo oldVideo = meetVideoDAO.selectOne(meetVideo);
-                courseId = oldVideo.getCourseId();
+                if (oldVideo != null) {
+                    courseId = oldVideo.getCourseId();
+                }
                 break;
             case 3:
                 MeetExam exam = new MeetExam();
                 exam.setMeetId(module.getMeetId());
                 exam.setModuleId(module.getId());
                 MeetExam oldExam = meetExamDAO.selectOne(exam);
-                courseId = oldExam.getPaperId();
+                if (oldExam != null) {
+                    courseId = oldExam.getPaperId();
+                }
                 break;
             case 4:
                 MeetSurvey survey = new MeetSurvey();
                 survey.setMeetId(module.getMeetId());
                 survey.setModuleId(module.getId());
                 MeetSurvey oldSurvey = meetSurveyDAO.selectOne(survey);
-                courseId = oldSurvey.getPaperId();
+                if (oldSurvey != null) {
+                    courseId = oldSurvey.getPaperId();
+                }
                 break;
             case 5:
                 MeetPosition position = new MeetPosition();
                 position.setModuleId(module.getId());
                 position.setMeetId(module.getMeetId());
                 MeetPosition oldPos = meetPositionDAO.selectOne(position);
-                courseId = oldPos.getId();
+                if (oldPos != null) {
+                    courseId = oldPos.getId();
+                }
                 break;
             default:
                 break;
@@ -1870,35 +1880,36 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
 
                 // 查询草稿会议的课程id
                 Integer oldCourseId = findModuleCourseId(oldMeetModule);
+                if (oldCourseId != null && oldCourseId != 0) {
+                    // 根据课程课程id查询 草稿会议的课程表 并复制创建新的会议课程表获取新的课程ID
+                    if (oldFunctionId == MeetModule.ModuleFunction.PPT.getFunId()) {
 
-                // 根据课程课程id查询 草稿会议的课程表 并复制创建新的会议课程表获取新的课程ID
-                if (oldFunctionId == MeetModule.ModuleFunction.PPT.getFunId()) {
+                        // 复制PPT课程会议
+                        copyAudioCourse(oldCourseId, newModuleId, newMeetId);
 
-                    // 复制PPT课程会议
-                    copyAudioCourse(oldCourseId, newModuleId, newMeetId);
+                    } else if (oldFunctionId == MeetModule.ModuleFunction.VIDEO.getFunId()) {
 
-                } else if (oldFunctionId == MeetModule.ModuleFunction.VIDEO.getFunId()) {
+                        // 复制视频课程会议
+                        copyVideoCourse(oldCourseId, newModuleId, newMeetId);
 
-                    // 复制视频课程会议
-                    copyVideoCourse(oldCourseId, newModuleId, newMeetId);
+                    } else if (oldFunctionId == MeetModule.ModuleFunction.EXAM.getFunId()) {
 
-                } else if (oldFunctionId == MeetModule.ModuleFunction.EXAM.getFunId()) {
+                        // 复制考试课程会议
+                        MeetExam oldExam = examService.findExam(oldMeetId, oldMeetModule.getId());
+                        if (oldExam != null) {
+                            copyExam(oldExam, newModuleId, newMeetId);
+                        }
 
-                    // 复制考试课程会议
-                    MeetExam oldExam = examService.findExam(oldMeetId, oldMeetModule.getId());
-                    if (oldExam != null) {
-                        copyExam(oldExam, newModuleId, newMeetId);
+                    } else if (oldFunctionId == MeetModule.ModuleFunction.SURVEY.getFunId()) {
+
+                        // 复制问卷调查课程会议
+                        copySurvey(oldCourseId, newModuleId, newMeetId);
+
+                    } else {
+                        // 复制会议签到数据
+                        copyMeetSign(oldMeetId, newMeetId, oldMeetModule.getId(), newModuleId);
+
                     }
-
-                } else if (oldFunctionId == MeetModule.ModuleFunction.SURVEY.getFunId()) {
-
-                    // 复制问卷调查课程会议
-                    copySurvey(oldCourseId, newModuleId, newMeetId);
-
-                } else {
-                    // 复制会议签到数据
-                   copyMeetSign(oldMeetId, newMeetId, oldMeetModule.getId(), newModuleId);
-
                 }
             }
         }
@@ -1943,10 +1954,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         condition.setModuleId(newModuleId);
         MeetAudio newAudio = meetAudioDAO.selectOne(condition);
         if (newAudio == null) { // 从草稿箱复制会议过来
-            newAudio = new MeetAudio();
-            newAudio.setId(null);
-            newAudio.setCourseId(newCourseId);
-            audioService.addMeetAudio(newAudio);
+            condition.setId(null);
+            condition.setCourseId(newCourseId);
+            audioService.addMeetAudio(condition);
         } else {
             // 发布会议从已获取会议 引用复制
             newAudio.setCourseId(newCourseId);
