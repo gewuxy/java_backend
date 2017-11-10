@@ -124,7 +124,7 @@
 <div class="my-mlist my-mlist-shedow my-index-box">
     <div class="my-top">
         <div class="fl">最新会议资源</div>
-        <div class="fr"><a href="${ctx}/func/res/list">更多</a></div>
+        <div class="fr"><a href="${ctx}/func/res/share/list">更多</a></div>
         <div class="clearfix"></div>
     </div>
     <table class="table-box-1">
