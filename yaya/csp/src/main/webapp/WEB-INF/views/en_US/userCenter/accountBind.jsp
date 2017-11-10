@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="http://adodson.com/hello.js/dist/hello.all.js"></script>
 
 </head>
 
@@ -51,7 +52,7 @@
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty twitter}">
-                                            <a href="#" class="fr binding-btn color-blue" type="1" action_type="bind">Bind</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="4" action_type="bind">Bind</a>
                                             <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
@@ -96,6 +97,9 @@
     <%@include file="../include/footer.jsp"%>
 </div>
 
+<form action="${ctx}/mgr/twitterCallback" id="twitterForm" name="twitterForm" method="post">
+    <input type="hidden" id="str" name="str">
+</form>
 
 <!--弹出绑定邮箱step01-->
 <div class="email-popup-box">
@@ -141,6 +145,23 @@
 
 <script>
 
+    window.twttr = (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0],
+            t = window.twttr || {};
+        if (d.getElementById(id)) return t;
+        js = d.createElement(s);
+        js.id = id;
+        js.src = "https://platform.twitter.com/widgets.js";
+        fjs.parentNode.insertBefore(js, fjs);
+
+        t._e = [];
+        t.ready = function(f) {
+            t._e.push(f);
+        };
+
+        return t;
+    }(document, "script", "twitter-wjs"));
+
     $(function () {
         $("#config_3").parent().attr("class","cur");
 
@@ -179,17 +200,52 @@
         });
 
 
+
+
         //绑定操作
         $("a[action_type='bind']").click(function () {
             var type = $(this).attr("type");
 
-            $.get('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
-                if (data.code == 0){
-                    window.location.href=data.data;
-                }else{
-                    layer.msg(data.err);
+            if(type == 4){
+                var log = console.log;
+                hello.init({
+                        'twitter' : 's024Uf0tlvwtDwzKqKLat56Zm'
+                    },
+                    {
+//                      redirect_uri:'/', //代理后的重定向路径，可不填
+                        oauth_proxy: 'https://auth-server.herokuapp.com/proxy' //这里使用默认的代理
+                    });
+
+                function login_twitter(network){  //登录方法，并将twitter 作为参数传入
+                    // Twitter instance
+                    var twitter = hello(network);
+                    // Login
+                    twitter.login().then( function(r){
+                        // Get Profile
+                        return twitter.api('/me');
+                    }, log ) .then( function(p){
+                        console.log("Connected to "+ network+" as " + p.name);
+                        var res = JSON.stringify(p);//因为得不到token，但是这步已经得到用户所有信息，所以将用户信息转成JSON字符串给后台
+                        console.log(res);
+                            $("#str").val(res);
+                            $("#twitterForm").submit();
+                        <%--self.location= '${ctx}/mgr/twitterCallback?str='+res;--%>
+                    }, log );
                 }
-            },'json');
+                login_twitter("twitter");
+
+
+            }else{
+                $.get('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
+                    if (data.code == 0){
+                        window.location.href=data.data;
+                    }else{
+                        layer.msg(data.err);
+                    }
+                },'json');
+            }
+
+
         });
 
         //弹出绑定手机

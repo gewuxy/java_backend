@@ -13,9 +13,9 @@
 
     <select id="findByAcceptId" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
 
-        SELECT d.id, c.title, c.play_type,sum(cd.duration) as duration, COUNT(cd.id) AS pageCount,l.start_time, l.end_time, cd.img_url as cover_url FROM t_audio_course c
+        SELECT c.id, c.title, c.play_type,sum(cd.duration) as duration, COUNT(cd.id) AS pageCount,l.start_time, l.end_time, cd.img_url as cover_url FROM t_audio_course c
         LEFT JOIN t_csp_live l ON l.course_id = c.id
-        INNER JOIN t_audio_course_detail cd ON c.id = cd.course_id AND cd.sort = 1
+        LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id AND cd.sort = 1
         INNER JOIN t_csp_delivery d ON d.source_id = c.id
         WHERE d.accept_id = #{acceptId} AND d.author_id = #{authorId}
         GROUP BY cd.course_id
