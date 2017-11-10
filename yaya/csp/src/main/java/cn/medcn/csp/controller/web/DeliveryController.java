@@ -50,10 +50,10 @@ public class DeliveryController extends CspBaseController {
     @ResponseBody
     public String contribute(Integer courseId,Integer[] accepts)  {
         if(courseId == null){
-            return error("courseId不能为空");
+            return error(local("courseId.empty"));
         }
         if(accepts.length == 0){
-            return error("请指定投稿单位号");
+            return error(local("institution.account.empty"));
         }
         String authorId = getWebPrincipal().getId();
         try {

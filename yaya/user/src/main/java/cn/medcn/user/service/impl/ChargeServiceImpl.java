@@ -51,7 +51,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws APIConnectionException
      * @throws AuthenticationException
      */  //TODO
-    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
+    public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip,String appBase) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
@@ -67,30 +67,20 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("subject", "charge flux");
         chargeParams.put("body", "charge flux");
 
-        //支付宝手机网页支付
-        if ("alipay_wap".equals(channel)) {
+        //支付宝手机网页支付,支付宝电脑网站支付
+        if ("alipay_wap".equals(channel) || "alipay_pc_direct".equals(channel)) {
             Map<String, String> extraMap = new HashMap();
-            extraMap.put("success_url", "http://www.baidu.com");
+            extraMap.put("success_url", appBase + "mgr/charge/success?money="+flux *2);
             chargeParams.put("extra", extraMap);
         }
-        //支付宝电脑网站支付
-        if ("alipay_pc_direct".equals(channel)) {
+
+        //银联全渠道手机网页支付,银联PC网页支付,微信h5支付
+        if ("upacp_wap".equals(channel) || "upacp_pc".equals(channel) || "wx_wap".equals(channel)) {
             Map<String, String> extraMap = new HashMap();
-            extraMap.put("success_url", "http://www.baidu.com");
+            extraMap.put("result_url", appBase + "mgr/charge/success?money="+flux *2);
             chargeParams.put("extra", extraMap);
         }
-        //银联全渠道手机网页支付
-        if ("upacp_wap".equals(channel)) {
-            Map<String, String> extraMap = new HashMap();
-            extraMap.put("result_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
-            chargeParams.put("extra", extraMap);
-        }
-        //银联PC网页支付
-        if ("upacp_pc".equals(channel)) {
-            Map<String, String> extraMap = new HashMap();
-            extraMap.put("result_url", "http://127.0.0.1:8080/PartTimeJob/pinus_webview.html");
-            chargeParams.put("extra", extraMap);
-        }
+
         return Charge.create(chargeParams);
     }
 

@@ -188,7 +188,7 @@ public class UserCenterController extends CspBaseController{
         String localStr = LocalUtils.getLocalStr();
 
         for(BindInfo info:list){
-            //英文版
+                //英文版
             if(LocalUtils.Local.en_US.name().equals(localStr)){
                 if(info.getThirdPartyId() == BindInfo.Type.FACEBOOK.getTypeId()){
                     model.addAttribute("facebook",info.getNickName());
@@ -196,7 +196,7 @@ public class UserCenterController extends CspBaseController{
                 if(info.getThirdPartyId() == BindInfo.Type.TWITTER.getTypeId()){
                     model.addAttribute("twitter",info.getNickName());
                 }
-            }else{
+            }else{ //中文版
                 if(info.getThirdPartyId() == BindInfo.Type.WE_CHAT.getTypeId()){
                     model.addAttribute("weChat",info.getNickName());
                 }
@@ -223,7 +223,7 @@ public class UserCenterController extends CspBaseController{
     @ResponseBody
     public String jumpOauthUrl(Integer type) throws SystemException {
         if(type == null){
-            return error("请选择要绑定的类型");
+            return error(local("bind.type.empty"));
         }
         String url = oauthService.jumpThirdPartyAuthorizePage(type);
         return success(url);
