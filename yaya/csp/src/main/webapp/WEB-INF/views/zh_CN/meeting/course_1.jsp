@@ -119,7 +119,7 @@
         <div class="title"><h3>简介</h3></div>
         <div class="text hidden-box">
 
-            <p>${not empty course.info ? course.info : '未设置'}</p>
+            <p>${course.info}</p>
         </div>
     </div>
 </div>

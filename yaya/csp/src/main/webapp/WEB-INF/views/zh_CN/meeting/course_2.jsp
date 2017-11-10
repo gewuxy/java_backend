@@ -210,7 +210,7 @@
             //播放器控制条
             CKobject.getObjectById('ck-video').allowFull(false);
             //播放开始/暂停
-            CKobject.getObjectById('ck-video').playOrPause();
+            CKobject.getObjectById('ck-video').play();
 
             //音频文件静音
             popupPalyer.element.muted = true;
@@ -305,21 +305,24 @@
 
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
+
+//                CKobject.getObjectById('ck-video').play();
             },
             onSlideNextEnd:function(){
-                prevItemIsVideo = $('.swiper-slide-prev').find('video');
-                //判断前一个是否有视频
-                if(prevItemIsVideo.length > 0){
-                    //重新加载视频
-                    prevItemIsVideo.get(0).load();
-                }
-            },
-            onSlidePrevEnd:function(){
                 nextItemIsVideo = $('.swiper-slide-next').find('video');
                 //判断后一个是否有视频
                 if(nextItemIsVideo.length > 0){
                     //重新加载视频
                     nextItemIsVideo.get(0).load();
+                }
+
+            },
+            onSlidePrevEnd:function(){
+                prevItemIsVideo = $('.swiper-slide-prev').find('video');
+                //判断前一个是否有视频
+                if(prevItemIsVideo.length > 0){
+                    //重新加载视频
+                    prevItemIsVideo.get(0).load();
                 }
             },
             onInit: function(swiper){

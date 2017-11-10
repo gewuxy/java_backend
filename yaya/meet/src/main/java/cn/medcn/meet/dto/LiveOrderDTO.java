@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/9/27.
@@ -31,6 +32,8 @@ public class LiveOrderDTO implements Serializable{
     public static final String LIVE_TYPE_PPT = "0";
 
     public static final String LIVE_TYPE_VIDEO = "1";
+
+    public static final int ORDER_HEART_BEAT = 101;//心跳指令
 
     //直播课件ID
     protected String courseId;
@@ -104,4 +107,14 @@ public class LiveOrderDTO implements Serializable{
         return order;
     }
 
+    public static LiveOrderDTO buildHeartBeatOrder(){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setOrder(ORDER_HEART_BEAT);
+        return order;
+    }
+
+    public static void main(String[] args) {
+        long time = TimeUnit.DAYS.toSeconds(2);
+        System.out.println("time = " + time + " int time = " + (int) time);
+    }
 }

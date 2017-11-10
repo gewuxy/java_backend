@@ -128,14 +128,17 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("wsUrl", wsUrl);
 
             course.setDetails(audioService.findLiveDetails(courseId));
-            LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
-            if (orderDTO != null) {
-                AudioCourseDetail tempDetail = new AudioCourseDetail();
-                tempDetail.setImgUrl(orderDTO.getImgUrl());
-                tempDetail.setVideoUrl(orderDTO.getVideoUrl());
-                tempDetail.setCourseId(Integer.valueOf(courseId));
-                tempDetail.setId(orderDTO.getDetailId());
-                course.getDetails().add(tempDetail);
+
+            if (course.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType()) {
+                LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
+                if (orderDTO != null) {
+                    AudioCourseDetail tempDetail = new AudioCourseDetail();
+                    tempDetail.setImgUrl(orderDTO.getImgUrl());
+                    tempDetail.setVideoUrl(orderDTO.getVideoUrl());
+                    tempDetail.setCourseId(Integer.valueOf(courseId));
+                    tempDetail.setId(orderDTO.getDetailId());
+                    course.getDetails().add(tempDetail);
+                }
             }
 
             Live live = liveService.findByCourseId(courseId);
@@ -282,7 +285,7 @@ public class MeetingController extends CspBaseController {
         //保存直播进度
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
-            live.setLivePage(maxSort);
+            live.setLivePage(detail.getSort() - 1);
             liveService.updateByPrimaryKeySelective(live);
         }
     }
@@ -343,6 +346,12 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String handleScan(Integer courseId, HttpServletRequest request) {
 
+        Principal principal = SecurityUtils.get();
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (!principal.getId().equals(course.getCspUserId())) {
+            return error(local("meeting.error.not_mine"));
+        }
+
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
         if (hasDuplicate) {
             Map<String, Object> result = new HashMap<>();
@@ -352,7 +361,7 @@ public class MeetingController extends CspBaseController {
             result.put("duplicate", "1");
             return success(result);
         } else {
-            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+
             Map<String, Object> result = new HashMap<>();
             result.put("courseId", courseId);
             result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
@@ -409,9 +418,17 @@ public class MeetingController extends CspBaseController {
         if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
             //查询出直播信息
             Live live = liveService.findByCourseId(courseId);
+            if (live != null) {//改变直播状态
+                live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+                liveService.updateByPrimaryKey(live);
+            }
             result.put("live", live);
         } else {//录播查询录播的进度信息
             AudioCoursePlay play = audioService.findPlayState(courseId);
+            if (play != null) {
+                play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
+                audioService.updateAudioCoursePlay(play);
+            }
             result.put("record", play);
         }
 
@@ -610,15 +627,31 @@ public class MeetingController extends CspBaseController {
             over = 0;
         }
 
-        AudioCoursePlay play = audioService.findPlayState(courseId);
-        if (play != null) {
-            play.setPlayPage(pageNum);
-            play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
-            if (over == 1) {
-                play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course != null) {
+            if (course.getPlayType() == null) {
+                course.setPlayType(AudioCourse.PlayType.normal.getType());
             }
-            audioService.updateAudioCoursePlay(play);
+
+            if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                Live live = liveService.findByCourseId(courseId);
+                if (live != null) {
+                    live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+                    liveService.updateByPrimaryKey(live);
+                }
+            } else {
+                AudioCoursePlay play = audioService.findPlayState(courseId);
+                if (play != null) {
+                    play.setPlayPage(pageNum);
+                    play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
+                    if (over == 1) {
+                        play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
+                    }
+                    audioService.updateAudioCoursePlay(play);
+                }
+            }
         }
+
 
         return success();
     }

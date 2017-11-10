@@ -16,10 +16,7 @@ import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
-import cn.medcn.meet.model.AudioCoursePlay;
-import cn.medcn.meet.model.CourseCategory;
+import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
 import cn.medcn.meet.service.LiveService;
@@ -129,6 +126,20 @@ public class MeetingMgrController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             throw new SystemException(local("meeting.error.not_mine"));
         }
+
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
+
+        if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+            AudioCoursePlay play = audioService.findPlayState(courseId);
+            model.addAttribute("record", play);
+        } else {
+            //查询出直播信息
+            Live live = liveService.findByCourseId(courseId);
+            model.addAttribute("live", live);
+        }
+
         model.addAttribute("course", course);
         String wsUrl = genWsUrl(request, courseId);
         model.addAttribute("wsUrl", wsUrl);

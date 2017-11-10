@@ -58,7 +58,7 @@ public class DeliveryController extends CspBaseController {
         String authorId = getWebPrincipal().getId();
         try {
             //投稿
-            courseDeliveryService.contribute(courseId,accepts,authorId);
+            courseDeliveryService.executeDelivery(courseId,accepts,authorId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

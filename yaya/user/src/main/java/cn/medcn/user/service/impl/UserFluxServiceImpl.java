@@ -22,4 +22,8 @@ public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements Us
         return userFluxDAO;
     }
 
+    @Override
+    public UserFlux findByCourseId(Integer courseId) {
+        return userFluxDAO.findByCourseId(courseId);
+    }
 }

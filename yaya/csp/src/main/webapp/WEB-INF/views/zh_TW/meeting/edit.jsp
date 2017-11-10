@@ -78,7 +78,7 @@
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;輸入會議簡介</span>
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
+                                    <span class="subject">分類&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${course.categoryId}">
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${course.category}">
                                 </div>
@@ -116,7 +116,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>流量消耗每人約0.5G/1小時，例如：本次直播時長30分鐘，如100人在線預計消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <div class="text">流量剩餘<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>

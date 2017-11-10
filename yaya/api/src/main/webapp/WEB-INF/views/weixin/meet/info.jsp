@@ -85,7 +85,9 @@
                             <c:set var="icon" value="icon-faq"/>
                         </c:when>
                     </c:choose>
-                    <div class="${module.functionId == 1?'flex-item ':''}t-center"><a href="${ctx}/weixin/app/download" class="YaYa-button-item${module.functionId==1?' YaYa-button-hot':''}"><i class="${icon}"></i>${module.moduleName}</a></div>
+                    <div class="${module.functionId == 1?'flex-item ':''}t-center">
+                        <a href="doctor://mdecn.com?meetId=${meet.id}&title=${meet.meetName}" class="YaYa-button-item${module.functionId==1?' YaYa-button-hot':''}"><i class="${icon}"></i>${module.moduleName}</a>
+                    </div>
                 </c:forEach>
 
             </div>

@@ -1,5 +1,6 @@
 package cn.medcn.csp.dto;
 
+import cn.medcn.common.utils.HttpUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.PropertyUtils;
 import cn.medcn.csp.utils.ZeGoUtils;
@@ -8,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/9/28.
@@ -72,5 +75,17 @@ public class ZeGoCallBack implements Serializable {
         }
     }
 
+
+    public static void main(String[] args) {
+        String url = "http://10.0.0.250:8081/api/user/updateInfo";
+        Map<String, Object> params = new HashMap<>();
+        params.put("info", "阿斯顿发打发地方阿斯顿发");
+        params.put("nickName", "阿斯顿发到付");
+
+        Map<String, Object> headers = new HashMap<>();
+        headers.put("token", "e51a16c8bc9c4dcb9e849d5f78dbf636");
+
+        HttpUtils.post(url, params, headers);
+    }
 
 }

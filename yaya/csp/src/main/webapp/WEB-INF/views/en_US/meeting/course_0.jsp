@@ -109,7 +109,7 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>简介</h3></div>
+        <div class="title"><h3>Info</h3></div>
         <div class="text hidden-box">
 
             <p>${not empty course.info ? course.info : 'undefined'}</p>

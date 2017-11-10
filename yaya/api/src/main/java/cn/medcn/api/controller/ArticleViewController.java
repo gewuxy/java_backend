@@ -8,6 +8,8 @@ import cn.medcn.data.model.DataFile;
 import cn.medcn.data.service.DataFileService;
 import cn.medcn.meet.dto.MeetInfoDTO;
 import cn.medcn.meet.service.MeetService;
+import cn.medcn.user.model.Advert;
+import cn.medcn.user.service.AdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,6 +31,9 @@ public class ArticleViewController extends BaseController {
 
     @Autowired
     private DataFileService dataFileService;
+
+    @Autowired
+    protected AdvertService advertService;
 
 
 
@@ -64,5 +69,12 @@ public class ArticleViewController extends BaseController {
         model.addAttribute("meet", meetInfoDTO);
         model.addAttribute("view", "true");
         return "/weixin/meet/info";
+    }
+
+    @RequestMapping(value = "/advert/{id}")
+    public String view(@PathVariable Integer id, Model model){
+        Advert advert = advertService.selectByPrimaryKey(id);
+        model.addAttribute("advert", advert);
+        return "/advert/view";
     }
 }

@@ -33,6 +33,7 @@ import java.util.List;
 @Controller
 @RequestMapping(value = "/weixin/meet")
 public class WXMeetController extends BaseController {
+
     @Autowired
     protected MeetStatsService meetStatsService;
 
@@ -96,7 +97,7 @@ public class WXMeetController extends BaseController {
 
 
     @RequestMapping(value = "/info")
-    public String info(String meetId, Model model){
+    public String info(String meetId, Model model, HttpServletRequest request){
         Principal principal = SecurityUtils.getCurrentUserInfo();
         MeetInfoDTO meetInfoDTO = meetService.findFinalMeetInfo(meetId, principal == null ? null : principal.getId());
         if (meetInfoDTO.getStartTime() != null && meetInfoDTO.getEndTime() != null){

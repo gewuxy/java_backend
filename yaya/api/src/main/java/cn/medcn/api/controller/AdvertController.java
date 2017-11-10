@@ -2,17 +2,23 @@ package cn.medcn.api.controller;
 
 import cn.medcn.article.model.Article;
 import cn.medcn.article.service.ArticleService;
+import cn.medcn.common.Constants;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.TailorMadeUtils;
 import cn.medcn.user.dto.AdvertDTO;
 import cn.medcn.user.dto.BannerDTO;
 import cn.medcn.user.model.Advert;
+import cn.medcn.user.service.AdvertService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -31,8 +37,8 @@ public class AdvertController {
 
     private static final String YAYA_BANNER_CATEGORY_ID = "17051215380482710996";
 
-    /*@Autowired
-    private AdvertService advertService;*/
+    @Autowired
+    private AdvertService advertService;
 
     @Autowired
     private ArticleService articleService;
@@ -51,14 +57,39 @@ public class AdvertController {
     @RequestMapping("/advert")
     @ResponseBody
     public String advert() {
-        Article article = articleService.findAppAdvert(YAYA_ADVERT_CATEGORY_ID);
-        Map<String, String> map = Maps.newHashMap();
-        if(article != null){
-            map.put("pageUrl",appFileBase+article.getArticleImg());
-            map.put("id", article.getId());
+
+        Integer masterId = TailorMadeUtils.get();
+        if (masterId == null) {
+            masterId = Constants.DEFAULT_ATTENTION_PUBLIC_ACCOUNT;
+        }
+        Advert cond = new Advert();
+        cond.setPubUserId(masterId);
+        cond.setActive(true);
+        Advert advert = advertService.selectOne(cond);
+
+
+        Map<String, Object> map = Maps.newHashMap();
+        if(advert != null){
+            if (CheckUtils.isNotEmpty(advert.getImageUrl())) {
+                map.put("imageUrl", appFileBase + advert.getImageUrl());
+            }
+
+            if (CheckUtils.isNotEmpty(advert.getPageUrl())) {
+                map.put("pageUrl", advert.getPageUrl());
+            } else {
+                if (CheckUtils.isNotEmpty(advert.getContent())) {
+                    map.put("pageUrl", appYayaBase + "view/advert/" + advert.getId());
+                }
+            }
+
+            map.put("skipTime", advert.getSkipTime());
+            map.put("version", advert.getVersion());
         }
         return APIUtils.success(map);
     }
+
+
+
 
     /**
      * @return

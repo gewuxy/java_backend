@@ -73,7 +73,6 @@
     $(function(){
 
 
-
         //调整高度
         $('.swiper-fullPage').find('.swiper-container-metting-full').height($(window).height());
 
@@ -91,6 +90,12 @@
             paginationType: 'fraction',
             onInit: function(swiper){
                 swiper.wrapper.attr('style','transform: translate3d(0px, 0, 0);transition-duration: 0ms;');
+                var playType = "${course.playType}";
+                if (playType == "0"){
+                    swiper.slideTo("${record.playPage}");
+                } else {
+                    swiper.slideTo("${live.livePage}");
+                }
             },
             onSlideChangeEnd:function(swiper){
                 sendOrder(swiper.activeIndex);
@@ -174,7 +179,8 @@
     }
 
     function sendOrder(pageNo){
-        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web'};
+        var imgUrl = $(".swiper-slide-active").find("img").attr("src");
+        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
         myWs.send(JSON.stringify(message));
     }
 

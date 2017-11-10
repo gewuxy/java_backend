@@ -38,6 +38,11 @@ public class Advert {
     private Integer  appId;
 
     private String pageUrl;
+    //广告图地址
+    protected String imageUrl;
 
-
+    //广告自动跳转时间
+    protected Integer skipTime;
+    //版本号
+    protected Integer version;
 }

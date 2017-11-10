@@ -20,6 +20,7 @@ import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -533,7 +534,6 @@ public class CspUserController extends CspBaseController {
     @RequestMapping("/changeBindStatus")
     @ResponseBody
     public String changeBindStatus(BindInfo info)  {
-
         String userId = SecurityUtils.get().getId();
         //第三方账号绑定操作
         if (!StringUtils.isEmpty(info.getUniqueId())) {
