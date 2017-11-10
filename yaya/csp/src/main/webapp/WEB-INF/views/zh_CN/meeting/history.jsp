@@ -61,7 +61,7 @@
                                                         <img src="${meet.coverUrl}" alt="" class="img-response">
                                                     </c:if>
                                                     <div class="resource-link">
-                                                        <a href="#" class="resource-icon-play popup-player-hook">
+                                                        <a href="#" class="resource-icon-play popup-player-hook" courseId="${meet.id}">
                                                             <i></i>
                                                             预览
                                                         </a>
@@ -122,6 +122,40 @@
         </div>
     </c:if>
 
+</div>
+
+<div class="player-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="tab-subPage-bd swiperBox mettingSwiperBox clearfix">
+
+                <div class="metting-swiper">
+                    <!-- Swiper -->
+                    <div class="swiper-container swiper-container-horizontal swiper-container-metting">
+                        <div class="swiper-wrapper" id="mySwiper" style="transform: translate3d(297.25px, 0px, 0px); transition-duration: 0ms;">
+                        </div>
+                        <div class="clearfix t-center player-item" >
+                            <div class="audio-metting-box" style="">
+                                <audio controls=true id="swiperViedo" src=""></audio>
+                            </div>
+                        </div>
+                        <!-- Add Pagination -->
+                        <div class="metting-btn-item clearfix">
+                            <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
+                            <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> <i>|</i> <span class="swiper-pagination-total">4</span></div>
+                            <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
 </div>
 
 <%@include file="../include/footer.jsp"%>
@@ -207,12 +241,19 @@
         });
 
         $('.popup-player-hook').on('click',function(){
+            var course = loadCourseInfo($(this).attr("courseId"));
+            if (course == undefined){
+                layer.msg("获取会议信息失败");
+                return false;
+            }
+            initSwiper(course);
             layer.open({
                 type: 1,
                 area: ['1080px', '816px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
+                anim:2,
                 content: $('.player-popup-box'),
                 success:function(){
 
@@ -237,7 +278,7 @@
                             //获取默认偏移值
                             var defaultOffset = swiper.snapGrid;
                             for(var i =0; i<defaultOffset.length; i++){
-                                defaultOffset[i] = defaultOffset[i] - added;
+                                defaultOffset[i] = defaultOffset[i] - added ;
                             }
                             //更新偏移值
                             var updateOffset = defaultOffset.slice(1);
@@ -253,17 +294,48 @@
                             asAllItem[0].play();
                         },
                     });
-//                        $(".player-popup-box").find('.swiper-wrapper').attr('style','transform: translate3d(160px, 0, 0);transition-duration: 0ms;');
 
                 },
                 cancel :function(){
-
+                    $("#mySwiper").html("");
                 },
             });
+
+
         });
 
 
-//            $('.main-nav ul.sf-menu > li').last().addClass('last').end().hover(function(){ $(this).addClass('nav-hover'); },function(){ $(this).removeClass('nav-hover'); });
+        function loadCourseInfo(courseId){
+            var course ;
+            $.ajax({
+                url:'${ctx}/mgr/meet/view/'+courseId,
+                dataType:'json',
+                async:false,
+                type:'get',
+                success:function (data) {
+                    course = data.data;
+                },
+                error:function(e, n, a){
+                    alert(a);
+                }
+            });
+            return course;
+        }
+
+        function initSwiper(course){
+            $("#mySwiper").html("");
+            for(var index in course.details){
+                var detail = course.details[index];
+                if (detail.videoUrl != undefined){//视频
+                    $("#mySwiper").append('<div class="swiper-slide" data-num="'+index+'"  ><video src="'+detail.videoUrl+'" width="auto" height="264" controls autobuffer></video>'
+                        +'<div class="swiper-slide-metting-audio"></div></div>');
+                } else {
+                    $("#mySwiper").append('<div class="swiper-slide swiper-slide-active" data-num="'+index+'"  audio-src="'+detail.audioUrl+'">'
+                        +'<img src="'+detail.imgUrl+'" alt=""></div>');
+                }
+            }
+        }
+
     })
 
 
