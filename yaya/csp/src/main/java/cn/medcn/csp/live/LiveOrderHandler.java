@@ -119,6 +119,19 @@ public class LiveOrderHandler extends TextWebSocketHandler {
     }
 
     /**
+     * 发送指令到指定session
+     * @param session
+     * @param order
+     */
+    public static void sendToPoint (WebSocketSession session, LiveOrderDTO order){
+        try {
+            session.sendMessage(new TextMessage(JSON.toJSONString(order)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 广播到客户端
      *
      * @param dto
@@ -284,6 +297,28 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         }
 
         return map;
+    }
+
+    /**
+     * 返回消耗流量的用户
+     * @param courseId
+     * @return
+     */
+    public static int onlineFluxUsers(String courseId){
+        Map<String, WebSocketSession> sMap = sessionMap.get(courseId);
+        if (sMap == null || sMap.size() == 0) {
+            return 0;
+        } else {
+            int counter = 0;
+            for (String sKey : sMap.keySet()) {
+                WebSocketSession session = sMap.get(sKey);
+                if (session.getAttributes().get(Constants.TOKEN) == null) {
+                    counter ++;
+                }
+            }
+
+            return counter;
+        }
     }
 
 }

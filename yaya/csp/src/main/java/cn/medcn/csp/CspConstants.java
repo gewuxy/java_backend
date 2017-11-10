@@ -21,7 +21,12 @@ public class CspConstants {
 
     public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
 
-
+    //直播流量监控间隔 单位秒
     public static final int FLUX_MONITOR_SPACE = 5;
+
+    //直播流量报警阈值 单位M
+    public static final int FLUX_WARN_THRESHOLD = 2048;
+
+    public static final float FLUX_USAGE_PER_SECOND = 0.48f;//直播单人流量消耗 单位 mbps 兆每秒
 
 }

@@ -347,7 +347,7 @@ public class MeetingController extends CspBaseController {
     public String handleScan(Integer courseId, HttpServletRequest request) {
 
         Principal principal = SecurityUtils.get();
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        AudioCourse course = audioService.findAudioCourse(courseId);
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
@@ -367,6 +367,8 @@ public class MeetingController extends CspBaseController {
             result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
             result.put("duplicate", "0");
             result.put("title", course.getTitle());
+            result.put("coverUrl", !CheckUtils.isEmpty(course.getDetails()) ?  fileBase + course.getDetails().get(0).getImgUrl() : null);
+
             if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
                 Live live = liveService.findByCourseId(courseId);
                 if (live != null) {

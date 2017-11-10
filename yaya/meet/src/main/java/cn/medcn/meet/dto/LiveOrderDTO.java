@@ -27,6 +27,10 @@ public class LiveOrderDTO implements Serializable{
 
     public static final int ORDER_USER_JOIN = 6;//用户进入
 
+    public static final int ORDER_FLUX_NOT_ENOUGH = 7;//流量不足预警
+
+    public static final int ORDER_FLUX_EXHAUSTED = 8;//流量耗尽
+
     public static final int ORDER_SCAN_SUCCESS = 100;
 
     public static final String LIVE_TYPE_PPT = "0";
@@ -113,8 +117,23 @@ public class LiveOrderDTO implements Serializable{
         return order;
     }
 
+
+    public static LiveOrderDTO buildFluxNotEnoughOrder(String courseId){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(courseId);
+        order.setOrder(ORDER_FLUX_NOT_ENOUGH);
+        return order;
+    }
+
+    public static LiveOrderDTO buildFluxExhaustedOrder(String courseId){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(courseId);
+        order.setOrder(ORDER_FLUX_EXHAUSTED);
+        return order;
+    }
+
     public static void main(String[] args) {
-        long time = TimeUnit.DAYS.toSeconds(2);
-        System.out.println("time = " + time + " int time = " + (int) time);
+        float f = 21.829f;
+        System.out.println((int)f);
     }
 }
