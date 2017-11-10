@@ -23,8 +23,8 @@
 
 <div class="tab-hd">
 
-    <ul class="tab-list clearfix">
-        <li class="cur">
+    <ul class="tab-list clearfix" id="menu">
+        <li >
             <a href="${ctx}/func/res/list">CSP投屏<i></i></a>
         </li>
         <li >
@@ -33,3 +33,16 @@
     </ul>
 </div>
 
+<script>
+    $(function(){
+        var urlstr = location.href;
+        $("#menu>li").removeClass("cur");
+        $("#menu>li").each(function () {
+            if (urlstr.indexOf($(this).find("a").attr('href')) > -1) {
+                $(this).addClass('cur');
+            }else if (urlstr.indexOf('/acquired/list') > -1){
+                $(this).addClass("cur").siblings().removeClass("cur");
+            }
+        });
+    });
+</script>

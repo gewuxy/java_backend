@@ -45,6 +45,9 @@ public class ChargeController extends BaseController {
     @Value("${appId}")
     private String appId;
 
+    @Value("${app.yaya.base}")
+    private String appBase;
+
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
      */
@@ -61,7 +64,7 @@ public class ChargeController extends BaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip);
+            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip,appBase);
         } catch (RateLimitException e) {
             e.printStackTrace();
             return error(e.getMessage());
