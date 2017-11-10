@@ -155,4 +155,11 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param localStr
      */
     void sendBindMail(String email, String password, String userId, String localStr) throws SystemException;
+
+    /**
+     * 管理平台查询用户列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CspUserInfo> findCspUserList(Pageable pageable);
 }

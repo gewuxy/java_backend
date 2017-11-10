@@ -7,7 +7,7 @@
         <if test="account != null">
             AND account = #{account}
         </if>
-        order by log_date asc
+        order by log_date desc
     </select>
 
 </mapper>

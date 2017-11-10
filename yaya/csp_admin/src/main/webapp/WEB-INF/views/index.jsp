@@ -87,7 +87,7 @@
                 </li>
                 <li id="userInfo" class="dropdown">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="个人信息"><i class="icon-user"></i>&nbsp;您好,
-                        <shiro:principal property="nickname"/>&nbsp;<span id="notifyNum"
+                        <shiro:principal property="account"/>&nbsp;<span id="notifyNum"
                                                                           class="label label-info hide"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="${ctx}/csp/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a>
@@ -162,7 +162,7 @@
                                     </a>
                                     </li>
                                     <li><a
-                                            href="${ctx}/example/form"
+                                            href="${ctx}/csp/user/list"
                                             target="mainFrame"><i
                                             class="icon-circle-arrow-right"></i>&nbsp;CSP账号管理
                                     </a>
@@ -174,7 +174,7 @@
                                     </a>
                                     </li>
                                     <li><a
-                                            href="${ctx}/example/form"
+                                            href="${ctx}/csp/meet/list"
                                             target="mainFrame"><i
                                             class="icon-circle-arrow-right"></i>&nbsp;审议会议
                                     </a>

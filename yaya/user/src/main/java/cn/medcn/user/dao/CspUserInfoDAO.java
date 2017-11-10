@@ -42,4 +42,6 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
      * @return
      */
     List<VideoLiveRecordDTO> findVideoLiveRecord(Map<String, Object> params);
+
+    List<CspUserInfo> findCspUserList(Map<String, Object> params);
 }

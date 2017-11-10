@@ -242,6 +242,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
 
+    @Override
+    public MyPage<CspUserInfo> findCspUserList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<CspUserInfo> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
+        return page;
+    }
+
+
     /**
      * 绑定手机号
      * @param mobile

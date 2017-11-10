@@ -31,6 +31,13 @@
         WHERE tu.user_id = #{userId}
     </select>
 
+    <select id="findCspUserList" resultType="cn.medcn.user.model.CspUserInfo">
+        SELECT * FROM t_csp_user_info WHERE 1=1
+        <if test="userName != null">
+            AND user_name = #{userName}
+        </if>
+    </select>
+
 
 
 
