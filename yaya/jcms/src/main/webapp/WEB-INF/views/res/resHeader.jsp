@@ -24,7 +24,7 @@
 <div class="tab-hd">
 
     <ul class="tab-list clearfix" id="menu">
-        <li class="cur">
+        <li >
             <a href="${ctx}/func/res/list">CSP投屏<i></i></a>
         </li>
         <li >
