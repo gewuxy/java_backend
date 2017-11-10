@@ -23,6 +23,13 @@ public class CspSysLogController extends BaseController {
    private CspSysLogService cspSysLogService;
 
 
+    /**
+     * 获取日志列表
+     * @param pageable
+     * @param account
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/log/list")
     public String cspSysUserSearch(Pageable pageable, String account, Model model) {
         if (!StringUtils.isEmpty(account)) {

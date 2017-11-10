@@ -5,10 +5,10 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.csp.admin.model.CspUserInfo;
-import cn.medcn.csp.admin.service.CspUserService;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
+import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +19,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 /**
  * by create HuangHuibin 2017/11/3
@@ -28,7 +29,7 @@ import java.util.List;
 public class CspUserController extends BaseController {
 
    @Autowired
-   private CspUserService cspUserService;
+   private CspUserService cspUsersService;
 
    @Autowired
    private SystemRegionService systemRegionService;
@@ -46,13 +47,13 @@ public class CspUserController extends BaseController {
             pageable.getParams().put("userName", userName);
             model.addAttribute("userName",userName);
         }
-        MyPage<CspUserInfo> page = cspUserService.findCspUserList(pageable);
+        MyPage<CspUserInfo> page = cspUsersService.findCspUserList(pageable);
         model.addAttribute("page", page);
         return "/user/cspUserList";
     }
 
     /**
-     *
+     * 跳转到查看或者修改页面
      * @param user
      * @param model
      * @return
@@ -66,7 +67,7 @@ public class CspUserController extends BaseController {
         model.addAttribute("province", page);
         model.addAttribute("actionType",actionType);
         if(actionType == 3){ //更新或者查看
-            CspUserInfo userInfo = cspUserService.selectByPrimaryKey(user);
+            CspUserInfo userInfo = cspUsersService.selectByPrimaryKey(user);
             model.addAttribute("user",userInfo);
             String province = userInfo.getProvince();
             if(province != null){
@@ -92,25 +93,25 @@ public class CspUserController extends BaseController {
     public String stopOrActive(CspUserInfo user,Integer actionType,Integer isReset, RedirectAttributes redirectAttributes) {
         if(actionType == 1){ //停用
             user.setActive(false);
-            cspUserService.updateByPrimaryKeySelective(user);
+            cspUsersService.updateByPrimaryKeySelective(user);
         }else if(actionType == 2){   //删除
-            cspUserService.deleteByPrimaryKey(user);
+            cspUsersService.deleteByPrimaryKey(user);
         }else if(actionType == 3){   //修改用户信息
             if(isReset == 1){   //密码重置
                 user.setPassword(MD5Utils.MD5Encode("111111"));
             }
-            cspUserService.updateByPrimaryKeySelective(user);
+            cspUsersService.updateByPrimaryKeySelective(user);
         }else{  //注册新用户
-            user.setId(null);   //
+            user.setId(String.valueOf(System.currentTimeMillis()));   //暂时随机数代替
             user.setRegisterTime(new Date());
-            cspUserService.insertSelective(user);
+            cspUsersService.insertSelective(user);
         }
         addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": actionType == 2?"删除成功":"注册成功");
         return "redirect:/csp/user/list";
     }
 
     /**
-     * 获取到子级列表
+     * 根据上级名称获取到子级列表
      * @param name
      * @return
      */
