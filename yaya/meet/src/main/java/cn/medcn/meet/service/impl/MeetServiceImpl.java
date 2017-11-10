@@ -1943,10 +1943,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         condition.setModuleId(newModuleId);
         MeetAudio newAudio = meetAudioDAO.selectOne(condition);
         if (newAudio == null) { // 从草稿箱复制会议过来
-            newAudio = new MeetAudio();
-            newAudio.setId(null);
-            newAudio.setCourseId(newCourseId);
-            audioService.addMeetAudio(newAudio);
+            condition.setId(null);
+            condition.setCourseId(newCourseId);
+            audioService.addMeetAudio(condition);
         } else {
             // 发布会议从已获取会议 引用复制
             newAudio.setCourseId(newCourseId);
