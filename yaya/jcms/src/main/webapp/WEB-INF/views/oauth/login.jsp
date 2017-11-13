@@ -123,7 +123,7 @@
                                     <input id="pwd" name="password" type="password" required placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
-                                <span class="cells-block error ${not empty message ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${message}</span></span>
+                                <span class="cells-block error"><img id="errorIcon" src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${message}</span></span>
                                 <input type="button" class="button login-button buttonBlue last" id="submitBtn" value="确认登录">
                             </div>
                         </form>
@@ -149,25 +149,26 @@
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
 
-
+        $("#errorIcon").hide();
 
         $("#submitBtn").click(function(){
             var $username = $("#username");
             var $password = $("#pwd");
             if (!isEmail($username.val()) || isMobile($username.val())){
+                $("#errorIcon").show();
                 $("#errorMessage").text("请输入正确的用户名");
-                $("#errorMessage").parent().removeClass("none");
                 $username.focus();
                 return false;
             }
 
             if($.trim($password.val()).length > 24 || $.trim($password.val()).length < 6){
+                $("#errorIcon").show();
                 $("#errorMessage").text("请输入正确的密码");
-                $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }
-            $("#errorMessage").parent().addClass("none");
+            $("#errorIcon").hide();
+            $("#errorMessage").text("");
             $("#loginForm").submit();
 
         });
