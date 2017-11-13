@@ -29,12 +29,21 @@
                         <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius">
                             <div class="user-portrait-upload">
-                                <div class="user-portrait-area item-radius">
-                                    <p>上傳頭像</p>
-                                </div>
-                                <p>選擇JPG、PNG格式，小於1M的圖片</p>
-                                <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
-                                <input href="#" type="button"  class="button login-button buttonBlue last" onclick="headimg.click()" value="上傳頭像">
+                                <c:if test="${empty dto.avatar}">
+                                    <div class="user-portrait-area item-radius">
+                                        <p>上傳頭像</p>
+                                    </div>
+                                    <p>選擇JPG、PNG格式，小於1M的圖片</p>
+                                    <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
+                                    <input href="#" type="button"  class="button login-button buttonBlue last" onclick="headimg.click()" value="上傳頭像">
+                                </c:if>
+                                <c:if test="${not empty dto.avatar}">
+                                    <div class="user-portrait-area item-radius user-portrait-finish">
+                                        <img src="${dto.avatar}" alt="">
+                                    </div>
+                                    <p>選擇JPG、PNG格式，小於1M的圖片</p>
+                                    <input href="#" type="button" class="button login-button buttonBlue last" value="更換頭像">
+                                </c:if>
                             </div>
                         </div>
                     </div>

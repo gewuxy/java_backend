@@ -88,7 +88,7 @@
                                             <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                         </label>
                                         <label for="id2" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="wx_wap" id="id2">
+                                            <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id2">
                                             <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                         </label>
                                         <label for="id3" class="item item-radius">
