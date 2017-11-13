@@ -86,7 +86,7 @@
                         </c:when>
                     </c:choose>
                     <div class="${module.functionId == 1?'flex-item ':''}t-center">
-                        <a href="doctor://mdecn.com?meetId=${meet.id}&title=${meet.meetName}" class="YaYa-button-item${module.functionId==1?' YaYa-button-hot':''}"><i class="${icon}"></i>${module.moduleName}</a>
+                        <a href="doctor://medcn.com?meetId=${meet.id}&title=${meet.meetName}" class="YaYa-button-item${module.functionId==1?' YaYa-button-hot':''}"><i class="${icon}"></i>${module.moduleName}</a>
                     </div>
                 </c:forEach>
 
