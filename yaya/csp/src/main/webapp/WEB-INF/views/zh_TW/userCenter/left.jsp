@@ -17,12 +17,12 @@
                             <img src="${ctxStatic}/images/icon-user-medcn.png"  alt="">
                         </c:if>
                     </c:forEach>
-                <c:if test="${not empty dto.email}">
-                    <img src="${ctxStatic}/images/icon-user-email.png"  alt="">
-                </c:if>
-                <c:if test="${not empty dto.mobile}">
-                    <img src="${ctxStatic}/images/icon-user-phone.png"  alt="">
-                </c:if>
+            </c:if>
+            <c:if test="${not empty dto.email}">
+                <img src="${ctxStatic}/images/icon-user-email.png"  alt="">
+            </c:if>
+            <c:if test="${not empty dto.mobile}">
+                <img src="${ctxStatic}/images/icon-user-phone.png"  alt="">
             </c:if>
             <c:if test="${fn:length(dto.bindInfoList) == 0 && empty email && empty mobile}">
                 <img src="${ctxStatic}/images/default_blank.png" alt="" width="34" height="34">
