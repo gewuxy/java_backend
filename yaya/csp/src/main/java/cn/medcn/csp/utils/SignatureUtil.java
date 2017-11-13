@@ -20,8 +20,6 @@ public class SignatureUtil {
 
     private static final String TOKEN_URL = "https://api.sandbox.paypal.com/v1/oauth2/token";
     private static final String PAYMENT_DETAIL = "https://api.sandbox.paypal.com/v1/payments/payment/";
-    private static final String clientId = "ATBGjclV9GcygEwPz_58PUlxOvh0sJvC_Md3ZuTghMGlGIfQzgID_2zh93Ku44nMV6bcuGyoDvN3GHKv";
-    private static final String secret = "EKnYYM97NgsKMPbfoB8ULvKbQr3HLMSxg7aPBuSvx2pFjTVgR78SDctLXWE6WddJDFm_sLVtg-VF09Hv";
 
     /**
      * 获取签名
@@ -125,10 +123,10 @@ public class SignatureUtil {
      * 了解更多：https://developer.paypal.com/webapps/developer/docs/integration/mobile/verify-mobile-payment/
      * @return
      */
-    private static String getAccessToken(){
+    private static String getAccessToken(String paypalId,String paypalSecret){
         try{
             URL url = new URL(TOKEN_URL);
-            String authorization = clientId+":"+secret;
+            String authorization = paypalId+":"+paypalSecret;
             authorization = Base64.encodeBase64String(authorization.getBytes());
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -167,14 +165,14 @@ public class SignatureUtil {
      * @param paymentId 支付ID，来自于用户客户端
      * @return
      */
-    public static String getPaymentDetails(String paymentId){
+    public static String getPaymentDetails(String paymentId,String paypalId,String paypalSecret){
         try{
             URL url = new URL(PAYMENT_DETAIL+paymentId);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");// 提交模式
             //设置请求头header
             conn.setRequestProperty("Accept", "application/json");
-            conn.setRequestProperty("Authorization", "Bearer "+getAccessToken());
+            conn.setRequestProperty("Authorization", "Bearer "+getAccessToken(paypalId,paypalSecret));
 //             conn.setConnectTimeout(10000);//连接超时 单位毫秒
 //             conn.setReadTimeout(2000);//读取超时 单位毫秒
             int code = conn.getResponseCode();

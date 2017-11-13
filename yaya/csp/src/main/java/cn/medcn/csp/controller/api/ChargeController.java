@@ -48,6 +48,12 @@ public class ChargeController extends BaseController {
     @Value("${app.yaya.base}")
     private String appBase;
 
+    @Value("${paypal_clientId}")
+    protected String paypalId;
+
+    @Value("${paypal_secret}")
+    protected String paypalSecret;
+
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
      */
@@ -191,7 +197,7 @@ public class ChargeController extends BaseController {
         if(StringUtils.isEmpty(paymentId) || StringUtils.isEmpty(orderId)){
             return error(local("user.param.empty"));
         }
-        String str = SignatureUtil.getPaymentDetails(paymentId);
+        String str = SignatureUtil.getPaymentDetails(paymentId,paypalId,paypalSecret);
         if(StringUtils.isEmpty(str)){
             return error(local("error.data"));
         }
