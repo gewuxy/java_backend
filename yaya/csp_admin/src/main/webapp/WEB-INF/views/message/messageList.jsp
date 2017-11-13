@@ -13,10 +13,10 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/message/list">公告列表</a></li>
+    <li class="active"><a href="${ctx}/csp/message/list">公告列表</a></li>
 </ul>
 
-<form id="pageForm" name="pageForm" action="${ctx}/message/list" method="post">
+<form id="pageForm" name="pageForm" action="${ctx}/csp/message/list" method="post">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
     <input id="sendMessage" value="发布公告" size="40"  type="button" name="message" maxlength="50" class="required" style="margin-left: 1108px;color: darkorange"/>
@@ -48,8 +48,8 @@
                 <%--TODO  权限--%>
                 <shiro:hasPermission name="sys:hospital:edit"><td width="15%">
                     <div style="text-align: center">
-                    <a href="${ctx}/message/edit?id=${mes.id}">修改</a>
-                    <a href="${ctx}/message/delete?id=${mes.id}" onclick="deleteMessage()">删除</a>
+                    <a href="${ctx}/csp/message/edit?id=${mes.id}">修改</a>
+                    <a href="${ctx}/csp/message/delete?id=${mes.id}" onclick="deleteMessage()">删除</a>
                     </div>
                 </td></shiro:hasPermission>
             </tr>
@@ -66,7 +66,7 @@
 </body>
 <script>
    $("#sendMessage").click(function () {
-       location.href="${ctx}/message/messageInfo";
+       location.href="${ctx}/csp/message/messageInfo";
     })
 
    function deleteMessage() {

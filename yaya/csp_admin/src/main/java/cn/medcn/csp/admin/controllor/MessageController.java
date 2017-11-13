@@ -12,7 +12,6 @@ import cn.medcn.csp.admin.utils.SubjectUtils;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -21,8 +20,9 @@ import java.util.Date;
 /**
  * 公告消息 Created by jianliang
  */
+
 @Controller
-@RequestMapping(value = "/message")
+@RequestMapping(value = "/csp/message")
 public class MessageController extends BaseController {
 
     @Autowired
@@ -59,7 +59,7 @@ public class MessageController extends BaseController {
             message.setUpdateTime(message.getCreatTime());
             messageService.insert(message);
         }
-        return "redirect:/message/list";
+        return "redirect:/csp/message/list";
     }
 
     /**
@@ -84,7 +84,7 @@ public class MessageController extends BaseController {
         message.setUsername(sendMessageName);
         message.setUpdateTime(new Date());
         messageService.updateByPrimaryKey(message);
-        return "redirect:/message/list";
+        return "redirect:/csp/message/list";
     }
 
     /**
@@ -94,6 +94,6 @@ public class MessageController extends BaseController {
     public String delete(@RequestParam(value = "id", required = true, defaultValue = "1") String messageId) {
         CspAdminMessage message = messageService.selectByPrimaryKey(messageId);
         int count = messageService.deleteByPrimaryKey(messageId);
-        return "redirect:/message/list";
+        return "redirect:/csp/message/list";
     }
 }

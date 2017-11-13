@@ -58,9 +58,9 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/message/edit">公告菜单修改</a></li>
+    <li class="active"><a href="${ctx}/csp/message/edit">公告菜单修改</a></li>
 </ul>
-<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/message/update">
+<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/message/update">
     <input type="hidden" id="edit_id" name="id" value="${message.id}"/>
     <div class="control-group">
         <label class="control-label">公告标题:</label>
@@ -80,7 +80,7 @@
     <div class="control-group">
         <label class="control-label">发布者:</label>
         <div class="controls">
-            <input type="text" id="name" name="sendMessageName" value="${message.username}" onblur="checkUsername()"/>
+            <input readonly type="text" id="name" name="sendMessageName" value="${message.username}" onblur="checkUsername()"/>
         </div>
     </div>
     <div class="form-actions">

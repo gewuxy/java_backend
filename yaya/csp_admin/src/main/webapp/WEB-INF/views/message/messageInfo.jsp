@@ -60,7 +60,7 @@
 <ul class="nav nav-tabs">
     <li class="active">公告详情</li>
 </ul>
-<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/message/sendMessage">
+<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/message/sendMessage">
     <input type="hidden" name="userId" value="${page.userId}">
     <div class="control-group">
         <label class="control-label">公告标题:</label>
