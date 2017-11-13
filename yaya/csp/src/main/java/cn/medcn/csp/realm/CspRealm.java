@@ -1,5 +1,6 @@
 package cn.medcn.csp.realm;
 
+import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;
@@ -70,7 +71,10 @@ public class CspRealm extends AuthorizingRealm {
         }
 
         Principal principal = Principal.build(cspUser);
-        if (!CheckUtils.isEmpty(principal.getAvatar()) && !principal.getAvatar().startsWith("http")){
+        System.out.println(CheckUtils.isEmpty(principal.getAvatar()));
+        if (CheckUtils.isEmpty(principal.getAvatar())) {
+            principal.setAvatar(fileBase + FilePath.PORTRAIT.path + "/admin-userImg.png");
+        } else if (!principal.getAvatar().startsWith("http")){
             principal.setAvatar(fileBase + principal.getAvatar());
         }
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
