@@ -39,10 +39,11 @@
                                 </c:if>
                                 <c:if test="${not empty dto.avatar}">
                                     <div class="user-portrait-area item-radius user-portrait-finish">
-                                        <img src="${dto.avatar}" alt="">
+                                        <img src="${dto.avatar}" alt="" id="show">
                                     </div>
                                     <p>選擇JPG、PNG格式，小於1M的圖片</p>
-                                    <input href="#" type="button" class="button login-button buttonBlue last" value="更換頭像">
+                                    <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
+                                    <input href="#" type="button" class="button login-button buttonBlue last" onclick="headimg.click()" value="更換頭像">
                                 </c:if>
                             </div>
                         </div>
@@ -78,6 +79,7 @@
     function uploadHandler(result){
         $("#image").attr("src",result.data);
         $("#head_img").attr("src",result.data);
+        $("#show").attr("src",result.data);
         layer.msg("修改成功");
     }
 
