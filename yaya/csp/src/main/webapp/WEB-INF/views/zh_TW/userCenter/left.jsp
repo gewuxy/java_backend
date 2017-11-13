@@ -24,9 +24,8 @@
                     <img src="${ctxStatic}/images/icon-user-phone.png"  alt="">
                 </c:if>
             </c:if>
-            <c:if test="${fn:length(dto.bindInfoList) == 0}">
-                        <img src="${ctxStatic}/images/default_blank.png" alt="" width="34" height="34">
-
+            <c:if test="${fn:length(dto.bindInfoList) == 0 && empty email && empty mobile}">
+                <img src="${ctxStatic}/images/default_blank.png" alt="" width="34" height="34">
             </c:if>
         </div>
         <%--<img src="./images/icon-user-facebook.png" alt="">--%>
