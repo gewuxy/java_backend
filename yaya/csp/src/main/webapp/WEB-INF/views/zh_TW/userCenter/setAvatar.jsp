@@ -42,7 +42,8 @@
                                         <img src="${dto.avatar}" alt="">
                                     </div>
                                     <p>選擇JPG、PNG格式，小於1M的圖片</p>
-                                    <input href="#" type="button" class="button login-button buttonBlue last" value="更換頭像">
+                                    <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
+                                    <input href="#" type="button" class="button login-button buttonBlue last" onclick="headimg.click()" value="更換頭像">
                                 </c:if>
                             </div>
                         </div>
