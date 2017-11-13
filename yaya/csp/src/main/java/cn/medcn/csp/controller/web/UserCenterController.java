@@ -274,22 +274,6 @@ public class UserCenterController extends CspBaseController{
 
     }
 
-    /**
-     * 绑定第三方账号
-     * @param info
-     * @return
-     */
-   @RequestMapping("/bind")
-    @ResponseBody
-    public String bind(BindInfo info){
-        String userId = getWebPrincipal().getId();
-       try {
-           cspUserService.doBindThirdAccount(info,userId);
-       } catch (SystemException e) {
-           return error(e.getMessage());
-       }
-        return success();
-   }
 
     /**
      * 解绑账号
