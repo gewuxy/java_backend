@@ -52,6 +52,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         LiveOrderDTO order = JSON.parseObject(message.getPayload(), LiveOrderDTO.class);
+        LogUtils.debug(log, "accept order = " + order.getOrder());
         order.setSid(session.getId());
         //收到消息 发送到队列
         liveService.publish(order);

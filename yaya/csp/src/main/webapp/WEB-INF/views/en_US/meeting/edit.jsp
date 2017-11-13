@@ -116,7 +116,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>Generally 1 audience takes 0.5G network flow per hour. Your live is set to 30 minutes. It is estimated to take 25G network flow given 100 audience(s) online.</p>
-                                                    <div class="text">Network Flow Balance<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
+                                                    <div class="text">Network Flow Balance<span class="color-blue">${flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
                                         </div>
