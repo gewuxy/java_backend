@@ -44,6 +44,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
     @Override
     public void convert2PDF(String sourceFilePath, String targetFilePath) {
         String cmd = String.format(pdfConvertCommand, sourceFilePath, targetFilePath);
+        LogUtils.debug(log, "convert command = " + cmd);
         CommandUtils.CMD(cmd);
     }
 
@@ -53,7 +54,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
         convert2PDF(sourceFilePath, pdfFilePath);
         List<String> imageList = null;
         try {
-            String pdfFileName = sourceFilePath.substring(sourceFilePath.lastIndexOf(File.separator) + 1, sourceFilePath.lastIndexOf(".")) + "." + FileTypeSuffix.PDF_SUFFIX.suffix;
+            String pdfFileName = pdfFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf("/") + 1, sourceFilePath.lastIndexOf(".")) + "." + FileTypeSuffix.PDF_SUFFIX.suffix;
             imageList = pdf2Images(pdfFileName, targetDir, courseId, request);
         } catch (Exception e) {
             e.printStackTrace();
@@ -71,6 +72,8 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
      * @throws Exception
      */
     public List<String> pdf2Images(String pdfPath, String imgDirPath, int courseId, HttpServletRequest request) {
+        LogUtils.debug(log, "convert pdf to image pdfPath = " + pdfPath + " - imgDirPath = " + imgDirPath);
+
         File file = new File(pdfPath);
         File dir = new File(appFileUploadBase + imgDirPath);
         if (!file.exists()) {

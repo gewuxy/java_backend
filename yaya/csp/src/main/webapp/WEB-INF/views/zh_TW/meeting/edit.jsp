@@ -51,11 +51,11 @@
                                 <div class="admin-button t-center">
                                 <c:choose>
                                     <c:when test="${not empty course.details}">
-                                            <a href="javascript:;" class="button min-btn" onclick="uploadFile()">重新上傳</a>&nbsp;&nbsp;&nbsp;
+                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span class="button min-btn">重新上傳</span>&nbsp;&nbsp;&nbsp;</label>
                                             <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">編輯</a>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="javascript:;" class="button color-blue min-btn"  onclick="uploadFile()">上傳演講文檔</a>
+                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile2"><span class="button color-blue min-btn" >上傳演講文檔</span></label>
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
@@ -227,8 +227,13 @@
 <script>
     const file_size_limit = 100*1024*1024;
 
-    function uploadFile(){
-        var fSize = fileSize($("#uploadFile").get(0));
+    $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
+        var id = $(this).attr("id");
+        uploadFile(document.getElementById(id));
+    });
+
+    function uploadFile(f){
+        var fSize = fileSize(f);
         if (fSize > file_size_limit){
             layer.msg("請上傳小於100M的文件");
             return false;

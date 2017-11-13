@@ -260,6 +260,7 @@ public class MeetingMgrController extends CspBaseController {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         if (course != null) {
             course.setTitle(fileName.substring(0, fileName.lastIndexOf(".")));
+            audioService.updateByPrimaryKey(course);
         }
         audioService.updateAllDetails(courseId, imgList);
         return success();
