@@ -83,17 +83,9 @@
                                     <div class="formTitle color-black">充值方式</div>
                                     <div class="formControls">
                                         <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
-                                            <label for="id1" class="item item-radius pay-on">
-                                                <input type="radio" name="channel" class="none" value="alipay_pc_direct" checked="checked" id="id1">
-                                                <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
-                                            </label>
-                                            <label for="id2" class="item item-radius">
-                                                <input type="radio" name="channel" class="none" value="wx_wap" id="id2">
-                                                <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
-                                            </label>
-                                            <label for="id3" class="item item-radius">
-                                                <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
-                                                <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                            <label for="paypal" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="paypal" id="paypal">
+                                                <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                             </label>
                                         </div>
                                     </div>
@@ -167,18 +159,12 @@
 
         $("#submitBtn").click(function () {
             if(checkFlux()){
-                var channel = $('input[name="channel"]:checked').val();
-                if(channel != "paypal"){
-                    $("#submitForm").submit();
-                }else{
                     var flux = $("#flux").val();
                     $(".flux").val(flux);
                     $("#paypalForm").submit();
 
-                }
 
-                //觸發彈出窗
-                //投稿
+                //觸發充值彈出窗
                 layer.open({
                     type: 1,
                     area: ['560px', '250px'],

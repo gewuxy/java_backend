@@ -9,7 +9,7 @@
              SELECT c.category as name, count(c.category) as count ,COUNT(r.id)>0 as reprinted
              FROM t_audio_course c
              LEFT JOIN t_audio_course r ON r.primitive_id = c.id AND r.owner=#{userId}
-             WHERE c.primitive_id = 0 AND c.shared=true GROUP BY c.category
+             WHERE c.primitive_id = 0 AND c.shared=true GROUP BY c.id
          ) a WHERE a.reprinted = 0
     </select>
 
