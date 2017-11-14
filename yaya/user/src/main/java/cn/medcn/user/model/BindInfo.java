@@ -77,7 +77,9 @@ public class BindInfo {
         bindUser.setNickName(dto.getNickName());
         bindUser.setUniqueId(dto.getUniqueId());
         bindUser.setGender(dto.getGender());
-        bindUser.setAvatar(dto.getAvatar());
+        if(!StringUtils.isEmpty(dto.getAvatar())){
+            bindUser.setAvatar(dto.getAvatar());
+        }
         return bindUser;
     }
 }

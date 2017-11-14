@@ -238,7 +238,7 @@
             layer.msg("请上传小于100M的文件");
             return false;
         }
-        var fileName = $("#uploadFile").val().toLowerCase();
+        var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
             layer.msg("请选择ppt|pptx|pdf格式文件");
             return false;
@@ -251,7 +251,7 @@
         $.ajaxFileUpload({
             url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
             secureuri: false, //是否需要安全协议，一般设置为false
-            fileElementId: "uploadFile", //文件上传域的ID
+            fileElementId: f.id, //文件上传域的ID
             dataType: 'json', //返回值类型 一般设置为json
             success: function (data)  //服务器成功响应处理函数
             {
