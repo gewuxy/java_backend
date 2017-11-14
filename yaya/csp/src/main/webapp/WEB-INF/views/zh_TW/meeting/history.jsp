@@ -114,7 +114,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                            <p> -無投稿記錄 -</p>
+                            <p> - 無投稿記錄 -</p>
                         </div>
                     </div>
                 </div>

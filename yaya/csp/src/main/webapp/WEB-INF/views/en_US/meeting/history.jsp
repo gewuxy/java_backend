@@ -114,7 +114,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                            <p> -No Record -</p>
+                            <p> - No Record -</p>
                         </div>
                     </div>
                 </div>
