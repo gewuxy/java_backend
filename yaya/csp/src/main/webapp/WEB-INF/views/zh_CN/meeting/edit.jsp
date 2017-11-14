@@ -235,11 +235,12 @@
     });
 
     function uploadFile(f){
-        var fSize = fileSize(f);
-        if (fSize > file_size_limit){
-            layer.msg("请上传小于100M的文件");
-            return false;
-        }
+        alert(f.id);
+//        var fSize = fileSize(f);
+//        if (fSize > file_size_limit){
+//            layer.msg("请上传小于100M的文件");
+//            return false;
+//        }
         var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
             layer.msg("请选择ppt|pptx|pdf格式文件");
@@ -311,6 +312,36 @@
     }
 
     $(function(){
+
+        //拖动上传
+        var oFileSpan = $(".upload-ppt-area");					//选择文件框
+
+        //拖拽外部文件，进入目标元素触发
+        oFileSpan.on("dragenter",function(){
+            $(this).css("border-color","#167AFE");
+        });
+
+        //拖拽外部文件，进入目标、离开目标之间，连续触发
+        oFileSpan.on("dragover",function(){
+            return false;
+        });
+
+        //拖拽外部文件，离开目标元素触发
+        oFileSpan.on("dragleave",function(){
+            $(this).css("border-color","#EDF3F9");
+        });
+
+        //拖拽外部文件，在目标元素上释放鼠标触发
+        oFileSpan.on("drop",function(ev){
+            var fs = ev.originalEvent.dataTransfer.files[0];
+            fs.id = "dragUploadFile";
+            uploadFile(fs);
+
+            console.log(fs);
+            $(this).css("border-color","#167AFE");
+            return false;
+        });
+
         showInfoLeftCount();
 
         function showInfoLeftCount(){
@@ -469,6 +500,8 @@
         $(".chk-hook").change(function(){
             showLiveMessage();
         });
+
+
     });
 </script>
 </body>
