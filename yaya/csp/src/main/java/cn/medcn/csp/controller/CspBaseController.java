@@ -7,6 +7,7 @@ import cn.medcn.common.service.SMSService;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
@@ -138,5 +139,13 @@ public class CspBaseController extends BaseController {
         } catch (Exception e) {
             throw new SystemException(local("sms.invalid.captcha"));
         }
+    }
+
+    //是否需要添加头像路径前缀
+    protected Boolean needAvatarPrefix(String path){
+        if(!StringUtils.isEmpty(path) &&  path.startsWith(Constants.AVATAR_URL_PREFIX) == false){
+            return true;
+        }
+        return false;
     }
 }

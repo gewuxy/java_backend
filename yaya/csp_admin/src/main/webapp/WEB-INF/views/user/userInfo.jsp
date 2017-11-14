@@ -37,7 +37,7 @@
     <div class="control-group">
         <label class="control-label">国家:</label>
         <div class="controls">
-            <input type="search" name="country" value="${user.country}" maxlength="50"/>
+            <input type="search" name="country" value="${user.country}" maxlength="50" class="realName"/>
         </div>
     </div>
     <div class="control-group">

@@ -1,5 +1,6 @@
 package cn.medcn.oauth.dto;
 
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
@@ -99,7 +100,9 @@ public class OAuthUser {
         dto.setProvince(authUser.getProvince());
         dto.setCity(authUser.getCity());
         dto.setDistrict("");
-        dto.setAvatar(authUser.getIconUrl());
+        if(!StringUtils.isEmpty(authUser.getIconUrl())){
+            dto.setAvatar(authUser.getIconUrl());
+        }
         dto.setInfo("");
         dto.setEmail("");
         dto.setMobile("");
