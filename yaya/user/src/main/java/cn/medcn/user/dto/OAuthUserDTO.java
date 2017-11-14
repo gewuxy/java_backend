@@ -1,5 +1,6 @@
 package cn.medcn.user.dto;
 
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.user.model.AppUser;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,7 +32,7 @@ public class OAuthUserDTO {
     public static OAuthUserDTO build(String fileBase, AppUser user){
         OAuthUserDTO dto = new OAuthUserDTO();
         if (user != null) {
-            dto.setAvatar(fileBase + user.getHeadimg());
+            dto.setAvatar(CheckUtils.isEmpty(user.getHeadimg()) ? null : fileBase + user.getHeadimg());
             dto.setNickName(user.getNickname());
             dto.setEmail(user.getUsername());
             dto.setMobile(user.getMobile());
