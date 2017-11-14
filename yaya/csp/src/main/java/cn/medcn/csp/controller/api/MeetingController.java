@@ -631,10 +631,7 @@ public class MeetingController extends CspBaseController {
                 AudioCoursePlay play = audioService.findPlayState(courseId);
                 if (play != null) {
                     play.setPlayPage(pageNum);
-                    play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
-                    if (over == 1) {
-                        play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
-                    }
+                    play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
                     audioService.updateAudioCoursePlay(play);
                 }
             }
