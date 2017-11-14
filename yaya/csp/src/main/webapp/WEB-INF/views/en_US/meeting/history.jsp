@@ -37,8 +37,8 @@
                                                         <img src="${accept.headimg}" alt="" height="30" width="30">
                                                     </div>
                                                     <div class="oh">
-                                                        <h4>${accept.nickname}</h4>
-                                                        <p>${accept.sign}</p>
+                                                        <h4 class="overflowText">${accept.nickname}</h4>
+                                                        <p class="overflowText-nowrap-multi">${accept.sign}</p>
                                                     </div>
                                                 </div>
                                             </a>
@@ -114,7 +114,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                            <p> -No Record -</p>
+                            <p> - No Record -</p>
                         </div>
                     </div>
                 </div>

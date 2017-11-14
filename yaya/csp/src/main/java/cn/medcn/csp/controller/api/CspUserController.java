@@ -185,8 +185,7 @@ public class CspUserController extends CspBaseController {
 
             // 用户信息
             CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
-            if (dto.getAvatar() != null &&
-                    dto.getAvatar().startsWith(Constants.AVATAR_URL_PREFIX) == false) {
+            if (needAvatarPrefix(dto.getAvatar())) {
                 dto.setAvatar(fileBase + dto.getAvatar());
             }
 

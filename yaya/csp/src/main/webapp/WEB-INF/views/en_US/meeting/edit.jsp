@@ -227,6 +227,8 @@
 <script>
     const file_size_limit = 100*1024*1024;
 
+    var uploadOver = false;
+
     $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
         var id = $(this).attr("id");
         uploadFile(document.getElementById(id));
@@ -260,10 +262,12 @@
                     //回调函数传回传完之后的URL地址
                     window.location.reload();
                 } else {
+                    uploadOver = true;
                     layer.msg(data.err);
                 }
             },
             error:function(data, status, e){
+                uploadOver = true;
                 alert(e);
                 layer.close(index);
             }
@@ -281,7 +285,9 @@
                 $("#progressS").text("0%");
                 $("#progressI").css("width", "0%");
             } else {
-                setTimeout(showUploadProgress, 200);
+                if (!uploadOver){
+                    setTimeout(showUploadProgress, 200);
+                }
             }
         }, 'json');
     }
@@ -297,7 +303,9 @@
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
             } else {
-                setTimeout(showConvertProgress, 500);
+                if(!uploadOver){
+                    setTimeout(showConvertProgress, 500);
+                }
             }
         }, 'json');
     }

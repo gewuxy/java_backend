@@ -25,6 +25,7 @@
         <module>csp</module>
         <module>oauth</module>
         <module>csp_admin</module>
+        <module>official</module>
     </modules>
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

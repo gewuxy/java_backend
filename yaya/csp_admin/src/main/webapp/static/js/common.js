@@ -20,3 +20,13 @@ function initFormValidate(){
 function initPage(action){
     $("#pageForm").attr("action", ctx + action);
 }
+
+/**
+ * 初始化日期控件
+ * @param id
+ */
+function initLaydate(id){
+    laydate.render({
+        elem: '#' + id
+    });
+}

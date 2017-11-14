@@ -177,7 +177,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/example/form" target="mainFrame">
+                                        <a href="${ctx}/user/statistics" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;账号数据统计
                                         </a>
                                     </li>
