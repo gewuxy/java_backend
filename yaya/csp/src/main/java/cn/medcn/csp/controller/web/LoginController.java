@@ -259,7 +259,7 @@ public class LoginController extends CspBaseController {
 
         try {
             cspUserService.doBindThirdAccount(info,userId);
-            addFlashMessage(redirectAttributes,"绑定成功");
+            addFlashMessage(redirectAttributes,local("user.bind.success"));
         } catch (SystemException e) {
            addFlashMessage(redirectAttributes,e.getMessage());
         }

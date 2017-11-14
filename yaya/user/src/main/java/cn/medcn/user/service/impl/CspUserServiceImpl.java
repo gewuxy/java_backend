@@ -334,6 +334,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         info.setUserId(userId);
         info.setBindDate(new Date());
         bindInfoDAO.insert(info);
+
+
     }
 
     /**

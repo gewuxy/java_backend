@@ -172,7 +172,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/example/form" target="mainFrame">
+                                        <a href="${ctx}/csp/message/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;消息公告
                                         </a>
                                     </li>
@@ -182,12 +182,12 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/example/form" target="mainFrame">
+                                        <a href="${ctx}/csp/appManage/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;APP上架
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/example/form" target="mainFrame">
+                                        <a href="${ctx}/csp/feedback/index" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;帮助与反馈
                                         </a>
                                     </li>
