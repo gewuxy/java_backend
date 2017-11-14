@@ -722,6 +722,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .upload-ppt-area { border:4px dashed #EDF3F9; text-align: center; color:#A4B3C6; margin-bottom:43px;}
 .upload-ppt-area label { display: block; padding:45px 0; cursor: pointer;}
 .upload-ppt-area .img { margin-bottom:30px;}
+.upload-ppt-area-finish { border:0; }
+.upload-ppt-area-finish img{ width: 100%; max-height:270px; }
 .upload-main { text-align: center; }
 .upload-main .admin-button { margin-bottom:20px;}
 .upload-main .admin-button .min-btn{ padding:4px 20px; border:1px solid #7A8B9F; -moz-border-radius: 27px; -webkit-border-radius:27px;  border-radius: 27px;}
