@@ -319,7 +319,7 @@
                                     </ul>
                                 </div>
                                 <div class="index-button">
-                                    <a href="login-01.html" class="button ">敬請期待</a>
+                                    <a href="javascript:;" class="button ">敬請期待</a>
                                 </div>
                             </div>
                         </div>

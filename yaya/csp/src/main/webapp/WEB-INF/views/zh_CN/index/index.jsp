@@ -317,7 +317,7 @@
                                     </ul>
                                 </div>
                                 <div class="index-button">
-                                    <a href="${ctx}/login" class="button ">敬请期待</a>
+                                    <a href="javascript:;" class="button ">敬请期待</a>
                                 </div>
                             </div>
                         </div>
