@@ -80,6 +80,11 @@
         </div>
     </div>
 </div>
+<form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
+    <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
+    <input type="hidden" name="pageNum" id="pageNum">
+    <input type="hidden" name="isOpen" id="isOpen" value="true">
+</form>
 
 
 <script src="${ctxStatic}/js/jquery.min.js"></script>
