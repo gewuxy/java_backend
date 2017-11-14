@@ -8,12 +8,6 @@
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/sys/user/list">CSP用户列表</a></li>
 </ul>
-<form id="pageForm" name="pageForm" action="${ctx}/csp/user/list" method="post">
-    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
-    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-    <input type="hidden" name="keyword" value="${keyword}">
-    <input type="hidden" name="level" value="${level}">
-</form>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="searchForm" method="post" class="breadcrumb form-search">
     <input placeholder="输入用户名进行搜索" value="${userName}" size="40"  type="search" name="userName" maxlength="50" class="required"/>
@@ -49,5 +43,10 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
+<script>
+    $(document).ready(function() {
+        initPage("/csp/user/list");
+    });
+</script>
 </body>
 </html>

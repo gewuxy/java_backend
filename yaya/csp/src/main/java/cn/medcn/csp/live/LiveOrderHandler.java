@@ -52,6 +52,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) throws Exception {
         LiveOrderDTO order = JSON.parseObject(message.getPayload(), LiveOrderDTO.class);
+        LogUtils.debug(log, "accept order = " + order.getOrder());
         order.setSid(session.getId());
         //收到消息 发送到队列
         liveService.publish(order);
@@ -116,6 +117,19 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         }
 
         broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionList == null ? 0 : sessionList.size()));
+    }
+
+    /**
+     * 发送指令到指定session
+     * @param session
+     * @param order
+     */
+    public static void sendToPoint (WebSocketSession session, LiveOrderDTO order){
+        try {
+            session.sendMessage(new TextMessage(JSON.toJSONString(order)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -284,6 +298,28 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         }
 
         return map;
+    }
+
+    /**
+     * 返回消耗流量的用户
+     * @param courseId
+     * @return
+     */
+    public static int onlineFluxUsers(String courseId){
+        Map<String, WebSocketSession> sMap = sessionMap.get(courseId);
+        if (sMap == null || sMap.size() == 0) {
+            return 0;
+        } else {
+            int counter = 0;
+            for (String sKey : sMap.keySet()) {
+                WebSocketSession session = sMap.get(sKey);
+                if (session.getAttributes().get(Constants.TOKEN) == null) {
+                    counter ++;
+                }
+            }
+
+            return counter;
+        }
     }
 
 }

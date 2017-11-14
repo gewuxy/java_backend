@@ -51,11 +51,11 @@
                                 <div class="admin-button t-center">
                                 <c:choose>
                                     <c:when test="${not empty course.details}">
-                                            <a href="javascript:;" class="button min-btn" onclick="uploadFile()">重新上傳</a>&nbsp;&nbsp;&nbsp;
+                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span class="button min-btn">重新上傳</span>&nbsp;&nbsp;&nbsp;</label>
                                             <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">編輯</a>
                                     </c:when>
                                     <c:otherwise>
-                                        <a href="javascript:;" class="button color-blue min-btn"  onclick="uploadFile()">上傳演講文檔</a>
+                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile2"><span class="button color-blue min-btn" >上傳演講文檔</span></label>
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
@@ -116,7 +116,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>流量消耗每人約0.5G/1小時，例如：本次直播時長30分鐘，如100人在線預計消耗25G流量。</p>
-                                                    <div class="text">流量剩餘<span class="color-blue">${flux.flux / 1024}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <div class="text">流量剩餘<span class="color-blue">${flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -227,13 +227,18 @@
 <script>
     const file_size_limit = 100*1024*1024;
 
-    function uploadFile(){
-        var fSize = fileSize($("#uploadFile").get(0));
+    $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
+        var id = $(this).attr("id");
+        uploadFile(document.getElementById(id));
+    });
+
+    function uploadFile(f){
+        var fSize = fileSize(f);
         if (fSize > file_size_limit){
             layer.msg("請上傳小於100M的文件");
             return false;
         }
-        var fileName = $("#uploadFile").val().toLowerCase();
+        var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
             layer.msg("請選擇ppt|pptx|pdf格式文件");
             return false;
@@ -246,7 +251,7 @@
         $.ajaxFileUpload({
             url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
             secureuri: false, //是否需要安全协议，一般设置为false
-            fileElementId: "uploadFile", //文件上传域的ID
+            fileElementId: f.id, //文件上传域的ID
             dataType: 'json', //返回值类型 一般设置为json
             success: function (data)  //服务器成功响应处理函数
             {

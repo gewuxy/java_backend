@@ -6,14 +6,8 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/sys//list">日志管理</a></li>
+    <li class="active"><a href="${ctx}/csp/sys/log/list">日志管理</a></li>
 </ul>
-<form id="pageForm" name="pageForm" action="${ctx}/csp/sys/log/list" method="post">
-    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
-    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-    <input type="hidden" name="keyword" value="${keyword}">
-    <input type="hidden" name="level" value="${level}">
-</form>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="searchForm" method="post" class="breadcrumb form-search">
     <input placeholder="输入帐号进行搜索" value="${account}" size="40"  type="search" name="account" maxlength="50" />
@@ -40,5 +34,10 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
+<script>
+    $(document).ready(function() {
+       initPage("/csp/sys/log/list");
+    });
+</script>
 </body>
 </html>

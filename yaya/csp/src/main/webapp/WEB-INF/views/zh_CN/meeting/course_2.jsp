@@ -171,8 +171,9 @@
         var fullState = true;
         var ismuted = false;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
-        var asAllItem = audiojs.createAll();
-        var popupPalyer = asAllItem[asAllItem.length - 1];
+        var asAllItem = audiojs.create($("#audioPlayer"));
+        var popupPalyer = asAllItem[0];
+
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var cH = window.innerHeight;
         var phoneDpi = window.devicePixelRatio;
@@ -377,7 +378,6 @@
             var swiperCurrent;
 
             popupPalyer.pause();
-            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             if(current.find(".swiper-slide-active")){
                 swiperCurrent  = current.find(".swiper-slide-active");
             }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
@@ -385,7 +385,6 @@
             }
             var dataSrc = swiperCurrent.attr('audio-src');
             popupPalyer.load(dataSrc);
-
 
             popupPalyer.play();
         }

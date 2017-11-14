@@ -86,7 +86,7 @@
                         </c:when>
                     </c:choose>
                     <div class="${module.functionId == 1?'flex-item ':''}t-center">
-                        <a href="doctor://mdecn.com?meetId=${meet.id}&title=${meet.meetName}" class="YaYa-button-item${module.functionId==1?' YaYa-button-hot':''}"><i class="${icon}"></i>${module.moduleName}</a>
+                        <a id="openApp" class="YaYa-button-item${module.functionId==1?' YaYa-button-hot':''}"><i class="${icon}"></i>${module.moduleName}</a>
                     </div>
                 </c:forEach>
 
@@ -97,6 +97,22 @@
 
 <script>
     $(function(){
+
+        var openAppUrl = "doctor://medcn.com?meetId=${meet.id}&title=${meet.meetName}";
+
+        var downLoadAppUrl = "${ctx}/weixin/app/download";
+
+        $("#openApp").click(function(){
+            window.location.href = openAppUrl;
+//            var t = Date.now();
+//            setTimeout(function(){
+//                if (Date.now() - t < 1200) {
+//                    window.location.href = downLoadAppUrl;
+//                }
+//            }, 1000);
+            return false;
+        });
+
         $('.collect-hook').on('click',function(){
             storeOrNot();
         });

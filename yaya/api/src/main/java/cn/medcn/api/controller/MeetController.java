@@ -386,16 +386,6 @@ public class MeetController extends BaseController {
             if (meetAudio.getCourse().getPlayType() != null && meetAudio.getCourse().getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
                 //直播查询返回直播的明细 而不是返回初始的素材
                 meetAudio.getCourse().setDetails(audioService.findLiveDetails(meetAudio.getCourseId()));
-                LiveOrderDTO orderDTO = liveService.findCachedOrder(meetAudio.getCourseId());
-                if (orderDTO != null) {
-                    AudioCourseDetail detail = new AudioCourseDetail();
-                    detail.setId(orderDTO.getDetailId());
-                    detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
-                    detail.setImgUrl(orderDTO.getImgUrl());
-                    detail.setAudioUrl(orderDTO.getAudioUrl());
-                    detail.setVideoUrl(orderDTO.getVideoUrl());
-                    meetAudio.getCourse().getDetails().add(detail);
-                }
             }
         }
         MeetAudioDTO audioDTO = MeetAudioDTO.build(meetAudio);
