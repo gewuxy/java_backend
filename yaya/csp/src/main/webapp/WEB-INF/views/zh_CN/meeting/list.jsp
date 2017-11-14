@@ -479,8 +479,8 @@
 	                                        <img src="${a.headimg}" alt="" width="30" height="30">
 	                                    </div>
 	                                    <div class="oh">
-	                                        <h4>${a.nickname}</h4>
-	                                        <p>${a.sign}</p>
+	                                        <h4 class="overflowText">${a.nickname}</h4>
+	                                        <p class="overflowText-nowrap-multi">${a.sign}</p>
 	                                    </div>
 	                                </div>
 	                            </label>
