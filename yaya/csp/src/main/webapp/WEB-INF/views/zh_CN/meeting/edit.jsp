@@ -236,11 +236,11 @@
 
     function uploadFile(f){
         alert(f.id);
-//        var fSize = fileSize(f);
-//        if (fSize > file_size_limit){
-//            layer.msg("请上传小于100M的文件");
-//            return false;
-//        }
+        var fSize = fileSize(f);
+        if (fSize > file_size_limit){
+            layer.msg("请上传小于100M的文件");
+            return false;
+        }
         var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
             layer.msg("请选择ppt|pptx|pdf格式文件");
