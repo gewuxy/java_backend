@@ -78,10 +78,7 @@
     }
 
     function uploadHandler(result){
-        $("#image").attr("src",result.data);
-        $("#head_img").attr("src",result.data);
-        $("#show").attr("src",result.data);
-        layer.msg("update success");
+        window.location.reload();
     }
 
 </script>

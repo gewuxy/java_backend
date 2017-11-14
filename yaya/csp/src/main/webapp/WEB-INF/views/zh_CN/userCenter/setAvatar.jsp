@@ -77,10 +77,7 @@
     }
 
     function uploadHandler(result){
-        $("#image").attr("src",result.data);
-        $("#head_img").attr("src",result.data);
-        $("#show").attr("src",result.data);
-        layer.msg("修改成功");
+        window.location.reload();
     }
 
 </script>
