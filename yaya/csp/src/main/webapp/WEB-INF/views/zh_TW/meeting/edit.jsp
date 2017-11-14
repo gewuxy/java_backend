@@ -35,13 +35,23 @@
                 <div class="row clearfix">
                     <div class="col-lg-5">
                         <div class="upload-ppt-box">
-                            <div class="upload-ppt-area">
-                                <label for="uploadFile">
-                                    <input type="file" name="file" class="none" id="uploadFile">
-                                    <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
-                                    <p>或拖動PDF／PPT到此區域上傳</p>
-                                </label>
-                            </div>
+                            <c:choose>
+                                <c:when test="${fn:length(course.details) > 0}">
+                                    <div class="upload-ppt-area upload-ppt-area-finish">
+                                        <img src="${fileBase}${course.details[0].imgUrl}" alt="">
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="upload-ppt-area">
+                                        <label for="uploadFile">
+                                            <input type="file" name="file" class="none" id="uploadFile">
+                                            <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
+                                            <p>或拖動PDF／PPT到此區域上傳</p>
+                                        </label>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
                             <div class="upload-main">
                                 <div class="metting-progreesItem clearfix t-left none">
                                     <span id="uploadAlt">上傳進度</span> <span class="color-blue" id="progressS">0%</span>
@@ -59,7 +69,10 @@
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
-                                <p class="color-gray-02">選擇小於100M的文件</p>
+                                <c:if test="${empty course.details}">
+                                    <p class="color-gray-02">選擇小於100M的文件</p>
+                                </c:if>
+
 
                             </div>
                         </div>
@@ -84,12 +97,12 @@
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="course.playType" value="0">
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ?'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏錄播</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1">
+                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked' : ''}>
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
@@ -248,7 +261,7 @@
         var index = layer.load(1, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-        $(".metting-progreesItem").removeClass("none");
+
         showUploadProgress();
         $.ajaxFileUpload({
             url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
@@ -275,6 +288,7 @@
     }
 
     function showUploadProgress(){
+        $(".metting-progreesItem").removeClass("none");
         $.get('${ctx}/mgr/meet/upload/progress', {}, function (data) {
             $("#progressS").text(data.data.progress);
             $("#progressI").css("width", data.data.progress);
@@ -300,6 +314,7 @@
             if (data.data.progress.indexOf("100") != -1){
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
+                window.location.reload();
             } else {
                 setTimeout(showConvertProgress, 500);
             }
@@ -307,6 +322,60 @@
     }
 
     $(function(){
+        //拖动上传
+        var oFileSpan = $(".upload-ppt-area");					//选择文件框
+
+        //拖拽外部文件，进入目标元素触发
+        oFileSpan.on("dragenter",function(){
+            $(this).css("border-color","#167AFE");
+        });
+
+        //拖拽外部文件，进入目标、离开目标之间，连续触发
+        oFileSpan.on("dragover",function(){
+            return false;
+        });
+
+        //拖拽外部文件，离开目标元素触发
+        oFileSpan.on("dragleave",function(){
+            $(this).css("border-color","#EDF3F9");
+        });
+
+        //拖拽外部文件，在目标元素上释放鼠标触发
+        oFileSpan.on("drop",function(ev){
+            var fs = ev.originalEvent.dataTransfer.files[0];
+            uploadByDrag(fs);
+
+            console.log(fs);
+            $(this).css("border-color","#167AFE");
+            return false;
+        });
+
+        function uploadByDrag(f){
+
+            if (!f.name.endWith(".ppt") && !f.name.endWith(".pptx") && !f.name.endWith(".pdf")){
+                layer.msg("請選擇ppt|pptx|pdf格式文件");
+                return false;
+            }
+
+            var filesize = Math.floor((f.size)/1024);
+            if(filesize>file_size_limit){
+                layer.msg("請上傳小於100M的文件");
+                return false;
+            }
+            //上传
+
+            xhr = new XMLHttpRequest();
+            xhr.open("post", "${ctx}/mgr/meet/upload?courseId=${course.id}", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+            var fd = new FormData();
+            fd.append('file', f);
+
+            xhr.send(fd);
+            showUploadProgress();
+        }
+
+
         showInfoLeftCount();
 
         function showInfoLeftCount(){

@@ -515,9 +515,9 @@ public class MeetingController extends CspBaseController {
             if (live != null) {
 
                 String replayUrl = callback.getReplay_url();
-                String suffix = replayUrl.substring(replayUrl.lastIndexOf("."));
+                String suffix = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
 
-                String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + channelId + suffix;
+                String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + suffix;
                 File dir = new File(fileUploadBase + FilePath.COURSE.path + "/" +channelId + "/replay/");
                 if (!dir.exists()){
                     dir.mkdirs();
