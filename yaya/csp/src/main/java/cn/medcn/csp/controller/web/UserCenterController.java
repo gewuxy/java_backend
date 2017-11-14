@@ -1,5 +1,6 @@
 package cn.medcn.csp.controller.web;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
@@ -79,7 +80,7 @@ public class UserCenterController extends CspBaseController{
     private CspUserInfoDTO addBaseUserInfo(Model model) {
         String userId = getWebPrincipal().getId();
         CspUserInfoDTO dto = cspUserService.findCSPUserInfo(userId);
-        if (!StringUtils.isEmpty(dto.getAvatar())) {
+        if (needAvatarPrefix(dto.getAvatar())) {
             dto.setAvatar(fileBase + dto.getAvatar());
         }
         List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userId);

@@ -69,7 +69,9 @@ public class CspUserInfo implements Serializable{
         CspUserInfo userInfo = new CspUserInfo();
         userInfo.setId(StringUtils.nowStr());
         userInfo.setNickName(dto.getNickName());
-        userInfo.setAvatar(dto.getAvatar());
+        if(!StringUtils.isEmpty(dto.getAvatar())){
+            userInfo.setAvatar(dto.getAvatar());
+        }
         userInfo.setCountry(dto.getCountry());
         userInfo.setProvince(dto.getProvince());
         userInfo.setCity(dto.getCity());
