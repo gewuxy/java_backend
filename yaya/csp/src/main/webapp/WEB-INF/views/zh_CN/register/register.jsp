@@ -46,7 +46,7 @@
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
                                 <label for="nickname" class="cells-block pr">
-                                    <input id="nickname" name="nickName" type="text" class="login-formInput" placeholder="昵称">
+                                    <input id="nickname" name="nickName" type="text" class="login-formInput" placeholder="昵称" maxlength="18" >
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
 
@@ -85,6 +85,8 @@
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
 
+
+
         $("#submitBtn").click(function(){
             var $username = $("#email");
             var $password = $("#pwd");
@@ -109,6 +111,16 @@
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
+            } else if ($nickname.val().indexOf(" ")!=-1) {
+                $("#errorMessage").text("昵称不能输入空格");
+                $("#errorMessage").parent().removeClass("none");
+                $nickname.focus();
+                return false;
+            } else if ($.trim($nickname.val()).length > 18) {
+                $("#errorMessage").text("昵称长度不能超过18位");
+                $("#errorMessage").parent().removeClass("none");
+                $nickname.focus();
+                return false;
             }
 
             $("#errorMessage").parent().addClass("none");
@@ -120,17 +132,16 @@
                 dataType: "json",
                 success: function (data){
                     if (data.code == 0){
-                        alert(data.data);
                         $(".position-phone-login").addClass("none");
                         $(".t-center").addClass("none");
                         $(".position-message-login").removeClass("none");
                     } else {
                         $(".position-message-login").addClass("none");
-                        alert(data.err);
+                        layer.msg(data.err);
                     }
                 },
                 error: function (a, n, e) {
-                    alert("获取数据异常："+a + " - "+n+" - "+e);
+                    layer.msg("获取数据异常："+a + " - "+n+" - "+e);
                 }
             })
 
