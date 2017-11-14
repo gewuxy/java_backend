@@ -54,7 +54,6 @@
                         </form>
                     </div>
 
-
                     <%@include file="../include/login_service.jsp"%>
 
                 </div>

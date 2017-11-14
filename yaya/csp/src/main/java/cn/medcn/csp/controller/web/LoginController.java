@@ -117,6 +117,27 @@ public class LoginController extends CspBaseController {
         return "redirect:/mgr/meet/list";
     }
 
+
+    /**
+     * 根据手机号码 检查用户是否存在，如果不存在 需注册新用户
+     * @param mobile
+     */
+    public void checkUserByMobile(String mobile) {
+        // 根据手机号码检查用户是否存在
+        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+        if (userInfo == null) {
+            // 手机号码不存在，注册新用户
+            userInfo = new CspUserInfo();
+            userInfo.setId(StringUtils.nowStr());
+            userInfo.setMobile(mobile);
+            userInfo.setRegisterTime(new Date());
+            userInfo.setActive(true);
+            userInfo.setAbroad(LocalUtils.isAbroad());
+            userInfo.setFlux(0); // 用户流量
+            cspUserService.insert(userInfo);
+        }
+    }
+
     /**
      * 手机登录
      * @param mobile
@@ -139,7 +160,10 @@ public class LoginController extends CspBaseController {
         }
 
         try {
-            // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常 浪费短信验证码）
+            // 检查手机号码是否注册
+            checkUserByMobile(mobile);
+
+            // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常时 浪费短信验证码）
             UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
             token.setHost("mobile");
             Subject subject = SecurityUtils.getSubject();
@@ -147,6 +171,13 @@ public class LoginController extends CspBaseController {
 
             // 检查验证码是否有效
             checkCaptchaIsOrNotValid(mobile, captcha);
+
+            Principal principal = getWebPrincipal();
+            // 如果该用户没有昵称 需设置昵称才能登录
+            if (principal != null && principal.getNickName() == null) {
+                model.addAttribute("id", principal.getId());
+                return localeView("/login/to_set_nickname");
+            }
 
         } catch (AuthenticationException e) {
             model.addAttribute("error", e.getMessage());
@@ -161,6 +192,29 @@ public class LoginController extends CspBaseController {
             model.addAttribute("mobile", mobile);
             return errorForwardUrl;
         }
+        return "redirect:/mgr/meet/list";
+    }
+
+
+    /**
+     * 手机登录 如果没有昵称，要先设置昵称 才能登录
+     * @param id
+     * @param nickName
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/login/addNickName", method = RequestMethod.POST)
+    public String loginSetNickName(String id, String nickName, Model model) {
+        if (StringUtils.isEmpty(nickName)) {
+            model.addAttribute("error", local("user.empty.mobile"));
+            model.addAttribute("nickName", nickName);
+            return localeView("/login/to_set_nickname");
+        }
+        // 设置用户昵称
+        CspUserInfo userInfo = cspUserService.selectByPrimaryKey(id);
+        userInfo.setNickName(nickName);
+        cspUserService.updateByPrimaryKeySelective(userInfo);
+
         return "redirect:/mgr/meet/list";
     }
 
