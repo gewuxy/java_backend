@@ -171,8 +171,9 @@
         var fullState = true;
         var ismuted = false;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
-        var asAllItem = audiojs.createAll($("#audioPlayer")[0]);
-        var popupPalyer = asAllItem[asAllItem.length - 1];
+        var asAllItem = audiojs.create($("#audioPlayer"));
+        var popupPalyer = asAllItem[0];
+
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var cH = window.innerHeight;
         var phoneDpi = window.devicePixelRatio;
@@ -385,12 +386,7 @@
             var dataSrc = swiperCurrent.attr('audio-src');
             popupPalyer.load(dataSrc);
 
-
             popupPalyer.play();
-
-            setTimeout(function(){
-                CKobject.getObjectById('ck-video').play();
-            }, 2000);
         }
 
         //点击切换状态
