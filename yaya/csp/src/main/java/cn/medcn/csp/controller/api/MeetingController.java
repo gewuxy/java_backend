@@ -518,6 +518,11 @@ public class MeetingController extends CspBaseController {
                 String suffix = replayUrl.substring(replayUrl.lastIndexOf("."));
 
                 String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + channelId + suffix;
+                File dir = new File(fileUploadBase + FilePath.COURSE.path + "/" +channelId + "/replay/");
+                if (!dir.exists()){
+                    dir.mkdirs();
+                }
+
                 //检测是否有之前的直播视频
                 File file = new File(fileUploadBase + finalReplayPath);
                 if (file.exists()) {
@@ -529,6 +534,7 @@ public class MeetingController extends CspBaseController {
                             append(replayUrl.substring(replayUrl.lastIndexOf(".")));
                     HttpUtils.copyFromNetwork(callback.getReplay_url(), buffer.toString());
                 } else {
+
                     HttpUtils.copyFromNetwork(callback.getReplay_url(), fileUploadBase + finalReplayPath);
                 }
 
