@@ -83,7 +83,7 @@
 <form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
     <input type="hidden" name="pageNum" id="pageNum">
-    <input type="hidden" name="isOpen" id="isOpen" value="true">
+    <input type="hidden" name="isOpen" id="isOpen" value="1">
 </form>
 
 
