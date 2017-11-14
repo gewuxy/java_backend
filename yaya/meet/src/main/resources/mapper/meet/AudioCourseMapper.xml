@@ -3,35 +3,30 @@
 <mapper namespace="cn.medcn.meet.dao.AudioCourseDAO" >
 
     <select id="findResourceCategorys" resultType="cn.medcn.meet.dto.ResourceCategoryDTO">
-        <!-- SELECT category as name, count(category) as count FROM t_audio_course
-        WHERE primitive_id = 0 AND shared=true GROUP BY category -->
-         SELECT a.* FROM (
-             SELECT c.category as name, count(c.category) as count ,COUNT(r.id)>0 as reprinted
-             FROM t_audio_course c
-             LEFT JOIN t_audio_course r ON r.primitive_id = c.id AND r.owner=#{userId}
-             WHERE c.primitive_id = 0 AND c.shared=true GROUP BY c.id
-         ) a WHERE a.reprinted = 0
+        SELECT c.category as name, count(c.category) as count
+        FROM t_audio_course c
+        WHERE c.source_type != 1 AND c.shared = true
+        AND c.primitive_id = 0 AND c.published = true
+        AND c.deleted != 1 AND
+        NOT EXISTS(select id from t_audio_course WHERE owner = #{userId} and primitive_id = c.id)
+        GROUP BY c.category
     </select>
 
     <select id="findResource" resultType="cn.medcn.meet.dto.CourseReprintDTO">
-        SELECT acs.* FROM (
-            SELECT c.id, c.title, c.category, c.create_time, c.owner, c.credits,
-            u.nickname as pub_user_name, count(r.id)>0 AS reprinted,c.share_type,d.img_url as cover_url
-            FROM t_audio_course c
-            LEFT JOIN t_app_user u ON u.id = c.owner
-            LEFT JOIN t_audio_course r on r.primitive_id = c.id  AND r.owner=#{userId}
-            LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
-            WHERE c.primitive_id=0 AND c.published = true AND c.shared = true
-            <if test="category != null">
-                AND c.category = #{category}
-            </if>
-            <if test="keyword != null">
-                AND c.title like CONCAT('%',#{keyword}, '%')
-            </if>
-            GROUP BY c.id
-            ORDER BY c.create_time DESC
-        )acs WHERE acs.reprinted = #{reprinted}
-
+        SELECT c.id,c.title,c.category,c.create_time,c.owner,u.nickname as pub_user_name,c.credits, d.img_url as cover_url
+        FROM t_audio_course c
+        LEFT JOIN t_app_user u ON u.id = c.owner
+        LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
+        WHERE c.source_type != 1 AND c.shared = true AND c.primitive_id = 0
+        AND c.published = true AND c.deleted != 1
+        <if test="category != null">
+            AND c.category = #{category}
+        </if>
+        <if test="keyword != null">
+            AND c.title like CONCAT('%',#{keyword}, '%')
+        </if>
+        AND NOT EXISTS(select id from t_audio_course WHERE owner= #{userId} and primitive_id = c.id)
+        ORDER BY c.create_time DESC
     </select>
 
     <select id="findMyReprints" resultType="cn.medcn.meet.dto.CourseReprintDTO">
@@ -40,7 +35,9 @@
         LEFT JOIN t_audio_course r on r.id = c.primitive_id
         LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
         LEFT JOIN t_app_user u ON u.id = r.owner
-        WHERE c.primitive_id > 0 AND c.owner = #{userId}
+        WHERE c.source_type != 1 AND c.shared = true
+        AND c.primitive_id > 0 AND c.published = true
+        AND c.deleted != 1 AND c.owner = #{userId}
         <if test="keyword != null">
             AND c.title like CONCAT('%',#{keyword}, '%')
         </if>

@@ -77,7 +77,10 @@ public class MeetFolderDTO {
     }
 
     public enum LiveLabel {
-        LIVE(1, "直播中");
+        NO_START(0, "未开始"),
+        LIVE(1, "直播中"),
+        LIVE_END(2, "已结束");
+
         private Integer state;
         private String label;
 
@@ -94,4 +97,5 @@ public class MeetFolderDTO {
             this.label = label;
         }
     }
+
 }
