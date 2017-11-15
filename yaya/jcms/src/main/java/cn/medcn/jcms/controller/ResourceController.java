@@ -17,6 +17,7 @@ import cn.medcn.meet.dto.CourseReprintDTO;
 import cn.medcn.meet.dto.CourseSharedDTO;
 import cn.medcn.meet.dto.ResourceCategoryDTO;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.user.service.AppUserService;
@@ -306,6 +307,19 @@ public class ResourceController extends BaseController {
         }else{
             boolean reprinted = audioService.checkReprinted(courseId, principal.getId());
             model.addAttribute("reprinted", reprinted);
+        }
+        //如果是来自csp的资源，需要更改查阅状态
+        if(!StringUtils.isEmpty(course.getCspUserId())){
+            CourseDelivery delivery = new CourseDelivery();
+            delivery.setSourceId(courseId);
+            delivery.setAcceptId(SubjectUtils.getCurrentUserid());
+            delivery.setAuthorId(course.getCspUserId());
+            delivery = courseDeliveryService.selectOne(delivery);
+            if(delivery != null){
+                delivery.setViewState(true);
+                courseDeliveryService.updateByPrimaryKeySelective(delivery);
+            }
+
         }
         model.addAttribute("pageLimit", Constants.NOT_ATTENTION_PPT_VIEW_PAGES);
         return "/res/view";
