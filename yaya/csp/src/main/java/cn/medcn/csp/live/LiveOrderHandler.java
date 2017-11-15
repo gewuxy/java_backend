@@ -1,6 +1,7 @@
 package cn.medcn.csp.live;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.service.LiveService;
@@ -67,7 +68,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
             sessionMap.get(courseId).remove(session.getId());
         }
 
-        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionMap.get(courseId) == null ? 0 : sessionMap.get(courseId).size()));
+        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), onlineAudiences(courseId)));
     }
 
     @Override
@@ -80,7 +81,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
             sessionMap.get(courseId).remove(session.getId());
         }
 
-        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionMap.get(courseId) == null ? 0 : sessionMap.get(courseId).size()));
+        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), onlineAudiences(courseId)));
     }
 
 
@@ -116,7 +117,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
             sessionMap.get(courseId).put(session.getId(), session);
         }
 
-        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), sessionList == null ? 0 : sessionList.size()));
+        broadcast(LiveOrderDTO.buildUserJoinOrder(courseId, session.getId(), onlineAudiences(courseId)));
     }
 
     /**
@@ -141,7 +142,7 @@ public class LiveOrderHandler extends TextWebSocketHandler {
     public static void broadcast(LiveOrderDTO dto) {
         if (!StringUtils.isEmpty(dto.getCourseId())) {
             Map<String, WebSocketSession> currentMap = sessionMap.get(dto.getCourseId());
-            dto.setOnLines(currentMap == null ? 0 : currentMap.size());
+            dto.setOnLines(onlineAudiences(dto.getCourseId()));
             if (dto.getOrder() == LiveOrderDTO.ORDER_KICK_REFUSE) {//当指令为拒绝被踢
                 WebSocketSession currentSession = sessionMap.get(dto.getCourseId()).get(dto.getSid());
                 if (currentSession != null) {
@@ -320,6 +321,26 @@ public class LiveOrderHandler extends TextWebSocketHandler {
 
             return counter;
         }
+    }
+
+    /**
+     * 获取观看人数
+     * @param courseId
+     * @return
+     */
+    public static int onlineAudiences(String courseId){
+        int onLines = 0;
+
+        Map<String, WebSocketSession> sMap = sessionMap.get(courseId);
+        if (sMap != null && sMap.size() > 0) {
+            for (WebSocketSession session : sMap.values()) {
+                if (CheckUtils.isEmpty((String)session.getAttributes().get(Constants.TOKEN))){
+                    onLines ++ ;
+                }
+            }
+        }
+
+        return onLines;
     }
 
 }
