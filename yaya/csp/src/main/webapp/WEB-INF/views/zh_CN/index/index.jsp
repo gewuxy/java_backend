@@ -27,7 +27,7 @@
             <div class=" index-login">
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
-                    <a href="${ctx}/login" class="user-login-button"><strong>登录</strong>&nbsp;&nbsp;<i></i> </a>
+                    <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "登录"}</strong>&nbsp;&nbsp;<i></i> </a>
                     <a href="javascript:;" class="index-download">下载App</a>
                 </div>
             </div>
