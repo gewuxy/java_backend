@@ -27,7 +27,7 @@
             <div class=" index-login">
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
-                    <a href="${ctx}/login" class="user-login-button"><strong>Login</strong>&nbsp;&nbsp;<i></i> </a>
+                    <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "Login"}</strong>&nbsp;&nbsp;<i></i> </a>
                     <a href="javascript:;" class="index-download">Download App</a>
                 </div>
             </div>

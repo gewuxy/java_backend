@@ -171,17 +171,19 @@
         //解绑操作
         $("a[action_type='unbind']").click(function () {
             var type = $(this).attr("type");
-            $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
-                if (data.code == 0){
-                    layer.msg('unbind success',{
-                        time: 300
-                    },function(){
-                           window.location.href = "${ctx}/mgr/user/toAccount";
-                    });
-                }else{
-                    layer.msg(data.err);
-                }
-            },'json');
+            layer.confirm("Are you sure to unblock this account?",function () {
+                $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
+                    if (data.code == 0){
+                        layer.msg('unbind success',{
+                            time: 300
+                        },function(){
+                            window.location.href = "${ctx}/mgr/user/toAccount";
+                        });
+                    }else{
+                        layer.msg(data.err);
+                    }
+                },'json');
+            });
         });
 
 
