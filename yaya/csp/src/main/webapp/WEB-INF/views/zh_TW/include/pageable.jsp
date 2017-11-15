@@ -5,6 +5,7 @@
   Time: 18:22
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<c:if test="${page.pages>1}">
 <div class="page-box-re">
     <a <c:if test="${page.pageNum > 1}"> href="javascript:page(1)"</c:if> >首頁</a>
     <c:forEach begin="1" step="1" end="${page.pages}" var="pageN">
@@ -19,4 +20,4 @@
         $("#pageForm").submit();
     }
 </script>
-
+</c:if>

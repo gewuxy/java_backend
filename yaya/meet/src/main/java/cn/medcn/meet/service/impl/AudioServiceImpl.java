@@ -670,6 +670,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param play
      */
     @Override
+    @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#audioCourse.id")
     public void updateAudioCourseInfo(AudioCourse audioCourse, AudioCoursePlay play) {
         AudioCoursePlay oldPlay = findPlayState(audioCourse.getId());
 
@@ -683,6 +684,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             audioCoursePlayDAO.insert(oldPlay);
         }
         audioCourse.setDeleted(false);
+        audioCourse.setPlayType(AudioCourse.PlayType.normal.getType());
         audioCourse.setPublished(true);
         updateByPrimaryKeySelective(audioCourse);
     }

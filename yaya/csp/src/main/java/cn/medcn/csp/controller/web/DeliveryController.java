@@ -66,8 +66,16 @@ public class DeliveryController extends CspBaseController {
     }
 
 
+    /**
+     * 投稿历史
+     * @param pageable
+     * @param acceptId
+     * @param model
+     * @return
+     */
     @RequestMapping("/history")
     public String history(Pageable pageable,Integer acceptId,Model model){
+        pageable.setPageSize(6);
         //接收者列表
         Pageable regular = new Pageable();
         List<AppUser> userList = addAcceptList(regular,model);
@@ -79,20 +87,6 @@ public class DeliveryController extends CspBaseController {
         model.addAttribute("current",acceptId);
         return localeView("/meeting/history");
     }
-
-
-    /**
-     * 获取局部会议数据(iframe)
-     * @return
-     */
-    @RequestMapping("/part")
-    public String getPartMeetList(Pageable pageable, Integer acceptId,Model model){
-//        addAcceptList(pageable,model);
-        addMeetList(acceptId,pageable,model);
-        return localeView("/meet/partMeet");
-    }
-
-
 
 
 

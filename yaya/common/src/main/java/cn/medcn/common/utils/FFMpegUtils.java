@@ -1,9 +1,11 @@
 package cn.medcn.common.utils;
 
+import cn.medcn.common.excptions.SystemException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -114,6 +116,66 @@ public class FFMpegUtils {
     }
 
     /**
+     * 合并多段MP3音频
+     * @param mergePath 合并之后的保存路径
+     * @param targetFileNames 需要整合的文件名称
+     */
+    public static void concatMp3(String mergePath, String...targetFileNames) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(FFMPEG_COMMAND).append(" -i \"concat:");
+        for (int i = 0; i < targetFileNames.length; i ++) {
+            buffer.append(targetFileNames[i]);
+            if (i < targetFileNames.length - 1) {
+                buffer.append("|");
+            }
+        }
+        buffer.append("\"  -c copy ").append(mergePath);
+        LogUtils.debug(log, "merge map command = " + buffer.toString());
+        CommandUtils.CMD(buffer.toString());
+
+    }
+
+
+    /**
+     * 合并mp4视频
+     * @param mergePath
+     * @param deleteOriginal 是否删除原文件
+     * @param targetFileNames
+     */
+    public static void concatMp4(String mergePath, boolean deleteOriginal, String...targetFileNames){
+        String fileDir = mergePath.substring(0, mergePath.lastIndexOf("/") + 1);
+
+        String convertCMD = FFMPEG_COMMAND + " -i %s -c copy -bsf:v h264_mp4toannexb -f mpegts %s";
+        StringBuffer buffer = new StringBuffer(FFMPEG_COMMAND).append(" -i \"concat:");
+
+        String tsConvertCMD ;
+
+        for (int index = 0 ; index < targetFileNames.length; index ++) {
+            tsConvertCMD = String.format(convertCMD, targetFileNames[index], fileDir + index + ".ts");
+            LogUtils.debug(log, "convert cmd = " + tsConvertCMD);
+            CommandUtils.CMD(tsConvertCMD);
+
+            if (deleteOriginal) {
+                FileUtils.deleteTargetFile(targetFileNames[index]);
+            }
+
+            buffer.append(fileDir).append(index).append(".ts");
+            if (index < targetFileNames.length - 1) {
+                buffer.append("|");
+            }
+        }
+        buffer.append("\" -acodec copy -vcodec copy -absf aac_adtstoasc ").append(mergePath);
+
+        LogUtils.debug(log, "merge map command = " + buffer.toString());
+        CommandUtils.CMD(buffer.toString());
+
+        //删除临时ts文件
+        for (int i = 0 ; i < targetFileNames.length; i ++) {
+            FileUtils.deleteTargetFile(fileDir + i + ".ts");
+        }
+    }
+
+    /**
      * 视频截图
      * @param videoPath
      * @return
@@ -149,13 +211,6 @@ public class FFMpegUtils {
 
 
     public static void main(String[] args) {
-       wavToMp3("D:/lixuan/test/abc.mp3", "D:/lixuan/test/mp3");
-        //System.out.println(duration("D:/lixuan/test/test.mp4"));
-        //compress("D:/lixuan/test/2652.mp3", "D:/lixuan/test/mp3/");
-        //cuttingAudio("D:/lixuan/test/韩济生.mp3","D:/lixuan/test/mp3/",new AudioPoint[]{new AudioPoint(0,30),new AudioPoint(30,80),new AudioPoint(80,110),new AudioPoint(110,200),new AudioPoint(200,280),new AudioPoint(280,350),new AudioPoint(350,830),new AudioPoint(830,2500)});
-        //MediaInfo mediaInfo = parseMedia("D:/lixuan/test/2652.mp3");
-        //System.out.println(mediaInfo);
-
-        //printScreen("D:/lixuan/test/test.mp4");
+        concatMp4("D:/lixuan/test/concat/concat.mp4", false, "D:/lixuan/test/clip.mp4", "D:/lixuan/test/clip2.mp4");
     }
 }

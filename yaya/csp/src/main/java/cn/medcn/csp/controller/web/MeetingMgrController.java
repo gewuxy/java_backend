@@ -215,6 +215,7 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("rootList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.root.depth));
         model.addAttribute("subList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.sub.depth));
         model.addAttribute("course", course);
+        model.addAttribute("fileBase", fileBase);
 
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());

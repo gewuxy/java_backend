@@ -15,9 +15,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <script src="${ctxStatic}/js/animate.min.js"></script>
 </head>
 <body>
@@ -27,16 +27,16 @@
             <div class=" index-login">
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
-                    <a href="${ctx}/login" class="user-login-button"><strong>Login</strong>&nbsp;&nbsp;<i></i> </a>
+                    <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "Login"}</strong>&nbsp;&nbsp;<i></i> </a>
                     <a href="javascript:;" class="index-download">Download App</a>
                 </div>
             </div>
         </div>
         <div class="banner index-banner-img">
             <div class="index-banner-content not-animated" data-animate="fadeIn" data-delay="200">
-                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">CSP&nbsp;meeting</h3>
-                <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">Your insights will permeate throughout the network</h2>
-                <p class="not-animated" data-animate="fadeIn" data-delay="500">CSPmeeting provides online meeting services of projective record and projective live stream,<br /> to serve the requirement of content spreading for different users in multiple scenarios. </p>
+                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">CSPmeeting</h3>
+                <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">A bigger stage for your insights!</h2>
+                <p class="not-animated" data-animate="fadeIn" data-delay="500">CSPmeeting provides online meeting services of projective record and projective live stream, <br />to serve the requirement of content spreading for different users in multiple scenarios. </p>
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
                     <a href="${ctx}/login" class="button item-radius">Free Trial</a>
                 </div>
@@ -314,7 +314,7 @@
                                     </ul>
                                 </div>
                                 <div class="index-button" style="text-align:center;">
-                                    <a href="login-01.html" class="button ">Coming Soon</a>
+                                    <a href="javascript:;" class="button ">Coming Soon</a>
                                 </div>
                             </div>
                         </div>
@@ -378,7 +378,6 @@
                         <div class="row">
                             <div class="col-lg-7">
                                 <h3 class="color-black">Global Leading Meeting System<br />with Cloud Synchronization Playback</h3>
-                                <p  >Global Leading Meeting System with <br />Cloud Synchronization Playback</p>
                             </div>
                             <div class="col-lg-5 pr">
                                 <div class="index-playback-img"><img src="${ctxStatic}/images/img/Shadow.png" alt=""></div>

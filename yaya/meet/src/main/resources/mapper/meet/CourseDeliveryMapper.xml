@@ -19,7 +19,7 @@
         LEFT JOIN t_audio_course_detail cd2 ON c.id = cd2.course_id
         INNER JOIN t_csp_delivery d ON d.source_id = c.id
         WHERE d.accept_id = #{acceptId} AND d.author_id = #{authorId}
-        GROUP BY cd.course_id
+        GROUP BY c.id
 
     </select>
 

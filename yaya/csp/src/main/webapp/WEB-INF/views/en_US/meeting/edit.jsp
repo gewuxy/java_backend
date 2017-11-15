@@ -35,13 +35,23 @@
                 <div class="row clearfix">
                     <div class="col-lg-5">
                         <div class="upload-ppt-box">
-                            <div class="upload-ppt-area">
-                                <label for="uploadFile">
-                                    <input type="file" name="file" class="none" id="uploadFile">
-                                    <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
-                                    <p>You can drag PDF/PPT into this area to upload.</p>
-                                </label>
-                            </div>
+                            <c:choose>
+                                <c:when test="${fn:length(course.details) > 0}">
+                                    <div class="upload-ppt-area upload-ppt-area-finish">
+                                        <img src="${fileBase}${course.details[0].imgUrl}" alt="">
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="upload-ppt-area">
+                                        <label for="uploadFile">
+                                            <input type="file" name="file" class="none" id="uploadFile">
+                                            <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
+                                            <p>You can drag PDF/PPT into this area to upload.</p>
+                                        </label>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
                             <div class="upload-main">
                                 <div class="metting-progreesItem clearfix t-left none">
                                     <span id="uploadAlt">Progress of Uploading</span> <span class="color-blue" id="progressS">0%</span>
@@ -59,7 +69,9 @@
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
-                                <p class="color-gray-02">Please select a file less than 100M.</p>
+                                <c:if test="${empty course.details}">
+                                    <p class="color-gray-02">Please select a file less than 100M.</p>
+                                </c:if>
 
                             </div>
                         </div>
@@ -84,12 +96,12 @@
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="course.playType" value="0">
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>Projective Recording</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1">
+                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>Projective Live Stream</div>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
@@ -116,7 +128,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>Generally 1 audience takes 0.5G network flow per hour. Your live is set to 30 minutes. It is estimated to take 25G network flow given 100 audience(s) online.</p>
-                                                    <div class="text">Network Flow Balance<span class="color-blue">${flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
+                                                    <div class="text">Network Flow Balance<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -248,7 +260,7 @@
         var index = layer.load(1, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-        $(".metting-progreesItem").removeClass("none");
+
         showUploadProgress();
         $.ajaxFileUpload({
             url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
@@ -275,6 +287,7 @@
     }
 
     function showUploadProgress(){
+        $(".metting-progreesItem").removeClass("none");
         $.get('${ctx}/mgr/meet/upload/progress', {}, function (data) {
             $("#progressS").text(data.data.progress);
             $("#progressI").css("width", data.data.progress);
@@ -302,6 +315,7 @@
             if (data.data.progress.indexOf("100") != -1){
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
+                window.location.reload();
             } else {
                 if(!uploadOver){
                     setTimeout(showConvertProgress, 500);
@@ -311,6 +325,61 @@
     }
 
     $(function(){
+        //拖动上传
+        var oFileSpan = $(".upload-ppt-area");					//选择文件框
+
+        //拖拽外部文件，进入目标元素触发
+        oFileSpan.on("dragenter",function(){
+            $(this).css("border-color","#167AFE");
+        });
+
+        //拖拽外部文件，进入目标、离开目标之间，连续触发
+        oFileSpan.on("dragover",function(){
+            return false;
+        });
+
+        //拖拽外部文件，离开目标元素触发
+        oFileSpan.on("dragleave",function(){
+            $(this).css("border-color","#EDF3F9");
+        });
+
+        //拖拽外部文件，在目标元素上释放鼠标触发
+        oFileSpan.on("drop",function(ev){
+            var fs = ev.originalEvent.dataTransfer.files[0];
+            uploadByDrag(fs);
+
+            console.log(fs);
+            $(this).css("border-color","#167AFE");
+            return false;
+        });
+
+        function uploadByDrag(f){
+
+            if (!f.name.endWith(".ppt") && !f.name.endWith(".pptx") && !f.name.endWith(".pdf")){
+
+                layer.msg("Please select the ppt|pptx|pdf format file");
+                return false;
+            }
+
+            var filesize = Math.floor((f.size)/1024);
+            if(filesize>file_size_limit){
+                layer.msg("Please upload files less than 100M");
+                return false;
+            }
+            //上传
+
+            xhr = new XMLHttpRequest();
+            xhr.open("post", "${ctx}/mgr/meet/upload?courseId=${course.id}", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+            var fd = new FormData();
+            fd.append('file', f);
+
+            xhr.send(fd);
+            showUploadProgress();
+        }
+
+
         showInfoLeftCount();
 
         function showInfoLeftCount(){

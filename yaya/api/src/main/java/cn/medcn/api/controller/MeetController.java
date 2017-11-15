@@ -222,12 +222,6 @@ public class MeetController extends BaseController {
                 meetService.setUserLearningRecord(folderDTO, userId);
                 if (folderDTO.getType() == MeetFolderDTO.FolderType.folder.ordinal()) { // 文件夹 设置相应的状态
                     folderDTO.setState(state);
-                } else {// 会议 直播状态为1 设置为直播中
-                    if (folderDTO.getLiveState() != null &&
-                            (folderDTO.getLiveState().intValue() == MeetFolderDTO.LiveLabel.LIVE.getState().intValue())
-                            ) {
-                        folderDTO.setLiveLabel(MeetFolderDTO.LiveLabel.LIVE.getLabel());
-                    }
                 }
             }
         }

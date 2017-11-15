@@ -35,13 +35,23 @@
                 <div class="row clearfix">
                     <div class="col-lg-5">
                         <div class="upload-ppt-box">
-                            <div class="upload-ppt-area">
-                                <label for="uploadFile">
-                                    <input type="file" name="file" class="none" id="uploadFile">
-                                    <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
-                                    <p>或拖动PDF／PPT到此区域上传</p>
-                                </label>
-                            </div>
+                            <c:choose>
+                                <c:when test="${fn:length(course.details) > 0}">
+                                    <div class="upload-ppt-area upload-ppt-area-finish">
+                                        <img src="${fileBase}${course.details[0].imgUrl}" alt="">
+                                    </div>
+                                </c:when>
+                                <c:otherwise>
+                                    <div class="upload-ppt-area">
+                                        <label for="uploadFile">
+                                            <input type="file" name="file" class="none" id="uploadFile">
+                                            <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
+                                            <p>或拖动PDF／PPT到此区域上传</p>
+                                        </label>
+                                    </div>
+                                </c:otherwise>
+                            </c:choose>
+
                             <div class="upload-main">
                                 <div class="metting-progreesItem clearfix t-left none">
                                     <span id="uploadAlt">上传进度</span> <span class="color-blue" id="progressS">0%</span>
@@ -56,10 +66,13 @@
                                     </c:when>
                                     <c:otherwise>
                                         <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span  class="button color-blue min-btn">上传演讲文档</span></label>
+
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
-                                <p class="color-gray-02">选择小于100M的文件</p>
+                                <c:if test="${empty course.details}">
+                                    <p class="color-gray-02">选择小于100M的文件</p>
+                                </c:if>
 
                             </div>
                         </div>
@@ -84,12 +97,12 @@
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="course.playType" value="0">
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1">
+                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
@@ -103,20 +116,20 @@
                                                                 </label>
                                                             </span>
                                                         <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
-                                                        <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.startTime" id="liveStartTime" value="${live.startTime}">
-                                                        <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.endTime" id="liveEndTime" value="${live.endTime}">
+                                                        <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="${live.startTime}">
+                                                        <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="${live.endTime}">
                                                     </div>
 
                                                 </div>
                                             </div>
                                             <div class="cells-block clearfix checkbox-box">
                                                     <span class="checkboxIcon">
-                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''}>
+                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked=true' : ''}>
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">${flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <div class="text">流量剩余<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -235,12 +248,11 @@
     });
 
     function uploadFile(f){
-        alert(f.id);
-//        var fSize = fileSize(f);
-//        if (fSize > file_size_limit){
-//            layer.msg("请上传小于100M的文件");
-//            return false;
-//        }
+        var fSize = fileSize(f);
+        if (fSize > file_size_limit){
+            layer.msg("请上传小于100M的文件");
+            return false;
+        }
         var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
             layer.msg("请选择ppt|pptx|pdf格式文件");
@@ -249,7 +261,6 @@
         var index = layer.load(1, {
             shade: [0.1,'#fff'] //0.1透明度的白色背景
         });
-        $(".metting-progreesItem").removeClass("none");
         showUploadProgress();
         $.ajaxFileUpload({
             url: "${ctx}/mgr/meet/upload"+"?courseId=${course.id}", //用于文件上传的服务器端请求地址
@@ -276,6 +287,7 @@
     }
 
     function showUploadProgress(){
+        $(".metting-progreesItem").removeClass("none");
         $.get('${ctx}/mgr/meet/upload/progress', {}, function (data) {
             $("#progressS").text(data.data.progress);
             $("#progressI").css("width", data.data.progress);
@@ -303,6 +315,7 @@
             if (data.data.progress.indexOf("100") != -1){
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
+                window.location.reload();
             } else {
                 if(!uploadOver){
                     setTimeout(showConvertProgress, 500);
@@ -334,13 +347,37 @@
         //拖拽外部文件，在目标元素上释放鼠标触发
         oFileSpan.on("drop",function(ev){
             var fs = ev.originalEvent.dataTransfer.files[0];
-            fs.id = "dragUploadFile";
-            uploadFile(fs);
+            uploadByDrag(fs);
 
             console.log(fs);
             $(this).css("border-color","#167AFE");
             return false;
         });
+
+        function uploadByDrag(f){
+
+            if (!f.name.endWith(".ppt") && !f.name.endWith(".pptx") && !f.name.endWith(".pdf")){
+                layer.msg("请选择ppt|pptx|pdf格式文件");
+                return false;
+            }
+
+            var filesize = Math.floor((f.size)/1024);
+            if(filesize>file_size_limit){
+                layer.msg("上传大小不能超过100M.");
+                return false;
+            }
+            //上传
+
+            xhr = new XMLHttpRequest();
+            xhr.open("post", "${ctx}/mgr/meet/upload?courseId=${course.id}", true);
+            xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
+
+            var fd = new FormData();
+            fd.append('file', f);
+
+            xhr.send(fd);
+            showUploadProgress();
+        }
 
         showInfoLeftCount();
 
@@ -359,10 +396,10 @@
             $(this).prop("checked", "true");
             if (playType == 0){
                 $("#liveStartTime").attr("disabled", "true");
-                $("#endStartTime").attr("disabled", "true");
+                $("#liveEndTime").attr("disabled", "true");
             } else {
                 $("#liveStartTime").removeAttr("disabled");
-                $("#endStartTime").removeAttr("disabled");
+                $("#liveEndTime").removeAttr("disabled");
             }
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
@@ -482,6 +519,7 @@
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
             var timeArray = obj.value.split(" 至 ");
+
             $("#liveStartTime").val(timeArray[0]);
             $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);

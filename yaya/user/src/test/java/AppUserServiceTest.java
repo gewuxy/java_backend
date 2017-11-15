@@ -1,12 +1,19 @@
+import cn.medcn.common.utils.ActiveCodeUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.user.dao.ActiveCodeDAO;
+import cn.medcn.user.model.ActiveCode;
 import cn.medcn.user.model.AppUnit;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.service.AppUserService;
+import com.google.common.collect.Maps;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+
+import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/4/25.
@@ -17,6 +24,7 @@ public class AppUserServiceTest {
 
     @Autowired
     private AppUserService appUserService;
+
 
     @Test
     public void testRegistUser() throws Exception {
@@ -36,4 +44,8 @@ public class AppUserServiceTest {
         user.setUserDetail(userDetail);
        // appUserService.executeRegist(user,"123456");
     }
+
+
+
+
 }

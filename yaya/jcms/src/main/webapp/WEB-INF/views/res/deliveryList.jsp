@@ -55,8 +55,18 @@
                                         <div class="oh">
                                             <div class="row clearfix">
                                                 <div class="col-lg-10">
-                                                    <h3 >${d.name}</h3>
-                                                    <p>${d.email}</p>
+                                                    <c:if test="${empty d.name}">
+                                                        <h3 >&nbsp;</h3>
+                                                    </c:if>
+                                                    <c:if test="${not empty d.name}">
+                                                        <h3 >${d.name}</h3>
+                                                    </c:if>
+                                                    <c:if test="${empty d.email}">
+                                                        <p>&nbsp;</p>
+                                                    </c:if>
+                                                    <c:if test="${not empty d.email}">
+                                                        <p>${d.email}</p>
+                                                    </c:if>
                                                 </div>
                                                 <c:if test="${d.playType != 0}" >
                                                     <div class="col-lg-2">
@@ -80,6 +90,11 @@
         </div>
     </div>
 </div>
+<form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
+    <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
+    <input type="hidden" name="pageNum" id="pageNum">
+    <input type="hidden" name="isOpen" id="isOpen" value="1">
+</form>
 
 
 <script src="${ctxStatic}/js/jquery.min.js"></script>
