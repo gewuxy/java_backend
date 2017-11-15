@@ -177,4 +177,13 @@ public class Constants {
 
     // 资源平台 共享资源页面每页显示条数
     public static final int SHARE_PAGE_SIZE = 16;
+
+    // CSP用户登录缓存账号
+    public static final String LOGIN_USER_KEY = "csp_username";
+
+    public static final String LOGIN_USER_ID_KEY = "csp_id";
+
+    // CSP用户缓存时长
+    public static final int LOGIN_COOKIE_MAX_AGE = 7;
+
 }
