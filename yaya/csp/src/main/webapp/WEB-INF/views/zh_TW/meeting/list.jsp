@@ -480,7 +480,12 @@
 	                                    </div>
 	                                    <div class="oh">
                                              <h4 class="overflowText">${a.nickname}</h4>
-                                            <p class="overflowText-nowrap-multi">${a.sign}</p
+                                            <c:if test="${empty a.sign}">
+                                                <p class="overflowText-nowrap-multi">&nbsp;</p>
+                                            </c:if>
+                                            <c:if test="${not empty a.sign}">
+                                                <p class="overflowText-nowrap-multi">${a.sign}</p>
+                                            </c:if>
 	                                    </div>
 	                                </div>
 	                            </label>

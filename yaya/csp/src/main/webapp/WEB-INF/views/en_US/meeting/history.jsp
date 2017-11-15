@@ -30,7 +30,7 @@
                             <div class="admin-history-tabList">
                                 <ul>
                                     <c:forEach items="${acceptList}" var="accept" varStatus="status">
-                                        <li id="${accept.id}" <c:if test="${status.index == 0}">  </c:if> <c:if test="${status.end}"> class="last" </c:if>>
+                                        <li id="${accept.id}" <c:if test="${status.first}">  </c:if> <c:if test="${status.last}"> class="last" </c:if>>
                                             <a href="${ctx}/mgr/delivery/history?pageNum=1&pageSize=${page.pageSize}&acceptId=${accept.id}" >
                                                 <div class="clearfix">
                                                     <div class="fl">

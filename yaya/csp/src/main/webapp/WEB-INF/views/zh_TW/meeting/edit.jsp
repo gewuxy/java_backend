@@ -129,7 +129,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>流量消耗每人約0.5G/1小時，例如：本次直播時長30分鐘，如100人在線預計消耗25G流量。</p>
-                                                    <div class="text">流量剩餘<span class="color-blue">${flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                                    <div class="text">流量剩餘<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
                                         </div>

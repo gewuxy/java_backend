@@ -17,6 +17,7 @@ import cn.medcn.meet.dto.CourseReprintDTO;
 import cn.medcn.meet.dto.CourseSharedDTO;
 import cn.medcn.meet.dto.ResourceCategoryDTO;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.user.service.AppUserService;
@@ -307,6 +308,19 @@ public class ResourceController extends BaseController {
             boolean reprinted = audioService.checkReprinted(courseId, principal.getId());
             model.addAttribute("reprinted", reprinted);
         }
+        //如果是来自csp的资源，需要更改查阅状态
+        if(!StringUtils.isEmpty(course.getCspUserId())){
+            CourseDelivery delivery = new CourseDelivery();
+            delivery.setSourceId(courseId);
+            delivery.setAcceptId(SubjectUtils.getCurrentUserid());
+            delivery.setAuthorId(course.getCspUserId());
+            delivery = courseDeliveryService.selectOne(delivery);
+            if(delivery != null){
+                delivery.setViewState(true);
+                courseDeliveryService.updateByPrimaryKeySelective(delivery);
+            }
+
+        }
         model.addAttribute("pageLimit", Constants.NOT_ATTENTION_PPT_VIEW_PAGES);
         return "/res/view";
     }
@@ -324,7 +338,7 @@ public class ResourceController extends BaseController {
     }
 
     /**
-     *
+     *    csp投稿列表
      * @param isOpen  翻页时带此参数，说明已经开启投稿
      * @param pageable
      * @param model
@@ -332,6 +346,7 @@ public class ResourceController extends BaseController {
      */
     @RequestMapping(value = "/list")
     public String users(Integer isOpen,Pageable pageable, Model model){
+
         Integer userId = SubjectUtils.getCurrentUserid();
         if(isOpen == null){  //点击资源平台动作
             //查询用户是否开启投稿功能
@@ -341,7 +356,7 @@ public class ResourceController extends BaseController {
                 return "/res/deliveryList";
             }
         }
-
+    pageable.setPageSize(12);
         pageable.put("userId",userId);
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
         for(CourseDeliveryDTO dto:myPage.getDataList()){

@@ -573,6 +573,7 @@
     const defaultGirlImg = 'metting-img-girl.jpg';
     const boy = "男";
     const girl = "女";
+    var isEmpty = '${empty liveStartTime}';
     $(function(){
         var popupCheckbox = $('label.popup_checkbox_hook');
         var popupCheckboxNum = popupCheckbox.length - 1;
@@ -738,31 +739,35 @@
         editor.create();
 
         $(".callTimedate").on('click',function(){
-            var isNull = ${empty liveStartTime};
-            if(isNull){
+            if(${empty liveStartTime}) {
                 $('#timeStart').trigger('focus');
             }
         });
+
+        if(${empty liveStartTime}){
             $('#timeStart').dateRangePicker({
-                    singleMonth: true,
-                    showShortcuts: false,
-                    showTopbar: false,
-                    startOfWeek: 'monday',
-                    separator : ' ~ ',
-                    format: 'YYYY/MM/DD HH:mm',
-                    autoClose: false,
-                    time: {
-                        enabled: true
-                    }
+                singleMonth: true,
+                showShortcuts: false,
+                showTopbar: false,
+                startOfWeek: 'monday',
+                separator : ' ~ ',
+                format: 'YYYY/MM/DD HH:mm',
+                autoClose: false,
+                time: {
+                    enabled: true
+                }
             }).bind('datepicker-first-date-selected', function(event, obj){
-                    /*首次点击的时间*/
-                    console.log('first-date-selected',obj);
+                /*首次点击的时间*/
+                console.log('first-date-selected',obj);
             }).bind('datepicker-change',function(event,obj){
-                    /* This event will be triggered when second date is selected */
-                    var timeArr = obj.value.split("~");
-                    $("#startTime").val($.trim(timeArr[0]));
-                    $("#endTime").val($.trim(timeArr[1]));
+                /* This event will be triggered when second date is selected */
+                var timeArr = obj.value.split("~");
+                $("#startTime").val($.trim(timeArr[0]));
+                $("#endTime").val($.trim(timeArr[1]));
             });
+        }
+
+
 
 
 
