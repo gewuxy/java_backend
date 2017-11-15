@@ -12,7 +12,7 @@
         <div class="fr">
             <!--登录前-->
             <div class="login-header">
-                <a href="${ctx}/mgr/login" class="login-header-button" title="登录">登录&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
+                <a href="${ctx}/login" class="login-header-button" title="登录">${not empty username ? username : "登录"}&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
         </div>

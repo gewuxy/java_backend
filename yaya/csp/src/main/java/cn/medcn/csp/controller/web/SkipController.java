@@ -39,14 +39,8 @@ public class SkipController extends CspBaseController {
     @Autowired
     protected CspArticleService articleService;
 
-    /**
-     * 首页 检查缓存中是否有账号，如果有账号 显示登录账号
-     * @param request
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/")
-    public String index(HttpServletRequest request, Model model){
+
+    protected void getCookieUser(HttpServletRequest request, Model model){
         String userName = CookieUtils.getCookieValue(request, LOGIN_USER_KEY);
         try {
             if (StringUtils.isNotEmpty(userName)) {
@@ -56,6 +50,19 @@ public class SkipController extends CspBaseController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * 首页 检查缓存中是否有账号，如果有账号 显示登录账号
+     * @param request
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/")
+    public String index(HttpServletRequest request, Model model){
+        // 获取缓存是否存在用户数据
+        getCookieUser(request, model);
+
         return localeView("/index/index");
     }
 
@@ -91,11 +98,15 @@ public class SkipController extends CspBaseController {
 
 
     @RequestMapping(value = "/index/{id}")
-    public String index(@PathVariable String id, Model model) {
+    public String index(@PathVariable String id, Model model, HttpServletRequest request) {
         if (StringUtils.isNotEmpty(id)) {
             CspArticle article = articleService.selectByPrimaryKey(id);
             model.addAttribute("article", article);
         }
+
+        // 获取缓存是否存在用户数据
+        getCookieUser(request, model);
+
         if (id.equals(SERVICE_PROTOCOL_ID) || id.equals(ABOUT_US_ID)) {
             return localeView("/index/about");
         }  else {
