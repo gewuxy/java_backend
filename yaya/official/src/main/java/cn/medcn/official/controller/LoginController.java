@@ -9,7 +9,6 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
@@ -24,10 +23,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 @Controller
 public class LoginController extends BaseController{
-
-    @Autowired
-    private OffiUserInfoService offiUserInfoService;
-
 
     @RequestMapping(value="/login", method = RequestMethod.POST)
     public String login(String account, String password, Boolean rememberMe, HttpServletRequest request, HttpServletResponse response, Model model){
