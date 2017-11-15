@@ -25,6 +25,8 @@
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
 
+    <script src="${ctxStatic}/phone/js/ckplayer.js"></script>
+
     <!-- 高清方案 -->
     <script>!function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);  flex(100, 1);</script>
     <style>
@@ -38,13 +40,12 @@
 <body>
 <div class="warp">
 
-    <div class="CSPMeeting-gallery details-gallery " >
+    <div class="CSPMeeting-gallery CSPMeeting-gallery-live video-countDown" id="CSPMeeting-gallery-live">
         <!-- Swiper -->
-        <div class="swiper-container gallery-top video-countDown ">
-            <!--根据ID 切换 PPT列表-->
+        <div class="swiper-container gallery-top popup-volume">
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
-                    <div class="swiper-slide" data-num="0" audio-src="${detail.audioUrl}">
+                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
                                 <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
@@ -76,8 +77,8 @@
                 <div class="swiper-pagination"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                 <span class="swiper-button-next "></span>
             </div>
-        </div>
 
+        </div>
         <!--添加 video-notPlay-item 背景为白色-->
         <div  class="video-play-live popup-min-screen ">
             <div id="videoWrap" class="viedoItem"></div>
@@ -90,11 +91,12 @@
         </div>
         <!--初始化视频     http://weblive.hebtv.com/live/hbws_bq/index.m3u8-->
         <script>
-            showPlayer('${course.live.hlsUrl}','videoWrap')
+            var hlsUrl = '${live.hlsUrl}';
+            showPlayer(hlsUrl,'videoWrap')
             function showPlayer(src, id){
                 //player
                 var flashvars={
-                    f : 'js/m3u8/m3u8.swf',
+                    f : '${ctxStatic}/phone/js/m3u8/m3u8.swf',
                     p : 0,
                     a : src,
                     c : 0,
@@ -102,9 +104,9 @@
                     v: 0,
                     lv:1//注意，如果是直播，需设置lv:1
                 };
-                var params={bgcolor:'#FFF',allowFullScreen:true,allowScriptAccess:'always',wmode:'transparent'};
+                var params={bgcolor:'#FFF',allowFullScreen:false,allowScriptAccess:'always',wmode:'transparent'};
                 var video=[src];
-                CKobject.embed('js/m3u8/ckplayer.swf',id ,'ck-video','100%','100%',false, flashvars ,video, params);
+                CKobject.embed('${ctxStatic}/phone/js/m3u8/ckplayer.swf',id ,'ck-video','100%','100%',false, flashvars ,video, params);
             }
         </script>
 
@@ -131,14 +133,16 @@
 
 
         </div>
-
     </div>
+
+
 
     <!--新加载提示-->
     <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;40</span><span class="arrows"></span></div>
 
     <!--自动播放层-->
-    <%--<div class="html5ShadePlay"></div>--%>
+    <div class="html5ShadePlay"></div>
+
 
 
 
@@ -147,394 +151,82 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>Info</h3></div>
+        <div class="title"><h3>简介</h3></div>
         <div class="text hidden-box">
-
-            <p>${not empty course.info ? course.info : '--'}</p>
+            <p>${course.info}</p>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
 
-    var heartbeat_timer = 0;
-    var last_health = -1;
-    var health_timeout = 3000;
-    var myWs;
-    var wsUrl = "${wsUrl}";
-    $(function(){
-        //ws = ws_conn( "ws://211.100.41.186:9999" );
-        if (wsUrl){
-            myWs = ws_conn(wsUrl);
-        }
-
-    });
-
-
-    function keepalive( ws ){
-        var time = new Date();
-        if( last_health != -1 && ( time.getTime() - last_health > health_timeout ) ){
-            console.log("Connection broken !!!");
-        }
-        else{
-            console.log("Connection success ...");
-        }
-    }
-
-    //websocket function
-    function ws_conn( to_url ){
-        to_url = to_url || "";
-        if( to_url == "" ){
-            return false;
-        }
-
-        clearInterval( heartbeat_timer );
-        var ws = new WebSocket( to_url );
-
-        ws.onopen=function(){
-            console.log("Connected !!!")
-            heartbeat_timer = setInterval( function(){keepalive(ws)}, 5000 );
-        }
-        ws.onerror=function(){
-            console.log("Connection error !!!");
-            clearInterval( heartbeat_timer );
-        }
-        ws.onclose=function(){
-            console.log("Connection closed !!!");
-            clearInterval( heartbeat_timer );
-        }
-
-        ws.onmessage=function(msg){
-            var data = JSON.parse(msg.data);
-            console.log("order = "+data.order);
-            if (data.onLines){
-                $(".num").text(data.onLines);
-            }
-            if (data.order == 0){//直播页面只接受直播指令
-                $(".icon-added").show();
-                $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
-
-                var newSlide = '<div class="swiper-slide" data-num="0" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
-                if (data.videoUrl){
-                    newSlide = '<div class="swiper-slide" data-num="0" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
-                }
-
-                galleryTop.appendSlide(newSlide);
-
-                setTimeout(function(){$(".icon-added").hide()}, 5000);
-
-            }
-        }
-
-        return ws;
-    }
-
-</script>
 <script>
-    var asAllItem = audiojs.createAll();
-    var playing = false;
-    var galleryTop ;
+    var galleryTop;
+
+    var totalPages = parseInt("${fn:length(course.details)}");
+
+    var needSync = true;
+
     $(function(){
+        var fullState = true;
+        var ismuted = false;
+        var CSPMeetingGallery = $('.CSPMeeting-gallery');
+        var asAllItem = audiojs.create($("#audioPlayer"));
+        var popupPalyer = asAllItem[0];
+
+        var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
+        var cH = window.innerHeight;
+        var phoneDpi = window.devicePixelRatio;
+
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
+
+        CSPMeetingGallery.height(cH);
+        $(window).resize(function(){
+            cH = window.innerHeight;
+            CSPMeetingGallery.height(cH);
+        });
+//        asAllItem[0].play();
+
 
         function slideToNext(){
             setTimeout(function(){galleryTop.slideNext();}, 3000);
         }
 
-        var target = $('.layer-hospital-popup-fullSize')[0];
-        var CSPMeetingGallery = $('.CSPMeeting-gallery');
-        var fullState = true;
-        var playerState = true;
-        var swiperFullSize;
-        var popupPalyer = asAllItem[asAllItem.length - 1];
-        var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
-        var dataSrc ;
-
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio ended");
-            if (playing){
-                if (isVideo.length == 0){
-                    slideToNext();
-                }
-            }
-        });
-//
-        $("#audioPlayer")[0].addEventListener("error", function(){
-            console.log("load audio source error ...");
-            if (playing){
-                if (isVideo.length == 0){
-                    slideToNext();
-                }
-            } else {
-                if (isVideo.length == 0){
-                    $('.html5ShadePlay').hide();
-                    popupPalyer.play();
-                    playing = true;
-                    changePlayerStete(false);
-                    slideToNext();
-                }
-            }
+            $(".boxAudio-loading").addClass("none");
         });
 
-
-
-//        popupPalyer.play();
-//        popupFullPalyer.play();
-
-
-        var ch = window.innerHeight;
-
-        //初始化高度
-        CSPMeetingGallery.css("height", ch);
-
-        //横竖屏切换 更换高度
-        $(window).resize(function(){
-
-            CSPMeetingGallery.css("height", window.innerHeight);
-            $('.layer-hospital-popup-fullSize').show();
-        });
-
-        //初始化默认竖屏
-        galleryTop = new Swiper('.gallery-top', {
-            spaceBetween: 0,
-            pagination: '.swiper-pagination',
-            nextButton: '.swiper-button-next',
-            prevButton: '.swiper-button-prev',
-            paginationType: 'fraction',
-            onSlideChangeEnd:function(swiper){
-                //选中的项是否有视频
-                activeItemIsVideo = $('.swiper-slide-active').find('video');
-
-                nextItemIsVideo = $('.swiper-slide-prev').find('video');
-
-                //触发切换音频
-                swiperChangeAduio(swiper.wrapper.prevObject);
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
-
-
-            },
-            onSlideNextEnd:function(){
-                prevItemIsVideo = $('.swiper-slide-prev').find('video');
-                //判断前一个是否有视频
-                if(prevItemIsVideo.length > 0){
-                    //重新加载视频
-                    prevItemIsVideo.get(0).load();
-                }
-            },
-            onSlidePrevEnd:function(){
-                nextItemIsVideo = $('.swiper-slide-next').find('video');
-                //判断后一个是否有视频
-                if(nextItemIsVideo.length > 0){
-                    //重新加载视频
-                    nextItemIsVideo.get(0).load();
-                }
-            },
-            onInit: function(swiper){
-                //选中的项是否有视频
-                activeItemIsVideo = $('.swiper-slide-active').find('video');
-                dataSrc = $('.swiper-slide-active').attr("audio-src");
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
-                swiper.slideTo("${fn:length(course.details) - 1}");
-            }
+        $("#audioPlayer")[0].addEventListener("loadedmetadata", function(){
+            $(".boxAudio-loading").addClass("none");
         });
 
 
 
 
-        //启动全屏
-        $('.changeFull-hook').click(function(){
-            //判断是否播放状态
-            playerState ? popupPalyer.pause():popupPalyer.play();
-            //是否全屏状态
-            if(fullState) {
-                $('.CSPMeeting-gallery').addClass('CSPMeeting-popup-fullsize');
-                $('.CSPMeeting-gallery').find('.swiper-container').addClass('layer-hospital-popup');
-                fullState = false;
-                $(this).addClass('button-icon-onFull-off');
-            } else if(fullState === false) {
-//                $('.CSPMeeting-gallery-live').removeClass('popup-fullStatus');
-//                galleryTop.update(true);
-                $('.CSPMeeting-gallery').removeClass('CSPMeeting-popup-fullsize');
-                $('.CSPMeeting-gallery').find('.swiper-container').removeClass('layer-hospital-popup');
-                galleryTop.update(true);
+        //手机端 点击任何一个地方  自动播放音频
+        $('.html5ShadePlay').on('touchstart',function(){
 
-                fullState = true;
-                $(this).removeClass('button-icon-onFull-off');
-            }
+            $(this).hide();
+            //播放音频
+            popupPalyer.play();
 
 
+            $("#ck-video")[0].play();
+            //播放器控制条
+            //$("#ck-video")[0].allowFull(false);
+            //播放开始/暂停
+//            CKobject.getObjectById('ck-video').play();
+
+            //音频文件静音
+            popupPalyer.element.muted = true;
+
+            //跳转到最后一页
+            //galleryTop.slideTo(galleryTop.slides.length, 1000, false);
         });
 
-
-
-
-
-
-
-
-        //超出页面下拉
-        $(".hidden-box").perfectScrollbar();
-
-        /*弹出留言*/
-        $(".faq-popup-button-hook").on('click',function(){
-            layer.open({
-                type: 1,
-                anim: 5,
-                area: ['100%','100%'],
-                fix: false, //不固定
-                title: false,
-                content: $('.faq-popup-hook'),
-                success: function () {
-                    popupPalyer.play();
-                },
-                end:function(){
-                    popupPalyer.play();
-                }
-            })
-        });
-
-        //启动留言输入框
-        $(".meeting-faq-popup-input-text").on('click',function(){
-            layer.open({
-                type: 1,
-                anim: 2,
-                area: ['100%','4rem'],
-                offset:'b',
-                title:false,
-                content: $('.meeting-faq-popup-keyboard'),
-                success: function (swiper) {
-                    popupPalyer.play();
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
-                },
-                end:function(){
-                    popupPalyer.play();
-                }
-            })
-        });
-
-        //弹出简介
-        $('.info-popup-hook').click(function(){
-            layer.open({
-                type: 1,
-                area: ['85%','65%'],
-                fix: false, //不固定
-                title:false,
-                skin: 'info-popup',
-                content: $('.CSPMeeting-meeting-info-popup'),
-                success: function (swiper) {
-                    popupPalyer.play();
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
-                },
-                end:function(){
-                    popupPalyer.play();
-                }
-            })
-        });
-
-
-        //视频播放是否已结束
-        var isEnded = function () {
-            if(activeItemIsVideo.length > 0 && activeItemIsVideo.get(0).ended == true){
-                galleryTop.slideNext();
-            }
-        }
-
-        //视频网络状态
-        var videoNetWorkState = function () {
-            activeItemIsVideo.get(0).networkState
-        }
-
-
-
-
-
-
-
-        //播放器切换加载对应的路径
-        var swiperChangeAduio = function(current){
-            var swiperCurrent;
-
-            popupPalyer.pause();
-            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
-            if(current.find(".swiper-slide-active")){
-                swiperCurrent  = current.find(".swiper-slide-active");
-            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
-                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
-            }
-            dataSrc = swiperCurrent.attr('audio-src');
-            //如果有音频，才进行播放
-            if(dataSrc.length > 0){
-                $('.boxAudio').removeClass('none');
-                popupPalyer.load(dataSrc);
-                popupPalyer.play();
-                changePlayerStete(true);
-            } else {
-                popupPalyer.load('isNotSrc');
-                console.log('没加载音频');
-                $('.boxAudio').addClass('none');
-                changePlayerStete(false);
-            }
-            //如果有视频
-            if(activeItemIsVideo.length > 0){
-                changePlayerStete(true);
-            } else {
-                return false;
-            }
-
-
-        }
-
-
-
-        //播放按钮
-        $(".button-icon-state").on('click',function(){
-            changePlayerStete();
-        })
-
-        var changePlayerStete = function(state){
-            if(playerState || state == true){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
-                playerState = false;
-                //有video文件
-                if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).play();
-                } else {
-                    popupPalyer.play();
-                }
-            } else {
-                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
-                playerState = true;
-                //this = window
-
-                //有video文件
-                if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).pause();
-                } else {
-                    popupPalyer.pause();
-//                    $(this).on('touchstart',function(){
-//                        popupPalyer.play();
-//                    })
-                }
-
-            }
-        }
 
 
         function isPC() {
@@ -556,20 +248,28 @@
             $('.html5ShadePlay').hide();
             popupPalyer.play();
             playing = true;
-            changePlayerStete(false);
+            CSPMeetingGallery.height(cH);
+            $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
         } else {
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
                 $(this).hide();
                 popupPalyer.play();
                 playing = true;
-                changePlayerStete(false);
             });
+
+            CSPMeetingGallery.height(cH);
+            $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
         }
 
 
 
 
+
+
+
+
+        //移动到最新PPT 页
         var slideToPage = function (pageNum){
             galleryTop.slideTo(pageNum, 1000, false);
         };
@@ -580,20 +280,152 @@
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
-        var ismuted = true;
-        var isVideo = $('.swiper-slide-active').find('video');
 
 
+
+        $(".play-hook").click(function(){
+
+        })
+
+        $(".full-hook").click(function(){
+
+        })
+
+        function mutedHanlder(){
+
+        }
+        $(".quit-full-hook").click(function(){
+            changeTrack();
+        });
+
+        //初始化
+        galleryTop = new Swiper('.gallery-top', {
+            spaceBetween: 10,
+            pagination: '.swiper-pagination',
+            nextButton: '.swiper-button-next',
+            prevButton: '.swiper-button-prev',
+            paginationType: 'fraction',
+            onSlideChangeEnd:function(swiper){
+                //选中的项是否有视频
+                activeItemIsVideo = $('.swiper-slide-active').find('video');
+
+                nextItemIsVideo = $('.swiper-slide-prev').find('video');
+
+                //触发切换音频
+                swiperChangeAduio(swiper.wrapper.prevObject);
+
+//                CKobject.getObjectById('ck-video').play();
+            },
+            onSlideNextEnd:function(){
+                nextItemIsVideo = $('.swiper-slide-next').find('video');
+                //判断后一个是否有视频
+                if(nextItemIsVideo.length > 0){
+                    //重新加载视频
+                    nextItemIsVideo.get(0).load();
+                }
+
+            },
+            onSlidePrevEnd:function(){
+                prevItemIsVideo = $('.swiper-slide-prev').find('video');
+                //判断前一个是否有视频
+                if(prevItemIsVideo.length > 0){
+                    //重新加载视频
+                    prevItemIsVideo.get(0).load();
+                }
+            },
+            onInit: function(swiper){
+                //选中的项是否有视频
+                activeItemIsVideo = $('.swiper-slide-active').find('video');
+                dataSrc = $('.swiper-slide-active').attr("audio-src");
+                if (!dataSrc.length && !activeItemIsVideo.length){
+                    slideToNext();
+                }
+                swiper.slideTo("${fn:length(course.details) - 1}");
+            }
+        });
+        //点击屏幕后自动播放
+//        $('body').on('touchstart',function(){
+//            //音频播放
+//            popupPalyer.play();
+//
+//            //播放器控制条
+//            CKobject.getObjectById('ck-video').allowFull(false);
+//            //播放开始/暂停
+//            CKobject.getObjectById('ck-video').playOrPause();
+//
+//
+//        })
+
+
+        $('.changeFull-hook').click(function(){
+            if(fullState && !isPC()) {
+                $('.CSPMeeting-gallery-live').addClass('popup-fullStatus');
+                $('.CSPMeeting-gallery-live').find('.popup-min-screen').on('click',function(){
+                    changeScreen();
+//                    galleryTop.update(true);
+                });
+                fullState = false;
+                $(this).addClass('button-icon-onFull-off');
+            } else if(fullState === false && !isPC()) {
+                $('.CSPMeeting-gallery-live').removeClass('popup-fullStatus');
+                galleryTop.update(true);
+                $('.CSPMeeting-gallery-live').find('.popup-min-screen').off('click',function(){
+                    changeScreen();
+                });
+                fullState = true;
+                $(this).removeClass('button-icon-onFull-off');
+            } else {
+                return false;
+            }
+
+        });
+
+        //播放器切换加载对应的路径
+        var swiperChangeAduio = function(current){
+            var swiperCurrent;
+
+            popupPalyer.pause();
+            if(current.find(".swiper-slide-active")){
+                swiperCurrent  = current.find(".swiper-slide-active");
+            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
+                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            }
+            var dataSrc = swiperCurrent.attr('audio-src');
+            popupPalyer.load(dataSrc);
+
+            popupPalyer.play();
+        }
+
+        //点击切换状态
+        var changeScreen = function(){
+
+            $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
+            $(this).addClass('popup-volume').removeClass("popup-min-screen");
+
+            viedoMuted();
+//            viedoMuted();
+
+            if($('.popup-volume').find('audio').length > 0){
+                needSync = false;
+                popupPalyer.element.muted = false;
+            } else if ($('.popup-volume').find('video').length) {
+                CKobject.getObjectById('ck-video').changeVolume(100);
+                $("#ck-video")[0].muted = false;
+                needSync = true;
+            }
+
+
+            //重新渲染插件
+            galleryTop.update(true);
+
+        };
         //静音
         var viedoMuted = function(){
             //音频文件静音
             popupPalyer.element.muted = true;
-
             //直播静音
-            if(isVideo.length > 0){
-                CKobject.getObjectById('ck-video').changeVolume(0);
-                $("#ck-video")[0].muted = true;
-            }
+            CKobject.getObjectById('ck-video').changeVolume(0);
+            $("#ck-video")[0].muted = true;
 //            CKobject.getObjectById('ck-video').play();
         }
 
@@ -604,26 +436,245 @@
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
                 ismuted = false
             } else {
-                if($('.swiper-slide-active').attr("audio-src") != ''){
+                if($('.popup-volume').find('audio').length > 0){
                     popupPalyer.element.muted = false;
-                } else if ($('.swiper-slide-active').find('video').length) {
+
+                } else if ($('.popup-volume').find('video').length) {
                     CKobject.getObjectById('ck-video').changeVolume(100);
                     $("#ck-video")[0].muted = false;
+
+
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
                 ismuted = true
             }
         }
 
+        //绑定状态切换
+        $(document).on('click','.popup-min-screen',changeScreen);
 
-        $(".quit-full-hook").click(function(){
-            changeTrack();
+        //超出页面下拉
+        $(".hidden-box").perfectScrollbar();
+
+        /*弹出留言*/
+        $(".faq-popup-button-hook").on('click',function(){
+            layer.open({
+                type: 1,
+                anim: 5,
+                area: ['100%','100%'],
+                fix: false, //不固定
+                title: false,
+                content: $('.faq-popup-hook'),
+                success: function () {
+
+                }
+            })
+        });
+
+        //启动留言输入框
+        $(".meeting-faq-popup-input-text").on('click',function(){
+            layer.open({
+                type: 1,
+                anim: 2,
+                area: ['100%','4rem'],
+                offset:'b',
+                title:false,
+                content: $('.meeting-faq-popup-keyboard'),
+                success: function (swiper) {
+                    swiper.find('textarea').focus();
+                    $(this).find('textarea').on('click',function(){
+                        var target = this;
+                        //解决IOS弹出输入框挡住问题
+                        setTimeout(function(){
+                            target.scrollIntoView(true);
+                        },100)
+                    });
+                }
+            })
+        });
+
+        //弹出简介
+        $('.info-popup-hook').click(function(){
+            layer.open({
+                type: 1,
+                area: ['85%','65%'],
+                fix: false, //不固定
+                title:false,
+                skin: 'info-popup',
+                content: $('.CSPMeeting-meeting-info-popup'),
+                success: function (swiper) {
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','height:0;');
+                    }
+                },
+                cancel: function (swiper) {
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','height:auto;');
+                    }
+                }
+
+            })
         });
 
 
 
+
+
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+            cH = window.innerHeight;
+            if (window.orientation === 180 || window.orientation === 0) {
+                console.log('竖屏状态！');
+                CSPMeetingGallery.height(cH);
+                $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                console.log('横屏状态！');
+                CSPMeetingGallery.height(cH);
+                $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
+            }
+        }, false);
+
+
+        $("#ck-video")[0].addEventListener('pause',function(){
+            $("#ck-video")[0].play();
+        })
+
+
+
+        //兼容类型
+//        var supportOrientation = (typeof window.orientation === 'number' &&
+//        typeof window.onorientationchange === 'object');
+//        //
+//        var init = function(){
+//            var htmlNode = document.body.parentNode,
+//                    orientation;
+//            var updateOrientation = function(){
+//                if(supportOrientation){
+//                    orientation = window.orientation;
+//                    switch(orientation){
+//                        case 90:
+//                        case -90:
+//                            orientation = 'landscape';
+//                            CSPMeetingGallery.height($(window).height());
+//                            $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
+//                                alert('横屏');
+//                            break;
+//                        default:
+//                            orientation = 'portrait';
+//                            CSPMeetingGallery.height($(window).height());
+//                            $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
+//                            alert('竖屏');
+//                            break;
+//                    }
+//                }else{
+//                    orientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
+//                }
+//                htmlNode.setAttribute('class',orientation);
+//            };
+//
+//            if(supportOrientation){
+//                window.addEventListener('orientationchange',updateOrientation,false);
+//            }else{
+//                //监听resize事件
+//                window.addEventListener('resize',updateOrientation,false);
+//            }
+//
+//            updateOrientation();
+//        };
+//
+//        window.addEventListener('DOMContentLoaded',init,false);
+
+        var heartbeat_timer = 0;
+        var last_health = -1;
+        var health_timeout = 3000;
+        var myWs;
+        var wsUrl = "${wsUrl}";
+        $(function(){
+            //ws = ws_conn( "ws://211.100.41.186:9999" );
+            if (wsUrl){
+                myWs = ws_conn(wsUrl);
+            }
+
+        });
+
+
+        function keepalive( ws ){
+            var time = new Date();
+            if( last_health != -1 && ( time.getTime() - last_health > health_timeout ) ){
+                console.log("Connection broken !!!");
+            }
+            else{
+                console.log("Connection success ...");
+            }
+        }
+
+        //websocket function
+        function ws_conn( to_url ){
+            to_url = to_url || "";
+            if( to_url == "" ){
+                return false;
+            }
+
+            clearInterval( heartbeat_timer );
+            var ws = new WebSocket( to_url );
+
+            ws.onopen=function(){
+                console.log("Connected !!!")
+                heartbeat_timer = setInterval( function(){keepalive(ws)}, 5000 );
+            }
+            ws.onerror=function(){
+                console.log("Connection error !!!");
+                clearInterval( heartbeat_timer );
+            }
+            ws.onclose=function(){
+                console.log("Connection closed !!!");
+                clearInterval( heartbeat_timer );
+            }
+
+            ws.onmessage=function(msg){
+                var data = JSON.parse(msg.data);
+
+                console.log("order = "+data.onLines);
+                if (data.onLines){
+                    $(".num").text(data.onLines);
+                }
+                if (data.order == 0){//直播指令
+                    $(".icon-added").show();
+                    $("#newLivePage").text("P " + (parseInt(data.pageNum) + 2));
+                    if(data.audioUrl != undefined) {
+                        $(".swiper-slide[data-num='"+(data.pageNum + 1)+"']").attr("audio-src", data.audioUrl);
+                    }
+                    if (data.pageNum == galleryTop.activeIndex){
+                        swiperChangeAduio($(".swiper-wrapper"));
+                    }
+                    setTimeout(function(){$(".icon-added").hide()}, 5000);
+
+                } else if (data.order == 1){//同步指令
+                    totalPages ++;
+                    var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                    if (data.videoUrl){
+                        newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src=""  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                    }
+
+                    galleryTop.appendSlide(newSlide);
+                    if (needSync){
+                        $(".boxAudio-loading").removeClass("none");
+                        galleryTop.slideTo(totalPages);
+                    } else {
+                        $(".boxAudio-loading").addClass("none");
+                    }
+                }
+            }
+
+            return ws;
+        }
+
     });
 
+
+</script>
+<script type="text/javascript">
 
 
 

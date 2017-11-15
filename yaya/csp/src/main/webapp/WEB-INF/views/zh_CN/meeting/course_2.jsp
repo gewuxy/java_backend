@@ -27,7 +27,6 @@
 
     <script src="${ctxStatic}/phone/js/ckplayer.js"></script>
 
-
     <!-- 高清方案 -->
     <script>!function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);  flex(100, 1);</script>
     <style>
@@ -152,7 +151,7 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>简介</h3></div>
+        <div class="title"><h3>introduction</h3></div>
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
@@ -177,6 +176,12 @@
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var cH = window.innerHeight;
         var phoneDpi = window.devicePixelRatio;
+
+        var u = navigator.userAgent;
+        var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+        var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+
+
         CSPMeetingGallery.height(cH);
         $(window).resize(function(){
             cH = window.innerHeight;
@@ -208,10 +213,12 @@
             //播放音频
             popupPalyer.play();
 
+
+            $("#ck-video")[0].play();
             //播放器控制条
-            CKobject.getObjectById('ck-video').allowFull(false);
+            //$("#ck-video")[0].allowFull(false);
             //播放开始/暂停
-            CKobject.getObjectById('ck-video').play();
+//            CKobject.getObjectById('ck-video').play();
 
             //音频文件静音
             popupPalyer.element.muted = true;
@@ -496,15 +503,16 @@
                 skin: 'info-popup',
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','height:0;');
+                    }
+                },
+                cancel: function (swiper) {
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','height:auto;');
+                    }
                 }
+
             })
         });
 
@@ -514,6 +522,7 @@
 
         //切换屏幕状态
         window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+            cH = window.innerHeight;
             if (window.orientation === 180 || window.orientation === 0) {
                 console.log('竖屏状态！');
                 CSPMeetingGallery.height(cH);
@@ -525,6 +534,11 @@
                 $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
             }
         }, false);
+
+
+        $("#ck-video")[0].addEventListener('pause',function(){
+            $("#ck-video")[0].play();
+        })
 
 
 
@@ -621,7 +635,7 @@
             ws.onmessage=function(msg){
                 var data = JSON.parse(msg.data);
 
-                console.log("order = "+data.order);
+                console.log("order = "+data.onLines);
                 if (data.onLines){
                     $(".num").text(data.onLines);
                 }
