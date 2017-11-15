@@ -28,54 +28,51 @@
                 </div>
             </div>
             <div class="resource-list clearfix" id="deliveryList">
-                <c:forEach items="${page.dataList}" varStatus="status" step="4">
-                    <div class="row clearfix">
-                        <c:forEach items="${page.dataList}" var="d" begin="${status.index}" end="${status.index+3}">
-                            <div class="col-lg-response">
-                                <div class="resource-list-box">
-                                    <div class="resource-list-item">
-                                        <div class="resource-img ">
-                                            <img src="${d.coverUrl}" alt="" class="img-response">
-                                            <div class="resource-link">
-                                                <a href="#" class="resource-icon-play popup-player-hook" courseId="${d.id}">
-                                                    <i></i>
-                                                    预览
-                                                </a><a href="${ctx}/func/meet/edit?courseId=${d.id}" class="resource-icon-edit">
+                <div class="row clearfix">
+                    <c:forEach items="${page.dataList}" var="d">
+                        <div class="col-lg-response">
+                            <div class="resource-list-box">
+                                <div class="resource-list-item">
+                                    <div class="resource-img ">
+                                        <img src="${d.coverUrl}" alt="" class="img-response">
+                                        <div class="resource-link">
+                                            <a href="#" class="resource-icon-play popup-player-hook" courseId="${d.id}">
                                                 <i></i>
-                                                立即发布
-                                            </a>
-                                            </div>
-                                            <c:if test="${d.playType == 2}">
-                                                <div class="resource-state"><span class="icon iconfont icon-minIcon26"></span></div>
-                                            </c:if>
+                                                预览
+                                            </a><a href="${ctx}/func/meet/edit?courseId=${d.id}" class="resource-icon-edit">
+                                            <i></i>
+                                            立即发布
+                                        </a>
                                         </div>
-                                        <div class="resource-info">
-                                            <div class="fl">
-                                                <img src="${d.avatar}" alt="">
-                                            </div>
-                                            <div class="oh">
-                                                <div class="row clearfix">
-                                                    <div class="col-lg-10">
-                                                        <h3 >${d.name}</h3>
-                                                        <p>${d.email}</p>
-                                                    </div>
-                                                    <c:if test="${d.playType != 0}" >
-                                                        <div class="col-lg-2">
-                                                            <div class="state">直播</div>
-                                                        </div>
-                                                    </c:if>
+                                        <c:if test="${d.playType == 2}">
+                                            <div class="resource-state"><span class="icon iconfont icon-minIcon26"></span></div>
+                                        </c:if>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="fl">
+                                            <img src="${d.avatar}" alt="">
+                                        </div>
+                                        <div class="oh">
+                                            <div class="row clearfix">
+                                                <div class="col-lg-10">
+                                                    <h3 >${d.name}</h3>
+                                                    <p>${d.email}</p>
                                                 </div>
-
+                                                <c:if test="${d.playType != 0}" >
+                                                    <div class="col-lg-2">
+                                                        <div class="state">直播</div>
+                                                    </div>
+                                                </c:if>
                                             </div>
+
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
-                        </c:forEach>
-                    </div>
-                </c:forEach>
-
+                    </c:forEach>
+                </div>
             </div>
 
             <%@include file="/WEB-INF/include/pageable.jsp"%>
