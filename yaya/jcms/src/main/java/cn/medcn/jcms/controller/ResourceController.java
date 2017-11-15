@@ -324,7 +324,7 @@ public class ResourceController extends BaseController {
     }
 
     /**
-     *
+     *    csp投稿列表
      * @param isOpen  翻页时带此参数，说明已经开启投稿
      * @param pageable
      * @param model
@@ -332,6 +332,7 @@ public class ResourceController extends BaseController {
      */
     @RequestMapping(value = "/list")
     public String users(Integer isOpen,Pageable pageable, Model model){
+
         Integer userId = SubjectUtils.getCurrentUserid();
         if(isOpen == null){  //点击资源平台动作
             //查询用户是否开启投稿功能
@@ -341,7 +342,7 @@ public class ResourceController extends BaseController {
                 return "/res/deliveryList";
             }
         }
-
+    pageable.setPageSize(12);
         pageable.put("userId",userId);
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
         for(CourseDeliveryDTO dto:myPage.getDataList()){
