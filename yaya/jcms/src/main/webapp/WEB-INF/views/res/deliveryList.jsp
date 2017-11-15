@@ -55,8 +55,18 @@
                                         <div class="oh">
                                             <div class="row clearfix">
                                                 <div class="col-lg-10">
-                                                    <h3 >${d.name}</h3>
-                                                    <p>${d.email}</p>
+                                                    <c:if test="${empty d.name}">
+                                                        <h3 >&nbsp;</h3>
+                                                    </c:if>
+                                                    <c:if test="${not empty d.name}">
+                                                        <h3 >${d.name}</h3>
+                                                    </c:if>
+                                                    <c:if test="${empty d.email}">
+                                                        <p>&nbsp;</p>
+                                                    </c:if>
+                                                    <c:if test="${not empty d.email}">
+                                                        <p>${d.email}</p>
+                                                    </c:if>
                                                 </div>
                                                 <c:if test="${d.playType != 0}" >
                                                     <div class="col-lg-2">
