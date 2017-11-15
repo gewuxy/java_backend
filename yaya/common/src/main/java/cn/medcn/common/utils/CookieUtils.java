@@ -90,6 +90,7 @@ public class CookieUtils {
     public static void clearCookie(HttpServletRequest request, String key){
         Cookie cookie = getCookie(request, key);
         if (cookie != null){
+            cookie.setPath("/");
             cookie.setMaxAge(0);
         }
     }
