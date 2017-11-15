@@ -5,6 +5,10 @@ import cn.medcn.article.service.CspArticleService;
 import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.UsernamePasswordToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,6 +18,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+
+import static cn.medcn.common.Constants.LOGIN_USER_ID_KEY;
+import static cn.medcn.common.Constants.LOGIN_USER_KEY;
 
 
 /**
@@ -29,15 +39,56 @@ public class SkipController extends CspBaseController {
     @Autowired
     protected CspArticleService articleService;
 
+    /**
+     * 首页 检查缓存中是否有账号，如果有账号 显示登录账号
+     * @param request
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/")
-    public String index(){
+    public String index(HttpServletRequest request, Model model){
+        String userName = CookieUtils.getCookieValue(request, LOGIN_USER_KEY);
+        try {
+            if (StringUtils.isNotEmpty(userName)) {
+                userName = URLDecoder.decode(userName,"UTF-8");
+                model.addAttribute("username", userName);
+            }
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
         return localeView("/index/index");
     }
 
+
+    /**
+     * 点击首页登录 检查缓存是否有账号，有账号直接进入后台，没有账号需进入登录界面
+     * @param request
+     * @return
+     */
     @RequestMapping(value = "/login")
-    public String login() {
+    public String login(HttpServletRequest request) {
+        // 从缓存获取是否有用户id
+        String userId = CookieUtils.getCookieValue(request, LOGIN_USER_ID_KEY);
+        if (StringUtils.isNotEmpty(userId)) {
+            try {
+                // 缓存中用户id不为空 直接登录
+                UsernamePasswordToken token = new UsernamePasswordToken();
+                token.setHost("thirdParty");
+                token.setUsername(userId);
+
+                Subject subject = SecurityUtils.getSubject();
+                subject.login(token);
+                return "redirect:/mgr/meet/list";
+
+            } catch (AuthenticationException e) {
+                // 登录异常: 缓存过期，账号未认证，跳转登录主界面
+                return localeView("/login/login");
+            }
+        }
+
         return localeView("/login/login");
     }
+
 
     @RequestMapping(value = "/index/{id}")
     public String index(@PathVariable String id, Model model) {
