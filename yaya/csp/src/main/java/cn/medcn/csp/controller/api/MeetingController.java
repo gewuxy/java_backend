@@ -515,30 +515,27 @@ public class MeetingController extends CspBaseController {
             if (live != null) {
 
                 String replayUrl = callback.getReplay_url();
-                String suffix = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
+                String videoName = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
 
-                String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + suffix;
-                File dir = new File(fileUploadBase + FilePath.COURSE.path + "/" +channelId + "/replay/");
+                String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + videoName;
+
+                String videoDirPath = fileUploadBase + FilePath.COURSE.path + "/" +channelId + "/replay/";
+
+                File dir = new File(videoDirPath);
                 if (!dir.exists()){
                     dir.mkdirs();
                 }
+                HttpUtils.copyFromNetwork(replayUrl, videoDirPath + videoName);
 
                 //检测是否有之前的直播视频
-                File file = new File(fileUploadBase + finalReplayPath);
-                if (file.exists()) {
-                    StringBuffer buffer = new StringBuffer(fileUploadBase);
-                    buffer.append(FilePath.COURSE.path).append("/").
-                            append(channelId).append("/replay/").
-                            append(channelId).append("_").
-                            append(StringUtils.nowStr()).
-                            append(replayUrl.substring(replayUrl.lastIndexOf(".")));
-                    HttpUtils.copyFromNetwork(callback.getReplay_url(), buffer.toString());
+                if (CheckUtils.isNotEmpty(live.getReplayUrl())) {
+                    String oldVideoName = live.getReplayUrl().substring(live.getReplayUrl().lastIndexOf("/") + 1);
+                    if (!videoName.equals(oldVideoName)) {//文件名不相同 需要将两端视频整合为一段
+                        FFMpegUtils.concatMp4(videoDirPath + oldVideoName, true, videoDirPath + oldVideoName, videoDirPath + videoName);
+                    }
                 } else {
-
-                    HttpUtils.copyFromNetwork(callback.getReplay_url(), fileUploadBase + finalReplayPath);
+                    live.setReplayUrl(fileBase + finalReplayPath);
                 }
-
-                live.setReplayUrl(fileBase + finalReplayPath);
 
                 live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expireDays)));
                 live.setPlayCount(callback.getPlayer_count());
