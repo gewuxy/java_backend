@@ -1,5 +1,6 @@
 import cn.medcn.user.model.AppMenu;
 import cn.medcn.user.service.AppMenuService;
+import cn.medcn.user.service.AppUserService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ public class AppMenuTest {
     @Autowired
     private AppMenuService appMenuService;
 
+
     @Test
     public void testFindMenuByRole(){
         List<AppMenu> list = appMenuService.findMenuByRole(1);
@@ -25,4 +27,6 @@ public class AppMenuTest {
             System.out.println(appMenu.getMenuName());
         }
     }
+
+
 }

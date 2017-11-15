@@ -21,7 +21,7 @@ window.twttr = (function (d, s, id) {
 
 var log = console.log;
 hello.init(
-    {'twitter': 'jAY5jjYsPqvUpULMGCB4ryCdL'},
+    {'twitter': 's024Uf0tlvwtDwzKqKLat56Zm'},
     {oauth_proxy: 'https://auth-server.herokuapp.com/proxy'}
 );
 
@@ -40,8 +40,6 @@ $("#twitter").click(function () {
         var res = JSON.stringify(p);
         $("#str").val(res);
         $("#twitterForm").submit();
-
-        // self.location= '${ctx}/mgr/twitterCallback?str='+res;
 
     }, log);
 
