@@ -27,14 +27,14 @@
             <div class=" index-login">
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>&nbsp;&nbsp;&nbsp;
-                    <a href="${ctx}/login" class="user-login-button"><strong>登錄</strong>&nbsp;&nbsp;<i></i> </a>
+                    <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "登錄"}</strong>&nbsp;&nbsp;<i></i> </a>
                     <a href="javascript:;" class="index-download">下載App</a>
                 </div>
             </div>
         </div>
         <div class="banner index-banner-img">
             <div class="index-banner-content not-animated" data-animate="fadeIn" data-delay="200">
-                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">CSP&nbsp;meeting</h3>
+                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">CSPmeeting</h3>
                 <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">妳的智慧，將被更多人看見</h2>
                 <p class="not-animated" data-animate="fadeIn" data-delay="500">CSPmeeting（Cloud Synchronization & Playback Meeting），全球領先的雲同步回放會議系統，<br />提供會議錄播、投屏直播、視頻直播三種線上會議服務，滿足不同用戶群體多場景內容傳播需求。 </p>
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
