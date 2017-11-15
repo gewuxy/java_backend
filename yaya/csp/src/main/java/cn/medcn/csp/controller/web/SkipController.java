@@ -61,7 +61,7 @@ public class SkipController extends CspBaseController {
 
 
     /**
-     * 点击首页登录 检查缓存是否有账号，有账号直接进入后台，没有账号需进入登录界面
+     * 点击用户名登录 检查缓存是否有账号，有账号直接进入后台，没有账号需进入登录界面
      * @param request
      * @return
      */
