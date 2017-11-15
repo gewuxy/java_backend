@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>HTML5-Video-Player</title>
+    <style type="text/css">
+        .videoPlayer{
+            border: 1px solid #000;
+            width: 600px;
+        }
+        #video{
+            margin-top: 0px;
+        }
+        #videoControls{
+            width: 600px;
+            margin-top: 0px;
+        }
+        .show{
+            opacity: 1;
+        }
+        .hide{
+            opacity: 0;
+        }
+        #progressWrap{
+            background-color: black;
+            height: 25px;
+            cursor: pointer;
+        }
+        #playProgress{
+            background-color: red;
+            width: 0px;
+            height: 25px;
+            border-right: 2px solid blue;
+        }
+        #showProgress{
+            background-color: ;
+            font-weight: 600;
+            font-size: 20px;
+            line-height: 25px;
+        }
+    </style>
+</head>
+<body>
+<div class="">
+    <h1>HTML5_Video_Player</h1>
+    <div class="videoPlayer" id="videoContainer">
+        <video id="video"
+               width="600" height="360"
+               preload controls
+        >
+            <source src="http://nettuts.s3.amazonaws.com/763_sammyJSIntro/trailer_test.mp4" type='video/mp4'>
+            <source src="http://nettuts.s3.amazonaws.com/763_sammyJSIntro/trailer_test.ogg" type='video/ogg'>
+        </video>
+        <div id="videoControls">
+            <div id="progressWrap">
+                <div id="playProgress">
+                    <span id="showProgress">0</span>
+                </div>
+            </div>
+            <div>
+                <button id="playBtn" title="Play"> 播放 </button>
+                <button id="fullScreenBtn" title="FullScreen Toggle">  全屏 </button>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
