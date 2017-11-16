@@ -297,10 +297,9 @@ public class LoginController extends CspBaseController {
      * 推特回调
      * @param str
      * @return
-     * @throws SystemException
      */
     @RequestMapping(value="/twitterCallback",method = RequestMethod.POST)
-    public String twitterCallback(String str, HttpServletResponse response) throws SystemException {
+    public String twitterCallback(String str, HttpServletResponse response,RedirectAttributes redirectAttributes)  {
 
         if(StringUtils.isEmpty(str)){
             return "";
@@ -329,7 +328,13 @@ public class LoginController extends CspBaseController {
             info.setBindDate(new Date());
             info.setAvatar((String)JsonUtils.getValue(str,"profile_image_url"));
             info.setNickName((String)JsonUtils.getValue(str,"name"));
-            cspUserService.doBindThirdAccount(info,principal.getId());
+            try {
+                cspUserService.doBindThirdAccount(info,principal.getId());
+            } catch (SystemException e) {
+                addFlashMessage(redirectAttributes,e.getMessage());
+                return "redirect:/mgr/user/toAccount";
+            }
+
             return "redirect:/mgr/user/toAccount";
         }
     }
