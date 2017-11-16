@@ -11,14 +11,14 @@
                     <form action="${ctx}/login" id="loginForm" name="loginForm" method="post">
                         <div class="v2-login_box">
                             <p>
-                                <label for="" class="pr">
-                                    <input type="text" id="ccount" name="account" class="input-border textInput" placeholder="输入手机号或邮箱登录"><span class=""></span><span class="errorText hide"></span>
+                                <label for="account" class="pr">
+                                    <input type="text" id="account" name="account" class="input-border textInput" placeholder="输入手机号或邮箱登录"><span class=""></span><span class="errorText hide"></span>
                                 </label>
                             </p>
                         </div>
                         <div class="v2-login_box">
                             <p>
-                                <label for="" class="pr">
+                                <label for="password" class="pr">
                                     <input type="password" id="password" name="password" class="input-border textInput" placeholder="密码"><span class=""></span><span class="errorText hide"></span>
                                 </label>
                             </p>
@@ -27,8 +27,8 @@
 
                         <div class="v2-login_box" style="position:relative">
                             <div class="fl color-gray">
-                                <input type="checkbox" id="checkbox_2" name="" class="chk_1">
-                                <label for="checkbox_2">
+                                <input type="checkbox" id="rememberMe" name="rememberMe" class="chk_1">
+                                <label for="rememberMe">
                                     <i class="ico"></i>
                                     记住我
                                 </label>

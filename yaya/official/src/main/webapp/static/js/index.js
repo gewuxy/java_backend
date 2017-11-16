@@ -12,11 +12,16 @@ function loginCheck() {
         $("#password").focus();
         return false;
     }
+    if(!isMobile(account) && !isEmail(account)){
+        msgTips("error","请输入正确的手机号或者密码！");
+        return false;
+    }
+    $(".login_tip").hide();
     //将最后一个用户信息写入到Cookie
     SetLastUser(account);
 
     //如果记住密码选项被选中
-    if (document.getElementById('checkbox_2').checked == true) {
+    if (document.getElementById('rememberMe').checked == true) {
         //取密码值
         var pwd = document.getElementById('password').value;
         //alert("密码："+pwd);
@@ -33,7 +38,7 @@ function loginCheck() {
         if(data.code == 0){
             alert("success");
         }else{
-            msgTips("error",data.data.msg);
+            msgTips("error",data.err);
         }
     },'json');
 }
@@ -60,7 +65,7 @@ function ResetCookie() {
 
 function msgTips(type,content){
     $(".login_tip").show();
-    $(".login_tip_"+type).html("<i class='ico ico_"+type+"'></i>"+content);
+    $(".login_tip_"+type).html("<i  class='ico ico_"+type+"'></i>"+ "<span style='color:red;'>" + content + "</span>");
 }
 
 function SetLastUser(usr) {
@@ -79,13 +84,15 @@ var count = 60; //间隔函数，1秒执行
 var curCount;//当前剩余秒数
 
 function sendMessage() {
-    var mobile = $("#mobile").val();
-    if (!isMobile(mobile)){
-        styleChange("mobile",1,"请填写正确的手机号码")
+    var account = $("#registaccount").val();
+    if (!isMobile(account) && !isEmail(account)){
+        styleChange("registaccount",1,"请填写正确的手机或邮箱")
         return false;
     }else{
-        styleChange("mobile",1,"")
+        styleChange("registaccount",1,"")
     }
+    var type = 1;  //手机
+    if(isEmail(account)) type = 2;  //邮箱
     //如果省份为空加载省份列表
     setProvince();
     curCount = count;
@@ -95,20 +102,20 @@ function sendMessage() {
     $("#btnSendCode").addClass("getCodeButton-current");
     InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
     //向后台发送处理数据
-    // $.ajax({
-    //     url: ctx + "/regist/get_captcha", //目标地址
-    //     type: "POST", //用POST方式传输
-    //     dataType: "json", //数据格式:JSON
-    //     data: {'mobile':mobile},
-    //     error: function (XMLHttpRequest, textStatus, errorThrown) { },
-    //     success: function (data){
-    //         if(data.code != 0){
-    //             layer.msg(data.err);
-    //         }else{
-    //             layer.msg("验证码已发送到您的手机");
-    //         }
-    //     }
-    // });
+     $.ajax({
+         url: ctx + "/regist/get_captcha", //目标地址
+         type: "POST", //用POST方式传输
+         dataType: "json", //数据格式:JSON
+         data: {'account':account,'type':type},
+         error: function (XMLHttpRequest, textStatus, errorThrown) { },
+         success: function (data){
+             if(data.code != 0){
+                 layer.msg(data.err);
+             }else{
+                 layer.msg("验证码已发送到您的手机");
+             }
+         }
+     });
 }
 
 //timer处理函数

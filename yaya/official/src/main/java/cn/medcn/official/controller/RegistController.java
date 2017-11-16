@@ -1,13 +1,13 @@
 package cn.medcn.official.controller;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.email.EmailHelper;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.JSmsService;
-import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.common.utils.RedisCacheUtils;
-import cn.medcn.common.utils.RegexUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.official.model.OffUserInfo;
 import cn.medcn.official.service.OffiUserInfoService;
 import cn.medcn.sys.model.SystemRegion;
@@ -21,6 +21,7 @@ import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -29,12 +30,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.mail.MessagingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * by create HuangHuibin 2017/11/15
@@ -58,18 +62,44 @@ public class RegistController extends BaseController{
     @Autowired
     private SystemRegionService systemRegionService;
 
+    @Autowired
+    private EmailHelper emailHelper;
+
     /**
      * 生成短信验证码给前端
-     * @param mobile
      * @return
      */
     @RequestMapping("/get_captcha")
     @ResponseBody
-    public String getCode(String mobile){
-        return appUserService.sendCaptcha(mobile);
+    public String getCode(String account,int type){
+        if(type == 1){
+            return appUserService.sendCaptcha(account);
+        }else{
+            return sendEmail(account);
+        }
+
     }
 
-
+    private String sendEmail(String account){
+        String code = UUIDUtil.getUUID();
+        account += code;
+        redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY+code, account, (int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));//缓存24小时
+        MailBean mailBean = new MailBean();
+        mailBean.setSubject("注册");
+        try {
+            emailHelper.sendMailByType(mailBean, account, account,0);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return error("邮件发送失败,可能是邮箱地址不可用");
+        } catch (MessagingException e) {
+            e.printStackTrace();
+            return error("邮件发送失败");
+        } catch (JDOMException e) {
+            e.printStackTrace();
+            return error("邮件模板解析错误");
+        }
+        return success();
+    }
 
     @RequestMapping(value="/do_register", method = RequestMethod.POST)
     @ResponseBody

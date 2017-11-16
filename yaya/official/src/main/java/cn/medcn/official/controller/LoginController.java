@@ -3,6 +3,7 @@ package cn.medcn.official.controller;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.RegexUtils;
 import cn.medcn.official.model.OffUserInfo;
 import cn.medcn.official.service.OffiUserInfoService;
 import org.apache.shiro.SecurityUtils;
@@ -27,27 +28,31 @@ import java.util.Map;
 @Controller
 public class LoginController extends BaseController{
 
+    /**
+     * 登录
+     * @param account
+     * @param password
+     * @param rememberMe
+     * @return
+     */
     @RequestMapping(value="/login", method = RequestMethod.POST)
     @ResponseBody
-    public String login(String account, String password, Boolean rememberMe, HttpServletRequest request, HttpServletResponse response, Model model){
+    public String login(String account, String password, Boolean rememberMe){
         Map<String,String> map = new HashMap<>();
         if(StringUtils.isEmpty(account)){
-            map.put("id","account");
-            map.put("msg","用户名不能为空");
-            return APIUtils.error(map);
+            return APIUtils.error("用户名不能为空");
         }
         if(StringUtils.isEmpty(password)){
-            map.put("id","password");
-            map.put("msg","密码不能为空");
-            return APIUtils.error(map);
+            return APIUtils.error("密码不能为空");
+        }
+        if(!RegexUtils.checkMobile(account) && !RegexUtils.checkEmail(account)){
+            return APIUtils.error("请输入正确的手机或者邮箱");
         }
         try {
             Subject subject = SecurityUtils.getSubject();
             subject.login(new UsernamePasswordToken(account, password, rememberMe == null ? false : rememberMe));
         }catch (AuthenticationException e){
-            map.put("id","account");
-            map.put("msg",e.getMessage());
-            return APIUtils.error(map);
+            return APIUtils.error(e.getMessage());
         }
         return success();
     }
