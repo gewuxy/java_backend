@@ -7,6 +7,8 @@ import org.scribe.model.Token;
 import org.scribe.model.Verifier;
 import org.scribe.oauth.OAuthService;
 
+import java.io.UnsupportedEncodingException;
+
 /**
  * Created by lixuan on 2017/9/15.
  */
