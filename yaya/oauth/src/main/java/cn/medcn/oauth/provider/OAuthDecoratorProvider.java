@@ -22,6 +22,7 @@ public class OAuthDecoratorProvider {
         try {
             OAuthServiceDecorator decorator = (OAuthServiceDecorator) clazz.newInstance();
             decorator.setOAuthService(OAuthServiceProvider.getService(config));
+            decorator.setConfig(config);
             return decorator;
         } catch (InstantiationException e) {
             e.printStackTrace();
