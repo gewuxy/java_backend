@@ -1,5 +1,6 @@
 package cn.medcn.oauth.decorator;
 
+import cn.medcn.oauth.config.OAuthServiceConfig;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import cn.medcn.oauth.api.WeChatApi;
@@ -36,6 +37,7 @@ public class WeChatServiceDecorator extends OAuthServiceDecorator {
      */
     @Override
     public Token getAccessToken(Token requestToken, Verifier verifier) {
+
         OAuthRequest request = new OAuthRequest(api.getAccessTokenVerb(), api.getAccessTokenEndpoint());
         request.addQuerystringParameter(APP_ID, config.getApiKey());
         request.addQuerystringParameter(APP_SECRET, config.getApiSecret());
@@ -49,7 +51,9 @@ public class WeChatServiceDecorator extends OAuthServiceDecorator {
 
     @Override
     public OAuthUser getOAuthUser(Token accessToken) {
-        OAuthRequest request = new OAuthRequest(Verb.GET, String.format(USER_INFO_ACCESS_URL, accessToken.getToken(), accessToken.getSecret()));
+        String rawResponse = accessToken.getRawResponse();
+        String openId = JSON.parseObject(rawResponse).getString("openid");
+        OAuthRequest request = new OAuthRequest(Verb.GET, String.format(USER_INFO_ACCESS_URL, accessToken.getToken(), openId));
         Response response = request.send();
 
         String body = response.getBody();

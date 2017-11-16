@@ -28,6 +28,10 @@ public abstract class OAuthServiceDecorator {
         this.oAuthService = oAuthService;
     }
 
+    public void setConfig(OAuthServiceConfig config) {
+        this.config = config;
+    }
+
     public abstract OAuthUser getOAuthUser(Token accessToken);
 
     public String getAuthorizeUrl(){

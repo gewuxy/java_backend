@@ -625,16 +625,16 @@ a.color-wathet-blue:hover{color:#146ee3}
 .resource-list-item .resource-link a { display: inline-block; width:50%; height:100%; color:#fff; text-align: center; border-radius: 10px 10px 0 0; font-size:20px;}
 .resource-list-item .resource-link .resource-icon-play i,
 .resource-list-item .resource-link .resource-icon-qrcode i { display: block; width:40px; height:38px;margin:76px auto 35px;}
-.resource-list-item .resource-link .resource-icon-play { background: rgba(22,122,254,0.80); }
+.resource-list-item .resource-link .resource-icon-play { background: rgba(22,122,254,0.80); border-radius: 10px 0 0 0; -moz-border-radius: 10px 0 0 0; -webkit-border-radius:10px 0 0 0;}
 .resource-list-item .resource-link .resource-icon-play i {  background:url(../images/icon-admin-metting-play.png) no-repeat;}
-.resource-list-item .resource-link .resource-icon-qrcode { background: rgba(37,175,162,0.80); }
+.resource-list-item .resource-link .resource-icon-qrcode { background: rgba(37,175,162,0.80); border-radius:0 10px 0 0; -moz-border-radius: 0 10px 0 0; -webkit-border-radius:0 10px 0 0; }
 .resource-list-item .resource-link .resource-icon-qrcode i {  background:url(../images/icon-admin-metting-qdCode.png) no-repeat;}
 .resource-list-item .resource-menu a{ text-align: center; display: block; font-size:18px; margin:20px 0 0;}
 .resource-list-item .resource-menu .more{ background:url(../images/admin-metting-list-line.png) repeat-y center left;}
 .resource-list-item .resource-menu .more i{ display: inline-block; width:16px; height:16px; background:url(../images/icon-admin-metting-more.png) no-repeat; position: relative; top:2px; margin-right:10px;  }
 .resource-list-item .resource-menu .more:hover i { background:url(../images/icon-admin-metting-more-cur.png) no-repeat;}
 
-.resource-list-item .resource-img img{ width:100%;}
+.resource-list-item .resource-img img{ width:100%;  border-radius: 10px 10px 0 0; -moz-border-radius: 10px 10px 0 0; -webkit-border-radius:10px 10px 0 0;}
 
 
 .admin-bottom { padding:30px 0; background-color:#F7F9FB;}
