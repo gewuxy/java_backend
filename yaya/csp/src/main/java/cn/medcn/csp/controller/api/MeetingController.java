@@ -509,6 +509,9 @@ public class MeetingController extends CspBaseController {
     public String onReplay(ZeGoCallBack callback) {
         try {
             callback.signature();
+            if (callback.getReplay_url().endsWith(".m3u8")) {//对于m3u8格式不做处理 只处理mp4格式
+                return success();
+            }
 
             Integer channelId = Integer.valueOf(callback.getChannel_id());
             Live live = liveService.findByCourseId(channelId);
@@ -525,13 +528,17 @@ public class MeetingController extends CspBaseController {
                 if (!dir.exists()){
                     dir.mkdirs();
                 }
-                HttpUtils.copyFromNetwork(replayUrl, videoDirPath + videoName);
+                FileUtils.downloadNetWorkFile(replayUrl, videoDirPath , videoName);
 
                 //检测是否有之前的直播视频
                 if (CheckUtils.isNotEmpty(live.getReplayUrl())) {
                     String oldVideoName = live.getReplayUrl().substring(live.getReplayUrl().lastIndexOf("/") + 1);
-                    if (!videoName.equals(oldVideoName)) {//文件名不相同 需要将两端视频整合为一段
+                    File oldFile = new File(videoDirPath + oldVideoName);
+
+                    if (!videoName.equals(oldVideoName) && oldFile.exists()) {//文件名不相同 需要将两端视频整合为一段
                         FFMpegUtils.concatMp4(videoDirPath + oldVideoName, true, videoDirPath + oldVideoName, videoDirPath + videoName);
+                    } else {
+                        live.setReplayUrl(fileBase + finalReplayPath);
                     }
                 } else {
                     live.setReplayUrl(fileBase + finalReplayPath);

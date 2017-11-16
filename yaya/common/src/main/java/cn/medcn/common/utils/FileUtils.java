@@ -188,7 +188,7 @@ public class FileUtils {
         if (!dir.exists()){
             dir.mkdirs();
         }
-        String saveFileName = saveDir+File.separator+fileName;
+        String saveFileName = saveDir+ "/" + fileName;
         InputStream is = null;
         OutputStream os = null;
         try{
