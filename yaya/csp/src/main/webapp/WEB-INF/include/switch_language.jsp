@@ -12,9 +12,9 @@
             <a class="first-level" target="_blank" href="javascript:;"></a>
             <div class="tb-popupBox-bg clearfix">
                 <ul class="item-radius" id="ulitem">
-                    <li class="first"><a href="#">简体</a></li>
-                    <li><a href="#">繁體</a></li>
-                    <li class="last"><a href="#">EN</a></li>
+                    <li class="first"><a style="cursor: pointer">简体</a></li>
+                    <li><a style="cursor: pointer">繁體</a></li>
+                    <li class="last"><a style="cursor: pointer">EN</a></li>
                 </ul>
                 <div class="tb-popupBox-border"></div>
                 <div class="tb-popupBox-outerBorder"></div>
