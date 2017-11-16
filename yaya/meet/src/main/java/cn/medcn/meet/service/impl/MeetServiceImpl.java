@@ -1257,14 +1257,17 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
 
         //如果是转载csp会议，发布完成需要更改csp的发布状态
         MeetAudio audio = audioService.findMeetAudioByMeetId(meetId);
-        CourseDelivery delivery = new CourseDelivery();
-        delivery.setSourceId(audio.getCourseId());
-        delivery.setAcceptId(acceptId);
-        delivery = courseDeliveryService.selectOne(delivery);
-        if(delivery != null){
-            delivery.setPublishState(true);
-            courseDeliveryService.updateByPrimaryKey(delivery);
+        if(audio != null){
+            CourseDelivery delivery = new CourseDelivery();
+            delivery.setSourceId(audio.getCourseId());
+            delivery.setAcceptId(acceptId);
+            delivery = courseDeliveryService.selectOne(delivery);
+            if(delivery != null){
+                delivery.setPublishState(true);
+                courseDeliveryService.updateByPrimaryKey(delivery);
+            }
         }
+
 
     }
 
