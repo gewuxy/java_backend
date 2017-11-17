@@ -197,7 +197,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/example/form" target="mainFrame">
+                                        <a href="${ctx}/csp/order/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;流量订单管理
                                         </a>
                                     </li>
