@@ -610,6 +610,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             Live copy = new Live();
             BeanUtils.copyProperties(live, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            copy.setReplayUrl(null);
+            copy.setLiveState(AudioCoursePlay.PlayState.init.ordinal());
+            copy.setLivePage(0);
+            copy.setHdlUrl(null);
+            copy.setHlsUrl(null);
+            copy.setRtmpUrl(null);
+            copy.setPlayCount(0);
             copy.setCourseId(newCourseId);
             liveService.insert(copy);
         }
@@ -621,6 +628,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             AudioCoursePlay copy = new AudioCoursePlay();
             BeanUtils.copyProperties(play, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+            copy.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
+            copy.setPlayPage(0);
             copy.setCourseId(newCourseId);
             audioCoursePlayDAO.insert(copy);
         }
