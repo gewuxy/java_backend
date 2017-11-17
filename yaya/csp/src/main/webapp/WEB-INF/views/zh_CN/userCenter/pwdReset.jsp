@@ -250,6 +250,12 @@
 
     function oldPwdValid() {
         var password = $("#pwd").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#oldSpan").find('span').html("密码不能包含中文");
+            $("#oldSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#oldSpan").find('span').html("旧密码不能为空");
             $("#oldSpan").attr("class","cells-block error");
@@ -271,6 +277,12 @@
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
         var password = $("#pwd").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(newPwd))){
+            $("#newSpan").find('span').html("新密码不能包含中文");
+            $("#newSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(newPwd)==''){
             $("#newSpan").find('span').html("新密码不能为空");
             $("#newSpan").attr("class","cells-block error");
@@ -293,6 +305,12 @@
 
     function checkPwd() {
         var password = $("#password").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#passwordSpan").find('span').html("密码不能包含中文");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#passwordSpan").find('span').html("密码不能为空");
             $("#passwordSpan").attr("class","cells-block error");
@@ -301,10 +319,9 @@
             $("#passwordSpan").find('span').html("密码不能包含空格");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
-        }else if($.trim(password).length < 6){
+        }else if($.trim(password).length < 6) {
             $("#passwordSpan").find('span').html("请输入6~24位密码");
-            $("#passwordSpan").attr("class","cells-block error");
-
+            $("#passwordSpan").attr("class", "cells-block error");
         }else{
             $("#passwordSpan").attr("class","cells-block error none");
             return true;

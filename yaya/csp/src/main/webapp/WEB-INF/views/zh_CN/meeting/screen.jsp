@@ -70,6 +70,11 @@
 <script src="${ctxStatic}/js/layer/layer.js"></script>
 <script>
     var swiper;
+
+    const delay = 3000;
+
+    var needSendOrder = true;//是否需要发送指令
+
     $(function(){
 
 
@@ -96,9 +101,15 @@
                 } else {
                     swiper.slideTo("${live.livePage}");
                 }
+                needSendOrder = false;
             },
             onSlideChangeEnd:function(swiper){
-                sendOrder(swiper.activeIndex);
+                console.log("need send order = " + needSendOrder);
+                if (needSendOrder){
+                    sendOrder(swiper.activeIndex);
+                }
+                needSendOrder = true;
+                leftTime = totalLeftTime;
             },
         });
 
@@ -106,7 +117,7 @@
 
 
     function skip(pageNo){
-        swiper.slideTo(pageNo, 200, false);
+        swiper.slideTo(pageNo, 100, false);
     }
 
     function show(){
@@ -116,6 +127,9 @@
 </script>
 <script type="text/javascript">
     var scaned = false;
+
+    const totalLeftTime = 3;
+    var leftTime = 3;
 
     var heartbeat_timer = 0;
     var last_health = -1;
@@ -164,12 +178,14 @@
 
         ws.onmessage=function(msg){
             var data = JSON.parse(msg.data);
-            console.log("order = "+data.orderFrom);
-            if (data.order == 1 && data.orderFrom == 'app'){
+            console.log("order = "+data.order + " orderFrom = " + data.orderFrom);
+            if (data.order == 1 && data.orderFrom != 'web'){
                 console.log("skip to page "+data.pageNum);
+                needSendOrder = false;
                 if (scaned){
                     skip(data.pageNum);
                 }
+                needSendOrder = true;
             } else if(data.order == 100){//扫码成功
                 show();
             }
@@ -180,8 +196,16 @@
 
     function sendOrder(pageNo){
         var imgUrl = $(".swiper-slide-active").find("img").attr("src");
-        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
-        myWs.send(JSON.stringify(message));
+        console.log("left time is = " + leftTime);
+        if(leftTime <= 1){
+            var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
+            myWs.send(JSON.stringify(message));
+            console.log("send sync order ");
+            leftTime = totalLeftTime;
+        } else {
+            leftTime --;
+            setTimeout(sendOrder, 1000, pageNo);
+        }
     }
 
 </script>

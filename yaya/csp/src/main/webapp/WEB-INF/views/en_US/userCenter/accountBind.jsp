@@ -39,7 +39,7 @@
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty facebook}">
-                                            <a href="#" class="fr binding-btn color-blue"  action_type="bind" type="3">Bind</a>
+                                            <a href="#" class="fr binding-btn color-blue"  type="3" onclick="facebookLogin()">Bind</a>
                                             <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
@@ -52,7 +52,7 @@
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty twitter}">
-                                            <a href="#" class="fr binding-btn color-blue" id="twitter"  >Bind</a>
+                                            <a href="#" class="fr binding-btn color-blue" id="twitter"  onclick="twitterLogin()">Bind</a>
                                             <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
@@ -95,11 +95,9 @@
         </div>
     </div>
     <%@include file="../include/footer.jsp"%>
+    <%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
 </div>
 
-<form action="${ctx}/mgr/twitterCallback" id="twitterForm" name="twitterForm" method="post">
-    <input type="hidden" id="str" name="str">
-</form>
 
 <!--弹出绑定邮箱step01-->
 <div class="email-popup-box">
@@ -143,8 +141,10 @@
     </div>
 </div>
 
-<script src="${ctxStatic}/js/oauth.twitter.js"></script>
 <script>
+
+
+
 
 
     $(function () {
@@ -167,6 +167,7 @@
                 $("#password").prop("type", "password");
             }
         });
+
 
         //解绑操作
         $("a[action_type='unbind']").click(function () {
@@ -288,6 +289,8 @@
         });
 
 
+
+
     });
 
 
@@ -329,6 +332,7 @@
             return true;
         }
     }
+
 
 
 

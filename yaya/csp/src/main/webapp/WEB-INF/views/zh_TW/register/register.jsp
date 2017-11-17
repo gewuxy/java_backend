@@ -102,6 +102,11 @@
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
+            }else if(isChinesePassword($.trim($password.val()))){
+                $("#errorMessage").text("密碼不能包含中文");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
             }
 
             if (isEmpty($nickname.val())) {

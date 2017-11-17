@@ -250,6 +250,12 @@
 
     function oldPwdValid() {
         var password = $("#pwd").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#oldSpan").find('span').html("密碼不能包含中文");
+            $("#oldSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#oldSpan").find('span').html("舊密碼不能為空");
             $("#oldSpan").attr("class","cells-block error");
@@ -271,6 +277,12 @@
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
         var password = $("#pwd").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(newPwd))){
+            $("#newSpan").find('span').html("新密碼不能包含中文");
+            $("#newSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(newPwd)==''){
             $("#newSpan").find('span').html("新密碼不能為空");
             $("#newSpan").attr("class","cells-block error");
@@ -295,6 +307,12 @@
 
     function checkPwd() {
         var password = $("#password").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#passwordSpan").find('span').html("密碼不能包含中文");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#passwordSpan").find('span').html("密碼不能為空");
             $("#passwordSpan").attr("class","cells-block error");

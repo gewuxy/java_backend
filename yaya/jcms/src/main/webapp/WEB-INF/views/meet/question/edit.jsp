@@ -29,7 +29,7 @@
                                 <div class="title_itram" id="optionView">
                                 <c:forEach items="${question.optionList}" var="op" varStatus="opstatus">
                                     <div class="kzjxx_iteam">
-                                        <input name="rightKeyArr" type="${question.qtype == 0?'radio':'checkbox'}"  value="${opstatus.index+1}"
+                                        <input name="rightKeyArr" mark="mark" type="${question.qtype == 0?'radio':'checkbox'}"  value="${opstatus.index+1}"
                                             <c:if test="${question.qtype == 0 && question.rightKey eq op.key}">checked</c:if>
                                                <c:if test="${question.qtype == 1 && fn:contains(question.rightKey, op.key)}">checked</c:if>
                                                class="dxk">
@@ -53,6 +53,19 @@
         $(function(){
             $(".qxbj_but").click(function(){
                 parent.closeDialog();
+            });
+
+            $(".xxk_title>li").click(function(){
+                var qtype = $(this).attr('data-t');
+                $(".xxk_title li").removeClass();
+                $(this).attr('class',"on");
+               if(qtype == 0){
+                   $(".dxk").attr("type","radio");
+               }else{
+                   $(".dxk").attr("type","checkbox");
+               }
+               $("#qtype").val(qtype);
+
             });
 
             $(".zjxx").click(function(){

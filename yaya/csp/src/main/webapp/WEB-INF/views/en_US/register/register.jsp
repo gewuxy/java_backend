@@ -103,6 +103,11 @@
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
+            }else if(isChinesePassword($.trim($password.val()))){
+                $("#errorMessage").text("The password cannot contain Chinese");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
             }
 
             if (isEmpty($nickname.val())) {

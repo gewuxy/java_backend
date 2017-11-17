@@ -31,6 +31,8 @@ public class LiveOrderDTO implements Serializable{
 
     public static final int ORDER_FLUX_EXHAUSTED = 8;//流量耗尽
 
+    public static final int ORDER_FLUX_AMPLE = 9;//流量充足
+
     public static final int ORDER_SCAN_SUCCESS = 100;
 
     public static final String LIVE_TYPE_PPT = "0";
@@ -132,8 +134,11 @@ public class LiveOrderDTO implements Serializable{
         return order;
     }
 
-    public static void main(String[] args) {
-        float f = 21.829f;
-        System.out.println((int)f);
+    public static LiveOrderDTO buildFluxAmpleOrder(String courseId){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(courseId);
+        order.setOrder(ORDER_FLUX_AMPLE);
+        return order;
     }
+
 }

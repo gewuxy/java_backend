@@ -36,8 +36,8 @@
 
                     <!--切换 登录-->
                     <div class="login-box-main position-button-login">
-                        <a href="${ctx}/mgr/login?thirdPartyId=3" title="Login with Facebook" class=" login-button buttonBlue-02">Login with Facebook</a>
-                        <a href="javascript:;" id="twitter" title="Login with Twitter" class=" login-button buttonBlue-03">Login with Twitter</a>
+                        <a href="javascript:;" title="Login with Facebook" class=" login-button buttonBlue-02" onclick="facebookLogin()">Login with Facebook</a>
+                        <a href="javascript:;" id="twitter" title="Login with Twitter" class=" login-button buttonBlue-03" onclick="twitterLogin()">Login with Twitter</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=7" title="Login by E-mail" class=" login-button buttonBlue">Login by E-mail</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Digital Platform" class=" login-button buttonBlue-04 last">Login with Jingxin Digital Platform</a>
                     </div>
@@ -51,11 +51,7 @@
         </div>
     </div>
 </div>
-<form id="twitterForm" name="twitterForm" action="${ctx}/mgr/twitterCallback" method="post">
-    <input type="hidden" name="str" id="str" value="">
-</form>
-<script src="http://adodson.com/hello.js/dist/hello.all.js"></script>
-<script src="${ctxStatic}/js/oauth.twitter.js"></script>
+<%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
 <script>
     $(function(){
         //让背景撑满屏幕
