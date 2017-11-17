@@ -573,4 +573,27 @@ public class CspUserController extends CspBaseController {
     }
 
 
+    /**
+     * 前端定时请求此接口获取用户信息
+     * @return
+     */
+    @RequestMapping("/info")
+    @ResponseBody
+    public String cspUserInfo() {
+        String userId = SecurityUtils.get().getId();
+        CspUserInfo userInfo = cspUserService.findUserInfoById(userId);
+        // 用户信息
+        CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
+        if (needAvatarPrefix(dto.getAvatar())) {
+            dto.setAvatar(fileBase + dto.getAvatar());
+        }
+
+        // 查询当前用户绑定的第三方平台列表
+        List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userInfo.getId());
+        if (!CheckUtils.isEmpty(bindInfoList)) {
+            dto.setBindInfoList(bindInfoList);
+        }
+
+        return success(dto);
+    }
 }

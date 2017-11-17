@@ -15,6 +15,12 @@
         WHERE u.mobile = #{username} OR u.email = #{username}
     </select>
 
+    <select id="findCspUserById" resultType="cn.medcn.user.model.CspUserInfo">
+        SELECT u.*,f.flux FROM t_csp_user_info u
+        LEFT JOIN t_csp_user_flux f ON u.id = f.user_id
+        WHERE u.id = #{userId}
+    </select>
+
     <select id="findCSPUserInfo" resultType="cn.medcn.user.dto.CspUserInfoDTO">
         SELECT tu.avatar,tu.email,tu.nick_name,tu.mobile,tu.info,count(tc.id) AS pptCount,
         (SELECT count(ts.id)  FROM t_csp_share ts WHERE ts.user_id = #{userId}) AS shareCount

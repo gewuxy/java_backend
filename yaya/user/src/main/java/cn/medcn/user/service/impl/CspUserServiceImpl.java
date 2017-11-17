@@ -102,6 +102,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO;
     }
 
+    @Override
+    public CspUserInfo findUserInfoById(String userId) {
+        return cspUserInfoDAO.findCspUserById(userId);
+    }
 
     @Override
     public CspUserInfo findBindUserByUniqueId(String uniqueId) {

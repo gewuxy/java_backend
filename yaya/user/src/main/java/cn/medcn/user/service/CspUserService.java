@@ -23,6 +23,8 @@ import java.util.List;
  */
 public interface CspUserService extends BaseService<CspUserInfo>{
 
+    CspUserInfo findUserInfoById(String userId);
+
     /**
      * 根据uniqueId 查询用户是否存在
      * @param uniqueId
