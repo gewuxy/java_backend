@@ -109,9 +109,6 @@ public class MeetController extends BaseController {
                         if (!StringUtils.isEmpty(material.getFileUrl())) {
                             material.setFileUrl(appFileBase + material.getFileUrl());
                         }
-                        // TODO 测试数据 发布正式线需删除此代码
-                        String testHtml = "data/17051816413005881649/17082511344000160770/17082511344008521117.html";
-                        material.setHtmlUrl(testHtml);
 
                         // 增加查看html格式文件路径
                         if (!StringUtils.isEmpty(material.getHtmlUrl())) {
