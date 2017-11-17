@@ -154,7 +154,7 @@
         $("#submitBtn").click(function(){
             var $username = $("#username");
             var $password = $("#pwd");
-            if (!isEmail($username.val()) || isMobile($username.val())){
+            if (!isEmail($username.val()) && !isMobile($username.val())){
                 $("#errorIcon").show();
                 $("#errorMessage").text("请输入正确的用户名");
                 $username.focus();
