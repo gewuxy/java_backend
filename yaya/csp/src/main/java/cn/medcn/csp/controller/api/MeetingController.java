@@ -97,8 +97,17 @@ public class MeetingController extends CspBaseController {
      * @return
      */
     @RequestMapping("/share")
-    public String share(String signature, Model model, HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
-        Map<String, Object> params = parseParams(signature);
+    public String share(String signature, Model model, HttpServletRequest request) {
+        String linkError = local("share.link.error");
+        String abroadError = local("share.aboard.error");
+
+        Map<String, Object> params = null;
+        try {
+            params = parseParams(signature);
+        } catch (SystemException e) {
+            model.addAttribute("error", linkError);
+            return localeView("/meeting/share_error");
+        }
         String id = (String) params.get("id");
         String local = (String) params.get(LOCAL_KEY);
         LocalUtils.set(LocalUtils.getByKey(local));
@@ -109,13 +118,15 @@ public class MeetingController extends CspBaseController {
         //boolean isAbroad = false;
         AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
         if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
-            throw new SystemException(local("source.access.deny"));
+            model.addAttribute("error", abroadError);
+            return localeView("/meeting/share_error");
         }
 
         Integer courseId = Integer.valueOf(id);
         AudioCourse course = audioService.findAudioCourse(courseId);
         if (course == null) {
-            throw new SystemException(local("source.not.exists"));
+            model.addAttribute("error", linkError);
+            return localeView("/meeting/share_error");
         }
         if (course.getPlayType() == null) {
             course.setPlayType(0);
@@ -509,6 +520,9 @@ public class MeetingController extends CspBaseController {
     public String onReplay(ZeGoCallBack callback) {
         try {
             callback.signature();
+            if (callback.getReplay_url().endsWith(".m3u8")) {//对于m3u8格式不做处理 只处理mp4格式
+                return success();
+            }
 
             Integer channelId = Integer.valueOf(callback.getChannel_id());
             Live live = liveService.findByCourseId(channelId);
@@ -525,13 +539,17 @@ public class MeetingController extends CspBaseController {
                 if (!dir.exists()){
                     dir.mkdirs();
                 }
-                HttpUtils.copyFromNetwork(replayUrl, videoDirPath + videoName);
+                FileUtils.downloadNetWorkFile(replayUrl, videoDirPath , videoName);
 
                 //检测是否有之前的直播视频
                 if (CheckUtils.isNotEmpty(live.getReplayUrl())) {
                     String oldVideoName = live.getReplayUrl().substring(live.getReplayUrl().lastIndexOf("/") + 1);
-                    if (!videoName.equals(oldVideoName)) {//文件名不相同 需要将两端视频整合为一段
+                    File oldFile = new File(videoDirPath + oldVideoName);
+
+                    if (!videoName.equals(oldVideoName) && oldFile.exists()) {//文件名不相同 需要将两端视频整合为一段
                         FFMpegUtils.concatMp4(videoDirPath + oldVideoName, true, videoDirPath + oldVideoName, videoDirPath + videoName);
+                    } else {
+                        live.setReplayUrl(fileBase + finalReplayPath);
                     }
                 } else {
                     live.setReplayUrl(fileBase + finalReplayPath);
