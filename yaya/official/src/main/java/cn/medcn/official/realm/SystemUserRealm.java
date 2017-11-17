@@ -30,11 +30,6 @@ public class SystemUserRealm extends AuthorizingRealm {
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
         SimpleAuthorizationInfo authorizationInfo = new SimpleAuthorizationInfo();
-        String account = String.valueOf(principalCollection.getPrimaryPrincipal());
-        OffUserInfo user = new OffUserInfo();
-        user.setAccount(account);
-        final OffUserInfo loginUser = offiUserInfoService.selectOne(user);
-        if (loginUser == null) return null;
         return authorizationInfo;
     }
 
@@ -51,13 +46,21 @@ public class SystemUserRealm extends AuthorizingRealm {
         String password = new String(token.getPassword());
         token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
         // 校验用户名密码
-        OffUserInfo condition = new OffUserInfo();
-        condition.setUserName(token.getUsername());
-        OffUserInfo user = offiUserInfoService.selectOne(condition);
-        if (user != null) {
-            Principal principal = Principal.build(user);
-            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
-                    user.getPassword(), getName());
+        OffUserInfo conForMobile = new OffUserInfo();
+        conForMobile.setMobile(token.getUsername());
+        OffUserInfo accountUser = offiUserInfoService.selectOne(conForMobile);
+        OffUserInfo conForEmail = new OffUserInfo();
+        conForEmail.setEmail(token.getUsername());
+        OffUserInfo emailUser = offiUserInfoService.selectOne(conForEmail);
+        if(accountUser != null || emailUser != null){
+            OffUserInfo user = new OffUserInfo();
+            if(accountUser != null){
+                user = accountUser;
+            }else{
+                user = emailUser;
+            }
+            Principal principal = Principal.build(emailUser);
+            SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPassword(), getName());
             if (!getCredentialsMatcher().doCredentialsMatch(token, info)) {
                 throw new AuthenticationException("密码不正确.");
             }
@@ -66,7 +69,7 @@ public class SystemUserRealm extends AuthorizingRealm {
             offiUserInfoService.updateByPrimaryKeySelective(user);
             //登录成功
             return info;
-        } else {
+        }else{
             throw new AuthenticationException("该帐号不存在.");
         }
     }

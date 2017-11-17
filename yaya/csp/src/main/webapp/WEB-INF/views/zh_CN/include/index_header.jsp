@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="fl">
-            <a class="logo" href="https://www.medcn.com"></a>
+            <a class="logo" href="/"></a>
         </div>
     </div>
 </div>

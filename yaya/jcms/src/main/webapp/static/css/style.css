@@ -1525,7 +1525,7 @@ a:hover .minIcon { background-position-y:-26px; }
     align-items: center;
 }
 
-.mettingSwiperBox .swiper-slide video { height:100%; }
+.mettingSwiperBox .swiper-slide video { width: 100%; height:80%; }
 
 .swiper-title { border-bottom:1px solid #dbdbdb; padding-bottom:30px;}
 

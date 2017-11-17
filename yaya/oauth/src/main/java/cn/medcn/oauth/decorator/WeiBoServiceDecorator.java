@@ -29,9 +29,7 @@ public class WeiBoServiceDecorator extends OAuthServiceDecorator {
         user.setUid(jsonObject.getString("id"));
         user.setNickname(jsonObject.getString("screen_name"));
         String location = jsonObject.getString("location");
-        String loc[] = location.split(" ");
-        user.setProvince(loc[0]);
-        user.setCity(loc[1]);
+        user.setProvince(location);
         user.setCountry("cn");
         user.setGender(jsonObject.getString("gender"));
         user.setIconUrl(jsonObject.getString("profile_image_url"));
