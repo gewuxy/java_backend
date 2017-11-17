@@ -295,39 +295,33 @@ public class LoginController extends CspBaseController {
 
     /**
      * 推特回调
-     * @param str
+     * @param user
      * @return
      */
-    @RequestMapping(value="/twitterCallback",method = RequestMethod.POST)
-    public String twitterCallback(String str, HttpServletResponse response,RedirectAttributes redirectAttributes)  {
-
-        if(StringUtils.isEmpty(str)){
-            return "";
+    @RequestMapping(value="/jsCallback",method = RequestMethod.POST)
+    public String twitterCallback(OAuthUser user, HttpServletResponse response,RedirectAttributes redirectAttributes) throws SystemException {
+        if(user == null){
+            throw new SystemException("can't get userInfo");
         }
-
+        System.out.println(user.getPlatformId());
         Principal principal =  getWebPrincipal();
         //登录回调
         if(principal == null){
-            //将json转为OauthUser对象
-            String uid = (String)JsonUtils.getValue(str,"id_str");
-            OAuthUser oAuthUser = new OAuthUser();
-            oAuthUser.setIconUrl((String)JsonUtils.getValue(str,"profile_image_url"));
-            oAuthUser.setNickname((String)JsonUtils.getValue(str,"name"));
-            oAuthUser.setUid(uid);
+
             // 根据第三方用户唯一id 查询用户是否存在
-            CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uid);
-            doThirdPartWebLogin(BindInfo.Type.TWITTER.getTypeId(), oAuthUser, userInfo, response);
+            CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(user.getUid());
+            doThirdPartWebLogin(user.getPlatformId(), user, userInfo, response);
             return "redirect:/mgr/meet/list";
         }else{  //绑定回调
 
-            //将json转为BindInfo对象
+            //将OauthUser转为BindInfo对象
             BindInfo info = new BindInfo();
-            info.setThirdPartyId(BindInfo.Type.TWITTER.getTypeId());
-            info.setUniqueId((String)JsonUtils.getValue(str,"id_str"));
+            info.setThirdPartyId(user.getPlatformId());
+            info.setUniqueId(user.getUid());
             info.setId(StringUtils.nowStr());
             info.setBindDate(new Date());
-            info.setAvatar((String)JsonUtils.getValue(str,"profile_image_url"));
-            info.setNickName((String)JsonUtils.getValue(str,"name"));
+            info.setAvatar(user.getIconUrl());
+            info.setNickName(user.getNickname());
             try {
                 cspUserService.doBindThirdAccount(info,principal.getId());
             } catch (SystemException e) {

@@ -78,7 +78,7 @@
                 /mgr/register=anon
                 /mgr/to/reset/password=anon
                 /mgr/oauth/callback=anon
-                /mgr/twitterCallback=anon
+                /mgr/jsCallback=anon
                 /mgr/sendCaptcha=anon
                 /mgr/**=authc
             </value>
