@@ -305,6 +305,12 @@
 
     function checkPwd() {
         var password = $("#password").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#passwordSpan").find('span').html("密码不能包含中文");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#passwordSpan").find('span').html("密码不能为空");
             $("#passwordSpan").attr("class","cells-block error");

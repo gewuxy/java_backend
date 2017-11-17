@@ -307,6 +307,12 @@
 
     function checkPwd() {
         var password = $("#password").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#passwordSpan").find('span').html("The password can not contain Chinese");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#passwordSpan").find('span').html("please enter password");
             $("#passwordSpan").attr("class","cells-block error");
