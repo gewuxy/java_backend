@@ -303,7 +303,6 @@ public class LoginController extends CspBaseController {
         if(user == null){
             throw new SystemException("can't get userInfo");
         }
-        System.out.println(user.getPlatformId());
         Principal principal =  getWebPrincipal();
         //登录回调
         if(principal == null){

@@ -250,6 +250,12 @@
 
     function oldPwdValid() {
         var password = $("#pwd").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(password))){
+            $("#oldSpan").find('span').html("Password can not contain Chinese");
+            $("#oldSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(password)==''){
             $("#oldSpan").find('span').html("please enter old password");
             $("#oldSpan").attr("class","cells-block error");
@@ -271,6 +277,12 @@
     function newPwdValid() {
         var newPwd = $("#rePwd").val();
         var password = $("#pwd").val();
+        var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+        if(reg.test($.trim(newPwd))){
+            $("#newSpan").find('span').html("The new password can not contain Chinese");
+            $("#newSpan").attr("class","cells-block error");
+            return false;
+        }
         if ($.trim(newPwd)==''){
             $("#newSpan").find('span').html("please enter new password");
             $("#newSpan").attr("class","cells-block error");
