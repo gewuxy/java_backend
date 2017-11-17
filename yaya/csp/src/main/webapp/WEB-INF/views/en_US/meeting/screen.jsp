@@ -70,8 +70,12 @@
 <script src="${ctxStatic}/js/layer/layer.js"></script>
 <script>
     var swiper;
-    $(function(){
 
+    const delay = 3000;
+
+    var needSendOrder = true;//是否需要发送指令
+
+    $(function(){
 
 
         //调整高度
@@ -99,7 +103,10 @@
                 }
             },
             onSlideChangeEnd:function(swiper){
-                sendOrder(swiper.activeIndex);
+                if (needSendOrder){
+                    sendOrder(swiper.activeIndex);
+                }
+                needSendOrder = true;
             },
         });
 
@@ -107,7 +114,7 @@
 
 
     function skip(pageNo){
-        swiper.slideTo(pageNo, 200, false);
+        swiper.slideTo(pageNo, 100, false);
     }
 
     function show(){
@@ -165,9 +172,10 @@
 
         ws.onmessage=function(msg){
             var data = JSON.parse(msg.data);
-            console.log("order = "+data.orderFrom);
-            if (data.order == 1 && data.orderFrom == 'app'){
+            console.log("order = "+data.order + " orderFrom = " + data.orderFrom);
+            if (data.order == 1 && data.orderFrom != 'web'){
                 console.log("skip to page "+data.pageNum);
+                needSendOrder = false;
                 if (scaned){
                     skip(data.pageNum);
                 }
@@ -181,8 +189,12 @@
 
     function sendOrder(pageNo){
         var imgUrl = $(".swiper-slide-active").find("img").attr("src");
-        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
-        myWs.send(JSON.stringify(message));
+        setTimeout(function(){
+
+            var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
+            myWs.send(JSON.stringify(message));
+
+        }, delay);
     }
 
 </script>

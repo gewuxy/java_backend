@@ -97,8 +97,17 @@ public class MeetingController extends CspBaseController {
      * @return
      */
     @RequestMapping("/share")
-    public String share(String signature, Model model, HttpServletRequest request) throws SystemException, UnsupportedEncodingException {
-        Map<String, Object> params = parseParams(signature);
+    public String share(String signature, Model model, HttpServletRequest request) {
+        String linkError = local("share.link.error");
+        String abroadError = local("share.aboard.error");
+
+        Map<String, Object> params = null;
+        try {
+            params = parseParams(signature);
+        } catch (SystemException e) {
+            model.addAttribute("error", linkError);
+            return localeView("/meeting/share_error");
+        }
         String id = (String) params.get("id");
         String local = (String) params.get(LOCAL_KEY);
         LocalUtils.set(LocalUtils.getByKey(local));
@@ -109,13 +118,15 @@ public class MeetingController extends CspBaseController {
         //boolean isAbroad = false;
         AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
         if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
-            throw new SystemException(local("source.access.deny"));
+            model.addAttribute("error", abroadError);
+            return localeView("/meeting/share_error");
         }
 
         Integer courseId = Integer.valueOf(id);
         AudioCourse course = audioService.findAudioCourse(courseId);
         if (course == null) {
-            throw new SystemException(local("source.not.exists"));
+            model.addAttribute("error", linkError);
+            return localeView("/meeting/share_error");
         }
         if (course.getPlayType() == null) {
             course.setPlayType(0);

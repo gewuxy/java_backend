@@ -307,7 +307,7 @@ public class MeetingMgrController extends CspBaseController {
             result = fileUploadService.upload(file, dir);
         } catch (SystemException e) {
             e.printStackTrace();
-            return APIUtils.error(e.getMessage());
+            return error(e.getMessage());
         }
         AudioCourseDetail detail = new AudioCourseDetail();
         detail.setCourseId(courseId);
@@ -317,6 +317,7 @@ public class MeetingMgrController extends CspBaseController {
             detail.setImgUrl(result.getRelativePath());
         } else {
             detail.setVideoUrl(result.getRelativePath());
+            detail.setImgUrl(dir + "/" + FFMpegUtils.printScreen(fileUploadBase + result.getRelativePath()));
         }
 
         audioService.addDetail(detail);
