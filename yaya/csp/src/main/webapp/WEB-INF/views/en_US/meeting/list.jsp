@@ -113,7 +113,7 @@
                     closeBtn:0,
                     content: $('.copy-popup-box'),
                     success:function(){
-                        $("#courseTitle").val(courseTitle + "_副本");
+                        $("#courseTitle").val(courseTitle + "_copy");
                     },
                     cancel :function(){
 

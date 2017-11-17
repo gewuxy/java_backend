@@ -326,6 +326,8 @@ public class HttpUtils {
             byte[] data = readInputStream(inStream);
             File imageFile = new File(savePath);
             outputStream = new FileOutputStream(imageFile);
+
+
             outputStream.write(data);
         }catch (Exception e){
             e.printStackTrace();
