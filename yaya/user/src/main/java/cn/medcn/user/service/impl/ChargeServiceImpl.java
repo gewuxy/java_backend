@@ -64,7 +64,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("channel", channel);
         chargeParams.put("currency", "cny");
         chargeParams.put("client_ip", ip);
-        chargeParams.put("subject", "charge flux");
+        chargeParams.put("subject", "流量充值");
         chargeParams.put("body", "charge flux");
 
         Map<String, String> extraMap = null;

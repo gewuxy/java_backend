@@ -313,12 +313,12 @@ public class UserCenterController extends CspBaseController{
      */
    @RequestMapping("/toFlux")
     public String toFlux(Pageable pageable,Model model){
+        pageable.setPageSize(3);
         addBaseUserInfo(model);
         String userId = getWebPrincipal().getId();
         pageable.put("userId",userId);
         int flux = cspUserService.findFlux(userId);
         model.addAttribute("flux",flux);
-        model.addAttribute("now",new Date());
         //直播视频记录
         MyPage<VideoLiveRecordDTO> myPage = cspUserService.findVideoLiveRecord(pageable);
         VideoLiveRecordDTO.transExpireDay(myPage.getDataList());
