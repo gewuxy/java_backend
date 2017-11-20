@@ -60,4 +60,19 @@ public class SearchController extends BaseController{
         return "/search/searchList";
     }
 
+    /**
+     * 返回详细内容
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value="/detail/{id}")
+    public String detailView(@PathVariable String id,Model model){
+        Article article = new Article();
+        article.setId(id);
+        article  = articleService.selectOne(article);
+        model.addAttribute("article",article);
+        return "/search/searchDetail";
+    }
+
 }

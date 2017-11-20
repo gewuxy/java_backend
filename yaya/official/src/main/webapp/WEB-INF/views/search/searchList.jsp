@@ -32,8 +32,12 @@
                             </div>
                         </div>
                     </div>
-                    <p class="v2-searchText-error none">没有查找到相关结果，我们正在努力搜集数据!</p>
-                    <p class="v2-searchText ">搜索结果：${keyWords} </p>
+                    <c:if test="${not empty page.dataList}">
+                        <p class="v2-searchText ">搜索结果：${keyWords} </p>
+                    </c:if>
+                    <c:if test="${empty page.dataList}">
+                        <p class="v2-searchText-error none">没有查找到相关结果，我们正在努力搜集数据!</p>
+                    </c:if>
                     <div class="v2-newsList-bottomBorder">
                         <ul>
                             <c:if test="${not empty page.dataList}">
