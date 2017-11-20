@@ -37,7 +37,7 @@
                             <div class="clear"></div>
                         </div>
                         <div class="clearfix" style="margin-bottom:5px;">
-                            <a href="javascript:void(0);" class="v2-login-button v2-blue-button" onclick="loginCheck();">登录</a>
+                            <a href="javascript:void(0);" class="v2-login-button v2-blue-button" onclick="login();">登录</a>
                         </div>
                     </form>
                     <div class="v2-login_box" style="margin-bottom:35px;">
