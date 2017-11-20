@@ -497,6 +497,7 @@ public class MeetingController extends CspBaseController {
         try {
             callback.signature();
             Integer channelId = Integer.valueOf(callback.getChannel_id());
+            //liveService.publish(LiveOrderDTO.buildVideoLiveCloseOrder(String.valueOf()));
             Live live = liveService.findByCourseId(channelId);
             if (live != null) {
                 live.setLiveState(Live.LiveState.closed.ordinal());

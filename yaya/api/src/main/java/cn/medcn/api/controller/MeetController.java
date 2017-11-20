@@ -409,7 +409,10 @@ public class MeetController extends BaseController {
                 String socketUrl = wsBase + "?courseId="+ course.getId();
                 audioDTO.setSocketUrl(socketUrl);
 //                //添加视频直播
-//                Live live = liveService.findByCourseId(course.getId());
+                Live live = liveService.findByCourseId(course.getId());
+                if (live != null) {
+                    audioDTO.setLiveState(live.getLiveState());
+                }
 //                audioDTO.setVideoLive(live);
             }
         }
