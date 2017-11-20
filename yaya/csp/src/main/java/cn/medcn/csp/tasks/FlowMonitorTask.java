@@ -38,14 +38,18 @@ public class FlowMonitorTask implements Runnable {
 
                     LogUtils.debug(log, "直播会议["+courseId+"] 流量耗尽...");
 
-                    LiveOrderHandler.sendToPoint(sessionMap.get(courseId), LiveOrderDTO.buildFluxExhaustedOrder(courseId));
+                    LiveOrderHandler.sendToSpeaker(courseId, LiveOrderDTO.buildFluxExhaustedOrder(courseId));
+
+                    //LiveOrderHandler.sendToPoint(sessionMap.get(courseId), LiveOrderDTO.buildFluxExhaustedOrder(courseId));
 
                 } else if (flux.getFlux() < CspConstants.FLUX_WARN_THRESHOLD) {//流量不足预警阈值
 
                     LogUtils.debug(log, "直播会议["+courseId+"] 流量不足...");
 
-                    LiveOrderHandler.sendToPoint(sessionMap.get(courseId), LiveOrderDTO.buildFluxNotEnoughOrder(courseId));
-
+                    //LiveOrderHandler.sendToPoint(sessionMap.get(courseId), LiveOrderDTO.buildFluxNotEnoughOrder(courseId));
+                    LiveOrderHandler.sendToSpeaker(courseId, LiveOrderDTO.buildFluxNotEnoughOrder(courseId));
+                } else {
+                    LiveOrderHandler.sendToSpeaker(courseId, LiveOrderDTO.buildFluxAmpleOrder(courseId));
                 }
 
                 int onlineUsers = LiveOrderHandler.onlineFluxUsers(courseId);

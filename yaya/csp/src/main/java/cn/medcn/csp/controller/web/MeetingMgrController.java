@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("accepterList", myPage.getDataList());
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
-        sortType = CheckUtils.isEmpty(sortType) ? "desc" : "asc";
+        sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
@@ -200,6 +201,7 @@ public class MeetingMgrController extends CspBaseController {
                 course.setShared(false);
                 course.setCspUserId(principal.getId());
                 course.setTitle("");
+                course.setCreateTime(new Date());
                 course.setSourceType(AudioCourse.SourceType.csp.ordinal());
                 audioService.insert(course);
             }

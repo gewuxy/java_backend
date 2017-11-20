@@ -23,8 +23,6 @@
                                 </label>
                             </p>
                         </div>
-
-
                         <div class="v2-login_box" style="position:relative">
                             <div class="fl color-gray">
                                 <input type="checkbox" id="rememberMe" name="rememberMe" class="chk_1">
@@ -68,7 +66,7 @@
                                 <div class="v2-login_box">
                                     <p>
                                         <label for="" class="pr">
-                                            <input type="text" id="registaccount" name="account" class="input-border textInput" placeholder="输入手机号或邮箱"><span class="formIconTips"></span><span class="errorText hide"></span>
+                                            <input type="text" id="registAccount" name="account" class="input-border textInput" placeholder="输入手机号或邮箱"><span class="formIconTips"></span><span class="errorText hide"></span>
                                         </label>
                                     </p>
                                 </div>
@@ -110,8 +108,8 @@
                                 </div>
                                 <div class="v2-login_box" style="position:relative">
                                     <div class="fl color-gray">
-                                        <input type="checkbox" id="checkbox_3" class="chk_1">
-                                        <label for="checkbox_3">
+                                        <input type="checkbox" id="isAgree" class="chk_1">
+                                        <label for="isAgree">
                                             <i class="ico"></i>
                                             我已阅读并接受《协议书》
                                         </label>

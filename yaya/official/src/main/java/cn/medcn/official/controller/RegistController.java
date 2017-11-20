@@ -66,7 +66,7 @@ public class RegistController extends BaseController{
     private EmailHelper emailHelper;
 
     /**
-     * 生成短信验证码给前端
+     * 发送验证码到用户手机或者邮箱
      * @return
      */
     @RequestMapping("/get_captcha")
@@ -80,14 +80,22 @@ public class RegistController extends BaseController{
 
     }
 
+    /**
+     * 发送邮件
+     * @param account
+     * @return
+     */
     private String sendEmail(String account){
-        String code = UUIDUtil.getUUID();
-        account += code;
-        redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY+code, account, (int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));//缓存24小时
+        String code = UUIDUtil.getRandom6();  //生成验证码
+        Captcha captcha = new Captcha();
+        captcha.setFirstTime(new Date());
+        captcha.setCount(Constants.NUMBER_ONE);
+        captcha.setMsgId(code);
+        redisCacheUtils.setCacheObject(account,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
         MailBean mailBean = new MailBean();
         mailBean.setSubject("注册");
         try {
-            emailHelper.sendMailByType(mailBean, account, account,0);
+            emailHelper.sendMailByType(mailBean, account, code,2);
         } catch (IOException e) {
             e.printStackTrace();
             return error("邮件发送失败,可能是邮箱地址不可用");
@@ -101,28 +109,49 @@ public class RegistController extends BaseController{
         return success();
     }
 
+    /**
+     * 注册
+     * @param account
+     * @param captcha
+     * @param password
+     * @param province
+     * @param city
+     * @return
+     */
     @RequestMapping(value="/do_register", method = RequestMethod.POST)
     @ResponseBody
-    public String register(String mobile,String captcha,String password,String province,String city) {
-        String data = checkData(mobile,captcha,password);
+    public String register(String account,String captcha,String password,String province,String city) {
+        String data = checkData(account,captcha,password);
         if( data != null){
             return data;
         }
-        OffUserInfo user = new OffUserInfo();
-        user.setMobile(mobile);
-        if(offiUserInfoService.selectOne(user) != null){
-            return setMsg("mobile","该手机号码已注册");
+        OffUserInfo userForMobile = new OffUserInfo();
+        userForMobile.setMobile(account);
+        if(offiUserInfoService.selectOne(userForMobile) != null){
+            return setMsg("registAccount","该手机号码已注册");
         }
-        Captcha captcha1 = (Captcha)redisCacheUtils.getCacheObject(mobile);
+        OffUserInfo userForEmail = new OffUserInfo();
+        userForEmail.setEmail(account);
+        if(offiUserInfoService.selectOne(userForEmail) != null){
+            return setMsg("registAccount","该邮箱已注册");
+        }
+        Captcha captcha1 = (Captcha)redisCacheUtils.getCacheObject(account);
         try {
-            if(!jSmsService.verify(captcha1.getMsgId(),captcha)){
-                return setMsg("captcha","验证码不正确");
+            if(RegexUtils.checkMobile(account)){
+                if(!jSmsService.verify(captcha1.getMsgId(),captcha)) return setMsg("captcha","验证码不正确");
+            }else{
+                if(!captcha1.getMsgId().equals(captcha))  return setMsg("captcha","验证码不正确");
             }
         } catch (Exception e) {
             return setMsg("captcha","验证码已被校验，请重新获取验证码");
         }
+        OffUserInfo user = new OffUserInfo();
+        if (RegexUtils.checkMobile(account)) {
+            user.setMobile(account);
+        } else {
+            user.setEmail(account);
+        }
         user.setPassword(MD5Utils.MD5Encode(password));
-        user.setAccount(mobile);
         Integer info = offiUserInfoService.insertSelective(user);
         if (info != null){
             return setMsg("mobile","注册失败，请重试");
@@ -160,12 +189,12 @@ public class RegistController extends BaseController{
     }
 
 
-    private String checkData(String phone,String captcha,String password){
-        if(StringUtils.isEmpty(phone)){
-            return setMsg("registaccount","手机号码不能为空");
+    private String checkData(String account,String captcha,String password){
+        if(StringUtils.isEmpty(account)){
+            return setMsg("registAccount","手机或者邮箱不能为空");
         }
-        if(!RegexUtils.checkMobile(phone)){
-            return setMsg("registaccount","手机号码格式不对");
+        if(!RegexUtils.checkMobile(account) && !RegexUtils.checkEmail(account)){
+            return setMsg("registAccount","手机或者邮箱格式不对");
         }
         if(StringUtils.isEmpty(captcha)){
             return setMsg("captcha","验证码不能为空");

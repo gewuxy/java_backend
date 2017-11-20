@@ -201,6 +201,11 @@ function isPassword(val){
     return reg.test(val);
 }
 
+function isChinesePassword(val) {
+    var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
+    return reg.test(val);
+}
+
 function isChinseName(val){
     var reg = /^[\u4e00-\u9fa5]+$/i;
     return reg.test(val);

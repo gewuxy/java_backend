@@ -49,7 +49,7 @@ public class MaterialTest {
             material.setCreateTime(new Date());
             material.setMaterialType("html");
             material.setInfinityId("0");
-            material.setHtmlUrl("pubmaterial/" + material.getId() + ".html");
+            material.setHtmlUrl("pubmaterial/" + rare.getId() + ".html");
 
             materialDAO.insert(material);
         }

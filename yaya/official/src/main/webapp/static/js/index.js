@@ -84,12 +84,12 @@ var count = 60; //间隔函数，1秒执行
 var curCount;//当前剩余秒数
 
 function sendMessage() {
-    var account = $("#registaccount").val();
+    var account = $("#registAccount").val();
     if (!isMobile(account) && !isEmail(account)){
-        styleChange("registaccount",1,"请填写正确的手机或邮箱")
+        styleChange("registAccount",1,"请填写正确的手机或邮箱")
         return false;
     }else{
-        styleChange("registaccount",1,"")
+        styleChange("registAccount",2,"")
     }
     var type = 1;  //手机
     if(isEmail(account)) type = 2;  //邮箱
@@ -136,12 +136,12 @@ function SetRemainTime() {
 //-----------------校验注册表单-----------------------
 
 function checkForm(){
-    var mobile = $("#mobile").val();
-    if (!isMobile(mobile)){
-        styleChange("mobile",1,"请填写正确的手机号码");
+    var account = $("#registAccount").val();
+    if (!isMobile(account) && !isEmail(account)){
+        styleChange("registAccount",1,"请填写正确的手机号码");
         return false;
     }else{
-        styleChange("mobile",2,"");
+        styleChange("registAccount",2,"");
     }
     var captcha = $("#captcha").val();
     if (!/^\d{6}/g.test(captcha)){
@@ -154,6 +154,8 @@ function checkForm(){
     if($.trim(password) == '' ){
         styleChange("registPassword",1,"密码不能为空");
         return false;
+    }else{
+        styleChange("registPassword",2,"");
     }
     if (!(password.length>=6 && password.length <=24)){
         styleChange("registPassword",1,"密码格式长度为6-24位");
@@ -161,18 +163,18 @@ function checkForm(){
     }else{
         styleChange("registPassword",2,"");
     }
-    var agentPass = $("#commitPassword").val();
-    if(agentPass != password){
+    var commitPass = $("#commitPassword").val();
+    if(commitPass != password){
         styleChange("commitPassword",1,"两次密码输入不一致");
         return false;
     }else{
         styleChange("commitPassword",2,"");
     }
-    if(!$('#checkbox_3').is(':checked')){
-        $('#checkbox_3').next().next().removeClass("hide").html("请同意注册条款");
+    if(!$('#isAgree').is(':checked')){
+        $('#isAgree').next().next().removeClass("hide").html("请同意注册条款");
         return false;
     }else{
-        $('#checkbox_3').next().next().addClass("hide").html("");
+        $('#isAgree').next().next().addClass("hide").html("");
     }
     return true;
 }
@@ -186,8 +188,8 @@ $("#registBtn").click(function(){
     if(checkForm()){
         $.post($("#registForm").attr("action"), $("#registForm").serialize(),function (data) {
             if(data.code == 0){
-                layer.msg("success");
-                window.location.href = ctx + "/user/userInfo";
+                alert("注册成功，请登录！")
+                $(".fx-btn-1").click();
             }else{
                 styleChange(data.data.id,1,data.data.msg);
             }

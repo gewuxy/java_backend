@@ -343,4 +343,20 @@ public class LiveOrderHandler extends TextWebSocketHandler {
         return onLines;
     }
 
+    /**
+     * 发送消息给主持人
+     * @param courseId
+     * @param order
+     */
+    public static void sendToSpeaker (String courseId, LiveOrderDTO order){
+        Map<String , WebSocketSession> map = sessionMap.get(courseId);
+        if (map != null){
+            for (WebSocketSession session : map.values()) {
+                if (session.getAttributes().get(Constants.TOKEN) != null) {
+                    sendToPoint(session, order);
+                }
+            }
+        }
+    }
+
 }
