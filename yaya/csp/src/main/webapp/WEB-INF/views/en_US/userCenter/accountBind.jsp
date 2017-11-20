@@ -141,6 +141,24 @@
     </div>
 </div>
 
+<!--弹出解绑-->
+<div class="cancel-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Are you sure you want to unbundled this account?</p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
 
 
@@ -172,19 +190,30 @@
         //解绑操作
         $("a[action_type='unbind']").click(function () {
             var type = $(this).attr("type");
-            layer.confirm("Are you sure to unblock this account?",function () {
-                $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
-                    if (data.code == 0){
-                        layer.msg('unbind success',{
-                            time: 300
-                        },function(){
-                            window.location.href = "${ctx}/mgr/user/toAccount";
-                        });
-                    }else{
-                        layer.msg(data.err);
-                    }
-                },'json');
+            layer.open({
+                type: 1,
+                area: ['440px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                btn: ["Confirm","Cancel"],
+                content: $('.cancel-popup-box'),
+                yes:function () {
+                    $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
+                        if (data.code == 0){
+                            layer.msg('Unbundled successfully',{
+                                time: 300
+                            },function(){
+                                window.location.href = "${ctx}/mgr/user/toAccount";
+                            });
+                        }else{
+                            layer.msg(data.err);
+                        }
+                    },'json');
+                },
+
             });
+
         });
 
 
