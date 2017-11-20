@@ -79,8 +79,8 @@ public class BindController extends BaseController {
     public String bind(String scene_id, HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.setCookie(response, WeixinConfig.SCENE_ID_KEY, scene_id);
         //String unionId = CookieUtils.getCookieValue(request, WeixinConfig.COOKIE_NAME_UNION_ID);
-        CookieUtils.clearCookie(request, WeixinConfig.COOKIE_NAME_OPEN_ID);
-        CookieUtils.clearCookie(request, WeixinConfig.COOKIE_NAME_UNION_ID);
+        CookieUtils.clearCookie(response, WeixinConfig.COOKIE_NAME_OPEN_ID);
+        CookieUtils.clearCookie(response, WeixinConfig.COOKIE_NAME_UNION_ID);
         //如果已经绑定 直接跳转到个人中心
         return "/weixin/bind";
     }
@@ -132,7 +132,7 @@ public class BindController extends BaseController {
      * @throws SystemException
      */
     @RequestMapping(value = "/bind", method = RequestMethod.POST)
-    public String bind(HttpServletRequest request, String username, String password, Model model, RedirectAttributes redirectAttributes) {
+    public String bind(HttpServletRequest request, HttpServletResponse response, String username, String password, Model model, RedirectAttributes redirectAttributes) {
         model.addAttribute("username", username);
         model.addAttribute("password", password);
         if (CheckUtils.isEmpty(username)) {
@@ -166,7 +166,7 @@ public class BindController extends BaseController {
         appUser.setWxUserInfo(wxUserInfo);
         appUserService.doBindUserAndAttention(appUser, CheckUtils.isEmpty(sceneId) ? null : Integer.parseInt(sceneId));
         //cacheUserInfo(appUser);
-        clearSceneCookie(request);
+        clearSceneCookie(response);
         addFlashMessage(redirectAttributes, "绑定YaYa医师账号成功");
         return "redirect:/weixin/user/info";
     }
@@ -207,7 +207,7 @@ public class BindController extends BaseController {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public String register(@Validated AppUserDTO appUserDTO, HttpServletRequest request, Model model, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
+    public String register(@Validated AppUserDTO appUserDTO, HttpServletRequest request, HttpServletResponse response, Model model, RedirectAttributes redirectAttributes, BindingResult bindingResult) {
         try {
             resolveValidateResult(bindingResult);
         } catch (SystemException e) {
@@ -243,7 +243,7 @@ public class BindController extends BaseController {
         } catch (SystemException e) {
             return registerError(model, appUserDTO, request, e.getMessage());
         }
-        return bind(request, appUser.getMobile(), appUserDTO.getPassword(), model, redirectAttributes);
+        return bind(request, response, appUser.getMobile(), appUserDTO.getPassword(), model, redirectAttributes);
     }
 
     private boolean hadCheckInvite(String hosName, String invite) {
@@ -270,10 +270,10 @@ public class BindController extends BaseController {
     /**
      * 清除场景cookie
      *
-     * @param request
+     * @param response
      */
-    private void clearSceneCookie(HttpServletRequest request) {
-        CookieUtils.clearCookie(request, WeixinConfig.SCENE_ID_KEY);
+    private void clearSceneCookie(HttpServletResponse response) {
+        CookieUtils.clearCookie(response, WeixinConfig.SCENE_ID_KEY);
     }
 
 
