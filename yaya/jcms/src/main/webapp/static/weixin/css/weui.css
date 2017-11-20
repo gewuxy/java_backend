@@ -2184,8 +2184,8 @@ input[type="search"]::-webkit-search-results-decoration {
   top: 0;
   right: 0;
   height: 1px;
-  border-top: 1px solid #a1a1a1;
-  color: #a1a1a1;
+  border-top: 1px solid #000;
+  color: #000;
   -webkit-transform-origin: 0 0;
           transform-origin: 0 0;
   -webkit-transform: scaleY(0.5);
@@ -2198,8 +2198,8 @@ input[type="search"]::-webkit-search-results-decoration {
   bottom: 0;
   right: 0;
   height: 1px;
-  border-bottom: 1px solid #a1a1a1;
-  color: #a1a1a1;
+  border-bottom: 1px solid #000;
+  color: #000;
   -webkit-transform-origin: 0 100%;
           transform-origin: 0 100%;
   -webkit-transform: scaleY(0.5);
@@ -2210,6 +2210,7 @@ input[type="search"]::-webkit-search-results-decoration {
   top: 0;
   left: 0;
   width: 100%;
+  z-index: 4;
 }
 .weui-picker__item {
   padding: 5px 0 4px;
