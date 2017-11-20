@@ -17,15 +17,19 @@
                                 <a class="first-level" href="${ctx}/index"><strong class="first-level-min">首页</strong></a><i></i>
                             </li>
                             <li >
-                                <a class="first-level" target="_blank" href="javascript:;"><strong
-                                        class="first-level-min">健康动态</strong></a><i></i>
+                                <a class="first-level"  href="javascript:;">
+                                    <strong class="first-level-min">健康动态</strong>
+                                </a><i></i>
                                 <ul>
-                                    <li><a href="newList.html">医药动态</a></li>
-                                    <li><a href="newList.html">安全用药</a></li>
+                                    <li><a href="${ctx}/news/list?type=1">医药动态</a></li>
+                                    <li><a href="${ctx}/news/list?type=2">安全用药</a></li>
                                 </ul>
                             </li>
                             <li>
-                                <a class="first-level" href="javascript:;"><strong class="first-level-min">我的工具</strong></a><i></i>
+                                <a class="first-level" href="javascript:;">
+                                    <strong class="first-level-min">我的工具</strong>
+                                </a>
+                                <i></i>
                                 <ul>
                                     <li><a href="searchItem-01.html">药师建议</a></li>
                                     <li><a href="searchItem-03.html">医师建议</a></li>

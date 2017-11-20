@@ -5,37 +5,6 @@
   Time: 13:41
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<div class="v2-main">
-    <div class="page-width clearfix">
-        <div class="clearfix " style="margin-bottom:20px;">
-            <div class="row" id="firstRow">
-
-                <div class="col-lg-3">
-                    <div class="v2-news-list">
-                        <div class="v2-news-title">
-                            <a href="list.html" class="more fr">更多&gt;&gt;</a>
-                            <h3>公司动态</h3>
-                        </div>
-                        <div class="v2-news-main">
-                            <ul>
-                                <li><a href="detail.html">"YaYa医师"亮相第六届中国国际版权</a></li>
-                                <li><a href="detail.html">"YaYa医师"亮相第六届中国国际版权</a></li>
-                                <li><a href="detail.html">"YaYa医师"亮相第六届</a></li>
-                                <li><a href="detail.html">"YaYa医师"亮相第六届中国国际版权</a></li>
-                                <li><a href="detail.html">"YaYa医师"亮相第六届中国国际版权</a></li>
-                                <li><a href="detail.html">"YaYa医师"亮相第六届中国国际版权</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="v2-entry-area clearfix"></div>
-        <div class="t-center">
-            <a href="#" class="v2-more-button">点击查看更多</a>
-        </div>
-    </div>
-</div>
 <div class="v2-bottom">
     <div class="page-width clearfix">
         <div class="row">
