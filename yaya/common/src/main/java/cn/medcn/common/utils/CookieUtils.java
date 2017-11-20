@@ -84,14 +84,10 @@ public class CookieUtils {
 
     /**
      * 清除cookie
-     * @param request
+     * @param response
      * @param key
      */
-    public static void clearCookie(HttpServletRequest request, String key){
-        Cookie cookie = getCookie(request, key);
-        if (cookie != null){
-            cookie.setPath("/");
-            cookie.setMaxAge(0);
-        }
+    public static void clearCookie(HttpServletResponse response, String key){
+        setCookie(response, key, null, 0);
     }
 }

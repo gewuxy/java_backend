@@ -225,9 +225,10 @@ public class MeetingMgrController extends CspBaseController {
 
         if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             model.addAttribute("live", liveService.findByCourseId(course.getId()));
-            UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-            model.addAttribute("flux", flux == null ? 0 : flux.getFlux() / 1024);
         }
+        UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
+        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
+        model.addAttribute("flux", fluxValue);
 
         return localeView("/meeting/edit");
     }
