@@ -296,10 +296,10 @@
 </div>
 <div class="v2-footer">
     <div class="page-width clearfix">
-        <p class="t-center"><a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备12087993号</a> <a target="_blank"
+        <p class="t-center"><img src="${ctxStatic}/images/icp.png" align="absmiddle"/> 粤公网安备 44010602003210号 <a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备12087993号</a> <a target="_blank"
                                                                                                         href="http://www.medcn.com/upload/temp/service_certificate.pdf">互联网药品信息经营资格证：（粤）—经营性—2013—0001</a>    © 2012-2017  敬信公司 版权所有 | <a
                 href="http://www.medcn.com/help/disclaimer">免责声明</a> | <a href="http://www.medcn.com/help/updatelog">更新日志</a>
-            &nbsp;&nbsp;联系电话 : 020-38601688
+            <%--&nbsp;&nbsp;联系电话 : 020-38601688--%>
         </p>
     </div>
 </div>
