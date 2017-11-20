@@ -40,6 +40,12 @@ public class UUIDUtil {
         return ret;
     }
 
+    public static String getRandom6(){
+        Random random = new Random();
+        String ret = (random.nextInt(90000)+100000)+"";
+        return ret;
+    }
+
     public static void main(String[] args) {
 
         String id = null;
