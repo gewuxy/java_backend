@@ -32,7 +32,7 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content item-radius">
-                            <h4>视频直播记录 <span>剩余流量 <i>${flux == 0 || empty flux? 0:flux/1024}</i>G</span></h4>
+                            <h4>视频直播记录 <span>剩余流量 <i><fmt:formatNumber type="number" value="${flux/1024}" maxFractionDigits="2"/></i>G</span></h4>
                             <table class="table-box-1">
                                 <colgroup>
                                     <col class="col-w-4">
@@ -57,13 +57,13 @@
                                             </c:if>
                                         </tr>
                                     </c:forEach>
-                                    <%@include file="../include/pageable.jsp"%>
-                                    <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
-                                        <input type="hidden" name="pageNum">
-                                    </form>
                                 </c:if>
                                 </tbody>
                             </table>
+                            <%@include file="../include/pageable.jsp"%>
+                            <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
+                                <input type="hidden" name="pageNum">
+                            </form>
 
                         </div>
                         <div class="user-content item-radius pay-mode">
@@ -132,7 +132,8 @@
                     <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
                     <div class="admin-button t-right">
                         <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn" value="我已付款成功">
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"
+                               value="我已付款成功">
                     </div>
                 </div>
             </form>
