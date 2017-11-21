@@ -149,6 +149,7 @@ public class PublicAccountController {
         MyPage<MaterialDTO> myPage = appUserService.findMaterialList(pageable);
         for (MaterialDTO dto : myPage.getDataList()) {
             dto.setMaterialUrl(appFileBase + dto.getMaterialUrl());
+            dto.setHtmlUrl(appFileBase + dto.getHtmlUrl());
         }
         return APIUtils.success(myPage.getDataList());
     }
