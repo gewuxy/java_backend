@@ -38,7 +38,7 @@
         </div>
     </div>
 </div>
-<%@ include file="/WEB-INF/include/common_js.jsp" %>
+<script type="text/javascript" src="${ctxStatic}/js/v2/jquery.min.js"></script>
 <script>
     //加载新闻列表
     $(function () {
@@ -51,7 +51,7 @@
         $.get('${base}' + url,{'pageNum':1,'pageSize':6}, function (data) {
             if(data.code == 0){
                 for(var index in data.data.dataList){
-                    $("#" + id).append('<li><a href="${base}/news/viewtrend/'+data.data.dataList[index].id+'">' + getBeforeTitle(data.data.dataList[index].title)+'</a></li>');
+                    $("#" + id).append('<li><a href="${base}/news/detail/'+data.data.dataList[index].id+'">' + getBeforeTitle(data.data.dataList[index].title)+'</a></li>');
                 }
             }
         },'json');

@@ -27,14 +27,15 @@
         FROM t_csp_user_info tu
          LEFT JOIN t_audio_course tc ON tu.id = tc.csp_user_id
          WHERE tu.id = #{userId} GROUP BY tc.csp_user_id
-
     </select>
 
 
+    <!--t_csp_user_flux_usage的meeting_id是course_id-->
     <select id="findVideoLiveRecord" resultType="cn.medcn.user.dto.VideoLiveRecordDTO">
-        SELECT tu.id,tu.expense,tu.video_down_url,tu.expire_time,t.meet_name FROM  t_csp_user_flux_usage tu
-        LEFT JOIN t_meet t ON t.id = tu.meeting_id
-        WHERE tu.user_id = #{userId}
+        SELECT tu.id,tu.expense,tl.replay_url AS downloadUrl,tu.expire_time,t.title AS meetName FROM  t_csp_user_flux_usage tu
+        INNER JOIN t_audio_course t ON t.id = tu.meeting_id
+        INNER JOIN t_csp_live tl ON tl.course_id=tu.meeting_id
+        WHERE tu.user_id = #{userId} ORDER BY tu.expense_time DESC
     </select>
 
     <select id="findCspUserList" resultType="cn.medcn.user.model.CspUserInfo">

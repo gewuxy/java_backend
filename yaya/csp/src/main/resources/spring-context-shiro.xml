@@ -76,6 +76,7 @@
                 /mgr/login=anon
                 /mgr/to/register=anon
                 /mgr/register=anon
+                /mgr/user/logout=anon
                 /mgr/to/reset/password=anon
                 /mgr/oauth/callback=anon
                 /mgr/jsCallback=anon

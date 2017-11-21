@@ -36,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -94,7 +95,7 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("accepterList", myPage.getDataList());
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
-        sortType = CheckUtils.isEmpty(sortType) ? "desc" : "asc";
+        sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
@@ -200,6 +201,7 @@ public class MeetingMgrController extends CspBaseController {
                 course.setShared(false);
                 course.setCspUserId(principal.getId());
                 course.setTitle("");
+                course.setCreateTime(new Date());
                 course.setSourceType(AudioCourse.SourceType.csp.ordinal());
                 audioService.insert(course);
             }
@@ -223,9 +225,10 @@ public class MeetingMgrController extends CspBaseController {
 
         if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             model.addAttribute("live", liveService.findByCourseId(course.getId()));
-            UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-            model.addAttribute("flux", flux == null ? 0 : flux.getFlux() / 1024);
         }
+        UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
+        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
+        model.addAttribute("flux", fluxValue);
 
         return localeView("/meeting/edit");
     }

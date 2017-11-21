@@ -216,8 +216,8 @@ public class LoginController extends CspBaseController {
             Subject subject = SecurityUtils.getSubject();
             subject.logout();
             // 清除缓存
-            CookieUtils.clearCookie(request, LOGIN_USER_ID_KEY);
-            CookieUtils.clearCookie(request, LOGIN_USER_KEY);
+            CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
+            CookieUtils.clearCookie(response, LOGIN_USER_KEY);
 
             model.addAttribute("error", ex.getMessage());
             model.addAttribute("mobile", mobile);
@@ -433,18 +433,19 @@ public class LoginController extends CspBaseController {
     @RequestMapping(value = "/user/logout")
     public String logout(HttpServletRequest request, HttpServletResponse response){
         // 清除缓存中的用户账号和id
-        String id = CookieUtils.getCookieValue(request, LOGIN_USER_ID_KEY);
-        if (StringUtils.isNotEmpty(id)) {
-            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, "", 0);
-        }
-        String userName = CookieUtils.getCookieValue(request, LOGIN_USER_KEY);
-        if (StringUtils.isNotEmpty(userName)) {
-            CookieUtils.setCookie(response, LOGIN_USER_KEY, "", 0);
-        }
+//        String id = CookieUtils.getCookieValue(request, LOGIN_USER_ID_KEY);
+//        if (StringUtils.isNotEmpty(id)) {
+//            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, "", 0);
+//        }
+//        String userName = CookieUtils.getCookieValue(request, LOGIN_USER_KEY);
+//        if (StringUtils.isNotEmpty(userName)) {
+//            CookieUtils.setCookie(response, LOGIN_USER_KEY, "", 0);
+//        }
 
         // 清除缓存
-        CookieUtils.clearCookie(request, LOGIN_USER_ID_KEY);
-        CookieUtils.clearCookie(request, LOGIN_USER_KEY);
+        CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
+        CookieUtils.clearCookie(response, LOGIN_USER_KEY);
+        System.out.println(CookieUtils.getCookieValue(request, LOGIN_USER_KEY));
         return "redirect:/mgr/logout";
     }
 

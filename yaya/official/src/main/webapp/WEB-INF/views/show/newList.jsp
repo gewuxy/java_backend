@@ -18,13 +18,18 @@
                         <c:forEach items="${page.dataList}" var="news">
                             <div class="v2-news-graphic-item clearfix">
                                 <div class="fl v2-news-graphic-img">
-                                    <a href="${ctx}/new/view/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
-                                    <i class="v2-news-graphic-classIcon"><a href="#">${news.keywords}</a></i>
+                                    <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
+                                    <i class="v2-news-graphic-classIcon"><a href="#">${fn:substringBefore(news.keywords, "-")}</a></i>
                                 </div>
                                 <div class="oh">
-                                    <h3><a href="${ctx}/new/view/${news.id}">${news.title}</a></h3>
+                                    <h3><a href="${ctx}/news/detail/${news.id}">${news.title}</a></h3>
                                     <p class="v2-news-graphic-info">${news.summary}</p>
-                                    <p >关键字：<a href="#" class="color-blue">${news.keywords}</a></p>
+                                    <p >关键字：
+                                        <c:forEach items="${fn:split(news.keywords, ',')}" var="words" varStatus="stat">
+                                            <a href="#" class="color-blue"> ${words} </a>
+
+                                        </c:forEach>
+                                    </p>
                                     <p><span class="time fr"><fmt:formatDate value="${news.createTime}" pattern="yyyy/MM/dd"/></span><span>来源：${news.xfrom}</span></p>
                                 </div>
                             </div>
@@ -52,25 +57,11 @@
 </div>
 <!-- 弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
-<div class="gotop-wrapper index-gotop">
-    <a class="gotop" href="javascript:;" >回到顶部</a>
-</div>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
 <script>
     function page(pageNum){
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
         $("#pageForm").submit();
     }
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
-
 </script>
 </body>
 </html>

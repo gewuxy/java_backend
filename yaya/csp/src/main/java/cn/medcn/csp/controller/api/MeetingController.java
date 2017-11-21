@@ -132,19 +132,33 @@ public class MeetingController extends CspBaseController {
             course.setPlayType(0);
         }
 
+        handleHttpUrl(fileBase, course);
+        model.addAttribute("course", course);
+
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
             course.setDetails(audioService.findLiveDetails(courseId));
+            handleHttpUrl(fileBase, course);
+            model.addAttribute("course", course);
+
             String wsUrl = genWsUrl(request, courseId);
             wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
             model.addAttribute("wsUrl", wsUrl);
 
             Live live = liveService.findByCourseId(courseId);
-            model.addAttribute("live", live);
+
+            if (live.getLiveState().intValue() == Live.LiveState.closed.getType()) {//直播已结束进入到录播模式
+                return localeView("/meeting/course_" + AudioCourse.PlayType.normal.getType());
+            } else if (live.getLiveState() == Live.LiveState.init.getType()){//直播未开始
+                model.addAttribute("error", local("share.live.not_start.error"));
+                return localeView("/meeting/share_error");
+            } else {
+                model.addAttribute("live", live);
+                return localeView("/meeting/course_" + course.getPlayType().intValue());
+            }
+
+
         }
 
-        handleHttpUrl(fileBase, course);
-
-        model.addAttribute("course", course);
         return localeView("/meeting/course_" + course.getPlayType().intValue());
     }
 
@@ -497,6 +511,7 @@ public class MeetingController extends CspBaseController {
         try {
             callback.signature();
             Integer channelId = Integer.valueOf(callback.getChannel_id());
+            //liveService.publish(LiveOrderDTO.buildVideoLiveCloseOrder(String.valueOf()));
             Live live = liveService.findByCourseId(channelId);
             if (live != null) {
                 live.setLiveState(Live.LiveState.closed.ordinal());

@@ -23,11 +23,11 @@
     <li class="active"><a>文章列表</a></li>
     <shiro:hasPermission name="article:edit"><li><a href="${ctx}/article/edit?categoryId=${categoryId}">添加文章</a></li></shiro:hasPermission>
 </ul>
-<form id="pageForm" name="pageForm" action="${ctx}/custom/code/list" method="post">
+<form id="pageForm" name="pageForm" action="${ctx}/article/page" method="post">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
+    <input name="categoryId" type="hidden" value="${categoryId}">
     <input type="hidden" name="keyword" value="${keyword}">
-    <input type="hidden" name="authed" value="${authed}">
 </form>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="searchForm" action="${ctx}/article/page" method="post" class="breadcrumb form-search">

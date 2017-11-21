@@ -33,6 +33,8 @@ public class LiveOrderDTO implements Serializable{
 
     public static final int ORDER_FLUX_AMPLE = 9;//流量充足
 
+    public static final int ORDER_VIDEO_LIVE_CLOSE = 10;//视频直播关闭
+
     public static final int ORDER_SCAN_SUCCESS = 100;
 
     public static final String LIVE_TYPE_PPT = "0";
@@ -138,6 +140,14 @@ public class LiveOrderDTO implements Serializable{
         LiveOrderDTO order = new LiveOrderDTO();
         order.setCourseId(courseId);
         order.setOrder(ORDER_FLUX_AMPLE);
+        return order;
+    }
+
+
+    public static LiveOrderDTO buildVideoLiveCloseOrder(String courseId){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(courseId);
+        order.setOrder(ORDER_VIDEO_LIVE_CLOSE);
         return order;
     }
 

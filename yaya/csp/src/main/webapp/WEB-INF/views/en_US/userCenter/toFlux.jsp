@@ -32,7 +32,7 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content item-radius">
-                            <h4>Live Stream History <span>Network Flow Balance: <i>${flux == 0 || empty flux? 0:flux/1024}</i>G</span></h4>
+                            <h4>Live Stream History <span>Network Flow Balance: <i><fmt:formatNumber type="number" value="${flux/1024}" maxFractionDigits="2"/></i>G</span></h4>
                             <table class="table-box-1">
                                 <colgroup>
                                     <col class="col-w-4">
@@ -57,13 +57,13 @@
                                             </c:if>
                                         </tr>
                                     </c:forEach>
-                                    <%@include file="../include/pageable.jsp"%>
-                                    <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
-                                        <input type="hidden" name="pageNum">
-                                    </form>
                                 </c:if>
                                 </tbody>
                             </table>
+                            <%@include file="../include/pageable.jsp"%>
+                            <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/user/toFlux">
+                                <input type="hidden" name="pageNum">
+                            </form>
 
                         </div>
                         <div class="user-content item-radius pay-mode">

@@ -31,6 +31,9 @@ public class MeetAudioDTO implements Serializable {
     private String socketUrl;
 
 
+    protected Integer liveState;//直播状态
+
+
     public static MeetAudioDTO build(MeetAudio meetAudio){
         MeetAudioDTO dto = new MeetAudioDTO();
         if(meetAudio!=null){
