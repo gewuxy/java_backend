@@ -7,7 +7,6 @@
                     <img src="${ctxStatic}/images/v2/logo.png" alt=""  />
                 </a>
             </div><!-- end of logo -->
-
             <div class="v2-top-item">
                 <!-- S nav -->
                 <nav class="v2-nav">
@@ -31,9 +30,9 @@
                                 </a>
                                 <i></i>
                                 <ul>
-                                    <li><a href="searchItem-01.html">药师建议</a></li>
-                                    <li><a href="searchItem-03.html">医师建议</a></li>
-                                    <li><a href="searchItem-02.html">对症下药</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=2">药师建议</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=1">医师建议</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=3">对症下药</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -48,9 +47,30 @@
                         <button type="submit" class="form-btn" ><span></span></button>
                     </div>
                 </div>
-                <div class="top-widget clearfix">
-                    <p><a href="javascript:;" class="button button-color fx-btn-1">登录</a><a href="javascript:;" class="button color-blue fx-btn-2">注册</a></p>
-                </div>
+                <shiro:authenticated>
+                    <!--登录后-->
+                    <div class="top-widget clearfix" style="padding-top:14px;">
+                        <div class="inLogin fr">
+                            <ul class="sf-menu">
+                                <li class="">
+                                    <a href="javascript:;" class="first-level">
+                                        <span><img src="${ctxStatic}/images/upload/_user-img.png" alt=""></span>
+                                    </a>
+                                    <ul>
+                                        <li><a href="#"><span><em>我的中心</em></span></a></li>
+                                        <li><a href="${ctx}/logout"><span><em>退出登录</em></span></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </shiro:authenticated>
+                <shiro:notAuthenticated>
+                    <div class="top-widget clearfix">
+                        <p><a href="javascript:;" class="button button-color fx-btn-1">登录</a><a href="javascript:;" class="button color-blue fx-btn-2">注册</a></p>
+                    </div>
+                </shiro:notAuthenticated>
+
             </div>
         </div>
     </div>

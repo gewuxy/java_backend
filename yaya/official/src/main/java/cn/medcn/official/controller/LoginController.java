@@ -56,4 +56,13 @@ public class LoginController extends BaseController{
         }
         return success();
     }
+
+    /**
+     * 登出
+     * @return
+     */
+    @RequestMapping(value="/logout")
+    public String logout(){
+        return "redirect:/";
+    }
 }
