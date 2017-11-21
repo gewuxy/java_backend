@@ -260,4 +260,93 @@ jQuery(function($) {
     });
 });
 
+$(function(){
+    $.get('/news/ajaxTrends',{'pageNum':1,'pageSize':6}, function (data) {
+        if(data.code == 0){
+            for(var index in data.data.dataList){
+                $("#trendsUL").append('<li title="'+data.data.dataList[index].title+'" class="shenglue"><a href="/news/viewtrend/'+data.data.dataList[index].id+'">'+data.data.dataList[index].title+'</a></li>');
+            }
+        }
+    },'json');
+
+    $.get('/news/pagenews',{'pageNum':pageNum,'pageSize':11},function (data) {
+        if(data.code == 0){
+            showNews(data);
+        }
+    },'json');
+
+    $(".v2-more-button").click(function(){
+        $.get('/news/pagenews',{'pageNum':pageNum+1,'pageSize':12},function (data) {
+            if(data.code == 0){
+                showNews(data);
+                autoPageable = true;
+                pageNum++;
+            }
+        },'json');
+    });
+});
+
+var pageNum = 1;
+var autoPageable = true;
+var autoPageTimes = 0;
+$(function(){
+    $(window).scroll(function () {
+        if(autoPageable){
+            if(($(window).scrollTop()) >= ($(document).height() - $(window).height())){
+                // alert(pag    eNum+1);
+                $.get('/news/pagenews',{'pageNum':pageNum+1,'pageSize':12},function (data) {
+                    if(data.code == 0){
+                        autoPageable = false;
+                        showNews(data);
+                        if(autoPageTimes >=2 ){
+                            autoPageable = false;
+                            autoPageTimes = 0;
+                        }else{
+                            autoPageable = true;
+                            autoPageTimes++;
+                        }
+                        pageNum++;
+                    }
+                },'json');
+            }
+        }
+    });
+});
+
+function showNews(data){
+    var parentContainer;
+    if(data.data.dataList.length > 0){
+        for(var index in data.data.dataList){
+            var keyword =data.data.dataList[index].keywords.split(/[,|，| ]/)[0];
+            var addhtml = '<div class="col-lg-3">'
+                +'<div class="v2-entry-item">'
+                +'<div class="v2-entry-img">'
+                +'<a href="/news/view/'+data.data.dataList[index].id+'" target="_blank"><img src="'+data.data.dataList[index].articleImg+'" alt=""></a>'
+                +'<i class="v2-entry-classIcon"><a href="/news/view/'+data.data.dataList[index].id+'">'+keyword+'</a></i>'
+                +'</div>'
+                +'<div class="v2-entry-title">'
+                +'<h5><a href="/news/view/'+data.data.dataList[index].id+'" target="_blank">'+data.data.dataList[index].title+'</a></h5>'
+                +'<span class="time">'+formatSimple(data.data.dataList[index].createTime)+'</span>'
+                +'</div>'
+                +'</div>'
+                +'</div>';
+            if(index < 3 && data.data.pageNum == 1){
+                $("#firstRow").prepend(addhtml);
+            }else{
+                if((index-3)%4==0&&data.data.pageNum == 1 || index%4==0&&data.data.pageNum != 1){
+                    parentContainer = $('<div class="row"></div>');
+                }
+                parentContainer.append(addhtml);
+                $(".v2-entry-area").append(parentContainer);
+            }
+        }
+    }
+}
+
+/*自动拉伸高度*/
+var mainItem = $(".v2-searchBg");
+var totalHeight = mainItem.outerHeight(true)+$(".v2-top").outerHeight(true) + $(".v2-bottom").outerHeight(true) +$(".v2-footer").outerHeight(true);
+$(window).height() > totalHeight ?  mainItem.height($(window).height() - ($(".v2-top").outerHeight(true) + $(".v2-bottom").outerHeight(true) +$(".v2-footer").outerHeight(true))) : "";
+
+
 

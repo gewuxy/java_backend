@@ -57,9 +57,12 @@
 </div>
 <div class="v2-footer">
     <div class="page-width clearfix">
-        <p class="t-center">
-            <a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备12087993号</a>
-            <a target="_blank" href="statement.html">免责声明</a> | <a href="update.html">更新日志</a>
-        </p>
+        <p class="t-center"><a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备12087993号</a> <a target="_blank"
+                                                                                                        href="http://www.medcn.cn/Styles/images/%E4%BA%92%E8%81%94%E7%BD%91%E8%8D%AF%E5%93%81%E4%BF%A1%E6%81%AF%E6%9C%8D%E5%8A%A1%E8%B5%84%E6%A0%BC%E8%AF%81%E4%B9%A6.pdf">互联网药品信息经营资格证：（粤）—经营性—2013—0001</a>    © 2012-2016  敬信公司 版权所有 | <a
+                href="statement.html">免责声明</a> | <a href="update.html">更新日志</a></p>
     </div>
 </div>
+<div class="gotop-wrapper index-gotop">
+    <a class="gotop" href="javascript:;" >回到顶部</a>
+</div>
+

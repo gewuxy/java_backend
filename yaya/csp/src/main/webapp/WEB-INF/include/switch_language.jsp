@@ -9,7 +9,7 @@
 <div href="javascript:;" class="login-language-item userInfo" title="切换语言" >
     <ul class="sf-menu" >
         <li class="current">
-            <a class="first-level" target="_blank" href="javascript:;"></a>
+            <a class="first-level" target="_blank"></a>
             <div class="tb-popupBox-bg clearfix">
                 <ul class="item-radius" id="ulitem">
                     <li class="first"><a style="cursor: pointer">简体</a></li>

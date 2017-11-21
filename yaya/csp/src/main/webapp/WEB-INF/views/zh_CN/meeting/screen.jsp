@@ -75,6 +75,8 @@
 
     var needSendOrder = true;//是否需要发送指令
 
+    var living = false;
+
     $(function(){
 
 
@@ -105,7 +107,7 @@
             },
             onSlideChangeEnd:function(swiper){
                 console.log("need send order = " + needSendOrder);
-                if (needSendOrder){
+                if (needSendOrder && living){
                     sendOrder(swiper.activeIndex);
                 }
                 needSendOrder = true;
@@ -188,7 +190,10 @@
                 needSendOrder = true;
             } else if(data.order == 100){//扫码成功
                 show();
+            } else if(data.order == 11){//直播开始指令
+                living = true;
             }
+
         }
 
         return ws;

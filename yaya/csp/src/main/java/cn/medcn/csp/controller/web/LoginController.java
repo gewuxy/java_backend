@@ -445,7 +445,6 @@ public class LoginController extends CspBaseController {
         // 清除缓存
         CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
         CookieUtils.clearCookie(response, LOGIN_USER_KEY);
-        System.out.println(CookieUtils.getCookieValue(request, LOGIN_USER_KEY));
         return "redirect:/mgr/logout";
     }
 
