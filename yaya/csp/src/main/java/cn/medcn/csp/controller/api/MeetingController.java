@@ -707,4 +707,53 @@ public class MeetingController extends CspBaseController {
         }
         return success(result);
     }
+
+    /**
+     * 直播开始
+     * @param courseId
+     * @param imgUrl
+     * @param videoUrl
+     * @param firstClk
+     * @return
+     */
+    @RequestMapping(value = "/live/start")
+    @ResponseBody
+    public String startLive(Integer courseId, String imgUrl, String videoUrl, Integer firstClk){
+        if (firstClk == null) {
+            firstClk = 0;
+        }
+        LiveOrderDTO order = liveService.findCachedOrder(courseId);
+        //首先判断是否存在缓存 如果存在缓存则不发送同步指令 否则发送同步指令
+        if (firstClk == 1) {
+            //发送直播开始指令 只用于投屏同步
+            LiveOrderDTO liveStartOrder = new LiveOrderDTO();
+            liveStartOrder.setOrder(LiveOrderDTO.ORDER_LIVE_START);
+            liveStartOrder.setCourseId(String.valueOf(courseId));
+            liveService.publish(liveStartOrder);
+
+            if (order == null){
+                sendSyncOrder(courseId, imgUrl, videoUrl);
+            }
+
+            Live live = liveService.findByCourseId(courseId);
+            if (live != null) {
+                live.setLiveState(Live.LiveState.usable.getType());
+                liveService.updateByPrimaryKey(live);
+            }
+        } else {
+            sendSyncOrder(courseId, imgUrl, videoUrl);
+        }
+
+        return success();
+    }
+
+    protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl){
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(String.valueOf(courseId));
+        order.setOrder(LiveOrderDTO.ORDER_SYNC);
+        order.setImgUrl(imgUrl);
+        order.setVideoUrl(videoUrl);
+        liveService.publish(order);
+    }
+
 }

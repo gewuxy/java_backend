@@ -75,6 +75,8 @@
 
     var needSendOrder = true;//是否需要发送指令
 
+    var living = false;
+
     $(function(){
 
 
@@ -101,12 +103,15 @@
                 } else {
                     swiper.slideTo("${live.livePage}");
                 }
+                needSendOrder = false;
             },
             onSlideChangeEnd:function(swiper){
-                if (needSendOrder){
+                console.log("need send order = " + needSendOrder);
+                if (needSendOrder && living){
                     sendOrder(swiper.activeIndex);
                 }
                 needSendOrder = true;
+                leftTime = totalLeftTime;
             },
         });
 
@@ -124,6 +129,9 @@
 </script>
 <script type="text/javascript">
     var scaned = false;
+
+    const totalLeftTime = 3;
+    var leftTime = 3;
 
     var heartbeat_timer = 0;
     var last_health = -1;
@@ -179,9 +187,13 @@
                 if (scaned){
                     skip(data.pageNum);
                 }
+                needSendOrder = true;
             } else if(data.order == 100){//扫码成功
                 show();
+            } else if(data.order == 11){//直播开始指令
+                living = true;
             }
+
         }
 
         return ws;
@@ -189,12 +201,16 @@
 
     function sendOrder(pageNo){
         var imgUrl = $(".swiper-slide-active").find("img").attr("src");
-        setTimeout(function(){
-
+        console.log("left time is = " + leftTime);
+        if(leftTime <= 1){
             var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
             myWs.send(JSON.stringify(message));
-
-        }, delay);
+            console.log("send sync order ");
+            leftTime = totalLeftTime;
+        } else {
+            leftTime --;
+            setTimeout(sendOrder, 1000, pageNo);
+        }
     }
 
 </script>
