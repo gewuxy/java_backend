@@ -6,6 +6,16 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<script src="${ctxStatic}/js/qrcode.js"></script>
+<script>
+    $(function(){
+        var qrcode = new QRCode(document.getElementById("qrcode"), {
+            width : 200,//设置宽高
+            height : 200
+        });
+        qrcode.makeCode("${yayaAppBase}/view/meet/info?id=${meet.id}");
+    });
+</script>
 <div class="fl metting-detail">
     <div class="metting-detail-item">
         <div class="metting-detail-cover">
@@ -102,8 +112,8 @@
         </div>
     </div>
     <div class="wx-box clearfix">
-        <p class="t-center">
-            <img src="${qrCodePath}" alt="">
+        <p class="t-center" id="qrcode">
+
         </p>
         <p class="t-center">
             H5会议分享链接
