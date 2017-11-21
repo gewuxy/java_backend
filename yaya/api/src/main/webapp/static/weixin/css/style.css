@@ -244,7 +244,7 @@ h3 { font-size:.4rem; }
 .faq-details-item .faq-details-title { font-weight: bold; margin-bottom:10px;}
 .faq-details-item { margin-bottom:20px;}
 
-    /*metting-list*/
+/*metting-list*/
 .metting-list { padding:.2rem; }
 .metting-list li a { position: relative; display: block; padding:.3rem 0; border-bottom:1px solid #dbdbdb;  }
 .metting-list li a .fr .metting-list-img {  width: 1.34rem; height: 1.34rem !important; margin-left:.12rem; margin-top:.1rem; }
@@ -293,7 +293,7 @@ h3 { font-size:.4rem; }
 .user-money-details-list ul li { font-size:.24rem; color:#888888;}
 .user-money-details-list ul li .rowTitle{ color:#000000; }
 
-    /*user-details*/
+/*user-details*/
 .user-details { padding-bottom:2rem; color:#929292; font-size:.32rem;}
 .user-header { position:relative; background-color:#fff; text-align: center; color:#999999; padding:.5rem 0.5rem;}
 .user-margin-top { margin-top:.4rem;}
@@ -411,7 +411,7 @@ h3 { font-size:.4rem; }
 .phoneHeight { overflow: hidden;  }
 
 
-    /*layui-layer*/
+/*layui-layer*/
 .layui-layer-popup { position: relative;}
 .layui-layer-popup .layui-layer-title { font-size:.3rem; height:.84rem; line-height: .84rem;}
 
@@ -428,13 +428,17 @@ h3 { font-size:.4rem; }
 .layui-layer.layui-layer-dialog .layui-layer-padding .layui-layer-icon { }
 .layui-layer.layui-layer-dialog .layui-layer-content .layui-layer-ico { width:.6rem; height:.6rem; top:.32rem; left:.3rem; background:url(../images/WeUI-success.png) no-repeat; background-position:0;  background-size:.55rem;}
 .layui-layer.layui-layer-dialog .layui-layer-content { font-size:.28rem; line-height:.48rem; display: block; padding: .24rem .5rem; }
-.layui-layer.layui-layer-dialog .layui-layer-title { font-size:.28rem;}
-.layui-layer.layui-layer-dialog { min-width:2.6rem;}
+.layui-layer.layui-layer-dialog .layui-layer-title { font-size:.28rem; }
+.layui-layer.layui-layer-dialog { min-width:2.6rem; width:80%;}
+
+.layui-layer.layui-layer-dialog .layui-layer-btn { padding:0 .1rem .12rem;}
 
 
-.layui-layer.layui-layer-confirm .layui-layer-content{ font-size:.22rem; padding: .24rem .26rem;}
-.layui-layer.layui-layer-confirm .layui-layer-title { font-size:.22rem;}
-.layui-layer.layui-layer-confirm .layui-layer-btn a{height: 0.46rem; line-height: .46rem; margin: 0.12rem 0.12rem 0; padding: 0 .2rem; border-radius: .04rem; font-size: .2rem;}
+.layui-layer.layui-layer-confirm .layui-layer-content{ font-size:.28rem; padding: .24rem .26rem;}
+.layui-layer.layui-layer-confirm .layui-layer-title { font-size:.28rem; padding: 0 .8rem 0 .2rem; height: .6rem; line-height: .6rem;}
+.layui-layer.layui-layer-confirm .layui-layer-btn a{height: 0.46rem; line-height: .46rem; margin: 0.12rem 0.12rem 0; padding: 0 .2rem; border-radius: .04rem; font-size: .24rem;}
+.layui-layer.layui-layer-confirm  .layui-layer-setwin .layui-layer-close1 { display: none;}
+.layui-layer.layui-layer-confirm .layui-layer-btn { padding:0 .1rem .12rem;}
 
 .layui-layer.layui-layer-msg { min-width: 40%; }
 
@@ -471,11 +475,14 @@ h3 { font-size:.4rem; }
 .weui-picker__indicator {
     height: .68rem;
     top: 2.04rem;
+    background-color:#f7f7f7;
 }
 .weui-picker__hd {
     padding:.2rem .3rem;
 }
-
+.weui-picker__content { z-index: 4;}
+.weui-picker__indicator:before { border-color:#000;}
+.weui-picker__indicator:after {  border-color:#000;}
 
 
 
@@ -544,6 +551,9 @@ h3 { font-size:.4rem; }
 .metting-chart-count-box .last{ border-right:0;}
 .echarts-box { height: 3.8rem; margin-bottom: .45rem;  }
 
+
+/*wechat*/
+.wechat-box { display: none; position: absolute; width:100%; height:100%; top:0; right:0; background:rgba(0,0,0,0.6) url(../images/wechat-click-img.png) no-repeat; background-size:3.87rem 1.55rem; background-position:97% 2%; }
 
 
 
