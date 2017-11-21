@@ -39,6 +39,7 @@
 </form>
 <script>
     $(document).ready(function() {
+        layer.msg(".....");
         initFormValidate();
     });
 </script>

@@ -5,12 +5,6 @@
   Time: 11:18
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<form id="pageForm" name="pageForm"  method="post">
-    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
-    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-    <input type="hidden" name="keyword" value="${keyword}">
-    <input type="hidden" name="level" value="${level}">
-</form>
 <c:if test="${page.pages > 1}">
     <div class="pagination">
         <ul class="pagination">

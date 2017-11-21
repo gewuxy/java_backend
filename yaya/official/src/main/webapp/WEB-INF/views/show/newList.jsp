@@ -5,6 +5,7 @@
     <title>首页</title>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
 </head>
+<body>
 <div id="wrapper" class="v2-medcnIndex">
     <%@include file="/WEB-INF/include/header.jsp" %>
     <div class="v2-sub-main" style="padding:40px 0 80px;">

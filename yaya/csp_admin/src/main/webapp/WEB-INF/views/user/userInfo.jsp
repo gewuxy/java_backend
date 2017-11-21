@@ -14,12 +14,14 @@
         <label class="control-label">昵称:</label>
         <div class="controls">
             <input type="search" name="nickName" maxlength="50" class="required" value="${user.nickName}" class="required realName"/>
+            <font color="red">*</font>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">姓名:</label>
         <div class="controls">
             <input type="search" name="userName" htmlEscape="false" maxlength="50" value="${user.userName}" class="required realName"/>
+            <font color="red">*</font>
         </div>
     </div>
     <div class="control-group">
@@ -136,8 +138,7 @@
             dataType:"json",
             type:"post",
             success:function (data) {
-                    $(id).empty();
-                    $(id).append("<option value='' selected>请选择</option>");
+                    $(id).empty().append("<option value='' selected='true'>请选择</option>").select2().first().trigger("change");
                     for(var index in data.data){
                         $(id).append('<option value="'+data.data[index].name+'">'+data.data[index].name+'</option>');
                     }

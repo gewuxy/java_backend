@@ -3,6 +3,6 @@
 <mapper namespace="cn.medcn.official.dao.OffSearchDao" >
 
   <select id="findTopHost" resultType="cn.medcn.official.model.OffSearch">
-    SELECT * FROM t_off_search where search_type = #{searchType} order by times asc
+    SELECT COUNT(search)AS num,search FROM t_off_search WHERE search_type = #{searchType} GROUP BY search ORDER BY num DESC
   </select>
 </mapper>

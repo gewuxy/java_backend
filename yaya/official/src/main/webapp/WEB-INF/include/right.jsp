@@ -1,9 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/6
-  Time: 13:41
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="col-lg-3 col-lg-offset-1">
     <div class="v2-news-list v2-news-list-garyStyle">
@@ -19,7 +13,7 @@
     </div>
     <div class="v2-news-list v2-news-list-garyStyle">
         <div class="v2-news-title">
-            <a href="searchDesc.html" class="more fr">更多&gt;&gt;</a>
+            <a href="${ctx}/search/searchList?searchType=4&keyWord=阿司匹林" class="more fr">更多&gt;&gt;</a>
             <h3>用药常识</h3>
         </div>
         <div class="v2-news-main">

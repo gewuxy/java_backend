@@ -42,11 +42,19 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String cspUserSearch(Pageable pageable, String userName, Model model) {
+    public String cspUserSearch(Pageable pageable, Integer listType,String userName, Model model) {
         if (!StringUtils.isEmpty(userName)) {
             pageable.getParams().put("userName", userName);
             model.addAttribute("userName",userName);
         }
+        if(listType == 1){  //海外
+            pageable.getParams().put("abroad",1);
+        }else if( listType == 0){  // 国内
+           pageable.getParams().put("abroad",0);
+        }else{  //封号=未激活
+            pageable.getParams().put("active",0);
+        }
+        model.addAttribute("listType",listType);
         MyPage<CspUserInfo> page = cspUsersService.findCspUserList(pageable);
         model.addAttribute("page", page);
         return "/user/cspUserList";
@@ -96,17 +104,13 @@ public class CspUserController extends BaseController {
             cspUsersService.updateByPrimaryKeySelective(user);
         }else if(actionType == 2){   //删除
             cspUsersService.deleteByPrimaryKey(user);
-        }else if(actionType == 3){   //修改用户信息
+        }else{   //修改用户信息
             if(isReset == 1){   //密码重置
                 user.setPassword(MD5Utils.MD5Encode("111111"));
             }
             cspUsersService.updateByPrimaryKeySelective(user);
-        }else{  //注册新用户
-            user.setId(String.valueOf(System.currentTimeMillis()));   //暂时随机数代替
-            user.setRegisterTime(new Date());
-            cspUsersService.insertSelective(user);
         }
-        addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": actionType == 2?"删除成功":"注册成功");
+        addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
         return "redirect:/csp/user/list";
     }
 
