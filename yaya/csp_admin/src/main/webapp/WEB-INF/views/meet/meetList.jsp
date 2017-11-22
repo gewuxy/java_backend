@@ -9,7 +9,12 @@
     <li class="active"><a href="${ctx}/csp/meet/list">会议列表</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
-<form id="searchForm" method="post" class="breadcrumb form-search">
+<form id="pageForm" name="pageForm" action="${ctx}/csp/meet/list" method="post">
+    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
+    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
+    <input  name="meetName" type="hidden" value="${meetName}"/>
+</form>
+<form id="searchForm" method="post" action="${ctx}/csp/meet/list" class="breadcrumb form-search">
     <input placeholder="请输入会议名称" value="${meetName}" size="40"  type="search" name="meetName" maxlength="50" class="required"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
@@ -40,10 +45,5 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
-<script>
-    $(document).ready(function() {
-        initPage("/csp/meet/list");
-    });
-</script>
 </body>
 </html>

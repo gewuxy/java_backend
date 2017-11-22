@@ -29,8 +29,7 @@
                                     </select>
                                     </span>
                                 <div class="v2-search-form clearfix">
-                                    <input type="text"  placeholder="药品通用名/商品名/批准文号" name="keyWord" id="searchWord" value="${keyWord}" class="form-text" >
-                                    <input  name="searchType" type="hidden" value="${searchType}"/>
+                                    <input type="text"  placeholder="输入需要药师提供建议的药品通用名" name="keyWord" id="searchWord" value="${keyWord}" class="form-text" >
                                     <button type="submit" class="form-btn" id="btnSearch"><span></span></button>
                                 </div>
                             </div>
@@ -44,14 +43,19 @@
                             <p class="v2-searchText-error">没有查找到相关结果，我们正在努力搜集数据!</p>
                         </c:otherwise>
                     </c:choose>
-                    <div class="v2-newsList-bottomBorder">
-                        <ul>
-                            <c:if test="${not empty page.dataList}">
-                                <c:forEach items="${page.dataList}" var="result">
-                                    <li><a href="${ctx}/search/detail/${result.id}">${result.title}</a></li>
-                                </c:forEach>
-                            </c:if>
-                        </ul>
+
+                    <div class="v2-news-graphic">
+                        <c:if test="${not empty page.dataList}">
+                            <c:forEach items="${page.dataList}" var="result">
+                                <div class="v2-news-graphic-item v2-news-graphic-border clearfix">
+                                    <div class="oh">
+                                        <h3><a href="newDetail.html">${result.title}</a></h3>
+                                        <p class="v2-news-graphic-info">${result.summary}</p>
+                                        <p><span class="time fr"><fmt:formatDate value="${result.createTime}" pattern="yyyy-MM-dd"/></span><span>来源：${result.xfrom}</span></p>
+                                    </div>
+                                </div>
+                            </c:forEach>
+                        </c:if>
                     </div>
                     <div class="v2-page-box">
                         <a <c:if test="${page.pageNum>1}"> href="javascript:page(${page.pageNum-1})"</c:if> class="v2-page-box-prev" title="上一页"></a>
@@ -63,7 +67,7 @@
                     <form action="${base}/search/searchList" method="post" name="pageForm" id="pageForm">
                         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
                         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-                        <input  name="searchType" type="hidden" value="${searchType}"/>
+                        <input  name="type" type="hidden" value="${type}"/>
                         <input  name="keyWord" type="hidden" value="${keyWord}"/>
                     </form>
                 </div>

@@ -1,9 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/6
-  Time: 13:41
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="v2-bottom">
     <div class="page-width clearfix">
@@ -65,4 +59,5 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
+<%@include file="/WEB-INF/include/common_js.jsp"%>
 

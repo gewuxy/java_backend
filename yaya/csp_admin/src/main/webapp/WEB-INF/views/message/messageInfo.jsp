@@ -12,7 +12,7 @@
     <script type="text/javascript">
         function checkTitle() {
             if ($("#title").val() == null || $("#title").val() == "") {
-                confirm("标题不能为空")
+                //confirm("标题不能为空")
                 $("#btnSubmit").attr("disabled", "disabled");
             } else {
                 $("#btnSubmit").removeAttr("disabled");
@@ -22,7 +22,7 @@
 
         function checkContent() {
             if ($("#content").val() == null || $("#content").val() == "" || $("#content").length > 65535) {
-                confirm("内容输入有误")
+               // confirm("内容输入有误")
                 $("#btnSubmit").attr("disabled", "disabled");
             } else {
                 $("#btnSubmit").removeAttr("disabled");
@@ -31,7 +31,7 @@
 
         function checkUsername() {
             if ($("#name").val() == null || $("#name").val() == "") {
-                confirm("发布人不能为空")
+                //confirm("发布人不能为空")
                 $("#btnSubmit").attr("disabled", "disabled");
             } else {
                 $("#btnSubmit").removeAttr("disabled");

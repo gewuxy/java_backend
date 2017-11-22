@@ -30,7 +30,6 @@
                                     </span>
                                 <div class="v2-search-form clearfix">
                                     <input type="text"  placeholder="药品通用名/商品名/批准文号" name="keyWord" id="searchWord" value="${keyWord}" class="form-text" >
-                                    <input  name="searchType" type="hidden" value="${searchType}"/>
                                     <button type="submit" class="form-btn" id="btnSearch"><span></span></button>
                                 </div>
                             </div>
@@ -63,7 +62,7 @@
                     <form action="${base}/search/searchList" method="post" name="pageForm" id="pageForm">
                         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
                         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-                        <input  name="searchType" type="hidden" value="${searchType}"/>
+                        <input  name="type" type="hidden" value="${type}"/>
                         <input  name="keyWord" type="hidden" value="${keyWord}"/>
                     </form>
                 </div>

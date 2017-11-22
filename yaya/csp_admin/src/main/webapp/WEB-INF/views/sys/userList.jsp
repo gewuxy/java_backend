@@ -9,7 +9,12 @@
     <li class="active"><a href="${ctx}/csp/sys/user/list">管理员列表</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
-<form id="searchForm" method="post" class="breadcrumb form-search">
+<form id="pageForm" name="pageForm" action="${ctx}/csp/sys/user/list" method="post">
+    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
+    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
+    <input  name="account" type="hidden" value="${account}"/>
+</form>
+<form id="searchForm" method="post" action="${ctx}/csp/sys/user/list" class="breadcrumb form-search">
     <input placeholder="管理员帐号" value="${account}" size="40"  type="search" name="account" maxlength="50" class="required"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
     <input id="btnAdd" class="btn btn-primary" type="button" style="margin-left: 60%" value="添加管理员" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
@@ -38,10 +43,5 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
-<script>
-    $(document).ready(function() {
-        initPage("/csp/sys/user/list");
-    });
-</script>
 </body>
 </html>

@@ -43,6 +43,12 @@
         <if test="userName != null">
             AND user_name = #{userName}
         </if>
+        <if test="abroad != null">
+            AND abroad = #{abroad}
+        </if>
+        <if test="active != null">
+            AND active = #{active}
+        </if>
     </select>
 
 

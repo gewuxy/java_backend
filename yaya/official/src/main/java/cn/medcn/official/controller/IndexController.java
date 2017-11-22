@@ -15,8 +15,8 @@ public class IndexController {
         return "index";
     }
 
-    @RequestMapping(value="/user/userInfo")
-    public String test(){
-        return "/user/userInfo";
+    @RequestMapping(value="/index")
+    public String index(){
+        return "index";
     }
 }
