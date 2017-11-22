@@ -389,7 +389,7 @@
 
         $("input[name='course.playType']").click(function(){
             var playType = $(this).val();
-            $("input[name='course.playType]").removeAttr("checked");
+            $("input[name='course.playType']").removeAttr("checked");
             $(this).prop("checked", "true");
             if (playType == 0){
                 $("#liveStartTime").attr("disabled", "true");

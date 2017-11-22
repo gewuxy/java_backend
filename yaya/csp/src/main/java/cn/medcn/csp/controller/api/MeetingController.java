@@ -108,58 +108,63 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("error", linkError);
             return localeView("/meeting/share_error");
         }
-        String id = (String) params.get("id");
-        String local = (String) params.get(LOCAL_KEY);
-        LocalUtils.set(LocalUtils.getByKey(local));
-        LocalUtils.setLocalStr(local);
+        try {
+            String id = (String) params.get("id");
+            String local = (String) params.get(LOCAL_KEY);
+            LocalUtils.set(LocalUtils.getByKey(local));
+            LocalUtils.setLocalStr(local);
 
-        String abroad = (String) params.get(ABROAD_KEY);
-        boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
-        //boolean isAbroad = false;
-        AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
-        if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
-            model.addAttribute("error", abroadError);
-            return localeView("/meeting/share_error");
-        }
+            String abroad = (String) params.get(ABROAD_KEY);
+            boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
+            //boolean isAbroad = false;
+            AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
+            if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
+                model.addAttribute("error", abroadError);
+                return localeView("/meeting/share_error");
+            }
 
-        Integer courseId = Integer.valueOf(id);
-        AudioCourse course = audioService.findAudioCourse(courseId);
-        if (course == null) {
-            model.addAttribute("error", linkError);
-            return localeView("/meeting/share_error");
-        }
-        if (course.getPlayType() == null) {
-            course.setPlayType(0);
-        }
+            Integer courseId = Integer.valueOf(id);
+            AudioCourse course = audioService.findAudioCourse(courseId);
+            if (course == null) {
+                model.addAttribute("error", linkError);
+                return localeView("/meeting/share_error");
+            }
+            if (course.getPlayType() == null) {
+                course.setPlayType(0);
+            }
 
-        handleHttpUrl(fileBase, course);
-        model.addAttribute("course", course);
-
-        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-            course.setDetails(audioService.findLiveDetails(courseId));
             handleHttpUrl(fileBase, course);
             model.addAttribute("course", course);
 
-            String wsUrl = genWsUrl(request, courseId);
-            wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
-            model.addAttribute("wsUrl", wsUrl);
+            if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                course.setDetails(audioService.findLiveDetails(courseId));
+                handleHttpUrl(fileBase, course);
+                model.addAttribute("course", course);
 
-            Live live = liveService.findByCourseId(courseId);
+                String wsUrl = genWsUrl(request, courseId);
+                wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
+                model.addAttribute("wsUrl", wsUrl);
 
-            if (live.getLiveState().intValue() == Live.LiveState.closed.getType()) {//直播已结束进入到录播模式
-                return localeView("/meeting/course_" + AudioCourse.PlayType.normal.getType());
-            } else if (live.getLiveState() == Live.LiveState.init.getType()){//直播未开始
-                model.addAttribute("error", local("share.live.not_start.error"));
-                return localeView("/meeting/share_error");
-            } else {
-                model.addAttribute("live", live);
-                return localeView("/meeting/course_" + course.getPlayType().intValue());
+                Live live = liveService.findByCourseId(courseId);
+
+                if (live.getLiveState().intValue() == Live.LiveState.closed.getType()) {//直播已结束进入到录播模式
+                    return localeView("/meeting/course_" + AudioCourse.PlayType.normal.getType());
+                } else if (live.getLiveState() == Live.LiveState.init.getType()){//直播未开始
+                    model.addAttribute("error", local("share.live.not_start.error"));
+                    return localeView("/meeting/share_error");
+                } else {
+                    model.addAttribute("live", live);
+                    return localeView("/meeting/course_" + course.getPlayType().intValue());
+                }
+
+
             }
-
-
+            return localeView("/meeting/course_" + course.getPlayType().intValue());
+        } catch (Exception e) {
+            e.printStackTrace();
+            model.addAttribute("error", linkError);
+            return localeView("/meeting/share_error");
         }
-
-        return localeView("/meeting/course_" + course.getPlayType().intValue());
     }
 
     /**
