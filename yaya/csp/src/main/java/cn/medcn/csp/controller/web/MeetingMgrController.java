@@ -286,6 +286,9 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/details/{courseId}")
     public String details(@PathVariable Integer courseId, Model model) throws SystemException {
         AudioCourse course = audioService.findAudioCourse(courseId);
+        if (course == null) {
+            throw new SystemException(local("source.not.exists"));
+        }
         handleHttpPath(course);
         Principal principal = getWebPrincipal();
         if (!principal.getId().equals(course.getCspUserId())) {
