@@ -37,8 +37,8 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th width="275">标题</th><th>作者</th><th>来源</th><th>修订时间</th><th>文件大小</th><shiro:hasPermission name="data:file:edit"><th>操作</th></shiro:hasPermission></tr></thead>
     <tbody>
-    <c:if test="${not empty page.datas}">
-        <c:forEach items="${page.datas}" var="data">
+    <c:if test="${not empty page.dataList}">
+        <c:forEach items="${page.dataList}" var="data">
             <tr>
                 <td>
                     <shiro:hasPermission name="data:file:edit"><a href="${ctx}/data/file/edit?id=${data.id}"></shiro:hasPermission>
@@ -62,7 +62,7 @@
             </tr>
         </c:forEach>
     </c:if>
-    <c:if test="${empty page.datas}">
+    <c:if test="${empty page.dataList}">
         <tr>
             <td colspan="6">没有查询到数据</td>
         </tr>

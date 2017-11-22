@@ -62,7 +62,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>头像</th><th>账号</th><th>昵称</th><th>姓名</th><th>手机</th><th>省份</th><th>城市</th><th>状态</th><shiro:hasPermission name="custom:unit:edit"><th>操作</th></shiro:hasPermission></tr></thead>
     <tbody>
-    <c:forEach items="${page.datas}" var="user">
+    <c:forEach items="${page.dataList}" var="user">
         <tr>
             <td></td>
             <td><a href="${ctx}/custom/edit?id=${user.id}">${user.username}</a></td>

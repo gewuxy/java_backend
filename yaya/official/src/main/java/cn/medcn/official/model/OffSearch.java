@@ -2,7 +2,6 @@ package cn.medcn.official.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import sun.text.normalizer.IntTrie;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
