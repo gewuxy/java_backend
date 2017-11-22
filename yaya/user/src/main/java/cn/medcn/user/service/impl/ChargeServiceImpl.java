@@ -50,13 +50,13 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws InvalidRequestException
      * @throws APIConnectionException
      * @throws AuthenticationException
-     */  //TODO wx_pub_qr 需要product_id
+     */
     public Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip,String appBase) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
         //单位为对应币种的最小货币单位，人民币为分。如订单总金额为 1 元， amount 为 100
-        chargeParams.put("amount", flux *2 * 100);
+        chargeParams.put("amount", flux * 2 * 100);
         Map<String, String> app = new HashMap();
         //appId
         app.put("id", appId);
@@ -65,7 +65,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("currency", "cny");
         chargeParams.put("client_ip", ip);
         chargeParams.put("subject", "流量充值");
-        chargeParams.put("body", "charge flux");
+        chargeParams.put("body", "流量充值");
 
         Map<String, String> extraMap = null;
         //支付宝手机网页支付,支付宝电脑网站支付
@@ -73,18 +73,17 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
              extraMap = new HashMap();
             extraMap.put("success_url", appBase + "mgr/charge/success?money="+flux *2);
             chargeParams.put("extra", extraMap);
-        }
 
         //银联全渠道手机网页支付,银联PC网页支付,微信h5支付
-        if ("upacp_wap".equals(channel) || "upacp_pc".equals(channel)) {
+        }else if ("upacp_wap".equals(channel) || "upacp_pc".equals(channel)) {
              extraMap = new HashMap();
             extraMap.put("result_url", appBase + "mgr/charge/success?money="+flux *2);
             chargeParams.put("extra", extraMap);
-        }
         //微信公众号扫码支付
-        if("wx_pub_qr".equals(channel)){
+        }else if("wx_pub_qr".equals(channel)){
             extraMap = new HashMap();
-            extraMap.put("product_id","");
+            extraMap.put("product_id",orderNo);
+            chargeParams.put("extra", extraMap);
         }
 
         return Charge.create(chargeParams);
