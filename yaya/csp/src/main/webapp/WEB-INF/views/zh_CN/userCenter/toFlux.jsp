@@ -91,10 +91,10 @@
                                             <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id2">
                                             <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                         </label>
-                                        <label for="id3" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="upacp_pc" id="id3">
-                                            <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                        </label>
+                                        <%--<label for="id3" class="item item-radius">--%>
+                                            <%--<input type="radio" name="channel" class="none" value="upacp_pc" id="id3">--%>
+                                            <%--<img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">--%>
+                                        <%--</label>--%>
                                     </div>
                                 </div>
                             </div>

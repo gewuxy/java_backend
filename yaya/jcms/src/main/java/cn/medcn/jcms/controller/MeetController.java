@@ -754,8 +754,9 @@ public class MeetController extends BaseController {
         Integer awardCreditCount = meetService.findGetRewardUserCount(id, MeetRewardHistory.rewardLabel.CREDIT.getRewardType());
         model.addAttribute("getAwardCreditCount",awardCreditCount);
 
-        String qrCodePath = checkAndCreateQRCode(id);
-        model.addAttribute("qrCodePath", qrCodePath);
+        model.addAttribute("yayaAppBase", yayaAppBase);
+//        String qrCodePath = checkAndCreateQRCode(id);
+//        model.addAttribute("qrCodePath", qrCodePath);
 
         if (tag != null && tag == 1) {
             return "/meet/detail";

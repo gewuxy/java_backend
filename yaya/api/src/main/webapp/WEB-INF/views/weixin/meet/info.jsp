@@ -94,22 +94,38 @@
         </div>
     </div>
 </div>
+<div class="wechat-box"></div>
 
 <script>
     $(function(){
+        var view = "${view}";
+        function isWX(){
+            var ua = window.navigator.userAgent.toLowerCase();
+            if(ua.match(/MicroMessenger/i) == 'micromessenger'){
+                return true;
+            }else{
+                return false;
+            }
+        }
 
         var openAppUrl = "doctor://medcn.com?meetId=${meet.id}&title=${meet.meetName}";
 
         var downLoadAppUrl = "${ctx}/weixin/app/download";
 
         $("#openApp").click(function(){
-            window.location.href = openAppUrl;
-//            var t = Date.now();
-//            setTimeout(function(){
-//                if (Date.now() - t < 1200) {
-//                    window.location.href = downLoadAppUrl;
-//                }
-//            }, 1000);
+            if (view && isWX()){
+                var mainBox = $(".wechat-box");
+                mainBox.show();
+            } else {
+                window.location.href = openAppUrl;
+                var t = Date.now();
+                setTimeout(function(){
+                    if (Date.now() - t < 1200) {
+                        window.location.href = downLoadAppUrl;
+                    }
+                }, 1000);
+            }
+
             return false;
         });
 

@@ -157,7 +157,7 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/csp/user/list" target="mainFrame">
+                                        <a href="${ctx}/csp/user/list?listType=0" target="mainFrame">
                                            <i class="icon-circle-arrow-right"></i>&nbsp;CSP账号管理
                                         </a>
                                     </li>

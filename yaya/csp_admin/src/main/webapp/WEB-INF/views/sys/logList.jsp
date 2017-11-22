@@ -9,7 +9,12 @@
     <li class="active"><a href="${ctx}/csp/sys/log/list">日志管理</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
-<form id="searchForm" method="post" class="breadcrumb form-search">
+<form id="pageForm" name="pageForm" action="${ctx}/csp/sys/log/list" method="post">
+    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
+    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
+    <input  name="account" type="hidden" value="${account}"/>
+</form>
+<form id="searchForm" method="post" action="${ctx}/csp/sys/log/list" class="breadcrumb form-search">
     <input placeholder="输入帐号进行搜索" value="${account}" size="40"  type="search" name="account" maxlength="50" />
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
@@ -34,10 +39,5 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
-<script>
-    $(document).ready(function() {
-       initPage("/csp/sys/log/list");
-    });
-</script>
 </body>
 </html>
