@@ -68,7 +68,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>激活码</th><th>状态</th><th>生成时间</th><th>激活时间</th><shiro:hasPermission name="custom:code:edit"><th>操作</th></shiro:hasPermission></tr></thead>
     <tbody>
-    <c:forEach items="${page.datas}" var="code">
+    <c:forEach items="${page.dataList}" var="code">
         <tr>
             <td>${code.code}</td>
             <td>

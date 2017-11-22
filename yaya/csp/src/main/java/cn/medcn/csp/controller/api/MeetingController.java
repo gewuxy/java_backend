@@ -672,7 +672,7 @@ public class MeetingController extends CspBaseController {
                 AudioCoursePlay play = audioService.findPlayState(courseId);
                 if (play != null) {
                     play.setPlayPage(pageNum);
-                    play.setPlayState(AudioCoursePlay.PlayState.over.ordinal());
+                    play.setPlayState(over == 1 ? AudioCoursePlay.PlayState.over.ordinal() : play.getPlayPage());
                     audioService.updateAudioCoursePlay(play);
                 }
             }
@@ -727,16 +727,23 @@ public class MeetingController extends CspBaseController {
         if (firstClk == null) {
             firstClk = 0;
         }
-        LiveOrderDTO order = liveService.findCachedOrder(courseId);
+
         //首先判断是否存在缓存 如果存在缓存则不发送同步指令 否则发送同步指令
         if (firstClk == 1) {
+
             //发送直播开始指令 只用于投屏同步
             LiveOrderDTO liveStartOrder = new LiveOrderDTO();
             liveStartOrder.setOrder(LiveOrderDTO.ORDER_LIVE_START);
             liveStartOrder.setCourseId(String.valueOf(courseId));
             liveService.publish(liveStartOrder);
 
+            LiveOrderDTO order = liveService.findCachedOrder(courseId);
             if (order == null){
+
+                Live live = liveService.findByCourseId(courseId);
+                if (live != null && live.getLiveState().intValue() == Live.LiveState.init.getType()) {
+
+                }
                 sendSyncOrder(courseId, imgUrl, videoUrl);
             }
 

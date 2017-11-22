@@ -19,13 +19,14 @@
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>帐号</th><th>姓名</th><th>操作url路径</th><th>操作时间</th></tr></thead>
+    <thead><tr><th>帐号</th><th>姓名</th><th>操作名称</th><th>操作url路径</th><th>操作时间</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="log">
             <tr>
                 <td>${log.account}</td>
                 <td>${log.userName}</td>
+                <td>${log.actionName}</td>
                 <td>${log.action}</td>
                 <td><fmt:formatDate value="${log.logDate}" type="both" dateStyle="full"/></td>
             </tr>

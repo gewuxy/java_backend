@@ -90,14 +90,12 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
             List<String> imageNameList = Lists.newArrayList();
             String suffix = FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix;
             String imageFilePath;
+            BufferedImage image = null;
             for (int i = 0; i < pageCount; i++) {
-                BufferedImage image = renderer.renderImage(i, 1.0f);
+                image = renderer.renderImage(i, 1.0f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 request.getSession().setAttribute(Constants.OFFICE_CONVERT_PROGRESS, new OfficeConvertProgress(pageCount, i + 1, courseId));
-                System.out.println(request.getSession().getAttribute(Constants.OFFICE_CONVERT_PROGRESS));
-//                imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
-//                ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 imageNameList.add(imageFilePath);
             }
             return imageNameList;

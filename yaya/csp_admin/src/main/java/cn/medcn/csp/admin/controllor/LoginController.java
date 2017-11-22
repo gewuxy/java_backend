@@ -1,6 +1,7 @@
 package cn.medcn.csp.admin.controllor;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.csp.admin.log.Log;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -31,6 +32,7 @@ public class LoginController extends BaseController{
     }
 
     @RequestMapping(value="/login", method = RequestMethod.POST)
+    @Log(name="登录")
     public String login(String account, String password, HttpServletRequest request, HttpServletResponse response, Model model){
         if(StringUtils.isEmpty(account)){
             model.addAttribute(messageKey, "用户名不能为空");
@@ -57,6 +59,7 @@ public class LoginController extends BaseController{
      * @return
      */
     @RequestMapping(value="/logout")
+    @Log(name="退出")
     public String logout(){
         return "redirect:/";
     }
