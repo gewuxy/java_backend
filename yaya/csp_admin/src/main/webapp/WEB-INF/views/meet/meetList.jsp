@@ -29,7 +29,7 @@
                 <td>${meet.lecturer}</td>
                 <td>${meet.meetType}</td>
                 <td>${meet.state eq 0? "草稿": meet.state eq 1?"未开始":meet.state eq 2?"进行中":meet.state eq 3?"已结束":meet.state eq 4?"已撤销":meet.state eq 5?"未发布":meet.state eq 6?"已关闭":"管理员删除"}</td>
-                <td><fmt:formatDate value="${meet.startTime}" type="both" dateStyle="full"/></td>
+                <td><fmt:formatDate value="${meet.startTime}" type="both"/></td>
                 <td>
                     <a href="${ctx}/csp/meet/info?id=${meet.id}">查看</a>
                     <a href="${ctx}/csp/meet/update?id=${meet.id}&state=7">删除</a>

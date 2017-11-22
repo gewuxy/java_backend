@@ -16,24 +16,29 @@
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
     <input  name="userName" type="hidden" value="${userName}"/>
     <input  name="type" type="hidden" value="${type}"/>
+    <input  name="listType" type="hidden" value="${listType}"/>
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/user/list" class="breadcrumb form-search">
     <input placeholder="输入用户名进行搜索" value="${userName}" size="40"  type="search" name="userName" maxlength="50" class="required"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>ID</th><th>昵称</th><th>注册时间</th><th>操作</th></tr></thead>
+    <thead><tr><th>ID</th><th>昵称</th><th>电话</th><th>电子邮件</th><th>注册时间</th><th>操作</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="user">
             <tr>
                 <td>${user.id}</td>
                 <td>${user.nickName}</td>
-                <td><fmt:formatDate value="${user.registerTime}" type="date"/></td>
+                <td>${user.mobile}</td>
+                <td>${user.email}</td>
+                <td><fmt:formatDate value="${user.registerTime}" type="both"/></td>
                 <td>
-                    <a href="${ctx}/csp/user/viewOrRegister?id=${user.id}&actionType=3">修改</a>
-                    <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=1"  onclick="layerConfirm('确认要冻结该用户帐号吗？', this)">冻结</a>
-                    <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=2"  onclick="layerConfirm('确认要删除该用户帐号吗？', this)">删除</a>
+                    <a href="${ctx}/csp/user/viewOrRegister?id=${user.id}&actionType=3&listType=${listType}">修改</a>
+                    <c:if test="${user.active eq true}">
+                        <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=1&listType=${listType}"  onclick="layerConfirm('确认要冻结该用户帐号吗？', this)">冻结</a>
+                    </c:if>
+                    <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=2&listType=${listType}"  onclick="layerConfirm('确认要删除该用户帐号吗？', this)">删除</a>
                 </td>
             </tr>
         </c:forEach>
