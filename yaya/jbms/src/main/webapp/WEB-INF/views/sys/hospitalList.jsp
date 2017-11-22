@@ -54,8 +54,8 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>名称</th><th>级别</th><th>电话</th><th>省份</th><th>城市</th><th>详细地址</th><shiro:hasPermission name="sys:region:edit"><th>操作</th></shiro:hasPermission></tr></thead>
     <tbody>
-    <c:if test="${not empty page.datas}">
-        <c:forEach items="${page.datas}" var="hos">
+    <c:if test="${not empty page.dataList}">
+        <c:forEach items="${page.dataList}" var="hos">
             <tr>
                 <td>${hos.name}</td>
                 <td>${hos.level}</td>
@@ -71,7 +71,7 @@
             </tr>
         </c:forEach>
     </c:if>
-    <c:if test="${empty page.datas}">
+    <c:if test="${empty page.dataList}">
         <tr>
             <td colspan="7">没有查询到数据</td>
         </tr>
