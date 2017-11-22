@@ -29,4 +29,10 @@ public class IndexController extends BaseController {
         return "/example/form";
     }
 
+    @RequestMapping(value = "/user/statistics")
+    public String statistic(){
+        return "/statistics/register";
+    }
+
+
 }

@@ -70,7 +70,6 @@
                         <p><a href="javascript:;" class="button button-color fx-btn-1">登录</a><a href="javascript:;" class="button color-blue fx-btn-2">注册</a></p>
                     </div>
                 </shiro:notAuthenticated>
-
             </div>
         </div>
     </div>

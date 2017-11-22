@@ -5,6 +5,7 @@
     <title>首页</title>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
 </head>
+<body>
 <div id="wrapper" class="v2-medcnIndex">
     <%@include file="/WEB-INF/include/header.jsp" %>
     <div class="v2-banner bg-lightBlue">
@@ -74,7 +75,6 @@
 </div>
 <!--弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
-<%@ include file="/WEB-INF/include/common_js.jsp" %>
 <script>
     $(function(){
         $.get('/news/ajaxTrends',{'pageNum':1,'pageSize':6}, function (data) {

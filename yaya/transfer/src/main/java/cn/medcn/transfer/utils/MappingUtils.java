@@ -6,6 +6,8 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -51,6 +53,24 @@ public class MappingUtils {
                             Integer intValue = (Integer) value;
                             Boolean booleanValue = intValue>0?Boolean.TRUE:Boolean.FALSE;
                             setter.invoke(entity, booleanValue);
+                            continue;
+                        }
+                    }
+                    if(properType.getName().equals("java.util.Date")){
+                        if(value != null){
+                            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            try {
+                                Date dateValue = format.parse(value.toString());
+                                setter.invoke(entity, dateValue);
+                                continue;
+                            } catch (ParseException e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                    if (properType.getName().equals("java.lang.Long")) {
+                        if (value != null) {
+                            setter.invoke(entity, Long.valueOf(value.toString()));
                             continue;
                         }
                     }

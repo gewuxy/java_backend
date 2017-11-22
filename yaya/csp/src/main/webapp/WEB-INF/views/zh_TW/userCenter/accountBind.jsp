@@ -195,6 +195,10 @@
 
 <script>
 
+    var InterValObj; //timer变量，控制时间
+    var count = 60; //间隔函数，1秒执行
+    var curCount;//当前剩余秒数
+
     $(function () {
         $("#config_3").parent().attr("class","cur");
 
@@ -404,33 +408,22 @@
 
     function checkCaptcha() {
         var captcha = $("#captcha").val();
-        var re = /^[0-9]+.?[0-9]*$/;
-        if(!re.test(captcha)){
-            $("#captchaSpan").attr("class","cells-block error");
-            $("#captchaSpan").html("驗證碼格式不正確");
-            return false;
-        }
         if($.trim(captcha) == '' ){
             $("#captchaSpan").attr("class","cells-block error");
             $("#captchaSpan").html("驗證碼不能為空");
             return false;
         }
 
+        var re = /^[0-9]+.?[0-9]*$/;
+        if(!re.test(captcha)){
+            $("#captchaSpan").attr("class","cells-block error");
+            $("#captchaSpan").html("驗證碼格式不正確");
+            return false;
+        }
+
         return true;
     }
 
-    function sendMessage() {
-        if(isPhone()){
-            var mobile =  $("#phone").val();
-            $.get('${ctx}/api/user/sendCaptcha',{"mobile":mobile,"type":1}, function (data) {
-                if (data.code == 0){
-                  layer.msg("驗證碼已發送");
-                }else{
-                    layer.msg(data.err);
-                }
-            },'json');
-        }
-    }
 
     function checkPwd() {
         var password = $("#password").val();
@@ -452,7 +445,41 @@
         }
     }
 
+    function sendMessage() {
+        if(isPhone()){
+            curCount = count;
+            //设置button效果，开始计时
+            $("#btnSendCode").attr("disabled", "true");
+            $("#btnSendCode").text(curCount + "s" );
+            $("#btnSendCode").addClass("getCodeButton-current");
+            InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
+            //向后台发送处理数据
+            var mobile =  $("#phone").val();
+            $.get('${ctx}/api/user/sendCaptcha',{"mobile":mobile,"type":1}, function (data) {
+                if (data.code == 0){
+                    layer.msg("驗證碼已經發送到您的手機,請注意查收");
+                    $("#btnSendCode").removeAttr("onclick");
+                }else{
+                    layer.msg(data.err);
+                }
+            },'json');
+        }
 
+    }
+
+    //timer处理函数
+    function SetRemainTime() {
+        if (curCount == 0) {
+            window.clearInterval(InterValObj);//停止计时器
+            $("#btnSendCode").removeClass("getCodeButton-current");
+            $("#btnSendCode").removeAttr("disabled");//启用按钮
+            $("#btnSendCode").text("重新發送");
+        }
+        else {
+            curCount--;
+            $("#btnSendCode").text(curCount + "s");
+        }
+    }
 
 
 </script>
