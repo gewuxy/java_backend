@@ -50,7 +50,7 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements CspUserService {
 
-    @Value("${app.yaya.base}")
+    @Value("${app.csp.base}")
     protected String appBase;
 
     @Value("${app.file.upload.base}")

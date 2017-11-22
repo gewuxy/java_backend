@@ -44,7 +44,7 @@ public class EmailController extends BaseController{
     @Autowired
     protected EmailTempService tempService;
 
-    @Value("${app.yaya.base}")
+    @Value("${app.csp.base}")
     private String appBaseUrl;
 
 
