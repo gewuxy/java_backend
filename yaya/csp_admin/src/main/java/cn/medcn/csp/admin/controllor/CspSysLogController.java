@@ -3,6 +3,7 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.csp.admin.log.Log;
 import cn.medcn.csp.admin.service.CspSysLogService;
 import cn.medcn.csp.admin.model.CspSysLog;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,7 @@ public class CspSysLogController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/log/list")
+    @Log(name="查看日志")
     public String cspSysUserSearch(Pageable pageable, String account, Model model) {
         if (!StringUtils.isEmpty(account)) {
             pageable.getParams().put("account", account);
