@@ -60,7 +60,7 @@ public class WeChatServiceDecorator extends OAuthServiceDecorator {
         JSONObject jsonObject = JSON.parseObject(body);
 
         OAuthUser user = new OAuthUser();
-        user.setUid(jsonObject.getString("openid"));
+        user.setUid(jsonObject.getString("unionid"));
         user.setNickname(jsonObject.getString("nickname"));
         user.setGender("sex");
         user.setPlatformId(ThirdPartyPlatform.we_chat.ordinal() + 1);
