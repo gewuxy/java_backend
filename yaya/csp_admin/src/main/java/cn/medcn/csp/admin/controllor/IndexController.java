@@ -11,28 +11,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class IndexController extends BaseController {
 
 
-    @RequestMapping(value = "/")
-    public String index(){
-        return "/login";
-    }
-
-
-    @RequestMapping(value = "/example/table")
-    public String table(){
-
-        return "/example/table";
-    }
-
-    @RequestMapping(value = "/example/form")
-    public String form(){
-
-        return "/example/form";
-    }
-
-    @RequestMapping(value = "/user/statistics")
-    public String statistic(){
-        return "/statistics/register";
-    }
+//    @RequestMapping(value = "/")
+//    public String index(){
+//        return "/login";
+//    }
+//
+//
+//    @RequestMapping(value = "/example/table")
+//    public String table(){
+//
+//        return "/example/table";
+//    }
+//
+//    @RequestMapping(value = "/example/form")
+//    public String form(){
+//
+//        return "/example/form";
+//    }
+//
+//    @RequestMapping(value = "/user/statistics")
+//    public String statistic(){
+//        return "/statistics/register";
+//    }
 
 
 }

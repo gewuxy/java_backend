@@ -60,7 +60,7 @@ public class LogAspect {
             if(principal!=null){
                 CspSysLog log=new CspSysLog();
                 log.setUserId(principal.getId());
-                log.setAccount(principal.getAccount());
+                log.setAccount(principal.getUsername());
                 log.setUserName(principal.getUsername());
                 log.setLogDate(new Date());
                 log.setAction(action.length() < 50 ? action : action.substring(0,50));
@@ -91,7 +91,7 @@ public class LogAspect {
             logger.info("异常信息:" + e.getMessage());
             logger.info("异常方法:" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
             logger.info("方法描述:" + getControllerMethodDescription(joinPoint));
-            logger.info("请求人:" +  principal.getAccount());
+            logger.info("请求人:" +  principal.getUsername());
             logger.info("请求IP:" + ip);
             logger.info("请求参数:" + params);
         } catch (Exception ex) {

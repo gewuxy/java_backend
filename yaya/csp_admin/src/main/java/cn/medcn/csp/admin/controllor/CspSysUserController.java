@@ -108,7 +108,7 @@ public class CspSysUserController extends BaseController {
     @RequestMapping(value = "/user/add")
     @Log(name="添加管理员")
     public String addUserInfo(CspSysUser user, Model model,RedirectAttributes redirectAttributes) {
-        String account = SubjectUtils.getCurrentAccount();
+        String account = SubjectUtils.getCurrentUsername();
         if(account.equals(user.getAccount())){
             model.addAttribute("err","此用户名已存在");
             return "/sys/addAdminForm";
