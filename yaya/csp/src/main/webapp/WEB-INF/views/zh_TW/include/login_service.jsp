@@ -7,5 +7,5 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="login-box-info t-center ">
-    <p>登錄即表示您已同意 <a href="${ctx}/index/17103116062545591360" class="color-blue">《CSPmeeting服務協議》</a> </p>
+    <p>登錄即表示您已同意 <a href="${ctx}/index/17103116062545591360" class="color-blue">《會講服務協議》</a> </p>
 </div>

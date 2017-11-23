@@ -28,19 +28,20 @@
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
                     <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "Login"}</strong>&nbsp;&nbsp;<i></i> </a>
-                    <a href="javascript:;" class="index-download">Download App</a>
+                    <a href="javascript:;" class="index-download index-qrcode">Download App<span class="qrcode-01 qrcode-top"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 </div>
             </div>
         </div>
         <div class="banner index-banner-img">
             <div class="index-banner-content not-animated" data-animate="fadeIn" data-delay="200">
-                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">CSPmeeting</h3>
-                <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">A bigger stage for your insights!</h2>
-                <p class="not-animated" data-animate="fadeIn" data-delay="500">CSPmeeting provides online meeting services of projective record and projective live stream, <br />to serve the requirement of content spreading for different users in multiple scenarios. </p>
+                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300"><img src="${ctxStatic}/images/index-logo-en.png" alt=""></h3>
+                <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">Spread your insights</h2>
+                <h4 class="not-animated" data-animate="fadeIn" data-delay="500">Deliver your presentation with mobile&nbsp;:&nbsp;presenting, recording and  <br />sharing anytime, anywhere! </h4>
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
                     <a href="${ctx}/login" class="button item-radius">Free Trial</a>
                 </div>
             </div>
+
         </div>
 
     </div>
@@ -59,7 +60,6 @@
                         <div class="container-fluid">
                             <div class="index-functional clearfix">
                                 <div class="row shadow-layer-top">
-
 
                                     <div class="col-lg-4">
                                         <div class="functional-item">
@@ -297,7 +297,7 @@
                     <div class="module-section-content index-buy clearfix">
                         <div class="index-buy-item  ">
                             <div class="index-buy-header">
-                                <h4>Evaluation Edition</h4>
+                                <h4>Standard Edition</h4>
                                 <h3 class="price">Free</h3>
                             </div>
                             <div class="index-buy-main">
@@ -320,7 +320,7 @@
                         </div>
                         <div class="index-buy-item  ">
                             <div class="index-buy-header">
-                                <h4>Basic Edition</h4>
+                                <h4>Premium Edition</h4>
                                 <h3 class="price">2.5 USD</h3>
                             </div>
                             <div class="index-buy-main">
@@ -392,36 +392,40 @@
     <div class="footer" >
         <div class="page-width">
             <p class="t-center"><a href="${ctx}/index/17103116215880292674" class="color-black">About Us</a><span class="muted">|</span><a href="${ctx}/index/17103116063862386794" class="color-black">Support</a></p>
-            <p class="t-center icon-row"><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-wechat.png" alt=""></a><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-facebook.png" alt=""></a><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-twitter.png" alt=""></a></p>
+            <p class="t-center icon-row">
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-wechat.png" alt=""></a>
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a>
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-facebook.png" alt=""></a>
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-twitter.png" alt=""></a>
+                <a href="javascript;" class="index-qrcode">
+                    <img src="${ctxStatic}/images/icon-indexDown.png" alt="">
+                    <span class="qrcode-01 qrcode-bottom"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span>
+                </a>
+            </p>
             <p class="t-center"><%@include file="../include/copy_right.jsp"%></p>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="//api.map.baidu.com/api?key=&v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj"></script>
 <script type="text/javascript">
     $(function(){
         //内容加载后的运动效果
         dataAnimate();
 
-        // 百度地图API功能
-        var map = new BMap.Map("allmap");
-        var point = new BMap.Point(113.337982, 23.121986);
-        map.centerAndZoom(point,18);
-        // 创建地址解析器实例
-        var myGeo = new BMap.Geocoder();
-        // 将地址解析结果显示在地图上,并调整地图视野
-        myGeo.getPoint("广州市天河区珠江新城兴民路222号天盈广场西塔", function(point){
-            if (point) {
-                map.centerAndZoom(point, 18);
-                map.addOverlay(new BMap.Marker(point));
-            }else{
-
+        var qrcode = $('.index-qrcode');
+        qrcode.on({
+            mouseenter:function() {
+                $(this).find('.qrcode-01').show();
+            },
+            mouseleave:function() {
+                $(this).find('.qrcode-01').hide();
             }
-        }, "广州");
+        })
+
     });
 
 </script>
+
 
 </body>
 </html>

@@ -27,14 +27,14 @@ public class AuthInterceptor implements HandlerInterceptor {
         //String token = "eb3b4a00c831429cb16d1b5dd00d8db6";
 
         if (CheckUtils.isEmpty(token)) {
-            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.unauthed")));
+            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
             return false;
         }
 
         String cacheKey = Constants.TOKEN+"_"+token;
         Principal principal = (Principal) redisCacheUtils.getCacheObject(cacheKey);
         if(principal == null){
-            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.unauthed")));
+            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
             return false;
         }
         redisCacheUtils.setCacheObject(cacheKey, principal, Constants.TOKEN_EXPIRE_TIME);

@@ -73,6 +73,7 @@
                                     <p class="color-gray-02">Please select a file less than 100M.</p>
                                 </c:if>
 
+                                <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Please upload the speech document</span>
                             </div>
                         </div>
                     </div>
@@ -127,7 +128,7 @@
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;Video Live Stream</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>Generally 1 audience takes 0.5G network flow per hour. Your live is set to 30 minutes. It is estimated to take 25G network flow given 100 audience(s) online.</p>
+                                                    <p>Generally 1 audience takes 1.7G network flow per hour. Your live is set to 30 minutes. It is estimated to take 85G network flow given 100 audience(s) online.</p>
                                                     <div class="text">Network Flow Balance<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
@@ -432,6 +433,13 @@
             var $courseTitle = $("#courseTitle");
             var $courseInfo = $("#courseInfo");
             var $timedate = $(".timedate-input");
+
+            var detailsLength = "${fn:length(course.details)}";
+            if (detailsLength == 0){
+                $("#detailsError").removeClass("none");
+                return;
+            }
+
             if ($.trim($courseTitle.val()) == ''){
                 $courseTitle.focus();
                 $courseTitle.parent().next(".error").removeClass("none");
@@ -449,10 +457,16 @@
             }
 
             var playType = $("input[name='course.playType']:checked").val();
-            if ($.trim($timedate.val()) == '' && playType == 1){
-                $timedate.focus();
-                $timedate.parent().parent().next(".error").removeClass("none");
-                return;
+            if (playType == 1){
+                var startTime = $("#liveStartTime").val();
+                var endTime = $("#liveEndTime").val();
+                if(startTime == endTime){
+                    $timedate.focus();
+                    $timedate.parent().parent().next(".error").removeClass("none");
+                    return;
+                } else {
+                    $timedate.parent().parent().next(".error").addClass("none");
+                }
             } else {
                 $timedate.parent().parent().next(".error").addClass("none");
             }
@@ -510,6 +524,7 @@
             startOfWeek: 'monday',
             separator : ' to ',
             format: 'YYYY/MM/DD HH:mm:ss',
+            startDate:new Date(),
             autoClose: false,
             time: {
                 enabled: true
