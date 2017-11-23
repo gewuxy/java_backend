@@ -74,6 +74,7 @@
                                     <p class="color-gray-02">选择小于100M的文件</p>
                                 </c:if>
 
+                                <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请上传演讲文档</span>
                             </div>
                         </div>
                     </div>
@@ -431,6 +432,12 @@
             var $courseTitle = $("#courseTitle");
             var $courseInfo = $("#courseInfo");
             var $timedate = $(".timedate-input");
+
+            var detailsLength = "${fn:length(course.details)}";
+            if (detailsLength == 0){
+                $("#detailsError").removeClass("none");
+                return;
+            }
             if ($.trim($courseTitle.val()) == ''){
                 $courseTitle.focus();
                 $courseTitle.parent().next(".error").removeClass("none");
