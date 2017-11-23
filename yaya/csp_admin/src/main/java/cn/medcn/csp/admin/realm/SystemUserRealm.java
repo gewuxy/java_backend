@@ -81,7 +81,7 @@ public class SystemUserRealm extends AuthorizingRealm {
 
         // 校验用户名密码
         SystemUser condition = new SystemUser();
-        condition.setUsername(token.getUsername());
+        condition.setUserName(token.getUsername());
         SystemUser user = systemUserService.selectOne(condition);
         if (user != null) {
             if (!user.getActive()) {

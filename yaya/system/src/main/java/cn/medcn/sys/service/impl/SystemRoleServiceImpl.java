@@ -38,10 +38,19 @@ public class SystemRoleServiceImpl extends BaseServiceImpl<SystemRole> implement
         //删除原来的所有设置
         SystemRoleMenu condition = new SystemRoleMenu();
         condition.setRoleId(roleId);
-        systemRoleMenuDAO.delete(condition);
+        deleteMenuRole(condition);
         for(Integer menuId:menuIds){
             SystemRoleMenu roleMenu = new SystemRoleMenu(null, roleId, menuId);
             systemRoleMenuDAO.insert(roleMenu);
         }
+    }
+
+    /**
+     * 删除该角色下的所有权限
+     * @param condition
+     */
+    @Override
+    public void deleteMenuRole(SystemRoleMenu condition) {
+        systemRoleMenuDAO.delete(condition);
     }
 }
