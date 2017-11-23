@@ -129,7 +129,7 @@
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
+                                                    <p>流量消耗每人约1.7G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗85G流量。</p>
                                                     <div class="text">流量剩余<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
@@ -455,10 +455,16 @@
             }
 
             var playType = $("input[name='course.playType']:checked").val();
-            if ($.trim($timedate.val()) == '' && playType == 1){
-                $timedate.focus();
-                $timedate.parent().parent().next(".error").removeClass("none");
-                return;
+            if (playType == 1){
+                var startTime = $("#liveStartTime").val();
+                var endTime = $("#liveEndTime").val();
+                if(startTime == endTime){
+                    $timedate.focus();
+                    $timedate.parent().parent().next(".error").removeClass("none");
+                    return;
+                } else {
+                    $timedate.parent().parent().next(".error").addClass("none");
+                }
             } else {
                 $timedate.parent().parent().next(".error").addClass("none");
             }
@@ -517,6 +523,7 @@
             separator : ' 至 ',
             format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
+            startDate:new Date(),
             time: {
                 enabled: true
             }
