@@ -44,8 +44,6 @@ public class WebChargeController extends CspBaseController {
     @Value("${appId}")
     private String appId;
 
-    @Value("${public_appId}")
-    private String publicAppId;
 
     @Value("${paypal_clientId}")
     protected String clientId;
