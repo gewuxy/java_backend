@@ -196,10 +196,7 @@ public class WebChargeController extends CspBaseController {
         return "";
     }
 
-    @RequestMapping("/cancel")
-    public String cancel(){
-        return "";
-    }
+
 
 
     /**
