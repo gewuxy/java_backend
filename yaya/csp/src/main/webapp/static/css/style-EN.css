@@ -194,10 +194,16 @@ a.color-wathet-blue:hover{color:#146ee3}
 .banner {}
 .index-banner-img { background:url(../images/img/index-banner-01.jpg) no-repeat center top; height:100%; }
 .index-banner-content { position: absolute; top:280px; z-index: 2; width:100%; text-align: center; color:#fff; font-size:16px;}
-.index-banner-content h3 { margin-bottom:30px; font-size:90px;  line-height: 1; }
-.index-banner-content h2 { margin-bottom:42px;  font-size:32px; font-weight: normal;  line-height: 1; }
+.index-banner-content h3 { margin-bottom:27px; font-size:90px;  line-height: 1; }
+.index-banner-content h2 { margin-bottom:65px;  font-size:32px; font-weight: normal;  line-height: 1; }
+.index-banner-content h4 { font-size:24px; font-weight: normal; line-height: 1.3;}
 .index-banner-content .index-buy-button .button { font-size:18px; }
 .index-banner-content .index-buy-button .button:hover {  background-color:#fff; color:#167afe; -moz-box-shadow: none; -webkit-box-shadow: none; box-shadow: none; }
+.index-qrcode { position: relative;}
+.index-qrcode .qrcode-01{ position: absolute;  display: none; width:150px; height:150px; padding:10px; background-color:#fff; border-radius: 15px; border:1px solid #C3C8CF; }
+.index-qrcode .qrcode-01 img{ max-width: 100%;}
+.index-qrcode .qrcode-top { top:40px; left: -35px;}
+.index-qrcode .qrcode-bottom{ bottom:70px; left: -60px;  }
 
 .index-banner-bg { position: absolute; top:0; left:0;  width:100%; height:100%; background-color:#000;  filter:alpha(opacity=60); -moz-opacity:0.6; -khtml-opacity: 0.6; opacity: 0.6;}
 
@@ -498,7 +504,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 *******/
 
 .admin-header { box-shadow: 0 4px 12px 0 rgba(136,138,169,0.20); background:#fff; height:80px; position: relative;  }
-.admin-header .logo{ background:url(../images/admin-logo.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
+.admin-header .logo{ background:url(../images/admin-logo-en.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
 .admin-header .login-header { position: static; padding-top:25px;}
 .admin-header .login-header a{ color:#7A8B9F; }
 .admin-header .login-header .login-language { border-color:#7a8b9f;}
@@ -590,7 +596,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .admin-content { padding:54px 0;}
 .admin-row { margin-bottom:70px; }
 .admin-screen-area ul li{ float:left;}
-.admin-screen-area ul li a {display: block; padding:10px 20px; font-size:14px; border:1px solid #EDF3F9; background-color:#fff;  -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px;}
+.admin-screen-area ul li a {display: block; padding:10px 20px; font-size:14px; border:1px solid #EDF3F9; background-color:#fff;  -moz-border-radius: 10px; -webkit-border-radius:10px; border-radius: 10px; color:#7a8b9f;}
 .admin-screen-area ul li a:hover,
 .admin-screen-area ul .cur a{ background-color:#167afe; color:#fff; border-color:#167afe; }
 .admin-screen-area ul .first { margin-right:30px;}
@@ -619,9 +625,9 @@ a.color-wathet-blue:hover{color:#146ee3}
 .admin-metting-list { margin:0 0 70px;}
 .resource-title { font-size: 20px; font-weight: normal; color: #000016; padding: 10px 16px;}
 .resource-label { margin:5px 16px;}
-.resource-label span{ border: 1px solid #EDF3F9; border-radius: 10px; padding: 8px 15px; margin-right:10px; color:#95A7BC; font-size:12px;}
+.resource-label span{ border: 1px solid #EDF3F9; border-radius: 10px; padding: 8px 13px; margin-right:10px; color:#95A7BC; font-size:12px;}
 .resource-label span i { font-style: normal;}
-.resource-label span .hot { font-size:18px; color:#167afe; }
+.resource-label span .hot { font-size:16px; color:#167afe; }
 .resource-label span .muted {  color:#EDF3F9 ; }
 .resource-label .issue { background:#167AFE; border-color:#167AFE; color:#fff;}
 .resource-label .look {border-color:#25AFA2; color:#25afa2; }
@@ -637,7 +643,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .resource-list-item .resource-link .resource-icon-play i {  background:url(../images/icon-admin-metting-play.png) no-repeat;}
 .resource-list-item .resource-link .resource-icon-qrcode { background: rgba(37,175,162,0.80); }
 .resource-list-item .resource-link .resource-icon-qrcode i {  background:url(../images/icon-admin-metting-qdCode.png) no-repeat;}
-.resource-list-item .resource-menu a{ text-align: center; display: block; font-size:18px; margin:20px 0 0;}
+.resource-list-item .resource-menu a{ text-align: center; display: block; font-size:18px; margin:20px 0 0; color:#7a8b9f;}
 .resource-list-item .resource-menu .more{ background:url(../images/admin-metting-list-line.png) repeat-y center left;}
 .resource-list-item .resource-menu .more i{ display: inline-block; width:16px; height:16px; background:url(../images/icon-admin-metting-more.png) no-repeat; position: relative; top:2px; margin-right:10px;  }
 .resource-list-item .resource-menu .more:hover i { background:url(../images/icon-admin-metting-more-cur.png) no-repeat;}
@@ -756,6 +762,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .swiper-slide-metting-move { position: absolute; right:16px; top:16px;}
 .audio-metting-box { position: relative;}
 .audiojs .play-pause { display: block;}
+.audio-metting-box .error .error { display: none; }
 .metting-btn-item { text-align: center;}
 .metting-button ,.swiper-pagination{ position: static; display: inline-block;}
 .metting-button {margin: 10px 0 0 0;}
@@ -894,7 +901,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .user-menu { margin-bottom:16px; }
 .user-menu ul { padding:0 36px;}
 .user-menu ul li { float:left;}
-.user-menu ul li a { display: inline-block; padding:10px 12px 9px 12px; border-bottom:2px solid #fff; font-size:16px; margin-right:25px;}
+.user-menu ul li a { display: inline-block; padding:10px 12px 9px 12px; border-bottom:2px solid #fff; font-size:16px; margin-right:25px; color:#7A8B9F;}
 .user-menu ul .cur a { border-color:#167AFE;}
 .user-menu ul .last a { margin-right:0;}
 .user-content { padding:45px 45px 67px 45px; margin-bottom:20px; }

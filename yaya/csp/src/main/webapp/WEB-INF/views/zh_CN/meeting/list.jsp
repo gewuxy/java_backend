@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>会议管理-CSPmeeting</title>
+    <title>会议管理-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 

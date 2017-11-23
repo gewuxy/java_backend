@@ -44,7 +44,7 @@
                                 <c:if test="${page.dataList != null && fn:length(page.dataList) != 0}">
                                     <c:forEach items="${page.dataList}" var="v">
                                         <tr>
-                                            <td class="col-w-4 color-black">${v.meetName}.avi</td>
+                                            <td class="col-w-4 color-black">${v.meetName}</td>
                                             <td class="col-w-3">消耗${v.expense}M</td>
                                             <c:if test="${v.expireDay > 0}">
 
@@ -83,7 +83,7 @@
                                     <div class="formTitle color-black">充值方式</div>
                                     <div class="formControls">
                                         <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
-                                            <label for="paypal" class="item item-radius">
+                                            <label for="paypal" class="item item-radius pay-on">
                                                 <input type="radio" name="channel" class="none" value="paypal" id="paypal">
                                                 <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                             </label>

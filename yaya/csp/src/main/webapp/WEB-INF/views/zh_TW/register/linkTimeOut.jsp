@@ -6,49 +6,69 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <title>郵件超時-會講</title>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <meta charset="utf-8" />
-    <meta name="keywords" content="社交，社交平台，医生，论坛，专属医生社交平台，专业医师，专业药师，执业医师，执业药师，执业资格证，医疗工具，实用，药草园">
-    <title>重设密码</title>
-    <link rel="stylesheet" type="text/css" href="${ctxStatic}/css/common.css" />
-    <link rel="stylesheet" type="text/css" href="${ctxStatic}/css/index.css"/>
-    <link rel="stylesheet" type="text/css" href="${ctxStatic}/css/completer.css"/>
+    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
+    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 
-<body class="bg-gray">
-<div id="header" class="header-border">
-    <div class="h_con">
-        <a href="http://www.medcn.com" class="c_left fl">
-            <img src="${ctxStatic}/images/logo.png" alt="logo" />
-        </a>
-    </div>
-</div>
-<!--内容区域-->
-<div class="warp ">
-    <div class="page-width">
-        <div class="reg-index-box clearfix">
 
-            <h3>忘记密码</h3>
-            <div class="reg-index-main" style="padding:80px 270px;">
-                <fieldset>
-                        <div class="formrow">
-                            <label for="" class="formTitle"><img src="${ctxStatic}/images/icon_tips.png" align="absMiddle" alt=""></label>
-                            <div class="formControls">
+<body>
+<div id="wrapper">
+    <div class="login login-banner" style="height:900px;">
+        <div class="page-width pr">
+            <div class="login-header">
+                <%@include file="../include/login_header.jsp"%>
+                <%@include file="/WEB-INF/include/switch_language.jsp"%>
+            </div>
+            <div class="login-box clearfix">
+                <%@include file="../include/login_left.jsp"%>
 
-                                <p style="line-height: 50px;">您的重置密码链接已失效，请重新申请！</p>
+                <div class="col-lg-5 login-box-item">
 
-
+                    <!--切换  重置密码-->
+                    <div class="login-box-main position-message-login ">
+                        <form action="">
+                            <div class="login-form-item">
+                                <div class="login-message-text" style="text-align: left !important;">
+                                    <div class="fl" style="margin-right:30px;">
+                                        <img src="${ctxStatic}/images/login-error-icon-02.png" alt="" style="margin-top:10px;">
+                                    </div>
+                                    <div class="oh">
+                                        <p class="color-red">鏈接已超時</p>
+                                        <p class="color-red">請重新驗證！</p>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
+                        </form>
+                    </div>
 
-                </fieldset>
+                </div>
             </div>
 
+            <%@include file="../include/login_footer.jsp"%>
         </div>
     </div>
 </div>
+
+<script>
+    $(function(){
+        //让背景撑满屏幕
+        $('.login-banner').height($(window).height());
+        //让协议定位到底部
+        $('.login-box-item').height($('.login-box').height());
+
+
+
+    })
+</script>
 
 </body>
 </html>
