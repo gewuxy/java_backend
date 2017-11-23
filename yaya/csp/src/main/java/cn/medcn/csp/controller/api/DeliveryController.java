@@ -48,11 +48,13 @@ public class DeliveryController extends BaseController {
 
     @RequestMapping(value = "/user/detail")
     @ResponseBody
-    public String detail(Integer acceptId) {
+    public String detail(Pageable pageable, Integer acceptId) {
         Principal principal = SecurityUtils.get();
-        List<CourseDeliveryDTO> list = courseDeliveryService.findByAcceptId(acceptId, principal.getId());
-        CourseDeliveryDTO.splitCoverUrl(list,fileBase);
-        return success(list);
+        pageable.put("acceptId", acceptId);
+        pageable.put("authorId", principal.getId());
+        MyPage<CourseDeliveryDTO> page = courseDeliveryService.pageDeliveries(pageable);
+        CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
+        return success(page.getDataList());
     }
 
 

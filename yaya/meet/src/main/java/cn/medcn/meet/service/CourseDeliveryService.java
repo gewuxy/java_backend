@@ -59,5 +59,11 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      */
     MyPage<CourseDeliveryDTO> findCSPList(Pageable pageable);
 
+    /**
+     * 分页获取用户投稿历史
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> pageDeliveries(Pageable pageable);
 
 }

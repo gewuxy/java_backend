@@ -1,10 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<!DOCTYPE html>
-<html>
+<%@include file="/WEB-INF/include/taglib.jsp"%>
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <title>敬信药草园--运营管理系统</title>
+    <title>敬信药草园运营管理系统</title>
+    <%@include file="/WEB-INF/include/common_css.jsp"%>
     <style type="text/css">
         html,body,table{background-color:#f5f5f5;width:100%;text-align:center;}.form-signin-heading{font-family:Helvetica, Georgia, Arial, sans-serif, 黑体;font-size:36px;margin-bottom:20px;color:#0663a2;}
         .form-signin{position:relative;text-align:left;width:300px;padding:25px 29px 29px;margin:0 auto 20px;background-color:#fff;border:1px solid #e5e5e5;
@@ -43,12 +42,20 @@
         <label id="loginError" class="error" style="text-align: left;">${message}</label>
     </div>
 </div>
+<%-- <h1 class="form-signin-heading">${fns:getConfig('productName')}</h1> --%>
 <form id="loginForm" class="form-signin" action="${ctx}/login" method="post">
-    <label class="input-label" for="account">登录名</label>
-    <input type="text" id="account" name="account" class="input-block-level required">
+    <label class="input-label" for="username">登录名</label>
+    <input type="text" id="username" name="username" class="input-block-level required" value="${username}">
     <label class="input-label" for="password">密码</label>
     <input type="password" id="password" name="password" class="input-block-level required">
+    <label class="input-label mid" for="validateCode">验证码</label>
+    <div class="validateCode">
+        <input type="text" id="validateCode" name="validateCode" maxlength="6" class="txt required" style="font-weight:bold;width:60px;"/>
+        <img src="${ctx}/validateCode" onclick="$('.validateCodeRefresh').click();" class="mid validateCode"/>
+        <a href="javascript:" onclick="$('.validateCode').attr('src','${ctx}/validateCode?'+new Date().getTime());" class="mid validateCodeRefresh">看不清</a>
+    </div>
     <input class="btn btn-large btn-primary" type="submit" value="登 录"/>&nbsp;&nbsp;
 </form>
+<%@include file="/WEB-INF/include/common_js.jsp"%>
 </body>
 </html>

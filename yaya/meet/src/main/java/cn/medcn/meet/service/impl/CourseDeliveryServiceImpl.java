@@ -124,4 +124,15 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
     }
 
 
+    /**
+     * 分页获取用户投稿历史
+     *
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> pageDeliveries(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
+        return MyPage.page2Mypage((Page) courseDeliveryDAO.findByAcceptId((Integer)pageable.get("acceptId"), (String)pageable.get("authorId")));
+    }
 }
