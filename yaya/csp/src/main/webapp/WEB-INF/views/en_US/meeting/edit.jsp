@@ -20,7 +20,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
     <link rel="stylesheet" href="${ctxStatic}/css/daterangepicker.css">
 
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <style>
         html,body { background-color:#F7F9FB;}
     </style>
