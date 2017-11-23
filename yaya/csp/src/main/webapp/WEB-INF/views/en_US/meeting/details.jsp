@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <link rel="stylesheet" href="${ctxStatic}/js/layer/skin/style.css">
 
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
