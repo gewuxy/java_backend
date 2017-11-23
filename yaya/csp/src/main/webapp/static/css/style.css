@@ -625,6 +625,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .resource-label span{ border: 1px solid #EDF3F9; border-radius: 10px; padding: 8px 13px; margin-right:10px; color:#95A7BC; font-size:12px;}
 .resource-label span i { font-style: normal;}
 .resource-label span .hot { font-size:16px; color:#167afe; }
+.resource-label span .muted {  color:#EDF3F9;   }
+.resource-label span .hot { font-size:16px; color:#167afe; }
 .resource-label span .muted {  color:#EDF3F9; margin:0 5px 0 0;  }
 .resource-label .issue { background:#167AFE; border-color:#167AFE; color:#fff;}
 .resource-label .look {border-color:#25AFA2; color:#25afa2; }
@@ -1001,3 +1003,4 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
     .index-login { right:70px;}
     .page-width  { width:1100px; padding:0 50px;}
 }
+

@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CSPmeeting-全球领先的云同步回放会议系统</title>
+    <title>会讲-全球领先的云同步回放会议系统</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -28,26 +28,25 @@
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
                     <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "登录"}</strong>&nbsp;&nbsp;<i></i> </a>
-                    <a href="javascript:;" class="index-download">下载App</a>
+                    <a href="javascript:;" class="index-download index-qrcode">下载App<span class="qrcode-01 qrcode-top"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 </div>
             </div>
         </div>
         <div class="banner index-banner-img">
             <div class="index-banner-content not-animated" data-animate="fadeIn" data-delay="200">
-                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">CSPmeeting</h3>
-                <h2 class="not-animated" data-animate="fadeInDown" data-delay="300">你的智慧，将被更多人看见</h2>
-                <p class="not-animated" data-animate="fadeIn" data-delay="500">CSPmeeting（Cloud Synchronization & Playback Meeting），全球领先的云同步回放会议系统，<br />提供会议录播、投屏直播、视频直播三种线上会议服务，满足不同用户群体多场景内容传播需求。 </p>
+                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300"><div class="img">
+                    <img src="${ctxStatic}/images/index-logo.png" alt=""></div></h3>
+                <h4 class="not-animated" data-animate="fadeInDown" data-delay="300">用手机讲PPT，随讲随录随分享！</h4>
+                <h2 class="not-animated" data-animate="fadeIn" data-delay="500">你的智慧，将被更多人看见</h2>
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
-                    <a href="${ctx}/login" class="button item-radius">免费公测</a>
+                    <a href="${ctx}/login" class="button item-radius">免费体验</a>
                 </div>
             </div>
         </div>
-
     </div>
+
     <div class="content">
-
         <div class="module-section ">
-
             <div class="module-section-inner">
                 <div class="page-width">
                     <div class="module-section-title-wrapper clearfix">
@@ -61,7 +60,6 @@
                             <div class="index-functional clearfix">
                                 <div class="row shadow-layer-top">
 
-
                                     <div class="col-lg-4">
                                         <div class="functional-item">
                                             <div class="functional-item-bg"></div>
@@ -72,8 +70,7 @@
                                             </div>
                                             <h3 class="title">轻设备</h3>
                                             <div class="main">
-                                                <p>同步完成会议主持、录制、发布，只要一部手机+CSP App
-                                                </p>
+                                                <p>同步完成会议主持、录制、发布，只要一部手机+会讲 App</p>
                                             </div>
                                         </div>
                                     </div>
@@ -119,7 +116,7 @@
                                             </div>
                                             <h3 class="title">直播同步回放</h3>
                                             <div class="main">
-                                                <p>不用等到结束，CSP支持在直播时对刚刚错过的内容进行立即回看</p>
+                                                <p>不用等到结束，会讲支持在直播时对刚刚错过的内容进行立即回看</p>
                                             </div>
                                         </div>
                                     </div>
@@ -259,7 +256,7 @@
                         <div class="row">
                             <div class="col-lg-4" >
                                 <h3 style="line-height: 1.4; margin-bottom:20px; font-size: 26px; font-weight: normal;" class="color-blue">更实时</h3>
-                                <p style="font-size:16px; padding-right:50px;">CSP通过App与Web云技术的创新结合，
+                                <p style="font-size:16px; padding-right:50px;">会讲通过App与Web云技术的创新结合，
                                     突破传统直播在设备、带宽、进程方面的限制，
                                     真正实现实时云端同步，
                                     可在直播当时进行内容回看。
@@ -300,7 +297,7 @@
                     <div class="module-section-content index-buy clearfix">
                         <div class="index-buy-item ">
                             <div class="index-buy-header">
-                                <h4>体验版</h4>
+                                <h4>标准版</h4>
                                 <h3 class="price">免费</h3>
                             </div>
                             <div class="index-buy-main">
@@ -312,7 +309,7 @@
                                     <ul>
                                         <li class="icon-li-selected">启用投屏录播</li>
                                         <li class="icon-li-close">启用投屏直播</li>
-                                        <li class="icon-li-selected">CSPmeeting水印</li>
+                                        <li class="icon-li-selected">会讲水印</li>
                                         <li class="icon-li-selected">广告接入</li>
                                     </ul>
                                 </div>
@@ -323,7 +320,7 @@
                         </div>
                         <div class="index-buy-item  ">
                             <div class="index-buy-header">
-                                <h4>基础版</h4>
+                                <h4>高级版</h4>
                                 <h3 class="price">16.67元</h3>
                             </div>
                             <div class="index-buy-main">
@@ -335,7 +332,7 @@
                                     <ul>
                                         <li class="icon-li-selected">启用投屏录播</li>
                                         <li class="icon-li-selected">启用投屏直播</li>
-                                        <li class="icon-li-selected">CSPmeeting水印</li>
+                                        <li class="icon-li-selected">会讲水印</li>
                                         <li class="icon-li-close">广告接入</li>
                                     </ul>
                                 </div>
@@ -396,40 +393,38 @@
     <div class="footer" >
         <div class="page-width">
             <p class="t-center"><a href="${ctx}/index/17103116215880292674" class="color-black">关于我们</a><span class="muted">|</span><a href="${ctx}/index/17103116063862386794" class="color-black">帮助中心</a></p>
-            <p class="t-center icon-row"><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-wechat.png" alt=""></a><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-facebook.png" alt=""></a><a href="javascript:;"><img src="${ctxStatic}/images/index-icon-twitter.png" alt=""></a></p>
+            <p class="t-center icon-row">
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-wechat.png" alt=""></a>
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a>
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-facebook.png" alt=""></a>
+                <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-twitter.png" alt=""></a>
+                <a href="javascript;" class="index-qrcode"><img src="${ctxStatic}/images/icon-indexDown.png" alt="">
+                    <span class="qrcode-01 qrcode-bottom"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span>
+                </a>
+            </p>
             <p class="t-center"><%@include file="../include/copy_right.jsp"%></p>
         </div>
     </div>
 </div>
 
-<script type="text/javascript" src="//api.map.baidu.com/api?key=&v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj"></script>
 <script type="text/javascript">
     $(function(){
-
         //内容加载后的运动效果
         dataAnimate();
 
-        // 百度地图API功能
-        var map = new BMap.Map("allmap");
-        var point = new BMap.Point(113.337982, 23.121986);
-        map.centerAndZoom(point,18);
-        // 创建地址解析器实例
-        var myGeo = new BMap.Geocoder();
-        // 将地址解析结果显示在地图上,并调整地图视野
-        myGeo.getPoint("广州市天河区珠江新城兴民路222号天盈广场西塔", function(point){
-            if (point) {
-                map.centerAndZoom(point, 18);
-                map.addOverlay(new BMap.Marker(point));
-            }else{
-
+        var qrcode = $('.index-qrcode');
+        qrcode.on({
+            mouseenter:function() {
+                $(this).find('.qrcode-01').show();
+            },
+            mouseleave:function() {
+                $(this).find('.qrcode-01').hide();
             }
-        }, "广州");
-
+        })
 
     });
 
-
-
 </script>
+
 </body>
 </html>
