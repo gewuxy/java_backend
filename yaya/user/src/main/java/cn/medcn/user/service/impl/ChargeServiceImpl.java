@@ -195,6 +195,8 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         Amount amount = new Amount();
         amount.setCurrency("USD");
         amount.setTotal(flux + ".00");
+        //测试
+        //amount.setTotal("0.01");
         Transaction transaction = new Transaction();
         transaction.setAmount(amount);
         List<Transaction> transactions = new ArrayList<>();
@@ -211,7 +213,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         payment.setNoteToPayer("Pay Order ");
 
         RedirectUrls redirectUrls = new RedirectUrls();
-        redirectUrls.setCancelUrl(appBase + "mgr/charge/cancel");
+        redirectUrls.setCancelUrl(appBase);
         redirectUrls.setReturnUrl(appBase + "mgr/charge/callback");//回调路径
         payment.setRedirectUrls(redirectUrls);
         return payment;

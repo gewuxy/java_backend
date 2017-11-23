@@ -84,8 +84,8 @@
                                     Channel</div>
                                 <div class="formControls">
                                     <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
-                                        <label for="paypal" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="paypal" id="paypal">
+                                        <label for="paypal" class="item item-radius pay-on">
+                                            <input type="radio" name="channel" class="none" value="paypal" checked="checked" id="paypal" >
                                             <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                         </label>
                                     </div>
