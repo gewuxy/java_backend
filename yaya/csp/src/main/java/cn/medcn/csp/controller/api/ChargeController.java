@@ -1,6 +1,7 @@
 package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
@@ -27,6 +28,7 @@ import java.security.PublicKey;
 import java.security.SignatureException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/9/12.
@@ -45,7 +47,7 @@ public class ChargeController extends BaseController {
     @Value("${appId}")
     private String appId;
 
-    @Value("${app.yaya.base}")
+    @Value("${app.csp.base}")
     private String appBase;
 
     @Value("${paypal_clientId}")
@@ -53,6 +55,9 @@ public class ChargeController extends BaseController {
 
     @Value("${paypal_secret}")
     protected String paypalSecret;
+
+    @Autowired
+    private RedisCacheUtils redisCacheUtils;
 
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
@@ -119,6 +124,7 @@ public class ChargeController extends BaseController {
             body = SignatureUtil.getData(request);
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         //获取ping++公钥
         PublicKey publicKey = null;
@@ -127,6 +133,7 @@ public class ChargeController extends BaseController {
             publicKey = SignatureUtil.getPubKey(path);
         } catch (Exception e) {
             e.printStackTrace();
+            return;
         }
 
         //验证签名
@@ -135,12 +142,16 @@ public class ChargeController extends BaseController {
             isTrue = SignatureUtil.verifyData(body, signature, publicKey);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
+            return;
         } catch (InvalidKeyException e) {
             e.printStackTrace();
+            return;
         } catch (SignatureException e) {
             e.printStackTrace();
+            return;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
+            return;
         }
         if (isTrue) {
             JSONObject event = JSON.parseObject(body);
@@ -156,6 +167,10 @@ public class ChargeController extends BaseController {
                 if (result != null) {
                     //更新订单状态，修改用户流量值
                     chargeService.updateOrderAndUserFlux(result);
+                    //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
+                    if("wx_pub_qr".equals(result.getPlatform())){
+                        redisCacheUtils.setCacheObject(result.getTradeId(),1, (int)TimeUnit.HOURS.toSeconds(2));
+                    }
                     response.setStatus(200);
                 } else {
                     //没有找到订单

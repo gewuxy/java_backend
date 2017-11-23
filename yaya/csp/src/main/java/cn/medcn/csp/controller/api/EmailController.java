@@ -14,6 +14,7 @@ import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,8 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 /** 通过邮箱重置密码，绑定邮箱账号
  * Created by LiuLP on 2017/7/27/027.
@@ -72,7 +75,6 @@ public class EmailController extends BaseController{
         }
 
     }
-
 
 
     /**

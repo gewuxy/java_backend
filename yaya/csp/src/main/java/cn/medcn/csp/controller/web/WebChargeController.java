@@ -6,6 +6,8 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
@@ -33,7 +35,7 @@ public class WebChargeController extends CspBaseController {
     @Autowired
     protected ChargeService chargeService;
 
-    @Value("${app.yaya.base}")
+    @Value("${app.csp.base}")
     protected String appBase;
 
     @Value("${apiKey}")
@@ -41,6 +43,7 @@ public class WebChargeController extends CspBaseController {
 
     @Value("${appId}")
     private String appId;
+
 
     @Value("${paypal_clientId}")
     protected String clientId;
@@ -58,6 +61,7 @@ public class WebChargeController extends CspBaseController {
     @RequestMapping("/toCharge")
     public String toCharge(Integer flux, String channel, HttpServletRequest request,Model model)  {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
+
         Pingpp.apiKey = apiKey;
         String orderNo = StringUtils.nowStr();
         String userId = getWebPrincipal().getId();
@@ -68,7 +72,7 @@ public class WebChargeController extends CspBaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip,appBase);
+            charge = chargeService.createCharge(orderNo,appId, flux, channel, ip,appBase);
         } catch (RateLimitException e) {
             e.printStackTrace();
             return error(e.getMessage());
@@ -91,7 +95,15 @@ public class WebChargeController extends CspBaseController {
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
         model.addAttribute("charge",charge.toString());
+
+        //微信扫码支付
+        if("wx_pub_qr".equals(channel)){
+            return localeView("/userCenter/wxPay");
+        }
         return localeView("/userCenter/newPage");
+
+
+
 
     }
 
@@ -197,9 +209,30 @@ public class WebChargeController extends CspBaseController {
      * @return
      */
     @RequestMapping("/success")
-    public String success(Integer money,Model model){
+    public String success(Float money,Model model){
         model.addAttribute("money",money);
         return localeView("/userCenter/paySuccess");
+    }
+
+
+    /**
+     * 异步获取订单状态
+     * @param tradeId
+     * @return
+     */
+    @RequestMapping("/orderStatus")
+    @ResponseBody
+    public String orderState(String tradeId){
+
+        Object status = redisCacheUtils.getCacheObject(tradeId);
+        if(status != null){
+            //订单支付成功
+            return success();
+        }else{
+            return error();
+        }
+
+
     }
 }
 

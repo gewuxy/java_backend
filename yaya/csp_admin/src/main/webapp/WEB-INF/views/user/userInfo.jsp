@@ -97,7 +97,7 @@
                     <option value="0">不重置</option>
                     <option value="1">重置</option>
                 </select>
-                <span id="mess"></span>
+                <span id="mess" style="color: red"></span>
             </div>
         </div>
     </c:if>
@@ -112,11 +112,9 @@
     <div class="form-actions">
         <input type="hidden" value="${user.id}" name="id">
         <input type="hidden" value="${actionType}" name="actionType"/>
+        <input type="hidden" value="${listType}" name="listType"/>
         <c:if test="${actionType == 3}">
             <input id="btnSubmit" class="btn btn-primary" type="submit" value="修  改"/>
-        </c:if>
-        <c:if test="${actionType == 4}">
-            <input id="btnSubmit" class="btn btn-primary" type="submit" value="注 册"/>
         </c:if>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>

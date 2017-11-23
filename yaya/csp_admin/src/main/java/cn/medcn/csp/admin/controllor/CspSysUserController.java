@@ -5,6 +5,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.csp.admin.log.Log;
 import cn.medcn.csp.admin.service.CspSysUserService;
 import cn.medcn.csp.admin.utils.SubjectUtils;
 import cn.medcn.csp.admin.model.CspSysUser;
@@ -44,6 +45,7 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/list")
+    @Log(name="查看管理员列表")
     public String cspSysUserSearch(Pageable pageable, String account, Model model) {
         if (!StringUtils.isEmpty(account)) {
             pageable.getParams().put("account", account);
@@ -60,6 +62,7 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/info")
+    @Log(name="查看用户信息")
     public String searchUserInfo(Model model) {
         Integer userId = SubjectUtils.getCurrentUserid();
         CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
@@ -72,6 +75,7 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/resetPwd")
+    @Log(name="重置密码")
     public String resetPwd(String oldPassword, String newPassword,Model model) throws SystemException {
         Integer userId = SubjectUtils.getCurrentUserid();
         CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
@@ -89,6 +93,7 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/update")
+    @Log(name="修改用户信息")
     public String updateUserInfo(CspSysUser user) {
         cspSysUserService.updateByPrimaryKeySelective(user);
         return "redirect:/csp/sys/user/info";
@@ -101,8 +106,9 @@ public class CspSysUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/user/add")
+    @Log(name="添加管理员")
     public String addUserInfo(CspSysUser user, Model model,RedirectAttributes redirectAttributes) {
-        String account = SubjectUtils.getCurrentAccount();
+        String account = SubjectUtils.getCurrentUsername();
         if(account.equals(user.getAccount())){
             model.addAttribute("err","此用户名已存在");
             return "/sys/addAdminForm";

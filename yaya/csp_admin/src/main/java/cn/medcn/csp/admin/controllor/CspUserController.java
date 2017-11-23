@@ -5,6 +5,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
 import cn.medcn.user.model.CspUserInfo;
@@ -17,9 +18,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.util.Date;
 import java.util.List;
-import java.util.Random;
 
 /**
  * by create HuangHuibin 2017/11/3
@@ -42,11 +41,13 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
+    @Log(name = "csp账户列表")
     public String cspUserSearch(Pageable pageable, Integer listType,String userName, Model model) {
         if (!StringUtils.isEmpty(userName)) {
             pageable.getParams().put("userName", userName);
             model.addAttribute("userName",userName);
         }
+        pageable.getParams().put("active",1);
         if(listType == 1){  //海外
             pageable.getParams().put("abroad",1);
         }else if( listType == 0){  // 国内
@@ -67,12 +68,14 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/viewOrRegister")
-    public String viewOrRegister(Integer actionType,CspUserInfo user,Model model) {
+    @Log(name="查看csp用户信息")
+    public String viewOrRegister(Integer actionType,Integer listType,CspUserInfo user,Model model) {
         Pageable pageable = new Pageable();
         pageable.setPageSize(50);
         pageable.put("level",1);
         MyPage<SystemRegion> page = systemRegionService.findByPage(pageable);
         model.addAttribute("province", page);
+        model.addAttribute("listType", listType);
         model.addAttribute("actionType",actionType);
         if(actionType == 3){ //更新或者查看
             CspUserInfo userInfo = cspUsersService.selectByPrimaryKey(user);
@@ -98,7 +101,8 @@ public class CspUserController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/update")
-    public String stopOrActive(CspUserInfo user,Integer actionType,Integer isReset, RedirectAttributes redirectAttributes) {
+    @Log(name="更新csp用户信息")
+    public String stopOrActive(CspUserInfo user,Integer actionType,Integer listType,Integer isReset, RedirectAttributes redirectAttributes) {
         if(actionType == 1){ //停用
             user.setActive(false);
             cspUsersService.updateByPrimaryKeySelective(user);
@@ -111,7 +115,7 @@ public class CspUserController extends BaseController {
             cspUsersService.updateByPrimaryKeySelective(user);
         }
         addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
-        return "redirect:/csp/user/list";
+        return "redirect:/csp/user/list?listType=" + listType;
     }
 
     /**

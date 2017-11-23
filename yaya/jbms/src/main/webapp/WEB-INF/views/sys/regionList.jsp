@@ -71,7 +71,7 @@
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>编号</th><th>名称</th><th>拼音</th><th>级别</th><shiro:hasPermission name="sys:region:edit"><th>操作</th></shiro:hasPermission></tr></thead>
     <tbody>
-    <c:forEach items="${page.datas}" var="region">
+    <c:forEach items="${page.dataList}" var="region">
         <tr>
             <td>${region.id}</td>
             <td>${region.name}</td>

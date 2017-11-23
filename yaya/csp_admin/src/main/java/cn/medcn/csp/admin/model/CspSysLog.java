@@ -23,6 +23,7 @@ public class CspSysLog {
     private Integer userId;
     private String account;
     private String action;
+    private String actionName;
     private Date logDate;
     private String userName;
 }

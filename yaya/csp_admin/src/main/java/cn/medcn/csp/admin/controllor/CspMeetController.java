@@ -3,6 +3,7 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.csp.admin.log.Log;
 import cn.medcn.meet.dto.MeetInfoDTO;
 import cn.medcn.meet.model.Meet;
 import cn.medcn.meet.service.MeetService;
@@ -31,6 +32,7 @@ public class CspMeetController extends BaseController{
      * @return
      */
     @RequestMapping(value="/list")
+    @Log(name = "获取会议列表")
     public String searchMeetList(Pageable pageable, String meetName, Model model){
         if (!StringUtils.isEmpty(meetName)) {
             pageable.getParams().put("keyword", meetName);
@@ -48,6 +50,7 @@ public class CspMeetController extends BaseController{
      * @return
      */
     @RequestMapping(value="/info")
+    @Log(name = "查询会议信息")
     public String searchMeetInfo(String id,Model model){
         MeetInfoDTO info = meetService.findMeetInfo(id);
         model.addAttribute("meet",info);
@@ -61,6 +64,7 @@ public class CspMeetController extends BaseController{
      * @return
      */
     @RequestMapping(value="/update")
+    @Log(name="更新会议信息")
     public String update(Meet meet, Model model,RedirectAttributes redirectAttributes){
         if (!StringUtils.isEmpty(meet.getMeetName())) {
             model.addAttribute("meetName",meet.getMeetName());
