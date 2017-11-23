@@ -309,7 +309,7 @@
                                     <ul>
                                         <li class="icon-li-selected">启用投屏录播</li>
                                         <li class="icon-li-close">启用投屏直播</li>
-                                        <li class="icon-li-selected">CSPmeeting水印</li>
+                                        <li class="icon-li-selected">会讲水印</li>
                                         <li class="icon-li-selected">广告接入</li>
                                     </ul>
                                 </div>
@@ -332,7 +332,7 @@
                                     <ul>
                                         <li class="icon-li-selected">启用投屏录播</li>
                                         <li class="icon-li-selected">启用投屏直播</li>
-                                        <li class="icon-li-selected">CSPmeeting水印</li>
+                                        <li class="icon-li-selected">会讲水印</li>
                                         <li class="icon-li-close">广告接入</li>
                                     </ul>
                                 </div>
