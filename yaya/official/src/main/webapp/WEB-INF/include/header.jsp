@@ -3,20 +3,21 @@
     <div class="v2-top-main">
         <div class="page-width clearfix">
             <div class="logo" >
-                <a href="/" >
+                <a href="${ctx}/" >
                     <img src="${ctxStatic}/images/v2/logo.png" alt=""  />
                 </a>
             </div><!-- end of logo -->
+
             <div class="v2-top-item">
                 <!-- S nav -->
                 <nav class="v2-nav">
                     <div class="main-nav clearfix" >
                         <ul class="sf-menu" >
                             <li class="current">
-                                <a class="first-level" href="${ctx}/index"><strong class="first-level-min">首页</strong></a><i></i>
+                                <a class="first-level" href="${ctx}/"><strong class="first-level-min">首页</strong></a><i></i>
                             </li>
                             <li >
-                                <a class="first-level"  href="javascript:;">
+                                <a class="first-level" target="_blank" style="cursor: pointer;"  href="javascript:;">
                                     <strong class="first-level-min">健康动态</strong>
                                 </a><i></i>
                                 <ul>
@@ -25,7 +26,7 @@
                                 </ul>
                             </li>
                             <li>
-                                <a class="first-level" href="javascript:;">
+                                <a class="first-level" style="cursor: pointer;" href="javascript:;">
                                     <strong class="first-level-min">我的工具</strong>
                                 </a>
                                 <i></i>
@@ -40,16 +41,13 @@
                     </div>
                 </nav>
                 <!-- E nav-->
+
                 <!--search-->
-                <div class="v2-top-search clearfix">
-                    <div class="v2-search-form v2-search-form-responsive clearfix">
-                        <input type="text"  placeholder="药品通用名/商品名/批准文号" name="" id=""  class="form-text" >
-                        <button type="submit" class="form-btn" ><span></span></button>
-                    </div>
-                </div>
+                <%@include file="search.jsp"%>
+
                 <shiro:authenticated>
                     <!--登录后-->
-                    <div class="top-widget clearfix" style="padding-top:14px;">
+                    <div class="top-widget clearfix" style="padding-top:0;">
                         <div class="inLogin fr">
                             <ul class="sf-menu">
                                 <li class="">
