@@ -107,6 +107,13 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("sortType", sortType);
 
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+
+        //如果第二页或其他页数查找到无会议时，用前一页的会议列表代替(不加以下判断，删除会议时可能会出现无会议内容的情况)
+        if(page.getDataList().size() == 0 && pageable.getPageNum() != 1){
+            pageable.setPageNum(pageable.getPageNum() - 1);
+            page = audioService.findCspMeetingList(pageable);
+        }
+
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
 
