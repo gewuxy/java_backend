@@ -48,10 +48,10 @@ public class CspUserController extends BaseController {
             model.addAttribute("userName",userName);
         }
         pageable.getParams().put("active",1);
-        if(listType == 1){  //海外
-            pageable.getParams().put("abroad",1);
-        }else if( listType == 0){  // 国内
-           pageable.getParams().put("abroad",0);
+        if(listType == null || listType == 0){  //海外
+            pageable.getParams().put("abroad",0);
+        }else if( listType == 1){  // 国内
+           pageable.getParams().put("abroad",1);
         }else{  //封号=未激活
             pageable.getParams().put("active",0);
         }

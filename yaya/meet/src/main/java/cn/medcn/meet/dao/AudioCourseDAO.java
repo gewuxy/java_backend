@@ -70,4 +70,18 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
      * @return
      */
     List<CourseDeliveryDTO> findHistoryDeliveryByAcceptId(Map<String, Object> params);
+
+    /**
+     * csp后台获取会议列表
+     * @param params
+     * @return
+     */
+    List<AudioCourse> findAllMeetForManage(Map<String, Object> params);
+
+    /**
+     * csp后台
+     * @param id
+     * @return
+     */
+    CourseDeliveryDTO findMeetDetail(@Param("id")Integer id);
 }

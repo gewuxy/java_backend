@@ -742,4 +742,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
         return details;
     }
+
+    @Override
+    public MyPage<AudioCourse> findAllMeetForManage(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        return MyPage.page2Mypage((Page)audioCourseDAO.findAllMeetForManage(pageable.getParams()));
+    }
+
+    @Override
+    public CourseDeliveryDTO findMeetDetail(Integer id) {
+        return audioCourseDAO.findMeetDetail(id);
+    }
 }
