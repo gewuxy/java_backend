@@ -1,6 +1,8 @@
 package cn.medcn.user.service.impl;
 
 import cn.jiguang.common.resp.APIConnectionException;
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.FluxOrderDAO;
@@ -9,6 +11,8 @@ import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.ChargeService;
 import com.github.abel533.mapper.Mapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import com.paypal.api.payments.*;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
@@ -217,6 +221,18 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         redirectUrls.setReturnUrl(appBase + "mgr/charge/callback");//回调路径
         payment.setRedirectUrls(redirectUrls);
         return payment;
+    }
+
+    @Override
+    public MyPage<FluxOrder> findFluxOrderList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<FluxOrder> myPage = MyPage.page2Mypage((Page) fluxOrderDAO.findFluxOrderList(pageable.getParams()));
+        return myPage;
+    }
+
+    @Override
+    public List<FluxOrder> selectOrderInfo(String id) {
+        return fluxOrderDAO.selectOrderInfo(id);
     }
 
 }
