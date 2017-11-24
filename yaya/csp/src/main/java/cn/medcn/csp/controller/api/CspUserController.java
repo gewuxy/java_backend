@@ -168,11 +168,17 @@ public class CspUserController extends CspBaseController {
             }
 
             // 当前登录的用户不是海外用户
-            if (userInfo.getAbroad() == null) {
-                userInfo.setAbroad(false);
+            Boolean abroad = userInfo.getAbroad();
+            if (abroad == null) {
+                abroad = false;
             }
-            if (userInfo.getAbroad().booleanValue() != LocalUtils.isAbroad()) {
-                return error(local("user.login.error"));
+            if (abroad && !LocalUtils.isAbroad()) {
+                // 海外账号 在国内登录
+                return error(local("en.user.login.error"));
+            }
+            if (!abroad && LocalUtils.isAbroad()) {
+                // 国内账号 在海外登录
+                return error(local("cn.user.login.error"));
             }
 
             // 更新用户登录信息
