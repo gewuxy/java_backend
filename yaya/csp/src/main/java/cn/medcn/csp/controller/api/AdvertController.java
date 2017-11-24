@@ -4,7 +4,11 @@ import cn.medcn.article.model.Article;
 import cn.medcn.article.service.ArticleService;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.user.model.Advert;
+import cn.medcn.user.service.AdvertService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -34,16 +38,26 @@ public class AdvertController extends BaseController {
     @Autowired
     protected ArticleService articleService;
 
+    @Autowired
+    protected AdvertService advertService;
+
     @RequestMapping("/advert")
     @ResponseBody
     public String advert() {
-        Article article = articleService.findAppAdvert(CSP_ADVERT_CATEGORY_ID);
+        Integer abroad = LocalUtils.isAbroad() ? 1 : 0 ;
+        Advert advert = advertService.findCspAdvert(abroad);
         Map<String, Object> map = new HashMap<String, Object>();
-        if (article != null) {
-            map.put("id", article.getId());
-            map.put("countDown", Constants.CSP_ADVERT_COUNT_DOWN);
-            map.put("imgUrl", appFileBase + article.getArticleImg());
-            map.put("pageUrl", appCSPBase + "api/advert/view/" + article.getId() ) ;
+        if (advert != null) {
+            map.put("id", advert.getId());
+            map.put("countDown", advert.getSkipTime());
+            map.put("imgUrl", appFileBase + advert.getImageUrl());
+            if (CheckUtils.isNotEmpty(advert.getPageUrl())) {
+                map.put("pageUrl", advert.getPageUrl());
+            } else {
+                if (CheckUtils.isNotEmpty(advert.getContent())) {
+                    map.put("pageUrl", appCSPBase + "api/advert/view/" + advert.getId());
+                }
+            }
         }
         return success(map);
     }
@@ -56,8 +70,8 @@ public class AdvertController extends BaseController {
      */
     @RequestMapping(value = "/view/{id}")
     public String view(@PathVariable String id, Model model) {
-        Article article = articleService.selectByPrimaryKey(id);
-        model.addAttribute("article", article);
+        Advert advert = advertService.selectByPrimaryKey(Integer.valueOf(id));
+        model.addAttribute("article", advert);
         return localeView("/advert/view");
     }
 
