@@ -5,6 +5,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**
@@ -55,5 +56,12 @@ public class Patient {
     // 注册时间
     protected Date registTime;
 
+    // 前端页面账号
+    @Transient
+    protected String account;
+
+    // 验证码
+    @Transient
+    protected String captcha;
 
 }

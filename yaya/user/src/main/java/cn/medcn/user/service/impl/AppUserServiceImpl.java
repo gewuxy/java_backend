@@ -755,10 +755,6 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
             return APIUtils.error("手机格式不正确");
         }
 
-        AppUser user = new AppUser();
-        user.setMobile(mobile);
-
-
         //10分钟内最多允许获取3次验证码
         Captcha captcha = (Captcha)redisCacheUtils.getCacheObject(mobile);
         if(captcha == null){ //第一次获取
