@@ -5,11 +5,11 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
-import cn.medcn.csp.admin.model.CspSysUser;
-import cn.medcn.csp.admin.service.CspSysUserService;
 import cn.medcn.csp.admin.utils.SubjectUtils;
 import cn.medcn.sys.model.SystemNotify;
+import cn.medcn.sys.model.SystemUser;
 import cn.medcn.sys.service.SysNotifyService;
+import cn.medcn.sys.service.SystemUserService;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
 import org.springframework.ui.Model;
@@ -33,7 +33,7 @@ public class SysNotifyController extends BaseController {
     private SysNotifyService sysNotifyService;
 
     @Autowired
-    private CspSysUserService cspSysUserService;
+    private SystemUserService cspSysUserService;
 
     @Autowired
     private CspUserService cspUserService;
@@ -75,7 +75,7 @@ public class SysNotifyController extends BaseController {
     @Log(name = "发布公告")
     public String sendMessage(SystemNotify notify, Model model, String userName) {
         Integer userId = SubjectUtils.getCurrentUserid();
-        CspSysUser cspSysUser = cspSysUserService.selectByPrimaryKey(userId);
+        SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null) {
             if (userName != null) {
                 CspUserInfo cspUserInfo = cspUserService.selectByUserName(userName);
@@ -88,7 +88,7 @@ public class SysNotifyController extends BaseController {
             }
             notify.setId(UUIDUtil.getNowStringID());
             notify.setSenderId(String.valueOf(userId));
-            notify.setSenderName(cspSysUser.getUserName());
+            notify.setSenderName(systemUser.getUserName());
             notify.setSendTime(new Date());
             int insert = sysNotifyService.insert(notify);
             System.out.println(insert);
