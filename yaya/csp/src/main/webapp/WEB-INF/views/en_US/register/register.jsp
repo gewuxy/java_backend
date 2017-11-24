@@ -135,7 +135,7 @@
                     }
                 },
                 error: function (a, n, e) {
-                    alert("获取数据异常："+a + " - "+n+" - "+e);
+                    layer.msg("获取数据异常："+a + " - "+n+" - "+e);
                 }
             })
 

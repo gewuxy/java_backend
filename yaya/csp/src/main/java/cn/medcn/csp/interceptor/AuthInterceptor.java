@@ -29,7 +29,6 @@ public class AuthInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         //客户端将token从header中传过来 作为每次请求的权限认证标识
         String token = httpServletRequest.getHeader(Constants.TOKEN);
-        //String token = "eb3b4a00c831429cb16d1b5dd00d8db6";
 
         if (CheckUtils.isEmpty(token)) {
             ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
