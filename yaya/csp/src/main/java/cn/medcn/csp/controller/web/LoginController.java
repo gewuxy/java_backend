@@ -398,12 +398,17 @@ public class LoginController extends CspBaseController {
             CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
             dto.setThirdPartyId(thirdPartyId);
             // 获取当前语言
-            String local = LocalUtils.getLocalStr();
-            if (!local.equals(DEFAULT_LOCAL)) { // 海外
+            if (!LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) { // 海外
                 dto.setAbroad(true);
             }
             //去添加绑定账号
             userInfo = cspUserService.saveThirdPartyUserInfo(dto);
+        } else {
+            if (userInfo.getAbroad()
+                    && LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) {
+                // 授权为国外账号 在国内登录
+
+            }
         }
 
         UsernamePasswordToken token = new UsernamePasswordToken();
