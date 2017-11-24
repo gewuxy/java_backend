@@ -39,6 +39,9 @@ public class CspUserInfoDTO  {
     // 头像
     protected String avatar;
 
+    // 国内=0、海外=1
+    protected Boolean abroad;
+
     // 第三方平台id
     protected Integer thirdPartyId;
     // 个人简介

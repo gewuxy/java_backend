@@ -389,7 +389,7 @@
                                 <p  >Global Leading Meeting System with <br />Cloud Synchronization Playback</p>
                             </div>
                             <div class="col-lg-5 pr">
-                                <div class="index-playback-img"><img src="${ctxStatic}/images/img/Shadow.png" alt=""></div>
+                                <div class="index-playback-img"><img src="${ctxStatic}/images/img/Shadow-tw.png" alt=""></div>
                             </div>
                         </div>
                     </div>

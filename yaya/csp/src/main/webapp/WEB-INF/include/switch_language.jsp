@@ -75,7 +75,8 @@ $(function () {
         //$(this).attr("href",window.location.href);
 
         if (setCookie('_local', local)){
-            window.location.reload();
+//            window.location.reload();
+            $(this).attr("href",window.location.href);
         }
 
     })

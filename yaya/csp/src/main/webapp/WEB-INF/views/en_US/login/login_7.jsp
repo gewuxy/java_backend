@@ -39,7 +39,7 @@
                             <input type="hidden" name="thirdPartyId" value="7">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="username" type="text" value="${username}" class="login-formInput" placeholder="E-mail Address">
+                                    <input id="email" name="username" type="text" value="${email}" class="login-formInput" placeholder="E-mail Address">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
                                     <input type="text" required placeholder="Password" class="login-formInput icon-register-hot last none" maxlength="24">
