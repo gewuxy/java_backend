@@ -1,5 +1,7 @@
 package cn.medcn.sys.service;
 
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.sys.model.SystemUser;
 
@@ -14,4 +16,11 @@ public interface SystemUserService extends BaseService<SystemUser>{
      * @return
      */
     SystemUser findUserHasRole(Integer userId);
+
+    /**
+     * 获取系统用户列表
+     * @param pageable
+     * @return
+     */
+    MyPage<SystemUser> findUserByPage(Pageable pageable);
 }

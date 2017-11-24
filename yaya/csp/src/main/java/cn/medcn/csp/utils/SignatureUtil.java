@@ -1,5 +1,6 @@
 package cn.medcn.csp.utils;
 
+import cn.medcn.common.utils.UUIDUtil;
 import com.alibaba.fastjson.JSONObject;
 import org.apache.commons.codec.binary.Base64;
 
@@ -197,5 +198,6 @@ public class SignatureUtil {
         }
         return null;
     }
+
 
 }

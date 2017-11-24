@@ -19,7 +19,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
 
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
 
     <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>

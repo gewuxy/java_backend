@@ -9,11 +9,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>登錄</title>
+    <title>登錄-會講</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
+
 </head>
 <body>
 <div id="wrapper">
@@ -29,22 +32,10 @@
                 <div class="col-lg-5 login-box-item">
                     <!--切换 登录-->
                     <div class="login-box-main position-button-login">
-                        <a href="${ctx}/mgr/login?thirdPartyId=1" title="微信授權登錄" class=" login-button buttonGreen-02">微信授權登錄</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=2" title="微博授權登錄" class=" login-button buttonRed">微博授權登錄</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信數字平台授權登錄" class=" login-button buttonBlue last">敬信數字平台授權登錄</a>
-                    </div>
-
-                    <!--登录用-->
-                    <div class="login-box-other">
-                        <div class="login-box-other-title t-center ">
-                            <span class="login-box-other-line-l"></span>
-                            <span>其他方式</span>
-                            <span class="login-box-other-line-r"></span>
-                        </div>
-                        <div class="login-box-other-main t-center ">
-                            <a href="${ctx}/mgr/login?thirdPartyId=6" title="手機登錄"><img src="${ctxStatic}/images/login-phone-icon.png" alt="手機登錄"></a>
-                            <a href="${ctx}/mgr/login?thirdPartyId=7" title="郵箱登錄"><img src="${ctxStatic}/images/login-email-icon.png" alt="郵箱登錄"></a>
-                        </div>
+                        <a href="javascript:;" title="Facebook授權登錄" class=" login-button buttonBlue-02" onclick="facebookLogin()">Facebook授權登錄</a>
+                        <a href="javascript:;" id="twitter" title="Twitter授權登錄" class=" login-button buttonBlue-03" onclick="twitterLogin()">Twitter授權登錄</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=7" title="郵箱登錄" class=" login-button buttonBlue">郵箱登錄</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信數字平臺授權登錄" class=" login-button buttonBlue-04 last">敬信數字平臺授權登錄</a>
                     </div>
 
                     <%@include file="../include/login_service.jsp"%>
@@ -55,6 +46,7 @@
         </div>
     </div>
 </div>
+<%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
 
 <script>
     $(function(){

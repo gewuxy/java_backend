@@ -7,19 +7,19 @@
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/csp/sys/user/info">个人信息</a></li>
-    <li><a href="${ctx}/csp/sys/user/pwd">修改密码</a></li>
+    <li><a href="${ctx}/sys/user/pwd">修改密码</a></li>
 </ul><br/>
-<form id="inputForm" action="${ctx}/csp/sys/user/update" method="post" class="form-horizontal">
+<form id="inputForm" action="${ctx}/sys/user/update" method="post" class="form-horizontal">
     <div class="control-group">
         <label class="control-label">账号:</label>
         <div class="controls">
-            <input type="search" name="account" maxlength="50" class="required" value="${user.account}" readonly="true"/>
+            <input type="search" name="username" maxlength="50" class="required" value="${user.username}" readonly="true"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">姓名:</label>
         <div class="controls">
-            <input type="search" name="userName" htmlEscape="false" maxlength="50" value="${user.userName}" class="required" readonly="true"/>
+            <input type="search" name="realname" htmlEscape="false" maxlength="50" value="${user.realname}" class="required" readonly="true"/>
         </div>
     </div>
     <div class="control-group">

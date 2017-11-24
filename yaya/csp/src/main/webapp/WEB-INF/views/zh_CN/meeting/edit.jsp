@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>发布会议-CSPmeeting</title>
+    <title>发布会议-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
@@ -74,6 +74,7 @@
                                     <p class="color-gray-02">选择小于100M的文件</p>
                                 </c:if>
 
+                                <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请上传演讲文档</span>
                             </div>
                         </div>
                     </div>
@@ -104,36 +105,37 @@
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
                                         <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
-                                        <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
-                                            <div class="clearfix">
-                                                <div class="formrow">
-                                                    <div class="formControls">
+
+                                    </label>
+                                    <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
+                                    <div class="clearfix">
+                                        <div class="formrow">
+                                            <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="" id="timeStart">
                                                                     时间<input type="text"  readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
-                                                                    <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
+                                                                             <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
-                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
-                                                        <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="${live.startTime}">
-                                                        <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="${live.endTime}">
-                                                    </div>
-
-                                                </div>
+                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
+                                                <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="${live.startTime}">
+                                                <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="${live.endTime}">
                                             </div>
-                                            <div class="cells-block clearfix checkbox-box">
+
+                                        </div>
+                                    </div>
+                                    <div class="cells-block clearfix checkbox-box">
                                                     <span class="checkboxIcon">
                                                         <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked=true' : ''}>
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
                                                     </span>
-                                                <div class="checkbox-main">
-                                                    <p>流量消耗每人约0.5G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗25G流量。</p>
-                                                    <div class="text">流量剩余<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
-                                                </div>
-                                            </div>
+                                        <div class="checkbox-main">
+                                            <p>流量消耗每人约1.7G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗85G流量。</p>
+                                            <div class="text">流量剩余<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                         </div>
-                                    </label>
+                                    </div>
+                                </div>
                                 </div>
 
                                 <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
@@ -397,15 +399,17 @@
             if (playType == 0){
                 $("#liveStartTime").attr("disabled", "true");
                 $("#liveEndTime").attr("disabled", "true");
+                $(this).parents('.meeting-tab').find(".meeting-tab-main").addClass("none");
             } else {
                 $("#liveStartTime").removeAttr("disabled");
                 $("#liveEndTime").removeAttr("disabled");
+                $(this).parents('.meeting-tab').find(".meeting-tab-main").removeClass("none");
             }
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
 
-            $(this).parent().siblings().find(".meeting-tab-main").addClass("none");
-            $(this).siblings(".meeting-tab-main").removeClass("none");
+
+
         });
 
         $('.cancel-hook').on('click',function(){
@@ -431,6 +435,12 @@
             var $courseTitle = $("#courseTitle");
             var $courseInfo = $("#courseInfo");
             var $timedate = $(".timedate-input");
+
+            var detailsLength = "${fn:length(course.details)}";
+            if (detailsLength == 0){
+                $("#detailsError").removeClass("none");
+                return;
+            }
             if ($.trim($courseTitle.val()) == ''){
                 $courseTitle.focus();
                 $courseTitle.parent().next(".error").removeClass("none");
@@ -448,10 +458,16 @@
             }
 
             var playType = $("input[name='course.playType']:checked").val();
-            if ($.trim($timedate.val()) == '' && playType == 1){
-                $timedate.focus();
-                $timedate.parent().parent().next(".error").removeClass("none");
-                return;
+            if (playType == 1){
+                var startTime = $("#liveStartTime").val();
+                var endTime = $("#liveEndTime").val();
+                if(startTime == endTime){
+                    $timedate.focus();
+                    $timedate.parent().parent().next(".error").removeClass("none");
+                    return;
+                } else {
+                    $timedate.parent().parent().next(".error").addClass("none");
+                }
             } else {
                 $timedate.parent().parent().next(".error").addClass("none");
             }
@@ -510,6 +526,7 @@
             separator : ' 至 ',
             format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
+            startDate:new Date(),
             time: {
                 enabled: true
             }

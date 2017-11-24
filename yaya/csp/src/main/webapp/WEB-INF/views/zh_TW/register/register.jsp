@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>註冊-CSPmeeting</title>
+    <title>註冊-會講</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -125,17 +125,16 @@
                 dataType: "json",
                 success: function (data){
                     if (data.code == 0){
-                        alert(data.data);
                         $(".position-phone-login").addClass("none");
                         $(".t-center").addClass("none");
                         $(".position-message-login").removeClass("none");
                     } else {
                         $(".position-message-login").addClass("none");
-                        alert(data.err);
+                        layer.msg(data.err);
                     }
                 },
                 error: function (a, n, e) {
-                    alert("獲取數據異常："+a + " - "+n+" - "+e);
+                    layer.msg("獲取數據異常："+a + " - "+n+" - "+e);
                 }
             })
 

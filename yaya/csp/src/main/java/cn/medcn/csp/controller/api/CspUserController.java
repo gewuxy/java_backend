@@ -194,7 +194,6 @@ public class CspUserController extends CspBaseController {
             if (!CheckUtils.isEmpty(bindInfoList)) {
                 dto.setBindInfoList(bindInfoList);
             }
-
             return success(dto);
 
         } catch (SystemException e){
@@ -213,7 +212,7 @@ public class CspUserController extends CspBaseController {
      */
     @RequestMapping(value = "/logout")
     @ResponseBody
-    public String loginOut(HttpServletRequest request) {
+    public String logout(HttpServletRequest request) {
         String token = request.getHeader(Constants.TOKEN);
         if (StringUtils.isNotEmpty(token)) {
             String cacheKey = Constants.TOKEN+"_" + token;

@@ -6,11 +6,11 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li><a href="${ctx}/csp/sys/user/info">个人信息</a></li>
-    <li class="active"><a href="${ctx}/csp/sys/user/pwd">修改密码</a></li>
+    <li><a href="${ctx}/sys/user/info">个人信息</a></li>
+    <li class="active"><a href="${ctx}/sys/user/pwd">修改密码</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
-<form id="inputForm" method="post" action="${ctr}/csp/sys/user/resetPwd" class="form-horizontal">
+<form id="inputForm" method="post" action="${ctr}/sys/user/resetPwd" class="form-horizontal">
     <div class="control-group">
         <label class="control-label">旧密码:</label>
         <div class="controls">
@@ -39,7 +39,6 @@
 </form>
 <script>
     $(document).ready(function() {
-        layer.msg(".....");
         initFormValidate();
     });
 </script>

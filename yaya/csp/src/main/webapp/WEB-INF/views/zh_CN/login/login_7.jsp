@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>邮箱登录-CSPmeeting</title>
+    <title>邮箱登录-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -38,7 +38,7 @@
                             <input type="hidden" name="thirdPartyId" value="7">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="username" type="text" value="${username}" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="username" type="text" value="${email}" class="login-formInput" placeholder="邮箱地址">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
                                     <input type="text" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot last none" maxlength="24">

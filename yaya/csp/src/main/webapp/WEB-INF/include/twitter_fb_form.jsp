@@ -15,9 +15,9 @@
     <input type="hidden" id="platformId" name="platformId" >
     <input type="hidden" id="iconUrl" name="iconUrl" >
 </form>
-<fb:login-button scope="public_profile,email"   onlogin="checkLoginState();"></fb:login-button>
+
 <script src="${ctxStatic}/js/oauth.twitter.js"></script>
-<script src="http://adodson.com/hello.js/dist/hello.all.js"></script>
+<script src="https://adodson.com/hello.js/dist/hello.all.js"></script>
 <script>
     $(function () {
 

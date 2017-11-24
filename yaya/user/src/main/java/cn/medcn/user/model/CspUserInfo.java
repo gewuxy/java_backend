@@ -78,7 +78,7 @@ public class CspUserInfo implements Serializable{
         userInfo.setDistrict(dto.getDistrict());
         userInfo.setRegisterTime(new Date());
         userInfo.setActive(true);
-        userInfo.setAbroad(LocalUtils.isAbroad());
+        userInfo.setAbroad(dto.getAbroad() == null ? false : dto.getAbroad());
         return userInfo;
     }
 

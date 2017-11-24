@@ -87,8 +87,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public AudioCourse findAudioCourse(Integer courseId) {
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
 
-        List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
-        course.setDetails(details);
+        if (course != null) {
+            List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
+            course.setDetails(details);
+        }
         return course;
     }
 

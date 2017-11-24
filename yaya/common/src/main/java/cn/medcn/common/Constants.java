@@ -186,4 +186,6 @@ public class Constants {
     // CSP用户缓存时长
     public static final int LOGIN_COOKIE_MAX_AGE = 7;
 
+    /********** 合理用药 *************/
+
 }

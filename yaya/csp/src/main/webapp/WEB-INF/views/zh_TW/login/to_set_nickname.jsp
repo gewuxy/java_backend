@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>第壹次手機登錄 - 需要輸入昵稱 - CSPmeeting</title>
+    <title>第壹次手機登錄 - 需要輸入昵稱-會講</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">

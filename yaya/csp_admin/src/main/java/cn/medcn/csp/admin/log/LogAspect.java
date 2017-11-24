@@ -1,18 +1,16 @@
 package cn.medcn.csp.admin.log;
 
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.csp.admin.model.CspSysLog;
 import cn.medcn.csp.admin.security.Principal;
-import cn.medcn.csp.admin.service.CspSysLogService;
 import cn.medcn.csp.admin.utils.SubjectUtils;
+import cn.medcn.sys.model.SystemLog;
+import cn.medcn.sys.service.SystemLogService;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.apache.log4j.Logger;
-import org.aspectj.lang.JoinPoint;
-import org.aspectj.lang.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -36,7 +34,7 @@ public class LogAspect {
     private static final Logger logger =Logger.getLogger(LogAspect.class);
 
     @Autowired
-    private CspSysLogService cspSysLogService;
+    private SystemLogService systemLogService;
 
     /**
      * 配置Log切面
@@ -58,14 +56,14 @@ public class LogAspect {
             String action = this.getParameters(request);
             String actionName = getControllerMethodDescription(joinPoint);
             if(principal!=null){
-                CspSysLog log=new CspSysLog();
+                SystemLog log=new SystemLog();
                 log.setUserId(principal.getId());
-                log.setAccount(principal.getAccount());
+                log.setRealName(principal.getNickname());
                 log.setUserName(principal.getUsername());
                 log.setLogDate(new Date());
                 log.setAction(action.length() < 50 ? action : action.substring(0,50));
                 log.setActionName(actionName);
-                cspSysLogService.insert(log);
+                systemLogService.insert(log);
             }
         } catch (Exception e) {
             // TODO: handle exception
@@ -91,7 +89,7 @@ public class LogAspect {
             logger.info("异常信息:" + e.getMessage());
             logger.info("异常方法:" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
             logger.info("方法描述:" + getControllerMethodDescription(joinPoint));
-            logger.info("请求人:" +  principal.getAccount());
+            logger.info("请求人:" +  principal.getUsername());
             logger.info("请求IP:" + ip);
             logger.info("请求参数:" + params);
         } catch (Exception ex) {

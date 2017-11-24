@@ -1,6 +1,6 @@
 package cn.medcn.csp.admin.security;
 
-import cn.medcn.csp.admin.model.CspSysUser;
+import cn.medcn.sys.model.SystemUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,9 +17,11 @@ public class Principal implements Serializable {
 
     private Integer id;
 
-    private String account;
-
     private String username;
+
+    private String headimg;
+
+    private String nickname;
 
     private Integer roleId;
 
@@ -27,12 +29,14 @@ public class Principal implements Serializable {
         return this.id == 1;
     }
 
-    public static Principal build(CspSysUser user){
+
+    public static Principal build(SystemUser user){
         Principal principal = new Principal();
         if(user != null){
             principal.setUsername(user.getUserName());
-            principal.setAccount(user.getAccount());
+            principal.setHeadimg(user.getHeadImg());
             principal.setId(user.getId());
+            principal.setNickname(user.getRealName());
             principal.setRoleId(user.getRoleId());
         }
         return principal;

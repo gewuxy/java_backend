@@ -21,6 +21,8 @@
     <!-- 这里主要是设置自定义的单Realm应用,若有多个Realm,可使用'realms'属性代替 -->
     <bean id="securityManager" class="org.apache.shiro.web.mgt.DefaultWebSecurityManager">
         <property name="realm" ref="systemUserRealm"/>
+        <!-- 使用配置的缓存管理器 -->
+        <property name="cacheManager" ref="shiroCacheManager"></property>
         <!-- 会话管理 -->
         <property name="sessionManager" ref="sessionManager" />
     </bean>
@@ -35,7 +37,7 @@
     </bean>
 
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg name="name" value="csp.session.id"/>
+        <constructor-arg name="name" value="jbms.session.id"/>
     </bean>
 
 
@@ -45,6 +47,8 @@
 
     <!-- 记住我cookie -->
     <bean id="rememberMeCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
+        <!-- rememberMe是cookie的名字 -->
+        <constructor-arg value="rememberMe" />
         <!-- 记住我cookie生效时间30天 -->
         <property name="maxAge" value="2592000" />
     </bean>
@@ -55,8 +59,9 @@
     <!-- Web应用中,Shiro可控制的Web请求必须经过Shiro主过滤器的拦截,Shiro对基于Spring的Web应用提供了完美的支持 -->
     <bean id="shiroFilter" class="org.apache.shiro.spring.web.ShiroFilterFactoryBean">
         <property name="securityManager" ref="securityManager"/>
-        <property name="loginUrl" value="/"/>
-        <property name="unauthorizedUrl" value="/"/>
+        <property name="loginUrl" value="/login"/>
+        <property name="unauthorizedUrl" value="/login"/>
+        <property name="successUrl" value="/home/"/>
         <property name="filters">
             <map>
                 <entry key="authc" value-ref="formAuthenticationFilter"/>
@@ -65,11 +70,11 @@
         </property>
         <property name="filterChainDefinitions">
             <value>
+                /login=anon
+                /validateCode=anon
                 /logout=logout
                 /static/**=anon
-                /login=anon
-                /csp/**=authc
-                /index=authc
+                /**=authc
             </value>
         </property>
     </bean>

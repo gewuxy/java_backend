@@ -12,33 +12,24 @@ import cn.medcn.official.model.OffUserInfo;
 import cn.medcn.official.service.OffiUserInfoService;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
-import cn.medcn.user.dto.AppUserDTO;
 import cn.medcn.user.dto.Captcha;
-import cn.medcn.user.model.AppRole;
-import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.Patient;
 import cn.medcn.user.service.AppUserService;
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationException;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.subject.Subject;
+import cn.medcn.user.service.PatientUserService;
 import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.mail.MessagingException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * by create HuangHuibin 2017/11/15
@@ -46,6 +37,8 @@ import java.util.concurrent.TimeUnit;
 @Controller
 @RequestMapping(value="/regist")
 public class RegistController extends BaseController{
+    @Autowired
+    protected PatientUserService patientUserService;
 
     @Autowired
     private AppUserService appUserService;
@@ -212,5 +205,78 @@ public class RegistController extends BaseController{
         return APIUtils.error(map);
     }
 
+
+
+    /**
+     * 注册账号
+     * @param patient
+     * @return
+     */
+    @RequestMapping(value = "register", method = RequestMethod.POST)
+    @ResponseBody
+    public String doRegister(Patient patient){
+        String data = validateUserInfo(patient);
+        if( data != null){
+            return data;
+        }
+
+        patient.setPassword(MD5Utils.MD5Encode(patient.getPassword()));
+        String account = patient.getAccount();
+        // 判断账号是邮箱还是手机
+        if(RegexUtils.checkEmail(account)){
+            patient.setEmail(account);
+        } else if (RegexUtils.checkMobile(account)){
+            patient.setMobile(account);
+        }
+        patientUserService.insert(patient);
+
+        return success();
+    }
+
+    /**
+     * 验证用户信息
+     * @param patient
+     * @return
+     */
+    private String validateUserInfo(Patient patient) {
+        String account = patient.getAccount();
+        if(StringUtils.isEmpty(account)){
+            return setMsg("registAccount","手机或者邮箱不能为空");
+        }
+        if(!RegexUtils.checkMobile(account) || !RegexUtils.checkEmail(account)){
+            return setMsg("registAccount","手机或者邮箱格式不对");
+        }
+        if(StringUtils.isEmpty(patient.getCaptcha())){
+            return setMsg("captcha","验证码不能为空");
+        }
+        if(StringUtils.isEmpty(patient.getPassword())){
+            return setMsg("registPassword","密码不能为空");
+        }
+
+        // 检查用户是否已经注册
+        Patient mobileUser = new Patient();
+        mobileUser.setMobile(account);
+        Patient user = patientUserService.selectOne(mobileUser);
+        if (user != null) {
+            return setMsg("registAccount","该手机号码已注册");
+        }
+
+        Patient emailUser = new Patient();
+        emailUser.setEmail(account);
+        user = patientUserService.selectOne(emailUser);
+        if (user != null) {
+            return setMsg("registAccount","该邮箱已注册");
+        }
+
+        // 检查验证码是否有效
+        try {
+            patientUserService.checkCaptchaIsOrNotValid(patient.getMobile(), patient.getCaptcha());
+
+        } catch (Exception e) {
+            return error(e.getMessage());
+        }
+
+        return null;
+    }
 
 }

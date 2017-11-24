@@ -41,8 +41,7 @@ window.twttr = (function (d, s, id) {
 
 var log = console.log;
 hello.init(
-    // TODO 发布正式线的时候 需将key修改为公司运营的twitter账号的key
-    {'twitter': 's024Uf0tlvwtDwzKqKLat56Zm'},
+    {'twitter': 'hqhT16vzm2ZJxJary0WOULGfv'},//公司运营的twitter账号的key
     {oauth_proxy: 'https://auth-server.herokuapp.com/proxy'}
 );
 
@@ -64,44 +63,24 @@ function twitterLogin(){
     }, log);
 }
 
-// $("#twitter").click(function () {
-//     //登录方法，并将twitter 作为参数传入
-//     // Twitter instance
-//     var twitter = hello("twitter");
-//     // Login
-//     twitter.login().then(function (r) {
-//         // Get Profile
-//         return twitter.api('/me');
-//     }, log).then(function (p) {
-//         console.log("Connected to twitter"+" as " + p.name);
-//         //因为得不到token，但是这步已经得到用户所有信息，所以将用户信息转成JSON字符串给后台
-//         var res = JSON.stringify(p);
-//         $("#str").val(res);
-//         $("#twitterForm").submit();
-//
-//     }, log);
-//
-// });
+
 
 
 function facebookLogin(){
-    FB.getLoginStatus(function(response) {
-        return statusChangeCallback(response);
+    FB.login(function(response) {
+        if (response.status === 'connected') {  //登陆状态已连接
+            fbToken = response.authResponse.accessToken;
+            console.log(fbToken);
+            getUserInfo();
+        } else if (response.status === 'not_authorized') { //未经授权
+            console.log('facebook未经授权');
+        } else {
+            console.log('不是登陆到Facebook;不知道是否授权');
+        }
     });
+
 }
-function statusChangeCallback(response) {
-    if (response.status === 'connected') {  //登陆状态已连接
-        fbToken = response.authResponse.accessToken;
-        console.log(fbToken);
-        return getUserInfo();
-    } else if (response.status === 'not_authorized') { //未经授权
-        console.log('facebook未经授权');
-        return "";
-    } else {
-        console.log('不是登陆到Facebook;不知道是否授权');
-        return "";
-    }
-}
+
 //获取用户信息
 function getUserInfo() {
     FB.api('/me?fields=id,name,birthday,gender,hometown,email,devices,picture', function(response) {
