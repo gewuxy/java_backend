@@ -50,6 +50,9 @@ public class SystemNotify implements Serializable {
     @Transient
     private String sendTimeStr;
 
+    @Transient
+    private String userName;
+
     public static void tranEnglishTime(List<SystemNotify> list){
         DateFormat format = new SimpleDateFormat("MMM d", Locale.ENGLISH);
         for(SystemNotify notify:list){

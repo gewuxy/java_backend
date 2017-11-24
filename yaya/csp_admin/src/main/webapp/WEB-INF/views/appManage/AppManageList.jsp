@@ -38,10 +38,10 @@
                 <td>${app.downLoadUrl}</td>
                 <td>${app.driveTag}</td>
                 <td><fmt:formatDate value="${app.updateTime}" type="both" dateStyle="full"/></td>
-                <shiro:hasPermission name="sys:hospital:edit"><td>
+                <td>
                     <a href="${ctx}/csp/appManage/check?id=${app.id}">查看</a>
                     <a href="${ctx}/csp/appManage/delete?id=${app.id}" onclick="deleteAppManage()">删除</a>
-                </td></shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>

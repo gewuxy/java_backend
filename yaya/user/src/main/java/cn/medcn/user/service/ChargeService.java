@@ -1,10 +1,14 @@
 package cn.medcn.user.service;
 
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.user.model.FluxOrder;
 import com.paypal.api.payments.Payment;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
+
+import java.util.List;
 
 /**
  * Created by LiuLP on 2017/9/26.
@@ -40,4 +44,18 @@ public interface ChargeService extends BaseService<FluxOrder> {
      * @return
      */
     Payment generatePayment(Integer flux,String appBase);
+
+    /**
+     * 流量订单列表
+     * @param pageable
+     * @return
+     */
+    MyPage<FluxOrder> findFluxOrderList(Pageable pageable);
+
+    /**
+     * 查看个人订单列表
+     * @param id
+     * @return
+     */
+    List<FluxOrder> selectOrderInfo(String id);
 }

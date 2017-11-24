@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="http://adodson.com/hello.js/dist/hello.all.js"></script>
 
 </head>
 
@@ -31,44 +32,31 @@
                         <div class="user-content user-content-levelHeight item-radius">
                             <div class="binding-list">
                                 <ul>
-                                    <li class="phone">
-                                        <c:if test="${not empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn " type="6"  action_type="unbind">解綁</a>
-                                            <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
+                                    <li class="facebook">
+                                        <c:if test="${not empty facebook}">
+                                            <a href="#" class="fr binding-btn " type="3"  action_type="unbind">解綁</a>
+                                            <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
-                                        <c:if test="${empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn color-blue" id="bindPhone" type="6" >綁定</a>
-                                            <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
+                                        <c:if test="${empty facebook}">
+                                            <a href="#" class="fr binding-btn color-blue"  type="3" onclick="facebookLogin()">綁定</a>
+                                            <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty dto.mobile?"未綁定":dto.mobile}</span>
+                                        <span class="main">${empty facebook?"Not Bound":facebook}</span>
                                     </li>
-                                    <li class="wechat">
-                                        <c:if test="${not empty weChat}">
-                                            <a href="#" class="fr binding-btn " type="1" id="unbind_1" action_type="unbind">解綁</a>
-                                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                                    <li class="twitter">
+                                        <c:if test="${not empty twitter}">
+                                            <a href="#" class="fr binding-btn " type="4" id="unbind_4" action_type="unbind">解綁</a>
+                                            <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
-                                        <c:if test="${empty weChat}">
-                                            <a href="#" class="fr binding-btn color-blue" type="1" action_type="bind">綁定</a>
-                                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                                        <c:if test="${empty twitter}">
+                                            <a href="#" class="fr binding-btn color-blue" id="twitter"  onclick="twitterLogin()">綁定</a>
+                                            <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty weChat ?"未綁定":weChat}</span>
-                                    </li>
-                                    <li class="weibo">
-                                        <c:if test="${not empty weiBo}">
-                                            <a href="#" class="fr binding-btn " type="2" id="unbind_2" action_type="unbind">解綁</a>
-                                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
-                                            <span class="status status-on"></span>
-                                        </c:if>
-                                        <c:if test="${empty weiBo}">
-                                            <a href="#" class="fr binding-btn color-blue" type="2" action_type="bind">綁定</a>
-                                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
-                                            <span class="status status-off"></span>
-                                        </c:if>
-                                        <span class="main">${empty weiBo ?"未綁定":weiBo}</span>
+                                        <span class="main">${empty twitter ?"Not Bound":twitter }</span>
                                     </li>
                                     <li class="email">
                                         <c:if test="${not empty dto.email}">
@@ -81,7 +69,7 @@
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty dto.email ?"未綁定":dto.email}</span>
+                                        <span class="main">${empty dto.email ?"Not Bound":dto.email}</span>
                                     </li>
                                     <li class="medcn">
                                         <c:if test="${not empty YaYa}">
@@ -94,7 +82,7 @@
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty YaYa ?"未綁定":"敬信數字平台"}</span>
+                                        <span class="main">${empty YaYa ?"Not Bound":"Login with Jingxin Digital Platform"}</span>
                                     </li>
                                 </ul>
                                 <span class="line-bg"></span>
@@ -107,6 +95,7 @@
         </div>
     </div>
     <%@include file="../include/footer.jsp"%>
+    <%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
 </div>
 
 <!--弹出绑定手机-->

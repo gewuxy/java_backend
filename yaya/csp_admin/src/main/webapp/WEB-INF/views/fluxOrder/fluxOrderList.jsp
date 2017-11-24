@@ -9,15 +9,18 @@
 <head>
     <title>流量订单列表</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-
 </head>
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/csp/order/list">流量订单列表</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
-<form id="searchForm" method="post" class="breadcrumb form-search">
-    <input placeholder="订单号" value="${tradeId}" size="40"  type="search" name="tradeId" maxlength="50" class="required"/>
+<form id="pageForm" name="pageForm" action="${ctx}/csp/order/list" method="post">
+    <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
+    <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
+</form>
+<form id="searchForm" method="post" action="${ctx}/csp/order/list" class="breadcrumb form-search">
+    <input placeholder="订单号" value="${tradeId}" type="search" name="tradeId" maxlength="50" class="required"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -33,12 +36,12 @@
                 <td>${data.tradeId}</td>
                 <td>${data.flux}</td>
                 <td>${data.platform}</td>
-                <shiro:hasPermission name="sys:hospital:edit"><td>
+                <td>
                     <a href="${ctx}/csp/order/check?id=${data.id}">查看</a>
                     <c:if test="${data.state eq 1}">
                     <a href="${ctx}/csp/order/close?id=${data.id}" id="closeOrder">关闭</a>
                     </c:if>
-                </td></shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>

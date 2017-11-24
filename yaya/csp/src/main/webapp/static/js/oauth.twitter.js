@@ -41,8 +41,7 @@ window.twttr = (function (d, s, id) {
 
 var log = console.log;
 hello.init(
-    // TODO 发布正式线的时候 需将key修改为公司运营的twitter账号的key
-    {'twitter': 's024Uf0tlvwtDwzKqKLat56Zm'},
+    {'twitter': 'hqhT16vzm2ZJxJary0WOULGfv'},//公司运营的twitter账号的key
     {oauth_proxy: 'https://auth-server.herokuapp.com/proxy'}
 );
 

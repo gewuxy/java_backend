@@ -279,4 +279,10 @@ public interface AppUserService extends BaseService<AppUser> {
      */
     MyPage<AppUser> findAccepterList(Pageable pageable);
 
+    /**
+     * App下载统计
+     * @param registDate 注册时间
+     * @return
+     */
+    List<AppUser> selectByRegistDate(String registDate);
 }

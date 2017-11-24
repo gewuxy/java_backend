@@ -50,4 +50,5 @@ public interface AppUserDAO extends Mapper<AppUser> {
 
     List<AppUser> findAccepterList(Map<String,Object> map);
 
+    List<AppUser> selectByRegistDate(String registDate);
 }

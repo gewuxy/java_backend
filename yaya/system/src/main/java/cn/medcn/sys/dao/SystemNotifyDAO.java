@@ -15,4 +15,6 @@ public interface SystemNotifyDAO extends Mapper<SystemNotify> {
 
 
     List<SystemNotify> findNotifyList(Map<String, Object> params);
+
+    List<SystemNotify> findMessageListByPage();
 }

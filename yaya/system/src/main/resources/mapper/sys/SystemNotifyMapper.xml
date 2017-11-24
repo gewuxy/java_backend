@@ -6,4 +6,16 @@
     SELECT id,title,send_time,is_read FROM t_csp_system_notify
     WHERE accept_id = #{acceptId} ORDER BY send_time DESC
   </select>
+
+  <select id="findMessageListByPage" resultType="cn.medcn.sys.model.SystemNotify">
+
+   SELECT
+      n.*,
+      i.user_name
+    FROM t_csp_system_notify n
+    LEFT JOIN t_csp_user_info i
+    ON n.accept_id = i.id
+    ORDER BY send_time DESC
+
+  </select>
 </mapper>

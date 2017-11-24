@@ -37,7 +37,7 @@ public class AppVersion implements Serializable{
     /**版本更新说明*/
     private String details;
     /**是否强制更新*/
-    private Boolean force;
+    private Boolean forced;
 
 
     public enum APP_TYPE{
