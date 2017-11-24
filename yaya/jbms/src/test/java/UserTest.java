@@ -23,8 +23,8 @@ public class UserTest {
         SystemUser user = new SystemUser();
         user.setMobile("");
         user.setActive(true);
-        user.setUsername("admin");
-        user.setRealname("系统管理员");
+        user.setUserName("admin");
+        user.setRealName("系统管理员");
         user.setPassword(MD5Utils.MD5Encode("123456"));
         user.setRoleId(SystemRole.SystemRoleType.ADMIN.getRoleId());
         //user.setRole(SystemRole.SystemRoleType.ADMIN.getRoleId());

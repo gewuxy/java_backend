@@ -6,6 +6,7 @@
 <script>
 
         $(function(){
+            var charge = ${charge};
             pingpp.createPayment(charge, function(result, err){
                     console.log(result);
                     console.log(err.msg);

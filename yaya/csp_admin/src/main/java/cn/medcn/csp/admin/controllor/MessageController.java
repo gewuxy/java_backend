@@ -5,10 +5,10 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.model.CspAdminMessage;
-import cn.medcn.csp.admin.model.CspSysUser;
-import cn.medcn.csp.admin.service.CspSysUserService;
 import cn.medcn.csp.admin.service.MessageService;
 import cn.medcn.csp.admin.utils.SubjectUtils;
+import cn.medcn.sys.model.SystemUser;
+import cn.medcn.sys.service.SystemUserService;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,7 +29,7 @@ public class MessageController extends BaseController {
     private MessageService messageService;
 
     @Autowired
-    private CspSysUserService cspSysUserService;
+    private SystemUserService systemUserService;
 
     @RequestMapping(value = "/list")
     public String list(Pageable pageable, Model model) {
@@ -53,7 +53,7 @@ public class MessageController extends BaseController {
         if (message != null) {
             message.setId(UUIDUtil.getNowStringID());
             message.setUserId(userId);
-            CspSysUser user = cspSysUserService.selectByPrimaryKey(userId);
+            SystemUser user = systemUserService.selectByPrimaryKey(userId);
             message.setUsername(user.getUserName());
             message.setCreatTime(new Date());
             message.setUpdateTime(message.getCreatTime());

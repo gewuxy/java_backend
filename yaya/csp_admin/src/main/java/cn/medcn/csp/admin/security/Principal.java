@@ -33,10 +33,10 @@ public class Principal implements Serializable {
     public static Principal build(SystemUser user){
         Principal principal = new Principal();
         if(user != null){
-            principal.setUsername(user.getUsername());
-            principal.setHeadimg(user.getHeadimg());
+            principal.setUsername(user.getUserName());
+            principal.setHeadimg(user.getHeadImg());
             principal.setId(user.getId());
-            principal.setNickname(user.getRealname());
+            principal.setNickname(user.getRealName());
             principal.setRoleId(user.getRoleId());
         }
         return principal;

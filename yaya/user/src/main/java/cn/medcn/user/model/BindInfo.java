@@ -21,7 +21,7 @@ public class BindInfo {
     protected String id;
     // 用户id
     protected String userId;
-    // 第三方平台id 1代表微信，2代表微博，3代表facebook,4代表twitter，5代表yaya医师
+    // 第三方平台id 1代表微信，2代表微博，3代表facebook,4代表twitter，5代表yaya医师 6=手机 7=邮箱 8=QQ
     protected Integer thirdPartyId;
     // 绑定时间
     protected Date bindDate;
@@ -41,7 +41,8 @@ public class BindInfo {
         TWITTER(4, "twitter"),
         YaYa(5, "YaYa医师"),
         MOBILE(6, "手机"),
-        EMAIL(7, "邮箱");
+        EMAIL(7, "邮箱"),
+        QQ(8,"QQ");
 
         private Integer typeId;
         private String label;
