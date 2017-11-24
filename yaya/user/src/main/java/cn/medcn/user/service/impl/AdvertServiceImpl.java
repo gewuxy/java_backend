@@ -33,4 +33,19 @@ public class AdvertServiceImpl extends BaseServiceImpl<Advert> implements Advert
     public List<Banner> selectBanner(Banner banner) {
         return bannerDAO.select(banner);
     }
+
+    /**
+     * 根据国内外标识 获取启动广告
+     *
+     * @param abroad
+     * @return
+     */
+    @Override
+    public Advert findCspAdvert(Integer abroad) {
+        Advert cond = new Advert();
+        cond.setActive(true);
+        cond.setAbroad(abroad);
+        cond.setAppId(Advert.AdvertApp.CSP.ordinal());
+        return advertDAO.selectOne(cond);
+    }
 }

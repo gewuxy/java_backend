@@ -5,6 +5,8 @@ import cn.medcn.common.utils.*;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.service.CspUserService;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -20,6 +22,9 @@ public class AuthInterceptor implements HandlerInterceptor {
     @Resource
     private RedisCacheUtils redisCacheUtils;
 
+    @Resource
+    protected CspUserService cspUserService;
+
     @Override
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         //客户端将token从header中传过来 作为每次请求的权限认证标识
@@ -33,8 +38,17 @@ public class AuthInterceptor implements HandlerInterceptor {
         String cacheKey = Constants.TOKEN+"_"+token;
         Principal principal = (Principal) redisCacheUtils.getCacheObject(cacheKey);
         if(principal == null){
-            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
-            return false;
+            CspUserInfo cond = new CspUserInfo();
+            cond.setToken(token);
+            cond.setActive(true);
+            CspUserInfo user = cspUserService.selectOne(cond);
+            if (user == null) {
+                ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
+                return false;
+            } else {
+                principal = Principal.build(user);
+            }
+
         }
         redisCacheUtils.setCacheObject(cacheKey, principal, Constants.TOKEN_EXPIRE_TIME);
         SecurityUtils.set(principal);
