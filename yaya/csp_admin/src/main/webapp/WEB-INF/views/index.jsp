@@ -1,9 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/4/18
-  Time: 18:03
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/include/page_context.jsp"%>
 <html>
@@ -128,7 +122,7 @@
                         <li><a href="${ctx}/sys/user/pwd" target="mainFrame"><i class="icon-lock"></i>&nbsp;  修改密码</a></li>
                     </ul>
                 </li>
-                <li><a href="${ctx}/logout" title="退出登录"><i class="icon-off"></i>&nbsp;退出</a></li>
+                <li><a data-href="${ctx}/logout" title="退出登录" onclick="layerConfirm('确认退出吗？', this)"><i class="icon-off"></i>&nbsp;退出</a></li>
                 <li>&nbsp;</li>
             </ul>
 
