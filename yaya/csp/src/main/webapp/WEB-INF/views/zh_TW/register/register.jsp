@@ -125,17 +125,16 @@
                 dataType: "json",
                 success: function (data){
                     if (data.code == 0){
-                        alert(data.data);
                         $(".position-phone-login").addClass("none");
                         $(".t-center").addClass("none");
                         $(".position-message-login").removeClass("none");
                     } else {
                         $(".position-message-login").addClass("none");
-                        alert(data.err);
+                        layer.msg(data.err);
                     }
                 },
                 error: function (a, n, e) {
-                    alert("獲取數據異常："+a + " - "+n+" - "+e);
+                    layer.msg("獲取數據異常："+a + " - "+n+" - "+e);
                 }
             })
 

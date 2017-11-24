@@ -148,6 +148,9 @@
                 }
                 progressError = false;
                 showUploadPPTProgressDiv();
+                var index = layer.load(1, {
+                    shade: [0.1,'#fff'] //0.1透明度的白色背景
+                });
                 $.ajaxFileUpload({
                     url: '${ctx}/func/meet/ppt/uploadPPT?meetId='+meetId+'&courseId='+courseId, //用于文件上传的服务器端请求地址
                     secureuri: false, //是否需要安全协议，一般设置为false
@@ -155,6 +158,7 @@
                     dataType: 'json', //返回值类型 一般设置为json
                     success: function (data)  //服务器成功响应处理函数
                     {
+                        layer.close(index);
                         //回调函数传回传完之后的URL地址
                         if(data.code == 0){
                             window.location.reload();
@@ -165,6 +169,7 @@
                     },
                     error:function(data, status, e){
                         alert(e);
+                        layer.close(index);
                         progressError = true
                     }
                 });
@@ -209,6 +214,11 @@
             showUploadProgress();
         }
 
+        function clearProgress(){
+            $.get('${ctx}/file/cleanProgress',{}, function () {
+            }, 'json');
+        }
+
         function showUploadProgress(){
             if(!progressError){
                 $.get('${ctx}/file/uploadStatus',{}, function (data) {
@@ -219,6 +229,7 @@
                         setTimeout(showUploadProgress(),2000);
                     }else{
                         showConvertProgress();
+                        clearProgress();
                     }
                 },'json');
 
@@ -231,6 +242,7 @@
                     console.log("转换进度 = "+data.data.progress);
                     if(data.data.progress == '100.0%'){
                         $("#uploadStatus").text("转换完成,正在更新数据 ...");
+                        clearProgress();
                     }else{
                         $("#progressBar").css("width",data.data.progress);
                         $("#uploadProgress").text(data.data.progress);

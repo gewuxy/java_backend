@@ -45,4 +45,12 @@ public class Advert {
     protected Integer skipTime;
     //版本号
     protected Integer version;
+    // 国内 OR 国外 0表示国内 1表示国外
+    protected Integer abroad;
+
+
+    public enum AdvertApp{
+        YaYa,
+        CSP;
+    }
 }

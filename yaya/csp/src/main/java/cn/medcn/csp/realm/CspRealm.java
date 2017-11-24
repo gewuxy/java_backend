@@ -42,6 +42,7 @@ public class CspRealm extends AuthorizingRealm {
         CspUserInfo cspUser = null;
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
         String password = token.getPassword() == null ? null : new String(token.getPassword());
+
         if (!CheckUtils.isEmpty(password)) {
             token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
         } else {
@@ -54,12 +55,12 @@ public class CspRealm extends AuthorizingRealm {
             cspUser = cspUserService.findByLoginName(token.getUsername());
         }
 
-        //账号不存在
+        // 用户不存在
         if (cspUser == null) {
             throw new AuthenticationException(SpringUtils.getMessage("user.error.nonentity"));
         }
 
-        //用户未激活
+        // 用户未激活
         if (cspUser.getActive() == null || !cspUser.getActive()) {
             throw new AuthenticationException(SpringUtils.getMessage("user.unActive.email"));
         }

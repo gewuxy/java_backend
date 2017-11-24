@@ -104,6 +104,7 @@
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
                                         <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked' : ''}>
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
+                                    </label>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
                                             <div class="clearfix">
                                                 <div class="formrow">
@@ -133,7 +134,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </label>
                                 </div>
 
                                 <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
@@ -393,16 +393,18 @@
             $(this).prop("checked", "true");
             if (playType == 0){
                 $("#liveStartTime").attr("disabled", "true");
-                $("#endStartTime").attr("disabled", "true");
+                $("#liveEndTime").attr("disabled", "true");
+                $(this).parents('.meeting-tab').find(".meeting-tab-main").addClass("none");
             } else {
                 $("#liveStartTime").removeAttr("disabled");
-                $("#endStartTime").removeAttr("disabled");
+                $("#liveEndTime").removeAttr("disabled");
+                $(this).parents('.meeting-tab').find(".meeting-tab-main").removeClass("none");
             }
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
 
-            $(this).parent().siblings().find(".meeting-tab-main").addClass("none");
-            $(this).siblings(".meeting-tab-main").removeClass("none");
+
+
         });
 
         $('.cancel-hook').on('click',function(){

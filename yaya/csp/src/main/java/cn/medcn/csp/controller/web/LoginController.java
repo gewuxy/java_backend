@@ -32,9 +32,7 @@ import java.net.URLEncoder;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
-import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
-import static cn.medcn.common.Constants.LOGIN_USER_ID_KEY;
-import static cn.medcn.common.Constants.LOGIN_USER_KEY;
+import static cn.medcn.common.Constants.*;
 
 /**
  * Created by lixuan on 2017/10/16.
@@ -81,6 +79,7 @@ public class LoginController extends CspBaseController {
     public String login(String username, String password, Integer thirdPartyId,
                         String mobile, String captcha, Model model,
                         HttpServletResponse response, HttpServletRequest request){
+
         // 默认为邮箱密码登录
         if (thirdPartyId == null) {
             thirdPartyId = BindInfo.Type.EMAIL.getTypeId();
@@ -106,20 +105,43 @@ public class LoginController extends CspBaseController {
      * @param model
      * @return
      */
-    protected String loginByEmail(String username, String password, Model model, HttpServletResponse response){
+    protected String loginByEmail(String username, String password,
+                                  Model model, HttpServletResponse response){
         String errorForwardUrl = localeView("/login/login_" + BindInfo.Type.EMAIL.getTypeId());
         if (CheckUtils.isEmpty(username)) {
             model.addAttribute("error", local("user.empty.username"));
-            model.addAttribute("username", username);
+            model.addAttribute("email", username);
             return errorForwardUrl;
         }
 
         if (CheckUtils.isEmpty(password)) {
             model.addAttribute("error", local("user.empty.password"));
-            model.addAttribute("username", username);
+            model.addAttribute("email", username);
             return errorForwardUrl;
         }
 
+        // 获取当前语言
+        String local = LocalUtils.getLocalStr();
+
+        // 检查用户是否 是海外用户
+        CspUserInfo user = cspUserService.findByLoginName(username);
+        if ((user != null && !user.getAbroad())
+                && local.equals(DEFAULT_LOCAL)) {
+            // 国内账号登录
+           return emailLogin(username, password, errorForwardUrl, model, response);
+
+        } else if (user.getAbroad() && !local.equals(DEFAULT_LOCAL)){
+            // 海外账号登录
+            return emailLogin(username, password, errorForwardUrl, model, response);
+
+        }  else {
+            model.addAttribute("error", local("web.user.login.error"));
+            model.addAttribute("email", username);
+            return errorForwardUrl;
+        }
+    }
+
+    private String emailLogin(String username, String password, String errorForwardUrl, Model model, HttpServletResponse response) {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         Subject subject = SecurityUtils.getSubject();
 
@@ -133,9 +155,10 @@ public class LoginController extends CspBaseController {
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
-            model.addAttribute("username", username);
+            model.addAttribute("email", username);
             return errorForwardUrl;
         }
+
         return "redirect:/mgr/meet/list";
     }
 
@@ -263,8 +286,11 @@ public class LoginController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/oauth/callback")
-    public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes, HttpServletResponse response) throws SystemException {
+    public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes,
+                           HttpServletResponse response) throws SystemException {
+
         Principal principal =  getWebPrincipal();
+
         if (StringUtils.isNotEmpty(code)) {
             //获取第三方用户信息
             OAuthUser oAuthUser = oauthService.getOauthUser(code, thirdPartyId);
@@ -294,21 +320,24 @@ public class LoginController extends CspBaseController {
     }
 
     /**
-     * 推特回调
+     * 推特/facebook 回调
      * @param user
      * @return
      */
     @RequestMapping(value="/jsCallback",method = RequestMethod.POST)
-    public String twitterCallback(OAuthUser user, HttpServletResponse response,RedirectAttributes redirectAttributes) throws SystemException {
+    public String twitterCallback(OAuthUser user, HttpServletRequest request, HttpServletResponse response,
+                                  RedirectAttributes redirectAttributes) throws SystemException {
         if(user == null){
             throw new SystemException("can't get userInfo");
         }
+
         Principal principal =  getWebPrincipal();
+
         //登录回调
         if(principal == null){
-
             // 根据第三方用户唯一id 查询用户是否存在
             CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(user.getUid());
+
             doThirdPartWebLogin(user.getPlatformId(), user, userInfo, response);
             return "redirect:/mgr/meet/list";
         }else{  //绑定回调
@@ -361,11 +390,17 @@ public class LoginController extends CspBaseController {
      * @param oAuthUser
      * @param userInfo
      */
-    private void doThirdPartWebLogin(Integer thirdPartyId, OAuthUser oAuthUser, CspUserInfo userInfo, HttpServletResponse response) {
+    private void doThirdPartWebLogin(Integer thirdPartyId, OAuthUser oAuthUser, CspUserInfo userInfo,
+                                     HttpServletResponse response) {
         // 用户不存在，去添加绑定账号及添加csp用户账号
         if (userInfo == null) {
             CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
             dto.setThirdPartyId(thirdPartyId);
+            // 获取当前语言
+            String local = LocalUtils.getLocalStr();
+            if (!local.equals(DEFAULT_LOCAL)) { // 海外
+                dto.setAbroad(true);
+            }
             //去添加绑定账号
             userInfo = cspUserService.saveThirdPartyUserInfo(dto);
         }
@@ -408,7 +443,7 @@ public class LoginController extends CspBaseController {
     @ResponseBody
     public String register(CspUserInfo userInfo) {
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
-        try {
+       try {
             return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
             return error(local(e.getMessage()));

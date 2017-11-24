@@ -44,6 +44,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static cn.medcn.common.Constants.DEFAULT_LOCAL;
+
 /**
  * Created by Liuchangling on 2017/9/26.
  */
@@ -147,8 +149,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
         }
 
+        // 获取当前语言
+        String local = LocalUtils.getLocalStr();
         // 是否海外用户
-        userInfo.setAbroad(LocalUtils.isAbroad());
+        if (!local.equals(DEFAULT_LOCAL)) { // 海外
+            userInfo.setAbroad(true);
+        } else {
+            userInfo.setAbroad(false);
+        }
         userInfo.setId(StringUtils.nowStr());
         String password = userInfo.getPassword();
         userInfo.setPassword(MD5Utils.md5(password));
