@@ -38,7 +38,7 @@
                         <a href="javascript:;" title="Login with Facebook" class=" login-button buttonBlue-02" onclick="facebookLogin()">Login with Facebook</a>
                         <a href="javascript:;" id="twitter" title="Login with Twitter" class=" login-button buttonBlue-03" onclick="twitterLogin()">Login with Twitter</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=7" title="Login by E-mail" class=" login-button buttonBlue">Login by E-mail</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Digital Platform" class=" login-button buttonBlue-04 last">Login with Jingxin Digital Platform</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Platform" class=" login-button buttonBlue-04 last">Login with Jingxin Platform</a>
                     </div>
 
                     <%@include file="../include/login_service.jsp"%>

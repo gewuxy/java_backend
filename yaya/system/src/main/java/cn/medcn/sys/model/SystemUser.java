@@ -19,11 +19,11 @@ public class SystemUser implements Serializable {
     @GeneratedValue(generator = "JDBC")
     private Integer id;
 
-    private String username;
+    private String userName;
 
     private String password;
 
-    private String realname;
+    private String realName;
 
     private String mobile;
 
@@ -31,9 +31,9 @@ public class SystemUser implements Serializable {
 
     private String qq;
 
-    private String headimg;
+    private String headImg;
 
-    private String openid;
+    private String openId;
 
     private Date lastLoginDate;
 
@@ -47,6 +47,9 @@ public class SystemUser implements Serializable {
 
     @Transient
     private SystemRole role;
+
+    @Transient
+    private String roleDesc;
 
     @Transient
     private Boolean isAdmin;

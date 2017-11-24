@@ -45,6 +45,23 @@ public class NewsController extends BaseController {
     }
 
     /**
+     * 跳转到公司动态新闻列表页
+     * @param pageable
+     * @return
+     */
+    @RequestMapping(value="/trends")
+    public String trends(Pageable pageable, Model model){
+        pageable.setPageSize(10);
+        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
+        MyPage<News> page = newsService.pageNews(pageable);
+        for(News news:page.getDataList()){
+            news.replaceJSPTAG(editorMediaPath);
+        }
+        model.addAttribute("page", page);
+        return "/news/trends";
+    }
+
+    /**
      * AJAX 加载首页新闻列表
      * @param pageable
      * @return
