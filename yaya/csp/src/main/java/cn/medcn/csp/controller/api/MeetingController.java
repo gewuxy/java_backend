@@ -37,10 +37,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.ABROAD_KEY;
@@ -744,19 +741,12 @@ public class MeetingController extends CspBaseController {
             liveService.publish(liveStartOrder);
 
             LiveOrderDTO order = liveService.findCachedOrder(courseId);
+
             if (order == null){
-
-                Live live = liveService.findByCourseId(courseId);
-                if (live != null && live.getLiveState().intValue() == Live.LiveState.init.getType()) {
-
+                List<AudioCourseDetail> list = audioService.findLiveDetails(courseId);
+                if (!CheckUtils.isEmpty(list)) {
+                    sendSyncOrder(courseId, imgUrl, videoUrl);
                 }
-                sendSyncOrder(courseId, imgUrl, videoUrl);
-            }
-
-            Live live = liveService.findByCourseId(courseId);
-            if (live != null) {
-                live.setLiveState(Live.LiveState.usable.getType());
-                liveService.updateByPrimaryKey(live);
             }
         } else {
             sendSyncOrder(courseId, imgUrl, videoUrl);
