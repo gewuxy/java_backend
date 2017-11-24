@@ -744,7 +744,7 @@ public class MeetingController extends CspBaseController {
 
             if (order == null){
                 List<AudioCourseDetail> list = audioService.findLiveDetails(courseId);
-                if (!CheckUtils.isEmpty(list)) {
+                if (list.size() > 1) {
                     sendSyncOrder(courseId, imgUrl, videoUrl);
                 }
             }
