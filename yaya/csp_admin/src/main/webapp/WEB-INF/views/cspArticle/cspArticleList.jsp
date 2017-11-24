@@ -55,10 +55,10 @@
                 </td>
                 </c:if>
                 </td>
-                <shiro:hasPermission name="sys:hospital:edit"><td>
+                <td>
                     <a href="${ctx}/csp/article/check?id=${data.id}&listType=${listType}">查看(check)</a>&nbsp;&nbsp;&nbsp;&nbsp;
                     <a href="${ctx}/csp/article/edit?id=${data.id}&listType=${listType}">修改(update)</a>
-                </td></shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>

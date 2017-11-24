@@ -36,12 +36,12 @@
                 <td>${data.tradeId}</td>
                 <td>${data.flux}</td>
                 <td>${data.platform}</td>
-                <shiro:hasPermission name="sys:hospital:edit"><td>
+                <td>
                     <a href="${ctx}/csp/order/check?id=${data.id}">查看</a>
                     <c:if test="${data.state eq 1}">
                     <a href="${ctx}/csp/order/close?id=${data.id}" id="closeOrder">关闭</a>
                     </c:if>
-                </td></shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>
