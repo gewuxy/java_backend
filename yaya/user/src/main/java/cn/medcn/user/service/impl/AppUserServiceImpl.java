@@ -928,6 +928,16 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         return MyPage.page2Mypage((Page)appUserDAO.findAccepterList(pageable.getParams()));
     }
 
+    /**
+     * App下载统计
+     * @param registDate 注册时间
+     * @return
+     */
+    @Override
+    public List<AppUser> selectByRegistDate(String registDate) {
+        return appUserDAO.selectByRegistDate(registDate);
+    }
+
 
     /**
      * 查询所有的已关注用户

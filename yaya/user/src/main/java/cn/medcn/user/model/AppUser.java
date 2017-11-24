@@ -91,6 +91,18 @@ public class AppUser {
     @Transient
     private WXUserInfo wxUserInfo;
 
+    /*数量统计*/
+    @Transient
+    private String years;
+
+    @Transient
+    private String months;
+
+    @Transient
+    private String counts;
+
+
+
 
     public String getRoleName(){
         if(this.roleId == null || this.roleId == 0){

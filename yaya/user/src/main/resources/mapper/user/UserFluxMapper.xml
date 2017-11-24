@@ -9,4 +9,6 @@
         WHERE c.id = #{courseId}
 
     </select>
+
+
 </mapper>
