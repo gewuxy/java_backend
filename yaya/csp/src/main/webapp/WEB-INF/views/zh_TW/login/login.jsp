@@ -36,6 +36,10 @@
                         <a href="javascript:;" id="twitter" title="Twitter授權登錄" class=" login-button buttonBlue-03" onclick="twitterLogin()">Twitter授權登錄</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=7" title="郵箱登錄" class=" login-button buttonBlue">郵箱登錄</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信數字平臺授權登錄" class=" login-button buttonBlue-04 last">敬信數字平臺授權登錄</a>
+                        <span class="cells-block error ${not empty error ? '':'none'} ">
+                            <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;
+                            <span id="errorMessage">${error}</span>
+                        </span>
                     </div>
 
                     <%@include file="../include/login_service.jsp"%>

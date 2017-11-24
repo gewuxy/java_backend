@@ -23,8 +23,7 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
     @Autowired
     protected PatientUserDAO patientUserDAO;
 
-    @Autowired
-    protected SMSService medSmsService;
+  //  protected SMSService medSmsService;
 
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
@@ -39,8 +38,7 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
      * @param mobile
      * @param captcha
      */
-    @Override
-    public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException{
+   /* public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException{
         // 从缓存获取此号码的短信记录
         Captcha result = (Captcha) redisCacheUtils.getCacheObject(CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
         try {
@@ -53,5 +51,5 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
         } catch (Exception e) {
             throw new SystemException("sms.invalid.captcha");
         }
-    }
+    }*/
 }
