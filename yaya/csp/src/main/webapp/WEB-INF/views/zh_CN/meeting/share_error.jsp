@@ -67,7 +67,7 @@
         <div class="error-item">
             <div class="logo-error">
                 <p><img src="${ctxStatic}/images/logo-csp.png" alt=""></p>
-                <p>CSPmeeting</p>
+                <p>会讲</p>
             </div>
             <div class="main-error">
                 <p>${error}</p>
