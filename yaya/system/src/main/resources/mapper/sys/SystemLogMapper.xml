@@ -7,6 +7,7 @@
         <if test="userName != null">
             AND user_name = #{userName}
         </if>
+        order by log_date desc
     </select>
 
 </mapper>

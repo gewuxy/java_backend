@@ -4,8 +4,12 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.csp.admin.log.Log;
+import cn.medcn.meet.dto.CourseDeliveryDTO;
+import cn.medcn.meet.dto.CourseReprintDTO;
 import cn.medcn.meet.dto.MeetInfoDTO;
+import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.MeetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -22,57 +26,38 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class CspMeetController extends BaseController{
 
     @Autowired
-    private MeetService meetService;
+    private AudioService audioService;
 
-    /**
-     * 获取会议列表
-     * @param pageable
-     * @param meetName
-     * @param model
-     * @return
-     */
     @RequestMapping(value="/list")
     @Log(name = "获取会议列表")
-    public String searchMeetList(Pageable pageable, String meetName, Model model){
-        if (!StringUtils.isEmpty(meetName)) {
-            pageable.getParams().put("keyword", meetName);
-            model.addAttribute("meetName",meetName);
+    public String searchMeetList(Pageable pageable, String keyword, Model model){
+        if (!StringUtils.isEmpty(keyword)) {
+            pageable.getParams().put("keyword", keyword);
+            model.addAttribute("keyword",keyword);
         }
-        MyPage<MeetInfoDTO> page = meetService.searchMeetInfo(pageable);
+        MyPage<AudioCourse> page = audioService.findAllMeetForManage(pageable);
         model.addAttribute("page",page);
         return "/meet/meetList";
     }
 
-    /**
-     * 查询会议信息
-     * @param id
-     * @param model
-     * @return
-     */
     @RequestMapping(value="/info")
-    @Log(name = "查询会议信息")
-    public String searchMeetInfo(String id,Model model){
-        MeetInfoDTO info = meetService.findMeetInfo(id);
+    @Log(name = "查询会议详情")
+    public String searchMeetInfo(Integer id,Model model){
+        CourseDeliveryDTO info =  audioService.findMeetDetail(id);
         model.addAttribute("meet",info);
         return "/meet/meetInfo";
     }
 
-    /**
-     * 更新会议信息
-     * @param meet
-     * @param model
-     * @return
-     */
-    @RequestMapping(value="/update")
-    @Log(name="更新会议信息")
-    public String update(Meet meet, Model model,RedirectAttributes redirectAttributes){
-        if (!StringUtils.isEmpty(meet.getMeetName())) {
-            model.addAttribute("meetName",meet.getMeetName());
-        }
-        meetService.updateByPrimaryKeySelective(meet);
-        addFlashMessage(redirectAttributes, "更新成功");
+
+    @RequestMapping(value="/delete")
+    @Log(name = "删除会议")
+    public String delete(Integer id,RedirectAttributes redirectAttributes){
+        AudioCourse audioCourse = new AudioCourse();
+        audioCourse.setId(id);
+        audioCourse.setDeleted(true);
+        audioService.updateByPrimaryKeySelective(audioCourse);
+        audioService.deleteAllDetails(id);
+        addFlashMessage(redirectAttributes, "删除成功");
         return "redirect:/csp/meet/list";
     }
-
-
 }

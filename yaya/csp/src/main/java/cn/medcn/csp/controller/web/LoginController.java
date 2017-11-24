@@ -120,25 +120,26 @@ public class LoginController extends CspBaseController {
             return errorForwardUrl;
         }
 
-        // 获取当前语言
-        String local = LocalUtils.getLocalStr();
-
         // 检查用户是否 是海外用户
         CspUserInfo user = cspUserService.findByLoginName(username);
-        if ((user != null && !user.getAbroad())
-                && local.equals(DEFAULT_LOCAL)) {
-            // 国内账号登录
-           return emailLogin(username, password, errorForwardUrl, model, response);
-
-        } else if (user.getAbroad() && !local.equals(DEFAULT_LOCAL)){
-            // 海外账号登录
-            return emailLogin(username, password, errorForwardUrl, model, response);
-
-        }  else {
-            model.addAttribute("error", local("web.user.login.error"));
+        if ((user != null && user.getAbroad())
+                && LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) {
+            // 国外账号 国内登录
+            model.addAttribute("error", local("en.user.web.login.error"));
             model.addAttribute("email", username);
             return errorForwardUrl;
         }
+        if ((user != null && !user.getAbroad())
+                && !LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) {
+            // 国内账号 国外登录
+            model.addAttribute("error", local("cn.user.web.login.error"));
+            model.addAttribute("email", username);
+            return errorForwardUrl;
+
+        }
+
+        return emailLogin(username, password, errorForwardUrl, model, response);
+
     }
 
     private String emailLogin(String username, String password, String errorForwardUrl, Model model, HttpServletResponse response) {
