@@ -98,6 +98,7 @@ public class FileUploadController extends BaseController {
     @ResponseBody
     public String cleanProgress(HttpServletRequest request){
         request.getSession().removeAttribute(Constants.UPLOAD_PROGRESS_KEY);
+        request.getSession().removeAttribute(Constants.OFFICE_CONVERT_PROGRESS);
         return APIUtils.success();
     }
 

@@ -188,7 +188,6 @@ jQuery.extend({
         // Get the JavaScript object, if JSON is used.
         if (type == "json") {
             data = r.responseText;
-            alert(data);
             var start = data.indexOf(">");
             if (start != -1) {
                 var end = data.indexOf("<", start + 1);
