@@ -122,4 +122,14 @@
         </if>
 
     </select>
+
+    <select id="selectByRegistDate" resultType="cn.medcn.user.model.AppUser">
+        SELECT YEAR(regist_date) AS years,MONTH(regist_date)AS months, COUNT(id) AS counts FROM t_app_user u
+        WHERE 1=1
+        <if test="_parameter != null">
+            AND DATE_FORMAT(u.`regist_date`,'%Y') LIKE #{registDate}
+        </if>
+        AND DATE_FORMAT(u.`regist_date`,'%Y') IS NOT NULL
+        GROUP BY YEAR(regist_date) ,MONTH(regist_date)
+    </select>
 </mapper>

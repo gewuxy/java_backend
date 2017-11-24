@@ -1,5 +1,7 @@
 package cn.medcn.user.service;
 
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.user.model.AppVersion;
 import org.apache.ibatis.annotations.Param;
@@ -15,4 +17,11 @@ public interface AppVersionService extends BaseService<AppVersion> {
      * @return
      */
     AppVersion findNewly(String appType, String driveTag);
+
+    /**
+     * 查看App上架列表
+     * @param pageable
+     * @return
+     */
+    MyPage<AppVersion> findappManageListByPage(Pageable pageable);
 }

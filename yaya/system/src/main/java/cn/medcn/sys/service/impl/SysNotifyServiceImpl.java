@@ -57,4 +57,13 @@ public class SysNotifyServiceImpl extends BaseServiceImpl<SystemNotify> implemen
         return systemNotifyDAO.selectCount(notify);
     }
 
+    @Override
+    public MyPage<SystemNotify> findMessageListByPage(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
+        List<SystemNotify> notifyList= systemNotifyDAO.findMessageListByPage();
+        MyPage<SystemNotify> page = new MyPage<SystemNotify>();
+        page.setDataList(notifyList);
+        return page;
+    }
+
 }

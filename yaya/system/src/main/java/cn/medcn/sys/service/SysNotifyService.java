@@ -27,4 +27,11 @@ public interface SysNotifyService extends BaseService<SystemNotify>{
      * @return
      */
     int findUnreadMsgCount(String userId);
+
+    /**
+     *消息列表
+     * @param pageable
+     * @return
+     */
+    MyPage<SystemNotify> findMessageListByPage(Pageable pageable);
 }

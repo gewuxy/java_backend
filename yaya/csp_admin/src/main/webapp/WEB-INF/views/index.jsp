@@ -172,12 +172,12 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/csp/message/list" target="mainFrame">
+                                        <a href="${ctx}/csp/notify/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;消息公告
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/user/statistics" target="mainFrame">
+                                        <a href="${ctx}/csp/data/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;账号数据统计
                                         </a>
                                     </li>
@@ -187,18 +187,23 @@
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/csp/feedback/index" target="mainFrame">
+                                        <a href="${ctx}/csp/article/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;帮助与反馈
                                         </a>
                                     </li>
                                     <li>
-                                        <a href="${ctx}/example/form" target="mainFrame">
+                                        <a href="${ctx}/csp/data/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;数据统计
                                         </a>
                                     </li>
                                     <li>
                                         <a href="${ctx}/csp/order/list" target="mainFrame">
                                             <i class="icon-circle-arrow-right"></i>&nbsp;流量订单管理
+                                        </a>
+                                    </li>
+                                    <li>
+                                        <a href="${ctx}/sys/banner/list" target="mainFrame">
+                                            <i class="icon-circle-arrow-right"></i>&nbsp;首页广告屏
                                         </a>
                                     </li>
                                 </ul>
