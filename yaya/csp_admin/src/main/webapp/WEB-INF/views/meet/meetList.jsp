@@ -31,8 +31,12 @@
                 <td>${meet.userName}</td>
                 <td>${meet.deleted == true ? "已删除":"正常"}</td>
                 <td>
-                    <a href="${ctx}/csp/meet/info?id=${meet.id}">查看</a>
-                    <a data-href="/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要删除该会议吗？', this)">关闭</a>
+                    <shiro:hasPermission name="csp:meet:view">
+                        <a href="${ctx}/csp/meet/info?id=${meet.id}">查看</a>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="csp:meet:del">
+                        <a data-href="/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要删除该会议吗？', this)">关闭</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>

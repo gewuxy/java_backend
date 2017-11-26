@@ -31,18 +31,18 @@
                 <td nowrap><i class="icon-${not empty menu.icon?menu.icon:' hide'}"></i><a href="${ctx}/sys/menu/edit?id=${menu.id}">${menu.name}</a></td>
                 <td title="${menu.url}">${menu.url}</td>
                 <td style="text-align:center;">
-
                         <input type="hidden" name="ids" value="${menu.id}"/>
                         <input name="sorts" type="text" value="${menu.sort}" style="width:50px;margin:0;padding:0;text-align:center;">
-
                 </td>
                 <td>${menu.hide == false?'显示':'隐藏'}</td>
                 <td title="${menu.perm}">${menu.perm}</td>
-                <td nowrap>
-                    <a href="${ctx}/sys/menu/edit?id=${menu.id}">修改</a>
-                    <a data-href="${ctx}/sys/menu/delete?id=${menu.id}" style="cursor: pointer;" onclick="layerConfirm('要删除该菜单及所有子菜单项吗？', this)">删除</a>
-                    <a href="${ctx}/sys/menu/edit?preid=${menu.id}">添加子菜单</a>
-                </td>
+                <shiro:hasPermission name="sys:menu:edit">
+                    <td nowrap>
+                        <a href="${ctx}/sys/menu/edit?id=${menu.id}">修改</a>
+                        <a data-href="${ctx}/sys/menu/delete?id=${menu.id}" style="cursor: pointer;" onclick="layerConfirm('要删除该菜单及所有子菜单项吗？', this)">删除</a>
+                        <a href="${ctx}/sys/menu/edit?preid=${menu.id}">添加子菜单</a>
+                    </td>
+                </shiro:hasPermission>
             </tr>
         </c:forEach></tbody>
     </table>
