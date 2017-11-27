@@ -42,7 +42,9 @@
     </div>
     <div class="form-actions">
         <input type="hidden" name="id" value="${meet.id}"/>
-        <input id="btnSubmit" class="btn btn-primary" type="submit"  value="关 闭"/>
+        <shiro:hasPermission name="csp:meet:del">
+             <input id="btnSubmit" class="btn btn-primary" type="submit"  value="关 闭"/>
+        </shiro:hasPermission>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form>

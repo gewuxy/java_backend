@@ -67,7 +67,9 @@
     </c:if>
     <div class="form-actions">
         <input type="hidden" id="id" name="id" value="${user.id}"/>
-        <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>
+        <shiro:hasPermission name="sys:user:edit">
+            <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>
+        </shiro:hasPermission>
     </div>
 </form>
 <script>

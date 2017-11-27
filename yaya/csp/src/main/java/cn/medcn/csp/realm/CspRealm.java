@@ -75,12 +75,13 @@ public class CspRealm extends AuthorizingRealm {
         }
 
         boolean abroad = cspUser.getAbroad() == null ? false : cspUser.getAbroad();
-        if (!abroad && LocalUtils.isAbroad()) {
+        boolean loginAbroad = LocalUtils.getLocalStr().equals(LocalUtils.Local.zh_CN.name()) ? false : true;
+        if (!abroad && loginAbroad) {
             // 国内账号登录
             throw new AuthenticationException(SpringUtils.getMessage("cn.user.web.login.error"));
 
         }
-        if (abroad && !LocalUtils.isAbroad()) {
+        if (abroad && !loginAbroad) {
             // 海外账号登录
             throw new AuthenticationException(SpringUtils.getMessage("en.user.web.login.error"));
         }

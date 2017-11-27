@@ -72,7 +72,7 @@
                                 <div class="formTitle color-black" style="line-height: 1.3;">Recharge Network Flow</div>
                                 <div class="formControls">
                                     <label for="" class="pr">
-                                        <input type="text" class="textInput" placeholder="Input the amount" id="flux" name="flux" oninput="fill()">
+                                        <input type="text" class="textInput" placeholder="Input the amount" id="flux" name="flux" oninput="fill()" maxlength="3">
                                         <span >G</span>
                                     </label>
                                     <p ><span class="explain">1 GB = 1 USD</span></p>
@@ -213,10 +213,7 @@
             $("#errSpan").attr("class","cells-block error");
             $("#errSpan").find('span').html("Recharge flow must be greater than 1G");
             return false;
-        } else if(($("#flux").val()/1)>100000){
-            layer.msg("Recharge flow can not exceed 100 thousand ");
-            return false;
-        }else{
+        } else{
             $("#errSpan").attr("class","cells-block error none");
             return true;
         }

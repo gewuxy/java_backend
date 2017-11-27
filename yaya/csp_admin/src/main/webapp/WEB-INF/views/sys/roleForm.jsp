@@ -27,7 +27,9 @@
     </div>
     <div class="form-actions">
         <input type="hidden" name="id" value="${role.id}"/>
-        <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>
+        <shiro:hasPermission name="sys:role:add">
+             <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>
+        </shiro:hasPermission>
     </div>
 </form>
 <script>

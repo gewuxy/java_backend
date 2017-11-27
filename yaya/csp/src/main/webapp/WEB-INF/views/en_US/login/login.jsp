@@ -39,6 +39,10 @@
                         <a href="javascript:;" id="twitter" title="Login with Twitter" class=" login-button buttonBlue-03" onclick="twitterLogin()">Login with Twitter</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=7" title="Login by E-mail" class=" login-button buttonBlue">Login by E-mail</a>
                         <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Platform" class=" login-button buttonBlue-04 last">Login with Jingxin Platform</a>
+                        <span class="cells-block error ${not empty error ? '':'none'} ">
+                            <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;
+                            <span id="errorMessage">${error}</span>
+                        </span>
                     </div>
 
                     <%@include file="../include/login_service.jsp"%>
