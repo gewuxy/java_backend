@@ -14,6 +14,7 @@ import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.user.dto.Captcha;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -32,6 +33,9 @@ public class CspBaseController extends BaseController {
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Value("${web.socket.url}")
+    protected String webSocketUrl;
+
     /**
      * 获取web端用户认证信息
      * @return
@@ -47,13 +51,13 @@ public class CspBaseController extends BaseController {
      */
     protected String genWsUrl(HttpServletRequest request, Integer courseId){
         StringBuffer buffer = new StringBuffer();
-        buffer.append(request.getScheme().toLowerCase().equals("https") ? "wss" : "ws");
-        buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
-        buffer.append("/live/order?courseId=").append(courseId);
+        buffer.append(webSocketUrl);
+        buffer.append("?courseId=").append(courseId);
         String token = request.getHeader(Constants.TOKEN);
         if (CheckUtils.isNotEmpty(token)) {
             buffer.append("&token=").append(request.getHeader(Constants.TOKEN));
         }
+
         return buffer.toString();
     }
 
