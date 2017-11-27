@@ -121,11 +121,17 @@
 <script>
     var asAllItem = audiojs.createAll();
     var playing = false;
+    var needSkip = true;
     $(function(){
         var isVideo = $('.swiper-slide-active').find('video');
 
         function slideToNext(){
-            setTimeout(function(){galleryTop.slideNext();}, 3000);
+            setTimeout(function(){
+                if (){
+
+                }
+                galleryTop.slideNext();
+            }, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];
