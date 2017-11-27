@@ -88,20 +88,6 @@ public class UserController extends BaseController {
         return "redirect:/logout";
     }
 
-//    @RequestMapping(value = "/setRole")
-//    @Log(name="设置角色")
-//    public String setRole(SystemUser user,RedirectAttributes redirectAttributes){
-//        if(user != null){
-//            int result = systemUserService.updateByPrimaryKeySelective(user);
-//            if (result > 0) {
-//                addFlashMessage(redirectAttributes, "设置角色成功");
-//            }else{
-//                addFlashMessage(redirectAttributes, "分配角色失败");
-//            }
-//        }
-//        return "redirect:/sys/user/list";
-//    }
-
     @RequestMapping(value = "/add")
     @Log(name="跳转添加或编辑系统用户页面")
     public String add(Integer id,Model model){
@@ -115,7 +101,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/edit")
-    @Log(name="跳转添加或编辑系统用户页面")
+    @Log(name="添加或编辑系统用户操作")
     public String edit(SystemUser user ,Model model,RedirectAttributes redirectAttributes){
         String msg = "";
         if(user.getId() != null){  //编辑
@@ -134,6 +120,7 @@ public class UserController extends BaseController {
                 return "sys/addAdminForm";
             }
             user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
+            user.setActive(true);
             systemUserService.insertSelective(user);
             msg = "新增成功";
         }

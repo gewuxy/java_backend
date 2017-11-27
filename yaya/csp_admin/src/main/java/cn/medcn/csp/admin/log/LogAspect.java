@@ -53,7 +53,6 @@ public class LogAspect {
         Principal principal = SubjectUtils.getCurrentUser();
         HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
         try {
-            String action = this.getParameters(request);
             String actionName = getControllerMethodDescription(joinPoint);
             if(principal!=null){
                 SystemLog log=new SystemLog();
@@ -61,7 +60,7 @@ public class LogAspect {
                 log.setRealName(principal.getNickname());
                 log.setUserName(principal.getUsername());
                 log.setLogDate(new Date());
-                log.setAction(action.length() < 50 ? action : action.substring(0,50));
+                log.setAction(request.getServletPath());
                 log.setActionName(actionName);
                 systemLogService.insert(log);
             }
@@ -98,7 +97,7 @@ public class LogAspect {
         }
     }
 
-    @SuppressWarnings("rawtypes")
+    @SuppressWarnings("unchecked")
     public  String getControllerMethodDescription(JoinPoint joinPoint) throws Exception {
         String targetName = joinPoint.getTarget().getClass().getName();
         String methodName = joinPoint.getSignature().getName();

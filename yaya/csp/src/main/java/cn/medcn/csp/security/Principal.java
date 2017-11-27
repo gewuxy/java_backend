@@ -87,7 +87,7 @@ public class Principal implements Serializable{
             principle.setEmail(userInfo.getEmail());
             principle.setNickName(userInfo.getNickName());
             principle.setToken(userInfo.getToken());
-            principle.setAbroad(userInfo.getAbroad() == null ? false : true);
+            principle.setAbroad(userInfo.getAbroad() == null ? false : userInfo.getAbroad());
             principle.setAvatar(userInfo.getAvatar());
 
             return principle;
