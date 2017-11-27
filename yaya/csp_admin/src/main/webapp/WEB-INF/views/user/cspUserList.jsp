@@ -33,15 +33,17 @@
                 <td>${user.mobile}</td>
                 <td>${user.email}</td>
                 <td><fmt:formatDate value="${user.registerTime}" type="both"/></td>
-                <shiro:hasPermission name="csp:user:edit">
-                    <td>
+                <td>
+                    <shiro:hasPermission name="csp:user:edit">
                         <a href="${ctx}/csp/user/viewOrRegister?id=${user.id}&actionType=3&listType=${listType}">修改</a>
                         <c:if test="${user.active eq true}">
                             <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=1&listType=${listType}"  onclick="layerConfirm('确认要冻结该用户帐号吗？', this)">冻结</a>
                         </c:if>
-                        <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=2&listType=${listType}"  onclick="layerConfirm('确认要删除该用户帐号吗？', this)">删除</a>
-                    </td>
-                </shiro:hasPermission>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="csp:user:del">
+                         <a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=2&listType=${listType}"  onclick="layerConfirm('确认要删除该用户帐号吗？', this)">删除</a>
+                    </shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>

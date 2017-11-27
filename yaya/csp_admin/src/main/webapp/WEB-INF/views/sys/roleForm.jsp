@@ -14,14 +14,14 @@
     <div class="control-group">
         <label class="control-label">角色英文名称:</label>
         <div class="controls">
-            <input type="search" id="roleName" name="roleName" value="${role.roleName}" maxlength="50" class="required abc" />
+            <input type="search" id="roleName" name="roleName" value="${role.roleName}" maxlength="50" class="required" />
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">角色中文名称:</label>
         <div class="controls">
-            <input type="search" name="roleDesc" id="roleDesc" value="${role.roleDesc}" maxlength="50" class="required realName"/>
+            <input type="search" name="roleDesc" id="roleDesc" value="${role.roleDesc}" maxlength="50" class="required"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>

@@ -148,5 +148,13 @@ public class SkipController extends CspBaseController {
     }
 
 
+    /**
+     * 官网首页 微信扫描下载app二维码 跳转提示页面
+     * @return
+     */
+    @RequestMapping(value = "/download")
+    public String downloadApp() {
+        return localeView("/index/download");
+    }
 
 }

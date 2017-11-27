@@ -13,13 +13,13 @@
     <div class="control-group">
         <label class="control-label">账号:</label>
         <div class="controls">
-            <input type="search" name="username" maxlength="50" class="required" value="${user.username}" readonly="true"/>
+            <input type="search" name="userName" maxlength="50" class="required" value="${user.userName}" readonly="true"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">姓名:</label>
         <div class="controls">
-            <input type="search" name="realname" htmlEscape="false" maxlength="50" value="${user.realname}" class="required" readonly="true"/>
+            <input type="search" name="realName" htmlEscape="false" maxlength="50" value="${user.realName}" class="required" readonly="true"/>
         </div>
     </div>
     <div class="control-group">

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -42,15 +43,15 @@ public class CspUserController extends BaseController {
      */
     @RequestMapping(value = "/list")
     @Log(name = "csp账户列表")
-    public String cspUserSearch(Pageable pageable, Integer listType,String userName, Model model) {
+    public String cspUserSearch(Pageable pageable, @RequestParam(required = false, defaultValue = "0")Integer listType, String userName, Model model) {
         if (!StringUtils.isEmpty(userName)) {
             pageable.getParams().put("userName", userName);
             model.addAttribute("userName",userName);
         }
         pageable.getParams().put("active",1);
-        if(listType == null || listType == 0){  //海外
+        if(listType == null || listType == 0){  //国内
             pageable.getParams().put("abroad",0);
-        }else if( listType == 1){  // 国内
+        }else if( listType == 1){  // 海外
            pageable.getParams().put("abroad",1);
         }else{  //封号=未激活
             pageable.getParams().put("active",0);

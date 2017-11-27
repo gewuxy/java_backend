@@ -9,6 +9,7 @@
         <if test="userName != null">
             AND su.user_name = #{userName}
         </if>
+        order by active desc
     </select>
 
 </mapper>

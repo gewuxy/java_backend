@@ -20,7 +20,7 @@
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>帐号</th><th>真实姓名</th><th>电话</th><th>电子邮箱</th><th>使用状态</th><th>用户角色</th><th>最后登录时间</th><th>最后登录ip地址</th><shiro:hasPermission name="sys:user:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+    <thead><tr><th>帐号</th><th>真实姓名</th><th>电话</th><th>电子邮箱</th><th>使用状态</th><th>用户角色</th><th>最后登录时间</th><th>最后登录ip地址</th><th>操作</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="user">
@@ -33,11 +33,19 @@
                 <td>${user.roleDesc}</td>
                 <td><fmt:formatDate value="${user.lastLoginDate}" type="both" dateStyle="full"/></td>
                 <td>${user.lastLoginIp}</td>
-                <shiro:hasPermission name="sys:user:edit">
-                    <td>
-                        <a href="${ctx}/sys/user/add?id=${user.id}">查看</a>
-                    </td>
-                </shiro:hasPermission>
+                <td>
+                    <shiro:hasPermission name="sys:user:edit">
+                         <a href="${ctx}/sys/user/add?id=${user.id}">查看</a>
+                        <c:choose>
+                            <c:when test="${user.active == true}">
+                                <a data-href="${ctx}/sys/user/edit?id=${user.id}&active=0"  onclick="layerConfirm('确认要禁用该用户帐号吗？', this)">禁用</a>
+                            </c:when>
+                            <c:otherwise>
+                                <a data-href="${ctx}/sys/user/edit?id=${user.id}&active=1"  onclick="layerConfirm('确认要激活该用户帐号吗？', this)">激活</a>
+                            </c:otherwise>
+                        </c:choose>
+                    </shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>
