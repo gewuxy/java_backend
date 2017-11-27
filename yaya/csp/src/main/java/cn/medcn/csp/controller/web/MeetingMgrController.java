@@ -15,10 +15,12 @@ import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
+import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.UserFlux;
@@ -232,6 +234,8 @@ public class MeetingMgrController extends CspBaseController {
 
         if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             model.addAttribute("live", liveService.findByCourseId(course.getId()));
+        } else {
+            model.addAttribute("play", audioService.findPlayState(course.getId()));
         }
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
         float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
@@ -409,7 +413,8 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String share(@PathVariable Integer courseId, HttpServletRequest request) {
         String local = LocalUtils.getLocalStr();
-        boolean abroad = LocalUtils.isAbroad();
+        Principal principal = getWebPrincipal();
+        boolean abroad = principal.getAbroad();
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
                 .append(local).append("&abroad=" + (abroad ? 1 : 0));
@@ -433,7 +438,7 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
-        if (openLive != null && openLive == 1) {
+        if (openLive != null && openLive == 1 && ac.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             ac.setPlayType(AudioCourse.PlayType.live_video.getType()); //视频直播
             //判断是否有足够的流量
             UserFlux flux = userFluxService.selectByPrimaryKey(getWebPrincipal().getId());

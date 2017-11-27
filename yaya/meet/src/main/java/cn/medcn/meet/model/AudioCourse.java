@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -52,6 +53,7 @@ public class AudioCourse implements Serializable {
     protected Boolean deleted;
 
     @Transient
+    @JsonIgnore
     private String userName;
 
     @Transient

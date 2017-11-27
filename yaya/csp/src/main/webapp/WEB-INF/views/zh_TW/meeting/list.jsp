@@ -516,22 +516,10 @@
         <div class="layer-hospital-popup-main ">
             <div class="more-popup-list clearfix">
                 <ul id="more_popup_ul" class="-mob-share-list">
-                    <li  class="-mob-share-weixin">
+                    <li  class="-mob-share-facebook">
                         <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
-                            <p>微信好友</p>
-                        </a>
-                    </li>
-                    <%--<li class="-mob-share-qq">--%>
-                        <%--<a href="javascript:;">--%>
-                            <%--<img src="${ctxStatic}/images/_friends-icon.png" alt="">--%>
-                            <%--<p>朋友圈</p>--%>
-                        <%--</a>--%>
-                    <%--</li>--%>
-                    <li class="-mob-share-weibo">
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
-                            <p>微博</p>
+                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
+                            <p>Facebook</p>
                         </a>
                     </li>
                     <li class="-mob-share-twitter">
@@ -540,22 +528,34 @@
                             <p>Twitter</p>
                         </a>
                     </li>
-                    <li  class="-mob-share-facebook">
+                    <%--<li  class="-mob-share-WhatsApp" >--%>
+                    <%--<a href="javascript:;">--%>
+                    <%--<img src="${ctxStatic}/images/icon-user-whatsapp.png" alt="">--%>
+                    <%--<p>WhatsApp</p>--%>
+                    <%--</a>--%>
+                    <%--</li>--%>
+                    <%--<li class="-mob-share-line" >--%>
+                    <%--<a href="javascript:;">--%>
+                    <%--<img src="${ctxStatic}/images/icon-user-line.png" alt="">--%>
+                    <%--<p>Line</p>--%>
+                    <%--</a>--%>
+                    <%--</li>--%>
+                    <li class="-mob-share-linkedin" >
                         <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
-                            <p>Facebook</p>
+                            <img src="${ctxStatic}/images/icon-user-linkedin.png" alt="">
+                            <p>LinkedIn</p>
                         </a>
                     </li>
                     <li>
                         <a style="cursor: pointer;" id="copyShareUrlBtn">
                             <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
-                            <p>復制鏈接</p>
+                            <p>複製連結</p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
-                            <p>復制副本</p>
+                            <p>複製</p>
                         </a>
                     </li>
                     <li>
@@ -567,11 +567,13 @@
                     <li>
                         <a href="javascript:;" onclick="delCourse()">
                             <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>刪除</p>
+                            <p>删除</p>
                         </a>
                     </li>
+
                 </ul>
-                <input type="text" style="display: none; width: 485px;" id="copyShareUrl">
+
+                <input type="text" style="display: none; width: 100px; " id="copyShareUrl">
             </div>
         </div>
     </div>

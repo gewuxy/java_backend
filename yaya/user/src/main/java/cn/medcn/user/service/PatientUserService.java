@@ -11,5 +11,5 @@ import cn.medcn.user.model.Patient;
 public interface PatientUserService extends BaseService<Patient> {
 
     // 检查验证码是否有效
-//    void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
+    void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
 }

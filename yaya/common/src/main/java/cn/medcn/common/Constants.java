@@ -186,6 +186,10 @@ public class Constants {
     // CSP用户缓存时长
     public static final int LOGIN_COOKIE_MAX_AGE = 7;
 
+    public static final String JI_GUANG_APP_KEY = "61f4b84e5c33850ca329d67d";
+
+    public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
+
     /********** 合理用药 *************/
 
 }

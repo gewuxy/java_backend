@@ -66,4 +66,11 @@ public interface CourseDeliveryService extends BaseService<CourseDelivery>{
      */
     MyPage<CourseDeliveryDTO> pageDeliveries(Pageable pageable);
 
+    /**
+     * 判断课件是否已经投稿
+     * @param courseId
+     * @return
+     */
+    boolean hasContributed (Integer courseId);
+
 }
