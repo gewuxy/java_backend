@@ -101,4 +101,29 @@
         LEFT JOIN t_audio_course_detail tcd ON tcd.course_id = tc.id AND tcd.sort=1
         WHERE td.author_id = #{authorId} AND td.accept_id = #{acceptId} ORDER BY td.delivery_time DESC
     </select>
+
+    <select id="findAllMeetForManage" resultType="cn.medcn.meet.model.AudioCourse">
+        SELECT c.id,c.deleted,c.`title`,c.`category`,c.`create_time`,c.`published`,c.`share_type`,c.`play_type`,
+        csu.`user_name`
+        FROM `t_audio_course` c
+        LEFT JOIN `t_csp_user_info` csu ON c.`csp_user_id` = csu.`id`
+        WHERE c.`source_type` = 1
+        <if test="keyword != null">
+            AND c.title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
+        ORDER BY c.create_time DESC
+    </select>
+
+    <select id="findMeetDetail" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+        SELECT c.id, c.title, c.play_type, i.user_name as name ,i.email,l.start_time, l.end_time, l.live_state, l.live_page,
+        cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
+        p.play_page,p.play_state, c.info,c.category_id
+        FROM t_audio_course c
+        LEFT JOIN t_csp_user_info i on c.csp_user_id = i.id
+        LEFT JOIN t_csp_live l ON l.course_id = c.id
+        LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
+        WHERE c.id = #{id} GROUP BY c.id
+    </select>
+
 </mapper>

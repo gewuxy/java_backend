@@ -2,6 +2,7 @@ package cn.medcn.csp.realm;
 
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.csp.security.Principal;
@@ -14,6 +15,8 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+
+import static cn.medcn.common.Constants.DEFAULT_LOCAL;
 
 
 /**
@@ -69,6 +72,18 @@ public class CspRealm extends AuthorizingRealm {
             if (!MD5Utils.md5(password).equals(cspUser.getPassword())) {
                 throw new AuthenticationException(SpringUtils.getMessage("user.error.password"));
             }
+        }
+
+        boolean abroad = cspUser.getAbroad() == null ? false : cspUser.getAbroad();
+        boolean loginAbroad = LocalUtils.getLocalStr().equals(LocalUtils.Local.zh_CN.name()) ? false : true;
+        if (!abroad && loginAbroad) {
+            // 国内账号登录
+            throw new AuthenticationException(SpringUtils.getMessage("cn.user.web.login.error"));
+
+        }
+        if (abroad && !loginAbroad) {
+            // 海外账号登录
+            throw new AuthenticationException(SpringUtils.getMessage("en.user.web.login.error"));
         }
 
         Principal principal = Principal.build(cspUser);

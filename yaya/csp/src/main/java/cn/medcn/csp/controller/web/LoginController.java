@@ -13,6 +13,7 @@ import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -120,25 +121,26 @@ public class LoginController extends CspBaseController {
             return errorForwardUrl;
         }
 
-        // 获取当前语言
-        String local = LocalUtils.getLocalStr();
-
         // 检查用户是否 是海外用户
         CspUserInfo user = cspUserService.findByLoginName(username);
-        if ((user != null && !user.getAbroad())
-                && local.equals(DEFAULT_LOCAL)) {
-            // 国内账号登录
-           return emailLogin(username, password, errorForwardUrl, model, response);
-
-        } else if (user.getAbroad() && !local.equals(DEFAULT_LOCAL)){
-            // 海外账号登录
-            return emailLogin(username, password, errorForwardUrl, model, response);
-
-        }  else {
-            model.addAttribute("error", local("web.user.login.error"));
+        if ((user != null && user.getAbroad())
+                && LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) {
+            // 国外账号 国内登录
+            model.addAttribute("error", local("en.user.web.login.error"));
             model.addAttribute("email", username);
             return errorForwardUrl;
         }
+        if ((user != null && !user.getAbroad())
+                && !LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) {
+            // 国内账号 国外登录
+            model.addAttribute("error", local("cn.user.web.login.error"));
+            model.addAttribute("email", username);
+            return errorForwardUrl;
+
+        }
+
+        return emailLogin(username, password, errorForwardUrl, model, response);
+
     }
 
     private String emailLogin(String username, String password, String errorForwardUrl, Model model, HttpServletResponse response) {
@@ -287,7 +289,7 @@ public class LoginController extends CspBaseController {
      */
     @RequestMapping(value = "/oauth/callback")
     public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes,
-                           HttpServletResponse response) throws SystemException {
+                           HttpServletResponse response, Model model) throws SystemException {
 
         Principal principal =  getWebPrincipal();
 
@@ -308,8 +310,7 @@ public class LoginController extends CspBaseController {
                         return "redirect:/mgr/user/toAccount";
                     }else{
                         //第三方登录操作
-                        doThirdPartWebLogin(thirdPartyId, oAuthUser, userInfo, response);
-                        return "redirect:/mgr/meet/list";
+                        return doThirdPartWebLogin(thirdPartyId, oAuthUser, userInfo, response, model);
                     }
                 }
             }
@@ -326,7 +327,7 @@ public class LoginController extends CspBaseController {
      */
     @RequestMapping(value="/jsCallback",method = RequestMethod.POST)
     public String twitterCallback(OAuthUser user, HttpServletRequest request, HttpServletResponse response,
-                                  RedirectAttributes redirectAttributes) throws SystemException {
+                                  RedirectAttributes redirectAttributes, Model model) throws SystemException {
         if(user == null){
             throw new SystemException("can't get userInfo");
         }
@@ -337,9 +338,8 @@ public class LoginController extends CspBaseController {
         if(principal == null){
             // 根据第三方用户唯一id 查询用户是否存在
             CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(user.getUid());
+            return doThirdPartWebLogin(user.getPlatformId(), user, userInfo, response, model);
 
-            doThirdPartWebLogin(user.getPlatformId(), user, userInfo, response);
-            return "redirect:/mgr/meet/list";
         }else{  //绑定回调
 
             //将OauthUser转为BindInfo对象
@@ -390,15 +390,14 @@ public class LoginController extends CspBaseController {
      * @param oAuthUser
      * @param userInfo
      */
-    private void doThirdPartWebLogin(Integer thirdPartyId, OAuthUser oAuthUser, CspUserInfo userInfo,
-                                     HttpServletResponse response) {
+    private String doThirdPartWebLogin(Integer thirdPartyId, OAuthUser oAuthUser, CspUserInfo userInfo,
+                                     HttpServletResponse response, Model model) {
         // 用户不存在，去添加绑定账号及添加csp用户账号
         if (userInfo == null) {
             CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
             dto.setThirdPartyId(thirdPartyId);
             // 获取当前语言
-            String local = LocalUtils.getLocalStr();
-            if (!local.equals(DEFAULT_LOCAL)) { // 海外
+            if (!LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) { // 海外
                 dto.setAbroad(true);
             }
             //去添加绑定账号
@@ -409,19 +408,23 @@ public class LoginController extends CspBaseController {
         token.setHost("thirdParty");
         token.setUsername(userInfo.getId());
         Subject subject = SecurityUtils.getSubject();
-        subject.login(token);
-
-        // 将当前用户添加到cookie缓存 保存7天
-        Principal principal = getWebPrincipal();
-        CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
         try {
+            subject.login(token);
 
+            // 将当前用户添加到cookie缓存 保存7天
+            Principal principal = getWebPrincipal();
+            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
             String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
             CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
 
+        } catch (AuthenticationException e) {
+            model.addAttribute("error", e.getMessage());
+            return localeView("/login/login");
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+
+        return "redirect:/mgr/meet/list";
     }
 
 

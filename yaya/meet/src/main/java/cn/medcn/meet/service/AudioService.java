@@ -256,4 +256,8 @@ public interface AudioService extends BaseService<AudioCourse>  {
     Integer findMaxLiveDetailSort(Integer courseId);
 
     List<AudioCourseDetail> findLiveDetails(Integer courseId);
+
+    MyPage<AudioCourse> findAllMeetForManage(Pageable pageable);
+
+    CourseDeliveryDTO findMeetDetail(Integer id);
 }

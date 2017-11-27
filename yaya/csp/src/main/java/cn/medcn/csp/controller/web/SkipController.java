@@ -73,7 +73,7 @@ public class SkipController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/login")
-    public String login(HttpServletRequest request) {
+    public String login(HttpServletRequest request,HttpServletResponse response) {
         // 从缓存获取是否有用户id
         String userId = CookieUtils.getCookieValue(request, LOGIN_USER_ID_KEY);
         if (StringUtils.isNotEmpty(userId)) {
@@ -88,6 +88,8 @@ public class SkipController extends CspBaseController {
                 return "redirect:/mgr/meet/list";
 
             } catch (AuthenticationException e) {
+                CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
+                CookieUtils.clearCookie(response, LOGIN_USER_KEY);
                 // 登录异常: 缓存过期，账号未认证，跳转登录主界面
                 return localeView("/login/login");
             }

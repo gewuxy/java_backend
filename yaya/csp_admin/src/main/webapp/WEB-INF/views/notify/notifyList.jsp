@@ -35,10 +35,10 @@
                 <td>${mes.userName}</td>
                 <td>${mes.senderName}</td>
                 <td>${mes.isRead == false ? "未读" : mes.isRead == true ? "已读":"" }</td>
-                <shiro:hasPermission name="sys:hospital:edit"><td>
+                <td>
                     <a href="${ctx}/csp/notify/edit?id=${mes.id}">修改</a>
                     <a href="${ctx}/csp/notify/delete?id=${mes.id}" onclick="deleteMessage()">删除</a>
-                </td></shiro:hasPermission>
+                </td>
             </tr>
         </c:forEach>
     </c:if>

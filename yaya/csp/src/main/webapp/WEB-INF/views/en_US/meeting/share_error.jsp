@@ -9,7 +9,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>${error}</title>
+    <title>Error prompt</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
 
     <!-- 高清方案 -->

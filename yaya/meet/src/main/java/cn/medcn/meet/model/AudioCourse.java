@@ -52,6 +52,9 @@ public class AudioCourse implements Serializable {
     protected Boolean deleted;
 
     @Transient
+    private String userName;
+
+    @Transient
     private List<AudioCourseDetail> details;
 
 

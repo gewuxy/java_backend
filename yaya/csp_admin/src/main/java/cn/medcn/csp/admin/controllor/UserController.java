@@ -7,13 +7,18 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.csp.admin.utils.SubjectUtils;
+import cn.medcn.sys.model.SystemRole;
 import cn.medcn.sys.model.SystemUser;
+import cn.medcn.sys.service.SystemRoleService;
 import cn.medcn.sys.service.SystemUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.util.List;
 
 /**
  * Created by huanghuibin on 2017/5/3.
@@ -24,6 +29,9 @@ public class UserController extends BaseController {
 
     @Autowired
     private SystemUserService systemUserService;
+
+    @Autowired
+    private SystemRoleService systemRoleService;
 
     /**
      * 获取系统用户列表
@@ -45,7 +53,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value="/info")
-    @Log(name="查看用户信息")
+    @Log(name="查看当前用户信息")
     public String info(Model model) throws SystemException{
         Integer userid = SubjectUtils.getCurrentUserid();
         SystemUser user = systemUserService.findUserHasRole(userid);
@@ -54,7 +62,7 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping(value = "/update")
-    @Log(name="修改用户信息")
+    @Log(name="修改当前用户信息")
     public String updateUserInfo(SystemUser user) {
         systemUserService.updateByPrimaryKeySelective(user);
         return "redirect:/sys/user/info";
@@ -68,7 +76,7 @@ public class UserController extends BaseController {
 
     @RequestMapping(value = "/resetPwd")
     @Log(name="重置密码")
-    public String resetPwd(String oldPassword, String newPassword,Model model) throws SystemException {
+    public String resetPwd(String oldPassword, String newPassword,Model model){
         Integer userId = SubjectUtils.getCurrentUserid();
         SystemUser user = systemUserService.selectByPrimaryKey(userId);
         if (!user.getPassword().equals(MD5Utils.MD5Encode(oldPassword))) {
@@ -80,17 +88,56 @@ public class UserController extends BaseController {
         return "redirect:/logout";
     }
 
-    //    @RequestMapping(value = "/rrruser/add")
-//    @Log(name="添加管理员")
-//    public String addUserInfo(CspSysUser user, Model model,RedirectAttributes redirectAttributes) {
-//        String account = SubjectUtils.getCurrentUsername();
-//        if(account.equals(user.getAccount())){
-//            model.addAttribute("err","此用户名已存在");
-//            return "/sys/addAdminForm";
+//    @RequestMapping(value = "/setRole")
+//    @Log(name="设置角色")
+//    public String setRole(SystemUser user,RedirectAttributes redirectAttributes){
+//        if(user != null){
+//            int result = systemUserService.updateByPrimaryKeySelective(user);
+//            if (result > 0) {
+//                addFlashMessage(redirectAttributes, "设置角色成功");
+//            }else{
+//                addFlashMessage(redirectAttributes, "分配角色失败");
+//            }
 //        }
-//        user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
-//        cspSysUserService.insert(user);
-//        addFlashMessage(redirectAttributes, "添加成功");
-//        return "redirect:/csp/sys/user/list";
+//        return "redirect:/sys/user/list";
 //    }
+
+    @RequestMapping(value = "/add")
+    @Log(name="跳转添加或编辑系统用户页面")
+    public String add(Integer id,Model model){
+        List<SystemRole> roleList = systemRoleService.select(new SystemRole());
+        model.addAttribute("roleList",roleList);
+        if(id != null){
+            SystemUser user = systemUserService.selectByPrimaryKey(id);
+            model.addAttribute("user",user);
+        }
+        return "/sys/addAdminForm";
+    }
+
+    @RequestMapping(value = "/edit")
+    @Log(name="跳转添加或编辑系统用户页面")
+    public String edit(SystemUser user ,Model model,RedirectAttributes redirectAttributes){
+        String msg = "";
+        if(user.getId() != null){  //编辑
+            user.setPassword(null);
+            user.setUserName(null);
+            systemUserService.updateByPrimaryKeySelective(user);
+            msg = "编辑成功";
+        }else{  //新增
+            SystemUser searchUser = new SystemUser();
+            searchUser.setUserName(user.getUserName());
+            SystemUser isExit = systemUserService.selectOne(searchUser);
+            if(isExit != null){
+                model.addAttribute("err","当前帐号已存在");
+                List<SystemRole> roleList = systemRoleService.select(new SystemRole());
+                model.addAttribute("roleList",roleList);
+                return "sys/addAdminForm";
+            }
+            user.setPassword(MD5Utils.MD5Encode(user.getPassword()));
+            systemUserService.insertSelective(user);
+            msg = "新增成功";
+        }
+        addFlashMessage(redirectAttributes, msg);
+        return "redirect:/sys/user/list";
+    }
 }
