@@ -72,7 +72,7 @@
                                 <div class="formTitle color-black">充值流量</div>
                                 <div class="formControls">
                                     <label for="" class="pr">
-                                        <input type="text" class="textInput" placeholder="输入需充值的流量" id="flux" name="flux" oninput="fill()">
+                                        <input type="text" class="textInput" placeholder="输入需充值的流量" id="flux" name="flux" oninput="fill()" maxlength="3" >
                                         <span >G</span>
                                     </label>
                                     <p ><span class="explain">1G流量=2元</span></p>
@@ -226,10 +226,7 @@
             $("#errSpan").attr("class","cells-block error");
             $("#errSpan").find('span').html("充值流量必须大于1G");
             return false;
-        } else if(($("#flux").val()/1)>60000){
-            layer.msg("充值流量金额不能超过6万");
-            return false;
-        }else{
+        } else{
             $("#errSpan").attr("class","cells-block error none");
             return true;
         }
