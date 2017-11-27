@@ -97,12 +97,12 @@
                                 </div>
                                 <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''}>
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} readonly>
                                         <div class="meeting-tab-btn"><i></i>Projective Recording</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''}>
+                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''} readonly>
                                         <div class="meeting-tab-btn"><i></i>Projective Live Stream</div>
                                     </label>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
@@ -392,25 +392,31 @@
             showInfoLeftCount();
         });
 
-        $("input[name='course.playType']").click(function(){
-            var playType = $(this).val();
-            $("input[name='course.playType']").removeAttr("checked");
-            $(this).prop("checked", "true");
-            if (playType == 0){
-                $("#liveStartTime").attr("disabled", "true");
-                $("#liveEndTime").attr("disabled", "true");
-                $(this).parents('.meeting-tab').find(".meeting-tab-main").addClass("none");
-            } else {
-                $("#liveStartTime").removeAttr("disabled");
-                $("#liveEndTime").removeAttr("disabled");
-                $(this).parents('.meeting-tab').find(".meeting-tab-main").removeClass("none");
-            }
-            $(this).parent().siblings().removeClass("cur");
-            $(this).parent().addClass("cur");
+        var contributed = '${empty contributed ? "false" : contributed}';
+        if (contributed == 'true'){
+            $("input[name='course.playType']").unbind("click");
+        } else {
+            $("input[name='course.playType']").bind("click",function(){
+                var playType = $(this).val();
+                $("input[name='course.playType']").removeAttr("checked");
+                $(this).prop("checked", "true");
+                if (playType == 0){
+                    $("#liveStartTime").attr("disabled", "true");
+                    $("#liveEndTime").attr("disabled", "true");
+                    $(this).parents('.meeting-tab').find(".meeting-tab-main").addClass("none");
+                } else {
+                    $("#liveStartTime").removeAttr("disabled");
+                    $("#liveEndTime").removeAttr("disabled");
+                    $(this).parents('.meeting-tab').find(".meeting-tab-main").removeClass("none");
+                }
+                $(this).parent().siblings().removeClass("cur");
+                $(this).parent().addClass("cur");
 
 
 
-        });
+            });
+        }
+
 
         $('.cancel-hook').on('click',function(){
             layer.open({

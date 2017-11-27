@@ -4,6 +4,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.meet.dao.CourseDeliveryDAO;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
@@ -134,5 +135,19 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
     public MyPage<CourseDeliveryDTO> pageDeliveries(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),true);
         return MyPage.page2Mypage((Page) courseDeliveryDAO.findByAcceptId((Integer)pageable.get("acceptId"), (String)pageable.get("authorId")));
+    }
+
+    /**
+     * 判断课件是否已经投稿
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public boolean hasContributed(Integer courseId) {
+        CourseDelivery cond = new CourseDelivery();
+        cond.setSourceId(courseId);
+        List<CourseDelivery> list = courseDeliveryDAO.select(cond);
+        return CheckUtils.isEmpty(list) ? false : true;
     }
 }

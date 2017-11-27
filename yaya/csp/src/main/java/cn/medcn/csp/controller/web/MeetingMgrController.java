@@ -20,6 +20,7 @@ import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
+import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.UserFlux;
@@ -233,6 +234,8 @@ public class MeetingMgrController extends CspBaseController {
 
         if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             model.addAttribute("live", liveService.findByCourseId(course.getId()));
+        } else {
+            model.addAttribute("play", audioService.findPlayState(courseId));
         }
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
         float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
@@ -435,7 +438,7 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
-        if (openLive != null && openLive == 1) {
+        if (openLive != null && openLive == 1 && ac.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             ac.setPlayType(AudioCourse.PlayType.live_video.getType()); //视频直播
             //判断是否有足够的流量
             UserFlux flux = userFluxService.selectByPrimaryKey(getWebPrincipal().getId());
