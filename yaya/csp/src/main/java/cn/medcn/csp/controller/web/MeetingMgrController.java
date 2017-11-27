@@ -410,7 +410,7 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String share(@PathVariable Integer courseId, HttpServletRequest request) {
         String local = LocalUtils.getLocalStr();
-        Principal principal = SecurityUtils.get();
+        Principal principal = getWebPrincipal();
         boolean abroad = principal.getAbroad();
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
