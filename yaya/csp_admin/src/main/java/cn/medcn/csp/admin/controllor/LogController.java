@@ -4,7 +4,6 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.csp.admin.log.Log;
-import cn.medcn.csp.admin.model.CspSysLog;
 import cn.medcn.sys.model.SystemLog;
 import cn.medcn.sys.service.SystemLogService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -29,13 +29,15 @@
                 <td>${meet.shared}</td>
                 <td>${meet.playType eq 0 ? "录播" : meet.playType eq 1 ? "ppt" : "视频"}</td>
                 <td>${meet.userName}</td>
-                <td>${meet.deleted == true ? "已删除":"正常"}</td>
+                <td>${meet.deleted == true ? "已关闭":"正常"}</td>
                 <td>
                     <shiro:hasPermission name="csp:meet:view">
                         <a href="${ctx}/csp/meet/info?id=${meet.id}">查看</a>
                     </shiro:hasPermission>
-                    <shiro:hasPermission name="csp:meet:del">
-                        <a data-href="/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要删除该会议吗？', this)">关闭</a>
+                    <shiro:hasPermission name="csp:meet:close">
+                        <c:if test="${meet.deleted == false}">
+                            <a data-href="/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要关闭该会议吗？', this)">关闭</a>
+                        </c:if>
                     </shiro:hasPermission>
                 </td>
             </tr>
