@@ -16,7 +16,9 @@
 </form>
 <form id="searchForm" method="post" action="${ctx}/sys/logs/list" class="breadcrumb form-search">
     <input placeholder="输入帐号进行搜索" value="${userName}" size="40"  type="search" name="userName" maxlength="50" />
-    <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+    <shiro:hasPermission name="sys:logs:list">
+        <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+    </shiro:hasPermission>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>帐号</th><th>姓名</th><th>操作名称</th><th>操作url路径</th><th>操作时间</th></tr></thead>

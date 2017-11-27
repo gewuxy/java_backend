@@ -114,7 +114,9 @@
         <input type="hidden" value="${actionType}" name="actionType"/>
         <input type="hidden" value="${listType}" name="listType"/>
         <c:if test="${actionType == 3}">
-            <input id="btnSubmit" class="btn btn-primary" type="submit" value="修  改"/>
+            <shiro:hasPermission name="csp:user:edit">
+                <input id="btnSubmit" class="btn btn-primary" type="submit" value="修  改"/>
+            </shiro:hasPermission>
         </c:if>
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
