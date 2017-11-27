@@ -15,6 +15,7 @@ import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
@@ -409,7 +410,8 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String share(@PathVariable Integer courseId, HttpServletRequest request) {
         String local = LocalUtils.getLocalStr();
-        boolean abroad = LocalUtils.isAbroad();
+        Principal principal = SecurityUtils.get();
+        boolean abroad = principal.getAbroad();
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
                 .append(local).append("&abroad=" + (abroad ? 1 : 0));
