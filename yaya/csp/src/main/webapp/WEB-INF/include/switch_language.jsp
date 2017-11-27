@@ -79,7 +79,11 @@ $(function () {
 
         if (setCookie('_local', local)){
 //            window.location.reload();
-            $(this).attr("href",window.location.href);
+            if(window.location.href.indexOf('thirdPartyId=5')>-1){
+                $(this).attr("href","/login");
+            } else {
+                $(this).attr("href",window.location.href);
+            }
         }
 
     })
