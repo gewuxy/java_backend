@@ -480,7 +480,7 @@
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
-                if(startTime == endTime){
+                if(startTime >= endTime){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;

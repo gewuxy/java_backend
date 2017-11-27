@@ -119,7 +119,7 @@
                                                                 >
                                                                 </label>
                                                             </span>
-                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择直播开始结束时间</span>
+                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择正确的直播开始结束时间</span>
                                                 <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="${live.startTime}">
                                                 <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="${live.endTime}">
                                             </div>
@@ -475,7 +475,7 @@
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
-                if(startTime == endTime){
+                if(startTime >= endTime){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
