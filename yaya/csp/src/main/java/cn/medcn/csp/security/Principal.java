@@ -21,6 +21,16 @@ public class Principal implements Serializable{
 
     protected String avatar;
 
+    protected Boolean abroad;
+
+    public Boolean getAbroad() {
+        return abroad;
+    }
+
+    public void setAbroad(Boolean abroad) {
+        this.abroad = abroad;
+    }
+
     public String getAvatar() {
         return avatar;
     }
@@ -77,7 +87,7 @@ public class Principal implements Serializable{
             principle.setEmail(userInfo.getEmail());
             principle.setNickName(userInfo.getNickName());
             principle.setToken(userInfo.getToken());
-
+            principle.setAbroad(userInfo.getAbroad() == null ? false : true);
             principle.setAvatar(userInfo.getAvatar());
 
             return principle;
