@@ -213,8 +213,8 @@
             $("#errSpan").attr("class","cells-block error");
             $("#errSpan").find('span').html("Recharge flow must be greater than 1G");
             return false;
-        } else if(($("#flux").val()/1)>100000){
-            layer.msg("Recharge flow can not exceed 100 thousand ");
+        } else if(($("#flux").val()/1)>60000){
+            layer.msg("Recharge flow can not exceed 60 thousand ");
             return false;
         }else{
             $("#errSpan").attr("class","cells-block error none");

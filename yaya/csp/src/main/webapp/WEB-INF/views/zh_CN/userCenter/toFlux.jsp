@@ -226,8 +226,8 @@
             $("#errSpan").attr("class","cells-block error");
             $("#errSpan").find('span').html("充值流量必须大于1G");
             return false;
-        } else if(($("#flux").val()/1)>100000){
-            layer.msg("充值流量不能超过10万");
+        } else if(($("#flux").val()/1)>60000){
+            layer.msg("充值流量金额不能超过6万");
             return false;
         }else{
             $("#errSpan").attr("class","cells-block error none");
