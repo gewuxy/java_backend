@@ -1,13 +1,12 @@
-package cn.medcn.csp.service;
+package cn.medcn.common.service.impl;
 
 import cn.jsms.api.common.SMSClient;
 import cn.medcn.common.provider.SMSClientProvider;
 import cn.medcn.common.service.SMSService;
-import cn.medcn.common.service.impl.CommonSMSServiceImpl;
 import org.springframework.stereotype.Service;
 
-import static cn.medcn.csp.CspConstants.JI_GUANG_APP_KEY;
-import static cn.medcn.csp.CspConstants.JI_GUANG_SECRET;
+import static cn.medcn.common.Constants.JI_GUANG_APP_KEY;
+import static cn.medcn.common.Constants.JI_GUANG_SECRET;
 
 /**
  * Created by lixuan on 2017/11/7.

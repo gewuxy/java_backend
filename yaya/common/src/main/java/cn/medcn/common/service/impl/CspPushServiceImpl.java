@@ -1,16 +1,13 @@
-package cn.medcn.csp.service;
+package cn.medcn.common.service.impl;
 
 import cn.jpush.api.JPushClient;
 import cn.medcn.common.provider.PushClientProvider;
 import cn.medcn.common.service.PushService;
-import cn.medcn.common.service.impl.CommonPushServiceImpl;
-import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
 
-import java.util.Map;
+import static cn.medcn.common.Constants.JI_GUANG_APP_KEY;
+import static cn.medcn.common.Constants.JI_GUANG_SECRET;
 
-import static cn.medcn.csp.CspConstants.JI_GUANG_APP_KEY;
-import static cn.medcn.csp.CspConstants.JI_GUANG_SECRET;
 
 /**
  * Created by lixuan on 2017/11/7.

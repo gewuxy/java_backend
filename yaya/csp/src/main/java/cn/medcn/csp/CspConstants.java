@@ -17,10 +17,6 @@ public class CspConstants {
 
     public static final String LIVE_TYPE_KEY = "liveType";
 
-    public static final String JI_GUANG_APP_KEY = "61f4b84e5c33850ca329d67d";
-
-    public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
-
     //直播流量监控间隔 单位秒
     public static final int FLUX_MONITOR_SPACE = 5;
 
