@@ -247,6 +247,18 @@
         uploadFile(document.getElementById(id));
     });
 
+    function fleshPage(){
+        var reloadUrl = window.location.href;
+        if (reloadUrl.indexOf("?") > 0){
+            reloadUrl = reloadUrl + "&time="+new Date().getTime();
+        } else {
+            reloadUrl = reloadUrl + "?time="+new Date().getTime();
+        }
+        setTimeout(function (){
+            window.location.href = reloadUrl;
+        }, 2000);
+    }
+
     function uploadFile(f){
         var fSize = fileSize(f);
         if (fSize > file_size_limit){
@@ -273,7 +285,7 @@
                 layer.close(index);
                 if (data.code == 0){
                     //回调函数传回传完之后的URL地址
-                    window.location.reload();
+                    fleshPage();
                 } else {
                     uploadOver = true;
                     layer.msg(data.err);
@@ -314,7 +326,7 @@
             if (data.data.progress.indexOf("100") != -1){
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
-                window.location.reload();
+                fleshPage();
             } else {
                 setTimeout(showConvertProgress, 500);
             }
