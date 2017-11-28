@@ -351,7 +351,13 @@
         }
 
         function edit(){
-            window.location.href = '${ctx}/mgr/meet/edit?courseId='+courseId;
+            $.get("${ctx}/mgr/meet/editable/" + courseId, {}, function (data) {
+                if (data.code == "0"){
+                    window.location.href = '${ctx}/mgr/meet/edit?courseId='+courseId;
+                } else {
+                    layer.msg(data.err);
+                }
+            }, 'json');
         }
     </script>
 </head>

@@ -94,7 +94,7 @@
                 swiper.slideTo("${record.playPage}");
             },
             onSlideChangeEnd:function(swiper){
-                console.log("need send order = " + needSendOrder);
+                console.log("send sync order ");
                 sendOrder(swiper.activeIndex);
             },
         });
