@@ -244,6 +244,9 @@
                                 var dataSrc = $(".swiper-slide-active").attr('audio-src');
                                 asAllItem[0].load(dataSrc);
                                 asAllItem[0].play();
+                                //赋值给插件
+                                swiper.snapGrid = newOffset;
+                                swiper.slidesGrid = newOffset;
                             },
                             onTouchStart:function(swiper) {
                                 //赋值给插件
