@@ -149,14 +149,18 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             }
         }
 
-        // 获取当前语言
-        String local = LocalUtils.getLocalStr();
-        // 是否海外用户
-        if (!local.equals(DEFAULT_LOCAL)) { // 海外
-            userInfo.setAbroad(true);
-        } else {
-            userInfo.setAbroad(false);
+        // app端会传abroad参数，所以不会为空， 网页端该参数为空
+        if (userInfo.getAbroad() == null) {
+            // 从网页端注册 根据语言区分是否海外注册
+            String local = LocalUtils.getLocalStr();
+            // 是否海外用户
+            if (!local.equals(DEFAULT_LOCAL)) { // 海外
+                userInfo.setAbroad(true);
+            } else {
+                userInfo.setAbroad(false);
+            }
         }
+
         userInfo.setId(StringUtils.nowStr());
         String password = userInfo.getPassword();
         userInfo.setPassword(MD5Utils.md5(password));

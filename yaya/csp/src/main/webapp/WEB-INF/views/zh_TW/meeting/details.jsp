@@ -63,7 +63,7 @@
                 <div class="admin-line"></div>
                 <div class="admin-button t-center">
                     <a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >返回</a>&nbsp;&nbsp;
-                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="保存">
+                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="保存">-->
                 </div>
             </div>
         </div>

@@ -69,6 +69,8 @@ public class CourseDeliveryDTO implements Serializable {
     private boolean publishState;
 
     protected String info;
+    //是否可编辑
+    protected Boolean editAble;
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){

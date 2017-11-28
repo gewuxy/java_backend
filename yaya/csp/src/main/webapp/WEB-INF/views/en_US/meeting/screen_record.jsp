@@ -8,7 +8,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>投屏掃碼-會講</title>
+    <title>Scan-to-Project - CSPmeeting</title>
 
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
@@ -29,7 +29,7 @@
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode"><img src="${fileBase}${qrCodeUrl}" alt=""></div>
-                <p class="t-center">請使用 會講 APP掃碼繼續</p>
+                <p class="t-center">Please scan with CSPmeeting App to continue.</p>
             </div>
         </div>
     </div>
@@ -71,12 +71,6 @@
 <script>
     var swiper;
 
-    const delay = 3000;
-
-    var needSendOrder = true;//是否需要发送指令
-
-    var living = false;
-
     $(function(){
 
 
@@ -97,21 +91,10 @@
             paginationType: 'fraction',
             onInit: function(swiper){
                 swiper.wrapper.attr('style','transform: translate3d(0px, 0, 0);transition-duration: 0ms;');
-                var playType = "${course.playType}";
-                if (playType == "0"){
-                    swiper.slideTo("${record.playPage}");
-                } else {
-                    swiper.slideTo("${live.livePage}");
-                }
-                needSendOrder = false;
+                swiper.slideTo("${record.playPage}");
             },
             onSlideChangeEnd:function(swiper){
-                console.log("need send order = " + needSendOrder);
-                if (needSendOrder && living){
-                    sendOrder(swiper.activeIndex);
-                }
-                needSendOrder = true;
-                leftTime = totalLeftTime;
+                sendOrder(swiper.activeIndex);
             },
         });
 
@@ -129,9 +112,6 @@
 </script>
 <script type="text/javascript">
     var scaned = false;
-
-    const totalLeftTime = 3;
-    var leftTime = 3;
 
     var heartbeat_timer = 0;
     var last_health = -1;
@@ -183,15 +163,11 @@
             console.log("order = "+data.order + " orderFrom = " + data.orderFrom);
             if (data.order == 1 && data.orderFrom != 'web'){
                 console.log("skip to page "+data.pageNum);
-                needSendOrder = false;
                 if (scaned){
                     skip(data.pageNum);
                 }
-                needSendOrder = true;
             } else if(data.order == 100){//扫码成功
                 show();
-            } else if(data.order == 11){//直播开始指令
-                living = true;
             }
 
         }
@@ -201,16 +177,9 @@
 
     function sendOrder(pageNo){
         var imgUrl = $(".swiper-slide-active").find("img").attr("src");
-        console.log("left time is = " + leftTime);
-        if(leftTime <= 1){
-            var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
-            myWs.send(JSON.stringify(message));
-            console.log("send sync order ");
-            leftTime = totalLeftTime;
-        } else {
-            leftTime --;
-            setTimeout(sendOrder, 1000, pageNo);
-        }
+        var message = {'order':1, 'courseId':${course.id}, 'pageNum':pageNo, 'orderFrom':'web', 'imgUrl':imgUrl};
+        myWs.send(JSON.stringify(message));
+        console.log("send sync order ");
     }
 
 </script>

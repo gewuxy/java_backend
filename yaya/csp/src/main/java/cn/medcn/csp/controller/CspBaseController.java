@@ -88,12 +88,16 @@ public class CspBaseController extends BaseController {
      * @throws SystemException
      */
     protected String sendMobileCaptcha(String mobile, Integer msgTmpId) throws SystemException {
-        try {
             //10分钟内最多允许获取3次验证码
             Captcha captcha = (Captcha) redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
             if (captcha == null) { //第一次获取
                 // 发送短信
-                String msgId = cspSmsService.send(mobile, msgTmpId);
+                String msgId = null;
+                try {
+                    msgId = cspSmsService.send(mobile, msgTmpId);
+                } catch (Exception e) {
+                    throw new SystemException(local("sms.error.send"));
+                }
                 Captcha firstCaptcha = new Captcha();
                 firstCaptcha.setFirstTime(new Date());
                 firstCaptcha.setCount(NUMBER_ZERO);
@@ -106,7 +110,12 @@ public class CspBaseController extends BaseController {
                     throw new SystemException(local("sms.frequency.send"));
                 }
                 // 发送短信
-                String msgId = cspSmsService.send(mobile, msgTmpId);
+                String msgId = null;
+                try {
+                    msgId = cspSmsService.send(mobile, msgTmpId);
+                } catch (Exception e) {
+                    throw new SystemException(local("sms.error.send"));
+                }
 
                 captcha.setMsgId(msgId);
                 captcha.setCount(captcha.getCount() + 1);
@@ -115,9 +124,7 @@ public class CspBaseController extends BaseController {
 
             return APIUtils.success();
 
-        } catch (Exception e) {
-            throw new SystemException(local("sms.error.send"));
-        }
+
 
     }
 
@@ -151,5 +158,13 @@ public class CspBaseController extends BaseController {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 课件不可编辑异常
+     * @return
+     */
+    protected String courseNonEditAbleError(){
+        return local("course.error.editable");
     }
 }
