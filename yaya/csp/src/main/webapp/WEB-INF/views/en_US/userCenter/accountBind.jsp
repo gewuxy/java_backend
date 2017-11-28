@@ -12,7 +12,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
-    <script src="http://adodson.com/hello.js/dist/hello.all.js"></script>
+    <script src="//adodson.com/hello.js/dist/hello.all.js"></script>
 
 </head>
 
