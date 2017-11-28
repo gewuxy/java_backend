@@ -208,6 +208,7 @@
                     success:function(){
 
                         var added = 105;
+                        var newOffset;
 
                         //幻灯片轮播
                         var swiper = new Swiper('.swiper-container-metting', {
@@ -225,6 +226,7 @@
                             onInit: function(swiper){
                                 //设置偏移值
                                 swiper.wrapper.attr('style','-webkit-transform: translate3d(175px, 0, 0);-moz-transform: translate3d(175px, 0, 0);-o-transform: translate3d(175px, 0, 0);-ms-transform: translate3d(175px, 0, 0);transform: translate3d(175px, 0, 0);transition-duration: 0ms;');
+
                                 //获取默认偏移值
                                 var defaultOffset = swiper.snapGrid;
                                 for(var i =0; i<defaultOffset.length; i++){
@@ -232,7 +234,7 @@
                                 }
                                 //更新偏移值
                                 var updateOffset = defaultOffset.slice(1);
-                                var newOffset= [-175];
+                                newOffset= [-175];
                                 newOffset = newOffset.concat(updateOffset);
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
@@ -243,6 +245,11 @@
                                 asAllItem[0].load(dataSrc);
                                 asAllItem[0].play();
                             },
+                            onTouchStart:function(swiper) {
+                                //赋值给插件
+                                swiper.snapGrid = newOffset;
+                                swiper.slidesGrid = newOffset;
+                            }
                         });
 
                     },
