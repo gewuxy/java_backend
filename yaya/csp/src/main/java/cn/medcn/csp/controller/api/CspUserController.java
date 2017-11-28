@@ -136,7 +136,6 @@ public class CspUserController extends CspBaseController {
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
      * @param email 邮箱
-     * @param password 密码
      * @param password     密码
      * @param thirdPartyId 第三方平台id
      * @param mobile       手机
