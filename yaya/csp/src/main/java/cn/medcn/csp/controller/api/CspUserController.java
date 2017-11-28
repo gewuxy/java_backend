@@ -80,12 +80,9 @@ public class CspUserController extends CspBaseController {
         }
 
         // 获取是否海外注册
-        String abroad = request.getHeader("abroad") ;
-        if (abroad != null && abroad.equals("1")) {
-            userInfo.setAbroad(true);
-        } else {
-            userInfo.setAbroad(false);
-        }
+        Boolean abroad = LocalUtils.isAbroad();
+        userInfo.setAbroad(abroad);
+
         String email = userInfo.getEmail();
         String password = userInfo.getPassword();
         String nickName = userInfo.getNickName();
@@ -157,6 +154,10 @@ public class CspUserController extends CspBaseController {
            return error(local("user.empty.ThirdPartyId"));
         }
 
+        // 获取app header中是否海外登录
+        Boolean abroad = LocalUtils.isAbroad();
+        userInfoDTO.setAbroad(abroad);
+
         CspUserInfo userInfo = null;
         // 第三方平台id
         int type = thirdPartyId.intValue();
@@ -174,8 +175,8 @@ public class CspUserController extends CspBaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
-            // 当前登录的用户不是海外用户
-            Boolean abroad = userInfo.getAbroad();
+            // 检查当前登录的用户 是否海外用户
+            abroad = userInfo.getAbroad();
             if (abroad == null) {
                 abroad = false;
             }

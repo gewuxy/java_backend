@@ -61,6 +61,9 @@ public class MeetingMgrController extends CspBaseController {
     @Value("${app.file.base}")
     protected String fileBase;
 
+    @Value("${csp.app.csp.base}")
+    protected String appCspBase;
+
     @Autowired
     protected OpenOfficeService openOfficeService;
 
@@ -141,20 +144,14 @@ public class MeetingMgrController extends CspBaseController {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
 
-        if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
-            AudioCoursePlay play = audioService.findPlayState(courseId);
-            model.addAttribute("record", play);
-        } else {
-            //查询出直播信息
-            Live live = liveService.findByCourseId(courseId);
-            model.addAttribute("live", live);
-        }
-
         model.addAttribute("course", course);
         String wsUrl = genWsUrl(request, courseId);
         model.addAttribute("wsUrl", wsUrl);
 
         String scanUrl = genScanUrl(request, courseId);
+
+        model.addAttribute("scanUrl", scanUrl);
+        model.addAttribute("fileBase", fileBase);
         //判断二维码是否存在 不存在则重新生成
         String qrCodePath = FilePath.QRCODE.path + "/course/" + courseId + ".png";
         boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
@@ -165,7 +162,18 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("fileBase", fileBase);
         model.addAttribute("qrCodeUrl", qrCodePath);
 
-        return localeView("/meeting/screen");
+        if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+            AudioCoursePlay play = audioService.findPlayState(courseId);
+            model.addAttribute("record", play);
+            return localeView("/meeting/screen_record");
+        } else {
+            //查询出直播信息
+            Live live = liveService.findByCourseId(courseId);
+            model.addAttribute("live", live);
+            return localeView("/meeting/screen");
+        }
+
+
     }
 
 
@@ -177,8 +185,7 @@ public class MeetingMgrController extends CspBaseController {
      */
     protected String genScanUrl(HttpServletRequest request, Integer courseId) {
         StringBuffer buffer = new StringBuffer();
-        buffer.append(request.getScheme());
-        buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
+        buffer.append(appCspBase);
         buffer.append("/api/meeting/scan/callback?courseId=");
         buffer.append(courseId);
         return buffer.toString();
