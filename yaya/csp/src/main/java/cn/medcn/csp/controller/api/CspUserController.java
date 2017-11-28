@@ -74,7 +74,7 @@ public class CspUserController extends CspBaseController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public String register(CspUserInfo userInfo, HttpServletRequest request) {
+    public String register(CspUserInfo userInfo) {
         if (userInfo == null) {
             return error(local("user.param.empty"));
         }
@@ -286,7 +286,7 @@ public class CspUserController extends CspBaseController {
             throw new SystemException(local("user.password.notnull"));
         }
 
-        // 检查用户是否注册且已经激活
+        // 检查用户是否注册并激活
         CspUserInfo userInfo = cspUserService.findByLoginName(email);
         if (userInfo == null) {
             throw new SystemException(local("user.notexisted"));
@@ -365,6 +365,7 @@ public class CspUserController extends CspBaseController {
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
+            userInfo.setFlux(0);
         }
 
         return userInfo;
