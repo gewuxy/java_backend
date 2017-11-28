@@ -74,11 +74,18 @@ public class CspUserController extends CspBaseController {
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public String register(CspUserInfo userInfo) {
+    public String register(CspUserInfo userInfo, HttpServletRequest request) {
         if (userInfo == null) {
             return error(local("user.param.empty"));
         }
 
+        // 获取是否海外注册
+        String abroad = request.getHeader("abroad") ;
+        if (abroad != null && abroad.equals("1")) {
+            userInfo.setAbroad(true);
+        } else {
+            userInfo.setAbroad(false);
+        }
         String email = userInfo.getEmail();
         String password = userInfo.getPassword();
         String nickName = userInfo.getNickName();
@@ -96,8 +103,8 @@ public class CspUserController extends CspBaseController {
             return error(local("user.linkman.notnull"));
         }
 
+        // 获取邮箱模板
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
-
         try {
 
             return cspUserService.register(userInfo,template);
