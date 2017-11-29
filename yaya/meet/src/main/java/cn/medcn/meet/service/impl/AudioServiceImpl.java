@@ -731,7 +731,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
                 firstDetail.setVideoUrl(null);
                 firstDetail.setTemp(true);
-                System.out.println("first detail is temp = " + firstDetail.getTemp());
                 details.add(firstDetail);
             }
         } else {

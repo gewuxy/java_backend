@@ -453,6 +453,8 @@ public class MeetingController extends CspBaseController {
             }
             result.put("record", play);
         }
+        //传递服务器时间
+        result.put("serverTime", new Date());
 
         return success(result);
     }
@@ -601,6 +603,7 @@ public class MeetingController extends CspBaseController {
 
         if (!CheckUtils.isEmpty(page.getDataList())) {
             for (CourseDeliveryDTO deliveryDTO : page.getDataList()) {
+                deliveryDTO.setServerTime(new Date());
                 if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
                     deliveryDTO.setCoverUrl(fileBase + deliveryDTO.getCoverUrl());
                 }
@@ -621,6 +624,7 @@ public class MeetingController extends CspBaseController {
 
             }
         }
+
         return success(page.getDataList());
     }
 
