@@ -642,6 +642,9 @@ public class MeetingController extends CspBaseController {
         if (id == null || id == 0) {
             return error(local("error.param"));
         } else {
+            if (!audioService.editAble(id)) {
+                return courseNonDeleteAbleError();
+            }
             AudioCourse course = new AudioCourse();
             course.setId(id);
             course.setDeleted(true);
