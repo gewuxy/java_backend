@@ -204,10 +204,12 @@
     var asAllItem = audiojs.createAll();
     var playing = false;
     var galleryTop ;
+    var slideTimer ;
     $(function(){
 
         function slideToNext(){
-            setTimeout(function(){galleryTop.slideNext();}, 3000);
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];

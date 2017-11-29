@@ -449,7 +449,7 @@ public class MeetingMgrController extends CspBaseController {
         StringBuffer buffer2 = new StringBuffer();
         try {
             buffer2.append(appCspBase)
-                    .append("/api/meeting/share?signature=")
+                    .append("api/meeting/share?signature=")
                     .append(URLEncoder.encode(signature, Constants.CHARSET));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();

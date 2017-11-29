@@ -149,10 +149,11 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("wsUrl", wsUrl);
 
                 Live live = liveService.findByCourseId(courseId);
+                Date now = new Date();
 
-                if (live.getLiveState().intValue() == Live.LiveState.closed.getType()) {//直播已结束进入到录播模式
+                if (live.getEndTime().before(now)) {//直播已结束进入到录播模式
                     return localeView("/meeting/course_" + AudioCourse.PlayType.normal.getType());
-                } else if (live.getLiveState() == Live.LiveState.init.getType()){//直播未开始
+                } else if (live.getStartTime().after(now)){//直播未开始
                     model.addAttribute("error", local("share.live.not_start.error"));
                     return localeView("/meeting/share_error");
                 } else {

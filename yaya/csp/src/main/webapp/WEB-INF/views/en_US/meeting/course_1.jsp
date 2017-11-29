@@ -181,11 +181,12 @@
             }
             if (data.order == 0){//直播页面只接受直播指令
                 $(".icon-added").show();
+                var currentPageNo = parseInt(data.pageNum) + 1;
                 $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
 
-                var newSlide = '<div class="swiper-slide" data-num="0" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                var newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
                 if (data.videoUrl){
-                    newSlide = '<div class="swiper-slide" data-num="0" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                    newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
                 }
 
                 galleryTop.appendSlide(newSlide);
@@ -203,10 +204,12 @@
     var asAllItem = audiojs.createAll();
     var playing = false;
     var galleryTop ;
+    var slideTimer ;
     $(function(){
 
         function slideToNext(){
-            setTimeout(function(){galleryTop.slideNext();}, 3000);
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];

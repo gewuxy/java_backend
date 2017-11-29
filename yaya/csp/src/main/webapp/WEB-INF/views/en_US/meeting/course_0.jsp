@@ -121,11 +121,15 @@
 <script>
     var asAllItem = audiojs.createAll();
     var playing = false;
+
+    var slideTimer ;
+
     $(function(){
         var isVideo = $('.swiper-slide-active').find('video');
 
         function slideToNext(){
-            setTimeout(function(){galleryTop.slideNext();}, 3000);
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];
@@ -138,6 +142,7 @@
         var dataSrc ;
 
         $("#audioPlayer")[0].addEventListener("ended", function(){
+            console.log("audio play over ...");
             if (playing){
                 galleryTop.slideNext();
             }
@@ -193,9 +198,9 @@
 
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
 
 
             },
@@ -219,9 +224,9 @@
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
             }
         });
 

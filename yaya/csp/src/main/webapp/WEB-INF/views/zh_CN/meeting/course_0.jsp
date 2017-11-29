@@ -67,7 +67,7 @@
             <div class="boxAudio-loading none">
                 <div class="time">
                     <span><img src="${ctxStatic}/phone/images/viedo-icon.gif" alt=""></span>
-                    <span class="text">录播中</span>
+                    <span class="text">Recording...</span>
                 </div>
             </div>
             <!--切换菜单-->
@@ -112,7 +112,7 @@
         <div class="title"><h3>简介</h3></div>
         <div class="text hidden-box">
 
-            <p>${course.info}</p>
+            <p>${not empty course.info ? course.info : 'undefined'}</p>
         </div>
     </div>
 </div>
@@ -121,14 +121,15 @@
 <script>
     var asAllItem = audiojs.createAll();
     var playing = false;
-    var needSkip = true;
+
+    var slideTimer ;
+
     $(function(){
         var isVideo = $('.swiper-slide-active').find('video');
 
         function slideToNext(){
-            setTimeout(function(){
-                galleryTop.slideNext();
-            }, 3000);
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];
@@ -141,6 +142,7 @@
         var dataSrc ;
 
         $("#audioPlayer")[0].addEventListener("ended", function(){
+            console.log("audio play over ...");
             if (playing){
                 galleryTop.slideNext();
             }
@@ -196,9 +198,9 @@
 
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
 
 
             },
@@ -222,9 +224,9 @@
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
             }
         });
 
