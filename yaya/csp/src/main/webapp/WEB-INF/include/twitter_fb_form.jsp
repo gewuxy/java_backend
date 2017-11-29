@@ -17,7 +17,7 @@
 </form>
 
 <script src="${ctxStatic}/js/oauth.twitter.js"></script>
-<script src="https://adodson.com/hello.js/dist/hello.all.js"></script>
+<script src="//adodson.com/hello.js/dist/hello.all.js"></script>
 <script>
     $(function () {
 
@@ -26,7 +26,7 @@
 
     function twitterFormSubmit(str){
         $("#uid").val(str.id_str);
-        $("#nickname").val(str.name);
+        $("#nickname").val(str.screen_name);
         $("#gender").val(str.gender);
         $("#platformId").val(4);
         $("#iconUrl").val(str.profile_image_url);

@@ -54,6 +54,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected LiveDetailDAO liveDetailDAO;
 
+    @Autowired
+    protected CourseDeliveryDAO courseDeliveryDAO;
+
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
@@ -752,5 +755,45 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public CourseDeliveryDTO findMeetDetail(Integer id) {
         return audioCourseDAO.findMeetDetail(id);
+    }
+
+    /**
+     * 判断csp课件是否可编辑
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public boolean editAble(Integer courseId) {
+        //首先判断是否有投稿历史
+        CourseDelivery cond = new CourseDelivery();
+        cond.setSourceId(courseId);
+        List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
+        if (!CheckUtils.isEmpty(deliveries)){
+            return false;
+        }
+
+        // 判断是否有录播或者直播记录
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return false;
+        }
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
+        if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(course.getId());
+            if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
+                return false;
+            }
+        } else {
+            AudioCoursePlay play = findPlayState(course.getId());
+            if (play != null &&
+                    play.getPlayState() != null
+                    && play.getPlayState() > AudioCoursePlay.PlayState.init.ordinal()) {
+                return false;
+            }
+        }
+        return true;
     }
 }

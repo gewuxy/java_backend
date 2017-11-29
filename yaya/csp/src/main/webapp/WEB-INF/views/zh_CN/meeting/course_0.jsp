@@ -127,9 +127,6 @@
 
         function slideToNext(){
             setTimeout(function(){
-                if (){
-
-                }
                 galleryTop.slideNext();
             }, 3000);
         }

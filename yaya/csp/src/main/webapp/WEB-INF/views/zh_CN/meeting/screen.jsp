@@ -29,7 +29,7 @@
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode"><img src="${fileBase}${qrCodeUrl}" alt=""></div>
-                <p class="t-center">请使用 CSPmeeting App 扫码继续</p>
+                <p class="t-center">请使用 会讲 App 扫码继续</p>
             </div>
         </div>
     </div>

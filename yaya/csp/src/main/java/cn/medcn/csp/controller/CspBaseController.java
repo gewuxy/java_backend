@@ -14,6 +14,7 @@ import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.user.dto.Captcha;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
@@ -32,6 +33,9 @@ public class CspBaseController extends BaseController {
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Value("${web.socket.url}")
+    protected String webSocketUrl;
+
     /**
      * 获取web端用户认证信息
      * @return
@@ -47,13 +51,13 @@ public class CspBaseController extends BaseController {
      */
     protected String genWsUrl(HttpServletRequest request, Integer courseId){
         StringBuffer buffer = new StringBuffer();
-        buffer.append(request.getScheme().toLowerCase().equals("https") ? "wss" : "ws");
-        buffer.append("://").append(request.getServerName()).append(":").append(request.getServerPort());
-        buffer.append("/live/order?courseId=").append(courseId);
+        buffer.append(webSocketUrl);
+        buffer.append("?courseId=").append(courseId);
         String token = request.getHeader(Constants.TOKEN);
         if (CheckUtils.isNotEmpty(token)) {
             buffer.append("&token=").append(request.getHeader(Constants.TOKEN));
         }
+
         return buffer.toString();
     }
 
@@ -84,12 +88,16 @@ public class CspBaseController extends BaseController {
      * @throws SystemException
      */
     protected String sendMobileCaptcha(String mobile, Integer msgTmpId) throws SystemException {
-        try {
             //10分钟内最多允许获取3次验证码
             Captcha captcha = (Captcha) redisCacheUtils.getCacheObject(Constants.CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
             if (captcha == null) { //第一次获取
                 // 发送短信
-                String msgId = cspSmsService.send(mobile, msgTmpId);
+                String msgId = null;
+                try {
+                    msgId = cspSmsService.send(mobile, msgTmpId);
+                } catch (Exception e) {
+                    throw new SystemException(local("sms.error.send"));
+                }
                 Captcha firstCaptcha = new Captcha();
                 firstCaptcha.setFirstTime(new Date());
                 firstCaptcha.setCount(NUMBER_ZERO);
@@ -102,7 +110,12 @@ public class CspBaseController extends BaseController {
                     throw new SystemException(local("sms.frequency.send"));
                 }
                 // 发送短信
-                String msgId = cspSmsService.send(mobile, msgTmpId);
+                String msgId = null;
+                try {
+                    msgId = cspSmsService.send(mobile, msgTmpId);
+                } catch (Exception e) {
+                    throw new SystemException(local("sms.error.send"));
+                }
 
                 captcha.setMsgId(msgId);
                 captcha.setCount(captcha.getCount() + 1);
@@ -111,9 +124,7 @@ public class CspBaseController extends BaseController {
 
             return APIUtils.success();
 
-        } catch (Exception e) {
-            throw new SystemException(local("sms.error.send"));
-        }
+
 
     }
 
@@ -147,5 +158,13 @@ public class CspBaseController extends BaseController {
             return true;
         }
         return false;
+    }
+
+    /**
+     * 课件不可编辑异常
+     * @return
+     */
+    protected String courseNonEditAbleError(){
+        return local("course.error.editable");
     }
 }

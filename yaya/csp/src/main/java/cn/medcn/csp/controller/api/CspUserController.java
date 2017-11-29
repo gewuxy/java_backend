@@ -79,6 +79,10 @@ public class CspUserController extends CspBaseController {
             return error(local("user.param.empty"));
         }
 
+        // 获取是否海外注册
+        Boolean abroad = LocalUtils.isAbroad();
+        userInfo.setAbroad(abroad);
+
         String email = userInfo.getEmail();
         String password = userInfo.getPassword();
         String nickName = userInfo.getNickName();
@@ -96,8 +100,8 @@ public class CspUserController extends CspBaseController {
             return error(local("user.linkman.notnull"));
         }
 
+        // 获取邮箱模板
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
-
         try {
 
             return cspUserService.register(userInfo,template);
@@ -132,7 +136,6 @@ public class CspUserController extends CspBaseController {
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
      * @param email 邮箱
-     * @param password 密码
      * @param password     密码
      * @param thirdPartyId 第三方平台id
      * @param mobile       手机
@@ -149,6 +152,10 @@ public class CspUserController extends CspBaseController {
         if (thirdPartyId == null || thirdPartyId == 0) {
            return error(local("user.empty.ThirdPartyId"));
         }
+
+        // 获取app header中是否海外登录
+        Boolean abroad = LocalUtils.isAbroad();
+        userInfoDTO.setAbroad(abroad);
 
         CspUserInfo userInfo = null;
         // 第三方平台id
@@ -167,8 +174,8 @@ public class CspUserController extends CspBaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
-            // 当前登录的用户不是海外用户
-            Boolean abroad = userInfo.getAbroad();
+            // 检查当前登录的用户 是否海外用户
+            abroad = userInfo.getAbroad();
             if (abroad == null) {
                 abroad = false;
             }
@@ -278,7 +285,7 @@ public class CspUserController extends CspBaseController {
             throw new SystemException(local("user.password.notnull"));
         }
 
-        // 检查用户是否注册且已经激活
+        // 检查用户是否注册并激活
         CspUserInfo userInfo = cspUserService.findByLoginName(email);
         if (userInfo == null) {
             throw new SystemException(local("user.notexisted"));
@@ -357,6 +364,7 @@ public class CspUserController extends CspBaseController {
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
+            userInfo.setFlux(0);
         }
 
         return userInfo;
