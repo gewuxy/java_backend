@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by lixuan on 2017/4/27.
@@ -33,6 +34,8 @@ public class MeetAudioDTO implements Serializable {
 
     protected Integer liveState;//直播状态
 
+    protected Date serverTime;//传递给前端的服务器当前时间
+
 
     public static MeetAudioDTO build(MeetAudio meetAudio){
         MeetAudioDTO dto = new MeetAudioDTO();
@@ -40,6 +43,7 @@ public class MeetAudioDTO implements Serializable {
             dto.setMeetId(meetAudio.getMeetId());
             dto.setModuleId(meetAudio.getModuleId());
             dto.setId(meetAudio.getId());
+            dto.setServerTime(new Date());
             dto.setCourseId(meetAudio.getCourseId());
             if(meetAudio.getCourse()!=null){
                 AudioCourseDTO courseDTO = AudioCourseDTO.build(meetAudio.getCourse());
