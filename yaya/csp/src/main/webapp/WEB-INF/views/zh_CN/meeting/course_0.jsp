@@ -142,7 +142,7 @@
 
         $("#audioPlayer")[0].addEventListener("ended", function(){
             if (playing){
-                slideToNext();
+                galleryTop.slideNext();
             }
         });
 //

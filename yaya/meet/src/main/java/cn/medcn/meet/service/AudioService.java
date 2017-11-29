@@ -267,4 +267,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     boolean editAble(Integer courseId);
+
+    Integer countLiveDetails(Integer courseId);
 }
