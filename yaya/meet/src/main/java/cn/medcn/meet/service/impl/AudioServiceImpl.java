@@ -724,14 +724,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
         LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
         if (details.size() == 0) {//直播明细为空时
-            if (orderDTO == null) {//如果缓存中也没有则加入第一张
-                AudioCourseDetail cond = new AudioCourseDetail();
-                cond.setCourseId(courseId);
-                cond.setSort(1);
-                AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
-                firstDetail.setVideoUrl(null);
-                firstDetail.setTemp(true);
-                details.add(firstDetail);
+            //如果缓存中也没有则加入第一张
+            AudioCourseDetail detail = findFirstDetail(courseId);
+            if (detail != null) {
+                details.add(findFirstDetail(courseId));
             }
         } else {
             if (orderDTO != null) {
@@ -804,5 +800,33 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public Integer countLiveDetails(Integer courseId) {
         List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
         return CheckUtils.isEmpty(details) ? 0 : details.size();
+    }
+
+    /**
+     * 获取没有缓存的直播明细
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public List<AudioCourseDetail> findNoCacheLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        if (CheckUtils.isEmpty(details)) {
+            AudioCourseDetail detail = findFirstDetail(courseId);
+            if (detail != null) {
+                details.add(detail);
+            }
+        }
+        return details;
+    }
+
+    protected AudioCourseDetail findFirstDetail(Integer courseId){
+        AudioCourseDetail cond = new AudioCourseDetail();
+        cond.setCourseId(courseId);
+        cond.setSort(1);
+        AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
+        firstDetail.setVideoUrl(null);
+        firstDetail.setTemp(true);
+        return firstDetail;
     }
 }

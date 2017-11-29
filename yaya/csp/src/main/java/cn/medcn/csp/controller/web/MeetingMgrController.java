@@ -396,6 +396,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/del/{courseId}")
     @ResponseBody
     public String del(@PathVariable Integer courseId) {
+        if (!audioService.editAble(courseId)) {
+            return error(courseNonDeleteAble());
+        }
+
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         Principal principal = getWebPrincipal();
         if (!principal.getId().equals(course.getCspUserId())) {
@@ -449,7 +453,7 @@ public class MeetingMgrController extends CspBaseController {
         StringBuffer buffer2 = new StringBuffer();
         try {
             buffer2.append(appCspBase)
-                    .append("/api/meeting/share?signature=")
+                    .append("api/meeting/share?signature=")
                     .append(URLEncoder.encode(signature, Constants.CHARSET));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
