@@ -396,6 +396,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/del/{courseId}")
     @ResponseBody
     public String del(@PathVariable Integer courseId) {
+        if (!audioService.editAble(courseId)) {
+            return error(courseNonEditAbleError());
+        }
+
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         Principal principal = getWebPrincipal();
         if (!principal.getId().equals(course.getCspUserId())) {
