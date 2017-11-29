@@ -219,6 +219,7 @@ public class MeetController extends BaseController {
                 meetService.setUserLearningRecord(folderDTO, userId);
                 if (folderDTO.getType() == MeetFolderDTO.FolderType.folder.ordinal()) { // 文件夹 设置相应的状态
                     folderDTO.setState(state);
+                    folderDTO.setServerTime(new Date());
                 }
             }
         }
