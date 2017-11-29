@@ -722,6 +722,10 @@ public class MeetingController extends CspBaseController {
                 result.put("wsUrl", wsUrl);
             }
         }
+
+        //加入服务器当前时间
+        result.put("serverTime", new Date());
+
         return success(result);
     }
 

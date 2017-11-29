@@ -118,6 +118,7 @@ public class MeetController extends BaseController {
                     }
                 }
                 meetInfoDTO.setAttention(appUserService.checkAttention(meetInfoDTO.getPubUserId(), principal.getId()));
+                meetInfoDTO.setServerTime(new Date());
             }
             return APIUtils.success(meetInfoDTO);
         }
