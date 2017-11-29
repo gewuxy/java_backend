@@ -62,8 +62,8 @@
                 </div>
                 <div class="admin-line"></div>
                 <div class="admin-button t-center">
-                    <a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >Return</a>&nbsp;&nbsp;
-                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="Save">-->
+                    <%--<a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >Return</a>&nbsp;&nbsp;--%>
+                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="Return">
                 </div>
             </div>
         </div>
