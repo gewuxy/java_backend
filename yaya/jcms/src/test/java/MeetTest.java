@@ -11,6 +11,7 @@ import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.ExamService;
 import cn.medcn.meet.service.MeetService;
+import com.alibaba.fastjson.JSON;
 import org.apache.shiro.SecurityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -153,5 +154,11 @@ public class MeetTest {
         course.setDeleted(true);
         audioService.updateByPrimaryKeySelective(course);
         System.out.println(APIUtils.success());
+    }
+
+    @Test
+    public void testFindLiveDetails(){
+        List<AudioCourseDetail> details = audioService.findLiveDetails(14471);
+        System.out.println(JSON.toJSONString(details));
     }
 }

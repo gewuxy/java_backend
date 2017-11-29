@@ -70,6 +70,8 @@ public class MeetFolderDTO {
     // 直播状态 0表示未开始 1表示正在直播 2表示已关闭
     protected Integer liveState;
     protected String liveLabel;
+    // 服务器时间
+    protected Date serverTime;
 
     public enum FolderType{
         folder,

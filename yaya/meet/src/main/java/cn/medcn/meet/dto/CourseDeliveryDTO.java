@@ -72,6 +72,8 @@ public class CourseDeliveryDTO implements Serializable {
     //是否可编辑
     protected Boolean editAble;
 
+    protected Date serverTime;
+
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
             for(CourseDeliveryDTO dto :list){

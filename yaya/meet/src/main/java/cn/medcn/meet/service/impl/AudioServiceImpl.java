@@ -728,19 +728,22 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 AudioCourseDetail cond = new AudioCourseDetail();
                 cond.setCourseId(courseId);
                 cond.setSort(1);
-
                 AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
+                firstDetail.setVideoUrl(null);
+                firstDetail.setTemp(true);
                 details.add(firstDetail);
             }
-        }
-        if (orderDTO != null) {
-            AudioCourseDetail detail = new AudioCourseDetail();
-            detail.setId(orderDTO.getDetailId());
-            detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
-            detail.setImgUrl(orderDTO.getImgUrl());
-            detail.setAudioUrl(orderDTO.getAudioUrl());
-            detail.setVideoUrl(orderDTO.getVideoUrl());
-            details.add(detail);
+        } else {
+            if (orderDTO != null) {
+                AudioCourseDetail detail = new AudioCourseDetail();
+                detail.setId(orderDTO.getDetailId());
+                detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
+                detail.setImgUrl(orderDTO.getImgUrl());
+                detail.setAudioUrl(orderDTO.getAudioUrl());
+                detail.setVideoUrl(orderDTO.getVideoUrl());
+                detail.setTemp(true);
+                details.add(detail);
+            }
         }
 
         return details;
@@ -795,5 +798,11 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             }
         }
         return true;
+    }
+
+    @Override
+    public Integer countLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        return CheckUtils.isEmpty(details) ? 0 : details.size();
     }
 }

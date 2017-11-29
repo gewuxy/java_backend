@@ -102,6 +102,8 @@ public class MeetInfoDTO implements Serializable{
     // 转载自单位号
     private String reprintFromUnitUser;
 
+    protected Date serverTime;
+
 
 
 }

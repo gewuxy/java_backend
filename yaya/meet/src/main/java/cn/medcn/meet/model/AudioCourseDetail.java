@@ -36,4 +36,7 @@ public class AudioCourseDetail implements Serializable{
     private Integer duration;
     /**所属课程ID*/
     private Integer courseId;
+
+    @Transient
+    protected Boolean temp = false;//标识当前页是不是临时页
 }
