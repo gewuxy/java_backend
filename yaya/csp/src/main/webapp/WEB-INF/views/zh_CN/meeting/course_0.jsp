@@ -127,9 +127,6 @@
 
         function slideToNext(){
             setTimeout(function(){
-                if (){
-
-                }
                 galleryTop.slideNext();
             }, 3000);
         }
@@ -145,7 +142,7 @@
 
         $("#audioPlayer")[0].addEventListener("ended", function(){
             if (playing){
-                slideToNext();
+                galleryTop.slideNext();
             }
         });
 //

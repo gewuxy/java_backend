@@ -54,6 +54,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected LiveDetailDAO liveDetailDAO;
 
+    @Autowired
+    protected CourseDeliveryDAO courseDeliveryDAO;
+
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
@@ -725,19 +728,23 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 AudioCourseDetail cond = new AudioCourseDetail();
                 cond.setCourseId(courseId);
                 cond.setSort(1);
-
                 AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
+                firstDetail.setVideoUrl(null);
+                firstDetail.setTemp(true);
+                System.out.println("first detail is temp = " + firstDetail.getTemp());
                 details.add(firstDetail);
             }
-        }
-        if (orderDTO != null) {
-            AudioCourseDetail detail = new AudioCourseDetail();
-            detail.setId(orderDTO.getDetailId());
-            detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
-            detail.setImgUrl(orderDTO.getImgUrl());
-            detail.setAudioUrl(orderDTO.getAudioUrl());
-            detail.setVideoUrl(orderDTO.getVideoUrl());
-            details.add(detail);
+        } else {
+            if (orderDTO != null) {
+                AudioCourseDetail detail = new AudioCourseDetail();
+                detail.setId(orderDTO.getDetailId());
+                detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
+                detail.setImgUrl(orderDTO.getImgUrl());
+                detail.setAudioUrl(orderDTO.getAudioUrl());
+                detail.setVideoUrl(orderDTO.getVideoUrl());
+                detail.setTemp(true);
+                details.add(detail);
+            }
         }
 
         return details;
@@ -752,5 +759,51 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public CourseDeliveryDTO findMeetDetail(Integer id) {
         return audioCourseDAO.findMeetDetail(id);
+    }
+
+    /**
+     * 判断csp课件是否可编辑
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public boolean editAble(Integer courseId) {
+        //首先判断是否有投稿历史
+        CourseDelivery cond = new CourseDelivery();
+        cond.setSourceId(courseId);
+        List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
+        if (!CheckUtils.isEmpty(deliveries)){
+            return false;
+        }
+
+        // 判断是否有录播或者直播记录
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return false;
+        }
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
+        if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(course.getId());
+            if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
+                return false;
+            }
+        } else {
+            AudioCoursePlay play = findPlayState(course.getId());
+            if (play != null &&
+                    play.getPlayState() != null
+                    && play.getPlayState() > AudioCoursePlay.PlayState.init.ordinal()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Integer countLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        return CheckUtils.isEmpty(details) ? 0 : details.size();
     }
 }
