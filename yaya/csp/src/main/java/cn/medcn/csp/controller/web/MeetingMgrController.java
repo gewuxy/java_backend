@@ -397,7 +397,7 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String del(@PathVariable Integer courseId) {
         if (!audioService.editAble(courseId)) {
-            return error(courseNonEditAbleError());
+            return error(courseNonDeleteAble());
         }
 
         AudioCourse course = audioService.selectByPrimaryKey(courseId);

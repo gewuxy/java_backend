@@ -167,4 +167,9 @@ public class CspBaseController extends BaseController {
     protected String courseNonEditAbleError(){
         return local("course.error.editable");
     }
+
+
+    protected String courseNonDeleteAble(){
+        return local("course.error.delete");
+    }
 }
