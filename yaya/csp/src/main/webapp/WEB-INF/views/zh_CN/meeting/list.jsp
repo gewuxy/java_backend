@@ -325,29 +325,35 @@
 
 
         function delCourse(){
-            layer.open({
-                type: 1,
-                area: ['300px', '250px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                anim: 5,
-                content: $('#del-popup-box'),
-                btn : ['确定', '取消'],
-                yes :function(){
-                    $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
-                        if (data.code == 0){
-                            window.location.reload();
-                        } else {
-                            layer.msg(data.err);
+            $.get("${ctx}/mgr/meet/editable/" + courseId, {}, function (data) {
+                if (data.code == "0"){
+                    layer.open({
+                        type: 1,
+                        area: ['300px', '250px'],
+                        fix: false, //不固定
+                        title:false,
+                        closeBtn:0,
+                        anim: 5,
+                        content: $('#del-popup-box'),
+                        btn : ['Confirm', 'Cancel'],
+                        yes :function(){
+                            $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
+                                if (data.code == 0){
+                                    window.location.reload();
+                                } else {
+                                    layer.msg(data.err);
+                                }
+                            }, 'json');
+
+                        },
+
+                        cancel :function(){
                         }
-                    }, 'json');
-
-                },
-
-                cancel :function(){
+                    });
+                } else {
+                    layer.msg(data.err);
                 }
-            });
+            }, 'json');
         }
 
         function edit(){

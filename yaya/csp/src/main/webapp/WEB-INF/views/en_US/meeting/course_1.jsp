@@ -44,7 +44,7 @@
             <!--根据ID 切换 PPT列表-->
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
-                    <div class="swiper-slide" data-num="0" audio-src="${detail.audioUrl}">
+                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.temp ? '':detail.audioUrl}" istemp="${detail.temp ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
                                 <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
@@ -60,7 +60,7 @@
             <!--音频文件-->
             <div class="clearfix boxAudio t-center " >
                 <div class="audio-meeting-box" style="">
-                    <audio controls=true id="audioPlayer" src="${course.details[0].audioUrl}"></audio>
+                    <audio controls=true id="audioPlayer" src="${course.details[0].temp ? '' : course.details[0].audioUrl}"></audio>
                 </div>
             </div>
             <!--录播中音频-->
@@ -104,7 +104,7 @@
     </div>
 
     <!--新加载提示-->
-    <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;40</span><span class="arrows"></span></div>
+    <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;1</span><span class="arrows"></span></div>
 
     <!--自动播放层-->
     <%--<div class="html5ShadePlay"></div>--%>
@@ -116,15 +116,19 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>简介</h3></div>
+        <div class="title"><h3>Info</h3></div>
         <div class="text hidden-box">
 
-            <p>${not empty course.info ? course.info : '未设置'}</p>
+            <p>${not empty course.info }</p>
         </div>
     </div>
 </div>
-
-<script type="text/javascript">
+<script>
+    var asAllItem = audiojs.createAll();
+    var playing = false;
+    var galleryTop ;
+    var slideTimer ;
+    var playOver = false;
 
     var heartbeat_timer = 0;
     var last_health = -1;
@@ -132,81 +136,93 @@
     var myWs;
     var wsUrl = "${wsUrl}";
     $(function(){
-        //ws = ws_conn( "ws://211.100.41.186:9999" );
+
         if (wsUrl){
             myWs = ws_conn(wsUrl);
         }
 
-    });
-
-
-    function keepalive( ws ){
-        var time = new Date();
-        if( last_health != -1 && ( time.getTime() - last_health > health_timeout ) ){
-            console.log("Connection broken !!!");
-        }
-        else{
-            console.log("Connection success ...");
-        }
-    }
-
-    //websocket function
-    function ws_conn( to_url ){
-        to_url = to_url || "";
-        if( to_url == "" ){
-            return false;
-        }
-
-        clearInterval( heartbeat_timer );
-        var ws = new WebSocket( to_url );
-
-        ws.onopen=function(){
-            console.log("Connected !!!")
-            heartbeat_timer = setInterval( function(){keepalive(ws)}, 5000 );
-        }
-        ws.onerror=function(){
-            console.log("Connection error !!!");
-            clearInterval( heartbeat_timer );
-        }
-        ws.onclose=function(){
-            console.log("Connection closed !!!");
-            clearInterval( heartbeat_timer );
-        }
-
-        ws.onmessage=function(msg){
-            var data = JSON.parse(msg.data);
-            console.log("order = "+data.order);
-            if (data.onLines){
-                $(".num").text(data.onLines);
+        function keepalive( ws ){
+            var time = new Date();
+            if( last_health != -1 && ( time.getTime() - last_health > health_timeout ) ){
+                console.log("Connection broken !!!");
             }
-            if (data.order == 0){//直播页面只接受直播指令
-                $(".icon-added").show();
-                $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
+            else{
+                console.log("Connection success ...");
+            }
+        }
 
-                var newSlide = '<div class="swiper-slide" data-num="0" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
-                if (data.videoUrl){
-                    newSlide = '<div class="swiper-slide" data-num="0" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+        //websocket function
+        function ws_conn( to_url ){
+            to_url = to_url || "";
+            if( to_url == "" ){
+                return false;
+            }
+
+            clearInterval( heartbeat_timer );
+            var ws = new WebSocket( to_url );
+
+            ws.onopen=function(){
+                console.log("Connected !!!")
+                heartbeat_timer = setInterval( function(){keepalive(ws)}, 5000 );
+            }
+            ws.onerror=function(){
+                console.log("Connection error !!!");
+                clearInterval( heartbeat_timer );
+            }
+            ws.onclose=function(){
+                console.log("Connection closed !!!");
+                clearInterval( heartbeat_timer );
+            }
+
+            ws.onmessage=function(msg){
+                var data = JSON.parse(msg.data);
+                console.log("order = "+data.order);
+                if (data.onLines){
+                    $(".num").text(data.onLines);
                 }
+                if (data.order == 0){//直播页面只接受直播指令
 
-                galleryTop.appendSlide(newSlide);
+                    var currentPageNo = parseInt(data.pageNum) + 1;
+                    console.log("current page num = " +currentPageNo);
+                    var $currentPage = $('.swiper-slide-active');
+                    console.log("current page is temp = " + $currentPage.attr("istemp"));
+                    if ($currentPage.attr("istemp") == '1'){
+                        if (data.videoUrl != null && data.videoUrl != undefined){
+                            $currentPage.find("video").attr("src", data.videoUrl);
+                        } else {
+                            $currentPage.find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                        }
+                        console.log("current audio url = " + data.audioUrl);
+                        $currentPage.attr("audio-src", data.audioUrl);
+                        swiperChangeAduio($currentPage.parent());
+                        $currentPage.attr("istemp", "0");
+                    } else {
+                        $(".icon-added").show();
+                        $("#newLivePage").text("P " + currentPageNo);
 
-                setTimeout(function(){$(".icon-added").hide()}, 5000);
+                        var newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                        if (data.videoUrl){
+                            newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                        }
 
+                        galleryTop.appendSlide(newSlide);
+
+                        setTimeout(function(){$(".icon-added").hide()}, 5000);
+                    }
+
+                    if (playOver && !activeItemIsVideo.length){
+                        galleryTop.slideNext();
+                    }
+                }
             }
+
+            return ws;
         }
-
-        return ws;
-    }
-
-</script>
-<script>
-    var asAllItem = audiojs.createAll();
-    var playing = false;
-    var galleryTop ;
-    $(function(){
 
         function slideToNext(){
-            setTimeout(function(){galleryTop.slideNext();}, 3000);
+            clearTimeout(slideTimer);
+            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
+            playOver = true;
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];
@@ -222,13 +238,15 @@
             console.log("audio ended");
             if (playing){
                 if (isVideo.length == 0){
-                    slideToNext();
+                    galleryTop.slideNext();
                 }
             }
+            playOver = true;
         });
 //
         $("#audioPlayer")[0].addEventListener("error", function(){
             console.log("load audio source error ...");
+            isVideo = $('.swiper-slide-active').find('video');
             if (playing){
                 if (isVideo.length == 0){
                     slideToNext();
@@ -242,6 +260,7 @@
                     slideToNext();
                 }
             }
+            playOver = true;
         });
 
 
@@ -277,9 +296,9 @@
 
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
 
 
             },
@@ -289,6 +308,7 @@
                 if(prevItemIsVideo.length > 0){
                     //重新加载视频
                     prevItemIsVideo.get(0).load();
+                    prevItemIsVideo.get(0).pause();
                 }
             },
             onSlidePrevEnd:function(){
@@ -297,15 +317,16 @@
                 if(nextItemIsVideo.length > 0){
                     //重新加载视频
                     nextItemIsVideo.get(0).load();
+                    nextItemIsVideo.get(0).pause();
                 }
             },
             onInit: function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
                 swiper.slideTo("${fn:length(course.details) - 1}");
             }
         });
@@ -460,6 +481,8 @@
                 $('.boxAudio').addClass('none');
                 changePlayerStete(false);
             }
+
+            playOver = false;
             //如果有视频
             if(activeItemIsVideo.length > 0){
                 changePlayerStete(true);
