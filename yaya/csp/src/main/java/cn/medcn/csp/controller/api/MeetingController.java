@@ -648,7 +648,7 @@ public class MeetingController extends CspBaseController {
             return error(local("error.param"));
         } else {
             if (!audioService.editAble(id)) {
-                return courseNonDeleteAbleError();
+                return courseNonDeleteAble();
             }
             AudioCourse course = new AudioCourse();
             course.setId(id);
