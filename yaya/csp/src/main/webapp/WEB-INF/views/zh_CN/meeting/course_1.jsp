@@ -182,7 +182,8 @@
             if (data.order == 0){//直播页面只接受直播指令
                 $(".icon-added").show();
                 var currentPageNo = parseInt(data.pageNum) + 1;
-                $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
+                console.log("current page num = " +currentPageNo);
+                $("#newLivePage").text("P " + currentPageNo);
 
                 var newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
                 if (data.videoUrl){
@@ -280,9 +281,9 @@
 
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
 
 
             },
@@ -306,9 +307,9 @@
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
                 swiper.slideTo("${fn:length(course.details) - 1}");
             }
         });

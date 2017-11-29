@@ -269,4 +269,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
     boolean editAble(Integer courseId);
 
     Integer countLiveDetails(Integer courseId);
+
+    /**
+     * 获取没有缓存的直播明细
+     * @param courseId
+     * @return
+     */
+    List<AudioCourseDetail> findNoCacheLiveDetails(Integer courseId);
 }

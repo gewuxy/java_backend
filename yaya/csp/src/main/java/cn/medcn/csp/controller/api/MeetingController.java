@@ -140,7 +140,7 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("course", course);
 
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-                course.setDetails(audioService.findLiveDetails(courseId));
+                course.setDetails(audioService.findNoCacheLiveDetails(courseId));
                 handleHttpUrl(fileBase, course);
                 model.addAttribute("course", course);
 
@@ -415,6 +415,10 @@ public class MeetingController extends CspBaseController {
         Principal principal = SecurityUtils.get();
         AudioCourse audioCourse = audioService.findAudioCourse(courseId);
         if (audioCourse == null) {
+            throw new SystemException(local("source.not.exists"));
+        }
+
+        if (audioCourse.getDeleted()) {
             throw new SystemException(local("source.not.exists"));
         }
 
@@ -740,7 +744,7 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/live/start")
     @ResponseBody
-    public String startLive(Integer courseId, String imgUrl, String videoUrl, Integer firstClk){
+    public String startLive(Integer courseId, String imgUrl, String videoUrl, Integer firstClk, Integer pageNum){
         if (firstClk == null) {
             firstClk = 0;
         }
@@ -756,16 +760,17 @@ public class MeetingController extends CspBaseController {
 
 
         }
-        sendSyncOrder(courseId, imgUrl, videoUrl);
+        sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
 
         return success();
     }
 
-    protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl){
+    protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl, Integer pageNum){
         LiveOrderDTO order = new LiveOrderDTO();
         order.setCourseId(String.valueOf(courseId));
         order.setOrder(LiveOrderDTO.ORDER_SYNC);
         order.setImgUrl(imgUrl);
+        order.setPageNum(pageNum == null ? 0 : pageNum);
         order.setVideoUrl(videoUrl);
         liveService.publish(order);
     }
