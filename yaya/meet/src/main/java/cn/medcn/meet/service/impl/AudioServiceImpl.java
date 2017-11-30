@@ -228,7 +228,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param userId
      * @param newTitle
      */
-    private Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
+    @Override
+    public Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
         List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(course.getId());
         //复制微课信息
         AudioCourse reprintCourse = new AudioCourse();
@@ -783,13 +784,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             Live live = liveService.findByCourseId(course.getId());
             if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
-                return false;
-            }
-        } else {
-            AudioCoursePlay play = findPlayState(course.getId());
-            if (play != null &&
-                    play.getPlayState() != null
-                    && play.getPlayState() > AudioCoursePlay.PlayState.init.ordinal()) {
                 return false;
             }
         }
