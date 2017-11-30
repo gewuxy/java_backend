@@ -22,11 +22,14 @@ public class AudioCourseDetailDTO implements Serializable{
     /**视频地址*/
     private String videoUrl;
 
+    protected Boolean temp;
+
     public static AudioCourseDetailDTO build(AudioCourseDetail detail){
         AudioCourseDetailDTO dto = new AudioCourseDetailDTO();
         dto.setAudioUrl(detail.getAudioUrl()==null?"":detail.getAudioUrl());
         dto.setImgUrl(detail.getImgUrl()==null?"":detail.getImgUrl());
         dto.setSort(detail.getSort());
+        dto.setTemp(detail.getTemp());
         dto.setVideoUrl(detail.getVideoUrl());
         dto.setId(detail.getId());
         return dto;

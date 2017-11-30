@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="cn.medcn.csp.admin.dao.FluxOrderDao" >
-    <select id="findFluxOrderList" resultType="cn.medcn.csp.admin.dto.FluxOrderDTO">
-        SELECT *
-        FROM (SELECT
+    <select id="findFluxOrderList" resultType="cn.medcn.user.model.FluxOrder">
+        SELECT
         p.*,
         f.user_name
         FROM t_csp_user_flux_purchase p
         LEFT JOIN t_csp_user_info f
         ON p.user_id = f.id
-        ORDER BY p.buy_time DESC) o
         WHERE 1=1
         <if test="tradeId != null">
-           AND o.trade_id = #{tradeId}
+           AND p.trade_id = #{tradeId}
         </if>
+        ORDER BY p.buy_time DESC
 
     </select>
 
-    <select id="selectOrderInfo" parameterType="java.lang.String" resultType="cn.medcn.csp.admin.dto.FluxOrderDTO">
+    <select id="selectOrderInfo" parameterType="java.lang.String" resultType="cn.medcn.user.model.FluxOrder">
         SELECT
         p.*,
         i.user_name,

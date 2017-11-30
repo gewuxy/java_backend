@@ -159,4 +159,17 @@ public class CspBaseController extends BaseController {
         }
         return false;
     }
+
+    /**
+     * 课件不可编辑异常
+     * @return
+     */
+    protected String courseNonEditAbleError(){
+        return local("course.error.editable");
+    }
+
+
+    protected String courseNonDeleteAble(){
+        return local("course.error.delete");
+    }
 }

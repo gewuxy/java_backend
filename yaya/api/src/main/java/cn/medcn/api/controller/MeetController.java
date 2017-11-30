@@ -118,6 +118,7 @@ public class MeetController extends BaseController {
                     }
                 }
                 meetInfoDTO.setAttention(appUserService.checkAttention(meetInfoDTO.getPubUserId(), principal.getId()));
+                meetInfoDTO.setServerTime(new Date());
             }
             return APIUtils.success(meetInfoDTO);
         }
@@ -220,6 +221,7 @@ public class MeetController extends BaseController {
                 if (folderDTO.getType() == MeetFolderDTO.FolderType.folder.ordinal()) { // 文件夹 设置相应的状态
                     folderDTO.setState(state);
                 }
+                folderDTO.setServerTime(new Date());
             }
         }
         return success(page.getDataList());

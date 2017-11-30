@@ -436,7 +436,12 @@ public interface MeetService extends BaseService<Meet> {
      */
     void copyMeetSign(String oldMeetId, String newMeetId, Integer oldModuleId, Integer newModuleId);
 
-
+    /**
+     * 根据会议名称查询会议
+     * @param meetName
+     * @return
+     */
+    Meet selectByMeetName(String meetName);
 }
 
 

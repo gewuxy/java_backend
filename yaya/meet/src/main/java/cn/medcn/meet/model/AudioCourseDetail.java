@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
@@ -36,4 +37,8 @@ public class AudioCourseDetail implements Serializable{
     private Integer duration;
     /**所属课程ID*/
     private Integer courseId;
+
+    @Transient
+    @JsonIgnore
+    protected Boolean temp = false;//标识当前页是不是临时页
 }

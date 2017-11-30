@@ -260,4 +260,23 @@ public interface AudioService extends BaseService<AudioCourse>  {
     MyPage<AudioCourse> findAllMeetForManage(Pageable pageable);
 
     CourseDeliveryDTO findMeetDetail(Integer id);
+
+    /**
+     * 判断csp课件是否可编辑
+     * @param courseId
+     * @return
+     */
+    boolean editAble(Integer courseId);
+
+    Integer countLiveDetails(Integer courseId);
+
+    /**
+     * 获取没有缓存的直播明细
+     * @param courseId
+     * @return
+     */
+    List<AudioCourseDetail> findNoCacheLiveDetails(Integer courseId);
+
+    // 检查课程是否是当前用户的会议课程
+    boolean checkCourseIsMine(String userId, Integer courseId);
 }

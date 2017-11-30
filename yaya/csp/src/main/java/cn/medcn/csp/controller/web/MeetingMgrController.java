@@ -200,7 +200,7 @@ public class MeetingMgrController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/edit")
-    public String edit(Integer courseId, Model model, HttpServletRequest request) {
+    public String edit(Integer courseId, Model model, HttpServletRequest request) throws SystemException {
         uploadClear(request);
         convertClear(request);
 
@@ -208,12 +208,19 @@ public class MeetingMgrController extends CspBaseController {
         AudioCourse course = null;
         if (courseId != null) {
             course = audioService.findAudioCourse(courseId);
+
+            boolean editAble = audioService.editAble(courseId);
+            if (!editAble) {
+                throw new SystemException(courseNonEditAbleError());
+            }
+
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
                 course = new AudioCourse();
                 course.setPlayType(AudioCourse.PlayType.normal.getType());
                 course.setPublished(false);
+                course.setDeleted(false);
                 course.setShared(false);
                 course.setCspUserId(principal.getId());
                 course.setTitle("");
@@ -262,6 +269,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam(value = "file") MultipartFile file, Integer courseId, HttpServletRequest request) {
+        if (!audioService.editAble(courseId)) {
+            return error(courseNonEditAbleError());
+        }
+
         String fileName = file.getOriginalFilename();
         FileUploadResult result;
         try {
@@ -324,6 +335,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/detail/add")
     @ResponseBody
     public String add(@RequestParam(value = "file") MultipartFile file, Integer courseId, Integer index) {
+        if (!audioService.editAble(courseId)) {
+            return error(courseNonEditAbleError());
+        }
+
         boolean isPicture = isPicture(file.getOriginalFilename());
         String dir = FilePath.COURSE.path + "/" + courseId + "/" + (isPicture ? "ppt" : "video");
         FileUploadResult result;
@@ -359,7 +374,11 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/detail/del/{courseId}/{detailId}")
-    public String del(@PathVariable Integer courseId, @PathVariable Integer detailId) {
+    public String del(@PathVariable Integer courseId, @PathVariable Integer detailId) throws SystemException {
+        if (!audioService.editAble(courseId)) {
+            throw new SystemException(courseNonEditAbleError());
+        }
+
         AudioCourseDetail detail = audioService.findDetail(detailId);
         Integer sort = 1;
         if (detail != null) {
@@ -377,6 +396,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/del/{courseId}")
     @ResponseBody
     public String del(@PathVariable Integer courseId) {
+        if (!audioService.editAble(courseId)) {
+            return error(courseNonDeleteAble());
+        }
+
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         Principal principal = getWebPrincipal();
         if (!principal.getId().equals(course.getCspUserId())) {
@@ -429,8 +452,8 @@ public class MeetingMgrController extends CspBaseController {
 
         StringBuffer buffer2 = new StringBuffer();
         try {
-            buffer2.append(request.getScheme()).append("://").append(request.getServerName()).append(":")
-                    .append(request.getServerPort()).append(request.getContextPath()).append("/api/meeting/share?signature=")
+            buffer2.append(appCspBase)
+                    .append("api/meeting/share?signature=")
                     .append(URLEncoder.encode(signature, Constants.CHARSET));
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
@@ -445,6 +468,14 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
+
+        //编辑操作需要判断是否可以进行修改
+        if (ac.getId() != null && ac.getId() != 0) {
+            if (!audioService.editAble(ac.getId())) {
+                throw new SystemException(courseNonEditAbleError());
+            }
+        }
+
         if (openLive != null && openLive == 1 && ac.getPlayType() > AudioCourse.PlayType.normal.getType()) {
             ac.setPlayType(AudioCourse.PlayType.live_video.getType()); //视频直播
             //判断是否有足够的流量
@@ -499,5 +530,28 @@ public class MeetingMgrController extends CspBaseController {
     public String convertClear(HttpServletRequest request){
         request.getSession().removeAttribute(Constants.OFFICE_CONVERT_PROGRESS);
         return success();
+    }
+
+
+    @RequestMapping(value = "/editable/{courseId}")
+    @ResponseBody
+    public String editAble(@PathVariable Integer courseId){
+        boolean editAble = audioService.editAble(courseId);
+        if (editAble) {
+            return success();
+        } else {
+            return error(courseNonEditAbleError());
+        }
+    }
+
+    @RequestMapping(value = "/delete/able/{courseId}")
+    @ResponseBody
+    public String deleteAble(@PathVariable Integer courseId){
+        boolean editAble = audioService.editAble(courseId);
+        if (editAble) {
+            return success();
+        } else {
+            return error(courseNonDeleteAble());
+        }
     }
 }

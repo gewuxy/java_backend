@@ -105,4 +105,6 @@ public interface MeetDAO extends Mapper<Meet> {
 
     MeetFolderDTO getMeetFolder(@Param("id") String id);
 
+    List<Meet> selectByMeetName(String meetName);
+
 }

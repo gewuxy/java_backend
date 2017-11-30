@@ -10,6 +10,10 @@
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <title>App管理列表</title>
     <script type="text/javascript">
+        $(document).ready(function() {
+            initFormValidate();
+        });
+
         $(function () {
             var checkObj = ${appVersion.forced};
             if (checkObj == 1) {
@@ -136,8 +140,10 @@
         </div>
     </div>
     <div class="form-actions">
-        <input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                         value="修 改"/>&nbsp;
+        <shiro:hasPermission name="csp:appManage:edit">
+            <input id="btnSubmit" class="btn btn-primary" type="submit"
+                                                         value="修 改"/>
+        </shiro:hasPermission>&nbsp;
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form>

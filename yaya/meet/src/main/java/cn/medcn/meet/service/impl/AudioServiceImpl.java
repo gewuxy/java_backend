@@ -7,6 +7,7 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.FileUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.dto.CreditPayDTO;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.meet.dao.*;
@@ -23,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -53,6 +53,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Autowired
     protected LiveDetailDAO liveDetailDAO;
+
+    @Autowired
+    protected CourseDeliveryDAO courseDeliveryDAO;
 
 
     @Value("${app.file.upload.base}")
@@ -721,23 +724,22 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
         LiveOrderDTO orderDTO = liveService.findCachedOrder(courseId);
         if (details.size() == 0) {//直播明细为空时
-            if (orderDTO == null) {//如果缓存中也没有则加入第一张
-                AudioCourseDetail cond = new AudioCourseDetail();
-                cond.setCourseId(courseId);
-                cond.setSort(1);
-
-                AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
-                details.add(firstDetail);
+            //如果缓存中也没有则加入第一张
+            AudioCourseDetail detail = findFirstDetail(courseId);
+            if (detail != null) {
+                details.add(findFirstDetail(courseId));
             }
-        }
-        if (orderDTO != null) {
-            AudioCourseDetail detail = new AudioCourseDetail();
-            detail.setId(orderDTO.getDetailId());
-            detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
-            detail.setImgUrl(orderDTO.getImgUrl());
-            detail.setAudioUrl(orderDTO.getAudioUrl());
-            detail.setVideoUrl(orderDTO.getVideoUrl());
-            details.add(detail);
+        } else {
+            if (orderDTO != null) {
+                AudioCourseDetail detail = new AudioCourseDetail();
+                detail.setId(orderDTO.getDetailId());
+                detail.setCourseId(Integer.valueOf(orderDTO.getCourseId()));
+                detail.setImgUrl(orderDTO.getImgUrl());
+                detail.setAudioUrl(orderDTO.getAudioUrl());
+                detail.setVideoUrl(orderDTO.getVideoUrl());
+                detail.setTemp(true);
+                details.add(detail);
+            }
         }
 
         return details;
@@ -752,5 +754,99 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public CourseDeliveryDTO findMeetDetail(Integer id) {
         return audioCourseDAO.findMeetDetail(id);
+    }
+
+    /**
+     * 判断csp课件是否可编辑
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public boolean editAble(Integer courseId) {
+        //首先判断是否有投稿历史
+        CourseDelivery cond = new CourseDelivery();
+        cond.setSourceId(courseId);
+        List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
+        if (!CheckUtils.isEmpty(deliveries)){
+            return false;
+        }
+
+        // 判断是否有录播或者直播记录
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return false;
+        }
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
+        if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(course.getId());
+            if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
+                return false;
+            }
+        } else {
+            AudioCoursePlay play = findPlayState(course.getId());
+            if (play != null &&
+                    play.getPlayState() != null
+                    && play.getPlayState() > AudioCoursePlay.PlayState.init.ordinal()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public Integer countLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        return CheckUtils.isEmpty(details) ? 0 : details.size();
+    }
+
+    /**
+     * 获取没有缓存的直播明细
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public List<AudioCourseDetail> findNoCacheLiveDetails(Integer courseId) {
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        if (CheckUtils.isEmpty(details)) {
+            AudioCourseDetail detail = findFirstDetail(courseId);
+            if (detail != null) {
+                details.add(detail);
+            }
+        }
+        return details;
+    }
+
+    protected AudioCourseDetail findFirstDetail(Integer courseId){
+        AudioCourseDetail cond = new AudioCourseDetail();
+        cond.setCourseId(courseId);
+        cond.setSort(1);
+        AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
+        firstDetail.setVideoUrl(null);
+        firstDetail.setTemp(true);
+        return firstDetail;
+    }
+
+    /**
+     * 检查是否是当前用户的课程
+     * @param userId
+     * @param courseId
+     * @return
+     */
+    public boolean checkCourseIsMine(String userId, Integer courseId) {
+        if (StringUtils.isEmpty(userId)
+                || courseId == null || courseId == 0) {
+            return false;
+        }
+
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return false;
+        }
+        boolean isMine = course.getCspUserId() == userId;
+        return isMine;
     }
 }

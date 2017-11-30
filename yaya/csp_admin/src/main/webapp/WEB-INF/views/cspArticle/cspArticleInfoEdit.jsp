@@ -10,6 +10,11 @@
     <title>编辑服务</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <script type="text/javascript">
+        $(document).ready(function() {
+            initFormValidate();
+        });
+
+
         $(document).ready(function () {
             var active = '${listType}';
             $(".nav-tabs li:eq(" + active + ")").addClass("active");
@@ -123,8 +128,10 @@
         </div>
     </div>
     <div class="form-actions">
+        <shiro:hasPermission name="csp:article:edit">
         <input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                            value="修 改"/>&nbsp;
+                                                            value="修 改"/>
+        </shiro:hasPermission>&nbsp;
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form>

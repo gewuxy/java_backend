@@ -94,12 +94,12 @@
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
                                     <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
-                                    <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${course.categoryId}">
-                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${course.category}">
+                                    <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameCn}">
                                 </div>
-                                <div class="meeting-tab clearfix">
+                                    <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}" >
-                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''}>
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} >
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
