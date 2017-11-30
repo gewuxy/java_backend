@@ -7,6 +7,7 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.FileUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.dto.CreditPayDTO;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.meet.dao.*;
@@ -23,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -828,5 +828,25 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         firstDetail.setVideoUrl(null);
         firstDetail.setTemp(true);
         return firstDetail;
+    }
+
+    /**
+     * 检查是否是当前用户的课程
+     * @param userId
+     * @param courseId
+     * @return
+     */
+    public boolean checkCourseIsMine(String userId, Integer courseId) {
+        if (StringUtils.isEmpty(userId)
+                || courseId == null || courseId == 0) {
+            return false;
+        }
+
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return false;
+        }
+        boolean isMine = course.getCspUserId() == userId;
+        return isMine;
     }
 }
