@@ -48,7 +48,7 @@
                                             <td class="col-w-3">${v.expense}M consumed</td>
                                             <c:if test="${v.expireDay > 0}">
 
-                                                <td class="col-w-2"><a href="${v.downloadUrl}" class="color-blue">	Video Download</a></td>
+                                                <td class="col-w-2"><a  class="color-blue" id="download" href="javaScript:;" courseId="${v.courseId}">Video Download</a></td>
                                                 <td class="col-w-2 color-green1">Expired in ${v.expireDay} day(s)</td>
                                             </c:if>
                                             <c:if test="${v.expireDay == 0}">
@@ -187,6 +187,16 @@
         });
 
 
+        $("#download").click(function () {
+            var courseId = $("#download").attr("courseId");
+            $.get('${ctx}//mgr/user/download',{"courseId":courseId}, function (data) {
+                if (data.code == 0){
+                    window.open(data.data);
+                }else{
+                    layer.msg(data.err);
+                }
+            },'json');
+        });
 
     });
 
