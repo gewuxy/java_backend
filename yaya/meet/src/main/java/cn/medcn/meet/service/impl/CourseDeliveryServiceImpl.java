@@ -10,7 +10,9 @@ import cn.medcn.meet.dao.CourseDeliveryDAO;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
+import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.CourseDelivery;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.service.AppUserService;
@@ -35,6 +37,9 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
 
     @Autowired
     protected AppUserService appUserService;
+
+    @Autowired
+    protected AudioService audioService;
 
     @Override
     public Mapper<CourseDelivery> getBaseMapper() {
@@ -73,16 +78,35 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
      */
     @Override
     public void executeDelivery(Integer courseId, Integer[] acceptIds, String authorId) throws SystemException {
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course == null) {
+            throw new SystemException(local("source.not.exists"));
+        }
+
+        if (course.getPlayType() == null) {
+            course.setPlayType(0);
+        }
+        //将用户ID置空 意图是让录播投稿生成的副本不占该用户会议个数
+        course.setCspUserId(null);
+
         for(Integer acceptId:acceptIds){
+            if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {//录播投稿需要复制副本
+                //复制副本
+                courseId = audioService.doCopyCourse(course, null, null);
+            }
+
             CourseDelivery delivery = new CourseDelivery();
             delivery.setAcceptId(acceptId);
             delivery.setSourceId(courseId);
             delivery.setAuthorId(authorId);
-            CourseDelivery result = selectOne(delivery);
-            if(result != null){
-                AppUser user = appUserService.selectByPrimaryKey(acceptId);
-                throw new SystemException(local("cannot.repeat.delivery"));
+
+            if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                CourseDelivery result = selectOne(delivery);
+                if(result != null){
+                    throw new SystemException(local("cannot.repeat.delivery"));
+                }
             }
+
             delivery.setId(cn.medcn.common.utils.StringUtils.nowStr());
             delivery.setDeliveryTime(new Date());
             insert(delivery);

@@ -285,4 +285,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param courseId
      */
     void deleteCspCourse(Integer courseId);
+
+    Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle);
 }
