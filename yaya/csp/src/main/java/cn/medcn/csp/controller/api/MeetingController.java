@@ -671,11 +671,8 @@ public class MeetingController extends CspBaseController {
         if (!audioService.editAble(id)) {
             return courseNonDeleteAble();
         }
-
-        AudioCourse course = new AudioCourse();
-        course.setId(id);
-        course.setDeleted(true);
-        audioService.updateByPrimaryKeySelective(course);
+        //逻辑删除
+        audioService.deleteCspCourse(id);
         return success();
 
     }

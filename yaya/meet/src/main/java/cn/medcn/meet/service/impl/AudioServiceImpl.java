@@ -849,4 +849,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         boolean isMine = course.getCspUserId() == userId;
         return isMine;
     }
+
+    /**
+     * 逻辑删除csp课件
+     *
+     * @param courseId
+     */
+    @Override
+    public void deleteCspCourse(Integer courseId) {
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course != null) {
+            course.setDeleted(true);
+            audioCourseDAO.updateByPrimaryKey(course);
+        }
+    }
 }

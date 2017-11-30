@@ -405,7 +405,10 @@ public class MeetingMgrController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-        audioService.deleteAudioCourse(courseId);
+
+        course.setDeleted(true);
+        audioService.updateByPrimaryKey(course);
+
         return success();
     }
 

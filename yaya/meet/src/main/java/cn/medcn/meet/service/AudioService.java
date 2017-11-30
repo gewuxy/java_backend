@@ -279,4 +279,10 @@ public interface AudioService extends BaseService<AudioCourse>  {
 
     // 检查课程是否是当前用户的会议课程
     boolean checkCourseIsMine(String userId, Integer courseId);
+
+    /**
+     * 逻辑删除csp课件
+     * @param courseId
+     */
+    void deleteCspCourse(Integer courseId);
 }
