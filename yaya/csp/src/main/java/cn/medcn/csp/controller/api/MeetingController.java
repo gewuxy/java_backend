@@ -197,12 +197,11 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-        if (courseId == null || courseId ==0) {
+        if (courseId == null || courseId ==0
+                || StringUtils.isEmpty(title)) {
             return error(local("error.param"));
         }
-        if (StringUtils.isEmpty(title)) {
-            return error(local("error.param"));
-        }
+
         int newCourseId = audioService.addCourseCopy(courseId, title);
         Map<String, Object> map = new HashMap<>();
         map.put("id", newCourseId);
@@ -575,6 +574,9 @@ public class MeetingController extends CspBaseController {
             if (live != null) {
 
                 String replayUrl = callback.getReplay_url();
+
+                //System.out.println("video live replay url = " + replayUrl);
+
                 String videoName = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
 
                 String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + videoName;
@@ -671,11 +673,8 @@ public class MeetingController extends CspBaseController {
         if (!audioService.editAble(id)) {
             return courseNonDeleteAble();
         }
-
-        AudioCourse course = new AudioCourse();
-        course.setId(id);
-        course.setDeleted(true);
-        audioService.updateByPrimaryKeySelective(course);
+        //逻辑删除
+        audioService.deleteCspCourse(id);
         return success();
 
     }
