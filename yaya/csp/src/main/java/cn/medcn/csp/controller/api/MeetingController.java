@@ -732,6 +732,16 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/join/check")
     @ResponseBody
     public String joinCheck(Integer courseId, HttpServletRequest request, String liveType){
+
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course != null) {
+            return error(local("source.not.exists"));
+        }
+
+        if (course.getDeleted() != null && course.getDeleted()) {
+            return error(local("source.has.deleted"));
+        }
+
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);
         Map<String, Object> result = new HashMap<>();
 
