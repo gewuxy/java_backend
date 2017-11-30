@@ -189,7 +189,7 @@
 
         $("#download").click(function () {
             var courseId = $("#download").attr("courseId");
-            $.get('${ctx}//mgr/user/download',{"courseId":courseId}, function (data) {
+            $.get('${ctx}/mgr/user/download',{"courseId":courseId}, function (data) {
                 if (data.code == 0){
                     window.open(data.data);
                 }else{
