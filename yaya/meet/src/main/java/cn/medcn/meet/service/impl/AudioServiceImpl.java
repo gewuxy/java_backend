@@ -846,7 +846,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course == null) {
             return false;
         }
-        boolean isMine = course.getCspUserId() == userId;
+        boolean isMine = userId.equals(course.getCspUserId());
         return isMine;
     }
 
