@@ -13,9 +13,15 @@
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
     <input  name="keyword" type="hidden" value="${keyword}"/>
+    <input  name="deleted" type="hidden" value="${deleted}"/>
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/meet/list" class="breadcrumb form-search">
-    <input placeholder="请输入会议名称" value="${keyword}" size="40"  type="search" name="keyword" maxlength="50" class="required"/>
+    <input placeholder="请输入会议名称" value="${keyword}" size="40"  type="search" name="keyword" maxlength="50" class="required"/>&nbsp;&nbsp;
+    <select name="deleted" id="deleted" style="width: 150px;">
+        <option value="">会议状态</option>
+        <option value="0">正常</option>
+        <option value="1">关闭</option>
+    </select>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -29,7 +35,7 @@
                 <td>${meet.shared}</td>
                 <td>${meet.playType eq 0 ? "录播" : meet.playType eq 1 ? "ppt" : "视频"}</td>
                 <td>${meet.userName}</td>
-                <td>${meet.deleted == true ? "已关闭":"正常"}</td>
+                <td>${meet.deleted == true ? "关闭":"正常"}</td>
                 <td>
                     <shiro:hasPermission name="csp:meet:view">
                         <a href="${ctx}/csp/meet/info?id=${meet.id}">查看</a>
