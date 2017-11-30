@@ -54,6 +54,8 @@ public class Meet implements Serializable{
     /**是否是推荐会议*/
     private Boolean tuijian;
 
+    private Integer lecturerId;
+
     /**会议主讲者*/
     @Transient
     private Lecturer lecturer;

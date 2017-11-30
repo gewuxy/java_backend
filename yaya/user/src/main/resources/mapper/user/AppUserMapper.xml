@@ -132,4 +132,11 @@
         AND DATE_FORMAT(u.`regist_date`,'%Y') IS NOT NULL
         GROUP BY YEAR(regist_date) ,MONTH(regist_date)
     </select>
+
+    <select id="selectByPub" resultType="cn.medcn.user.model.AppUser">
+          SELECT * FROM t_app_user
+          WHERE
+          pub_flag = #{pubFlag}
+
+    </select>
 </mapper>

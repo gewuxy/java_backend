@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.BannerDAO" >
+    <select id="findBannerList" resultType="cn.medcn.user.model.Banner">
+          SELECT
+            b.*,
+            u.nickname
+          FROM t_app_banner b
+          LEFT JOIN t_app_user u
+          ON b.pub_user_id = u.id
+          ORDER BY b.weight DESC
+    </select>
+
+</mapper>

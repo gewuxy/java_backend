@@ -10,50 +10,9 @@
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <title>App管理列表</title>
     <script type="text/javascript">
-        function checkVersion() {
-            if ($("#version").val() == null || $("#title").val() == "") {
-                confirm("版本号不能为空")
-                $("#btnSubmit").attr("disabled", "disabled");
-            } else {
-                $("#btnSubmit").removeAttr("disabled");
-            }
-
-        }
-
-        function checkDriveTag() {
-            if ($("#driveTag").val() == null || $("#driveTag").val() == "") {
-                confirm("手机类型不能为空")
-                $("#btnSubmit").attr("disabled", "disabled");
-            } else {
-                $("#btnSubmit").removeAttr("disabled");
-            }
-        }
-
-        function checkDownLoadUrl() {
-            if ($("#downLoadUrl").val() == null || $("#downLoadUrl").val() == "") {
-                confirm("下载地址不能为空")
-                $("#btnSubmit").attr("disabled", "disabled");
-            } else {
-                $("#btnSubmit").removeAttr("disabled");
-            }
-        }
-
-        $(document).ready(function () {
-            $("#btnSubmit").click(function () {
-                var checkList = $("input:text");
-                var isCheckPass = true;
-                for (var i = 0; i < checkList.size(); i++) {
-                    if ($.trim(checkList[i].value) == "") {
-                        checkList[i].value = "请不要输入空格!";
-                        isCheckPass = false;
-                        $("#btnSubmit").attr("disabled", "disabled");
-                    } else {
-                        $("#btnSubmit").removeAttr("disabled");
-                    }
-                }
-                return isCheckPass;
-            })
-        })
+        $(document).ready(function() {
+            initFormValidate();
+        });
 
         function selectFile() {
             $("#uploadFile").trigger("click");
@@ -97,7 +56,7 @@
     <div class="control-group">
         <label class="control-label">版本号:</label>
         <div class="controls">
-            <input type="text" name="version" maxlength="50" onblur="checkVersion()" id="version"
+            <input type="text" name="version" maxlength="50"  id="version"
                    class="required input-xlarge"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
@@ -113,7 +72,7 @@
     <div class="control-group">
         <label class="control-label">手机类型:</label>
         <div class="controls">
-            <input type="text" name="driveTag" maxlength="50" onblur="checkDriveTag()" id="driveTag"
+            <input type="text" name="driveTag" maxlength="50" id="driveTag"
                    class="required input-xlarge"/>
         </div>
     </div>
@@ -157,8 +116,10 @@
         </div>
     </div>
     <div class="form-actions">
-        <input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                         value="保 存"/>&nbsp;
+        <shiro:hasPermission name="csp:appManage:add">
+            <input id="btnSubmit" class="btn btn-primary" type="submit"
+                                                         value="保 存"/>
+        </shiro:hasPermission>&nbsp;
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form>

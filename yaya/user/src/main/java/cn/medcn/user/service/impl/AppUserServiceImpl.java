@@ -938,6 +938,15 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         return appUserDAO.selectByRegistDate(registDate);
     }
 
+    /**
+     * 下拉选框 获得所有公众号
+     * @return
+     */
+    @Override
+    public List<AppUser> selectByPub(Integer pubFlag) {
+        return appUserDAO.selectByPub(pubFlag);
+    }
+
 
     /**
      * 查询所有的已关注用户

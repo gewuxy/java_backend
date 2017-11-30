@@ -2,6 +2,7 @@ package cn.medcn.meet.dto;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -19,8 +20,10 @@ public class MeetTuijianDTO implements Serializable{
     /**科室类别*/
     private String meetType;
     /**开始时间*/
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
     /**结束时间*/
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
     /**主讲者姓名*/
     private String lecturer;

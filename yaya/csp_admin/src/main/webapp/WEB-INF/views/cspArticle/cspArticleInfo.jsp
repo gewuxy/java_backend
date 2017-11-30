@@ -10,6 +10,9 @@
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <title>公告菜单</title>
     <script type="text/javascript">
+        $(document).ready(function() {
+            initFormValidate();
+        });
 
         $(document).ready(function () {
             var active = '${listType}';

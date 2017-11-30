@@ -285,4 +285,10 @@ public interface AppUserService extends BaseService<AppUser> {
      * @return
      */
     List<AppUser> selectByRegistDate(String registDate);
+
+    /**
+     * 获得所有公众号
+     * @return
+     */
+    List<AppUser> selectByPub(Integer pubFlag);
 }

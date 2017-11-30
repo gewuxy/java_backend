@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**banner广告实体类
@@ -18,16 +19,16 @@ import java.util.Date;
 @Table(name = "t_app_banner")
 public class Banner {
     @Id
-    private Integer id;
+    private String id;
 
     //图片地址
-    private String pageUrl;
+    private String imageUrl;
 
-    //是否是有效状态
+    //是否是有效状态 0 关闭 1开启
     private Boolean active;
 
-    //banner排序
-    private Integer sort;
+    //banner排序 权重
+    private Integer weight;
 
     //创建时间
     private Date createTime;
@@ -41,10 +42,11 @@ public class Banner {
     //0表示yaya 1表示合理用药
     private Integer appId;
 
+    //内容
+    private String content;
 
-
-
-
-
+    //公众号名字
+    @Transient
+    private String nickname;
 
 }

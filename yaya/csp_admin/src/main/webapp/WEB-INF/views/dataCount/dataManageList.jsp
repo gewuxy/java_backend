@@ -22,7 +22,9 @@
 <form id="searchForm" method="post" class="breadcrumb form-search">
     <input id="selectTime" name="registDate" class="laydate-icon" type="text" value="${registDate}"
            placeholder="选择查询时间"/>
+<shiro:hasPermission name="csp:data:view">
     <input id="btnSubmit" class="btn btn-primary" type="button" value="查询"/>
+</shiro:hasPermission>
 </form>
 <div id="main" style="height:400px"></div>
 </body>
