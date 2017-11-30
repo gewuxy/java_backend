@@ -611,28 +611,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
         Integer newCourseId = doCopyCourse(course, null, newTitle);
 
-        Live live = liveService.findByCourseId(courseId);
-        if (live != null) {
+        course.setPlayType(course.getPlayType() == null ? AudioCourse.PlayType.normal.getType() : course.getPlayType());
+
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
             Live copy = new Live();
-            BeanUtils.copyProperties(live, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
-            copy.setReplayUrl(null);
             copy.setLiveState(AudioCoursePlay.PlayState.init.ordinal());
             copy.setLivePage(0);
-            copy.setHdlUrl(null);
-            copy.setHlsUrl(null);
-            copy.setRtmpUrl(null);
             copy.setPlayCount(0);
             copy.setCourseId(newCourseId);
             liveService.insert(copy);
-        }
-
-        AudioCoursePlay cond = new AudioCoursePlay();
-        cond.setCourseId(courseId);
-        AudioCoursePlay play = audioCoursePlayDAO.selectOne(cond);
-        if (play != null) {
+        } else {
             AudioCoursePlay copy = new AudioCoursePlay();
-            BeanUtils.copyProperties(play, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
             copy.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
             copy.setPlayPage(0);
