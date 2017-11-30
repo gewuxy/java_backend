@@ -574,6 +574,9 @@ public class MeetingController extends CspBaseController {
             if (live != null) {
 
                 String replayUrl = callback.getReplay_url();
+
+                //System.out.println("video live replay url = " + replayUrl);
+
                 String videoName = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
 
                 String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + videoName;
@@ -670,11 +673,8 @@ public class MeetingController extends CspBaseController {
         if (!audioService.editAble(id)) {
             return courseNonDeleteAble();
         }
-
-        AudioCourse course = new AudioCourse();
-        course.setId(id);
-        course.setDeleted(true);
-        audioService.updateByPrimaryKeySelective(course);
+        //逻辑删除
+        audioService.deleteCspCourse(id);
         return success();
 
     }

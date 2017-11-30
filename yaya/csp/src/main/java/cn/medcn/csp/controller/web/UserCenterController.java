@@ -17,8 +17,10 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.UserFluxUsage;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,6 +31,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -53,6 +59,9 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected EmailTempService tempService;
+
+    @Autowired
+    protected UserFluxService userFluxService;
 
 
 
@@ -324,6 +333,44 @@ public class UserCenterController extends CspBaseController{
         VideoLiveRecordDTO.transExpireDay(myPage.getDataList());
         model.addAttribute("page",myPage);
        return localeView("/userCenter/toFlux");
+   }
+
+    /**
+     * 异步请求下载视频
+     * @param courseId
+     * @return
+     */
+   @RequestMapping("/download")
+    public void downLoad(String courseId,String meetName,HttpServletResponse response) throws SystemException, IOException {
+
+       String userId = getWebPrincipal().getId();
+       if(StringUtils.isEmpty(userId)){
+           throw new SystemException(local("meeting.error.not_mine"));
+       }
+        if(StringUtils.isEmpty(courseId)){
+            throw new SystemException(local("courseId.empty"));
+        }
+       UserFluxUsage usage = userFluxService.findUsage(userId,courseId);
+        if(usage == null){
+            throw new SystemException(local("source.not.exists"));
+        }
+
+       URL url=new URL(usage.getVideoDownUrl());
+       HttpURLConnection conn=(HttpURLConnection)url.openConnection();
+       conn.connect();
+       BufferedInputStream ins=new BufferedInputStream(conn.getInputStream());
+       Integer fileLength = conn.getContentLength();
+       response.reset();
+       response.setContentLength(fileLength);
+       response.setContentType("application/octet-stream");
+       response.setHeader("Content-Disposition", "attachment;filename=\"" + meetName + "\"");
+       int i;
+       while((i=ins.read())!=-1){
+           response.getOutputStream().write(i);
+       }
+       ins.close();
+       response.getOutputStream().close();
+       conn.disconnect();
    }
 
 
