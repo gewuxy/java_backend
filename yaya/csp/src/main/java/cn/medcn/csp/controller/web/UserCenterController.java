@@ -31,6 +31,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Date;
 import java.util.List;
 
@@ -337,22 +341,36 @@ public class UserCenterController extends CspBaseController{
      * @return
      */
    @RequestMapping("/download")
-   @ResponseBody
-    public String downLoad(String courseId){
+    public void downLoad(String courseId,String meetName,HttpServletResponse response) throws SystemException, IOException {
 
        String userId = getWebPrincipal().getId();
        if(StringUtils.isEmpty(userId)){
-           return error(local("meeting.error.not_mine"));
+           throw new SystemException(local("meeting.error.not_mine"));
        }
         if(StringUtils.isEmpty(courseId)){
-            return error(local("courseId.empty"));
+            throw new SystemException(local("courseId.empty"));
         }
        UserFluxUsage usage = userFluxService.findUsage(userId,courseId);
         if(usage == null){
-            return error(local("source.not.exists"));
+            throw new SystemException(local("source.not.exists"));
         }
-        return success(usage.getVideoDownUrl());
 
+       URL url=new URL(usage.getVideoDownUrl());
+       HttpURLConnection conn=(HttpURLConnection)url.openConnection();
+       conn.connect();
+       BufferedInputStream ins=new BufferedInputStream(conn.getInputStream());
+       Integer fileLength = conn.getContentLength();
+       response.reset();
+       response.setContentLength(fileLength);
+       response.setContentType("application/octet-stream");
+       response.setHeader("Content-Disposition", "attachment;filename=\"" + meetName + "\"");
+       int i;
+       while((i=ins.read())!=-1){
+           response.getOutputStream().write(i);
+       }
+       ins.close();
+       response.getOutputStream().close();
+       conn.disconnect();
    }
 
 

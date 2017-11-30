@@ -48,7 +48,7 @@
                                             <td class="col-w-3">消耗${v.expense}M</td>
                                             <c:if test="${v.expireDay > 0}">
 
-                                                <td class="col-w-2"><a  class="color-blue" id="download" href="javaScript:;" courseId="${v.courseId}">下載視頻</a></td>
+                                                <td class="col-w-2"><a  class="color-blue"  href="${ctx}/mgr/user/download?courseId=${v.courseId}&meetName=${v.meetName}">下載視頻</a></td>
                                                 <td class="col-w-2 color-green1">${v.expireDay}天後過期</td>
                                             </c:if>
                                             <c:if test="${v.expireDay == 0}">
@@ -185,17 +185,6 @@
             window.location.href="${ctx}/mgr/user/toFlux";
         });
 
-
-        $("#download").click(function () {
-            var courseId = $("#download").attr("courseId");
-            $.get('${ctx}/mgr/user/download',{"courseId":courseId}, function (data) {
-                if (data.code == 0){
-                    window.open(data.data);
-                }else{
-                    layer.msg(data.err);
-                }
-            },'json');
-        });
 
     });
 
