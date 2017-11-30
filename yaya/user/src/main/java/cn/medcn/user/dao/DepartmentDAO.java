@@ -10,4 +10,10 @@ import java.util.List;
  */
 public interface DepartmentDAO extends Mapper<Department> {
     List<String> findAllCategory();
+
+    /**
+     * 查找所有的科室
+     * @return
+     */
+    List<String> findAlldepartment();
 }

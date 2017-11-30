@@ -274,4 +274,10 @@
         SELECT * FROM v_meet_folder_final WHERE id = #{id}
     </select>
 
+    <select id="selectByMeetName" resultType="cn.medcn.meet.model.Meet">
+        SELECT * FROM t_meet WHERE meet_name = #{meetName}
+    </select>
+
+
+
 </mapper>

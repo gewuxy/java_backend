@@ -2,11 +2,9 @@ package cn.medcn.meet.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -28,10 +26,22 @@ public class Recommend implements Serializable {
     private Integer recType;
     // 是否推荐 0 不推荐  1 推荐
     private Boolean recFlag;
+
     // 推荐日期
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date recDate;
     // 排序 序号
     private Integer sort;
+
+    //是否固定推荐
+    private Integer fixed;
+
+    @Transient
+    private String meetName;
+
+    @Transient
+    /**会议状态0表示草稿 1表示未开始 2表示进行中 3表示已结束 4表示已撤销/已删除 5表示未发布（从草稿复制过来） 6表示已关闭*/
+    private Short state;
 
     /* 推荐类型 */
     public enum recommendResource {

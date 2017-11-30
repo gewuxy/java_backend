@@ -2107,8 +2107,19 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         }
     }
 
-
-
+    /**
+     * 根据会议名称得到会议
+     * @param meetName
+     * @return
+     */
+    @Override
+    public Meet selectByMeetName(String meetName) {
+        List<Meet> meets= meetDAO.selectByMeetName(meetName);
+        if (meets != null){
+            return meets.get(0);
+        }
+        return null;
+    }
 
 
 }
