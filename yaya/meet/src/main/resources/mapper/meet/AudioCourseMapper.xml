@@ -111,6 +111,9 @@
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
         </if>
+        <if test="deleted != null">
+            AND c.deleted = #{deleted}
+        </if>
         ORDER BY c.create_time DESC
     </select>
 
