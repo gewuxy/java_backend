@@ -765,13 +765,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      */
     @Override
     public boolean editAble(Integer courseId) {
-        //首先判断是否有投稿历史
-        CourseDelivery cond = new CourseDelivery();
-        cond.setSourceId(courseId);
-        List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
-        if (!CheckUtils.isEmpty(deliveries)){
-            return false;
-        }
 
         // 判断是否有录播或者直播记录
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
@@ -781,11 +774,21 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
-        if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            //判断是否有投稿历史
+            CourseDelivery cond = new CourseDelivery();
+            cond.setSourceId(courseId);
+            List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
+            if (!CheckUtils.isEmpty(deliveries)){
+                return false;
+            }
+
             Live live = liveService.findByCourseId(course.getId());
             if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
                 return false;
             }
+
         }
         return true;
     }
