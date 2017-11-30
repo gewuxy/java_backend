@@ -89,8 +89,6 @@
             }
         })
         /*--end--*/
-
-
     </script>
 </head>
 <body>
@@ -120,9 +118,6 @@
             <input id="checkedAll" type="radio" value="0" name="notifyType">对所有人
             <input id="checked" type="radio" value="1" name="notifyType">对个人
         </div>
-        <script>
-
-        </script>
     </div>
     <div class="control-group">
         <label class="control-label">是否已读:</label>
@@ -130,9 +125,6 @@
             <input id="unRead" type="radio" value="0" name="isRead">未读
             <input id="read" type="radio" value="1" name="isRead">已读
         </div>
-        <script>
-
-        </script>
     </div>
     <div class="control-group">
         <label class="control-label">接收消息者(个人):</label>
@@ -141,9 +133,10 @@
         </div>
     </div>
     <div class="form-actions">
-
+        <shiro:hasPermission name="csp:notify:edit">
         <input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                         value="保存修改"/>&nbsp;
+                                                         value="保存修改"/>
+        </shiro:hasPermission>&nbsp;
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form>

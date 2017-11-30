@@ -21,10 +21,12 @@
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/order/list" class="breadcrumb form-search">
     <input placeholder="订单号" value="${tradeId}" type="search" name="tradeId" maxlength="50" class="required"/>
-    <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+    <shiro:hasPermission name="csp:order:view">
+        <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+    </shiro:hasPermission>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>用户名</th><th>购买时间</th><th>订单状态</th><th>生效时间</th><th>订单号</th><th>流量充值</th><th>充值平台</th><shiro:hasPermission name="sys:region:edit"><th>操作</th></shiro:hasPermission></tr></thead>
+    <thead><tr><th>用户名</th><th>购买时间</th><th>订单状态</th><th>生效时间</th><th>订单号</th><th>流量充值</th><th>充值平台</th><th>操作</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="data">
@@ -37,10 +39,14 @@
                 <td>${data.flux}</td>
                 <td>${data.platform}</td>
                 <td>
-                    <a href="${ctx}/csp/order/check?id=${data.id}">查看</a>
+                    <shiro:hasPermission name="csp:order:view">
+                        <a href="${ctx}/csp/order/check?id=${data.id}">查看</a>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="csp:order:close">
                     <c:if test="${data.state eq 1}">
                     <a href="${ctx}/csp/order/close?id=${data.id}" id="closeOrder">关闭</a>
                     </c:if>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>

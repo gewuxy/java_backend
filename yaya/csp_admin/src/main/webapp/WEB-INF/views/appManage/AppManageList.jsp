@@ -28,7 +28,7 @@
         <th>下载链接</th>
         <th>手机类型</th>
         <th>更新时间</th>
-        <shiro:hasPermission name="sys:region:edit"><th>操作</th></shiro:hasPermission>
+        <th>操作</th>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="app">
@@ -39,8 +39,12 @@
                 <td>${app.driveTag}</td>
                 <td><fmt:formatDate value="${app.updateTime}" type="both" dateStyle="full"/></td>
                 <td>
-                    <a href="${ctx}/csp/appManage/check?id=${app.id}">查看</a>
-                    <a href="${ctx}/csp/appManage/delete?id=${app.id}" onclick="deleteAppManage()">删除</a>
+                    <shiro:hasPermission name="csp:appManage:view">
+                        <a href="${ctx}/csp/appManage/check?id=${app.id}">查看</a>
+                    </shiro:hasPermission>
+                    <shiro:hasPermission name="csp:appManage:del">
+                        <a href="${ctx}/csp/appManage/delete?id=${app.id}" onclick="deleteAppManage()">删除</a>
+                    </shiro:hasPermission>
                 </td>
             </tr>
         </c:forEach>
@@ -53,8 +57,10 @@
     </tbody>
 </table>
     <div>
-        <input id="insertApp" class="btn btn-primary" type="button"
+        <shiro:hasPermission name="csp:appManage:add">
+            <input id="insertApp" class="btn btn-primary" type="button"
                value="添 加" style="margin-left: 1108px"/>
+        </shiro:hasPermission>
     </div>
 
 <%@include file="/WEB-INF/include/pageable.jsp"%>
