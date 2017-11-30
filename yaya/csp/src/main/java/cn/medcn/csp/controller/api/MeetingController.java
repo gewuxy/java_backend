@@ -197,12 +197,11 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-        if (courseId == null || courseId ==0) {
+        if (courseId == null || courseId ==0
+                || StringUtils.isEmpty(title)) {
             return error(local("error.param"));
         }
-        if (StringUtils.isEmpty(title)) {
-            return error(local("error.param"));
-        }
+
         int newCourseId = audioService.addCourseCopy(courseId, title);
         Map<String, Object> map = new HashMap<>();
         map.put("id", newCourseId);
