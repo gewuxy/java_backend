@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -336,12 +337,12 @@ public class UserCenterController extends CspBaseController{
    }
 
     /**
-     * 异步请求下载视频
+     * 下载视频
      * @param courseId
      * @return
      */
    @RequestMapping("/download")
-    public void downLoad(String courseId,String meetName,HttpServletResponse response) throws SystemException, IOException {
+    public void downLoad(String courseId,String meetName,HttpServletResponse response) throws SystemException, UnsupportedEncodingException {
 
        String userId = getWebPrincipal().getId();
        if(StringUtils.isEmpty(userId)){
@@ -355,22 +356,32 @@ public class UserCenterController extends CspBaseController{
             throw new SystemException(local("source.not.exists"));
         }
 
-       URL url=new URL(usage.getVideoDownUrl());
-       HttpURLConnection conn=(HttpURLConnection)url.openConnection();
-       conn.connect();
-       BufferedInputStream ins=new BufferedInputStream(conn.getInputStream());
-       Integer fileLength = conn.getContentLength();
+       HttpURLConnection conn= null;
+       BufferedInputStream ins = null;
+
        response.reset();
-       response.setContentLength(fileLength);
        response.setContentType("application/octet-stream");
-       response.setHeader("Content-Disposition", "attachment;filename=\"" + meetName + "\"");
-       int i;
-       while((i=ins.read())!=-1){
-           response.getOutputStream().write(i);
+       meetName = URLEncoder.encode(meetName,"UTF-8");
+       response.setHeader("Content-Disposition", "attachment;filename=\"" + meetName +".mp4" + "\"");
+       try {
+           URL url=new URL(usage.getVideoDownUrl());
+           conn = (HttpURLConnection)url.openConnection();
+           conn.connect();
+           Integer fileLength = conn.getContentLength();
+           response.setContentLength(fileLength);
+            ins=new BufferedInputStream(conn.getInputStream());
+           int i = ins.read();
+           while(i!=-1){
+               response.getOutputStream().write(i);
+           }
+           ins.close();
+           response.getOutputStream().close();
+           conn.disconnect();
+       } catch (IOException e) {
+           throw new SystemException(e.getMessage());
        }
-       ins.close();
-       response.getOutputStream().close();
-       conn.disconnect();
+
+
    }
 
 
