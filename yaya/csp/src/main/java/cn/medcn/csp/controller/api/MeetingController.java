@@ -652,19 +652,26 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String delete(Integer id) {
         Principal principal = SecurityUtils.get();
+        // 检查该会议是否是当前登录者的会议
+        boolean isMine = audioService.checkCourseIsMine(principal.getId(), id);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
 
         if (id == null || id == 0) {
             return error(local("error.param"));
-        } else {
-            if (!audioService.editAble(id)) {
-                return courseNonDeleteAble();
-            }
-            AudioCourse course = new AudioCourse();
-            course.setId(id);
-            course.setDeleted(true);
-            audioService.updateByPrimaryKeySelective(course);
-            return success();
         }
+
+        if (!audioService.editAble(id)) {
+            return courseNonDeleteAble();
+        }
+
+        AudioCourse course = new AudioCourse();
+        course.setId(id);
+        course.setDeleted(true);
+        audioService.updateByPrimaryKeySelective(course);
+        return success();
+
     }
 
     /**
