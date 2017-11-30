@@ -45,7 +45,7 @@
         <div class="swiper-container gallery-top popup-volume">
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
-                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}">
+                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}" istemp="${detail.temp ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
                                 <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
@@ -61,7 +61,7 @@
             <!--音频文件-->
             <div class="clearfix boxAudio t-center " >
                 <div class="audio-meeting-box" style="">
-                    <audio controls=true id="audioPlayer" src="${course.details[0].audioUrl}"></audio>
+                    <audio controls=true id="audioPlayer" src="${course.details[0].temp ? '':course.details[0].audioUrl}"></audio>
                 </div>
             </div>
             <!--录播中音频-->
@@ -138,7 +138,7 @@
 
 
     <!--新加载提示-->
-    <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;40</span><span class="arrows"></span></div>
+    <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;1</span><span class="arrows"></span></div>
 
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
@@ -151,7 +151,7 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>简介</h3></div>
+        <div class="title"><h3>Info</h3></div>
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
@@ -164,7 +164,9 @@
 
     var totalPages = parseInt("${fn:length(course.details)}");
 
-    var needSync = true;
+    var needSync = false;
+
+    var playOver = false;
 
     $(function(){
         var fullState = true;
@@ -180,7 +182,19 @@
         var u = navigator.userAgent;
         var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
         var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+        var isVideo = $('.swiper-slide-active').find('video');
 
+        $("#audioPlayer")[0].addEventListener("ended", function(){
+
+            console.log("audio ended");
+            isVideo = $('.swiper-slide-active').find('video')
+            if (!needSync){
+                if (isVideo.length == 0){
+                    galleryTop.slideNext();
+                }
+            }
+            playOver = true;
+        });
 
         CSPMeetingGallery.height(cH);
         $(window).resize(function(){
@@ -337,9 +351,9 @@
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
-                if (!dataSrc.length && !activeItemIsVideo.length){
-                    slideToNext();
-                }
+//                if (!dataSrc.length && !activeItemIsVideo.length){
+//                    slideToNext();
+//                }
                 swiper.slideTo("${fn:length(course.details) - 1}");
             }
         });
@@ -394,6 +408,7 @@
             popupPalyer.load(dataSrc);
 
             popupPalyer.play();
+            playOver = false;
         }
 
         //点击切换状态
@@ -540,51 +555,6 @@
             $("#ck-video")[0].play();
         })
 
-
-
-        //兼容类型
-//        var supportOrientation = (typeof window.orientation === 'number' &&
-//        typeof window.onorientationchange === 'object');
-//        //
-//        var init = function(){
-//            var htmlNode = document.body.parentNode,
-//                    orientation;
-//            var updateOrientation = function(){
-//                if(supportOrientation){
-//                    orientation = window.orientation;
-//                    switch(orientation){
-//                        case 90:
-//                        case -90:
-//                            orientation = 'landscape';
-//                            CSPMeetingGallery.height($(window).height());
-//                            $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
-//                                alert('横屏');
-//                            break;
-//                        default:
-//                            orientation = 'portrait';
-//                            CSPMeetingGallery.height($(window).height());
-//                            $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
-//                            alert('竖屏');
-//                            break;
-//                    }
-//                }else{
-//                    orientation = (window.innerWidth > window.innerHeight) ? 'landscape' : 'portrait';
-//                }
-//                htmlNode.setAttribute('class',orientation);
-//            };
-//
-//            if(supportOrientation){
-//                window.addEventListener('orientationchange',updateOrientation,false);
-//            }else{
-//                //监听resize事件
-//                window.addEventListener('resize',updateOrientation,false);
-//            }
-//
-//            updateOrientation();
-//        };
-//
-//        window.addEventListener('DOMContentLoaded',init,false);
-
         var heartbeat_timer = 0;
         var last_health = -1;
         var health_timeout = 3000;
@@ -597,7 +567,6 @@
             }
 
         });
-
 
         function keepalive( ws ){
             var time = new Date();
@@ -635,34 +604,57 @@
             ws.onmessage=function(msg){
                 var data = JSON.parse(msg.data);
 
-                console.log("order = "+data.onLines);
+                console.log("order = "+data.order);
                 if (data.onLines){
                     $(".num").text(data.onLines);
                 }
                 if (data.order == 0){//直播指令
                     $(".icon-added").show();
-                    $("#newLivePage").text("P " + (parseInt(data.pageNum) + 2));
+                    $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
+                    console.log("data.audioUrl = " + data.audioUrl);
                     if(data.audioUrl != undefined) {
                         $(".swiper-slide[data-num='"+(data.pageNum + 1)+"']").attr("audio-src", data.audioUrl);
                     }
                     if (data.pageNum == galleryTop.activeIndex){
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
+
+                    if (playOver && !needSync){
+                        galleryTop.slideNext();
+                    }
+
                     setTimeout(function(){$(".icon-added").hide()}, 5000);
 
                 } else if (data.order == 1){//同步指令
-                    totalPages ++;
-                    var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
-                    if (data.videoUrl){
-                        newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src=""  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
-                    }
-
-                    galleryTop.appendSlide(newSlide);
-                    if (needSync){
-                        $(".boxAudio-loading").removeClass("none");
-                        galleryTop.slideTo(totalPages);
+                    var lastPage = $(".swiper-slide:last");
+                    var temp = lastPage.attr("istemp");
+                    console.log("last page is temp = " + lastPage.attr("istemp"));
+                    if (temp == "1"){
+                        console.log("video url = " + data.videoUrl + " - imgUrl = " + data.imgUrl);
+                        if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
+                            lastPage.find("video").attr("src", data.videoUrl);
+                        } else {
+                            console.log("current img url = " + data.imgUrl);
+                            lastPage.find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                        }
+                        lastPage.attr("istemp", "0");
                     } else {
-                        $(".boxAudio-loading").addClass("none");
+                        totalPages ++;
+                        var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                        if (data.videoUrl != undefined && data.videoUrl != ''){
+                            newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                        }
+
+                        galleryTop.appendSlide(newSlide);
+
+                        console.log("need sync = " + needSync);
+
+                        if (needSync){
+                            $(".boxAudio-loading").removeClass("none");
+                            galleryTop.slideTo(totalPages);
+                        } else {
+                            $(".boxAudio-loading").addClass("none");
+                        }
                     }
                 }
             }

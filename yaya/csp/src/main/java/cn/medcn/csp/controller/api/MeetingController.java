@@ -140,7 +140,13 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("course", course);
 
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-                course.setDetails(audioService.findNoCacheLiveDetails(courseId));
+
+                if (course.getPlayType().intValue() == 1) {
+                    course.setDetails(audioService.findNoCacheLiveDetails(courseId));
+
+                } else {
+                    course.setDetails(audioService.findLiveDetails(courseId));
+                }
                 handleHttpUrl(fileBase, course);
                 model.addAttribute("course", course);
 
@@ -261,14 +267,17 @@ public class MeetingController extends CspBaseController {
         //删除源文件
         FileUtils.deleteTargetFile(sourcePath);
         AudioCourseDetail detail = audioService.findDetail(detailId);
-        if (detail != null) {
-            detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
-            detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
+        if (playType == null) {
+            playType = 0;
+        }
+
+        detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
+        if (playType == 0) {
             audioService.updateDetail(detail);
         }
 
         handleLiveOrRecord(courseId, playType, pageNum, detail);
-
 
         Map<String, String> result = new HashMap<>();
         result.put("audioUrl", fileBase + relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
