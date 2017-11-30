@@ -325,7 +325,7 @@
 
 
         function delCourse(){
-            $.get("${ctx}/mgr/meet/editable/" + courseId, {}, function (data) {
+            $.get("${ctx}/mgr/meet/delete/able/" + courseId + courseId, {}, function (data) {
                 if (data.code == "0"){
                     layer.open({
                         type: 1,

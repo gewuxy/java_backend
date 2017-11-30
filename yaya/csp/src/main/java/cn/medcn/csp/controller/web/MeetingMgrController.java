@@ -543,4 +543,15 @@ public class MeetingMgrController extends CspBaseController {
             return error(courseNonEditAbleError());
         }
     }
+
+    @RequestMapping(value = "/delete/able/{courseId}")
+    @ResponseBody
+    public String deleteAble(@PathVariable Integer courseId){
+        boolean editAble = audioService.editAble(courseId);
+        if (editAble) {
+            return success();
+        } else {
+            return error(courseNonDeleteAble());
+        }
+    }
 }
