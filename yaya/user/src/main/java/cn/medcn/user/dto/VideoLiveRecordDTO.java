@@ -24,6 +24,8 @@ public class VideoLiveRecordDTO {
   //使用量
   private Integer expense;
 
+  private String courseId;
+
   //视频下载地址
   private String downloadUrl;
 
