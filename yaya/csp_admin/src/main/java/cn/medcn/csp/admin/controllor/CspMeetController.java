@@ -38,10 +38,14 @@ public class CspMeetController extends BaseController{
 
     @RequestMapping(value="/list")
     @Log(name = "获取会议列表")
-    public String searchMeetList(Pageable pageable, String keyword, Model model){
+    public String searchMeetList(Pageable pageable, Integer deleted,String keyword, Model model){
         if (!StringUtils.isEmpty(keyword)) {
             pageable.getParams().put("keyword", keyword);
             model.addAttribute("keyword",keyword);
+        }
+        if (deleted != null) {
+            pageable.getParams().put("deleted", deleted);
+            model.addAttribute("deleted",deleted);
         }
         MyPage<AudioCourse> page = audioService.findAllMeetForManage(pageable);
         model.addAttribute("page",page);
