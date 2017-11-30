@@ -132,6 +132,12 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("error", linkError);
                 return localeView("/meeting/share_error");
             }
+
+            if (course.getDeleted() != null && course.getDeleted() == true) {
+                model.addAttribute("error", local("source.has.deleted"));
+                return localeView("/meeting/share_error");
+            }
+
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
             }
@@ -428,7 +434,7 @@ public class MeetingController extends CspBaseController {
         }
 
         if (audioCourse.getDeleted()) {
-            throw new SystemException(local("source.not.exists"));
+            throw new SystemException(local("source.has.deleted"));
         }
 
 //        if (audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
