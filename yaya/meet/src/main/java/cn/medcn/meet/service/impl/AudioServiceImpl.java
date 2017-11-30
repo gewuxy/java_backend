@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/4/25.
@@ -614,9 +615,17 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         course.setPlayType(course.getPlayType() == null ? AudioCourse.PlayType.normal.getType() : course.getPlayType());
 
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(courseId);
             Live copy = new Live();
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
             copy.setLiveState(AudioCoursePlay.PlayState.init.ordinal());
+            if (live != null && live.getStartTime() != null) {
+                copy.setStartTime(live == null ? new Date() : live.getStartTime());
+                copy.setEndTime(live == null ? new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)) : live.getEndTime());
+            } else {
+                copy.setStartTime(new Date());
+                copy.setEndTime(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)));
+            }
             copy.setLivePage(0);
             copy.setPlayCount(0);
             copy.setCourseId(newCourseId);
