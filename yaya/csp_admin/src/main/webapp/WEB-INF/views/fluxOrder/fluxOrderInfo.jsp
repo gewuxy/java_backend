@@ -40,7 +40,23 @@
     <div class="control-group">
         <label class="control-label">充值平台:</label>
         <div class="controls">
-            <input readonly name="platform" type="search" value="${fluxOrderList.get(0).platform}" maxlength="50" class="required input-xlarge"/>
+            <%--<input readonly name="platform" type="search" value="${fluxOrderList.get(0).platform}" maxlength="50" class="required input-xlarge"/>--%>
+
+            <select readonly id="platform" name="platform" style="width: 200px;">
+                <option value=""/>-- 请选择 --
+                <option value="wx_pub_qr "/>微信公众扫码支付
+                <option value="alipay_pc_direct"/>支付宝即时到账PC端
+                <option value="applepay_upacp"/>ApplePay_银联
+                <option value="alipay"/>支付宝
+                <option value="paypal"/>PayPal
+                <option value="upacp"/>银联
+                <option value="upacp_pc"/>银联PC端
+                <option value="wx"/>微信
+                <option value="wx_wap"/>微信移动端
+            </select>
+            <script>
+                document.getElementById("platform").value="${fluxOrderList.get(0).platform}";
+            </script>
         </div>
     </div>
     <div>

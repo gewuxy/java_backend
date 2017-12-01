@@ -43,11 +43,13 @@
     </script>
 </head>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
+<script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/yaya/banner/edit">新增Banner</a></li>
 </ul>
-<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/banner/insert"
+<script></script>
+<form  id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/banner/insert"
       enctype="multipart/form-data">
     <input type="hidden" name="userId" value="${page.userId}">
     <div class="control-group">
@@ -70,16 +72,8 @@
     <div class="control-group">
         <label class="control-label">Banner权重:</label>
         <div class="controls">
-            <select id="weight" name="weight" style="width: 100px;">
-                <option value=""/>
-                -- 请选择 --
-                <option value="0"/>
-                0
-                <option value="1"/>
-                1
-                <option value="2"/>
-                2
-            </select>
+            <input type="search" name="weight" id="weight" maxlength="50" class="required input-large">
+            <span class="help-inline">权重越大，排序越靠前</span>
         </div>
     </div>
     <div class="control-group">
@@ -132,10 +126,13 @@
             </select>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label">备注:</label>
+    <div id="articleViewer" style="margin:10px;text-align: center;">
+        <label class="control-label">内容详情:</label>
         <div class="controls">
-            <textarea name="content" rows="3" maxlength="2000" class="input-xxlarge"></textarea>
+            <textarea id="content" name="content"></textarea>
+            <script type="text/javascript">
+                CKEDITOR.replace('content');
+            </script>
         </div>
     </div>
     <div class="form-actions">

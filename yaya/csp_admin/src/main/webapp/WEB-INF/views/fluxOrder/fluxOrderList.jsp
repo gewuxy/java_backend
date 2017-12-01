@@ -37,7 +37,9 @@
                 <td><fmt:formatDate value="${data.effectTime}" type="both" dateStyle="full"/></td>
                 <td>${data.tradeId}</td>
                 <td>${data.flux}</td>
-                <td>${data.platform}</td>
+                <td>${data.platform eq "wx_pub_qr" ? "微信公众扫码支付" : data.platform eq "alipay_pc_direct" ? "支付宝即时到账PC端" :
+                      data.platform eq "alipay" ? "支付宝" :data.platform eq "applepay_upacp" ? "ApplePay_银联":data.platform eq "paypal" ? "PayPal":
+                      data.platform eq "upacp" ? "银联":data.platform eq "upacp_pc" ? "银联PC端":data.platform eq "wx" ? "微信":data.platform eq "wx_wap" ? "微信移动端":""}</td>
                 <td>
                     <shiro:hasPermission name="csp:order:view">
                         <a href="${ctx}/csp/order/check?id=${data.id}">查看</a>
