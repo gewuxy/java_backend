@@ -65,7 +65,7 @@
                                             <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">Edit</a>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile2"><span class="button color-blue min-btn"  >Upload Presentation File</span></label>
+                                        <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span class="button color-blue min-btn"  >Upload Presentation File</span></label>
                                     </c:otherwise>
                                 </c:choose>
                                 </div>

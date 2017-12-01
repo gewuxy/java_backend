@@ -610,10 +610,11 @@
                 }
                 if (data.order == 0){//直播指令
                     $(".icon-added").show();
-                    $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
+                    var currentPageNo = parseInt(data.pageNum) + 1;
+                    $("#newLivePage").text("P " + currentPageNo);
                     console.log("data.audioUrl = " + data.audioUrl);
                     if(data.audioUrl != undefined) {
-                        $(".swiper-slide[data-num='"+(data.pageNum + 1)+"']").attr("audio-src", data.audioUrl);
+                        $(".swiper-slide[data-num='"+currentPageNo+"']").attr("audio-src", data.audioUrl);
                     }
                     if (data.pageNum == galleryTop.activeIndex){
                         swiperChangeAduio($(".swiper-wrapper"));

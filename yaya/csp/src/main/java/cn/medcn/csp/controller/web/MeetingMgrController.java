@@ -405,7 +405,10 @@ public class MeetingMgrController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-        audioService.deleteAudioCourse(courseId);
+
+        course.setDeleted(true);
+        audioService.updateByPrimaryKey(course);
+
         return success();
     }
 
@@ -541,6 +544,17 @@ public class MeetingMgrController extends CspBaseController {
             return success();
         } else {
             return error(courseNonEditAbleError());
+        }
+    }
+
+    @RequestMapping(value = "/delete/able/{courseId}")
+    @ResponseBody
+    public String deleteAble(@PathVariable Integer courseId){
+        boolean editAble = audioService.editAble(courseId);
+        if (editAble) {
+            return success();
+        } else {
+            return error(courseNonDeleteAble());
         }
     }
 }

@@ -48,7 +48,7 @@
                                             <td class="col-w-3">${v.expense}M consumed</td>
                                             <c:if test="${v.expireDay > 0}">
 
-                                                <td class="col-w-2"><a href="${v.downloadUrl}" class="color-blue">	Video Download</a></td>
+                                                <td class="col-w-2"><a  class="color-blue" id="download" href="${ctx}/mgr/user/download?courseId=${v.courseId}&meetName=${v.meetName}" courseId="${v.courseId}">Video Download</a></td>
                                                 <td class="col-w-2 color-green1">Expired in ${v.expireDay} day(s)</td>
                                             </c:if>
                                             <c:if test="${v.expireDay == 0}">
@@ -185,6 +185,7 @@
         $("input[type='reLoad']").click(function () {
             window.location.href="${ctx}/mgr/user/toFlux";
         });
+
 
 
 

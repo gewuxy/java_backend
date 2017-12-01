@@ -13,14 +13,14 @@
     <div class="control-group">
         <label class="control-label">昵称:</label>
         <div class="controls">
-            <input type="search" name="nickName" maxlength="50" class="required" value="${user.nickName}" class="required realName"/>
+            <input type="search" name="nickName" maxlength="50" class="required" value="${user.nickName}" class="required"/>
             <font color="red">*</font>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">姓名:</label>
         <div class="controls">
-            <input type="search" name="userName" htmlEscape="false" maxlength="50" value="${user.userName}" class="required realName"/>
+            <input type="search" name="userName" htmlEscape="false" maxlength="50" value="${user.userName}" class="required"/>
             <font color="red">*</font>
         </div>
     </div>
@@ -75,7 +75,7 @@
         <label class="control-label">激活状态:</label>
         <div class="controls">
             <select id="active" name="active" style="width: 80px;">
-                <option value="0" ${user.active == false|| user.active == null?'selected':''}>未激活</option>
+                <option value="0" ${user.active == false|| user.active == null?'selected':''}>冻结</option>
                 <option value="1" ${user.active == true ?'selected':''}>激活</option>
             </select>
         </div>

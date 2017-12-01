@@ -93,7 +93,7 @@
                     $.post($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
                         if (result.code == 0){//成功
                             layer.msg("Submission success",{time:300},function () {
-                                window.parent.location.reload();
+                                layer.closeAll();
                             });
                         }else{//失败
                             layer.msg(result.err);
@@ -325,7 +325,7 @@
 
 
         function delCourse(){
-            $.get("${ctx}/mgr/meet/editable/" + courseId, {}, function (data) {
+            $.get("${ctx}/mgr/meet/delete/able/" + courseId, {}, function (data) {
                 if (data.code == "0"){
                     layer.open({
                         type: 1,

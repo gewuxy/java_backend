@@ -132,6 +132,12 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("error", linkError);
                 return localeView("/meeting/share_error");
             }
+
+            if (course.getDeleted() != null && course.getDeleted() == true) {
+                model.addAttribute("error", local("source.has.deleted"));
+                return localeView("/meeting/share_error");
+            }
+
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
             }
@@ -191,12 +197,11 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-        if (courseId == null || courseId ==0) {
+        if (courseId == null || courseId ==0
+                || StringUtils.isEmpty(title)) {
             return error(local("error.param"));
         }
-        if (StringUtils.isEmpty(title)) {
-            return error(local("error.param"));
-        }
+
         int newCourseId = audioService.addCourseCopy(courseId, title);
         Map<String, Object> map = new HashMap<>();
         map.put("id", newCourseId);
@@ -428,7 +433,7 @@ public class MeetingController extends CspBaseController {
         }
 
         if (audioCourse.getDeleted()) {
-            throw new SystemException(local("source.not.exists"));
+            throw new SystemException(local("source.has.deleted"));
         }
 
 //        if (audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
@@ -569,6 +574,9 @@ public class MeetingController extends CspBaseController {
             if (live != null) {
 
                 String replayUrl = callback.getReplay_url();
+
+                //System.out.println("video live replay url = " + replayUrl);
+
                 String videoName = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
 
                 String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + videoName;
@@ -652,19 +660,23 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String delete(Integer id) {
         Principal principal = SecurityUtils.get();
-
         if (id == null || id == 0) {
             return error(local("error.param"));
-        } else {
-            if (!audioService.editAble(id)) {
-                return courseNonDeleteAble();
-            }
-            AudioCourse course = new AudioCourse();
-            course.setId(id);
-            course.setDeleted(true);
-            audioService.updateByPrimaryKeySelective(course);
-            return success();
         }
+
+        // 检查该会议是否是当前登录者的会议
+        boolean isMine = audioService.checkCourseIsMine(principal.getId(), id);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+
+        if (!audioService.editAble(id)) {
+            return error(courseNonDeleteAble());
+        }
+        //逻辑删除
+        audioService.deleteCspCourse(id);
+        return success();
+
     }
 
     /**
@@ -720,6 +732,16 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/join/check")
     @ResponseBody
     public String joinCheck(Integer courseId, HttpServletRequest request, String liveType){
+
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course != null) {
+            return error(local("source.not.exists"));
+        }
+
+        if (course.getDeleted() != null && course.getDeleted()) {
+            return error(local("source.has.deleted"));
+        }
+
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);
         Map<String, Object> result = new HashMap<>();
 

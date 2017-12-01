@@ -30,7 +30,7 @@
         <label class="control-label">预览:</label>
         <div class="controls">
             <input  class="btn btn-primary" style="width: 100px;" onclick="showView()" value="预  览"/>
-            <label style="margin-left: 40%">类型:</label>
+            <label style="margin-left: 39%">类型:</label>
             <input type="search" name="playType" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.playType eq 0?"录播":meet.playType eq 1?"ppt直播":"视频直播"}" />
         </div>
     </div>

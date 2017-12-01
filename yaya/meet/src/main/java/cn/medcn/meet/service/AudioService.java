@@ -276,4 +276,15 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     List<AudioCourseDetail> findNoCacheLiveDetails(Integer courseId);
+
+    // 检查课程是否是当前用户的会议课程
+    boolean checkCourseIsMine(String userId, Integer courseId);
+
+    /**
+     * 逻辑删除csp课件
+     * @param courseId
+     */
+    void deleteCspCourse(Integer courseId);
+
+    Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle);
 }

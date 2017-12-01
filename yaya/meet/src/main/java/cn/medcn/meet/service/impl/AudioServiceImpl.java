@@ -7,6 +7,7 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.FileUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.dto.CreditPayDTO;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.meet.dao.*;
@@ -23,12 +24,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/4/25.
@@ -228,7 +229,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param userId
      * @param newTitle
      */
-    private Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
+    @Override
+    public Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
         List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(course.getId());
         //复制微课信息
         AudioCourse reprintCourse = new AudioCourse();
@@ -610,28 +612,26 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
         Integer newCourseId = doCopyCourse(course, null, newTitle);
 
-        Live live = liveService.findByCourseId(courseId);
-        if (live != null) {
+        course.setPlayType(course.getPlayType() == null ? AudioCourse.PlayType.normal.getType() : course.getPlayType());
+
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(courseId);
             Live copy = new Live();
-            BeanUtils.copyProperties(live, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
-            copy.setReplayUrl(null);
             copy.setLiveState(AudioCoursePlay.PlayState.init.ordinal());
+            if (live != null && live.getStartTime() != null) {
+                copy.setStartTime(live == null ? new Date() : live.getStartTime());
+                copy.setEndTime(live == null ? new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)) : live.getEndTime());
+            } else {
+                copy.setStartTime(new Date());
+                copy.setEndTime(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)));
+            }
             copy.setLivePage(0);
-            copy.setHdlUrl(null);
-            copy.setHlsUrl(null);
-            copy.setRtmpUrl(null);
             copy.setPlayCount(0);
             copy.setCourseId(newCourseId);
             liveService.insert(copy);
-        }
-
-        AudioCoursePlay cond = new AudioCoursePlay();
-        cond.setCourseId(courseId);
-        AudioCoursePlay play = audioCoursePlayDAO.selectOne(cond);
-        if (play != null) {
+        } else {
             AudioCoursePlay copy = new AudioCoursePlay();
-            BeanUtils.copyProperties(play, copy);
             copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
             copy.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
             copy.setPlayPage(0);
@@ -764,13 +764,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      */
     @Override
     public boolean editAble(Integer courseId) {
-        //首先判断是否有投稿历史
-        CourseDelivery cond = new CourseDelivery();
-        cond.setSourceId(courseId);
-        List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
-        if (!CheckUtils.isEmpty(deliveries)){
-            return false;
-        }
 
         // 判断是否有录播或者直播记录
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
@@ -780,18 +773,21 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
-        if (course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
+
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            //判断是否有投稿历史
+            CourseDelivery cond = new CourseDelivery();
+            cond.setSourceId(courseId);
+            List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
+            if (!CheckUtils.isEmpty(deliveries)){
+                return false;
+            }
+
             Live live = liveService.findByCourseId(course.getId());
             if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
                 return false;
             }
-        } else {
-            AudioCoursePlay play = findPlayState(course.getId());
-            if (play != null &&
-                    play.getPlayState() != null
-                    && play.getPlayState() > AudioCoursePlay.PlayState.init.ordinal()) {
-                return false;
-            }
+
         }
         return true;
     }
@@ -828,5 +824,39 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         firstDetail.setVideoUrl(null);
         firstDetail.setTemp(true);
         return firstDetail;
+    }
+
+    /**
+     * 检查是否是当前用户的课程
+     * @param userId
+     * @param courseId
+     * @return
+     */
+    public boolean checkCourseIsMine(String userId, Integer courseId) {
+        if (StringUtils.isEmpty(userId)
+                || courseId == null || courseId == 0) {
+            return false;
+        }
+
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return false;
+        }
+        boolean isMine = userId.equals(course.getCspUserId());
+        return isMine;
+    }
+
+    /**
+     * 逻辑删除csp课件
+     *
+     * @param courseId
+     */
+    @Override
+    public void deleteCspCourse(Integer courseId) {
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course != null) {
+            course.setDeleted(true);
+            audioCourseDAO.updateByPrimaryKey(course);
+        }
     }
 }

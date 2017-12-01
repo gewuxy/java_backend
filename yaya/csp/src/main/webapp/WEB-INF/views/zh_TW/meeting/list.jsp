@@ -93,7 +93,7 @@
                     $.post($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
                         if (result.code == 0){//成功
                             layer.msg("投稿成功",{time:300},function () {
-                                window.parent.location.reload();
+                                layer.closeAll();
                             });
                         }else{//失败
                             layer.msg(result.err);
@@ -325,7 +325,7 @@
 
 
         function delCourse(){
-            $.get("${ctx}/mgr/meet/editable/" + courseId, {}, function (data) {
+            $.get("${ctx}/mgr/meet/delete/able/" + courseId, {}, function (data) {
                 if (data.code == "0"){
                     layer.open({
                         type: 1,
@@ -335,7 +335,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : ['Confirm', 'Cancel'],
+                        btn : ['確定', '取消'],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){

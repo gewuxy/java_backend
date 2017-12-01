@@ -47,6 +47,8 @@ public class Patient {
     protected String avatar;
     // 使用状态 0：未激活、未使用 1:已激活
     protected Boolean active;
+    // token
+    protected String token;
     // 用户角色
     protected Integer roleId;
     // 最后登录时间
