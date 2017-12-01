@@ -146,13 +146,8 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("course", course);
 
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                course.setDetails(audioService.findLiveDetails(courseId));
 
-                if (course.getPlayType().intValue() == 1) {
-                    course.setDetails(audioService.findNoCacheLiveDetails(courseId));
-
-                } else {
-                    course.setDetails(audioService.findLiveDetails(courseId));
-                }
                 handleHttpUrl(fileBase, course);
                 model.addAttribute("course", course);
 
@@ -244,6 +239,10 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer playType, Integer pageNum, Integer detailId, HttpServletRequest request) {
+        //删除缓存
+        redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
+
+
         String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
         if (CheckUtils.isEmpty(osType)) {
             osType = OS_TYPE_ANDROID;
@@ -734,7 +733,7 @@ public class MeetingController extends CspBaseController {
     public String joinCheck(Integer courseId, HttpServletRequest request, String liveType){
 
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if (course != null) {
+        if (course == null) {
             return error(local("source.not.exists"));
         }
 

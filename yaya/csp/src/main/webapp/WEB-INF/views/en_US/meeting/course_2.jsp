@@ -45,7 +45,7 @@
         <div class="swiper-container gallery-top popup-volume">
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
-                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}" istemp="${detail.temp ? 1 : 0}">
+                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}" istemp="${detail.temp && status.index == 0 ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
                                 <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
@@ -609,9 +609,9 @@
                     $(".num").text(data.onLines);
                 }
                 if (data.order == 0){//直播指令
-                    $(".icon-added").show();
+                    //$(".icon-added").show();
                     var currentPageNo = parseInt(data.pageNum) + 1;
-                    $("#newLivePage").text("P " + currentPageNo);
+                    //$("#newLivePage").text("P " + currentPageNo);
                     console.log("data.audioUrl = " + data.audioUrl);
                     if(data.audioUrl != undefined) {
                         $(".swiper-slide[data-num='"+currentPageNo+"']").attr("audio-src", data.audioUrl);
@@ -641,6 +641,8 @@
                         lastPage.attr("istemp", "0");
                     } else {
                         totalPages ++;
+                        $(".icon-added").show();
+                        $("#newLivePage").text("P " + totalPages);
                         var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
                         if (data.videoUrl != undefined && data.videoUrl != ''){
                             newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
