@@ -107,7 +107,7 @@
     <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;1</span><span class="arrows"></span></div>
 
     <!--自动播放层-->
-    <%--<div class="html5ShadePlay"></div>--%>
+    <div class="html5ShadePlay"></div>
 
 
 
@@ -116,10 +116,10 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>Info</h3></div>
+        <div class="title"><h3>简介</h3></div>
         <div class="text hidden-box">
 
-            <p>${not empty course.info }</p>
+            <p>${course.info }</p>
         </div>
     </div>
 </div>
@@ -246,6 +246,34 @@
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var dataSrc ;
 
+        var changePlayerStete = function(state){
+            if(playerState || state == true){
+                $('.button-icon-play').addClass('none').siblings().removeClass('none');
+                playerState = false;
+                //有video文件
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).play();
+                } else {
+                    popupPalyer.play();
+                }
+            } else {
+                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
+                playerState = true;
+                //this = window
+
+                //有video文件
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).pause();
+                } else {
+                    popupPalyer.pause();
+//                    $(this).on('touchstart',function(){
+//                        popupPalyer.play();
+//                    })
+                }
+
+            }
+        }
+
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio ended");
             if (playing){
@@ -293,6 +321,39 @@
             $('.layer-hospital-popup-fullSize').show();
         });
 
+        //播放器切换加载对应的路径
+        var swiperChangeAduio = function(current){
+            var swiperCurrent;
+
+            popupPalyer.pause();
+            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            if(current.find(".swiper-slide-active")){
+                swiperCurrent  = current.find(".swiper-slide-active");
+            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
+                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            }
+            dataSrc = swiperCurrent.attr('audio-src');
+            //如果有音频，才进行播放
+            if(dataSrc.length > 0){
+                $('.boxAudio').removeClass('none');
+                popupPalyer.load(dataSrc);
+                changePlayerStete(true);
+            } else {
+                popupPalyer.load('isNotSrc');
+                console.log('没加载音频');
+                $('.boxAudio').addClass('none');
+                changePlayerStete(false);
+            }
+
+            playOver = false;
+            //如果有视频
+            if(activeItemIsVideo.length > 0){
+                changePlayerStete(true);
+            }
+
+
+        }
+
         //初始化默认竖屏
         galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 0,
@@ -338,7 +399,7 @@
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();
 //                }
-                swiper.slideTo("${fn:length(course.details) - 1}");
+
             }
         });
 
@@ -464,80 +525,10 @@
 
 
 
-
-
-
-
-        //播放器切换加载对应的路径
-        var swiperChangeAduio = function(current){
-            var swiperCurrent;
-
-            popupPalyer.pause();
-            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
-            if(current.find(".swiper-slide-active")){
-                swiperCurrent  = current.find(".swiper-slide-active");
-            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
-                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
-            }
-            dataSrc = swiperCurrent.attr('audio-src');
-            //如果有音频，才进行播放
-            if(dataSrc.length > 0){
-                $('.boxAudio').removeClass('none');
-                popupPalyer.load(dataSrc);
-                popupPalyer.play();
-                changePlayerStete(true);
-            } else {
-                popupPalyer.load('isNotSrc');
-                console.log('没加载音频');
-                $('.boxAudio').addClass('none');
-                changePlayerStete(false);
-            }
-
-            playOver = false;
-            //如果有视频
-            if(activeItemIsVideo.length > 0){
-                changePlayerStete(true);
-            } else {
-                return false;
-            }
-
-
-        }
-
-
-
         //播放按钮
         $(".button-icon-state").on('click',function(){
             changePlayerStete();
         })
-
-        var changePlayerStete = function(state){
-            if(playerState || state == true){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
-                playerState = false;
-                //有video文件
-                if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).play();
-                } else {
-                    popupPalyer.play();
-                }
-            } else {
-                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
-                playerState = true;
-                //this = window
-
-                //有video文件
-                if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).pause();
-                } else {
-                    popupPalyer.pause();
-//                    $(this).on('touchstart',function(){
-//                        popupPalyer.play();
-//                    })
-                }
-
-            }
-        }
 
 
         function isPC() {
@@ -555,6 +546,7 @@
             return flag;
         }
 
+
         if (isPC()){
             $('.html5ShadePlay').hide();
             popupPalyer.play();
@@ -564,9 +556,9 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
                 $(this).hide();
+                galleryTop.slideTo("${fn:length(course.details) - 1}");
                 popupPalyer.play();
                 playing = true;
-                changePlayerStete(false);
             });
         }
 
