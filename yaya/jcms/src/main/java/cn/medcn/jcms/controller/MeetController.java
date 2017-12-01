@@ -478,13 +478,11 @@ public class MeetController extends BaseController {
         //直播类型会议
         if(course != null && course.getPlayType() != AudioCourse.PlayType.normal.getType()){
             Live live = liveService.findByCourseId(courseId);
-            //直播没有结束
+            //直播没有结束,如果直播已结束，当成录播处理
             if(live.getLiveState() != Live.LiveState.closed.getType()){
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
                 model.addAttribute("liveStartTime",format.format(live.getStartTime()));
                 model.addAttribute("liveEndTime",format.format(live.getEndTime()));
-            }else{
-                throw new SystemException("该会议已结束");
             }
         }
         model.addAttribute("course", course);

@@ -13,11 +13,20 @@
 
 </head>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
+<script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
 <body>
 <script type="text/javascript">
     function selectFile() {
         $(document).ready(function() {
             initFormValidate();
+        });
+
+        $(function () {
+            var ww = $(window).width();
+            if (ww > 1024) {
+                ww = 1024;
+            }
+            $("#articleViewer").css("width", ww + "px");
         });
 
         $("#uploadFile").trigger("click");
@@ -64,25 +73,14 @@
     <div class="control-group">
         <label class="control-label">图片展示:</label>
         <div class="controls">
-            <img src="${ctx}/pic/${imgName}" id="imgId" width="200" height="200">
+            <img src="${ctx}/pic/${imgUrl}" id="imgId" width="200" height="200">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">Banner权重:</label>
         <div class="controls">
-            <select id="weight" name="weight" style="width: 100px;">
-                <option value=""/>
-                -- 请选择 --
-                <option value="0"/>
-                0
-                <option value="1"/>
-                1
-                <option value="2"/>
-                2
-            </select>
-            <script>
-                document.getElementById("weight").value="${banner.weight}";
-            </script>
+            <input type="search" name="weight"  id="weight" maxlength="50" class="required input-large" value="${banner.weight}">
+            <span class="help-inline">权重越大，排序越靠前</span>
         </div>
     </div>
     <div class="control-group">
@@ -147,10 +145,13 @@
             </script>
         </div>
     </div>
-    <div class="control-group">
-        <label class="control-label">备注:</label>
+    <div id="articleViewer" style="margin:10px;text-align: center;">
+        <label class="control-label">内容详情:</label>
         <div class="controls">
-            <textarea name="content" rows="3" maxlength="2000" class="input-xxlarge">${banner.content}</textarea>
+            <textarea id="content" name="content">${banner.content}</textarea>
+            <script type="text/javascript">
+              CKEDITOR.replace('content');
+            </script>
         </div>
     </div>
     <div class="form-actions">
