@@ -20,7 +20,7 @@
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
     <shiro:hasPermission name="csp:notify:add">
-        <input id="sendMessage" class="btn btn-primary" type="button" value="发布公告" style="margin-left: 1108px"/>
+        <input id="sendMessage" class="btn btn-primary" type="button" value="发布公告"/>
     </shiro:hasPermission>
 </form>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
