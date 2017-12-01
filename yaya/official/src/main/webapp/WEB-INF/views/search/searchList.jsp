@@ -20,13 +20,14 @@
                             <div class="v2-subPage-serarch-content v2-helpPage-item">
                                     <span class="pr v2-helpPage-select-a">
                                         <i class="v2-helpPage-select-arrow"></i>
-                                        <select name="selectType" id="selectType" class="v2-helpPage-select">
-                                        <option value="">分类查找</option>
-                                        <option value="">常用药品</option>
-                                        <option value="">儿童常用药品</option>
-                                        <option value="">用药指南</option>
-                                        <option value="">在线购药指南</option>
-                                    </select>
+                                        <select name="classify" id="classify" class="v2-helpPage-select">
+                                            <option value="">分类查询</option>
+                                            <c:if test="${not empty list}">
+                                                <c:forEach items="${list}" var="list">
+                                                    <option value="${list.id}">${list.name}</option>
+                                                </c:forEach>
+                                            </c:if>
+                                        </select>
                                     </span>
                                 <div class="v2-search-form clearfix">
                                     <input type="text"  placeholder="药品通用名/商品名/批准文号" name="keyWord" id="searchWord" value="${keyWord}" class="form-text" >

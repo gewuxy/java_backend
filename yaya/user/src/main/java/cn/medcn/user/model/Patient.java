@@ -1,5 +1,8 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.utils.StringUtils;
+import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.PatientDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -65,5 +68,21 @@ public class Patient {
     // 验证码
     @Transient
     protected String captcha;
+
+
+    public static Patient buildToUserInfo(PatientDTO dto) {
+        Patient userInfo = new Patient();
+        userInfo.setId(StringUtils.nowStr());
+        userInfo.setNickName(dto.getNickName());
+        if(!StringUtils.isEmpty(dto.getAvatar())){
+            userInfo.setAvatar(dto.getAvatar());
+        }
+        userInfo.setProvince(dto.getProvince());
+        userInfo.setCity(dto.getCity());
+        userInfo.setDistrict(dto.getDistrict());
+        userInfo.setRegistTime(new Date());
+        userInfo.setActive(true);
+        return userInfo;
+    }
 
 }

@@ -2,4 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.user.dao.PatientUserDAO" >
 
+    <select id="findBindUserByUniqueId" resultType="cn.medcn.user.model.Patient">
+        select * from t_patient p
+        INNER JOIN t_csp_bind_info b ON b.user_id = u.id
+        where b.unique_id = #{uniqueId}
+    </select>
+
 </mapper>

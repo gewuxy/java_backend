@@ -1,10 +1,14 @@
 package cn.medcn.official.controller;
 
 import cn.medcn.article.model.Article;
+import cn.medcn.article.model.ArticleCategory;
+import cn.medcn.article.model.News;
 import cn.medcn.article.service.ArticleService;
+import cn.medcn.article.service.NewsService;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.official.model.OffSearch;
 import cn.medcn.official.service.OffiSearchService;
 import cn.medcn.official.utils.SubjectUtils;
@@ -38,11 +42,15 @@ public class SearchController extends BaseController{
      * @return
      */
     @RequestMapping(value="/view")
-    public String search(Integer searchType,Model model){
+    public String search(String searchType,Model model){
         model.addAttribute("searchType",searchType);
+        String categoryId = News.NEWS_CATEGORY.valueOf("CATEGORY_" + searchType).categoryId;
         //获取对应类型的热搜词查询
-        List<OffSearch> list = offiSearchService.findTopHost(searchType);
-        model.addAttribute("hotList",list);
+        List<OffSearch> hotList = offiSearchService.findTopHost(categoryId);
+        model.addAttribute("hotList",hotList);
+        //获取到分类查询
+        List<ArticleCategory> list = articleService.findCategoryByPreid(categoryId);
+        model.addAttribute("list",list);
         return "/search/search";
     }
 
@@ -53,32 +61,27 @@ public class SearchController extends BaseController{
      * @return
      */
     @RequestMapping(value="/searchList")
-    public String searchList(String keyWord, Integer searchType,Pageable pageable,Model model){
+    public String searchList(String keyWord, String searchType,String classify,Pageable pageable,Model model){
+        String categoryId = News.NEWS_CATEGORY.valueOf("CATEGORY_" + searchType).categoryId;
+        //添加查询记录
         OffSearch search = new OffSearch();
         search.setSearch(keyWord);
         search.setSearchTime(new Date());
-        search.setSearchType(searchType);
+        search.setSearchType(categoryId);
         search.setSearchUser(SubjectUtils.getCurrentUserid());
         offiSearchService.insertSelective(search);
-        model.addAttribute("keyWord",keyWord);
         model.addAttribute("searchType",searchType);
+        //根据分类查询
         pageable.setPageSize(10);
-        pageable.getParams().put("keyword","%" + keyWord + "%");
-        if(searchType == OffSearch.SearchType.YSJY.getSearchType()){ //药师建议
-            MyPage<Article> page  = articleService.findArticles(pageable);
-            model.addAttribute("page",page);
-        }else if(searchType == OffSearch.SearchType.YISJY.getSearchType()){ //医师建议
-            MyPage<Article> page  = articleService.findArticles(pageable);
-            model.addAttribute("page",page);
-        }else if(searchType == OffSearch.SearchType.DZXY.getSearchType()){    //对症下药
-            MyPage<Article> page  = articleService.findArticles(pageable);
-            model.addAttribute("page",page);
-            return "/search/drugList";
-        }else{   // 对症找药
-            MyPage<Article> page  = articleService.findArticles(pageable);
-            model.addAttribute("page",page);
-            return "/search/dzzyList";
+        model.addAttribute("keyWord",keyWord);
+        pageable.getParams().put("categoryId",categoryId);
+        if(!StringUtils.isEmpty(classify)){
+            pageable.getParams().put("classify",classify);
+            pageable.getParams().remove("categoryId");
         }
+        pageable.getParams().put("keyword","%" + keyWord + "%");
+        MyPage<Article> page  = articleService.findArticles(pageable);
+        model.addAttribute("page",page);
         return "/search/searchList";
     }
 
@@ -105,5 +108,10 @@ public class SearchController extends BaseController{
             model.addAttribute("detail",article);
             return "/search/searchDetail";
         }
+    }
+
+
+    public void setClassify(){
+
     }
 }

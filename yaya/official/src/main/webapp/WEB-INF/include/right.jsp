@@ -36,13 +36,13 @@
 <script>
     //加载新闻列表
     $(function () {
-        addNewList("/news/ajaxTrends","safeMedication");
-        addNewList("/news/ajaxTrends","MedicationKnowledge");
-        addNewList("/news/ajaxTrends","hotNews");
+        addNewList("/news/ajaxTrends","safeMedication","ZXGY");
+        addNewList("/news/ajaxTrends","MedicationKnowledge","YYCS");
+        addNewList("/news/ajaxTrends","hotNews","RMYY");
     })
 
-    function addNewList(url,id){
-        $.get('${base}' + url,{'pageNum':1,'pageSize':6}, function (data) {
+    function addNewList(url,id,type){
+        $.get('${base}' + url,{'pageNum':1,'pageSize':6,'type':type}, function (data) {
             if(data.code == 0){
                 for(var index in data.data.dataList){
                     $("#" + id).append('<li><a href="${base}/news/detail/'+data.data.dataList[index].id+'">' + getBeforeTitle(data.data.dataList[index].title)+'</a></li>');

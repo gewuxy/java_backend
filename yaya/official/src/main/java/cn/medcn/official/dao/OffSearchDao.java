@@ -11,5 +11,5 @@ import java.util.List;
  */
 public interface OffSearchDao extends Mapper<OffSearch>{
 
-    List<OffSearch> findTopHost(@Param("searchType") Integer searchType);
+    List<OffSearch> findTopHost(@Param("searchType")String searchType);
 }
