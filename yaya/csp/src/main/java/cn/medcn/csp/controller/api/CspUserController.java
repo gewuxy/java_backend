@@ -20,7 +20,6 @@ import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -44,7 +43,6 @@ import static cn.medcn.common.Constants.*;
 @Controller
 @RequestMapping(value = "/api/user")
 public class CspUserController extends CspBaseController {
-    private static Log log = LogFactory.getLog(CspUserController.class);
 
     @Autowired
     protected CspUserService cspUserService;
@@ -260,10 +258,10 @@ public class CspUserController extends CspBaseController {
 
         } catch (APIConnectionException e) {
             e.printStackTrace();
-            return error("极光推送连接异常");
+            return error(local("jpush.connect.error"));
         } catch (APIRequestException e) {
             e.printStackTrace();
-            return error("极光推送请求异常");
+            return error(local("jpush.request.error"));
         }
         return success();
     }
