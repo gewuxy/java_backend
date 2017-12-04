@@ -116,7 +116,11 @@ public class CspUserController extends BaseController {
             cspUsersService.updateByPrimaryKeySelective(user);
         }
         addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
-        return "redirect:/csp/user/list?listType=" + listType;
+        StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
+        if (listType != null) {
+            buffer.append("?listType=").append(listType);
+        }
+        return buffer.toString();
     }
 
     /**
