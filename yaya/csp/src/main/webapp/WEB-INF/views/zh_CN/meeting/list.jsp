@@ -162,7 +162,7 @@
             function loadCourseInfo(courseId){
                 var course ;
 
-                ajaxGet('${ctx}/mgr/meet/view/'+courseId, {}, false, function(data){
+                ajaxSyncGet('${ctx}/mgr/meet/view/'+courseId, {}, function(data){
                     course = data.data;
                 });
                 return course;

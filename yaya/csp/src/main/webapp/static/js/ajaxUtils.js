@@ -6,20 +6,20 @@
 const postMethod = "POST";
 const getMethod = "GET";
 
-function ajaxPost(url, params, async, onSuccess, onError){
-    doAjax(url, params, postMethod, async, onSuccess, onError);
-}
-
-function ajaxGet(url, params, async, onSuccess, onError){
-    doAjax(url, params, getMethod, async, onSuccess, onError);
-}
-
 function ajaxPost(url, params, onSuccess, onError){
     doAjax(url, params, postMethod, true, onSuccess, onError);
 }
 
 function ajaxGet(url, params, onSuccess, onError){
     doAjax(url, params, getMethod, true, onSuccess, onError);
+}
+
+function ajaxSyncPost(url, params, onSuccess, onError){
+    doAjax(url, params, postMethod, false, onSuccess, onError);
+}
+
+function ajaxSyncGet(url, params, onSuccess, onError){
+    doAjax(url, params, getMethod, false, onSuccess, onError);
 }
 
 
