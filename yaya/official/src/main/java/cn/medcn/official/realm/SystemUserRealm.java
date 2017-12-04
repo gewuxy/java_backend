@@ -59,6 +59,9 @@ public class SystemUserRealm extends AuthorizingRealm {
             }else{
                 user = emailUser;
             }
+            if (!user.getActive()) {
+                throw new AuthenticationException("该帐号未激活.");
+            }
             Principal principal = Principal.build(user);
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPassword(), getName());
             if (!getCredentialsMatcher().doCredentialsMatch(token, info)) {

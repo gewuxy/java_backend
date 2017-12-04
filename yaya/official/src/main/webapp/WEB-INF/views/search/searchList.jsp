@@ -14,7 +14,7 @@
                 <div class="col-lg-8 ">
                     <div class="v2-subPage-searchItem">
                         <div class="v2-subPage-searchTitle clearfix">
-                            <img src="${ctxStatic}/images/v2/searchItem-title2.png" alt="">
+                            <img src="${ctxStatic}/images/v2/searchItem-title-${searchType}.png" alt="">
                         </div>
                         <form action="${ctx}/search/searchList" method="post">
                             <div class="v2-subPage-serarch-content v2-helpPage-item">
@@ -24,7 +24,7 @@
                                             <option value="">分类查询</option>
                                             <c:if test="${not empty list}">
                                                 <c:forEach items="${list}" var="list">
-                                                    <option value="${list.id}">${list.name}</option>
+                                                    <option value="${list.id}" ${list.id eq categoryId?"selected":""}>${list.name}</option>
                                                 </c:forEach>
                                             </c:if>
                                         </select>
@@ -46,13 +46,44 @@
                         </c:otherwise>
                     </c:choose>
                     <div class="v2-newsList-bottomBorder">
-                        <ul>
-                            <c:if test="${not empty page.dataList}">
-                                <c:forEach items="${page.dataList}" var="result">
-                                    <li><a href="${ctx}/search/detail/${result.id}">${result.title}</a></li>
-                                </c:forEach>
-                            </c:if>
-                        </ul>
+                        <c:if test="${not empty page.dataList}">
+                            <c:choose>
+                                <c:when test="${searchType eq 'YSJY'}">
+                                    <ul>
+                                        <c:forEach items="${page.dataList}" var="result">
+                                            <li><a href="${ctx}/search/detail/${result.id}">${result.title}</a></li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:when>
+                                <c:when test="${searchType eq 'YISJY'}">
+                                    <c:forEach items="${page.dataList}" var="news">
+                                        <div class="v2-news-graphic-item clearfix">
+                                            <div class="fl v2-news-graphic-img">
+                                                <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
+                                                <i class="v2-news-graphic-classIcon"><a href="#">${news.keywords}</a></i>
+                                            </div>
+                                            <div class="oh">
+                                                <h3><a href="${ctx}/news/detail/${news.id}">${news.title}</a></h3>
+                                                <p class="v2-news-graphic-info">${news.summary}</p>
+                                                <p >关键字：
+                                                    <c:forEach items="${fn:split(news.keywords, ',')}" var="words" varStatus="stat">
+                                                        <a href="#" class="color-blue"> ${words} </a>
+                                                    </c:forEach>
+                                                </p>
+                                                <p><span class="time fr"><fmt:formatDate value="${news.createTime}" pattern="yyyy/MM/dd"/></span><span>来源：${news.xfrom}</span></p>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </c:when>
+                                <c:otherwise>
+                                    <ul>
+                                        <c:forEach items="${page.dataList}" var="result">
+                                            <li><a href="${ctx}/search/detail/${result.id}">${result.title}</a></li>
+                                        </c:forEach>
+                                    </ul>
+                                </c:otherwise>
+                            </c:choose>
+                        </c:if>
                     </div>
                     <div class="v2-page-box">
                         <a <c:if test="${page.pageNum>1}"> href="javascript:page(${page.pageNum-1})"</c:if> class="v2-page-box-prev" title="上一页"></a>
@@ -78,6 +109,9 @@
 <!-- 弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
 <script>
+    $(function(){
+        $(".three").addClass("current");
+    })
     function page(pageNum){
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
         $("#keyWord").val($("#searchWord").val());

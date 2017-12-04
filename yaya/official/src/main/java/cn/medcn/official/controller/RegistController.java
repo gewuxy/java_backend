@@ -83,6 +83,7 @@ public class RegistController extends BaseController{
         }
         patient.setPassword(MD5Utils.MD5Encode(patient.getPassword()));
         patient.setId(StringUtils.nowStr());
+        patient.setActive(true);
         Integer info = patientUserService.insertSelective(patient);
         if (info == null){
             return setMsg("mobile","注册失败，请重试");

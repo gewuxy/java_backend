@@ -13,10 +13,10 @@
                 <nav class="v2-nav">
                     <div class="main-nav clearfix" >
                         <ul class="sf-menu" >
-                            <li class="current">
+                            <li class="first">
                                 <a class="first-level" href="${ctx}/"><strong class="first-level-min">首页</strong></a><i></i>
                             </li>
-                            <li >
+                            <li class="second">
                                 <a class="first-level" target="_blank" style="cursor: pointer;"  href="javascript:;">
                                     <strong class="first-level-min">健康动态</strong>
                                 </a><i></i>
@@ -25,15 +25,15 @@
                                     <li><a href="${ctx}/news/list?type=AQYY">安全用药</a></li>
                                 </ul>
                             </li>
-                            <li>
-                                <a class="first-level" style="cursor: pointer;" href="javascript:;">
+                            <li class="three">
+                                <a class="first-level" target="_blank" style="cursor: pointer;" href="javascript:;">
                                     <strong class="first-level-min">我的工具</strong>
                                 </a>
                                 <i></i>
                                 <ul>
                                     <li><a href="${ctx}/search/view?searchType=YSJY">药师建议</a></li>
                                     <li><a href="${ctx}/search/view?searchType=YISJY">医师建议</a></li>
-                                    <li><a href="${ctx}/search/view?searchType=DZXY">对症下药</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=DZXY">对症找药</a></li>
                                 </ul>
                             </li>
                         </ul>
