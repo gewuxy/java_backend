@@ -95,7 +95,7 @@ public class LoginController extends CspBaseController {
             return loginByMobile(mobile, captcha, model, response, request);
 
         }
-        return "" ;
+        return null ;
     }
 
 
@@ -316,7 +316,7 @@ public class LoginController extends CspBaseController {
             }
         }
 
-        return "";
+        return null;
 
     }
 
@@ -465,21 +465,10 @@ public class LoginController extends CspBaseController {
 
     /**
      * 退出登录 需清除cookie缓存的账号
-     * @param request
      * @return
      */
     @RequestMapping(value = "/user/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response){
-        // 清除缓存中的用户账号和id
-//        String id = CookieUtils.getCookieValue(request, LOGIN_USER_ID_KEY);
-//        if (StringUtils.isNotEmpty(id)) {
-//            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, "", 0);
-//        }
-//        String userName = CookieUtils.getCookieValue(request, LOGIN_USER_KEY);
-//        if (StringUtils.isNotEmpty(userName)) {
-//            CookieUtils.setCookie(response, LOGIN_USER_KEY, "", 0);
-//        }
-
+    public String logout(HttpServletResponse response){
         // 清除缓存
         CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
         CookieUtils.clearCookie(response, LOGIN_USER_KEY);
