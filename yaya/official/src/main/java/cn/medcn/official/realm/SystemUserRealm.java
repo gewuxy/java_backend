@@ -1,9 +1,9 @@
 package cn.medcn.official.realm;
 
 import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.official.model.OffUserInfo;
 import cn.medcn.official.security.Principal;
-import cn.medcn.official.service.OffiUserInfoService;
+import cn.medcn.user.model.Patient;
+import cn.medcn.user.service.PatientUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -19,7 +19,7 @@ import java.util.Date;
 public class SystemUserRealm extends AuthorizingRealm {
 
     @Autowired
-    private OffiUserInfoService offiUserInfoService;
+    private PatientUserService patientUserService;
 
     /**
      * 授权查询回调函数, 进行鉴权但缓存中无用户的授权信息时调用.
@@ -46,27 +46,27 @@ public class SystemUserRealm extends AuthorizingRealm {
         String password = new String(token.getPassword());
         token.setPassword(MD5Utils.MD5Encode(password).toCharArray());
         // 校验用户名密码
-        OffUserInfo conForMobile = new OffUserInfo();
-        conForMobile.setMobile(token.getUsername());
-        OffUserInfo accountUser = offiUserInfoService.selectOne(conForMobile);
-        OffUserInfo conForEmail = new OffUserInfo();
-        conForEmail.setEmail(token.getUsername());
-        OffUserInfo emailUser = offiUserInfoService.selectOne(conForEmail);
-        if(accountUser != null || emailUser != null){
-            OffUserInfo user = new OffUserInfo();
-            if(accountUser != null){
-                user = accountUser;
+        Patient paForMobile = new Patient();
+        paForMobile.setMobile(token.getUsername());
+        Patient phoneUser = patientUserService.selectOne(paForMobile);
+        Patient paForEmail = new Patient();
+        paForEmail.setEmail(token.getUsername());
+        Patient emailUser = patientUserService.selectOne(paForEmail);
+        if(phoneUser != null || emailUser != null){
+            Patient user = new Patient();
+            if(phoneUser != null){
+                user = phoneUser;
             }else{
                 user = emailUser;
             }
-            Principal principal = Principal.build(emailUser);
+            Principal principal = Principal.build(user);
             SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal, user.getPassword(), getName());
             if (!getCredentialsMatcher().doCredentialsMatch(token, info)) {
                 throw new AuthenticationException("密码不正确.");
             }
             user.setLastLoginIp(((UsernamePasswordToken) authenticationToken).getHost());
-            user.setLastLoginDate(new Date());
-            offiUserInfoService.updateByPrimaryKeySelective(user);
+            user.setLastLoginTime(new Date());
+            patientUserService.updateByPrimaryKeySelective(user);
             //登录成功
             return info;
         }else{

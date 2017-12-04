@@ -21,8 +21,8 @@ public class OffSearch {
     @GeneratedValue(generator = "JDBC")
     private Integer id;
     private String search;
-    private Integer searchUser;
-    private Integer searchType;
+    private String searchUser;
+    private String searchType;
     private Date searchTime;
     private Integer times;
 

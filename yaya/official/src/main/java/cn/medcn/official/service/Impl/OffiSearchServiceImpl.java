@@ -26,7 +26,7 @@ public class OffiSearchServiceImpl extends BaseServiceImpl<OffSearch> implements
 
 
     @Override
-    public List<OffSearch> findTopHost(Integer searchType) {
+    public List<OffSearch> findTopHost(String searchType) {
         List<OffSearch> list = offSearchDao.findTopHost(searchType);
         return list;
     }

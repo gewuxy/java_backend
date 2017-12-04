@@ -66,4 +66,6 @@ public interface ArticleService extends BaseService<Article> {
      */
     MyPage<Article> findAppBanners(Pageable pageable, String categoryId);
 
+    MyPage<Article> searchArticles(Pageable pageable);
+
 }

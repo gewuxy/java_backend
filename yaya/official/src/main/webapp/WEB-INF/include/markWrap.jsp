@@ -128,7 +128,7 @@
                             <div class="t-center " style="margin:60px 0 105px;"><img src="${ctxStatic}/images/v2/logo-login.png" alt=""></div>
                             <p class="t-center fz12">第三方账户登录</p>
                             <div class="t-center" style="margin-bottom:105px;">
-                                <a href="#" class="v2-login-icon v2-login-icon-max v2-weixin-max"></a>&nbsp;&nbsp;&nbsp;<a href="#" class="v2-login-icon v2-login-icon-max v2-qq-max"></a>
+                                <a href="${ctx}/login?thirdPartyId=2" class="v2-login-icon v2-login-icon-max v2-weixin-max"></a>&nbsp;&nbsp;&nbsp;<a href="${ctx}/login?thirdPartyId=8" class="v2-login-icon v2-login-icon-max v2-qq-max"></a>
                             </div>
                             <div class="v2-login_box t-center" style="margin-bottom:35px;">
                                 <p class="fz12">提示：使用该账号可登录 <a href="#" class=" underline fx-btn-2">合理用药APP客户端</a> </p>

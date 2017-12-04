@@ -5,8 +5,6 @@
 <head>
     <title>敬信药草园-国内首家关注合理用药的信息平台 | 敬信科技官网</title>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
-    <%@include file="/WEB-INF/include/common_js.jsp"%>
-
     <style type="text/css">
         .shenglue{
             width: 280px;  /*必须设置宽度*/
@@ -18,9 +16,7 @@
 </head>
 <body>
 <div id="wrapper" class="v2-medcnIndex">
-
     <%@include file="/WEB-INF/include/header.jsp" %>
-
     <div class="v2-banner bg-lightBlue">
         <div class="page-width clearfix">
             <div class="fr">
@@ -54,7 +50,6 @@
             </div>
         </div>
     </div>
-
     <div class="v2-main">
         <div class="page-width clearfix">
             <div class="clearfix " style="margin-bottom:20px;">
@@ -81,18 +76,14 @@
             </div>
         </div>
     </div>
-
     <%@include file="/WEB-INF/include/footer.jsp" %>
 </div>
-
     <!--弹出层-->
     <%@include file="/WEB-INF/include/markWrap.jsp" %>
-
     <div class="gotop-wrapper index-gotop">
         <a class="gotop" href="javascript:;" >回到顶部</a>
     </div>
-
-
+<%@include file="/WEB-INF/include/common_js.jsp"%>
 <script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
 <script>
     /*<!--轮播广告-->*/
@@ -119,7 +110,7 @@
 
     $(function(){
         // 加载公司动态
-        $.get('${ctx}/news/ajaxTrends',{'pageNum':1,'pageSize':6}, function (data) {
+        $.get('${ctx}/news/ajaxTrends',{'pageNum':1,'pageSize':6,'type':"GSDT"}, function (data) {
             if(data.code == 0){
                 for(var index in data.data.dataList){
                     $("#trendsUL").append('<li title="'+data.data.dataList[index].title+'" class="shenglue"><a href="${ctx}/news/viewtrend/'+data.data.dataList[index].id+'">'+data.data.dataList[index].title+'</a></li>');

@@ -18,4 +18,6 @@ public interface ArticleDAO extends Mapper<Article> {
     Article findAdvert(@Param("categoryId") String categoryId);
 
     List<Article> findBanners(@Param("categoryId")String categoryId);
+
+    List<Article> searchArticles(Map<String, Object> params);
 }

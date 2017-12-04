@@ -17,7 +17,7 @@ public class SubjectUtils {
         return principal == null?null:principal.getAccount();
     }
 
-    public static Integer getCurrentUserid(){
+    public static String getCurrentUserid(){
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
         return principal == null?null:principal.getId();
     }

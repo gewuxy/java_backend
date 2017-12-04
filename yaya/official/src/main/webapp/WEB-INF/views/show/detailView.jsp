@@ -22,7 +22,7 @@
                         <!--startprint-->
                         <div class="v2-news-detail-item">
                             <p style="text-align: center;"><img src="${news.articleImg}" alt=""></p>
-                            <p>${news.summary}</p>
+                            ${news.content}
                         </div>
                         <!--endprint-->
                         <div class="v2-news-detail-footerDesc">
@@ -39,6 +39,9 @@
         </div>
     </div>
     <%@include file="/WEB-INF/include/footer.jsp" %>
+</div>
+<div class="gotop-wrapper index-gotop">
+    <a class="gotop" href="javascript:" >回到顶部</a>
 </div>
 <!-- 弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
