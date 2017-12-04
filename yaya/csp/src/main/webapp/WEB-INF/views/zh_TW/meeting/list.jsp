@@ -27,7 +27,7 @@
     <script src="${ctxStatic}/js/zclip/jquery.zclip.min.js"></script>
 
     <script id="-mob-share" src="//f1.webshare.mob.com/code/mob-share.js"></script>
-
+    <script src="${ctxStatic}/js/ajaxUtils.js"></script>
 
     <script>
         const shareSdkAppKey = "21454499cef00";

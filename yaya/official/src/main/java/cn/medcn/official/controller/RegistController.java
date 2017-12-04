@@ -54,7 +54,7 @@ public class RegistController extends BaseController{
             return appUserService.sendCaptcha(account);
         }else{
             // 获取邮箱模板
-            EmailTemplate template = tempService.getTemplate("zh_CN",EmailTemplate.Type.REGISTER.getLabelId());
+            EmailTemplate template = tempService.getTemplate("zh_CN",EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.OFFICIAL.getLabelId());
             try {
                 return patientUserService.sendCode(account,template);
             } catch (SystemException e){
