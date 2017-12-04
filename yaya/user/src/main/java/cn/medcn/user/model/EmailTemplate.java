@@ -33,7 +33,7 @@ public class EmailTemplate implements Serializable{
    //语言类型
    private String langType;
 
-   //使用对象，1表示csp
+   //使用对象，1表示csp 2表示官网
    private Integer useType;
 
    //发送者邮箱
@@ -72,5 +72,29 @@ public class EmailTemplate implements Serializable{
            this.label = label;
        }
    }
+
+    public enum UseType{
+        CSP(1,"CSP"), // csp
+        OFFICIAL(2,"官网"); // 官网
+
+        private Integer labelId;
+        private String label;
+        public Integer getLabelId() {
+            return labelId;
+        }
+        public void setLabelId(Integer labelId) {
+            this.labelId = labelId;
+        }
+        public String getLabel() {
+            return label;
+        }
+        public void setLabel(String label) {
+            this.label = label;
+        }
+        UseType(Integer labelId, String label){
+            this.labelId = labelId;
+            this.label = label;
+        }
+    }
 
 }

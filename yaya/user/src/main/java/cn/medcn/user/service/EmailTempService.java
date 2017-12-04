@@ -12,6 +12,5 @@ import com.pingplusplus.model.Charge;
  */
 public interface EmailTempService extends BaseService<EmailTemplate> {
 
-
-    EmailTemplate getTemplate(String localStr,Integer tempType);
+    EmailTemplate getTemplate(String localStr,Integer tempType,Integer useType);
 }

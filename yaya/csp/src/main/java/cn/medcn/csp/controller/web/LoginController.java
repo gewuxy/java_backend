@@ -445,7 +445,7 @@ public class LoginController extends CspBaseController {
     @RequestMapping(value = "/register")
     @ResponseBody
     public String register(CspUserInfo userInfo) {
-        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId());
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
        try {
             return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
