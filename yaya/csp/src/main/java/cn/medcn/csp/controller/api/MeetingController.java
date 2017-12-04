@@ -146,13 +146,8 @@ public class MeetingController extends CspBaseController {
             model.addAttribute("course", course);
 
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+                course.setDetails(audioService.findLiveDetails(courseId));
 
-                if (course.getPlayType().intValue() == 1) {
-                    course.setDetails(audioService.findNoCacheLiveDetails(courseId));
-
-                } else {
-                    course.setDetails(audioService.findLiveDetails(courseId));
-                }
                 handleHttpUrl(fileBase, course);
                 model.addAttribute("course", course);
 
@@ -244,6 +239,10 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer playType, Integer pageNum, Integer detailId, HttpServletRequest request) {
+        //删除缓存
+        redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
+
+
         String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
         if (CheckUtils.isEmpty(osType)) {
             osType = OS_TYPE_ANDROID;
@@ -387,6 +386,8 @@ public class MeetingController extends CspBaseController {
             return error(local("meeting.error.not_mine"));
         }
 
+
+
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
         if (hasDuplicate) {
             Map<String, Object> result = new HashMap<>();
@@ -407,6 +408,15 @@ public class MeetingController extends CspBaseController {
             if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
                 Live live = liveService.findByCourseId(courseId);
                 if (live != null) {
+                    Date now = new Date();
+                    if (live.getStartTime().after(now)) {//直播还未开始
+                        return error(local("share.live.not_start.error"));
+                    }
+
+                    if (live.getEndTime().before(now)) {//直播已经结束
+                        return error(local("share.live.over"));
+                    }
+
                     result.put("startTime", live.getStartTime());
                     result.put("endTime", live.getEndTime());
                 }
@@ -734,7 +744,7 @@ public class MeetingController extends CspBaseController {
     public String joinCheck(Integer courseId, HttpServletRequest request, String liveType){
 
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if (course != null) {
+        if (course == null) {
             return error(local("source.not.exists"));
         }
 

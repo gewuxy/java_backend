@@ -98,13 +98,23 @@
                 return false;
             }
 
-            if(!isPassword($.trim($password.val()))){
+            if($.trim($password.val()) == ''){
                 $("#errorMessage").text("Please enter password");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }else if(isChinesePassword($.trim($password.val()))){
                 $("#errorMessage").text("The password cannot contain Chinese");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
+            }else if($password.val() != $.trim($password.val())){
+                $("#errorMessage").text("Password can't contain blank");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
+            }else if($.trim($password.val()).length < 6){
+                $("#errorMessage").text("Please enter the 6~24 digit password");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;

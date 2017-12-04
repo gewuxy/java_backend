@@ -74,6 +74,13 @@ public class ArticleServiceImpl extends BaseServiceImpl<Article> implements Arti
     }
 
     @Override
+    public MyPage<Article> searchArticles(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<Article> page = MyPage.page2Mypage((Page) articleDAO.searchArticles(pageable.getParams()));
+        return page;
+    }
+
+    @Override
     public List<ArticleCategory> findAllCategory() {
         return articleCategoryDAO.findAllCategory();
     }

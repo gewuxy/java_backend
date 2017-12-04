@@ -1,18 +1,23 @@
 package cn.medcn.user.service.impl;
 
+import cn.medcn.common.Constants;
+import cn.medcn.common.email.CSPEmailHelper;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.SMSService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
-import cn.medcn.common.utils.RedisCacheUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.user.dao.PatientUserDAO;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.model.Patient;
 import cn.medcn.user.service.PatientUserService;
 import com.github.abel533.mapper.Mapper;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-
-import static cn.medcn.common.Constants.CSP_MOBILE_CACHE_PREFIX_KEY;
 
 /**
  * Created by Liuchangling on 2017/11/23.
@@ -20,6 +25,16 @@ import static cn.medcn.common.Constants.CSP_MOBILE_CACHE_PREFIX_KEY;
  */
 @Service
 public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements PatientUserService{
+
+    @Value("${csp_mail_username}")
+    private String sender;
+
+    @Value("${csp_mail_password}")
+    private String password;
+
+    @Value("${csp_mail_server_host}")
+    private String serverHost;
+
     @Autowired
     protected PatientUserDAO patientUserDAO;
 
@@ -29,6 +44,12 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Autowired
+    protected CSPEmailHelper emailHelper;
+
+    @Autowired
+    protected JavaMailSenderImpl emailSender;
+
     @Override
     public Mapper<Patient> getBaseMapper() {
         return patientUserDAO;
@@ -36,21 +57,71 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
 
     /**
      * 检查验证码合法性
-     * @param mobile
+     * @param account
      * @param captcha
      */
-    public void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException{
-        // 从缓存获取此号码的短信记录
-        Captcha result = (Captcha) redisCacheUtils.getCacheObject(CSP_MOBILE_CACHE_PREFIX_KEY + mobile);
+    public void checkCaptchaIsOrNotValid(String account, String captcha) throws SystemException{
+        // 从缓存获取验证码信息
+        Captcha result = (Captcha) redisCacheUtils.getCacheObject(account);
         try {
-
-            Boolean bool = medSmsService.verify(result.getMsgId(),captcha);
+            Boolean bool = true;
+            if(RegexUtils.checkMobile(account)){
+                 bool = medSmsService.verify(result.getMsgId(),captcha);
+            }else{
+                bool = result.getMsgId().equals(captcha);
+            }
             if (!bool) {
                 throw new SystemException("sms.error.captcha");
             }
-
         } catch (Exception e) {
             throw new SystemException("sms.invalid.captcha");
         }
     }
+
+    @Override
+    public String sendCode(String email, EmailTemplate template) throws SystemException {
+        if (email == null) {
+            return APIUtils.error(local("user.param.empty"));
+        }
+        // 检查用户邮箱是否已经注册过
+        Patient patient = new Patient();
+        patient.setEmail(email);
+        Patient user = patientUserDAO.selectOne(patient);
+        if (user != null) {
+            // 检查是否有激活
+            if (user.getActive()) {
+                return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+            } else {
+                // 发送验证码
+                String code = UUIDUtil.getRandom6();
+                sendMail(email, code,template);
+                return APIUtils.success(local("user.success.register"));
+            }
+        }
+        return APIUtils.success(local("user.success.register"));
+    }
+
+    public void sendMail(String email, String code,EmailTemplate template) throws SystemException {
+        redisCacheUtils.setCacheObject(email,code,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
+        // 发送注册激活邮箱邮件
+        MailBean bean = new MailBean();
+        bean.setFrom(template.getSender());
+        bean.setFromName(template.getSenderName());
+        bean.setSubject(template.getSubject());
+        bean.setLocalStr(template.getLangType());
+        bean.setToEmails(new String[]{email});
+        try {
+            emailSender.setUsername(sender);
+            emailSender.setPassword(password);
+            emailSender.setHost(serverHost);
+            emailHelper.sendMail(code,template.getContent(),emailSender,bean);
+        } catch (JDOMException e) {
+            e.printStackTrace();
+            throw new SystemException(local("email.address.error"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SystemException(local("email.error.send"));
+        }
+    }
+
 }

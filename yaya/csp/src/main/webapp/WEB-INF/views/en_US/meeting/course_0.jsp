@@ -149,7 +149,10 @@
         });
 //
         $("#audioPlayer")[0].addEventListener("error", function(){
+            isVideo = $('.swiper-slide-active').find('video');
             console.log("load audio source error ...");
+            console.log("is playing = " + playing);
+            console.log("isVideo.length == " + isVideo.length);
             if (playing){
                 if (isVideo.length == 0){
                     slideToNext();

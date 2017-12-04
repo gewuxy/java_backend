@@ -44,7 +44,7 @@
             <!--根据ID 切换 PPT列表-->
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
-                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.temp ? '':detail.audioUrl}" istemp="${detail.temp ? 1 : 0}">
+                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.temp ? '':detail.audioUrl}" istemp="${detail.temp && status.index == 0 ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
                                 <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
@@ -107,7 +107,7 @@
     <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;1</span><span class="arrows"></span></div>
 
     <!--自动播放层-->
-    <%--<div class="html5ShadePlay"></div>--%>
+    <div class="html5ShadePlay"></div>
 
 
 
@@ -116,10 +116,10 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>Info</h3></div>
+        <div class="title"><h3>简介</h3></div>
         <div class="text hidden-box">
 
-            <p>${not empty course.info }</p>
+            <p>${course.info }</p>
         </div>
     </div>
 </div>
@@ -129,6 +129,8 @@
     var galleryTop ;
     var slideTimer ;
     var playOver = false;
+    var totalPages = parseInt("${fn:length(course.details)}");
+    console.log("total pages = " + totalPages);
 
     var heartbeat_timer = 0;
     var last_health = -1;
@@ -136,6 +138,8 @@
     var myWs;
     var wsUrl = "${wsUrl}";
     $(function(){
+
+        console.log("current locale is en");
 
         if (wsUrl){
             myWs = ws_conn(wsUrl);
@@ -180,33 +184,41 @@
                 if (data.onLines){
                     $(".num").text(data.onLines);
                 }
-                if (data.order == 0){//直播页面只接受直播指令
+                if (data.order == 0){//直播指令
 
                     var currentPageNo = parseInt(data.pageNum) + 1;
                     console.log("current page num = " +currentPageNo);
-                    var $currentPage = $('.swiper-slide-active');
+                    if(data.audioUrl != undefined) {
+                        $(".swiper-slide[data-num='"+currentPageNo+"']").attr("audio-src", data.audioUrl);
+                    }
+
+                    console.log("data.pageNum == galleryTop.activeIndex = " + (data.pageNum == galleryTop.activeIndex));
+                    if (data.pageNum == galleryTop.activeIndex){
+                        swiperChangeAduio($(".swiper-wrapper"));
+                    }
+
+                } else if(data.order == 1){
+                    console.log("current page num = " +totalPages);
+                    var $currentPage = $(".swiper-slide:last");
                     console.log("current page is temp = " + $currentPage.attr("istemp"));
                     if ($currentPage.attr("istemp") == '1'){
-                        if (data.videoUrl != null && data.videoUrl != undefined){
+                        if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
                             $currentPage.find("video").attr("src", data.videoUrl);
                         } else {
                             $currentPage.find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
                         }
-                        console.log("current audio url = " + data.audioUrl);
-                        $currentPage.attr("audio-src", data.audioUrl);
-                        swiperChangeAduio($currentPage.parent());
                         $currentPage.attr("istemp", "0");
                     } else {
+                        totalPages ++;
                         $(".icon-added").show();
-                        $("#newLivePage").text("P " + currentPageNo);
+                        $("#newLivePage").text("P " + totalPages);
 
-                        var newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src="'+data.audioUrl+'"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                        var newSlide = '<div class="swiper-slide" data-num="'+totalPages+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
                         if (data.videoUrl){
-                            newSlide = '<div class="swiper-slide" data-num="'+currentPageNo+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                            newSlide = '<div class="swiper-slide" data-num="'+totalPages+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
                         }
 
                         galleryTop.appendSlide(newSlide);
-
                         setTimeout(function(){$(".icon-added").hide()}, 5000);
                     }
 
@@ -233,6 +245,34 @@
         var popupPalyer = asAllItem[asAllItem.length - 1];
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var dataSrc ;
+
+        var changePlayerStete = function(state){
+            if(playerState || state == true){
+                $('.button-icon-play').addClass('none').siblings().removeClass('none');
+                playerState = false;
+                //有video文件
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).play();
+                } else {
+                    popupPalyer.play();
+                }
+            } else {
+                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
+                playerState = true;
+                //this = window
+
+                //有video文件
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).pause();
+                } else {
+                    popupPalyer.pause();
+//                    $(this).on('touchstart',function(){
+//                        popupPalyer.play();
+//                    })
+                }
+
+            }
+        }
 
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio ended");
@@ -281,6 +321,39 @@
             $('.layer-hospital-popup-fullSize').show();
         });
 
+        //播放器切换加载对应的路径
+        var swiperChangeAduio = function(current){
+            var swiperCurrent;
+
+            popupPalyer.pause();
+            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            if(current.find(".swiper-slide-active")){
+                swiperCurrent  = current.find(".swiper-slide-active");
+            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
+                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
+            }
+            dataSrc = swiperCurrent.attr('audio-src');
+            //如果有音频，才进行播放
+            if(dataSrc.length > 0){
+                $('.boxAudio').removeClass('none');
+                popupPalyer.load(dataSrc);
+                changePlayerStete(true);
+            } else {
+                popupPalyer.load('isNotSrc');
+                console.log('没加载音频');
+                $('.boxAudio').addClass('none');
+                changePlayerStete(false);
+            }
+
+            playOver = false;
+            //如果有视频
+            if(activeItemIsVideo.length > 0){
+                changePlayerStete(true);
+            }
+
+
+        }
+
         //初始化默认竖屏
         galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 0,
@@ -291,19 +364,17 @@
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
-
-                nextItemIsVideo = $('.swiper-slide-prev').find('video');
-
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();
 //                }
-
+                clearTimeout(slideTimer);
 
             },
             onSlideNextEnd:function(){
                 prevItemIsVideo = $('.swiper-slide-prev').find('video');
+                console.log("prevItemIsVideo = "+prevItemIsVideo.length);
                 //判断前一个是否有视频
                 if(prevItemIsVideo.length > 0){
                     //重新加载视频
@@ -313,6 +384,7 @@
             },
             onSlidePrevEnd:function(){
                 nextItemIsVideo = $('.swiper-slide-next').find('video');
+                console.log("nextItemIsVideo = " + nextItemIsVideo.length);
                 //判断后一个是否有视频
                 if(nextItemIsVideo.length > 0){
                     //重新加载视频
@@ -327,7 +399,7 @@
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();
 //                }
-                swiper.slideTo("${fn:length(course.details) - 1}");
+
             }
         });
 
@@ -453,80 +525,10 @@
 
 
 
-
-
-
-
-        //播放器切换加载对应的路径
-        var swiperChangeAduio = function(current){
-            var swiperCurrent;
-
-            popupPalyer.pause();
-            // var swiperCurrent = current.find(".swiper-slide-active") ||  current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
-            if(current.find(".swiper-slide-active")){
-                swiperCurrent  = current.find(".swiper-slide-active");
-            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
-                swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
-            }
-            dataSrc = swiperCurrent.attr('audio-src');
-            //如果有音频，才进行播放
-            if(dataSrc.length > 0){
-                $('.boxAudio').removeClass('none');
-                popupPalyer.load(dataSrc);
-                popupPalyer.play();
-                changePlayerStete(true);
-            } else {
-                popupPalyer.load('isNotSrc');
-                console.log('没加载音频');
-                $('.boxAudio').addClass('none');
-                changePlayerStete(false);
-            }
-
-            playOver = false;
-            //如果有视频
-            if(activeItemIsVideo.length > 0){
-                changePlayerStete(true);
-            } else {
-                return false;
-            }
-
-
-        }
-
-
-
         //播放按钮
         $(".button-icon-state").on('click',function(){
             changePlayerStete();
         })
-
-        var changePlayerStete = function(state){
-            if(playerState || state == true){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
-                playerState = false;
-                //有video文件
-                if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).play();
-                } else {
-                    popupPalyer.play();
-                }
-            } else {
-                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
-                playerState = true;
-                //this = window
-
-                //有video文件
-                if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).pause();
-                } else {
-                    popupPalyer.pause();
-//                    $(this).on('touchstart',function(){
-//                        popupPalyer.play();
-//                    })
-                }
-
-            }
-        }
 
 
         function isPC() {
@@ -544,6 +546,7 @@
             return flag;
         }
 
+
         if (isPC()){
             $('.html5ShadePlay').hide();
             popupPalyer.play();
@@ -553,9 +556,9 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
                 $(this).hide();
+                galleryTop.slideTo("${fn:length(course.details) - 1}");
                 popupPalyer.play();
                 playing = true;
-                changePlayerStete(false);
             });
         }
 

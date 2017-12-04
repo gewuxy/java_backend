@@ -19,7 +19,7 @@
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
 <shiro:hasPermission name="yaya:banner:add">
-    <input id="insertBanner" class="btn btn-primary" type="button" value="新 建"  name="message"  style="margin-left: 1108px"/>
+    <input id="insertBanner" class="btn btn-primary" type="button" value="新 建"  name="message"  style="margin-right: 1108px"/>
 </shiro:hasPermission>
 </form>
 <%@include file="/WEB-INF/include/message.jsp"%>

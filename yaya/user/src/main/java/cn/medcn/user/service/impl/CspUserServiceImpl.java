@@ -253,7 +253,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         //将密码插入到数据库
         insertPassword(email,password,userId);
         //获取邮件模板对象
-        EmailTemplate template = tempService.getTemplate(localStr,EmailTemplate.Type.BIND.getLabelId());
+        EmailTemplate template = tempService.getTemplate(localStr,EmailTemplate.Type.BIND.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
         sendMail(email,userId, template);
     }
 

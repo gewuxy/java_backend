@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,8 +36,9 @@ public class NewsController extends BaseController {
      */
     @RequestMapping(value="/ajaxTrends")
     @ResponseBody
-    public String ajaxTrends(Pageable pageable){
-        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
+    public String ajaxTrends(Pageable pageable,String type){
+        String category = "CATEGORY_" + type;
+        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
             news.replaceJSPTAG(editorMediaPath);
@@ -82,25 +84,53 @@ public class NewsController extends BaseController {
      * @return
      */
     @RequestMapping(value="/list")
-    public String dtList(Pageable pageable, Integer type,Model model){
+    public String dtList(Pageable pageable, String type,Model model){
         pageable.setPageSize(4);
-        pageable.getParams().put("categoryId", type == 1 ? News.NEWS_CATEGORY.CATEGORY_YYDT.categoryId:News.NEWS_CATEGORY.CATEGORY_AQYY.categoryId);
+        String category = "CATEGORY_" + type;
+        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
             news.replaceJSPTAG(editorMediaPath);
         }
         model.addAttribute("page", page);
         model.addAttribute("type",type);
-        model.addAttribute("title",type == 1 ? "医药动态": "安全用药");
+        model.addAttribute("title", News.NEWS_CATEGORY.valueOf(category).label);
         return "/show/newList";
     }
 
+    /**
+     * 查看详情
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value="/detail/{id}")
-    public String detail(@PathVariable String id, Integer type, Model model){
+    public String detail(@PathVariable String id, Model model){
         News news = new News();
         news.setId(id);
         news = newsService.selectByPrimaryKey(news);
         model.addAttribute("news",news);
         return "/show/detailView";
+    }
+
+    /**
+     * 公司新闻动态
+     * @param nid
+     * @param model
+     * @return
+     * @throws Exception
+     */
+    @RequestMapping(value="/viewtrend/{nid}")
+    public String viewtrend(@PathVariable String nid, Model model) throws Exception {
+        if (StringUtils.isEmpty(nid)){
+            throw new Exception("参数不正确");
+        }
+        News news = newsService.selectByPrimaryKey(nid);
+        if (news == null){
+            throw new Exception("您查看的新闻id=["+nid+"] 不存在");
+        }
+        news.replaceJSPTAG(editorMediaPath);
+        model.addAttribute(news);
+        return "/news/view_trend";
     }
 }

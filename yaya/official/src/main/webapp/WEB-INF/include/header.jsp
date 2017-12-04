@@ -21,8 +21,8 @@
                                     <strong class="first-level-min">健康动态</strong>
                                 </a><i></i>
                                 <ul>
-                                    <li><a href="${ctx}/news/list?type=1">医药动态</a></li>
-                                    <li><a href="${ctx}/news/list?type=2">安全用药</a></li>
+                                    <li><a href="${ctx}/news/list?type=YYDT">医药动态</a></li>
+                                    <li><a href="${ctx}/news/list?type=AQYY">安全用药</a></li>
                                 </ul>
                             </li>
                             <li>
@@ -31,9 +31,9 @@
                                 </a>
                                 <i></i>
                                 <ul>
-                                    <li><a href="${ctx}/search/view?searchType=2">药师建议</a></li>
-                                    <li><a href="${ctx}/search/view?searchType=1">医师建议</a></li>
-                                    <li><a href="${ctx}/search/view?searchType=3">对症下药</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=YSJY">药师建议</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=YISJY">医师建议</a></li>
+                                    <li><a href="${ctx}/search/view?searchType=DZXY">对症下药</a></li>
                                 </ul>
                             </li>
                         </ul>

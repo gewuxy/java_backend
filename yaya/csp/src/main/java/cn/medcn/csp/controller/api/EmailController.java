@@ -94,7 +94,7 @@ public class EmailController extends BaseController{
         }
 
         //获取邮件模板对象
-        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.FIND_PWD.getLabelId());
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.FIND_PWD.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
         try {
             cspUserService.sendMail(email,null, template);
         } catch (SystemException e) {

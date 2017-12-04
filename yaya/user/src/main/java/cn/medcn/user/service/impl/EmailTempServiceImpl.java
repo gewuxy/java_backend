@@ -31,11 +31,11 @@ public class EmailTempServiceImpl extends BaseServiceImpl<EmailTemplate> impleme
     }
 
     @Override
-    public EmailTemplate getTemplate(String localStr, Integer tempType) {
+    public EmailTemplate getTemplate(String localStr, Integer tempType,Integer useType) {
         EmailTemplate template = new EmailTemplate();
         template.setLangType(localStr);
         template.setTempType(tempType);
-        template.setUseType(1);
+        template.setUseType(useType);
         return selectOne(template);
     }
 }

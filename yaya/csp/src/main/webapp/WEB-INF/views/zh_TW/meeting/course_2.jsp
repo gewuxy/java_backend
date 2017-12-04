@@ -45,7 +45,7 @@
         <div class="swiper-container gallery-top popup-volume">
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
-                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}" istemp="${detail.temp ? 1 : 0}">
+                    <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}" istemp="${detail.temp && status.index == 0 ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
                                 <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
@@ -610,10 +610,11 @@
                 }
                 if (data.order == 0){//直播指令
                     $(".icon-added").show();
-                    $("#newLivePage").text("P " + (parseInt(data.pageNum) + 1));
+                    var currentPageNo = parseInt(data.pageNum) + 1;
+                    $("#newLivePage").text("P " + currentPageNo);
                     console.log("data.audioUrl = " + data.audioUrl);
                     if(data.audioUrl != undefined) {
-                        $(".swiper-slide[data-num='"+(data.pageNum + 1)+"']").attr("audio-src", data.audioUrl);
+                        $(".swiper-slide[data-num='"+currentPageNo+"']").attr("audio-src", data.audioUrl);
                     }
                     if (data.pageNum == galleryTop.activeIndex){
                         swiperChangeAduio($(".swiper-wrapper"));

@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script src="js/jquery-1.12.4.min.js"></script>
+<script src="js/ajaxUtils.js"></script>
+<script>
+    ajaxPost("http://10.0.0.250:8081/mgr/meet/delete/able/10063", {}, function(){
+
+    }, function(a, n, e){
+        alert(a + " - " + n + " - " + e);
+    });
+</script>
+</body>
+</html>

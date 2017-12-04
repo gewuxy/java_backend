@@ -2,6 +2,9 @@ package cn.medcn.user.service;
 
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.BaseService;
+import cn.medcn.user.dto.PatientDTO;
+import cn.medcn.user.model.BindInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.model.Patient;
 
 /**
@@ -12,4 +15,6 @@ public interface PatientUserService extends BaseService<Patient> {
 
     // 检查验证码是否有效
     void checkCaptchaIsOrNotValid(String mobile, String captcha) throws SystemException;
+
+    String sendCode(String account, EmailTemplate template) throws SystemException;
 }

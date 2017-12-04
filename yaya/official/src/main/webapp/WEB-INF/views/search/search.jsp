@@ -13,28 +13,29 @@
             <div class="row">
                 <div class="col-lg-12">
                     <div class="v2-fullSearch">
-                        <div class="v2-fullSearch-title"><img src="${ctxStatic}/images/v2/fullSearch-title${searchType}.png" alt=""></div>
+                        <div class="v2-fullSearch-title"><img src="${ctxStatic}/images/v2/fullSearch-title-${searchType}.png" alt=""></div>
                         <div class="v2-subPage-searchItem">
                             <div class="v2-subPage-serarch-content v2-helpPage-item">
                                 <form action="${ctx}/search/searchList" method="post">
                                     <span class="pr v2-helpPage-select-a">
                                         <i class="v2-helpPage-select-arrow"></i>
-                                        <select name="search" id="search" class="v2-helpPage-select">
-                                                <option value="">分类查找</option>
-                                                <option value="">常用药品</option>
-                                                <option value="">儿童常用药品</option>
-                                                <option value="">用药指南</option>
-                                                <option value="">在线购药指南</option>
+                                        <select name="classify" id="classify" class="v2-helpPage-select">
+                                            <option value="">分类查询</option>
+                                            <c:if test="${not empty list}">
+                                                <c:forEach items="${list}" var="list">
+                                                    <option value="${list.id}">${list.name}</option>
+                                                </c:forEach>
+                                            </c:if>
                                         </select>
                                     </span>
                                     <div class="v2-search-form clearfix">
-                                        <c:if test="${searchType eq 1}">
+                                        <c:if test="${searchType == 'YSJY'}">
                                             <input type="text"  placeholder="输入需要药师提供建议的药品通用名" name="keyWord" id="keyWord"  class="form-text" >
                                         </c:if>
-                                        <c:if test="${searchType eq 2}">
+                                        <c:if test="${searchType == 'YISJY'}">
                                             <input type="text"  placeholder="输入症状名称" name="keyWord" id="keyWord"  class="form-text" >
                                         </c:if>
-                                        <c:if test="${searchType eq 3}">
+                                        <c:if test="${searchType == 'DZXY'}">
                                             <input type="text"  placeholder="输入需要医师提供建议的疾病名称" name="keyWord" id="keyWord"  class="form-text" >
                                         </c:if>
                                         <input type="hidden" name="searchType" value="${searchType}"/>

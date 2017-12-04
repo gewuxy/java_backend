@@ -1,29 +1,28 @@
 package cn.medcn.official.security;
 
-import cn.medcn.official.model.OffUserInfo;
+import cn.medcn.user.model.Patient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
-/**
- * Created by lixuan on 2017/5/2.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Principal implements Serializable {
 
-    private Integer id;
+    private String id;
 
     private String account;
 
     private String username;
 
+    protected String nickName;
+
     private Integer roleId;
 
-    public static Principal build(OffUserInfo user){
+    public static Principal build(Patient user){
         Principal principal = new Principal();
         if(user != null){
             principal.setUsername(user.getUserName());

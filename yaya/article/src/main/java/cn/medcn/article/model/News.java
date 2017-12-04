@@ -24,10 +24,10 @@ public class News extends Article implements Serializable {
     public void replaceJSPTAG(String basePath){
         if(!StringUtils.isBlank(articleImg)){
             articleImg = (basePath+articleImg);
-        }
-        if (!StringUtils.isBlank(content)){
-            String basePath2 = articleImg.substring(0, articleImg.lastIndexOf("/"));
-            content = content.replaceAll("<%=strFullImageDir %>",basePath2);
+            if (!StringUtils.isBlank(content)){
+                String basePath2 = articleImg.substring(0, articleImg.lastIndexOf("/"));
+                content = content.replaceAll("<%=strFullImageDir %>",basePath2);
+            }
         }
     }
 
@@ -69,11 +69,16 @@ public class News extends Article implements Serializable {
 
     public enum NEWS_CATEGORY{
         CATEGORY_YYXW("医药新闻", "170510101223456"),
-
         CATEGORY_ZYZX("专业资讯","170510121548925"),
         CATEGORY_AQYY("安全用药","170510121523528"),
         CATEGORY_YYDT("医药动态", "170510121548956"),
-        CATEGORY_GSDT("公司动态", "17051016434243959379");
+        CATEGORY_GSDT("公司动态", "17051016434243959379"),
+        CATEGORY_ZXGY("在线购药指南", "17112118044649791417"),
+        CATEGORY_RMYY("热门医药新闻", "17080110423820252113"),
+        CATEGORY_YYCS("用药常识", "17112118044523161352"),
+        CATEGORY_YSJY("药师建议", "170515121565482"),
+        CATEGORY_YISJY("医师建议", "170515121577458"),
+        CATEGORY_DZXY("对症下药", "171117095417088");
 
 
         public String label;
