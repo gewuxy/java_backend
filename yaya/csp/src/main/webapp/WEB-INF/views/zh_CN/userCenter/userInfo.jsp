@@ -70,14 +70,14 @@
             }
             $("#nameSpan").attr("class","cells-block error none");
             var info = $("#info").val();
-            $.post('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info}, function (data) {
+            ajaxPost('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info}, function (data) {
                 if (data.code == 0){
                     $("#name", window.parent.document).html(nickName);
                     layer.msg("修改成功");
                 }else{
                     layer.msg("修改失败");
                 }
-            },'json');
+            });
 
         });
     });

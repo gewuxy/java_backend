@@ -199,7 +199,7 @@
                 btn: ["Confirm","Cancel"],
                 content: $('.cancel-popup-box'),
                 yes:function () {
-                    $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
+                    ajaxGet('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
                         if (data.code == 0){
                             layer.msg('Unbundled successfully',{
                                 time: 300
@@ -209,7 +209,7 @@
                         }else{
                             layer.msg(data.err);
                         }
-                    },'json');
+                    });
                 },
 
             });
@@ -222,13 +222,13 @@
         //绑定操作
         $("a[action_type='bind']").click(function () {
             var type = $(this).attr("type");
-                $.get('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
+                ajaxGet('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
                     if (data.code == 0){
                         window.location.href=data.data;
                     }else{
                         layer.msg(data.err);
                     }
-                },'json');
+                });
         });
 
         //弹出绑定手机
@@ -280,7 +280,7 @@
                 var email = $("#email").val();
                 var password = $("#password").val();
                 if(checkPwd()){
-                    $.get('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
+                    ajaxGet('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
                         if (data.code == 0){
                             layer.open({
                                 type: 1,
@@ -300,7 +300,7 @@
                         }else{
                             layer.msg(data.err);
                         }
-                    },'json');
+                    });
                 }
                 
             }
