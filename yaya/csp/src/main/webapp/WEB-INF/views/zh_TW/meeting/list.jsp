@@ -162,7 +162,7 @@
             function loadCourseInfo(courseId){
                 var course ;
 
-                ajaxGet('${ctx}/mgr/meet/view/'+courseId, {}, false, function(data){
+                ajaxSyncGet('${ctx}/mgr/meet/view/'+courseId, {}, function(data){
                     course = data.data;
                 });
                 return course;
@@ -267,17 +267,11 @@
             });
 
             $("#copyBtn").click(function(){
-                $.ajax({
-                    url:'${ctx}/mgr/meet/copy/'+courseId,
-                    data:{'title': $("#courseTitle").val()},
-                    type : "POST",
-                    dataType : 'json',
-                    success:function(data){
-                        if (data.code == 0){
-                            window.location.reload();
-                        } else {
-                            layer.msg(data.err);
-                        }
+                ajaxPost('${ctx}/mgr/meet/copy/'+courseId, {'title': $("#courseTitle").val()}, function(data){
+                    if (data.code == 0){
+                        window.location.href = "${ctx}/mgr/list";
+                    } else {
+                        layer.msg(data.err);
                     }
                 });
             });
