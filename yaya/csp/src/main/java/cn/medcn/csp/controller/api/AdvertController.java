@@ -27,8 +27,6 @@ import java.util.Map;
 @RequestMapping("/api/advert")
 public class AdvertController extends BaseController {
 
-    protected static final String CSP_ADVERT_CATEGORY_ID = "17092809462257868554";
-
     @Value("${app.file.base}")
     private String appFileBase;
 

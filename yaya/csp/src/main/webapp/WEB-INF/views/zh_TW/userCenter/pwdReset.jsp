@@ -154,7 +154,7 @@
                 var email = $("#email").val();
                 var password = $("#password").val();
                 if(checkPwd()){
-                    $.get('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
+                    ajaxGet('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
                         if (data.code == 0){
                             layer.open({
                                 type: 1,
@@ -174,7 +174,7 @@
                         }else{
                             layer.msg(data.err);
                         }
-                    },'json');
+                    });
                 }
 
             }
@@ -222,7 +222,7 @@
 
         $("#submitBtn").click(function () {
             if(check()){
-                $.post('${ctx}/mgr/user/resetPwd',$("#submitForm").serialize(),function(result){
+                ajaxPost('${ctx}/mgr/user/resetPwd',$("#submitForm").serialize(),function(result){
                     if (result.code == 0){//成功
                         $("#pwd").val("");
                         $("#rePwd").val("");
@@ -230,7 +230,7 @@
                     }else{//失败
                         layer.msg(result.err);
                     }
-                },'json');
+                });
             }
         });
 

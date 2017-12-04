@@ -15,6 +15,7 @@
 <script src="${ctxStatic}/js/util.js"></script>
 <script src="${ctxStatic}/js/layer/layer.js"></script>
 <script src="${ctxStatic}/js/jquery.cookie.js"></script>
+<script src="${ctxStatic}/js/ajaxUtils.js"></script>
 
 <script type="text/javascript">var ctx = '${ctx}', ctxStatic='${ctxStatic}';</script>
 <link rel="SHORTCUT ICON" href="${ctxStatic}/images/v2/icon.ico" />

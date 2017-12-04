@@ -221,7 +221,7 @@
                 btn: ["確認","取消"],
                 content: $('.cancel-popup-box'),
                 yes:function () {
-                    $.get('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
+                    ajaxGet('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
                         if (data.code == 0){
                             layer.msg('解綁成功',{
                                 time: 300
@@ -231,7 +231,7 @@
                         }else{
                             layer.msg(data.err);
                         }
-                    },'json');
+                    });
                 },
 
             });
@@ -242,14 +242,13 @@
         //绑定操作
         $("a[action_type='bind']").click(function () {
             var type = $(this).attr("type");
-
-            $.get('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
+            ajaxGet('${ctx}/mgr/user/jumpOauth',{"type":type}, function (data) {
                 if (data.code == 0){
                     window.location.href=data.data;
                 }else{
                     layer.msg(data.err);
                 }
-            },'json');
+            });
         });
 
         //弹出绑定手机
@@ -283,16 +282,16 @@
                 var mobile = $("#phone").val();
                 var captcha = $("#captcha").val();
                 if(checkCaptcha()){
-                    $.get('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {
+                    ajaxGet('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {
                         if (data.code == 0){
                             layer.closeAll();
                             layer.msg("綁定成功",{ time: 800},function () {
-                               window.location.href="${ctx}/mgr/user/toAccount";
+                                window.location.href="${ctx}/mgr/user/toAccount";
                             });
                         }else{
                             layer.msg(data.err);
                         }
-                    },'json');
+                    });
                 }
 
 
@@ -322,7 +321,7 @@
                 var email = $("#email").val();
                 var password = $("#password").val();
                 if(checkPwd()){
-                    $.get('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
+                    ajaxGet('${ctx}/mgr/user/bindEmail',{"email":email,"password":password}, function (data) {
                         if (data.code == 0){
                             layer.open({
                                 type: 1,
@@ -342,7 +341,7 @@
                         }else{
                             layer.msg(data.err);
                         }
-                    },'json');
+                    });
                 }
                 
             }
@@ -448,14 +447,14 @@
             InterValObj = window.setInterval(SetRemainTime, 1000); //启动计时器，1秒执行一次
             //向后台发送处理数据
             var mobile =  $("#phone").val();
-            $.get('${ctx}/api/user/sendCaptcha',{"mobile":mobile,"type":1}, function (data) {
+            ajaxGet('${ctx}/api/user/sendCaptcha',{"mobile":mobile,"type":1}, function (data) {
                 if (data.code == 0){
                     layer.msg("驗證碼已經發送到您的手機,請注意查收");
                     $("#btnSendCode").removeAttr("onclick");
                 }else{
                     layer.msg(data.err);
                 }
-            },'json');
+            });
         }
 
     }
