@@ -14,6 +14,15 @@ function ajaxGet(url, params, async, onSuccess, onError){
     doAjax(url, params, getMethod, async, onSuccess, onError);
 }
 
+function ajaxPost(url, params, onSuccess, onError){
+    doAjax(url, params, postMethod, true, onSuccess, onError);
+}
+
+function ajaxGet(url, params, onSuccess, onError){
+    doAjax(url, params, getMethod, true, onSuccess, onError);
+}
+
+
 function doAjax(url, params, method, async, onSuccess, onError){
     if (method == undefined || (method != postMethod && method != getMethod)){
         method = getMethod;
@@ -35,6 +44,7 @@ function doAjax(url, params, method, async, onSuccess, onError){
                     window.location.href = "/";
                 });
             } else {
+                alert(typeof onSuccess  );
                 if (typeof onSuccess == "function") {
                     onSuccess(data);
                 }
