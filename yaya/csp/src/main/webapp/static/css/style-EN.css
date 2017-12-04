@@ -504,7 +504,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 *******/
 
 .admin-header { box-shadow: 0 4px 12px 0 rgba(136,138,169,0.20); background:#fff; height:80px; position: relative;  }
-.admin-header .logo{ background:url(../images/admin-logo.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
+.admin-header .logo{ background:url(../images/admin-logo-en.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
 .admin-header .login-header { position: static; padding-top:25px;}
 .admin-header .login-header a{ color:#7A8B9F; }
 .admin-header .login-header .login-language { border-color:#7a8b9f;}
