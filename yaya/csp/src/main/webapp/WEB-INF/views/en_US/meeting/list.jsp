@@ -161,17 +161,9 @@
 
             function loadCourseInfo(courseId){
                 var course ;
-                $.ajax({
-                    url:'${ctx}/mgr/meet/view/'+courseId,
-                    dataType:'json',
-                    async:false,
-                    type:'get',
-                    success:function (data) {
-                        course = data.data;
-                    },
-                    error:function(e, n, a){
-                        alert(a);
-                    }
+
+                ajaxGet('${ctx}/mgr/meet/view/'+courseId, {}, false, function(data){
+                    course = data.data;
                 });
                 return course;
             }
@@ -303,14 +295,11 @@
         
         function getShareUrl(){
             var shareUrl = '';
-            $.ajax({
-                url : '${ctx}/mgr/meet/share/'+courseId,
-                dataType:'json',
-                async:false,
-                success : function (data) {
-                    shareUrl = data.data.shareUrl;
-                }
+
+            ajaxGet('${ctx}/mgr/meet/share/'+courseId, {}, function(data){
+                shareUrl = data.data.shareUrl;
             });
+
             return shareUrl;
         }
 
@@ -325,7 +314,7 @@
 
 
         function delCourse(){
-            $.get("${ctx}/mgr/meet/delete/able/" + courseId, {}, function (data) {
+            ajaxGet("${ctx}/mgr/meet/delete/able/" + courseId, {}, function (data) {
                 if (data.code == "0"){
                     layer.open({
                         type: 1,
@@ -335,7 +324,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : ['Confirm', 'Cancel'],
+                        btn : ['确定', '取消'],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
@@ -353,19 +342,18 @@
                 } else {
                     layer.msg(data.err);
                 }
-            }, 'json');
-
+            });
 
         }
 
         function edit(){
-            $.get("${ctx}/mgr/meet/editable/" + courseId, {}, function (data) {
+            ajaxGet("${ctx}/mgr/meet/editable/" + courseId, {}, function(data) {
                 if (data.code == "0"){
                     window.location.href = '${ctx}/mgr/meet/edit?courseId='+courseId;
                 } else {
                     layer.msg(data.err);
                 }
-            }, 'json');
+            });
         }
     </script>
 </head>
