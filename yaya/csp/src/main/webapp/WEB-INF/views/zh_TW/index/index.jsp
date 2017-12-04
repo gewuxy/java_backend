@@ -385,7 +385,7 @@
                     <div class="module-section-content index-info">
                         <div class="row">
                             <div class="col-lg-7">
-                                <h3 class="color-black">全球領先的<br />雲同步回放會議系統</h3>
+                                <h3 class="color-black">全球領先的<br />雲同步回放演講系統</h3>
                                 <p  >Global Leading Meeting System with <br />Cloud Synchronization Playback</p>
                             </div>
                             <div class="col-lg-5 pr">
