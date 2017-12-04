@@ -386,6 +386,8 @@ public class MeetingController extends CspBaseController {
             return error(local("meeting.error.not_mine"));
         }
 
+
+
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
         if (hasDuplicate) {
             Map<String, Object> result = new HashMap<>();
@@ -406,6 +408,15 @@ public class MeetingController extends CspBaseController {
             if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
                 Live live = liveService.findByCourseId(courseId);
                 if (live != null) {
+                    Date now = new Date();
+                    if (live.getStartTime().after(now)) {//直播还未开始
+                        return error(local("share.live.not_start.error"));
+                    }
+
+                    if (live.getEndTime().before(now)) {//直播已经结束
+                        return error(local("share.live.over"));
+                    }
+
                     result.put("startTime", live.getStartTime());
                     result.put("endTime", live.getEndTime());
                 }
