@@ -1,29 +1,23 @@
 package cn.medcn.official.controller;
 
-import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.email.EmailHelper;
-import cn.medcn.common.email.MailBean;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.service.JSmsService;
 import cn.medcn.common.utils.*;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
-import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.model.Patient;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.EmailTempService;
 import cn.medcn.user.service.PatientUserService;
-import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.mail.MessagingException;
-import java.io.IOException;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -47,7 +41,7 @@ public class RegistController extends BaseController{
     protected SystemRegionService systemRegionService;
 
     @Autowired
-    protected EmailHelper emailHelper;
+    private EmailTempService tempService;
 
     /**
      * 发送验证码到用户手机或者邮箱
@@ -59,37 +53,14 @@ public class RegistController extends BaseController{
         if(type == 1){
             return appUserService.sendCaptcha(account);
         }else{
-            return sendEmail(account);
+            // 获取邮箱模板
+            EmailTemplate template = tempService.getTemplate("zh_CN",EmailTemplate.Type.REGISTER.getLabelId());
+            try {
+                return patientUserService.sendCode(account,template);
+            } catch (SystemException e){
+                return error(e.getMessage());
+            }
         }
-    }
-
-    /**
-     * 发送邮件
-     * @param account
-     * @return
-     */
-    private String sendEmail(String account){
-        String code = UUIDUtil.getRandom6();  //生成验证码
-        Captcha captcha = new Captcha();
-        captcha.setFirstTime(new Date());
-        captcha.setCount(Constants.NUMBER_ONE);
-        captcha.setMsgId(code);
-        redisCacheUtils.setCacheObject(account,captcha,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
-        MailBean mailBean = new MailBean();
-        mailBean.setSubject("注册");
-        try {
-            emailHelper.sendMailByType(mailBean, account, code,2);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return error("邮件发送失败,可能是邮箱地址不可用");
-        } catch (MessagingException e) {
-            e.printStackTrace();
-            return error("邮件发送失败");
-        } catch (JDOMException e) {
-            e.printStackTrace();
-            return error("邮件模板解析错误");
-        }
-        return success();
     }
 
     /**

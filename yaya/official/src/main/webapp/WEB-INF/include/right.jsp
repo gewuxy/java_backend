@@ -2,7 +2,7 @@
 <div class="col-lg-3 col-lg-offset-1">
     <div class="v2-news-list v2-news-list-garyStyle">
         <div class="v2-news-title">
-            <a href="${ctx}/news/list?type=1" class="more fr">更多&gt;&gt;</a>
+            <a href="${ctx}/news/list?type=ZXGY" class="more fr">更多&gt;&gt;</a>
             <h3>在线购药指南</h3>
         </div>
         <div class="v2-news-main">
@@ -13,7 +13,7 @@
     </div>
     <div class="v2-news-list v2-news-list-garyStyle">
         <div class="v2-news-title">
-            <a href="${ctx}/search/searchList?searchType=4&keyWord=阿司匹林" class="more fr">更多&gt;&gt;</a>
+            <a href="${ctx}/news/list?type=YYCS" class="more fr">更多&gt;&gt;</a>
             <h3>用药常识</h3>
         </div>
         <div class="v2-news-main">
@@ -23,7 +23,7 @@
     </div>
     <div class="v2-news-list v2-news-list-garyStyle">
         <div class="v2-news-title">
-            <a href="newList.html" class="more fr">更多&gt;&gt;</a>
+            <a href="${ctx}/news/list?type=RMYY" class="more fr">更多&gt;&gt;</a>
             <h3>热门医药新闻</h3>
         </div>
         <div class="v2-news-main">

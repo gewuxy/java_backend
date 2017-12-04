@@ -1,38 +1,19 @@
 package cn.medcn.official.controller;
 
 import cn.medcn.common.ctrl.BaseController;
-import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.RegexUtils;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.oauth.dto.OAuthUser;
-import cn.medcn.oauth.service.OauthService;
-import cn.medcn.official.security.Principal;
-import cn.medcn.user.dto.PatientDTO;
-import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.Patient;
-import cn.medcn.user.service.PatientUserService;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
-
-import static cn.medcn.common.Constants.*;
 
 /**
  * by create HuangHuibin 2017/11/15

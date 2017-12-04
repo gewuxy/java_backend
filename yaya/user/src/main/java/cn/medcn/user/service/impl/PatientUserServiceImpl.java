@@ -1,24 +1,23 @@
 package cn.medcn.user.service.impl;
 
+import cn.medcn.common.Constants;
+import cn.medcn.common.email.CSPEmailHelper;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.SMSService;
 import cn.medcn.common.service.impl.BaseServiceImpl;
-import cn.medcn.common.utils.RedisCacheUtils;
-import cn.medcn.common.utils.RegexUtils;
-import cn.medcn.common.utils.UUIDUtil;
-import cn.medcn.user.dao.BindInfoDAO;
+import cn.medcn.common.utils.*;
 import cn.medcn.user.dao.PatientUserDAO;
 import cn.medcn.user.dto.Captcha;
-import cn.medcn.user.dto.PatientDTO;
-import cn.medcn.user.model.BindInfo;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.model.Patient;
 import cn.medcn.user.service.PatientUserService;
 import com.github.abel533.mapper.Mapper;
+import org.jdom.JDOMException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
-
-import java.util.Date;
-
 
 /**
  * Created by Liuchangling on 2017/11/23.
@@ -26,6 +25,16 @@ import java.util.Date;
  */
 @Service
 public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements PatientUserService{
+
+    @Value("${csp_mail_username}")
+    private String sender;
+
+    @Value("${csp_mail_password}")
+    private String password;
+
+    @Value("${csp_mail_server_host}")
+    private String serverHost;
+
     @Autowired
     protected PatientUserDAO patientUserDAO;
 
@@ -35,13 +44,16 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Autowired
+    protected CSPEmailHelper emailHelper;
+
+    @Autowired
+    protected JavaMailSenderImpl emailSender;
+
     @Override
     public Mapper<Patient> getBaseMapper() {
         return patientUserDAO;
     }
-
-    @Autowired
-    protected BindInfoDAO bindInfoDAO;
 
     /**
      * 检查验证码合法性
@@ -67,41 +79,49 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
     }
 
     @Override
-    public Patient findBindUserByUniqueId(String uniqueId) {
-        return patientUserDAO.findBindUserByUniqueId(uniqueId);
+    public String sendCode(String email, EmailTemplate template) throws SystemException {
+        if (email == null) {
+            return APIUtils.error(local("user.param.empty"));
+        }
+        // 检查用户邮箱是否已经注册过
+        Patient patient = new Patient();
+        patient.setEmail(email);
+        Patient user = patientUserDAO.selectOne(patient);
+        if (user != null) {
+            // 检查是否有激活
+            if (user.getActive()) {
+                return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+            } else {
+                // 发送验证码
+                String code = UUIDUtil.getRandom6();
+                sendMail(email, code,template);
+                return APIUtils.success(local("user.success.register"));
+            }
+        }
+        return APIUtils.success(local("user.success.register"));
     }
 
-    @Override
-    public Patient saveThirdPartyUserInfo(PatientDTO dto) {
-        // 将第三方用户信息 保存到用户表
-        Patient userInfo = Patient.buildToUserInfo(dto);
-        patientUserDAO.insertSelective(userInfo);
-        // 添加绑定第三方平台用户信息
-        BindInfo bind = BindInfo.buildToBindInfo(dto);
-        bindInfoDAO.insert(bind);
-        return userInfo;
+    public void sendMail(String email, String code,EmailTemplate template) throws SystemException {
+        redisCacheUtils.setCacheObject(email,code,Constants.CAPTCHA_CACHE_EXPIRE_TIME); //15分钟有效期
+        // 发送注册激活邮箱邮件
+        MailBean bean = new MailBean();
+        bean.setFrom(template.getSender());
+        bean.setFromName(template.getSenderName());
+        bean.setSubject(template.getSubject());
+        bean.setLocalStr(template.getLangType());
+        bean.setToEmails(new String[]{email});
+        try {
+            emailSender.setUsername(sender);
+            emailSender.setPassword(password);
+            emailSender.setHost(serverHost);
+            emailHelper.sendMail(code,template.getContent(),emailSender,bean);
+        } catch (JDOMException e) {
+            e.printStackTrace();
+            throw new SystemException(local("email.address.error"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new SystemException(local("email.error.send"));
+        }
     }
 
-    @Override
-    public void doBindThirdAccount(BindInfo info, String userId) throws SystemException {
-        BindInfo condition = new BindInfo();
-        condition.setUniqueId(info.getUniqueId());
-        condition.setThirdPartyId(info.getThirdPartyId());
-        condition = bindInfoDAO.selectOne(condition);
-        if(condition != null){  //该第三方账号已被使用
-            throw new SystemException(local("user.exist.account"));
-        }
-        BindInfo condition2 = new BindInfo();
-        condition2.setUserId(userId);
-        condition2.setThirdPartyId(info.getThirdPartyId());
-        condition2 = bindInfoDAO.selectOne(condition2);
-        if(condition2 != null){  //当前的账号已绑定其他第三方账号
-            throw new SystemException(local("user.exist.ThirdAccount"));
-        }
-        //插入到数据库
-        info.setId(UUIDUtil.getNowStringID());
-        info.setUserId(userId);
-        info.setBindDate(new Date());
-        bindInfoDAO.insert(info);
-    }
 }
