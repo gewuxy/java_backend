@@ -97,8 +97,8 @@
                 return false;
             }
 
-            if(!isPassword($.trim($password.val()))){
-                $("#errorMessage").text("請輸入正確的密碼");
+            if($.trim($password.val()) == ''){
+                $("#errorMessage").text("密碼不能為空");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
@@ -107,7 +107,18 @@
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
+            }else if($password.val() != $.trim($password.val())){
+                $("#errorMessage").text("密碼不能包含空格");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
+            }else if($.trim($password.val()).length < 6){
+                $("#errorMessage").text("請輸入6〜24位密");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
             }
+
 
             if (isEmpty($nickname.val())) {
                 $("#errorMessage").text("請輸入昵稱");

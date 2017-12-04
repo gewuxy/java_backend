@@ -5,14 +5,47 @@
 
 const postMethod = "POST";
 const getMethod = "GET";
-
-function ajaxPost(url, params, async, onSuccess, onError){
-    doAjax(url, params, postMethod, async, onSuccess, onError);
+/**
+ * 异步POST
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
+function ajaxPost(url, params, onSuccess, onError){
+    doAjax(url, params, postMethod, true, onSuccess, onError);
+}
+/**
+ * 异步GET
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
+function ajaxGet(url, params, onSuccess, onError){
+    doAjax(url, params, getMethod, true, onSuccess, onError);
+}
+/**
+ * 同步POST
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
+function ajaxSyncPost(url, params, onSuccess, onError){
+    doAjax(url, params, postMethod, false, onSuccess, onError);
+}
+/**
+ * 同步GET
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
+function ajaxSyncGet(url, params, onSuccess, onError){
+    doAjax(url, params, getMethod, false, onSuccess, onError);
 }
 
-function ajaxGet(url, params, async, onSuccess, onError){
-    doAjax(url, params, getMethod, async, onSuccess, onError);
-}
 
 function doAjax(url, params, method, async, onSuccess, onError){
     if (method == undefined || (method != postMethod && method != getMethod)){
@@ -35,6 +68,7 @@ function doAjax(url, params, method, async, onSuccess, onError){
                     window.location.href = "/";
                 });
             } else {
+
                 if (typeof onSuccess == "function") {
                     onSuccess(data);
                 }

@@ -99,13 +99,23 @@
                 return false;
             }
 
-            if(!isPassword($.trim($password.val()))){
-                $("#errorMessage").text("请输入正确的密码");
+            if($.trim($password.val()) == ''){
+                $("#errorMessage").text("密码不能为空");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             } else if(isChinesePassword($.trim($password.val()))){
                 $("#errorMessage").text("密码不能包含中文");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
+            }else if($password.val() != $.trim($password.val())){
+                $("#errorMessage").text("密码不能包含空格");
+                $("#errorMessage").parent().removeClass("none");
+                $password.focus();
+                return false;
+            }else if($.trim($password.val()).length < 6){
+                $("#errorMessage").text("请输入6~24位密码");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;

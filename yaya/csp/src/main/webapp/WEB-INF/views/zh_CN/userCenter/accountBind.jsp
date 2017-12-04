@@ -441,7 +441,11 @@
         }else if($.trim(password).length < 6){
             $("#passwordSpan").html("请输入6~24位密码");
             $("#passwordSpan").attr("class","cells-block error");
-
+            return false;
+        }else if(isChinesePassword($.trim(password))){
+            $("#passwordSpan").html("密码不能包含中文");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
         }else{
             $("#passwordSpan").attr("class","cells-block error none");
             return true;

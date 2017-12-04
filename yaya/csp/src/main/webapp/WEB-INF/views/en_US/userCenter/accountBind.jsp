@@ -345,18 +345,22 @@
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password)==''){
-            $("#passwordSpan").html("password can't empty");
+            $("#passwordSpan").html("Please enter password");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#passwordSpan").html("password can't contain blank");
+            $("#passwordSpan").html("Password can't contain blank");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
             $("#passwordSpan").html("Please enter the 6~24 digit password");
             $("#passwordSpan").attr("class","cells-block error");
-
-        }else{
+            return false;
+        }else if(isChinesePassword($.trim(password))){
+            $("#passwordSpan").html("The password cannot contain Chinese");
+            $("#passwordSpan").attr("class","cells-block error");
+            return false;
+        } else{
             $("#passwordSpan").attr("class","cells-block error none");
             return true;
         }
