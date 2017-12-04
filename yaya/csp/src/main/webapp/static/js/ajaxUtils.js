@@ -5,19 +5,43 @@
 
 const postMethod = "POST";
 const getMethod = "GET";
-
+/**
+ * 异步POST
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
 function ajaxPost(url, params, onSuccess, onError){
     doAjax(url, params, postMethod, true, onSuccess, onError);
 }
-
+/**
+ * 异步GET
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
 function ajaxGet(url, params, onSuccess, onError){
     doAjax(url, params, getMethod, true, onSuccess, onError);
 }
-
+/**
+ * 同步POST
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
 function ajaxSyncPost(url, params, onSuccess, onError){
     doAjax(url, params, postMethod, false, onSuccess, onError);
 }
-
+/**
+ * 同步GET
+ * @param url
+ * @param params
+ * @param onSuccess
+ * @param onError
+ */
 function ajaxSyncGet(url, params, onSuccess, onError){
     doAjax(url, params, getMethod, false, onSuccess, onError);
 }
