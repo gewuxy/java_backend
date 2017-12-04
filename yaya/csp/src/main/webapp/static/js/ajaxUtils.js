@@ -44,7 +44,7 @@ function doAjax(url, params, method, async, onSuccess, onError){
                     window.location.href = "/";
                 });
             } else {
-                alert(typeof onSuccess  );
+
                 if (typeof onSuccess == "function") {
                     onSuccess(data);
                 }
