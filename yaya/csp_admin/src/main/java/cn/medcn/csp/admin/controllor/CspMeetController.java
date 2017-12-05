@@ -40,11 +40,11 @@ public class CspMeetController extends BaseController{
     @Log(name = "获取会议列表")
     public String searchMeetList(Pageable pageable, Integer deleted,String keyword, Model model){
         if (!StringUtils.isEmpty(keyword)) {
-            pageable.getParams().put("keyword", keyword);
+            pageable.put("keyword", keyword);
             model.addAttribute("keyword",keyword);
         }
         if (deleted != null) {
-            pageable.getParams().put("deleted", deleted);
+            pageable.put("deleted", deleted);
             model.addAttribute("deleted",deleted);
         }
         MyPage<AudioCourse> page = audioService.findAllMeetForManage(pageable);
@@ -62,42 +62,21 @@ public class CspMeetController extends BaseController{
 
     @RequestMapping(value = "/view/{courseId}")
     @ResponseBody
-    public String view(@PathVariable Integer courseId, Model model) {
+    public String view(@PathVariable Integer courseId) {
         AudioCourse course = audioService.findAudioCourse(courseId);
-        handleHttpPath(course);
+        audioService.handleHttpUrl(fileBase, course);
         return success(course);
     }
 
-    protected void handleHttpPath(AudioCourse course) {
-        handleHttpUrl(fileBase, course);
-    }
-
-
     @RequestMapping(value="/delete")
-    @Log(name = "删除会议")
+    @Log(name = "关闭会议")
     public String delete(Integer id,RedirectAttributes redirectAttributes){
         AudioCourse audioCourse = new AudioCourse();
         audioCourse.setId(id);
         audioCourse.setDeleted(true);
         audioService.updateByPrimaryKeySelective(audioCourse);
         audioService.deleteAllDetails(id);
-        addFlashMessage(redirectAttributes, "删除成功");
+        addFlashMessage(redirectAttributes, "关闭成功");
         return "redirect:/csp/meet/list";
-    }
-
-    protected void handleHttpUrl(String fileBase, AudioCourse course){
-        if (course != null && !CheckUtils.isEmpty(course.getDetails())) {
-            for (AudioCourseDetail detail : course.getDetails()) {
-                if (CheckUtils.isNotEmpty(detail.getAudioUrl()) && !detail.getAudioUrl().startsWith("http")) {
-                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
-                }
-                if (CheckUtils.isNotEmpty(detail.getImgUrl()) && !detail.getImgUrl().startsWith("http")) {
-                    detail.setImgUrl(fileBase + detail.getImgUrl());
-                }
-                if (CheckUtils.isNotEmpty(detail.getVideoUrl()) && !detail.getVideoUrl().startsWith("http")) {
-                    detail.setVideoUrl(fileBase + detail.getVideoUrl());
-                }
-            }
-        }
     }
 }

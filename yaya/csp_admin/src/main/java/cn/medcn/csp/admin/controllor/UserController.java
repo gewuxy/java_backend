@@ -36,16 +36,16 @@ public class UserController extends BaseController {
     /**
      * 获取系统用户列表
      * @param pageable
-     * @param username
+     * @param userName
      * @param model
      * @return
      */
     @RequestMapping(value="/list")
     @Log(name="查询系统用户列表")
-    public String list(Pageable pageable, String username, Model model){
-        if (!StringUtils.isEmpty(username)) {
-            pageable.getParams().put("username", username);
-            model.addAttribute("username",username);
+    public String list(Pageable pageable, String userName, Model model){
+        if (!StringUtils.isEmpty(userName)) {
+            pageable.put("userName", userName);
+            model.addAttribute("userName",userName);
         }
         MyPage<SystemUser> page = systemUserService.findUserByPage(pageable);
         model.addAttribute("page", page);

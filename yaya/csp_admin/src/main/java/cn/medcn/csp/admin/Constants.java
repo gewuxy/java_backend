@@ -6,4 +6,6 @@ package cn.medcn.csp.admin;
 public class Constants {
 
     public static final String UPLOAD_PROGRESS_KEY = "upload_progress";
+
+    public static final String RESET_PASSWORD = "111111";
 }

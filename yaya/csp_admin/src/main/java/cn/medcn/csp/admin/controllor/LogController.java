@@ -22,18 +22,11 @@ public class LogController extends BaseController{
     @Autowired
     private SystemLogService systemLogService;
 
-    /**
-     * 获取日志列表
-     * @param pageable
-     * @param userName
-     * @param model
-     * @return
-     */
     @RequestMapping(value = "/list")
     @Log(name="查看日志")
     public String cspSysUserSearch(Pageable pageable, String userName, Model model) {
         if (!StringUtils.isEmpty(userName)) {
-            pageable.getParams().put("userName", userName);
+            pageable.put("userName", userName);
             model.addAttribute("userName",userName);
         }
         MyPage<SystemLog> page = systemLogService.findLogByPage(pageable);

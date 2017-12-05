@@ -11,27 +11,39 @@
 </ul><br/>
 <form id="inputForm" action="${ctx}/csp/meet/delete" method="post" class="form-horizontal">
     <div class="control-group">
-            <label class="control-label">标题:</label>
-            <div class="controls">
-                <input type="search" name="meetName" style="width: 300px;" maxlength="50" class="required" value="${meet.title}" />
-                <label style="margin-left: 15%">是否发布:</label>&nbsp;&nbsp;&nbsp;
-                <input type="search" name="organizer" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.publishState == true ? "已发布":"未发布"}"/>
-            </div>
+        <label class="control-label">标题:</label>
+        <div class="controls">
+            <input type="search" name="meetName" style="width: 300px;" maxlength="50" class="required" value="${meet.title}" />
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">是否发布:</label>
+        <div class="controls">
+            <input type="search" name="organizer" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.publishState == true ? "已发布":"未发布"}"/>
+        </div>
     </div>
     <div class="control-group">
         <label class="control-label">投稿人:</label>
         <div class="controls">
             <input type="search" name="name" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.name}" />
-            <label style="margin-left: 18%">emial:</label>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">emial:</label>
+        <div class="controls">
             <input type="search" name="email" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.email}"/>
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">类型:</label>
+        <div class="controls">
+            <input type="search" name="playType" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.playType eq 0?"录播":meet.playType eq 1?"ppt直播":"视频直播"}" />
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">预览:</label>
         <div class="controls">
             <input  class="btn btn-primary" style="width: 100px;" onclick="showView()" value="预  览"/>
-            <label style="margin-left: 39%">类型:</label>
-            <input type="search" name="playType" style="width: 300px;" htmlEscape="false" maxlength="50" value="${meet.playType eq 0?"录播":meet.playType eq 1?"ppt直播":"视频直播"}" />
         </div>
     </div>
     <div class="control-group">
@@ -95,6 +107,7 @@
     function initSwiper(course){
         $("#courseId").html("");
         $("#index").html("");
+        var num = course.details.length;
         for(var index in course.details){
             var detail = course.details[index];
             var count = parseInt(index) + 1;
@@ -110,9 +123,9 @@
             if (detail.videoUrl != undefined){//视频
                 courseHtml += '<video src="'+detail.videoUrl+'" width="auto" height="400px" controls autobuffer></video>';
             } else {
-                courseHtml += '<img src="http://139.199.170.178/course/100345/ppt/17112809585080980259.jpg">';
+                courseHtml += '<img src="' + detail.ImageUrl+ '">';
             }
-            courseHtml += '<div class="carousel-caption">'+ count + '</div></div>';
+            courseHtml += '<div class="carousel-caption">'+ count + '/' + num + '</div></div>';
             $("#courseId").append(courseHtml);
             $("#index").append(indexHtml);
         }
@@ -129,7 +142,7 @@
                 course = data.data;
             },
             error:function(e, n, a){
-                alert(a);
+                layer.msg(a);
             }
         });
         return course;

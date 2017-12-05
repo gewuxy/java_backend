@@ -77,7 +77,7 @@ public class SystemRegionServiceImpl extends BaseServiceImpl<SystemRegion> imple
         SystemRegion condition = new SystemRegion();
         condition.setName(preName);
         List<SystemRegion> list = systemRegionDAO.select(condition);
-        if(list.size()<0){
+        if(list.size() == 0){
             return Lists.newArrayList();
         }
         SystemRegion parent = list.get(0);

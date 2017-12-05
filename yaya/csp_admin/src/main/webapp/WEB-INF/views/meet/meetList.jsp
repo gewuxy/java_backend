@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title>管理员列表</title>
+    <title>会议列表</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
 </head>
 <body>
@@ -19,10 +19,10 @@
     <input placeholder="请输入会议名称" value="${keyword}" size="40"  type="search" name="keyword" maxlength="50" class="required"/>&nbsp;&nbsp;
     <select name="deleted" id="deleted" style="width: 150px;">
         <option value="">会议状态</option>
-        <option value="0">正常</option>
-        <option value="1">关闭</option>
+        <option value="0" ${deleted eq 0 ? 'selected':''}>正常</option>
+        <option value="1" ${deleted eq 1 ? 'selected':''}>关闭</option>
     </select>
-    <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+    <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>主题</th><th>类型</th><th>可否分享</th><th>播放类型</th><th>发布者</th><th>是否删除</th><th>操作</th></tr></thead>

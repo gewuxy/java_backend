@@ -2,6 +2,7 @@ package cn.medcn.csp.admin.controllor;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.csp.admin.log.Log;
 import cn.medcn.csp.admin.security.Principal;
 import cn.medcn.csp.admin.utils.SubjectUtils;
 import cn.medcn.sys.model.SystemMenu;
@@ -66,6 +67,7 @@ public class MenuController extends BaseController{
 
     @RequiresPermissions({"sys:menu:edit"})
     @RequestMapping(value = "/edit")
+    @Log(name="菜单编辑")
     public String edit(Integer id, Integer preid, Model model){
         if(id != null){
             SystemMenu menu = sysMenuService.selectByPrimaryKey(id);
@@ -83,6 +85,7 @@ public class MenuController extends BaseController{
 
     @RequiresPermissions({"sys:menu:edit"})
     @RequestMapping(value="/save")
+    @Log(name="添加或更新菜单")
     public String save(SystemMenu menu, RedirectAttributes redirectAttributes){
         String action = menu.getId() == null?"添加菜单":"更新菜单";
         if(menu.getHide() == null){
@@ -99,6 +102,7 @@ public class MenuController extends BaseController{
 
     @RequiresPermissions({"sys:menu:del"})
     @RequestMapping(value="/delete")
+    @Log(name="删除菜单")
     public String delete(Integer id, RedirectAttributes redirectAttributes) throws SystemException{
         if(id == null){
             throw new SystemException("不能删除空菜单");

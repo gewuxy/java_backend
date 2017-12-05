@@ -3,6 +3,7 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.ValidateCodeUtils;
+import cn.medcn.csp.admin.log.Log;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -36,6 +37,7 @@ public class LoginController extends BaseController{
     }
 
     @RequestMapping(value="/login", method = RequestMethod.POST)
+    @Log(name="用户登录")
     public String login(String username, String password,String validateCode, Boolean rememberMe, HttpServletRequest request, HttpServletResponse response, Model model){
         if(StringUtils.isEmpty(username)){
             model.addAttribute("message", "用户名不能为空");
@@ -79,7 +81,7 @@ public class LoginController extends BaseController{
         try {
             ValidateCodeUtils.createImage(request, response);
         } catch (IOException e) {
-            return APIUtils.error("生成验证码错误");
+            return error("生成验证码错误");
         }
         return null;
     }

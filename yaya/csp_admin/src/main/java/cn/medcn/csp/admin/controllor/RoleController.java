@@ -76,8 +76,8 @@ public class RoleController extends BaseController {
         return "redirect:/sys/role/list";
     }
 
-
     @RequestMapping(value="assign", method = RequestMethod.GET)
+    @Log(name="跳转权限分配")
     public String assign(Integer id, Model model) throws SystemException{
         if(id == null){
             throw new SystemException("角色不存在");
@@ -98,8 +98,8 @@ public class RoleController extends BaseController {
         return "/sys/roleAssign";
     }
 
-
     @RequestMapping(value="/assign", method = RequestMethod.POST)
+    @Log(name="角色权限分配")
     public String assign(Integer[] menuIds, Integer roleId, RedirectAttributes redirectAttributes) throws SystemException{
         if(roleId == null || menuIds==null){
             throw new SystemException("操作失败,数据有误");
