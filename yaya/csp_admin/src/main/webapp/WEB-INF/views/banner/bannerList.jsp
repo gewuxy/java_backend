@@ -14,13 +14,11 @@
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/yaya/banner/list">首页广告列表</a></li>
+    <li><a href="${ctx}/yaya/banner/edit">新建首页广告</a></li>
 </ul>
 <form id="pageForm" name="pageForm" action="${ctx}/yaya/banner/list" method="post">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-<shiro:hasPermission name="yaya:banner:add">
-    <input id="insertBanner" class="btn btn-primary" type="button" value="新 建"  name="message"  style="margin-right: 1108px"/>
-</shiro:hasPermission>
 </form>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -42,7 +40,7 @@
                 <td>${data.weight}</td>
                 <td>${data.type eq 0? "系统Banner":data.type eq 1 ? "用户banner":""}</td>
                 <td><fmt:formatDate value="${data.createTime}" type="both" dateStyle="full"/></td>
-                <td>${data.nickname}</td>
+                <td>${pubName}</td>
                 <td>${data.appId eq 0? "YAYA医师":data.appId eq 1 ? "合理用药":""}</td>
                 <td>
                     <shiro:hasPermission name="yaya:banner:view">
@@ -69,10 +67,10 @@
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
 </body>
-<script>
+<%--<script>
     $("#insertBanner").click(function () {
         location.href="${ctx}/yaya/banner/edit";
     })
-</script>
+</script>--%>
 </html>
 

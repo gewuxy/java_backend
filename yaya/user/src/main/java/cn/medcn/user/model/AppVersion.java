@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -21,7 +22,7 @@ public class AppVersion implements Serializable{
     @Id
     private Integer id;
     /**版本*/
-    private Integer version;
+    private String version;
     /**版本信息的字符串描述*/
     private String versionStr;
     /**更新时间*/
@@ -38,7 +39,6 @@ public class AppVersion implements Serializable{
     private String details;
     /**是否强制更新*/
     private Boolean forced;
-
 
     public enum APP_TYPE{
         YAYA_YISHI("yaya_yishi"),

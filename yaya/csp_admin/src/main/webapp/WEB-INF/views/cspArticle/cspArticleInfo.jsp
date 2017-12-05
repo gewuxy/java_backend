@@ -40,6 +40,7 @@
     </script>
 </head>
 <script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/csp/article/check?id=${article.id}&listType=0">服务菜单(CN)</a></li>
@@ -47,7 +48,7 @@
     <li><a href="${ctx}/csp/article/check?id=${article.id}&listType=2">Service menu(EN)</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp" %>
-<form id="inputForm" method="post" class="form-horizontal">
+<form id="inputForm" method="post" class="form-horizontal" enctype="multipart/form-data">
     <input type="hidden" name="userId" value="${article.id}">
     <input type="hidden" name="listType" value="${listType}">
     <c:if test="${listType == 0 || listType == null}">
@@ -127,7 +128,8 @@
         <label class="control-label">图片路径:</label>
         <div class="controls">
             <%-- <img src="${ctx}/${article.imgUrl}" width="100" height="100">--%>
-            <input readonly type="text" name="file" id="imgUrl" value="${article.imgUrl}" style="width: 300px"/>
+            <input readonly type="search" name="file" id="imgUrl" value="${article.imgUrl}" style="width: 300px"/>
+
         </div>
     </div>
     <div class="control-group">
