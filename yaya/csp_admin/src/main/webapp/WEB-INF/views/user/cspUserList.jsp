@@ -20,7 +20,7 @@
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/user/list" class="breadcrumb form-search">
     <input placeholder="输入用户名进行搜索" value="${userName}" size="40"  type="search" name="userName" maxlength="50" class="required"/>
-    <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+    <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead><tr><th>ID</th><th>昵称</th><th>电话</th><th>电子邮件</th><th>注册时间</th><th>操作</th></tr></thead>

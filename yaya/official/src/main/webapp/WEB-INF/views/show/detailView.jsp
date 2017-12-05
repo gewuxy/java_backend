@@ -45,5 +45,19 @@
 </div>
 <!-- 弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
+<%@ include file="/WEB-INF/include/common_js.jsp" %>
+<script>
+    $(function(){
+        $(".second").addClass("current");
+    })
+    /*固定栏*/
+    jQuery(function($) {
+        $(document).ready( function() {
+            $('.fixed-nav').stickUp({
+                marginTop: 'auto'
+            });
+        });
+    });
+</script>
 </body>
 </html>
