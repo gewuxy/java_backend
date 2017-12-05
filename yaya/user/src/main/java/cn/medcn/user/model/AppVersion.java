@@ -22,7 +22,7 @@ public class AppVersion implements Serializable{
     @Id
     private Integer id;
     /**版本*/
-    private String version;
+    private Integer version;
     /**版本信息的字符串描述*/
     private String versionStr;
     /**更新时间*/
@@ -43,8 +43,8 @@ public class AppVersion implements Serializable{
     public enum APP_TYPE{
         YAYA_YISHI("yaya_yishi"),
         YAYA_YAOSHI("yaya_yaoshi"),
-        HLYY("hlyy");
-
+        HLYY("hlyy"),
+        CSPMeeting("csp");
         public String type;
 
         APP_TYPE(String type){

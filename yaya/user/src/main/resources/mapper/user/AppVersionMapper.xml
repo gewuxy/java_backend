@@ -3,7 +3,7 @@
 <mapper namespace="cn.medcn.user.dao.AppVersionDAO" >
 
     <select id="findNewly" resultType="cn.medcn.user.model.AppVersion">
-        SELECT id, version, version_str drive_tag, app_type, file_size, update_time, details, down_load_url, `force`
+        SELECT id, version, version_str,drive_tag, app_type, file_size, update_time, details, down_load_url, forced
         FROM t_app_version WHERE app_type = #{appType} AND drive_tag = #{driveTag} ORDER BY version DESC
     </select>
 
