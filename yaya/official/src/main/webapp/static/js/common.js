@@ -115,7 +115,7 @@ function sendMessage() {
              if(data.code != 0){
                  layer.msg(data.err);
              }else{
-                 layer.msg("验证码已发送到您的手机");
+                 type == 1 ? layer.msg("验证码已发送到您的手机"): layer.msg("验证码已发送到您的邮箱");
              }
          }
      });
@@ -233,5 +233,8 @@ function changeOption(name){
         }
     });
 }
+
+
+
 
 

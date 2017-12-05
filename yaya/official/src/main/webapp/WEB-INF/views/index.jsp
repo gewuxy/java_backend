@@ -109,6 +109,10 @@
     });
 
     $(function(){
+        $(function(){
+            $(".first").addClass("current");
+        })
+
         // 加载公司动态
         $.get('${ctx}/news/ajaxTrends',{'pageNum':1,'pageSize':6,'type':"GSDT"}, function (data) {
             if(data.code == 0){
@@ -169,11 +173,11 @@
                 var addhtml = '<div class="col-lg-3">'
                     +'<div class="v2-entry-item">'
                     +'<div class="v2-entry-img">'
-                    +'<a href="${ctx}/news/view/'+data.data.dataList[index].id+'" target="_blank"><img src="'+data.data.dataList[index].articleImg+'" alt=""></a>'
-                    +'<i class="v2-entry-classIcon"><a href="${ctx}/news/view/'+data.data.dataList[index].id+'">'+keyword+'</a></i>'
+                    +'<a href="${ctx}/news/detail/'+data.data.dataList[index].id+'" target="_blank"><img src="'+data.data.dataList[index].articleImg+'" alt=""></a>'
+                    +'<i class="v2-entry-classIcon"><a href="${ctx}/news/detail/'+data.data.dataList[index].id+'">'+keyword+'</a></i>'
                     +'</div>'
                     +'<div class="v2-entry-title">'
-                    +'<h5><a href="${ctx}/news/view/'+data.data.dataList[index].id+'" target="_blank">'+data.data.dataList[index].title+'</a></h5>'
+                    +'<h5><a href="${ctx}/news/detail/'+data.data.dataList[index].id+'" target="_blank">'+data.data.dataList[index].title+'</a></h5>'
                     +'<span class="time">'+formatSimple(data.data.dataList[index].createTime)+'</span>'
                     +'</div>'
                     +'</div>'
