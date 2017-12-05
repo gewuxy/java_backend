@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,14 +33,17 @@ public class AppOnlineController extends BaseController {
     @Autowired
     private AppVersionService appVersionService;
 
-    @Value("${csp.file.upload.base}")
-    protected String cspFileUploadBase;
+    @Value("${app.file.upload.base}")
+    protected String appFileUploadBase;
 
     @Value("${app.ios.download.url}")
     protected String appIosDownloadUrl;
 
     @Value("${app.and.download.url}")
     protected String appAndDownloadUrl;
+
+    @Value("${app.file.base}")
+    protected String appFileBase;
 
     /**
      * 查看APP上架列表
@@ -67,7 +71,11 @@ public class AppOnlineController extends BaseController {
     @Log(name = "查看APP详情")
     public String checkAppManage(@RequestParam(value = "id", required = true) Integer id, Model model) {
         AppVersion appVersion = appVersionService.selectByPrimaryKey(id);
-        model.addAttribute("imgIosName", appVersion.getVersion() + ".png");
+        String absolutelyPath = appFileBase + "upload/"+appVersion.getDownLoadUrl();
+        QRCodeUtils.createQRCode(absolutelyPath, appFileUploadBase + appVersion.getVersion() + ".png");
+        QRCodeUtils.createQRCode(absolutelyPath, appFileUploadBase + appVersion.getVersion() + ".png");
+
+        model.addAttribute("absolutelyPath", absolutelyPath);
         model.addAttribute("imgAndName", appVersion.getVersion() + ".png");
         model.addAttribute("appVersion", appVersion);
         return "/appManage/AppManageInfo";
@@ -77,13 +85,19 @@ public class AppOnlineController extends BaseController {
      * 修改APP上架列表
      *
      * @param appVersion
+     * @param redirectAttributes
      * @return
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改APP列表")
-    public String updateAppManage(AppVersion appVersion) {
-        appVersion.setUpdateTime(new Date());
-        appVersionService.updateByPrimaryKeySelective(appVersion);
+    public String updateAppManage(AppVersion appVersion,RedirectAttributes redirectAttributes) {
+        if (appVersion != null){
+            appVersion.setUpdateTime(new Date());
+            appVersionService.updateByPrimaryKeySelective(appVersion);
+            addFlashMessage(redirectAttributes,"修改成功");
+        }else {
+            addFlashMessage(redirectAttributes,"修改失败");
+        }
         return "redirect:/csp/appManage/list";
     }
 
@@ -102,15 +116,21 @@ public class AppOnlineController extends BaseController {
      * 添加APP
      *
      * @param appVersion
+     * @param redirectAttributes
      * @return
      */
     @RequestMapping(value = "/add")
     @Log(name = "添加APP")
-    public String addAppManage(AppVersion appVersion) {
-        QRCodeUtils.createQRCode(appIosDownloadUrl, cspFileUploadBase + appVersion.getVersion() + ".png");
-        QRCodeUtils.createQRCode(appAndDownloadUrl, cspFileUploadBase + appVersion.getVersion() + ".png");
-        appVersion.setUpdateTime(new Date());
-        appVersionService.insert(appVersion);
+    public String addAppManage(AppVersion appVersion,RedirectAttributes redirectAttributes) {
+        if (appVersion != null){
+
+            appVersion.setUpdateTime(new Date());
+            appVersionService.insert(appVersion);
+            addFlashMessage(redirectAttributes,"添加成功");
+        }else {
+            addFlashMessage(redirectAttributes,"添加失败");
+        }
+
         return "redirect:/csp/appManage/list";
     }
 
@@ -141,16 +161,22 @@ public class AppOnlineController extends BaseController {
             return APIUtils.error("不能上传空文件");
         }
         String filename = uploadFile.getOriginalFilename();
-        File saveFile = new File("D:" + cspFileUploadBase + filename);
-        if (!saveFile.exists()) {
-            saveFile.mkdirs();
+        String suffix = uploadFile.getOriginalFilename().substring(filename.lastIndexOf(".")+1);
+        if (suffix.equals("apk")){
+            File saveFile = new File(appFileUploadBase+filename);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+            try {
+                uploadFile.transferTo(saveFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return APIUtils.error("文件保存出错");
+            }
+            return APIUtils.success(filename);
+        }else {
+            return APIUtils.error("文件格式错误");
         }
-        try {
-            uploadFile.transferTo(saveFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return APIUtils.error("文件保存出错");
-        }
-        return filename;
+
     }
 }

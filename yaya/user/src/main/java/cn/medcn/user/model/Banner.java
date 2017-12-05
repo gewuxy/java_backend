@@ -45,8 +45,4 @@ public class Banner {
     //内容
     private String content;
 
-    //公众号名字
-    @Transient
-    private String nickname;
-
 }

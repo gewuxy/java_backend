@@ -14,6 +14,7 @@
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/csp/appManage/list">App管理列表</a></li>
+    <li><a href="${ctx}/csp/appManage/edit">新建App管理</a></li>
 </ul>
 <form id="pageForm" name="pageForm" action="${ctx}/csp/appManage/list" method="post">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
@@ -43,7 +44,7 @@
                         <a href="${ctx}/csp/appManage/check?id=${app.id}">查看</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="csp:appManage:del">
-                        <a href="${ctx}/csp/appManage/delete?id=${app.id}" onclick="deleteAppManage()">删除</a>
+                        <a data-href="${ctx}/csp/appManage/delete?id=${app.id}"  onclick="layerConfirm('确认要删除吗？', this)">删除</a>
                     </shiro:hasPermission>
                 </td>
             </tr>
@@ -56,23 +57,11 @@
     </c:if>
     </tbody>
 </table>
-    <div>
-        <shiro:hasPermission name="csp:appManage:add">
-            <input id="insertApp" class="btn btn-primary" type="button"
-               value="添 加" style="margin-left: 1108px"/>
-        </shiro:hasPermission>
-    </div>
-
 <%@include file="/WEB-INF/include/pageable.jsp"%>
 </body>
 <script>
-        $("#insertApp").click(function () {
-            location.href="${ctx}/csp/appManage/edit"
-        })
     function deleteAppManage() {
-        if (confirm("确定删除吗？")){
-            alert("删除成功")
-        }
+        layer.msg("确认删除吗？")
     }
 </script>
 </html>

@@ -526,4 +526,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.selectByUserName(userName);
     }
 
+    @Override
+    public MyPage<CspUserInfo> findUserList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<CspUserInfo> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
+        return page;
+    }
+
 }
