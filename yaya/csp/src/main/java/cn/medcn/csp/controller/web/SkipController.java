@@ -8,6 +8,7 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.user.model.AppVersion;
 import cn.medcn.user.service.AppVersionService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -168,22 +169,19 @@ public class SkipController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/scan/qrcode")
-    public String downloadApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String downloadApp(String local, HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
         if (isWeChat(request)){
             // 微信扫描 再判断ios或安卓手机
-            if(isIOSDevice(request)) {
-                String url = cspBase + localeView("/index/download");
-                response.sendRedirect(url);
-            }
+            return local + "/index/download";
         } else {
             // 手机浏览器扫描 再判断ios或安卓手机
             if (isIOSDevice(request)) {
-                AppVersion appVersion = appUrl(AppVersion.APP_TYPE.CSPMeeting.type, AppVersion.DRIVE_TAG.IOS.type);
+                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting.type);
                 if (appVersion != null ) {
                     response.sendRedirect(appVersion.getDownLoadUrl());
                 }
             } else {
-                AppVersion appVersion = appUrl(AppVersion.APP_TYPE.CSPMeeting.type, AppVersion.DRIVE_TAG.ANDROID.type);
+                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting.type);
                 if (appVersion != null ) {
                     response.sendRedirect(appFileBase + appVersion.getDownLoadUrl());
                 }
@@ -193,6 +191,11 @@ public class SkipController extends CspBaseController {
         return null;
     }
 
+
+    @RequestMapping("/download")
+    public String download() {
+        return localeView("/index/download");
+    }
 
     public AppVersion appUrl(String driveTag, String appType) {
         AppVersion appVersion = appVersionService.findNewly(appType, driveTag);
