@@ -22,17 +22,16 @@
             var option = {
                 url: "${ctx}/yaya/banner/upload",
                 type: 'POST',
-                datatype: 'json',
+                dataType: 'json',
                 clearForm: false,
                 success: function (data) {
-                    //alert(data.savePath);
-                    alert("上传成功!");
-                    $("#uploadValue").val("/medcn/upload/" + data)
-                    $("#imgId").attr("src", "${ctx}/pic/" + data)
-
-                },
-                error: function (map) {
-                    alert("页面请求失败！");
+                    if (data.code == 0){
+                        layer.msg("上传成功");
+                        $("#uploadValue").val(data.data.imgPath);
+                        $("#imgId").attr("src", data.data.saveFileName);
+                    }else {
+                        layer.msg(data.err);
+                    }
                 }
             };
             $("#inputForm").ajaxSubmit(option);
@@ -59,7 +58,7 @@
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-            <input type="search" name="imageUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
+            <input readonly type="search" name="imageUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
 
         </div>
     </div>
@@ -120,9 +119,10 @@
         <div class="controls">
             <select id="pubUser" name="pubUserId" style="width: 20%;">
                 <option value=""/>-- 请选择 --
-                <c:forEach items="${appUser}" var="appUser">
+                <%--<c:forEach items="${appUser}" var="appUser">
                     <option value="${appUser.id}">${appUser.nickname}</option>
-                </c:forEach>
+                </c:forEach>--%>
+                <option value="207668">敬信药草园</option>
             </select>
         </div>
     </div>
