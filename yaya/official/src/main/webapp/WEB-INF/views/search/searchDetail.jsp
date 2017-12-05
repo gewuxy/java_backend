@@ -31,5 +31,10 @@
 </div>
 <!--弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
+<script>
+    $(function(){
+        $(".three").addClass("current");
+    })
+</script>
 </body>
 </html>

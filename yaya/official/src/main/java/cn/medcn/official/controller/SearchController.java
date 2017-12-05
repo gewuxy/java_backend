@@ -71,6 +71,7 @@ public class SearchController extends BaseController{
         search.setSearchUser(SubjectUtils.getCurrentUserid());
         offiSearchService.insertSelective(search);
         model.addAttribute("searchType",searchType);
+        model.addAttribute("categoryId",classify);
         //获取到分类查询
         List<ArticleCategory> list = articleService.findCategoryByPreid(categoryId);
         model.addAttribute("list",list);
@@ -79,6 +80,7 @@ public class SearchController extends BaseController{
         model.addAttribute("keyWord",keyWord);
         pageable.getParams().put("categoryId",categoryId);
         if(!StringUtils.isEmpty(classify)){
+            model.addAttribute("categoryId",classify);
             pageable.getParams().put("classify",classify);
             pageable.getParams().remove("categoryId");
         }
@@ -111,10 +113,5 @@ public class SearchController extends BaseController{
             model.addAttribute("detail",article);
             return "/search/searchDetail";
         }
-    }
-
-
-    public void setClassify(){
-
     }
 }

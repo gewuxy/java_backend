@@ -19,6 +19,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by Liuchangling on 2017/11/23.
  * 合理用药 用户
@@ -26,13 +29,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements PatientUserService{
 
-    @Value("${csp_mail_username}")
+    @Value("${mail_username}")
     private String sender;
 
-    @Value("${csp_mail_password}")
+    @Value("${mail_password}")
     private String password;
 
-    @Value("${csp_mail_server_host}")
+    @Value("${mail_server_host}")
     private String serverHost;
 
     @Autowired
@@ -71,34 +74,30 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
                 bool = result.getMsgId().equals(captcha);
             }
             if (!bool) {
-                throw new SystemException("sms.error.captcha");
+                throw new SystemException("短信验证码错误");
             }
         } catch (Exception e) {
-            throw new SystemException("sms.invalid.captcha");
+            throw new SystemException("短信验证码失败");
         }
     }
 
     @Override
     public String sendCode(String email, EmailTemplate template) throws SystemException {
         if (email == null) {
-            return APIUtils.error(local("user.param.empty"));
+            return setMsg("registAccount","邮箱不能为空");
         }
         // 检查用户邮箱是否已经注册过
         Patient patient = new Patient();
         patient.setEmail(email);
         Patient user = patientUserDAO.selectOne(patient);
         if (user != null) {
-            // 检查是否有激活
             if (user.getActive()) {
-                return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
-            } else {
-                // 发送验证码
-                String code = UUIDUtil.getRandom6();
-                sendMail(email, code,template);
-                return APIUtils.success(local("user.success.register"));
+                return setMsg("registAccount","该邮箱账户已经存在");
             }
         }
-        return APIUtils.success(local("user.success.register"));
+        String code = UUIDUtil.getRandom6();
+        sendMail(email, code,template);
+        return APIUtils.success("验证码发送成功");
     }
 
     public void sendMail(String email, String code,EmailTemplate template) throws SystemException {
@@ -117,11 +116,18 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
             emailHelper.sendMail(code,template.getContent(),emailSender,bean);
         } catch (JDOMException e) {
             e.printStackTrace();
-            throw new SystemException(local("email.address.error"));
+            throw new SystemException("邮箱地址错误");
         } catch (Exception e) {
             e.printStackTrace();
-            throw new SystemException(local("email.error.send"));
+            throw new SystemException("发送失败，请重试");
         }
+    }
+
+    private String setMsg(String id,String msg){
+        Map<String,String> map = new HashMap<>();
+        map.put("id",id);
+        map.put("msg",msg);
+        return APIUtils.error(map);
     }
 
 }

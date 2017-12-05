@@ -697,7 +697,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .contribute-list-item .clearfix .fl img{ border-radius: 50%; margin-right: 12px;margin-top: 3px;  }
 .contribute-list-item .clearfix .oh h4 { font-size:18px; color:#3b3a34; font-weight: normal;}
 .contribute-list-item .checkboxIcon .ico { float:left; margin-right:10px; top:12px;}
-.contribute-list-item .clearfix .oh p { font-size: 14px; color: #7A8B9F; line-height: 1.4;}
+.contribute-list-item .clearfix .oh p { font-size: 14px; color: #7A8B9F; line-height: 1.4; min-height: 38px;}
 .layer-hospital-popup-bottom .button { color:#fff;}
 .layer-hospital-popup-bottom .min-btn { padding:10px 20px; font-size:16px;  -moz-border-radius: 27px; -webkit-border-radius:27px; border-radius: 27px;}
 .layui-layer .layui-layer-btn { overflow: hidden; padding:30px 30px 30px 10px;}

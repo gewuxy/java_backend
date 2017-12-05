@@ -48,7 +48,7 @@
                             <span class="color-blue">热门搜索：</span>
                             <c:if test="${not empty hotList}">
                                 <c:forEach items="${hotList}" var="hot" varStatus="stat">
-                                    <a href="${ctx}/search/searchList/?keyWord=${hot.search}">${hot.search}</a>
+                                    <a href="${ctx}/search/searchList?searchType=${searchType}&keyWord=${hot.search}">${hot.search}</a>
                                     <c:if test="${!stat.last}">
                                         <span class="muted">|</span>
                                     </c:if>
@@ -65,4 +65,9 @@
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
 <%@ include file="/WEB-INF/include/common_js.jsp" %>
 </body>
+<script>
+    $(function(){
+        $(".three").addClass("current");
+    })
+</script>
 </html>

@@ -10,7 +10,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>會講-全球領先的雲同步回放會議系統</title>
+    <title>會講-全球領先的雲同步回放演講系統</title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -385,7 +385,7 @@
                     <div class="module-section-content index-info">
                         <div class="row">
                             <div class="col-lg-7">
-                                <h3 class="color-black">全球領先的<br />雲同步回放會議系統</h3>
+                                <h3 class="color-black">全球領先的<br />雲同步回放演講系統</h3>
                                 <p  >Global Leading Meeting System with <br />Cloud Synchronization Playback</p>
                             </div>
                             <div class="col-lg-5 pr">

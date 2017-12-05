@@ -27,7 +27,6 @@
     <script src="${ctxStatic}/js/zclip/jquery.zclip.min.js"></script>
 
     <script id="-mob-share" src="//f1.webshare.mob.com/code/mob-share.js"></script>
-    <script src="${ctxStatic}/js/ajaxUtils.js"></script>
 
     <script>
         const shareSdkAppKey = "21454499cef00";
@@ -90,7 +89,7 @@
                     $("#contribute").submit(function (e) {
                         e.preventDefault(); //阻止表单自动提交
                     });
-                    $.post($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
+                    ajaxPost($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
                         if (result.code == 0){//成功
                             layer.msg("投稿成功",{time:300},function () {
                                 layer.closeAll();
@@ -98,7 +97,7 @@
                         }else{//失败
                             layer.msg(result.err);
                         }
-                    },'json');
+                    });
                 }
             });
 
