@@ -3,6 +3,7 @@ package cn.medcn.sys.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.sys.dao.SystemRegionDAO;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
@@ -77,11 +78,8 @@ public class SystemRegionServiceImpl extends BaseServiceImpl<SystemRegion> imple
         SystemRegion condition = new SystemRegion();
         condition.setName(preName);
         List<SystemRegion> list = systemRegionDAO.select(condition);
-        if(list.size() == 0){
-            return Lists.newArrayList();
-        }
-        SystemRegion parent = list.get(0);
-        return findRegionByPreid(parent.getId());
+        SystemRegion parent = list.size() > 0 ? list.get(0) : null;
+        return findRegionByPreid(parent == null ? 0 : parent.getId());
     }
 
     @Override
