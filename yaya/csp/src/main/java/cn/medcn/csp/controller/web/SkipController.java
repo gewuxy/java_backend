@@ -40,8 +40,6 @@ public class SkipController extends CspBaseController {
     @Value("${csp.file.base}")
     protected String appFileBase;
 
-    @Value("${app.csp.base}")
-    protected String cspBase;
 
     // CSP 服务协议id
     public static final String SERVICE_PROTOCOL_ID = "17103116062545591360";
@@ -169,9 +167,9 @@ public class SkipController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/scan/qrcode")
-    public String downloadApp(String local, HttpServletRequest request, HttpServletResponse response, Model model) throws IOException {
+    public String downloadApp(String local, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (isWeChat(request)){
-            // 微信扫描 再判断ios或安卓手机
+            // 微信扫描
             return local + "/index/download";
         } else {
             // 手机浏览器扫描 再判断ios或安卓手机
@@ -191,11 +189,6 @@ public class SkipController extends CspBaseController {
         return null;
     }
 
-
-    @RequestMapping("/download")
-    public String download() {
-        return localeView("/index/download");
-    }
 
     public AppVersion appUrl(String driveTag, String appType) {
         AppVersion appVersion = appVersionService.findNewly(appType, driveTag);
