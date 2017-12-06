@@ -278,6 +278,16 @@
         SELECT * FROM t_meet WHERE meet_name = #{meetName}
     </select>
 
+    <select id="selectAllMeet" resultType="cn.medcn.meet.model.Meet">
+        SELECT t.id,t.meet_name FROM t_meet t
+    </select>
 
+    <select id="selectMeetList" resultType="cn.medcn.meet.model.Meet">
+        SELECT t.id,t.meet_name FROM t_meet t
+        WHERE 1 = 1
+        <if test="meetName != null">
+            AND t.meet_name LIKE  CONCAT('%',#{meetName},'%')
+        </if>
+    </select>
 
 </mapper>

@@ -15,6 +15,7 @@
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/yaya/recommendMeet/list">首页推荐会议列表</a></li>
+    <li><a href="${ctx}/yaya/recommendMeet/edit">新建推荐会议</a></li>
 </ul>
 <form id="pageForm" name="pageForm" action="${ctx}/yaya/recommendMeet/list" method="post">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
@@ -42,9 +43,6 @@
         </select>&nbsp;&nbsp;
 <shiro:hasPermission name = "yaya:recommendMeet:view">
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
-</shiro:hasPermission>&nbsp;&nbsp;
-<shiro:hasPermission name = "yaya:recommendMeet:add">
-    <input id="insertRecommendMeet" class="btn btn-primary" type="button" value="新 建"  name="recommendMeet" />
 </shiro:hasPermission>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -75,8 +73,8 @@
                     <a href="${ctx}/yaya/recommendMeet/check?id=${meet.id}">查看</a>
                     </shiro:hasPermission>
                     <shiro:hasPermission name="yaya:recommendMeet:close">
-                    <c:if test="${meet.state != 6}">
-                    <a href="${ctx}/yaya/recommendMeet/close?id=${meet.id}"  onclick="confirm('确认关闭吗？')">关闭</a>
+                    <c:if test="${meet.recFlag != false}">
+                        <a data-href="${ctx}/yaya/recommendMeet/close?id=${meet.id}"  onclick="layerConfirm('确认关闭推荐吗？', this)">关闭</a>
                     </c:if>
                     </shiro:hasPermission>
                 </td>

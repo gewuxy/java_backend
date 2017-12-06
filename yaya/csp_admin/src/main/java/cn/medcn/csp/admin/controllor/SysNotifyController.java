@@ -3,6 +3,7 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.csp.admin.utils.SubjectUtils;
@@ -12,9 +13,12 @@ import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.sys.service.SystemUserService;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.ui.Model;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -68,28 +72,20 @@ public class SysNotifyController extends BaseController {
      * 发布公告
      *
      * @param notify
-     * @param model
+     * @param acceptId 接收者id
      * @return
      */
     @RequestMapping(value = "/insert")
     @Log(name = "发布公告")
-    public String sendMessage(SystemNotify notify, Model model, String userName) {
+    public String sendMessage(SystemNotify notify,String acceptId) {
         Integer userId = SubjectUtils.getCurrentUserid();
         SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null) {
-            if (userName != null) {
-                CspUserInfo cspUserInfo = cspUserService.selectByUserName(userName);
-                if (cspUserInfo!=null){
-                    notify.setAcceptId(cspUserInfo.getId());
-                }else{
-                    model.addAttribute("err","不存在的用户");
-                    return "/notify/notifyInfo";
-                }
-            }
             notify.setId(UUIDUtil.getNowStringID());
             notify.setSenderId(String.valueOf(userId));
             notify.setSenderName(systemUser.getUserName());
             notify.setSendTime(new Date());
+            notify.setAcceptId(acceptId);
             int insert = sysNotifyService.insert(notify);
             System.out.println(insert);
             return "redirect:/csp/notify/list";
@@ -99,17 +95,25 @@ public class SysNotifyController extends BaseController {
 
     }
 
-    /**
-     * 接受者校验
-     * @param userName 接受者
-     * @return
-     */
-    @RequestMapping(value = "/checkout")
+    @RequestMapping(value = "/userList")
+    public String searchUserInfo(String userName,Pageable pageable,Model model){
+        if (!StringUtils.isEmpty(userName)) {
+            pageable.getParams().put("userName", userName);
+            model.addAttribute("userName",userName);
+        }
+        MyPage<CspUserInfo> myPage = cspUserService.findUserList(pageable);
+        model.addAttribute("page",myPage);
+        return "/notify/cspNotifyUser";
+    }
+
+    @RequestMapping(value = "/selectOne")
     @ResponseBody
-    @Log(name = "接受者校验")
-    public CspUserInfo checkout(String userName){
-        CspUserInfo cspUserInfo = cspUserService.selectByUserName(userName);
-        return cspUserInfo;
+    public String selectOne(@RequestParam(value = "id", required = true) String id,Model model){
+        CspUserInfo cspUserInfo =  cspUserService.selectByPrimaryKey(id);
+        model.addAttribute("cspUserInfo",cspUserInfo);
+        String json = JSON.toJSONString(cspUserInfo);
+        model.addAttribute("json",json);
+        return json;
     }
 
     /**
@@ -123,7 +127,9 @@ public class SysNotifyController extends BaseController {
     public String notifyEdit(@RequestParam(value = "id", required = true) String id, Model model) {
         SystemNotify notify = sysNotifyService.selectByPrimaryKey(id);
         CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(notify.getAcceptId());
-        model.addAttribute("userName",cspUserInfo.getUserName());
+        if (notify.getNotifyType() ==1){
+            model.addAttribute("userName",cspUserInfo.getUserName());
+        }
         model.addAttribute("notify", notify);
         return "/notify/notifyInfoEdit";
     }
@@ -131,20 +137,16 @@ public class SysNotifyController extends BaseController {
     /**
      * 修改页面
      * @param notify
-     * @param userName 接收人
      * @return
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改页面")
-    public String update( SystemNotify notify,String userName) {
+    public String update( SystemNotify notify) {
+        Integer userId = SubjectUtils.getCurrentUserid();
+        SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null){
-            if (userName != null){
-                CspUserInfo cspUserInfo = cspUserService.selectByUserName(userName);
-                notify.setAcceptId(cspUserInfo.getId());
-            }else {
-                return "/notify/notifyInfoEdit";
-            }
             notify.setSendTime(new Date());
+            notify.setSenderName(systemUser.getUserName());
             sysNotifyService.updateByPrimaryKey(notify);
             return "redirect:/csp/notify/list";
         }else{
