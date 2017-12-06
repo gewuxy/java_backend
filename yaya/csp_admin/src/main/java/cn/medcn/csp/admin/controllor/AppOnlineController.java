@@ -21,6 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Author：jianliang
@@ -35,12 +37,6 @@ public class AppOnlineController extends BaseController {
 
     @Value("${app.file.upload.base}")
     protected String appFileUploadBase;
-
-    @Value("${app.ios.download.url}")
-    protected String appIosDownloadUrl;
-
-    @Value("${app.and.download.url}")
-    protected String appAndDownloadUrl;
 
     @Value("${app.file.base}")
     protected String appFileBase;
@@ -71,12 +67,6 @@ public class AppOnlineController extends BaseController {
     @Log(name = "查看APP详情")
     public String checkAppManage(@RequestParam(value = "id", required = true) Integer id, Model model) {
         AppVersion appVersion = appVersionService.selectByPrimaryKey(id);
-        String absolutelyPath = appFileBase + "upload/"+appVersion.getDownLoadUrl();
-        QRCodeUtils.createQRCode(absolutelyPath, appFileUploadBase + appVersion.getVersion() + ".png");
-        QRCodeUtils.createQRCode(absolutelyPath, appFileUploadBase + appVersion.getVersion() + ".png");
-
-        model.addAttribute("absolutelyPath", absolutelyPath);
-        model.addAttribute("imgAndName", appVersion.getVersion() + ".png");
         model.addAttribute("appVersion", appVersion);
         return "/appManage/AppManageInfo";
     }
@@ -161,12 +151,12 @@ public class AppOnlineController extends BaseController {
     @Log(name = "文件下载")
     public String uploadApp(MultipartFile uploadFile) {
         if (uploadFile == null) {
-            return APIUtils.error("不能上传空文件");
+            return error("不能上传空文件");
         }
         String filename = uploadFile.getOriginalFilename();
         String suffix = uploadFile.getOriginalFilename().substring(filename.lastIndexOf(".")+1);
         if (suffix.equals("apk")){
-            File saveFile = new File(appFileUploadBase+filename);
+            File saveFile = new File(appFileUploadBase+"apkfile/"+filename);
             if (!saveFile.exists()) {
                 saveFile.mkdirs();
             }
@@ -174,11 +164,14 @@ public class AppOnlineController extends BaseController {
                 uploadFile.transferTo(saveFile);
             } catch (IOException e) {
                 e.printStackTrace();
-                return APIUtils.error("文件保存出错");
+                return error("文件保存出错");
             }
-            return APIUtils.success(filename);
+            Map<String,Object> map = new HashMap<String,Object>();
+            String downUrl = "apkfile/"+filename;
+            map.put("downUrl",downUrl);
+            return success(map);
         }else {
-            return APIUtils.error("文件格式错误");
+            return error("文件格式错误");
         }
 
     }

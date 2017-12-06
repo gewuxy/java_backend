@@ -28,7 +28,7 @@
                     //alert(data.code)
                     if (data.code == 0){
                         layer.msg("上传成功")
-                        $("#uploadValue").val(data.data)
+                        $("#uploadValue").val(data.data.downUrl)
                         //$("#downLoadId").val(${ctx}/pic/ + data)
                         var fileId = "uploadFile";
                         var dom = document.getElementById(fileId);
@@ -90,7 +90,7 @@
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${filename}" name="uploadFile">
-            <input readonly type="search" name="downLoadUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
+            <input  type="hidden" name="downLoadUrl" id="uploadValue" value="">
 
         </div>
     </div>
@@ -108,7 +108,7 @@
     <div class="control-group">
         <label class="control-label">文件大小:</label>
         <div class="controls">
-            <input id="fileSize" type="search" name="fileSize" value="${fileSize}" maxlength="50"
+            <input readonly id="fileSize" type="search" name="fileSize" value="${fileSize}" maxlength="50"
                    class="required digits input-small"/>KB
         </div>
     </div>
