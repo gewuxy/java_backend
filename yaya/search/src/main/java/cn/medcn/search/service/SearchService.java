@@ -11,9 +11,11 @@ import java.util.Map;
 /**
  * Created by LiuLP on 2017/8/7.
  */
-public interface SearchService<T> {
+public interface SearchService {
 
-    SearchResult<T> search(Map<String,String> queryMap, Pageable pageable);
+    SearchResult search(Pageable pageable);
 
     String getSolrUrl();
+
+    Class getEntityClass();
 }
