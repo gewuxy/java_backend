@@ -20,8 +20,13 @@ import java.util.Map;
 @Service
 public abstract class SearchServiceImpl implements SearchService {
 
+    /**
+     * 基本的OR查询
+     * @param pageable
+     * @return
+     */
     @Override
-    public SearchResult search( Pageable pageable) {
+    public SearchResult BaseSearch( Pageable pageable) {
         String url = getSolrUrl();
         HttpSolrClient client = new HttpSolrClient(url);
         SolrQuery query = new SolrQuery();
@@ -55,4 +60,8 @@ public abstract class SearchServiceImpl implements SearchService {
         }
         return result;
     }
+
+
+
+
 }
