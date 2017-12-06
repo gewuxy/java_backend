@@ -22,19 +22,22 @@
             var option = {
                 url: "${ctx}/csp/appManage/upload",
                 type: 'POST',
-                datatype: 'json',
+                dataType: 'json',
                 clearForm: false,
                 success: function (data) {
-                    alert("上传成功!");
-                    $("#uploadValue").val(data)
-                    var fileId = "uploadFile";
-                    var dom = document.getElementById(fileId);
-                    var fileSize = dom.files[0].size;
-                    var size = parseInt((Math.round(fileSize) / 1024).toFixed(2));
-                    $("#fileSize").val(size)
-                },
-                error: function (map) {
-                    alert("页面请求失败！");
+                    //alert(data.code)
+                    if (data.code == 0){
+                        layer.msg("上传成功")
+                        $("#uploadValue").val(data.data)
+                        //$("#downLoadId").val(${ctx}/pic/ + data)
+                        var fileId = "uploadFile";
+                        var dom = document.getElementById(fileId);
+                        var fileSize = dom.files[0].size;
+                        var size = parseInt((Math.round(fileSize) / 1024).toFixed(2));
+                        $("#fileSize").val(size)
+                    }else{
+                        layer.msg(data.err);
+                    }
                 }
             };
             $("#inputForm").ajaxSubmit(option);
@@ -43,7 +46,6 @@
     </script>
 
 </head>
-<script type="text/javascript" src="${ctxStatic}/jquery/jquery.min.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery/qrcode.min.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery/jquery.qrcode.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
@@ -56,7 +58,7 @@
     <div class="control-group">
         <label class="control-label">版本号:</label>
         <div class="controls">
-            <input type="text" name="version" maxlength="50"  id="version"
+            <input type="search" name="versionStr" maxlength="50"  id="version"
                    class="required input-xlarge"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
@@ -64,16 +66,21 @@
     <div class="control-group">
         <label class="control-label">版本信息描述:</label>
         <div class="controls">
-            <input type="text" name="versionStr" maxlength="50"
-                   class="required input-xlarge"/>
+            <%--<input type="search" name="details" maxlength="50"
+                   class="required input-xlarge"/>--%>
+            <textarea name="details" rows="3" maxlength="2000" class="input-xxlarge"></textarea>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">手机类型:</label>
         <div class="controls">
-            <input type="text" name="driveTag" maxlength="50" id="driveTag"
-                   class="required input-xlarge"/>
+            <select name="driveTag">
+                <option value="">-- 请选择 --</option>
+                <option value="ios">IOS</option>
+                <option value="ipad">IPAD</option>
+                <option value="android">ANDROID</option>
+            </select>
         </div>
     </div>
     <div class="control-group">
@@ -83,28 +90,32 @@
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${filename}" name="uploadFile">
-            <input type="search" name="downLoadUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
+            <input readonly type="search" name="downLoadUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
 
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">应用类型:</label>
         <div class="controls">
-            <input name="appType" type="text" maxlength="100"
-                   class="input-xlarge"/>
+                <select name="appType">
+                    <option value="">-- 请选择 --</option>
+                    <option value="yaya_yishi">YAYA_YISHI</option>
+                    <option value="yaya_yaoshi">YAYA_YAOSHI</option>
+                    <option value="hlyy">HLYY</option>
+                </select>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">文件大小:</label>
         <div class="controls">
-            <input id="fileSize" type="text" name="fileSize" value="${fileSize}" maxlength="50"
+            <input id="fileSize" type="search" name="fileSize" value="${fileSize}" maxlength="50"
                    class="required digits input-small"/>KB
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">版本更新说明:</label>
         <div class="controls">
-            <input name="details" type="text" maxlength="100"
+            <input name="details" type="search" maxlength="100"
                    class="input-xlarge"/>
         </div>
     </div>

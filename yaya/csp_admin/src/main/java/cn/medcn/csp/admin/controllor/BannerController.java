@@ -1,17 +1,16 @@
 package cn.medcn.csp.admin.controllor;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.supports.Validate;
 import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
-import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.BannerService;
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -20,13 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -43,8 +42,11 @@ public class BannerController extends BaseController{
     @Autowired
     private AppUserService appUserService;
 
-    @Value("${csp.file.upload.base}")
-    protected String cspFileUploadBase;
+    @Value("${app.file.upload.base}")
+    protected String appFileUploadBase;
+
+    @Value("${app.file.base}")
+    protected String appFileBase;
 
     /**
      * Banner列表页
@@ -57,6 +59,7 @@ public class BannerController extends BaseController{
     public String bannerList(Pageable pageable, Model model){
         MyPage<Banner> myPage = bannerService.findBannerList(pageable);
         model.addAttribute("page",myPage);
+        model.addAttribute("pubName", Constants.DEFAULT_HOS_NAME);
         return "/banner/bannerList";
     }
 
@@ -67,9 +70,6 @@ public class BannerController extends BaseController{
     @RequestMapping(value = "/edit")
     @Log(name = "跳转编辑页面")
     public String editBannerInfo(HttpServletRequest request){
-        Integer pubFlag = 1;
-        List<AppUser> appUser = appUserService.selectByPub(pubFlag);
-        request.setAttribute("appUser",appUser);
         return "/banner/bannerInfo";
     }
 
@@ -88,18 +88,28 @@ public class BannerController extends BaseController{
         }
         String filename = uploadFile.getOriginalFilename();
         String suffix = uploadFile.getOriginalFilename().substring(filename.lastIndexOf("."));
-        String saveFileName = System.currentTimeMillis()+suffix;
-        File saveFile = new File("D:"+cspFileUploadBase + saveFileName);
-        if (!saveFile.exists()) {
-            saveFile.mkdirs();
+        String saveFileName = StringUtils.nowStr()+suffix;
+        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+            String imgPath = appFileUploadBase+saveFileName;
+            File saveFile = new File(imgPath);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+            try {
+                uploadFile.transferTo(saveFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return APIUtils.error("文件保存出错");
+            }
+            String absolutelyPath = appFileBase + "upload/"+saveFileName;
+            Map<String,String> map = new HashMap();
+            map.put("saveFileName",absolutelyPath);
+            map.put("imgPath",imgPath);
+            return APIUtils.success(map);
+        }else {
+            return APIUtils.error("文件格式错误");
         }
-        try {
-            uploadFile.transferTo(saveFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return APIUtils.error("文件保存出错");
-        }
-        return saveFileName;
+
     }
 
     /**
@@ -109,10 +119,16 @@ public class BannerController extends BaseController{
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建Banner")
-    public String insertBanner(Banner banner){
-        banner.setCreateTime(new Date());
-        banner.setId(UUIDUtil.getNowStringID());
-        bannerService.insert(banner);
+    public String insertBanner(Banner banner,RedirectAttributes redirectAttributes){
+        if (banner != null){
+            banner.setCreateTime(new Date());
+            banner.setId(UUIDUtil.getNowStringID());
+            bannerService.insert(banner);
+            addFlashMessage(redirectAttributes,"添加成功");
+        }else {
+            addErrorFlashMessage(redirectAttributes,"添加失败");
+        }
+
         return "redirect:/yaya/banner/list";
     }
 
@@ -125,15 +141,15 @@ public class BannerController extends BaseController{
     @RequestMapping(value = "/check")
     @Log(name = "查看Banner")
     public String checkBanner(@RequestParam(value = "id", required = true) String id,Model model){
-        Integer pubFlag = 1;
-        List<AppUser> appUsers = appUserService.selectByPub(pubFlag);
         Banner banner = bannerService.selectByPrimaryKey(id);
-        String imgName = banner.getImageUrl().substring(14);
-        model.addAttribute("appUsers",appUsers);
-        model.addAttribute("imgName",imgName);
+        String imgUrl = banner.getImageUrl().substring(10);
+        String absolutelyPath = appFileBase + "upload/"+imgUrl;
+        System.out.println(imgUrl);
+        model.addAttribute("absolutelyPath",absolutelyPath);
         model.addAttribute("banner",banner);
         return "/banner/bannerInfoEdit";
     }
+
 
     /**
      * 修改Banner
@@ -142,9 +158,14 @@ public class BannerController extends BaseController{
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改Banner")
-    public String updateBanner(Banner banner){
-        banner.setCreateTime(new Date());
-        bannerService.updateByPrimaryKeySelective(banner);
+    public String updateBanner(Banner banner,RedirectAttributes redirectAttributes){
+        if(banner != null){
+            banner.setCreateTime(new Date());
+            bannerService.updateByPrimaryKeySelective(banner);
+            addFlashMessage(redirectAttributes,"修改成功");
+        }else {
+            addErrorFlashMessage(redirectAttributes,"修改失败");
+        }
         return "redirect:/yaya/banner/list";
     }
 

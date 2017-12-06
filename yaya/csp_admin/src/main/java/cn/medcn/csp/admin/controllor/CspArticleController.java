@@ -5,6 +5,8 @@ import cn.medcn.article.service.CspArticleService;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,7 +14,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -27,8 +31,8 @@ public class CspArticleController extends BaseController {
     @Autowired
     private CspArticleService cspArticleService;
 
-    @Value("${csp.file.upload.base}")
-    protected String cspFileUploadBase;
+    @Value("${app.file.upload.base}")
+    protected String appFileUploadBase;
 
     /**
      *查看详情
@@ -81,36 +85,54 @@ public class CspArticleController extends BaseController {
     /**
      * 修改页面
      * @param cspArticle
-     * @param picture
-     * @param model
+     * @param redirectAttributes
      * @return
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改页面")
-    public String update(CspArticle cspArticle, MultipartFile picture, Model model) {
-        String originalFileName = picture.getOriginalFilename();
-        if (picture != null && originalFileName != null && originalFileName.length() > 0) {
-            String pic_path = "D:"+cspFileUploadBase;
-            File file = new File(pic_path);
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            String newFileName = System.currentTimeMillis()
-                    + originalFileName.substring(originalFileName
-                    .lastIndexOf("."));
-            File newFile = new File(pic_path + newFileName);
-            try {
-                picture.transferTo(newFile);
-                String imgPath = pic_path + newFileName;
-                cspArticle.setImgUrl(imgPath);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            CspArticle article = cspArticleService.selectByPrimaryKey(cspArticle.getId());
-            article.setImgUrl(cspArticle.getImgUrl());
+    public String update(CspArticle cspArticle,RedirectAttributes redirectAttributes) {
+        if (cspArticle != null){
+            cspArticleService.updateByPrimaryKeySelective(cspArticle);
+            addFlashMessage(redirectAttributes,"更新成功");
+        }else {
+            addErrorFlashMessage(redirectAttributes,"更新失败");
         }
-        cspArticleService.updateByPrimaryKeySelective(cspArticle);
         return "redirect:/csp/article/list";
+    }
+
+    /**
+     * 图片上传
+     * @param uploadFile
+     * @return
+     */
+    @Log(name = "图片上传")
+    @RequestMapping(value = "/upload")
+    @ResponseBody
+    public String uploadImg(MultipartFile uploadFile){
+        if (uploadFile == null) {
+            return APIUtils.error("不能上传空文件");
+        }
+        String filename = uploadFile.getOriginalFilename();
+        String suffix = uploadFile.getOriginalFilename().substring(filename.lastIndexOf("."));
+        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+        String saveFileName = StringUtils.nowStr()+suffix;
+        String imgPath =appFileUploadBase + saveFileName;
+        File saveFile = new File(imgPath);
+        if (!saveFile.exists()) {
+            saveFile.mkdirs();
+        }
+        try {
+            uploadFile.transferTo(saveFile);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return APIUtils.error("文件保存出错");
+        }
+
+        //return saveFileName;
+            return APIUtils.success(imgPath);
+        }else {
+            return APIUtils.error("文件格式有误");
+
+        }
     }
 }

@@ -41,9 +41,8 @@
             success: function (data) {
                 //alert(data.savePath);
                 alert("上传成功!");
-                $("#uploadValue").val("/medcn/upload/" + data)
-                $("#imgId").attr("src", "${ctx}/pic/" + data)
-
+                $("#uploadValue").val(data.data.imgPath);
+                /*$("#imgId").attr("src", data.data.saveFileName);*/
             },
             error: function (map) {
                 alert("页面请求失败！");
@@ -66,14 +65,14 @@
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-            <input type="search" name="imageUrl" value="${banner.imageUrl}" id="uploadValue" maxlength="50" class="required input-xlarge">
+            <input readonly type="search" name="imageUrl" value="${banner.imageUrl}" id="uploadValue" maxlength="50" class="required input-xlarge">
 
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">图片展示:</label>
         <div class="controls">
-            <img src="${ctx}/pic/${imgUrl}" id="imgId" width="200" height="200">
+            <img  src="${absolutelyPath}" id="imgId" width="200" height="200">
         </div>
     </div>
     <div class="control-group">
@@ -136,9 +135,7 @@
         <div class="controls">
             <select id="pubUser" name="pubUserId" style="width: 20%;">
                 <option value=""/>-- 请选择 --
-                <c:forEach items="${appUsers}" var="appUsers">
-                    <option value="${appUsers.id}">${appUsers.nickname}</option>
-                </c:forEach>
+                <option value="207668">敬信药草园</option>
             </select>
             <script>
                 document.getElementById("pubUser").value="${banner.pubUserId}";

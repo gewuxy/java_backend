@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -39,12 +40,11 @@ public class AppVersion implements Serializable{
     /**是否强制更新*/
     private Boolean forced;
 
-
     public enum APP_TYPE{
         YAYA_YISHI("yaya_yishi"),
         YAYA_YAOSHI("yaya_yaoshi"),
-        HLYY("hlyy");
-
+        HLYY("hlyy"),
+        CSPMeeting("csp");
         public String type;
 
         APP_TYPE(String type){

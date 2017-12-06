@@ -442,6 +442,14 @@ public interface MeetService extends BaseService<Meet> {
      * @return
      */
     Meet selectByMeetName(String meetName);
+
+    /**
+     * 查询所有的会议
+     * @return
+     */
+    List<Meet> selectAllMeet();
+
+    MyPage<Meet> selectMeetList(Pageable pageable);
 }
 
 

@@ -49,4 +49,6 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
     List<CspUserInfo> findCspUserList(Map<String, Object> params);
 
     CspUserInfo selectByUserName(String userName);
+
+    List<CspUserInfo> findUserList(Map<String, Object> params);
 }

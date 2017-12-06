@@ -36,9 +36,34 @@
                 $("#unchecked").attr("checked", "checked")
             }
         })
+
+        function selectFile() {
+            $("#uploadFile").trigger("click");
+        }
+
+        function fileUpload() {
+            var option = {
+                url: "${ctx}/csp/article/upload",
+                type: 'POST',
+                dataType: 'json',
+                clearForm: false,
+                success: function (data)  //服务器成功响应处理函数
+                {
+                    if(data.code == 0){
+                        layer.msg("上传成功")
+                        $("#uploadValue").val(data.data);
+                    }else{
+                        layer.msg(data.err);
+                    }
+                }
+            };
+            $("#inputForm").ajaxSubmit(option);
+            return true;
+        }
     </script>
 </head>
 <script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/csp/article/edit?id=${article.id}&listType=0">服务菜单(CN)</a></li>
@@ -54,7 +79,7 @@
             <label class="control-label">文章标题:</label>
             <div class="controls">
                 <div class="input-append">
-                    <input id="title" name="titleCn" type="text" value="${article.titleCn}">
+                    <input id="title" name="titleCn" type="search" value="${article.titleCn}">
                 </div>
             </div>
         </div>
@@ -64,7 +89,7 @@
             <label class="control-label">文章標題:</label>
             <div class="controls">
                 <div class="input-append">
-                    <input id="titleTw" name="titleTw" type="text" value="${article.titleTw}">
+                    <input id="titleTw" name="titleTw" type="search" value="${article.titleTw}">
                 </div>
             </div>
         </div>
@@ -74,7 +99,7 @@
             <label class="control-label">Title(US):</label>
             <div class="controls">
                 <div class="input-append">
-                    <input id="titleUs" name="titleUs" type="text" value="${article.titleUs}">
+                    <input id="titleUs" name="titleUs" type="search" value="${article.titleUs}">
                 </div>
             </div>
         </div>
@@ -113,12 +138,19 @@
         </div>
     </c:if>
     <div class="control-group">
-        <label class="control-label">图片路径:</label>
+        <label class="control-label">上传图片:</label>
         <div class="controls">
-            <input readonly type="text" name="imgUrl" value="${article.imgUrl}" size="100" style="width: 300px">
-            <input type="file" name="picture">
+            <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
+                   onchange="fileUpload()">
+            <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
+            <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
+            <input readonly type="search" name="imgUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
+
         </div>
     </div>
+    <script type="text/javascript">
+
+    </script>
 
     <div class="control-group">
         <label class="control-label">是否审核:</label>

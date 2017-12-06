@@ -172,4 +172,35 @@ public class CspBaseController extends BaseController {
     protected String courseNonDeleteAble(){
         return local("course.error.delete");
     }
+
+    /**
+     * 判断是否是微信访问
+     *
+     * @param request
+     * @return
+     */
+    protected boolean isWeChat(HttpServletRequest request) {
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        return userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+    }
+
+    /**
+     * 判断是否为IOS系统访问
+     *
+     * @param request
+     * @return
+     */
+    protected boolean isIOSDevice(HttpServletRequest request) {
+        boolean isMobile = false;
+        final String[] ios_sys = { "iPhone", "iPad", "iPod" };
+        String userAgent = request.getHeader("user-agent");
+        for (int i = 0; !isMobile && userAgent != null && !userAgent.trim().equals("") && i < ios_sys.length; i++) {
+            if (userAgent.contains(ios_sys[i])) {
+                isMobile = true;
+                break;
+            }
+        }
+        return isMobile;
+    }
+
 }

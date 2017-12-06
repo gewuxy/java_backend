@@ -2,14 +2,19 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.article.model.CspArticle;
 import cn.medcn.article.service.CspArticleService;
+import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.user.model.AppVersion;
+import cn.medcn.user.service.AppVersionService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
 import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,6 +24,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 
@@ -31,6 +37,10 @@ import static cn.medcn.common.Constants.LOGIN_USER_KEY;
  */
 @Controller
 public class SkipController extends CspBaseController {
+    @Value("${csp.file.base}")
+    protected String appFileBase;
+
+
     // CSP 服务协议id
     public static final String SERVICE_PROTOCOL_ID = "17103116062545591360";
     // CSP 关于我们id
@@ -38,6 +48,9 @@ public class SkipController extends CspBaseController {
 
     @Autowired
     protected CspArticleService articleService;
+
+    @Autowired
+    protected AppVersionService appVersionService;
 
 
     protected void getCookieUser(HttpServletRequest request, Model model){
@@ -148,13 +161,37 @@ public class SkipController extends CspBaseController {
     }
 
 
+
     /**
-     * 官网首页 微信扫描下载app二维码 跳转提示页面
+     * 官网首页 微信扫描二维码下载app 跳转提示页面
      * @return
      */
-    @RequestMapping(value = "/download")
-    public String downloadApp() {
-        return localeView("/index/download");
+    @RequestMapping(value = "/scan/qrcode")
+    public String downloadApp(String local, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (isWeChat(request)){
+            // 微信扫描
+            return local + "/index/download";
+        } else {
+            // 手机浏览器扫描 再判断ios或安卓手机
+            if (isIOSDevice(request)) {
+                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting.type);
+                if (appVersion != null ) {
+                    response.sendRedirect(appVersion.getDownLoadUrl());
+                }
+            } else {
+                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting.type);
+                if (appVersion != null ) {
+                    response.sendRedirect(appFileBase + appVersion.getDownLoadUrl());
+                }
+            }
+
+        }
+        return null;
     }
 
+
+    public AppVersion appUrl(String driveTag, String appType) {
+        AppVersion appVersion = appVersionService.findNewly(appType, driveTag);
+        return appVersion;
+    }
 }
