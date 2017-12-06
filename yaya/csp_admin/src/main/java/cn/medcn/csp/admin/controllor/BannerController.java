@@ -8,6 +8,7 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
+import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.BannerService;
