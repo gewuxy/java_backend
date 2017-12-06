@@ -8,6 +8,7 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.user.model.AppVersion;
 import cn.medcn.user.service.AppVersionService;
+import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -39,8 +40,6 @@ public class SkipController extends CspBaseController {
     @Value("${csp.file.base}")
     protected String appFileBase;
 
-    @Value("${app.csp.base}")
-    protected String cspBase;
 
     // CSP 服务协议id
     public static final String SERVICE_PROTOCOL_ID = "17103116062545591360";
@@ -168,22 +167,19 @@ public class SkipController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/scan/qrcode")
-    public String downloadApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public String downloadApp(String local, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (isWeChat(request)){
-            // 微信扫描 再判断ios或安卓手机
-            if(isIOSDevice(request)) {
-                String url = cspBase + localeView("/index/download");
-                response.sendRedirect(url);
-            }
+            // 微信扫描
+            return local + "/index/download";
         } else {
             // 手机浏览器扫描 再判断ios或安卓手机
             if (isIOSDevice(request)) {
-                AppVersion appVersion = appUrl(AppVersion.APP_TYPE.CSPMeeting.type, AppVersion.DRIVE_TAG.IOS.type);
+                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting.type);
                 if (appVersion != null ) {
                     response.sendRedirect(appVersion.getDownLoadUrl());
                 }
             } else {
-                AppVersion appVersion = appUrl(AppVersion.APP_TYPE.CSPMeeting.type, AppVersion.DRIVE_TAG.ANDROID.type);
+                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting.type);
                 if (appVersion != null ) {
                     response.sendRedirect(appFileBase + appVersion.getDownLoadUrl());
                 }
