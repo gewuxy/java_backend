@@ -27,7 +27,7 @@
                 success: function (data) {
                     if (data.code == 0){
                         layer.msg("上传成功");
-                        $("#uploadValue").val(data.data.imgPath);
+                        $("#imgUrl").val(data.data.urlPath);
                         $("#imgId").attr("src", data.data.saveFileName);
                     }else {
                         layer.msg(data.err);
@@ -37,12 +37,11 @@
             $("#inputForm").ajaxSubmit(option);
             return true;
         }
-
-
     </script>
 </head>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
-<script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="${ctxStatic}/layer/layui.all.js"></script>
+<link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/yaya/banner/edit">新增Banner</a></li>
@@ -54,12 +53,11 @@
     <div class="control-group">
         <label class="control-label">上传图片:</label>
         <div class="controls">
-            <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
+            <input type="file" name="file" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-            <input readonly type="search" name="imageUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
-
+            <input type="hidden" id="imgUrl" value="" name="imageUrl">
         </div>
     </div>
     <div class="control-group">
@@ -119,19 +117,33 @@
         <div class="controls">
             <select id="pubUser" name="pubUserId" style="width: 20%;">
                 <option value=""/>-- 请选择 --
-                <%--<c:forEach items="${appUser}" var="appUser">
-                    <option value="${appUser.id}">${appUser.nickname}</option>
-                </c:forEach>--%>
                 <option value="207668">敬信药草园</option>
             </select>
         </div>
     </div>
-    <div id="articleViewer" style="margin:10px;text-align: center;">
-        <label class="control-label">内容详情:</label>
-        <div class="controls">
-            <textarea id="content" name="content"></textarea>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="content"></textarea>
             <script type="text/javascript">
-                CKEDITOR.replace('content');
+                layui.use(['form', 'layedit', 'laydate'], function() {
+                    var form = layui.form
+                        , layer = layui.layer
+                        , layedit = layui.layedit
+                        , laydate = layui.laydate;
+                    //上传图片,必须放在 创建一个编辑器前面
+                    layedit.set({
+                        uploadImage: {
+                            url: '${ctx}/yaya/banner/upload' //接口url
+                            ,type: 'post' //默认post
+                        }
+                    });
+                    //创建一个编辑器
+                    var editIndex = layedit.build('content',{
+                            height:400
+                        }
+                    );
+                });
             </script>
         </div>
     </div>
