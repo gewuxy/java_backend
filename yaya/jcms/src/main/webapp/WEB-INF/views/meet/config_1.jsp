@@ -142,8 +142,8 @@
             $("#uploadPptFile").change(function(){
                 var fileName = $(this).val();
                 fileName = fileName.substring(fileName.lastIndexOf("/"));
-                if(!fileName.toLowerCase().endsWith(".ppt") && !fileName.toLowerCase().endsWith(".pptx")){
-                    layer.msg("请选择ppt或者pptx格式的文件");
+                if(!fileName.toLowerCase().endsWith(".ppt") && !fileName.toLowerCase().endsWith(".pptx") && !fileName.toLowerCase().endsWith(".pdf")){
+                    layer.msg("请选择ppt、pptx、pdf格式的文件");
                     return ;
                 }
                 progressError = false;
@@ -582,7 +582,7 @@
             <div class="formrow">
                 <c:if test="${empty notMe}">
                     <div class="fr clearfix">
-                        <input type="button" id="uploadPptBtn" class="formButton formButton-max fx-btn-2" value="上传PPT">
+                        <input type="button" id="uploadPptBtn" class="formButton formButton-max fx-btn-2" value="上传PPT/PDF">
                     </div>
                 </c:if>
                 <div class="fl clearfix">
@@ -601,8 +601,8 @@
                 <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
             </div>
             <div class="mask-share-box">
-                <p class="top-txt color-black">会覆盖当前的PPT文件，是否继续？</p>
-                <p class="top-txt color-blue" style="font-size:14px;">建议将ppt格式另存为pptx格式再上传!</p>
+                <p class="top-txt color-black">会覆盖当前的幻灯片文件，是否继续？</p>
+                <p class="top-txt color-blue" style="font-size:14px;">建议将ppt格式另存为pptx、pdf格式再上传!</p>
             </div>
             <div class="sb-btn-box p-btm-1 t-right">
                 <label for="uploadPptFile" class="button color-blue">继续

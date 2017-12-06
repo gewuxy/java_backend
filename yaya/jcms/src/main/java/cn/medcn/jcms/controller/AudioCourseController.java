@@ -610,20 +610,25 @@ public class AudioCourseController extends BaseController {
         if (courseId == null || courseId == 0) {
             courseId = createCourse(meetId, 0);
         }
+        String fileName = file.getOriginalFilename();
         FileUploadResult result;
-        String tempDir = FilePath.TEMP.path;
         try {
-            result = fileUploadService.upload(file, tempDir);
-            String tempFilePath = appFileUploadBase + result.getRelativePath();
-            List<String> pptImageList = openOfficeService.convertPPT(tempFilePath, FilePath.COURSE.path + "/" + courseId + "/ppt/", courseId, request);
-            if (pptImageList == null) {
-                return APIUtils.error("解析PPT文件出错");
+            result = fileUploadService.upload(file, FilePath.TEMP.path);
+            String imgDir = FilePath.COURSE.path + "/" + courseId + "/ppt/";
+            List<String> imgList = null;
+            if (fileName.endsWith(".ppt") || fileName.endsWith(".pptx")) {
+                imgList = openOfficeService.convertPPT(appFileUploadBase + result.getRelativePath(), imgDir, courseId, request);
+            } else if (fileName.endsWith(".pdf")) {
+                imgList = openOfficeService.pdf2Images(appFileUploadBase + result.getRelativePath(), imgDir, courseId, request);
             }
-            saveOrUpdatePPTCourse(meetId, courseId, pptImageList);
+            if (CheckUtils.isEmpty(imgList)) {
+                return error("解析PPT/PDF文件出错");
+            }
+            saveOrUpdatePPTCourse(meetId, courseId, imgList);
         } catch (SystemException e) {
-            e.printStackTrace();
             return APIUtils.error(e.getMessage());
         }
+
         return APIUtils.success();
     }
 
