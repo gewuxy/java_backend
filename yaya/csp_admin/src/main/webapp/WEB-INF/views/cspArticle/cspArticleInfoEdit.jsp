@@ -49,10 +49,12 @@
                 clearForm: false,
                 success: function (data)  //服务器成功响应处理函数
                 {
-                    if(data.code == 0){
-                        layer.msg("上传成功")
-                        $("#uploadValue").val(data.data);
-                    }else{
+                    if (data.code == 0){
+                        layer.msg("上传成功");
+                        $("#imgUrl").val(data.data.imgURL);
+                        //$("#imgId").removeAttr("src");
+                        $("#imgId").attr("src", data.data.src);
+                    }else {
                         layer.msg(data.err);
                     }
                 }
@@ -62,8 +64,9 @@
         }
     </script>
 </head>
-<script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
+<script type="text/javascript" src="${ctxStatic}/layer/layui.all.js"></script>
+<link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 <body>
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/csp/article/edit?id=${article.id}&listType=0">服务菜单(CN)</a></li>
@@ -105,34 +108,82 @@
         </div>
     </c:if>
     <c:if test="${listType == 0 || listType == null}">
-        <div id="articleViewer" style="margin:10px;text-align: center;">
-            <label class="control-label">文章内容:</label>
-            <div class="controls">
-                <textarea id="contentCn" name="contentCn">${article.contentCn}</textarea>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="contentCn" lay-verify="content" id="contentCn">${article.contentCn}</textarea>
                 <script type="text/javascript">
-                    CKEDITOR.replace('contentCn');
+                    layui.use(['form', 'layedit', 'laydate'], function() {
+                        var form = layui.form
+                            , layer = layui.layer
+                            , layedit = layui.layedit
+                            , laydate = layui.laydate;
+                        layedit.set({
+                            uploadImage: {
+                                url: '${ctx}/csp/article/upload' //接口url
+                                ,type: 'post' //默认post
+                            }
+                        });
+                        //创建一个编辑器
+                        var editIndex = layedit.build('contentCn',{
+                                height:400
+                            }
+                        );
+                    });
                 </script>
             </div>
         </div>
     </c:if>
     <c:if test="${listType == 1}">
-        <div id="articleViewer" style="margin:10px;text-align: center;">
-            <label class="control-label">文章内容:</label>
-            <div class="controls">
-                <textarea id="contentTw" name="contentTw">${article.contentTw}</textarea>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="contentTw" lay-verify="content" id="contentTw">${article.contentCn}</textarea>
                 <script type="text/javascript">
-                    CKEDITOR.replace('contentTw');
+                    layui.use(['form', 'layedit', 'laydate'], function() {
+                        var form = layui.form
+                            , layer = layui.layer
+                            , layedit = layui.layedit
+                            , laydate = layui.laydate;
+                        layedit.set({
+                            uploadImage: {
+                                url: '${ctx}/csp/article/upload' //接口url
+                                ,type: 'post' //默认post
+                            }
+                        });
+                        //创建一个编辑器
+                        var editIndex = layedit.build('contentTw',{
+                                height:400
+                            }
+                        );
+                    });
                 </script>
             </div>
         </div>
     </c:if>
     <c:if test="${listType == 2}">
-        <div id="articleViewer" style="margin:10px;text-align: center;">
-            <label class="control-label">TitleContent:</label>
-            <div class="controls">
-                <textarea id="contentUs" name="contentUs">${article.contentUs}</textarea>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="contentUs" lay-verify="content" id="contentUs">${article.contentCn}</textarea>
                 <script type="text/javascript">
-                    CKEDITOR.replace('contentUs');
+                    layui.use(['form', 'layedit', 'laydate'], function() {
+                        var form = layui.form
+                            , layer = layui.layer
+                            , layedit = layui.layedit
+                            , laydate = layui.laydate;
+                        layedit.set({
+                            uploadImage: {
+                                url: '${ctx}/csp/article/upload' //接口url
+                                ,type: 'post' //默认post
+                            }
+                        });
+                        //创建一个编辑器
+                        var editIndex = layedit.build('contentTw',{
+                                height:400
+                            }
+                        );
+                    });
                 </script>
             </div>
         </div>
@@ -140,18 +191,19 @@
     <div class="control-group">
         <label class="control-label">上传图片:</label>
         <div class="controls">
-            <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
+            <input type="file" name="file" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-            <input readonly type="search" name="imgUrl" id="uploadValue" maxlength="50" class="required input-xlarge">
-
+            <input type="hidden" name="imgUrl" id="imgUrl" value="" maxlength="50" class="required input-xlarge">
         </div>
     </div>
-    <script type="text/javascript">
-
-    </script>
-
+    <div class="control-group">
+        <label class="control-label">图片展示:</label>
+        <div class="controls">
+            <img  src="" id="imgId" width="200" height="200">
+        </div>
+    </div>
     <div class="control-group">
         <label class="control-label">是否审核:</label>
         <div class="controls">
