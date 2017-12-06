@@ -15,10 +15,39 @@
 <script type="text/javascript" src="${ctxStatic}/laydate/laydate.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
+<script type="text/javascript">
+    function selectFile() {
+        $(document).ready(function() {
+            initFormValidate();
+        });
+
+        $("#uploadFile").trigger("click");
+    }
+
+    function fileUpload() {
+        var option = {
+            url: "${ctx}/yaya/recommendMeet/upload",
+            type: 'POST',
+            dataType: 'json',
+            clearForm: false,
+            success: function (data) {
+                if (data.code == 0){
+                    layer.msg("上传成功");
+                    $("#imgUrl").val(data.data.imgURL);
+                    $("#imgId").attr("src", data.data.imgPath);
+                }else {
+                    layer.msg(data.err);
+                }
+            }
+        };
+        $("#inputForm").ajaxSubmit(option);
+        return true;
+    }
+</script>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/yaya/recommendMeet/list">修改推荐会议</a></li>
 </ul>
-<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/recommendMeet/update">
+<form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/recommendMeet/update" enctype="multipart/form-data">
     <input type="hidden" name="id" value="${recommend.id}" />
     <input type="hidden" name="lecturerId" value="${lecturer.id}" />
     <div class="control-group">
@@ -40,6 +69,25 @@
             <input  type="search" name="title" id="lecturerTile" value="${lecturer.title}" maxlength="50" class="required input-xlarge">
         </div>
     </div>
+
+    <div class="control-group">
+        <label class="control-label">上传头像:</label>
+        <div class="controls">
+            <input type="file" name="file" id="uploadFile" style="display:none" multiple="multiple"
+                   onchange="fileUpload()">
+            <input class="btn-dr" type="button" value="上传头像" onclick="selectFile()">
+            <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
+            <input type="hidden" id="imgUrl" value="${headimg}" name="headimg">
+        </div>
+    </div>
+    <div class="control-group">
+        <label class="control-label">头像展示:</label>
+        <div class="controls">
+            <img src="${imgPath}" id="imgId" width="200" height="200">
+        </div>
+    </div>
+
+
     <div class="control-group">
         <label class="control-label">主讲者所属医院:</label>
         <div class="controls">

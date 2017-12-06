@@ -3,6 +3,7 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.meet.dto.MeetTuijianDTO;
@@ -15,15 +16,21 @@ import cn.medcn.meet.service.RecommendMeetService;
 import cn.medcn.user.service.DepartmentService;
 import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author：jianliang
@@ -44,6 +51,12 @@ public class RecommendMeetController extends BaseController {
 
     @Autowired
     private MeetLecturerService meetLecturerService;
+
+    @Value("${app.file.upload.base}")
+    protected String appFileUploadBase;
+
+    @Value("${app.file.base}")
+    protected String appFileBase;
 
     /**
      * 推荐会议列表 搜索会议 排序
@@ -138,12 +151,13 @@ public class RecommendMeetController extends BaseController {
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建推荐会议")
-    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId){
+    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId,String headimg){
         System.out.println(meetId);
         Meet meet = meetService.selectByPrimaryKey(meetId);
         recommend.setResourceId(meetId);
         Lecturer lecturer =new Lecturer();
         lecturer.setMeetId(meetId);
+        lecturer.setHeadimg(headimg);
         lecturer.setDepart(meetTuijianDTO.getLecturerDepart());
         lecturer.setHospital(meetTuijianDTO.getLecturerHos());
         lecturer.setName(meetTuijianDTO.getLecturer());
@@ -174,6 +188,9 @@ public class RecommendMeetController extends BaseController {
         model.addAttribute("recommend",recommend);
         String meetId = recommend.getResourceId();
         Lecturer lecturer = meetLecturerService.selectByMeetId(meetId);
+        String headimg = lecturer.getHeadimg();
+        model.addAttribute("imgPath",appFileBase+headimg);
+        model.addAttribute("headimg",headimg);
         model.addAttribute("lecturer",lecturer);
         Meet meet = meetService.selectByPrimaryKey(meetId);
         model.addAttribute("meet",meet);
@@ -219,5 +236,44 @@ public class RecommendMeetController extends BaseController {
        recommend.setRecFlag(false);
        recommendMeetService.updateByPrimaryKey(recommend);
         return "redirect:/yaya/recommendMeet/list";
+    }
+
+
+    /**
+     * 图片上传
+     * @param file
+     * @return
+     */
+    @RequestMapping(value = "/upload")
+    @ResponseBody
+    @Log(name = "图片上传")
+    public String uploadImg(MultipartFile file){
+        if (file == null) {
+            return error("不能上传空文件");
+        }
+        String filename = file.getOriginalFilename();
+        String suffix = file.getOriginalFilename().substring(filename.lastIndexOf("."));
+        String saveFileName = StringUtils.nowStr()+suffix;
+        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+            String imgPath = appFileUploadBase+"headimg/"+saveFileName;
+            String imgURL = "headimg/"+saveFileName;
+            File saveFile = new File(imgPath);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+            try {
+                file.transferTo(saveFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return error("文件保存出错");
+            }
+            Map<String,String> map = new HashMap();
+            map.put("imgURL",imgURL);
+            map.put("imgPath", appFileBase+imgURL);
+            return success(map);
+        }else {
+            return error("文件格式错误");
+        }
+
     }
 }

@@ -32,7 +32,6 @@
                 dataType: 'json',
                 clearForm: false,
                 success: function (data) {
-                    alert(data.code)
                     if (data.code == 0){
                         layer.msg("上传成功")
                         //$("#downLoadId").val(${ctx}/pic/ + data)
