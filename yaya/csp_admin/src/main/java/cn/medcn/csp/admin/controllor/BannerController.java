@@ -126,7 +126,7 @@ public class BannerController extends BaseController{
             bannerService.insert(banner);
             addFlashMessage(redirectAttributes,"添加成功");
         }else {
-            addFlashMessage(redirectAttributes,"添加失败");
+            addErrorFlashMessage(redirectAttributes,"添加失败");
         }
 
         return "redirect:/yaya/banner/list";
@@ -164,7 +164,7 @@ public class BannerController extends BaseController{
             bannerService.updateByPrimaryKeySelective(banner);
             addFlashMessage(redirectAttributes,"修改成功");
         }else {
-            addFlashMessage(redirectAttributes,"修改失败");
+            addErrorFlashMessage(redirectAttributes,"修改失败");
         }
         return "redirect:/yaya/banner/list";
     }

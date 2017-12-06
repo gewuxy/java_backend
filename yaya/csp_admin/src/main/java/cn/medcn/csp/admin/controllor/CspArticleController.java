@@ -95,7 +95,7 @@ public class CspArticleController extends BaseController {
             cspArticleService.updateByPrimaryKeySelective(cspArticle);
             addFlashMessage(redirectAttributes,"更新成功");
         }else {
-            addFlashMessage(redirectAttributes,"更新失败");
+            addErrorFlashMessage(redirectAttributes,"更新失败");
         }
         return "redirect:/csp/article/list";
     }

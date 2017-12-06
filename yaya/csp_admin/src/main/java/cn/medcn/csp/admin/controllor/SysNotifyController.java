@@ -22,6 +22,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Date;
 
@@ -77,7 +78,7 @@ public class SysNotifyController extends BaseController {
      */
     @RequestMapping(value = "/insert")
     @Log(name = "发布公告")
-    public String sendMessage(SystemNotify notify,String acceptId) {
+    public String sendMessage(SystemNotify notify,String acceptId,RedirectAttributes redirectAttributes) {
         Integer userId = SubjectUtils.getCurrentUserid();
         SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null) {
@@ -88,13 +89,22 @@ public class SysNotifyController extends BaseController {
             notify.setAcceptId(acceptId);
             int insert = sysNotifyService.insert(notify);
             System.out.println(insert);
+            addFlashMessage(redirectAttributes,"发布成功");
             return "redirect:/csp/notify/list";
         } else {
+            addFlashMessage(redirectAttributes,"发布失败");
             return "/notify/notifyInfo";
         }
 
     }
 
+    /**
+     * 弹窗页面
+     * @param userName
+     * @param pageable
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/userList")
     public String searchUserInfo(String userName,Pageable pageable,Model model){
         if (!StringUtils.isEmpty(userName)) {
@@ -106,6 +116,12 @@ public class SysNotifyController extends BaseController {
         return "/notify/cspNotifyUser";
     }
 
+    /**
+     * 弹窗页面 单个选中
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/selectOne")
     @ResponseBody
     public String selectOne(@RequestParam(value = "id", required = true) String id,Model model){
@@ -141,15 +157,17 @@ public class SysNotifyController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改页面")
-    public String update( SystemNotify notify) {
+    public String update( SystemNotify notify,RedirectAttributes redirectAttributes) {
         Integer userId = SubjectUtils.getCurrentUserid();
         SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null){
             notify.setSendTime(new Date());
             notify.setSenderName(systemUser.getUserName());
             sysNotifyService.updateByPrimaryKey(notify);
+            addFlashMessage(redirectAttributes,"修改成功");
             return "redirect:/csp/notify/list";
         }else{
+            addFlashMessage(redirectAttributes,"修改失败");
             return "/notify/notifyInfoEdit";
         }
     }
@@ -161,8 +179,9 @@ public class SysNotifyController extends BaseController {
      */
     @RequestMapping(value = "/delete")
     @Log(name = "删除")
-    public String delete(@RequestParam(value = "id", required = true) String id) {
+    public String delete(@RequestParam(value = "id", required = true) String id,RedirectAttributes redirectAttributes) {
         sysNotifyService.deleteByPrimaryKey(id);
+        addFlashMessage(redirectAttributes,"删除成功");
         return "redirect:/csp/notify/list";
     }
 }

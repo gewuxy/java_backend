@@ -58,7 +58,7 @@
     <div class="control-group">
         <label class="control-label">版本号:</label>
         <div class="controls">
-            <input type="search" name="version" maxlength="50"  id="version"
+            <input type="search" name="versionStr" maxlength="50"  id="version"
                    class="required input-xlarge"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
@@ -66,7 +66,7 @@
     <div class="control-group">
         <label class="control-label">版本信息描述:</label>
         <div class="controls">
-            <input type="text" name="versionStr" maxlength="50"
+            <input type="search" name="versionStr" maxlength="50"
                    class="required input-xlarge"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
@@ -76,9 +76,9 @@
         <div class="controls">
             <select name="driveTag">
                 <option value="">-- 请选择 --</option>
-                <option value="IOS">ios</option>
-                <option value="IPAD">ipad</option>
-                <option value="ANDROID">android</option>
+                <option value="ios">IOS</option>
+                <option value="ipad">IPAD</option>
+                <option value="android">ANDROID</option>
             </select>
         </div>
     </div>
@@ -98,9 +98,9 @@
         <div class="controls">
                 <select name="appType">
                     <option value="">-- 请选择 --</option>
-                    <option value="YAYA_YISHI">yaya_yishi</option>
-                    <option value="YAYA_YAOSHI">yaya_yaoshi</option>
-                    <option value="HLYY">hlyy</option>
+                    <option value="yaya_yishi">YAYA_YISHI</option>
+                    <option value="yaya_yaoshi">YAYA_YAOSHI</option>
+                    <option value="hlyy">HLYY</option>
                 </select>
         </div>
     </div>
