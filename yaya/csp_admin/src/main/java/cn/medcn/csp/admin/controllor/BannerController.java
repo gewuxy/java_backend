@@ -4,18 +4,13 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.supports.Validate;
 import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
-import cn.medcn.csp.admin.model.DataRareDisease;
-import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.BannerService;
-import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -27,10 +22,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.*;
+import java.io.File;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
