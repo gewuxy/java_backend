@@ -83,11 +83,11 @@
     <div class="control-group">
         <label class="control-label">推荐类型:</label>
         <div class="controls">
-            <select id="recType" name="recType">
+            <select id="recType" name="recType" style="width: 150px">
                 <option value="">推荐类型</option>
                 <option value="1">会议文件夹</option>
-                <option value="2">会议</option>
-                <option value="3">单位号</option>
+                <option value="2">  会议  </option>
+                <option value="3">单位号   </option>
             </select>
             <script>
                 document.getElementById("recType").value="${recommend.recType}";

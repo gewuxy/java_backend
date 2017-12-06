@@ -20,14 +20,6 @@
         });
 
         $(function () {
-            var ww = $(window).width();
-            if (ww > 1024) {
-                ww = 1024;
-            }
-            $("#articleViewer").css("width", ww + "px");
-        });
-
-        $(function () {
             var checkObj = ${article.authed};
             if (checkObj == 1) {
                 $("#checked").attr("checked", "checked")
@@ -39,8 +31,9 @@
         })
     </script>
 </head>
-<script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
+<script type="text/javascript" src="${ctxStatic}/layer/layui.all.js"></script>
+<link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 <body>
 <ul class="nav nav-tabs">
     <li><a href="${ctx}/csp/article/check?id=${article.id}&listType=0">服务菜单(CN)</a></li>
@@ -83,53 +76,74 @@
     </c:if>
 
     <c:if test="${listType == 0 || listType == null}">
-    <div id="articleViewer" style="margin:10px;text-align: center;">
-        <label class="control-label">文章内容:</label>
-        <div class="controls">
-            <textarea id="contentCn" name="contentCn">${article.contentCn}</textarea>
-            <script type="text/javascript">
-                CKEDITOR.replace('contentCn');
-                $(document).ready(function () {
-                    CKEDITOR.config.readOnly = true;
-                });
-            </script>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">内容</label>
+            <div class="layui-input-block">
+                <textarea class="layui-textarea layui-hide" name="contentCn" lay-verify="content" id="contentCn">${article.contentCn}</textarea>
+                <script type="text/javascript">
+                    layui.use(['form', 'layedit', 'laydate'], function() {
+                        var form = layui.form
+                            , layer = layui.layer
+                            , layedit = layui.layedit
+                            , laydate = layui.laydate;
+                        //创建一个编辑器
+                        var editIndex = layedit.build('contentCn',{
+                                height:400
+                            }
+                        );
+                    });
+                </script>
+            </div>
         </div>
-    </div>
     </c:if>
 <c:if test="${listType == 1}">
-    <div id="articleViewer" style="margin:10px;text-align: center;">
-        <label class="control-label">文章内容:</label>
-        <div class="controls">
-            <textarea id="contentTw" name="contentTw">${article.contentTw}</textarea>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" name="contentTw" lay-verify="content" id="contentTw">${article.contentTw}</textarea>
             <script type="text/javascript">
-                CKEDITOR.replace('contentTw');
-                $(document).ready(function () {
-                    CKEDITOR.config.readOnly = true;
+                layui.use(['form', 'layedit', 'laydate'], function() {
+                    var form = layui.form
+                        , layer = layui.layer
+                        , layedit = layui.layedit
+                        , laydate = layui.laydate;
+                    //创建一个编辑器
+                    var editIndex = layedit.build('contentTw',{
+                            height:400
+                        }
+                    );
                 });
             </script>
         </div>
     </div>
 </c:if>
 <c:if test="${listType == 2}">
-    <div id="articleViewer" style="margin:10px;text-align: center;">
-        <label class="control-label">TitleContent:</label>
-        <div class="controls">
-            <textarea id="contentUs" name="contentUs">${article.contentUs}</textarea>
+
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">TitleContent</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" name="contentUs" lay-verify="content" id="contentUs">${article.contentUs}</textarea>
             <script type="text/javascript">
-                CKEDITOR.replace('contentUs');
-                $(document).ready(function () {
-                    CKEDITOR.config.readOnly = true;
+                layui.use(['form', 'layedit', 'laydate'], function() {
+                    var form = layui.form
+                        , layer = layui.layer
+                        , layedit = layui.layedit
+                        , laydate = layui.laydate;
+                    //创建一个编辑器
+                    var editIndex = layedit.build('contentUs',{
+                            height:400
+                        }
+                    );
                 });
             </script>
         </div>
     </div>
 </c:if>
     <div class="control-group">
-        <label class="control-label">图片路径:</label>
+        <label class="control-label">图片:</label>
         <div class="controls">
-            <%-- <img src="${ctx}/${article.imgUrl}" width="100" height="100">--%>
-            <input readonly type="search" name="file" id="imgUrl" value="${article.imgUrl}" style="width: 300px"/>
-
+            <img  src="${imgURL}" id="imgId" width="200" height="200">
         </div>
     </div>
     <div class="control-group">
