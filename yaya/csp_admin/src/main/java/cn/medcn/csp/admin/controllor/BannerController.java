@@ -11,6 +11,7 @@ import cn.medcn.csp.admin.log.Log;
 import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.BannerService;
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
@@ -75,39 +77,42 @@ public class BannerController extends BaseController{
 
     /**
      * 图片上传
-     * @param uploadFile
+     * @param file
      * @param model
      * @return
      */
     @RequestMapping(value = "/upload")
     @ResponseBody
     @Log(name = "图片上传")
-    public String uploadImg(MultipartFile uploadFile,Model model){
-        if (uploadFile == null) {
-            return APIUtils.error("不能上传空文件");
+    public String uploadImg(MultipartFile file,Model model){
+        if (file == null) {
+            return error("不能上传空文件");
         }
-        String filename = uploadFile.getOriginalFilename();
-        String suffix = uploadFile.getOriginalFilename().substring(filename.lastIndexOf("."));
+        String filename = file.getOriginalFilename();
+        String suffix = file.getOriginalFilename().substring(filename.lastIndexOf("."));
         String saveFileName = StringUtils.nowStr()+suffix;
         if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
-            String imgPath = appFileUploadBase+saveFileName;
+            String imgPath = appFileUploadBase+"banner/"+saveFileName;
+            String urlPath = "banner/"+saveFileName;
             File saveFile = new File(imgPath);
             if (!saveFile.exists()) {
                 saveFile.mkdirs();
             }
             try {
-                uploadFile.transferTo(saveFile);
+                file.transferTo(saveFile);
             } catch (IOException e) {
                 e.printStackTrace();
                 return APIUtils.error("文件保存出错");
             }
-            String absolutelyPath = appFileBase + "upload/"+saveFileName;
+            String absolutelyPath = appFileBase + "banner/"+saveFileName;
             Map<String,String> map = new HashMap();
             map.put("saveFileName",absolutelyPath);
-            map.put("imgPath",imgPath);
-            return APIUtils.success(map);
+            map.put("urlPath",urlPath);
+            map.put("src", appFileBase + "banner/"+saveFileName);
+            map.put("title", saveFileName);
+            return success(map);
         }else {
-            return APIUtils.error("文件格式错误");
+            return error("文件格式错误");
         }
 
     }
@@ -142,9 +147,8 @@ public class BannerController extends BaseController{
     @Log(name = "查看Banner")
     public String checkBanner(@RequestParam(value = "id", required = true) String id,Model model){
         Banner banner = bannerService.selectByPrimaryKey(id);
-        String imgUrl = banner.getImageUrl().substring(10);
-        String absolutelyPath = appFileBase + "upload/"+imgUrl;
-        System.out.println(imgUrl);
+        String imgUrl = banner.getImageUrl();
+        String absolutelyPath = appFileBase +imgUrl;
         model.addAttribute("absolutelyPath",absolutelyPath);
         model.addAttribute("banner",banner);
         return "/banner/bannerInfoEdit";

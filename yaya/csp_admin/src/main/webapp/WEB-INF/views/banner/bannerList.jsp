@@ -48,10 +48,10 @@
                     </shiro:hasPermission>
                     <shiro:hasPermission name="yaya:banner:close">
                     <c:if test="${data.active == true}">
-                        <a href="${ctx}/yaya/banner/close?id=${data.id}" onclick="confirm('确认关闭吗？')">关闭</a>
+                        <a data-href="${ctx}/yaya/banner/close?id=${data.id}"  onclick="layerConfirm('确认关闭吗？', this)">关闭</a>
                     </c:if>
                     <c:if test="${data.active == false}">
-                        <a href="${ctx}/yaya/banner/close?id=${data.id}" onclick="confirm('确认开启吗？')">开启</a>
+                        <a data-href="${ctx}/yaya/banner/close?id=${data.id}"  onclick="layerConfirm('确认开启吗？', this)">开启</a>
                     </c:if>
                     </shiro:hasPermission>
                 </td>
