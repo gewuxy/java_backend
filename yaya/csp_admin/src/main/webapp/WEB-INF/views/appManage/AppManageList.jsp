@@ -35,7 +35,7 @@
         <c:forEach items="${page.dataList}" var="app">
             <tr>
                 <td>${app.appType}</td>
-                <td>${app.version}</td>
+                <td>${app.versionStr}</td>
                 <td>${app.downLoadUrl}</td>
                 <td>${app.driveTag}</td>
                 <td><fmt:formatDate value="${app.updateTime}" type="both" dateStyle="full"/></td>

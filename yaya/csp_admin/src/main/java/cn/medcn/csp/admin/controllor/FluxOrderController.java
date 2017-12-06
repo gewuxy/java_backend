@@ -14,6 +14,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
@@ -76,11 +77,17 @@ public class FluxOrderController extends BaseController{
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改流量")
-    public String updateOrder(FluxOrder fluxOrder){
-        String id = fluxOrder.getId();
-        FluxOrder order = chargeService.selectByPrimaryKey(id);
-        order.setFlux(fluxOrder.getFlux());
-        chargeService.updateOrderAndUserFlux(order);
+    public String updateOrder(FluxOrder fluxOrder,RedirectAttributes redirectAttributes){
+        if (fluxOrder != null){
+            String id = fluxOrder.getId();
+            FluxOrder order = chargeService.selectByPrimaryKey(id);
+            order.setFlux(fluxOrder.getFlux());
+            addFlashMessage(redirectAttributes,"修改成功");
+            chargeService.updateOrderAndUserFlux(order);
+        }else {
+            addErrorFlashMessage(redirectAttributes,"修改失败");
+        }
+
         return "redirect:/csp/order/list";
     }
 
@@ -91,10 +98,15 @@ public class FluxOrderController extends BaseController{
      */
    @RequestMapping(value = "/close")
    @Log(name = "关闭订单")
-    public String closeOrder(@RequestParam(value = "id", required = true) String id){
+    public String closeOrder(@RequestParam(value = "id", required = true) String id,RedirectAttributes redirectAttributes){
        FluxOrder fluxOrder = chargeService.selectByPrimaryKey(id);
-       fluxOrder.setState(2);
-       chargeService.updateByPrimaryKey(fluxOrder);
+       if (fluxOrder != null){
+           fluxOrder.setState(2);
+           addFlashMessage(redirectAttributes,"删除成功");
+           chargeService.updateByPrimaryKey(fluxOrder);
+       }else {
+           addErrorFlashMessage(redirectAttributes,"删除失败");
+       }
        return "redirect:/csp/order/list";
    }
 

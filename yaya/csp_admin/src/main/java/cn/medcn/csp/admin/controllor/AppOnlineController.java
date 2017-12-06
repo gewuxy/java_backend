@@ -96,7 +96,7 @@ public class AppOnlineController extends BaseController {
             appVersionService.updateByPrimaryKeySelective(appVersion);
             addFlashMessage(redirectAttributes,"修改成功");
         }else {
-            addFlashMessage(redirectAttributes,"修改失败");
+            addErrorFlashMessage(redirectAttributes,"修改失败");
         }
         return "redirect:/csp/appManage/list";
     }
@@ -128,7 +128,7 @@ public class AppOnlineController extends BaseController {
             appVersionService.insert(appVersion);
             addFlashMessage(redirectAttributes,"添加成功");
         }else {
-            addFlashMessage(redirectAttributes,"添加失败");
+            addErrorFlashMessage(redirectAttributes,"添加失败");
         }
 
         return "redirect:/csp/appManage/list";

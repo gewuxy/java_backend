@@ -138,7 +138,7 @@ public class RecommendMeetController extends BaseController {
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建推荐会议")
-    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId,String meetName){
+    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId){
         System.out.println(meetId);
         Meet meet = meetService.selectByPrimaryKey(meetId);
         recommend.setResourceId(meetId);
