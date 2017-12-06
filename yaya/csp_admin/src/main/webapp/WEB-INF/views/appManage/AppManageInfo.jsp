@@ -71,8 +71,7 @@
     <div class="control-group">
         <label class="control-label">版本信息描述:</label>
         <div class="controls">
-            <input type="search" name="versionStr" value="${appVersion.versionStr}" maxlength="50"
-                   class="required input-xlarge"/>
+            <textarea name="details" rows="3" maxlength="2000" class="input-xxlarge" >${appVersion.details}</textarea>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>

@@ -5,7 +5,7 @@
     <select id="recommendMeetList" resultType="cn.medcn.meet.model.Recommend">
         SELECT r.*,m.meet_name,m.state
         FROM t_recommend r
-        LEFT JOIN t_meet m
+        INNER JOIN v_meet_folder_final m
         ON r.resource_id = m.id
         WHERE 1 = 1
         <if test="meetName != null">
