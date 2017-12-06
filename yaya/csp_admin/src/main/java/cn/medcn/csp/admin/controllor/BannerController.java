@@ -10,7 +10,6 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
-import cn.medcn.csp.admin.model.DataRareDisease;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AppUserService;

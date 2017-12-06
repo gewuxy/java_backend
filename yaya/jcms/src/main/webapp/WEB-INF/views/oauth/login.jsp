@@ -107,7 +107,7 @@
 
                     <p class="logo t-center"><img src="${ctxStatic}/images/medcn-logo.png" alt=""></p>
 
-                    <p class="text t-center">使用敬信数字平台账号访问 CSPmeeting</p>
+                    <p class="text t-center">使用敬信数字平台账号访问${app_name}</p>
 
 
                     <!--切换  敬信数字平台登录-->
