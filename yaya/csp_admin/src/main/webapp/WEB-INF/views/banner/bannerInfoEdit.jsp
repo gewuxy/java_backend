@@ -13,20 +13,13 @@
 
 </head>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
-<script type="text/javascript" src="${ctxStatic}/ckeditor/ckeditor.js"></script>
+<script type="text/javascript" src="${ctxStatic}/layer/layui.all.js"></script>
+<link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 <body>
 <script type="text/javascript">
     function selectFile() {
         $(document).ready(function() {
             initFormValidate();
-        });
-
-        $(function () {
-            var ww = $(window).width();
-            if (ww > 1024) {
-                ww = 1024;
-            }
-            $("#articleViewer").css("width", ww + "px");
         });
 
         $("#uploadFile").trigger("click");
@@ -39,13 +32,14 @@
             datatype: 'json',
             clearForm: false,
             success: function (data) {
-                //alert(data.savePath);
-                alert("上传成功!");
-                $("#uploadValue").val(data.data.imgPath);
-                /*$("#imgId").attr("src", data.data.saveFileName);*/
-            },
-            error: function (map) {
-                alert("页面请求失败！");
+                if (data.code == 0){
+                    layer.msg("上传成功");
+                    $("#imgUrl").val(data.data.urlPath);
+                    $("#imgId").removeAttr("src");
+                    $("#imgId").attr("src", data.data.saveFileName);
+                }else {
+                    layer.msg(data.err);
+                }
             }
         };
         $("#inputForm").ajaxSubmit(option);
@@ -61,12 +55,11 @@
     <div class="control-group">
         <label class="control-label">上传图片:</label>
         <div class="controls">
-            <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
+            <input type="file" name="file" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-            <input readonly type="search" name="imageUrl" value="${banner.imageUrl}" id="uploadValue" maxlength="50" class="required input-xlarge">
-
+            <input type="hidden" id="imgUrl" value="${banner.imageUrl}" name="imageUrl">
         </div>
     </div>
     <div class="control-group">
@@ -142,12 +135,29 @@
             </script>
         </div>
     </div>
-    <div id="articleViewer" style="margin:10px;text-align: center;">
-        <label class="control-label">内容详情:</label>
-        <div class="controls">
-            <textarea id="content" name="content">${banner.content}</textarea>
+    <div class="layui-form-item layui-form-text">
+        <label class="layui-form-label">内容</label>
+        <div class="layui-input-block">
+            <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="content">${banner.content}</textarea>
             <script type="text/javascript">
-              CKEDITOR.replace('content');
+                layui.use(['form', 'layedit', 'laydate'], function() {
+                    var form = layui.form
+                        , layer = layui.layer
+                        , layedit = layui.layedit
+                        , laydate = layui.laydate;
+                    //上传图片,必须放在 创建一个编辑器前面
+                    layedit.set({
+                        uploadImage: {
+                            url: '${ctx}/yaya/banner/upload' //接口url
+                            ,type: 'post' //默认post
+                        }
+                    });
+                    //创建一个编辑器
+                    var editIndex = layedit.build('content',{
+                            height:400
+                        }
+                    );
+                });
             </script>
         </div>
     </div>

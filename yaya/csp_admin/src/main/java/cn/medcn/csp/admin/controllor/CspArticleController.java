@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * 帮助与反馈 Created by jianliang
@@ -33,6 +35,9 @@ public class CspArticleController extends BaseController {
 
     @Value("${app.file.upload.base}")
     protected String appFileUploadBase;
+
+    @Value("${app.file.base}")
+    protected String appFileBase;
 
     /**
      *查看详情
@@ -62,6 +67,8 @@ public class CspArticleController extends BaseController {
     public String check(@RequestParam(value = "id", required = true) String id, Model model, Integer listType) {
         model.addAttribute("listType", listType);
         CspArticle cspArticle = cspArticleService.selectByPrimaryKey(id);
+        String imgUrl = cspArticle.getImgUrl();
+        model.addAttribute("imgURL",appFileBase+imgUrl);
         model.addAttribute("article", cspArticle);
         return "/cspArticle/cspArticleInfo";
     }
@@ -95,44 +102,48 @@ public class CspArticleController extends BaseController {
             cspArticleService.updateByPrimaryKeySelective(cspArticle);
             addFlashMessage(redirectAttributes,"更新成功");
         }else {
-            addFlashMessage(redirectAttributes,"更新失败");
+            addErrorFlashMessage(redirectAttributes,"更新失败");
         }
         return "redirect:/csp/article/list";
     }
 
     /**
      * 图片上传
-     * @param uploadFile
+     * @param file
+     * @param model
      * @return
      */
-    @Log(name = "图片上传")
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public String uploadImg(MultipartFile uploadFile){
-        if (uploadFile == null) {
-            return APIUtils.error("不能上传空文件");
+    @Log(name = "图片上传")
+    public String uploadImg(MultipartFile file,Model model){
+        if (file == null) {
+            return error("不能上传空文件");
         }
-        String filename = uploadFile.getOriginalFilename();
-        String suffix = uploadFile.getOriginalFilename().substring(filename.lastIndexOf("."));
-        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+        String filename = file.getOriginalFilename();
+        String suffix = file.getOriginalFilename().substring(filename.lastIndexOf("."));
         String saveFileName = StringUtils.nowStr()+suffix;
-        String imgPath =appFileUploadBase + saveFileName;
-        File saveFile = new File(imgPath);
-        if (!saveFile.exists()) {
-            saveFile.mkdirs();
-        }
-        try {
-            uploadFile.transferTo(saveFile);
-        } catch (IOException e) {
-            e.printStackTrace();
-            return APIUtils.error("文件保存出错");
-        }
-
-        //return saveFileName;
-            return APIUtils.success(imgPath);
+        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+            String imgPath = appFileUploadBase+"article/"+saveFileName;
+            String imgURL = "article/"+saveFileName;
+            File saveFile = new File(imgPath);
+            if (!saveFile.exists()) {
+                saveFile.mkdirs();
+            }
+            try {
+                file.transferTo(saveFile);
+            } catch (IOException e) {
+                e.printStackTrace();
+                return APIUtils.error("文件保存出错");
+            }
+            Map<String,String> map = new HashMap();
+            map.put("imgURL",imgURL);
+            map.put("src", appFileBase + "article/"+saveFileName);
+            map.put("title", saveFileName);
+            return success(map);
         }else {
-            return APIUtils.error("文件格式有误");
-
+            return error("文件格式错误");
         }
+
     }
 }

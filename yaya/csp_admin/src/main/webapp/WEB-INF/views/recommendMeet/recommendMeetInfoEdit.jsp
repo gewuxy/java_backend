@@ -20,34 +20,36 @@
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/recommendMeet/update">
     <input type="hidden" name="id" value="${recommend.id}" />
+    <input type="hidden" name="lecturerId" value="${lecturer.id}" />
     <div class="control-group">
         <label class="control-label">会议名称:</label>
         <div class="controls">
-            <input type="search" name="meetName" id="meetName" value="${meet.meetName}" maxlength="50" class="required input-xlarge">
+            <input type="hidden" name="resourceId" value="${recommend.resourceId}">
+            <input readonly type="search" name="meetName" id="meetName" value="${meet.meetName}" maxlength="50" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者姓名:</label>
         <div class="controls">
-            <input type="search" name="name" id="lecturer" value="${lecturer.name}" maxlength="50" class="required input-xlarge">
+            <input  type="search" name="name" id="lecturer" value="${lecturer.name}" maxlength="50" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者职位:</label>
         <div class="controls">
-            <input type="search" name="title" id="lecturerTile" value="${lecturer.title}" maxlength="50" class="required input-xlarge">
+            <input  type="search" name="title" id="lecturerTile" value="${lecturer.title}" maxlength="50" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者所属医院:</label>
         <div class="controls">
-            <input type="search" name="hospital" id="lecturerHos" value="${lecturer.hospital}" maxlength="50" class="required input-xlarge">
+            <input  type="search" name="hospital" id="lecturerHos" value="${lecturer.hospital}" maxlength="50" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者所属科室:</label>
         <div class="controls">
-            <select id="lecturerDepart" name="depart" style="width: 150px;">
+            <select id="lecturerDepart" name="depart" style="width: 200px; background-color: #EEEEEE;" disabled="disabled">
                 <option value="">科室</option>
                 <c:forEach items="${departments}" var="d">
                     <option value="${d}"}>${d}</option>
@@ -63,7 +65,7 @@
     <div class="control-group">
         <label class="control-label">会议状态:</label>
         <div class="controls">
-            <select id="state" name="state" style="width: 150px">
+            <select id="state" name="state" style="width: 200px; background-color: #EEEEEE;" disabled="disabled">
                 <option value="">会议状态</option>
                 <option value="0">会议草稿</option>
                 <option value="1">会议未开始</option>
@@ -84,8 +86,8 @@
             <select id="recType" name="recType" style="width: 150px">
                 <option value="">推荐类型</option>
                 <option value="1">会议文件夹</option>
-                <option value="2">会议</option>
-                <option value="3">单位号</option>
+                <option value="2">  会议  </option>
+                <option value="3">单位号   </option>
             </select>
             <script>
                 document.getElementById("recType").value="${recommend.recType}";
@@ -108,19 +110,19 @@
     <div class="control-group">
         <label class="control-label">排序序号:</label>
         <div class="controls">
-            <input type="search" name="sort" id="sort" value="${recommend.sort}" maxlength="50" class="required input-xlarge">
+            <input readonly type="search" name="sort" id="sort" value="${recommend.sort}" maxlength="50" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">推荐日期:</label>
         <div class="controls">
-            <input type="text" id="recDate" value="${format}" class="layui-input" name="recDate" placeholder="yyyy-MM-dd HH:mm:ss">
+            <input readonly type="text" id="recDate" value="${format}" class="layui-input" name="recDate" placeholder="yyyy-MM-dd HH:mm:ss">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">是否固定推荐:</label>
         <div class="controls">
-            <select id="fixed" name="fixed" style="width: 150px">
+            <select id="fixed" name="fixed"  style="width: 200px;">
                 <option value="">是否固定推荐</option>
                 <option value="0">不固定</option>
                 <option value="1">固定</option>
@@ -143,10 +145,10 @@
         initFormValidate();
     });
     //时间选择器
-    laydate.render({
+   /* laydate.render({
         elem: '#recDate'
         ,type: 'datetime'
-    });
+    });*/
 </script>
 </body>
 </html>
