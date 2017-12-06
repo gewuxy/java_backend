@@ -26,7 +26,7 @@ public abstract class SearchServiceImpl implements SearchService {
      * @return
      */
     @Override
-    public SearchResult BaseSearch( Pageable pageable) {
+    public SearchResult baseSearch( Pageable pageable) {
         String url = getSolrUrl();
         HttpSolrClient client = new HttpSolrClient(url);
         SolrQuery query = new SolrQuery();

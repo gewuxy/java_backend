@@ -19,7 +19,7 @@ public interface SearchService {
      * @param pageable
      * @return
      */
-    SearchResult BaseSearch(Pageable pageable);
+    SearchResult baseSearch(Pageable pageable);
 
     /**
      * solr core地址
