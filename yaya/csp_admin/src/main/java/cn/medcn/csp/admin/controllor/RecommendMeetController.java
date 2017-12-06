@@ -13,11 +13,13 @@ import cn.medcn.meet.service.MeetLecturerService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.meet.service.RecommendMeetService;
 import cn.medcn.user.service.DepartmentService;
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,7 +90,43 @@ public class RecommendMeetController extends BaseController {
     public String editRecommendMeet(Model model) {
         List<String> departments= departmentService.findAlldepartment();
         model.addAttribute("departments",departments);
+        List<Meet> meets= meetService.selectAllMeet();
+        model.addAttribute("meets",meets);
         return "recommendMeet/recommendMeetInfo";
+    }
+
+    /**
+     * 弹窗页面
+     * @param model
+     * @param pageable
+     * @param meetName
+     * @return
+     */
+    @RequestMapping(value = "/queryMeet")
+    public String queryMeet(Model model,Pageable pageable,String meetName){
+        if (!StringUtils.isEmpty(meetName)) {
+            pageable.getParams().put("meetName", meetName);
+            model.addAttribute("meetName", meetName);
+        }
+        MyPage<Meet> myPage = meetService.selectMeetList(pageable);
+        model.addAttribute("page", myPage);
+        return "/recommendMeet/queryMeetList";
+    }
+
+    /**
+     * 弹窗页面根据id获得会议内容
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/selectOne")
+    @ResponseBody
+    public String selectOne(@RequestParam(value = "id", required = true) String id,Model model){
+        Meet meet = meetService.selectByPrimaryKey(id);
+        model.addAttribute("meet",meet);
+        String json = JSON.toJSONString(meet);
+        model.addAttribute("json",json);
+        return json;
     }
 
     /**
@@ -100,18 +138,19 @@ public class RecommendMeetController extends BaseController {
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建推荐会议")
-    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state){
-        String meetName = recommend.getMeetName();
-        Meet meet = meetService.selectByMeetName(meetName);
-        recommend.setResourceId(meet.getId());
-        recommendMeetService.insert(recommend);
+    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId){
+        System.out.println(meetId);
+        Meet meet = meetService.selectByPrimaryKey(meetId);
+        recommend.setResourceId(meetId);
         Lecturer lecturer =new Lecturer();
-        lecturer.setMeetId(meet.getId());
+        lecturer.setMeetId(meetId);
         lecturer.setDepart(meetTuijianDTO.getLecturerDepart());
         lecturer.setHospital(meetTuijianDTO.getLecturerHos());
         lecturer.setName(meetTuijianDTO.getLecturer());
         lecturer.setTitle(meetTuijianDTO.getLecturerTile());
         meetLecturerService.insert(lecturer);
+        meet.setLecturerId(lecturer.getId());
+        recommendMeetService.insert(recommend);
         meet.setLecturerId(lecturer.getId());
         meet.setState(state);
         meetService.updateByPrimaryKeySelective(meet);
@@ -153,24 +192,15 @@ public class RecommendMeetController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改")
-    public String updateRecommendMeet(Recommend recommend,Lecturer lecturer,String meetName,Short state){
-        Meet meet = meetService.selectByMeetName(meetName);
-        String meetId= meet.getId();
-        Lecturer lecturerObj = meetLecturerService.selectByMeetId(meetId);
-        Lecturer lecturerNew = new Lecturer();
-        if (lecturerObj == null){
-            lecturerNew.setMeetId(meetId);
-            lecturerNew.setDepart(lecturer.getDepart());
-            lecturerNew.setHospital(lecturer.getHospital());
-            lecturerNew.setName(lecturer.getName());
-            lecturerNew.setTitle(lecturer.getTitle());
-            meetLecturerService.insert(lecturerNew);
-        }else {
-            meetLecturerService.updateByPrimaryKey(lecturer);
-        }
-        recommend.setResourceId(meetId);
+    public String updateRecommendMeet(Recommend recommend,Lecturer lecturer,String meetName,Short state,Integer lecturerId){
+        String meetId = recommend.getResourceId();
+        Meet meet = meetService.selectByPrimaryKey(meetId);
+        meet.setMeetName(meetName);
+        lecturer.setId(lecturerId);
+        lecturer.setMeetId(meetId);
+        meetLecturerService.updateByPrimaryKey(lecturer);
         recommendMeetService.updateByPrimaryKey(recommend);
-        meet.setLecturerId(lecturerNew.getId());
+        meet.setLecturerId(lecturer.getId());
         meet.setTuijian(recommend.getRecFlag());
         meet.setState(state);
         meetService.updateByPrimaryKeySelective(meet);
@@ -186,10 +216,8 @@ public class RecommendMeetController extends BaseController {
     @Log(name = "关闭会议")
     public String closeRecommendMeet(@RequestParam(value = "id", required = true) Integer id){
         Recommend recommend = recommendMeetService.selectByPrimaryKey(id);
-        String meetId = recommend.getResourceId();
-        Meet meet = meetService.selectByPrimaryKey(meetId);
-        meet.setState(Meet.MeetType.CLOSED.getState());
-        meetService.updateByPrimaryKeySelective(meet);
+       recommend.setRecFlag(false);
+       recommendMeetService.updateByPrimaryKey(recommend);
         return "redirect:/yaya/recommendMeet/list";
     }
 }

@@ -15,19 +15,10 @@
         });
 
         function checkedAllPeo() {
-            $("#name").attr("readonly", "readonly")
+            $("#userName").attr("disabled", "disabled")
         }
         function checkedPer() {
-            $("#name").removeAttr("readonly")
-        }
-
-        function checkName() {
-            var obj = $("#name").val();
-            $.post("${ctx}/csp/notify/checkout", {"userName": obj}, function (data) {
-                if (data == null || data == "") {
-                    alert("用户名不存在")
-                }
-            })
+            $("#userName").removeAttr("disabled", "disabled")
         }
 
     </script>
@@ -62,11 +53,41 @@
 
     </div>
     <div class="control-group">
-        <label class="control-label">接收消息者(个人):</label>
+        <label class="control-label">接收消息者:</label>
         <div class="controls">
-            <input type="text" name="userName" id="name" onblur="checkName()"/>
-        </div>
+            <%--<input type="text" name="userName" id="name" onblur="checkName()"/>--%>
+                <input id="userName" class="btn btn-primary" type="button" value="查询" onclick="selectName()"/>
+                <input id="acceptId" name="acceptId" type="hidden" value="">
+                <input readonly id="name" name="userName" type="search" value="">
+            <script>
+                function selectName() {
+                    layer.open({
+                        type: 2,
+                        title: '用户列表页',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['1000px', '90%'],
+                        content: '${ctx}/csp/notify/userList',
+                        success: function(layero, index){
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            var data = body.html()//得到iframe页的body内容
+                            console.log(data);
+                            var name = JSON.parse(data);
+                            var val =  name.userName;
+                            console.log(val);
+                            var id =  name.id;
+                            console.log(id);
+                            $("#name").val(val);
+                            $("#acceptId").val(id);
+                        }
+                    });
+                }
+            </script>
+            <div>
 
+            </div>
+        </div>
     </div>
     <div class="form-actions">
 <shiro:hasPermission name="csp:notify:add">

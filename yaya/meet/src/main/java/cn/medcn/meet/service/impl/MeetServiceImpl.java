@@ -2121,5 +2121,17 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         return null;
     }
 
+    @Override
+    public List<Meet> selectAllMeet() {
+        return meetDAO.selectAllMeet();
+    }
+
+    @Override
+    public MyPage<Meet> selectMeetList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<Meet> page = MyPage.page2Mypage((Page) meetDAO.selectMeetList(pageable.getParams()));
+        return page;
+    }
+
 
 }

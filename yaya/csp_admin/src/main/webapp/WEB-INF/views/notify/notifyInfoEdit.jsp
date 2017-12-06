@@ -11,73 +11,20 @@
     <title>公告修改菜单</title>
     <script type="text/javascript">
         /*-- 修改校验  start--*/
-        function checkTitle() {
-            if ($("#title").val() == null || $("#title").val() == "") {
-                confirm("标题不能为空")
-                $("#btnSubmit").attr("disabled", "disabled");
-            } else {
-                $("#btnSubmit").removeAttr("disabled");
-            }
-
-        }
-
-        function checkContent() {
-            if ($("#content").val() == null || $("#content").val() == "" || $("#content").length > 65535) {
-                confirm("内容输入有误")
-                $("#btnSubmit").attr("disabled", "disabled");
-            } else {
-                $("#btnSubmit").removeAttr("disabled");
-            }
-        }
-
-        function checkUsername() {
-            if ($("#name").val() == null || $("#name").val() == "") {
-                confirm("发布人不能为空")
-                $("#btnSubmit").attr("disabled", "disabled");
-            } else {
-                $("#btnSubmit").removeAttr("disabled");
-            }
-        }
-
-        $(document).ready(function () {
-            $("#btnSubmit").click(function () {
-                var checkList = $("input:text");
-                var isCheckPass = true;
-                for (var i = 0; i < checkList.size(); i++) {
-                    if ($.trim(checkList[i].value) == "") {
-                        checkList[i].value = "请不要输入空格!";
-                        isCheckPass = false;
-                        $("#btnSubmit").attr("disabled", "disabled");
-                    } else {
-                        $("#btnSubmit").removeAttr("disabled");
-                    }
-                }
-                return isCheckPass;
-            })
-        })
-
-        function userNameIsNull() {
-            var obj = $("#name").val();
-            $.post("${ctx}/csp/notify/checkout", {"userName": obj}, function (data) {
-                alert(data)
-                if (data == null || data == "") {
-                    alert("用户名不存在")
-                }
-            })
-        }
-
+        $(document).ready(function() {
+            initFormValidate();
+        });
         /*-- end--*/
 
+        function checkedAllPeo() {
+            $("#userName").attr("disabled", "disabled")
+        }
+        function checkedPer() {
+            $("#userName").removeAttr("disabled", "disabled")
+        }
+
         /*-- 单选回显  start--*/
-        $(function () {
-            var obj =
-            ${notify.isRead}
-            if (obj == 0) {
-                $("#unRead").attr("checked", "checked")
-            } else {
-                $("#read").attr("checked", "checked")
-            }
-        })
+
 
         $(function () {
             var type =
@@ -88,6 +35,7 @@
                 $("#checked").attr("checked", "checked")
             }
         })
+
         /*--end--*/
     </script>
 </head>
@@ -115,21 +63,44 @@
     <div class="control-group">
         <label class="control-label">消息类型:</label>
         <div class="controls">
-            <input id="checkedAll" type="radio" value="0" name="notifyType">对所有人
-            <input id="checked" type="radio" value="1" name="notifyType">对个人
+            <input readonly id="checkedAll" type="radio" value="0" name="notifyType" onclick="checkedAllPeo()">对所有人
+            <input readonly id="checked" type="radio" value="1" name="notifyType" onclick="checkedPer()">对个人
         </div>
     </div>
     <div class="control-group">
-        <label class="control-label">是否已读:</label>
+        <label class="control-label">接收消息者:</label>
         <div class="controls">
-            <input id="unRead" type="radio" value="0" name="isRead">未读
-            <input id="read" type="radio" value="1" name="isRead">已读
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">接收消息者(个人):</label>
-        <div class="controls">
-            <input type="text" name="userName" id="name" value="${userName}" onblur="userNameIsNull()"/>
+            <input id="userName" class="btn btn-primary" type="button" value="查询" onclick="selectName()"/>
+            <input id="acceptId" name="acceptId" type="hidden" value="">
+            <input readonly id="name" name="userName" type="search" value="${userName}">
+            <script>
+                function selectName() {
+                    layer.open({
+                        type: 2,
+                        title: '用户列表页',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['1000px', '90%'],
+                        content: '${ctx}/csp/notify/userList',
+                        success: function(layero, index){
+                            var body = layer.getChildFrame('body', index);
+                            var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            var data = body.html()//得到iframe页的body内容
+                            console.log(data);
+                            var name = JSON.parse(data);
+                            var val =  name.userName;
+                            console.log(val);
+                            var id =  name.id;
+                            console.log(id);
+                            $("#name").val(val);
+                            $("#acceptId").val(id);
+                        }
+                    });
+                }
+            </script>
+            <div>
+
+            </div>
         </div>
     </div>
     <div class="form-actions">

@@ -22,7 +22,35 @@
     <div class="control-group">
         <label class="control-label">会议名称:</label>
         <div class="controls">
-            <input type="search" name="meetName" id="meetName" maxlength="50" class="required input-xlarge">
+            <input id="selectMeet" class="btn btn-primary" type="button" value="查询" onclick="selectMeets()"/>
+            <input type="hidden" name="meetId" value="" id="meetId">
+            <input readonly type="search" value=""  id="meetName" name="meetName" maxlength="50" class="required input-xlarge">
+           <script>
+                function selectMeets() {
+                    layer.open({
+                        type: 2,
+                        title: '用户列表页',
+                        shadeClose: true,
+                        shade: 0.8,
+                        area: ['1000px', '90%'],
+                        content: '${ctx}/yaya/recommendMeet/queryMeet',
+                         success: function(layero, index){
+                             var body = layer.getChildFrame('body', index);
+                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                            var data = body.html()//得到iframe页的body内容
+                             console.log(data);
+                           var name = JSON.parse(data);
+                           var val =  name.meetName;
+                             console.log(val);
+                            var id =  name.id;
+                             console.log(id);
+                             $("#meetName").val(val);
+                             $("#meetId").val(id);
+                         }
+                    });
+                }
+            </script>
+
         </div>
     </div>
     <div class="control-group">
