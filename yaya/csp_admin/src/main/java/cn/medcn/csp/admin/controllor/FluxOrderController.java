@@ -5,9 +5,11 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
+import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.ChargeService;
+import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,9 @@ public class FluxOrderController extends BaseController{
 
     @Autowired
     private UserFluxService userFluxService;
+
+    @Autowired
+    private CspUserService cspUserService;
 
     /**
      * 获取流量订单表
@@ -58,15 +63,20 @@ public class FluxOrderController extends BaseController{
     @RequestMapping(value = "/check")
     @Log(name = "查看个人订单列表")
     public String checkOrder(@RequestParam(value = "id", required = true) String id,Model model){
-            List<FluxOrder> fluxOrder=chargeService.selectOrderInfo(id);
-            Integer flux = 0;
+            FluxOrder fluxOrder=chargeService.selectByPrimaryKey(id);
+           /* Integer flux = 0;
             for (FluxOrder order: fluxOrder) {
             String userId = order.getUserId();
             UserFlux userFlux = userFluxService.selectByPrimaryKey(userId);
             flux = userFlux.getFlux();
-        }
+        }*/String userId = fluxOrder.getUserId();
+
+            UserFlux userFlux = userFluxService.selectByPrimaryKey(userId);
+            CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(userId);
+            Integer flux = userFlux.getFlux();
+            model.addAttribute("username",cspUserInfo.getUserName());
             model.addAttribute("flux",flux);
-            model.addAttribute("fluxOrderList",fluxOrder);
+            model.addAttribute("fluxOrder",fluxOrder);
             return "/fluxOrder/fluxOrderInfo";
     }
 

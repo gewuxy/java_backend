@@ -16,18 +16,18 @@
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/order/update">
 
-    <input type="hidden" name="id" value="${fluxOrderList.get(0).id}"/>
-    <input type="hidden" name="userId" value="${fluxOrderList.get(0).userId}"/>
+    <input type="hidden" name="id" value="${fluxOrder.id}"/>
+    <input type="hidden" name="userId" value="${fluxOrder.userId}"/>
     <div class="control-group">
         <label class="control-label">用户名:</label>
         <div class="controls">
-            <input readonly type="search" name="username" value="${fluxOrderList.get(0).username}" maxlength="50" class="required input-xlarge"/>
+            <input readonly type="search" name="username" value="${username}" maxlength="50" class="required input-xlarge"/>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">订单号:</label>
         <div class="controls">
-            <input readonly  type="search" name="tradeId" value="${fluxOrderList.get(0).tradeId}" maxlength="50" class="required input-xxlarge"/>
+            <input readonly  type="search" name="tradeId" value="${fluxOrder.tradeId}" maxlength="50" class="required input-xxlarge"/>
         </div>
     </div>
 
@@ -55,30 +55,24 @@
                 <option value="wx_wap"/>微信移动端
             </select>
             <script>
-                document.getElementById("platform").value="${fluxOrderList.get(0).platform}";
+                document.getElementById("platform").value="${fluxOrder.platform}";
             </script>
         </div>
     </div>
-    <div>
-        <hr style="height:3px;border:none;border-top:3px double darkorange;width: 70%" />
-    </div>
-    <c:forEach items="${fluxOrderList}" var="order">
+    <%--<c:forEach items="${fluxOrderList}" var="order">--%>
     <div class="control-group">
         <label class="control-label">流量充值:</label>
         <div class="controls">
-            <input id="flux"   type="search" value="${order.flux}" maxlength="50" name="flux" class="required input-xlarge">
+            <input id="flux"   type="search" value="${fluxOrder.flux}" maxlength="50" name="flux" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">充值会议:</label>
         <div class="controls">
-            <input readonly  type="search" name="meetName" value="${order.meetName}" maxlength="50" class="required input-xlarge"/>
+            <input readonly  type="search" name="meetName" value="${fluxOrder.meetName}" maxlength="50" class="required input-xlarge"/>
         </div>
     </div>
-        <div>
-            <hr style="height:3px;border:none;border-top:3px double darkorange;width: 70%" />
-        </div>
-    </c:forEach>
+    <%--</c:forEach>--%>
         <div class="control-group">
             <label class="control-label">订单状态:</label>
             <div class="controls">
@@ -96,12 +90,8 @@
 </form>
 </body>
 <script type="text/javascript">
-    $(document).ready(function() {
-        initFormValidate();
-    });
-
     $(function () {
-        var checkObj = ${fluxOrderList.get(0).state};
+        var checkObj = ${fluxOrder.state};
         if (checkObj == 1) {
             $("#checked").attr("checked", "checked")
         } else if (checkObj == 0){
