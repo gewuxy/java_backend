@@ -13,9 +13,10 @@
 
     <title>浏览器下载app</title>
     <script language="javascript">
-        $(window).on("load", function() {
-            layer.msg('由于微信的限制，点击右上角按钮并选择‘在浏览器中打开’下载安装包');
-        })
+        window.onload = function() {
+            alert('由于微信的限制，点击右上角按钮并选择‘在浏览器中打开’下载安装包');
+        }
+
 
     </script>
 </head>
