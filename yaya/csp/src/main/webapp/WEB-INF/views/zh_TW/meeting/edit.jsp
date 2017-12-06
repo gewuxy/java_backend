@@ -123,9 +123,9 @@
 
                                                 </div>
                                             </div>
-                                            <div class="cells-block clearfix checkbox-box">
+                                            <div class="cells-block clearfix checkbox-box" style="display: none;">
                                                     <span class="checkboxIcon">
-                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''}>
+                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} disabled>
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;開啟視頻直播</label>
                                                     </span>
                                                 <div class="checkbox-main">
