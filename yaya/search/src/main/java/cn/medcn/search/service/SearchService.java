@@ -4,6 +4,7 @@ import cn.medcn.article.model.Article;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.search.dto.SearchResult;
+import cn.medcn.search.supports.Searchable;
 import org.apache.solr.client.solrj.SolrQuery;
 
 import java.util.List;
@@ -25,6 +26,13 @@ public interface SearchService {
      * @throws SystemException  当sortMap不为null,又有多个值时，抛出异常
      */
     SearchResult search(Map<String,String> orMap,Map<String,String> andMap,Map<String,String> filterMap,Map<String,String> sortMap,Pageable pageable) throws SystemException;
+
+    /**
+     * 根据 searchable 对象进行检索
+     * @param searchable
+     * @return
+     */
+    SearchResult search(Searchable searchable);
 
     /**
      * solr core地址
