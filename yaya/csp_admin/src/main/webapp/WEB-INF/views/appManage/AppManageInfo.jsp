@@ -16,7 +16,7 @@
                 $("#uploadId").hide();
                 $("#uploadSizeId").hide();
                 $("#divId").show();
-                $("#downLoadUrl").removeAttr("readonly");
+                $("#downLoad").removeAttr("readonly");
             }else {
                 $("#uploadId").show();
                 $("#uploadSizeId").show();
@@ -34,6 +34,7 @@
                     $("#uploadId").hide();
                     $("#uploadSizeId").hide();
                     $("#divId").show();
+
                 }else {
                     $("#uploadId").show();
                     $("#uploadSizeId").show();
@@ -70,7 +71,7 @@
                         var fileSize = dom.files[0].size;
                         var size = parseInt((Math.round(fileSize) / 1024).toFixed(2));
                         $("#fileSize").val(size)
-                        $("#downLoadUrl").val(data.data.downUrl);
+                        $("#downLoad").val(data.data.downUrl);
                     }else{
                         layer.msg(data.err);
                     }
@@ -118,14 +119,6 @@
             </script>
         </div>
     </div>
-    <div class="control-group" id="divId">
-        <label class="control-label">IOS下载地址:</label>
-        <div class="controls">
-            <input name="downLoadUrl" type="search" maxlength="100" id="downLoad" value="${appVersion.downLoadUrl}"
-                   class="input-xlarge"/>
-            <span class="help-inline"><font color="#a9a9a9">ios系统输入下载地址</font> </span>
-        </div>
-    </div>
     <div class="control-group" id="uploadId">
         <label class="control-label">下载地址:</label>
         <div class="controls">
@@ -133,7 +126,14 @@
             <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
-            <input type="hidden" value="${appVersion.downLoadUrl}" name="downLoadUrl" id="downLoadUrl">
+        </div>
+    </div>
+    <div class="control-group" id="divId">
+        <label class="control-label">IOS下载地址:</label>
+        <div class="controls">
+            <input name="downLoadUrl" type="search" maxlength="100" id="downLoad" value="${appVersion.downLoadUrl}"
+                   class="input-xlarge"/>
+            <span class="help-inline"><font color="#a9a9a9">ios系统输入下载地址</font> </span>
         </div>
     </div>
     <div class="control-group" id="uploadSizeId">
@@ -155,12 +155,6 @@
             <script>
                 document.getElementById("appType").value="${appVersion.appType}";
             </script>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">版本更新说明:</label>
-        <div class="controls">
-            <input name="details" type="search" value="${appVersion.details}" maxlength="100" class="input-xlarge"/>
         </div>
     </div>
     <div class="control-group">

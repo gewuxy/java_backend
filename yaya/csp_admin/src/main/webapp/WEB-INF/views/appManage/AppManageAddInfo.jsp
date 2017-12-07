@@ -44,7 +44,7 @@
                     //alert(data.code)
                     if (data.code == 0){
                         layer.msg("上传成功")
-                        $("#uploadValue").val(data.data.downUrl)
+                        $("#downLoadUrl").val(data.data.downUrl)
                         //$("#downLoadId").val(${ctx}/pic/ + data)
                         var fileId = "uploadFile";
                         var dom = document.getElementById(fileId);
@@ -110,18 +110,16 @@
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()" id="uploadBtn">
             <input type="hidden" id="hiUpload" value="${filename}" name="uploadFile">
-            <input  type="hidden" name="downLoadUrl" id="uploadValue" value="">
-
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">应用类型:</label>
         <div class="controls">
-                <select name="appType">
-                    <option value="">-- 请选择 --</option>
-                    <option value="cspmeeting_cn">CSP中文版</option>
-                    <option value="cspmeeting_us">CSP英文版</option>
-                </select>
+            <select name="appType">
+                <option value="">-- 请选择 --</option>
+                <option value="cspmeeting_cn">CSP中文版</option>
+                <option value="cspmeeting_us">CSP英文版</option>
+            </select>
         </div>
     </div>
     <div class="control-group" id="uploadSizeId">
@@ -129,13 +127,6 @@
         <div class="controls">
             <input readonly id="fileSize" type="search" name="fileSize" value="${fileSize}" maxlength="50"
                    class="required digits input-small"/>KB
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">版本更新说明:</label>
-        <div class="controls">
-            <input name="details" type="search" maxlength="100"
-                   class="input-xlarge"/>
         </div>
     </div>
     <div class="control-group">
@@ -148,7 +139,7 @@
     <div class="form-actions">
         <shiro:hasPermission name="csp:appManage:add">
             <input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                         value="保 存"/>
+                   value="保 存"/>
         </shiro:hasPermission>&nbsp;
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>

@@ -140,7 +140,7 @@ public class SysNotifyController extends BaseController {
      */
     @RequestMapping(value = "/edit")
     @Log(name = "编辑页面")
-    public String notifyEdit(@RequestParam(value = "id", required = true) String id, Model model) {
+    public String notifyEdit(@RequestParam(value = "id", required = true) String id, Model model,String userName) {
         SystemNotify notify = sysNotifyService.selectByPrimaryKey(id);
         CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(notify.getAcceptId());
         if (notify.getNotifyType() ==1){
