@@ -10,7 +10,6 @@
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <title>App管理列表</title>
     <script type="text/javascript">
-
         $(document).ready(function() {
             var tagValue = $("#driveTag").val();
             if(tagValue == "ios" || tagValue == "ipad"){
