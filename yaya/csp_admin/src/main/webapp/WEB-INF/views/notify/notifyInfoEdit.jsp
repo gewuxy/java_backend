@@ -71,7 +71,7 @@
         <label class="control-label">接收消息者:</label>
         <div class="controls">
             <input id="userName" class="btn btn-primary" type="button" value="查询" onclick="selectName()"/>
-            <input id="acceptId" name="acceptId" type="hidden" value="">
+            <input id="acceptId" name="acceptId" type="hidden" value="${notify.acceptId}">
             <input readonly id="name" name="userName" type="search" value="${userName}">
             <script>
                 function selectName() {
