@@ -18,10 +18,6 @@
 <body>
 <script type="text/javascript">
     function selectFile() {
-        $(document).ready(function() {
-            initFormValidate();
-        });
-
         $("#uploadFile").trigger("click");
     }
 
@@ -29,13 +25,13 @@
         var option = {
             url: "${ctx}/yaya/banner/upload",
             type: 'POST',
-            datatype: 'json',
+            dataType: 'json',
             clearForm: false,
             success: function (data) {
                 if (data.code == 0){
                     layer.msg("上传成功");
                     $("#imgUrl").val(data.data.urlPath);
-                    $("#imgId").removeAttr("src");
+                    /*$("#imgId").removeAttr("src");*/
                     $("#imgId").attr("src", data.data.saveFileName);
                 }else {
                     layer.msg(data.err);
@@ -65,7 +61,7 @@
     <div class="control-group">
         <label class="control-label">图片展示:</label>
         <div class="controls">
-            <img  src="${absolutelyPath}" id="imgId" width="200" height="200">
+            <img src="${absolutelyPath}" id="imgId" width="200" height="200">
         </div>
     </div>
     <div class="control-group">

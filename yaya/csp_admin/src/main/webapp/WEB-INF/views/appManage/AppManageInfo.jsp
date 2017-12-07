@@ -32,16 +32,15 @@
                 dataType: 'json',
                 clearForm: false,
                 success: function (data) {
-                    alert(data.code)
                     if (data.code == 0){
                         layer.msg("上传成功")
-                        $("#uploadValue").val(data.data)
                         //$("#downLoadId").val(${ctx}/pic/ + data)
                         var fileId = "uploadFile";
                         var dom = document.getElementById(fileId);
                         var fileSize = dom.files[0].size;
                         var size = parseInt((Math.round(fileSize) / 1024).toFixed(2));
                         $("#fileSize").val(size)
+                        $("#downLoadUrl").val(data.data.downUrl);
                     }else{
                         layer.msg(data.err);
                     }
@@ -92,31 +91,17 @@
     <div class="control-group">
         <label class="control-label">下载地址:</label>
         <div class="controls">
-            <input readonly id="uploadValue" type="search" name="downLoadUrl" style="width: 320px"
-                   value="${appVersion.downLoadUrl}" maxlength="50" class="required digits input-small"/>
             <span class="help-inline"><font color="red">*</font> </span>
             <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">下载链接:</label>
-        <div class="controls">
-            <input readonly id="downLoadId" type="search" maxlength="50" value="${absolutelyPath}"
-                   class="required input-xlarge"/>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">二维码:</label>
-        <div class="controls">
-            <img src="${absolutelyPath}/${imgAndName}" width="200" height="200">
+            <input type="hidden" value="${appVersion.downLoadUrl}" name="downLoadUrl" id="downLoadUrl">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">文件大小:</label>
         <div class="controls">
-            <input id="fileSize" type="text" name="fileSize" value="${appVersion.fileSize}" maxlength="50"
+            <input readonly id="fileSize" type="text" name="fileSize" value="${appVersion.fileSize}" maxlength="50"
                    class="required digits input-small"/>KB
         </div>
     </div>
@@ -126,9 +111,9 @@
             <%--<input name="appType" type="search" value="${appVersion.appType}" maxlength="100" class="input-xlarge"/>--%>
             <select name="appType" id="appType" style="width: 150px">
                 <option value="">-- 请选择 --</option>
-                <option value="YAYA_YISHI">yaya_yishi</option>
-                <option value="YAYA_YAOSHI">yaya_yaoshi</option>
-                <option value="HLYY">hlyy</option>
+                <option value="yaya_yishi">YAYA_YISHI</option>
+                <option value="yaya_yaoshi">YAYA_YAOSHI</option>
+                <option value="hlyy">HLYY</option>
             </select>
             <script>
                 document.getElementById("appType").value="${appVersion.appType}";

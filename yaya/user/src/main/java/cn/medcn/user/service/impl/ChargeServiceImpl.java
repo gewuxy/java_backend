@@ -230,9 +230,5 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         return myPage;
     }
 
-    @Override
-    public List<FluxOrder> selectOrderInfo(String id) {
-        return fluxOrderDAO.selectOrderInfo(id);
-    }
 
 }

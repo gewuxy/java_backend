@@ -8,6 +8,7 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
+import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.BannerService;
@@ -108,7 +109,7 @@ public class BannerController extends BaseController{
             Map<String,String> map = new HashMap();
             map.put("saveFileName",absolutelyPath);
             map.put("urlPath",urlPath);
-            map.put("src", appFileBase + "banner/"+saveFileName);
+            map.put("src", appFileBase + urlPath);
             map.put("title", saveFileName);
             return success(map);
         }else {

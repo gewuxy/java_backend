@@ -49,10 +49,23 @@ public class AuthorizeController extends BaseController {
 
 
     @RequestMapping(value = "/authorize", method = RequestMethod.GET)
-    public String authorize(Model model, String redirect_uri) throws SystemException{
+    public String authorize(Model model, String redirect_uri, String client_id) throws SystemException{
         if (CheckUtils.isEmpty(redirect_uri)) {
             model.addAttribute(messageKey, "illegal redirect_uri");
         }
+        if (CheckUtils.isEmpty(client_id)) {
+            model.addAttribute(messageKey, "client_id can not be empty");
+        }
+
+        SystemAuthorize condition = new SystemAuthorize();
+        condition.setAppKey(client_id);
+        SystemAuthorize authorize = sysAuthorizeService.selectOne(condition);
+        if (authorize == null) {
+            model.addAttribute(messageKey, "invalid client id");
+        } else {
+            model.addAttribute("app_name", authorize.getAppName());
+        }
+
         model.addAttribute("redirect_uri", redirect_uri);
         //跳转到登录授权页
         return "/oauth/login";

@@ -52,10 +52,4 @@ public interface ChargeService extends BaseService<FluxOrder> {
      */
     MyPage<FluxOrder> findFluxOrderList(Pageable pageable);
 
-    /**
-     * 查看个人订单列表
-     * @param id
-     * @return
-     */
-    List<FluxOrder> selectOrderInfo(String id);
 }

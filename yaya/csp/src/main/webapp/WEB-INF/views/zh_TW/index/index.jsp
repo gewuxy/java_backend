@@ -407,7 +407,7 @@
                     <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a>
                     <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-facebook.png" alt=""></a>
                     <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-twitter.png" alt=""></a>
-                    <a href="javascript;" class="index-qrcode">
+                    <a href="javascript:;" class="index-qrcode">
                         <img src="${ctxStatic}/images/icon-indexDown.png" alt="">
                         <span class="qrcode-01 qrcode-bottom"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span>
                     </a>

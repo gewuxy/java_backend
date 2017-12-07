@@ -44,7 +44,9 @@ public class AppVersion implements Serializable{
         YAYA_YISHI("yaya_yishi"),
         YAYA_YAOSHI("yaya_yaoshi"),
         HLYY("hlyy"),
-        CSPMeeting("csp");
+        CSPMeeting_CN("cspmeeting_cn"),
+        CSPMeeting_US("cspmeeting_us");
+
         public String type;
 
         APP_TYPE(String type){

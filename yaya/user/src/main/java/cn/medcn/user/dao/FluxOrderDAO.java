@@ -18,10 +18,4 @@ public interface FluxOrderDAO extends Mapper<FluxOrder>{
      */
     List<FluxOrder> findFluxOrderList(Map<String, Object> params);
 
-    /**
-     * 查看个人订单
-     * @param id
-     * @return
-     */
-    List<FluxOrder> selectOrderInfo(String id);
 }

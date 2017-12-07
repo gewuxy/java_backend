@@ -4,6 +4,7 @@ import cn.medcn.article.model.CspArticle;
 import cn.medcn.article.service.CspArticleService;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CookieUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.user.model.AppVersion;
@@ -172,14 +173,28 @@ public class SkipController extends CspBaseController {
             // 微信扫描
             return local + "/index/download";
         } else {
+            AppVersion appVersion = null;
             // 手机浏览器扫描 再判断ios或安卓手机
-            if (isIOSDevice(request)) {
-                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting.type);
+            if (isIOSDevice(request) ) { // ios系统
+                // 海外版 下载
+                if (local.equals(LocalUtils.Local.en_US)) {
+                    appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting_US.type);
+                } else { // 国内版 下载
+                    appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting_CN.type);
+                }
+
                 if (appVersion != null ) {
                     response.sendRedirect(appVersion.getDownLoadUrl());
                 }
-            } else {
-                AppVersion appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting.type);
+
+            } else { // 安卓系统
+                // 海外版 下载
+                if (local.equals(LocalUtils.Local.en_US)) {
+                    appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting_US.type);
+                } else { // 国内版 下载
+                    appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting_CN.type);
+                }
+
                 if (appVersion != null ) {
                     response.sendRedirect(appFileBase + appVersion.getDownLoadUrl());
                 }
