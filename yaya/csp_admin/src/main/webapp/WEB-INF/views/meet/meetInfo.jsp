@@ -123,7 +123,7 @@
             if (detail.videoUrl != undefined){//视频
                 courseHtml += '<video src="'+detail.videoUrl+'" width="auto" height="400px" controls autobuffer></video>';
             } else {
-                courseHtml += '<img src="' + detail.ImageUrl+ '">';
+                courseHtml += '<img src="' + detail.imgUrl+ '">';
             }
             courseHtml += '<div class="carousel-caption">'+ count + '/' + num + '</div></div>';
             $("#courseId").append(courseHtml);
