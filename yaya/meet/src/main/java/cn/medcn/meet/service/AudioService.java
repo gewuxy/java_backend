@@ -287,4 +287,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void deleteCspCourse(Integer courseId);
 
     Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle);
+
+    void handleHttpUrl(String fileBase, AudioCourse course);
 }

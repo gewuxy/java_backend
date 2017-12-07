@@ -45,7 +45,7 @@
     }
 </script>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/yaya/recommendMeet/edit">新增推荐会议</a></li>
+    <li class="active"><a href="#">新增推荐会议</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/recommendMeet/insert" enctype="multipart/form-data">
     <div class="control-group">

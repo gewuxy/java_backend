@@ -25,7 +25,7 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active">公告详情</li>
+    <li class="active"><a href="#">公告详情</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/notify/insert">
     <div class="control-group">

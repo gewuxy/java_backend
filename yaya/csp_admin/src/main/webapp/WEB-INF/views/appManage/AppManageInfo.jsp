@@ -10,7 +10,38 @@
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <title>App管理列表</title>
     <script type="text/javascript">
+        $(document).ready(function() {
+            var tagValue = $("#driveTag").val();
+            if(tagValue == "ios" || tagValue == "ipad"){
+                $("#uploadId").hide();
+                $("#uploadSizeId").hide();
+                $("#divId").show();
+                $("#downLoad").removeAttr("readonly");
+            }else {
+                $("#uploadId").show();
+                $("#uploadSizeId").show();
+                $("#divId").hide();
+            }
 
+
+            $("#driveTag").change(function () {
+                selectChange();
+            })
+
+            function selectChange() {
+                var selectValue = $("#driveTag").val();
+                if (selectValue == "ios" || selectValue == "ipad"){
+                    $("#uploadId").hide();
+                    $("#uploadSizeId").hide();
+                    $("#divId").show();
+                    $("#downLoad").val("");
+                }else {
+                    $("#uploadId").show();
+                    $("#uploadSizeId").show();
+                    $("#divId").hide();
+                }
+            }
+        })
 
         $(function () {
             var checkObj = ${appVersion.forced};
@@ -40,7 +71,7 @@
                         var fileSize = dom.files[0].size;
                         var size = parseInt((Math.round(fileSize) / 1024).toFixed(2));
                         $("#fileSize").val(size)
-                        $("#downLoadUrl").val(data.data.downUrl);
+                        $("#downLoad").val(data.data.downUrl);
                     }else{
                         layer.msg(data.err);
                     }
@@ -54,7 +85,7 @@
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/sys/menu/edit">App管理列表</a></li>
+    <li class="active"><a href="#">App管理列表</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/appManage/update"
       enctype="multipart/form-data">
@@ -63,7 +94,7 @@
         <label class="control-label">版本号:</label>
         <div class="controls">
             <input type="search" name="versionStr" value="${appVersion.versionStr}" maxlength="50"
-                   class="required input-xlarge"/>
+                   class="required input-xlarge" onkeyup="value=value.replace(/[^\d\.]/g,'')" onblur="value=value.replace(/[^\d\.]/g,'')"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
@@ -88,17 +119,24 @@
             </script>
         </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="uploadId">
         <label class="control-label">下载地址:</label>
         <div class="controls">
             <span class="help-inline"><font color="red">*</font> </span>
             <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
-            <input type="hidden" value="${appVersion.downLoadUrl}" name="downLoadUrl" id="downLoadUrl">
         </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="divId">
+        <label class="control-label">IOS下载地址:</label>
+        <div class="controls">
+            <input name="downLoadUrl" type="search" maxlength="100" id="downLoad" value="${appVersion.downLoadUrl}"
+                   class="input-xlarge"/>
+            <span class="help-inline"><font color="#a9a9a9">ios系统输入下载地址</font> </span>
+        </div>
+    </div>
+    <div class="control-group" id="uploadSizeId">
         <label class="control-label">文件大小:</label>
         <div class="controls">
             <input readonly id="fileSize" type="text" name="fileSize" value="${appVersion.fileSize}" maxlength="50"
@@ -111,19 +149,12 @@
             <%--<input name="appType" type="search" value="${appVersion.appType}" maxlength="100" class="input-xlarge"/>--%>
             <select name="appType" id="appType" style="width: 150px">
                 <option value="">-- 请选择 --</option>
-                <option value="yaya_yishi">YAYA_YISHI</option>
-                <option value="yaya_yaoshi">YAYA_YAOSHI</option>
-                <option value="hlyy">HLYY</option>
+                <option value="cspmeeting_cn">CSP中文版</option>
+                <option value="cspmeeting_us">CSP英文版</option>
             </select>
             <script>
                 document.getElementById("appType").value="${appVersion.appType}";
             </script>
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">版本更新说明:</label>
-        <div class="controls">
-            <input name="details" type="search" value="${appVersion.details}" maxlength="100" class="input-xlarge"/>
         </div>
     </div>
     <div class="control-group">

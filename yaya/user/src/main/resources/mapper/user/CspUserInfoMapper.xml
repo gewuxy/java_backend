@@ -40,14 +40,17 @@
 
     <select id="findCspUserList" resultType="cn.medcn.user.model.CspUserInfo">
         SELECT * FROM t_csp_user_info WHERE 1=1
-        <if test="userName != null">
-            AND user_name = #{userName}
-        </if>
         <if test="abroad != null">
             AND abroad = #{abroad}
         </if>
         <if test="active != null">
             AND active = #{active}
+        </if>
+        <if test="keyWord != null">
+            AND (nick_name like CONCAT(#{keyWord}, '%') OR
+            user_name like CONCAT(#{keyWord}, '%') OR
+            mobile like CONCAT(#{keyWord}, '%')
+            )
         </if>
     </select>
 

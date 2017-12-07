@@ -43,7 +43,7 @@
     }
 </script>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/yaya/banner/list">新增Banner</a></li>
+    <li class="active"><a href="#">新增Banner</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/banner/update"
       enctype="multipart/form-data">

@@ -45,7 +45,7 @@
     }
 </script>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/yaya/recommendMeet/list">修改推荐会议</a></li>
+    <li class="active"><a href="#">修改推荐会议</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/recommendMeet/update" enctype="multipart/form-data">
     <input type="hidden" name="id" value="${recommend.id}" />

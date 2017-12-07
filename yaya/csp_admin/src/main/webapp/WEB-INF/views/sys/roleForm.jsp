@@ -2,7 +2,7 @@
 <html>
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <title>个人信息</title>
+    <title>角色管理</title>
 </head>
 <body>
 <ul class="nav nav-tabs">

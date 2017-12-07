@@ -127,7 +127,7 @@
     <div class="control-group">
         <label class="control-label">备注:</label>
         <div class="controls">
-            <textarea name="menuDesc"rows="3" maxlength="200" class="input-xxlarge"></textarea>
+            <textarea name="menuDesc" rows="3" maxlength="200" class="input-xxlarge">${menu.menuDesc}</textarea>
         </div>
     </div>
     <div class="form-actions">

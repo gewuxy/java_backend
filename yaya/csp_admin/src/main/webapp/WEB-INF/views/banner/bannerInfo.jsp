@@ -44,7 +44,7 @@
 <link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/yaya/banner/edit">新增Banner</a></li>
+    <li class="active"><a href="#">新增Banner</a></li>
 </ul>
 <script></script>
 <form  id="inputForm" method="post" class="form-horizontal" action="${ctx}/yaya/banner/insert"

@@ -859,4 +859,22 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             audioCourseDAO.updateByPrimaryKey(course);
         }
     }
+
+    @Override
+    public void handleHttpUrl(String fileBase, AudioCourse course){
+        if (course != null && !CheckUtils.isEmpty(course.getDetails())) {
+            for (AudioCourseDetail detail : course.getDetails()) {
+                if (CheckUtils.isNotEmpty(detail.getAudioUrl()) && !detail.getAudioUrl().startsWith("http")) {
+                    detail.setAudioUrl(fileBase + detail.getAudioUrl());
+                }
+                if (CheckUtils.isNotEmpty(detail.getImgUrl()) && !detail.getImgUrl().startsWith("http")) {
+                    detail.setImgUrl(fileBase + detail.getImgUrl());
+                }
+                if (CheckUtils.isNotEmpty(detail.getVideoUrl()) && !detail.getVideoUrl().startsWith("http")) {
+                    detail.setVideoUrl(fileBase + detail.getVideoUrl());
+                }
+            }
+        }
+    }
+
 }

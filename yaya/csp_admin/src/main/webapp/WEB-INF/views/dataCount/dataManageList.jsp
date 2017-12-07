@@ -16,7 +16,7 @@
 <script type="text/javascript" src="${ctxStatic}/js/echarts_common.js"></script>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/csp/data/list">数据统计表</a></li>
+    <li class="active"><a href="#">数据统计表</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp" %>
 <form id="searchForm" method="post" class="breadcrumb form-search">

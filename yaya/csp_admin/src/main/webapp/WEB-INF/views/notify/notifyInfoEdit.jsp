@@ -41,7 +41,7 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/csp/notify/edit">公告菜单修改</a></li>
+    <li class="active"><a href="#">公告菜单修改</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/notify/update">
     <input type="hidden" id="edit_id" name="id" value="${notify.id}"/>
@@ -71,7 +71,7 @@
         <label class="control-label">接收消息者:</label>
         <div class="controls">
             <input id="userName" class="btn btn-primary" type="button" value="查询" onclick="selectName()"/>
-            <input id="acceptId" name="acceptId" type="hidden" value="">
+            <input id="acceptId" name="acceptId" type="hidden" value="${notify.acceptId}">
             <input readonly id="name" name="userName" type="search" value="${userName}">
             <script>
                 function selectName() {

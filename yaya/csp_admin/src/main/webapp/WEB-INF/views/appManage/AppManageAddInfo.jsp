@@ -11,8 +11,24 @@
     <title>App管理列表</title>
     <script type="text/javascript">
         $(document).ready(function() {
-            initFormValidate();
-        });
+            $("#driveTag").change(function () {
+                selectChange();
+            })
+
+            function selectChange() {
+                var selectValue = $("#driveTag").val();
+                if (selectValue == "ios" || selectValue == "ipad"){
+                    $("#uploadId").hide();
+                    $("#uploadSizeId").hide();
+                    $("#divId").show();
+                    $("#downLoadUrl").removeAttr("readonly");
+                }else {
+                    $("#uploadId").show();
+                    $("#uploadSizeId").show();
+                    $("#divId").hide();
+                }
+            }
+        })
 
         function selectFile() {
             $("#uploadFile").trigger("click");
@@ -28,7 +44,7 @@
                     //alert(data.code)
                     if (data.code == 0){
                         layer.msg("上传成功")
-                        $("#uploadValue").val(data.data.downUrl)
+                        $("#downLoadUrl").val(data.data.downUrl)
                         //$("#downLoadId").val(${ctx}/pic/ + data)
                         var fileId = "uploadFile";
                         var dom = document.getElementById(fileId);
@@ -49,7 +65,7 @@
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/csp/appManage/add">App添加列表</a></li>
+    <li class="active"><a href="#">App添加列表</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/appManage/add"
       enctype="multipart/form-data">
@@ -57,15 +73,13 @@
         <label class="control-label">版本号:</label>
         <div class="controls">
             <input type="search" name="versionStr" maxlength="50"  id="version"
-                   class="required input-xlarge"/>
-            <span class="help-inline"><font color="red">*</font> </span>
+                   class="required input-xlarge" onkeyup="value=value.replace(/[^\d\.]/g,'')" onblur="value=value.replace(/[^\d\.]/g,'')"/>
+            <span class="help-inline"><font color="#a9a9a9">只允许输入数字和小数点*</font> </span>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">版本信息描述:</label>
         <div class="controls">
-            <%--<input type="search" name="details" maxlength="50"
-                   class="required input-xlarge"/>--%>
             <textarea name="details" rows="3" maxlength="2000" class="input-xxlarge"></textarea>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
@@ -73,7 +87,7 @@
     <div class="control-group">
         <label class="control-label">手机类型:</label>
         <div class="controls">
-            <select name="driveTag">
+            <select name="driveTag" id="driveTag" style="width: 100px">
                 <option value="">-- 请选择 --</option>
                 <option value="ios">IOS</option>
                 <option value="ipad">IPAD</option>
@@ -81,40 +95,38 @@
             </select>
         </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="divId">
+        <label class="control-label">IOS下载地址:</label>
+        <div class="controls">
+            <input readonly name="downLoadUrl" type="search" maxlength="100" id="downLoadUrl"
+                   class="input-xlarge"/>
+            <span class="help-inline"><font color="#a9a9a9">ios系统输入下载地址</font> </span>
+        </div>
+    </div>
+    <div class="control-group" id="uploadId">
         <label class="control-label">上传文件:</label>
         <div class="controls">
             <input type="file" name="uploadFile" id="uploadFile" style="display:none" multiple="multiple"
                    onchange="fileUpload()">
-            <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
+            <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()" id="uploadBtn">
             <input type="hidden" id="hiUpload" value="${filename}" name="uploadFile">
-            <input  type="hidden" name="downLoadUrl" id="uploadValue" value="">
-
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">应用类型:</label>
         <div class="controls">
-                <select name="appType">
-                    <option value="">-- 请选择 --</option>
-                    <option value="yaya_yishi">YAYA_YISHI</option>
-                    <option value="yaya_yaoshi">YAYA_YAOSHI</option>
-                    <option value="hlyy">HLYY</option>
-                </select>
+            <select name="appType">
+                <option value="">-- 请选择 --</option>
+                <option value="cspmeeting_cn">CSP中文版</option>
+                <option value="cspmeeting_us">CSP英文版</option>
+            </select>
         </div>
     </div>
-    <div class="control-group">
+    <div class="control-group" id="uploadSizeId">
         <label class="control-label">文件大小:</label>
         <div class="controls">
             <input readonly id="fileSize" type="search" name="fileSize" value="${fileSize}" maxlength="50"
                    class="required digits input-small"/>KB
-        </div>
-    </div>
-    <div class="control-group">
-        <label class="control-label">版本更新说明:</label>
-        <div class="controls">
-            <input name="details" type="search" maxlength="100"
-                   class="input-xlarge"/>
         </div>
     </div>
     <div class="control-group">
@@ -127,13 +139,10 @@
     <div class="form-actions">
         <shiro:hasPermission name="csp:appManage:add">
             <input id="btnSubmit" class="btn btn-primary" type="submit"
-                                                         value="保 存"/>
+                   value="保 存"/>
         </shiro:hasPermission>&nbsp;
         <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)"/>
     </div>
 </form>
 </body>
 </html>
-<script>
-
-</script>

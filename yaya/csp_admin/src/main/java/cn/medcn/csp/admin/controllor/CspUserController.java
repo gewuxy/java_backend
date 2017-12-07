@@ -3,8 +3,9 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.admin.Constants;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
@@ -13,7 +14,6 @@ import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -34,27 +34,20 @@ public class CspUserController extends BaseController {
    @Autowired
    private SystemRegionService systemRegionService;
 
-    /**
-     * 获取csp账户列表
-     * @param pageable
-     * @param userName
-     * @param model
-     * @return
-     */
     @RequestMapping(value = "/list")
-    @Log(name = "csp账户列表")
-    public String cspUserSearch(Pageable pageable, @RequestParam(required = false, defaultValue = "0")Integer listType, String userName, Model model) {
-        if (!StringUtils.isEmpty(userName)) {
-            pageable.getParams().put("userName", userName);
-            model.addAttribute("userName",userName);
+    @Log(name = "csp用户列表")
+    public String cspUserSearch(Pageable pageable, @RequestParam(required = false, defaultValue = "0")Integer listType, String keyWord, Model model) {
+        if (!StringUtils.isEmpty(keyWord)) {
+            pageable.put("keyWord", keyWord);
+            model.addAttribute("keyWord",keyWord);
         }
-        pageable.getParams().put("active",1);
+        pageable.put("active",1);
         if(listType == null || listType == 0){  //国内
-            pageable.getParams().put("abroad",0);
+            pageable.put("abroad",0);
         }else if( listType == 1){  // 海外
-           pageable.getParams().put("abroad",1);
+           pageable.put("abroad",1);
         }else{  //封号=未激活
-            pageable.getParams().put("active",0);
+            pageable.put("active",0);
         }
         model.addAttribute("listType",listType);
         MyPage<CspUserInfo> page = cspUsersService.findCspUserList(pageable);
@@ -82,8 +75,8 @@ public class CspUserController extends BaseController {
             CspUserInfo userInfo = cspUsersService.selectByPrimaryKey(user);
             model.addAttribute("user",userInfo);
             String province = userInfo.getProvince();
-            if(province != null){
-                List<SystemRegion> citys = systemRegionService.findRegionByPreName(userInfo.getProvince());
+            if(!StringUtils.isEmpty(province)){
+                List<SystemRegion> citys = systemRegionService.findRegionByPreName(province);
                 model.addAttribute("city", citys);
                 if(!province.equals("北京") || !province.equals("天津")){   //此此省份没有2级
                     List<SystemRegion> districts = systemRegionService.findRegionByPreName(userInfo.getCity());
@@ -93,7 +86,6 @@ public class CspUserController extends BaseController {
         }
         return "/user/userInfo";
     }
-
 
     /**
      * 删除、禁用、更新、注册用户
@@ -111,7 +103,7 @@ public class CspUserController extends BaseController {
             cspUsersService.deleteByPrimaryKey(user);
         }else{   //修改用户信息
             if(isReset == 1){   //密码重置
-                user.setPassword(MD5Utils.MD5Encode("111111"));
+                user.setPassword(MD5Utils.MD5Encode(Constants.RESET_PASSWORD));
             }
             cspUsersService.updateByPrimaryKeySelective(user);
         }
@@ -132,10 +124,10 @@ public class CspUserController extends BaseController {
     @ResponseBody
     public String searchOption(String name){
         if(name == null){
-            return APIUtils.success();
+            return success();
         }
         List<SystemRegion> options = systemRegionService.findRegionByPreName(name);
-        return APIUtils.success(options);
+        return success(options);
     }
 
 }
