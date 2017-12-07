@@ -67,12 +67,13 @@ public class Searchable {
                 index = 0;
                 for (String key : orMap.keySet()) {
                     buffer.append(key).append(MATCH).append(orMap.get(key));
-                    buffer.append(index == andMap.size() - 1 ? EMPTY : OR);
+                    buffer.append(index == orMap.size() - 1 ? EMPTY : OR);
                     index ++;
                 }
                 buffer.append(")");
             }
         }
+        System.out.println(buffer.toString());
         return buffer.toString();
     }
 
