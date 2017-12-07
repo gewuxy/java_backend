@@ -19,7 +19,7 @@ public interface SearchService {
      * @param pageable
      * @return
      */
-    SearchResult baseSearch(Pageable pageable);
+    SearchResult search(Map<String,String> orMap,Map<String,String> andMap,Map<String,String> filterMap,Map<String,String> sortMap,Pageable pageable) throws SystemException;
 
     /**
      * solr core地址
