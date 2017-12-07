@@ -65,7 +65,7 @@
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/csp/appManage/add">App添加列表</a></li>
+    <li class="active"><a href="#">App添加列表</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/appManage/add"
       enctype="multipart/form-data">

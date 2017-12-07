@@ -12,7 +12,7 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li  class="active"><a href="${ctx}/csp/order/check">流量订单详情</a></li>
+    <li  class="active"><a href="#">流量订单详情</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/order/update">
 

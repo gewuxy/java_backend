@@ -41,7 +41,7 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/csp/notify/edit">公告菜单修改</a></li>
+    <li class="active"><a href="#">公告菜单修改</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/notify/update">
     <input type="hidden" id="edit_id" name="id" value="${notify.id}"/>

@@ -34,7 +34,7 @@
                     $("#uploadId").hide();
                     $("#uploadSizeId").hide();
                     $("#divId").show();
-
+                    $("#downLoad").val("");
                 }else {
                     $("#uploadId").show();
                     $("#uploadSizeId").show();
@@ -85,7 +85,7 @@
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/sys/menu/edit">App管理列表</a></li>
+    <li class="active"><a href="#">App管理列表</a></li>
 </ul>
 <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/csp/appManage/update"
       enctype="multipart/form-data">
