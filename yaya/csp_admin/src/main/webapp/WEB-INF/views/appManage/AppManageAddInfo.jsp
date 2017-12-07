@@ -46,8 +46,6 @@
     </script>
 
 </head>
-<script type="text/javascript" src="${ctxStatic}/jquery/qrcode.min.js"></script>
-<script type="text/javascript" src="${ctxStatic}/jquery/jquery.qrcode.js"></script>
 <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
 <body>
 <ul class="nav nav-tabs">
