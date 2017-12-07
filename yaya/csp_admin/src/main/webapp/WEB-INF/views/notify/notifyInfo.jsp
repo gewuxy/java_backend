@@ -66,7 +66,8 @@
                         title: '用户列表页',
                         shadeClose: true,
                         shade: 0.8,
-                        area: ['1000px', '90%'],
+                        area: ['1000px', '600px'],
+                        offset: ['100px', '350px'],
                         content: '${ctx}/csp/notify/userList',
                         success: function(layero, index){
                             var body = layer.getChildFrame('body', index);
