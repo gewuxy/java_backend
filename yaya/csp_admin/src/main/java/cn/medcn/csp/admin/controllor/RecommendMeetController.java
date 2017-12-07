@@ -254,7 +254,7 @@ public class RecommendMeetController extends BaseController {
         String filename = file.getOriginalFilename();
         String suffix = file.getOriginalFilename().substring(filename.lastIndexOf("."));
         String saveFileName = StringUtils.nowStr()+suffix;
-        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")||suffix.substring(1).equals("JPG") || suffix.substring(1).equals("PNG")){
             String imgPath = appFileUploadBase+"headimg/"+saveFileName;
             String imgURL = "headimg/"+saveFileName;
             File saveFile = new File(imgPath);
