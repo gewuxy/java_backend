@@ -109,7 +109,7 @@ public class BannerController extends BaseController{
             Map<String,String> map = new HashMap();
             map.put("saveFileName",absolutelyPath);
             map.put("urlPath",urlPath);
-            map.put("src", appFileBase + "banner/"+saveFileName);
+            map.put("src", appFileBase + urlPath);
             map.put("title", saveFileName);
             return success(map);
         }else {
