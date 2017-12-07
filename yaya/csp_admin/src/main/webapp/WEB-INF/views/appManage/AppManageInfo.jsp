@@ -63,7 +63,7 @@
         <label class="control-label">版本号:</label>
         <div class="controls">
             <input type="search" name="versionStr" value="${appVersion.versionStr}" maxlength="50"
-                   class="required input-xlarge"/>
+                   class="required input-xlarge" onkeyup="value=value.replace(/[^\d\.]/g,'')" onblur="value=value.replace(/[^\d\.]/g,'')"/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
