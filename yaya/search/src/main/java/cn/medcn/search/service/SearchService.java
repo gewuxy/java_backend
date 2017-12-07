@@ -15,9 +15,14 @@ import java.util.Map;
 public interface SearchService {
 
     /**
-     * 基本的OR查询
-     * @param pageable
-     * @return
+     *
+     * @param orMap  or查询需要传入的map，key为要查询的字段，value为要查询的值
+     * @param andMap and查询需要传入的map，key为要查询的字段，value为要查询的值
+     * @param filterMap 对查询的结果进行过滤，key为需要过滤的条件字段，value为要滤的条件字段的值
+     * @param sortMap 对查询的结果进行排序，key为排序条件的字段，value为排序的方法，传入desc表示降序，asc表示升序
+     * @param pageable pageNum为开始查询的位置，pageSize为要查询的条数
+     * @return  查询结果对象
+     * @throws SystemException  当sortMap不为null,又有多个值时，抛出异常
      */
     SearchResult search(Map<String,String> orMap,Map<String,String> andMap,Map<String,String> filterMap,Map<String,String> sortMap,Pageable pageable) throws SystemException;
 
