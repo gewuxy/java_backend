@@ -92,7 +92,7 @@ public class BannerController extends BaseController{
         String filename = file.getOriginalFilename();
         String suffix = file.getOriginalFilename().substring(filename.lastIndexOf("."));
         String saveFileName = StringUtils.nowStr()+suffix;
-        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")){
+        if (suffix.substring(1).equals("jpg") || suffix.substring(1).equals("png")||suffix.substring(1).equals("JPG") || suffix.substring(1).equals("PNG")){
             String imgPath = appFileUploadBase+"banner/"+saveFileName;
             String urlPath = "banner/"+saveFileName;
             File saveFile = new File(imgPath);
