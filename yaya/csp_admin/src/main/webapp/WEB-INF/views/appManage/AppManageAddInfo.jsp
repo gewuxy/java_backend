@@ -43,6 +43,10 @@
             $("#inputForm").ajaxSubmit(option);
             return true;
         }
+
+        /*$("#version").blur(function () {
+
+        })*/
     </script>
 
 </head>
@@ -57,8 +61,8 @@
         <label class="control-label">版本号:</label>
         <div class="controls">
             <input type="search" name="versionStr" maxlength="50"  id="version"
-                   class="required input-xlarge"/>
-            <span class="help-inline"><font color="red">*</font> </span>
+                   class="required input-xlarge"  onKeyPress="if (event.keyCode!=46 && event.keyCode!=45 &&event.keyCode<48 || event.keyCode>57) event.returnValue=false"/>
+            <span class="help-inline"><font color="red">只允许输入数字和小数点*</font> </span>
         </div>
     </div>
     <div class="control-group">
