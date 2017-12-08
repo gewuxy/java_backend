@@ -4,6 +4,8 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.search.dto.SearchResult;
 import cn.medcn.search.service.SearchService;
+import cn.medcn.search.supports.Searchable;
+import org.apache.solr.client.solrj.SolrClient;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
@@ -90,6 +92,11 @@ public abstract class SearchServiceImpl implements SearchService {
         query.setStart((pageable.getPageNum()-1) * pageable.getPageNum());
         query.setRows(pageable.getPageSize());
 
+        return doSearch(client, query);
+    }
+
+
+    protected SearchResult doSearch(SolrClient client, SolrQuery query){
         SearchResult result = new SearchResult();
         try {
             QueryResponse response = client.query(query);
@@ -103,6 +110,25 @@ public abstract class SearchServiceImpl implements SearchService {
             e.printStackTrace();
         }
         return result;
+    }
+
+
+    /**
+     * 根据 searchable 对象进行检索
+     *
+     * @param searchable
+     * @return
+     */
+    @Override
+    public SearchResult search(Searchable searchable) {
+        String url = getSolrUrl();
+        HttpSolrClient client = new HttpSolrClient(url);
+        SolrQuery query = new SolrQuery();
+        query.setStart(searchable.getStart());
+        query.setRows(searchable.getPageSize());
+
+        query.setQuery(searchable.getQuery());
+        return doSearch(client, query);
     }
 
     private StringBuffer getBuffer(Map<String, String> orMap, Map<String, String> andMap, StringBuffer buffer) {

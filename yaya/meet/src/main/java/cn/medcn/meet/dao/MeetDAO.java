@@ -4,6 +4,7 @@ import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.Lecturer;
 import cn.medcn.meet.model.Meet;
 import cn.medcn.meet.model.MeetSetting;
+import cn.medcn.meet.model.MeetTuijian;
 import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -110,4 +111,5 @@ public interface MeetDAO extends Mapper<Meet> {
     List<Meet> selectAllMeet();
 
     List<Meet> selectMeetList(Map<String, Object> params);
+
 }

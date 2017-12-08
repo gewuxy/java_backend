@@ -289,5 +289,4 @@
             AND t.meet_name LIKE  CONCAT('%',#{meetName},'%')
         </if>
     </select>
-
 </mapper>

@@ -12,4 +12,6 @@ import java.util.Map;
  */
 public interface RecommendMeetDAO extends Mapper<Recommend>{
     List<Recommend> recommendMeetList(Map<String, Object> params);
+
+    Recommend selectByMeetId(String meetId);
 }

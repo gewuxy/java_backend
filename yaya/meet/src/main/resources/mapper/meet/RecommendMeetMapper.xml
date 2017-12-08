@@ -23,4 +23,8 @@
         ORDER BY r.sort
     </select>
 
+    <select id="selectByMeetId" resultType="cn.medcn.meet.model.Recommend">
+        SELECT  * FROM  t_recommend WHERE resource_id = #{meetId}
+    </select>
+
 </mapper>

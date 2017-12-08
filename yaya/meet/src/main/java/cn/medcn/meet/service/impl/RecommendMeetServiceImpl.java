@@ -36,4 +36,9 @@ public class RecommendMeetServiceImpl extends BaseServiceImpl<Recommend> impleme
         return page;
     }
 
+    @Override
+    public Recommend selectByMeetId(String meetId) {
+        return recommendMeetDAO.selectByMeetId(meetId);
+    }
+
 }

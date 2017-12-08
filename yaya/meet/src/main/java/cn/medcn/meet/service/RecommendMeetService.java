@@ -13,4 +13,6 @@ import java.util.List;
  */
 public interface RecommendMeetService extends BaseService<Recommend>{
     MyPage<Recommend> recommendMeetList(Pageable pageable);
+
+    Recommend selectByMeetId(String meetId);
 }

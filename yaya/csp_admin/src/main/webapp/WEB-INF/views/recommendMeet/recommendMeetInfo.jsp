@@ -85,13 +85,13 @@
     <div class="control-group">
         <label class="control-label">主讲者姓名:</label>
         <div class="controls">
-            <input type="search" name="lecturer" id="lecturer" maxlength="50" class="required input-xlarge">
+            <input type="search" name="lecturer" id="lecturer" maxlength="50" class="required input-xlarge" value="${lecturer.name}">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者职位:</label>
         <div class="controls">
-            <input type="search" name="lecturerTile" id="lecturerTile" maxlength="50" class="required input-xlarge">
+            <input type="search" name="lecturerTile" id="lecturerTile" maxlength="50" class="required input-xlarge" value="${lecturer.title}">
         </div>
     </div>
 
@@ -110,7 +110,7 @@
     <div class="control-group">
         <label class="control-label">头像展示:</label>
         <div class="controls">
-            <img src="" id="imgId" width="200" height="200">
+            <img src="${lecturer.headimg}" id="imgId" width="200" height="200">
         </div>
     </div>
 
@@ -118,7 +118,7 @@
     <div class="control-group">
         <label class="control-label">主讲者所属医院:</label>
         <div class="controls">
-                <input type="search" name="lecturerHos" id="lecturerHos" maxlength="50" class="required input-xlarge">
+                <input type="search" name="lecturerHos" id="lecturerHos" maxlength="50" class="required input-xlarge" value="${lecturer.hospital}">
         </div>
     </div>
     <div class="control-group">
@@ -129,6 +129,9 @@
                 <c:forEach items="${departments}" var="d">
                     <option value="${d}"}>${d}</option>
                 </c:forEach>
+                <script>
+                    document.getElementById("lecturerDepart").value="${lecturer.depart}";
+                </script>
             </select>&nbsp;&nbsp;
         </div>
     </div>
