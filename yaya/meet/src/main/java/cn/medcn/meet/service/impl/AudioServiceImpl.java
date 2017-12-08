@@ -249,13 +249,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setInfo(course.getInfo());
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
-        for(AudioCourseDetail detail:details){
-            AudioCourseDetail reprintDetail = new AudioCourseDetail();
-            BeanUtils.copyProperties(detail, reprintDetail);
-            reprintDetail.setId(null);
-            reprintDetail.setCourseId(reprintCourse.getId());
-            audioCourseDetailDAO.insert(reprintDetail);
-        }
+        doCopyDetails(details, reprintCourse.getId());
         return reprintCourse.getId();
     }
 
@@ -877,4 +871,43 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         }
     }
 
+    /**
+     * 将直播课件copy成录播课件
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public Integer doCopyLiveToRecord(Integer courseId) {
+
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        List<AudioCourseDetail> liveDetails = findLiveDetails(courseId);
+
+        AudioCourse copyCourse = new AudioCourse();
+        BeanUtils.copyProperties(course, copyCourse);
+        copyCourse.setId(null);
+        copyCourse.setCspUserId(null);//不属于任何人的
+        copyCourse.setPrimitiveId(courseId);
+        copyCourse.setCreateTime(new Date());
+        copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
+        audioCourseDAO.insert(copyCourse);
+
+        //生成明细
+        Integer copyCourseId = copyCourse.getId();
+        doCopyDetails(liveDetails, copyCourseId);
+
+        return copyCourse.getId();
+    }
+
+
+    protected void doCopyDetails(List<AudioCourseDetail> details, Integer courseId){
+        for (AudioCourseDetail detail : details) {
+            //复制微课明细
+            AudioCourseDetail copyDetail = new AudioCourseDetail();
+            BeanUtils.copyProperties(detail, copyDetail);
+            copyDetail.setId(null);
+            copyDetail.setCourseId(courseId);
+            audioCourseDetailDAO.insert(copyDetail);
+        }
+    }
 }

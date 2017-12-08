@@ -289,4 +289,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
     Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle);
 
     void handleHttpUrl(String fileBase, AudioCourse course);
+
+    /**
+     * 将直播课件copy成录播课件
+     * @param courseId
+     * @return
+     */
+    Integer doCopyLiveToRecord(Integer courseId);
 }

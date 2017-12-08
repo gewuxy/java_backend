@@ -1,10 +1,8 @@
 package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.Constants;
-import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.dto.AddressDTO;
-import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
@@ -16,6 +14,7 @@ import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.csp.utils.TXLiveUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.*;
@@ -24,9 +23,7 @@ import cn.medcn.meet.service.LiveService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -35,14 +32,13 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
-import static cn.medcn.common.Constants.ABROAD_KEY;
-import static cn.medcn.common.Constants.LOCAL_KEY;
-import static cn.medcn.common.Constants.OS_TYPE_ANDROID;
+import static cn.medcn.common.Constants.*;
 import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
 
 /**
@@ -142,13 +138,13 @@ public class MeetingController extends CspBaseController {
                 course.setPlayType(0);
             }
 
-            handleHttpUrl(fileBase, course);
+            audioService.handleHttpUrl(fileBase, course);
             model.addAttribute("course", course);
 
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
                 course.setDetails(audioService.findLiveDetails(courseId));
 
-                handleHttpUrl(fileBase, course);
+                audioService.handleHttpUrl(fileBase, course);
                 model.addAttribute("course", course);
 
                 String wsUrl = genWsUrl(request, courseId);
@@ -450,7 +446,7 @@ public class MeetingController extends CspBaseController {
 //            audioCourse.setDetails(audioService.findLiveDetails(courseId));
 //        }
 
-        handleHttpUrl(fileBase, audioCourse);
+        audioService.handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             throw new SystemException(local("course.error.author"));
@@ -713,7 +709,7 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
 
                 if (live != null) {
-                    live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+                    live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
                     liveService.updateByPrimaryKey(live);
                 }
 
@@ -731,6 +727,38 @@ public class MeetingController extends CspBaseController {
 
 
         return success();
+    }
+
+    /**
+     * 根据课件ID获取推流地址
+     * 如果已经存在则返回原有地址
+     * 不存在则生成推流地址
+     * @param courseId
+     * @return
+     */
+    protected String getPushUrl(Integer courseId) throws SystemException{
+        Live live = liveService.findByCourseId(courseId);
+        String pushUrl = null;
+        if (live != null) {
+            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                throw new SystemException(local("share.live.over"));
+            }
+
+           if (live.getVideoLive() != null && live.getVideoLive()) {//如果是视频直播
+                if (CheckUtils.isEmpty(live.getPushUrl())) {
+                    pushUrl = TXLiveUtils.genPushUrl(String.valueOf(courseId), live.getEndTime() == null ? 0 : live.getEndTime().getTime());
+                    live.setPushUrl(pushUrl);
+                    live.setRtmpUrl(TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.rtmp));
+                    live.setHlsUrl(TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.hls));
+                    live.setHdlUrl(TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.flv));
+
+                    liveService.updateByPrimaryKey(live);
+                } else {
+                    pushUrl = live.getPushUrl();
+                }
+           }
+        }
+        return pushUrl;
     }
 
     /**
@@ -757,6 +785,19 @@ public class MeetingController extends CspBaseController {
 
         if (liveType == null) {
             liveType = LiveOrderDTO.LIVE_TYPE_PPT;
+        }
+
+        //1.1中增加获取视频推流地址
+        if (liveType == LiveOrderDTO.LIVE_TYPE_VIDEO) {
+
+
+            String pushUrl = null;
+            try {
+                pushUrl = getPushUrl(courseId);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
+            result.put("pushUrl", pushUrl);
         }
 
         String wsUrl = genWsUrl(request, courseId);
@@ -805,6 +846,22 @@ public class MeetingController extends CspBaseController {
 
         }
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
+
+        return success();
+    }
+
+
+    @RequestMapping(value = "/live/over")
+    @ResponseBody
+    public String liveOver(Integer courseId){
+        //删除缓存中的同步指令
+        redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
+
+        Live live = liveService.findByCourseId(courseId);
+        if (live != null) {
+            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+            liveService.updateByPrimaryKey(live);
+        }
 
         return success();
     }
