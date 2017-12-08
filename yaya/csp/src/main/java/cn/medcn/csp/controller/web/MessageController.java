@@ -67,7 +67,7 @@ public class MessageController extends CspBaseController {
         }
         SystemNotify notify = sysNotifyService.selectByPrimaryKey(id);
         //改为已读状态
-        if(notify != null && notify.getIsRead() != null && notify.getIsRead()== false){
+        if(notify != null && (notify.getIsRead() == null || notify.getIsRead()== false)){
             notify.setIsRead(true);
             sysNotifyService.updateByPrimaryKeySelective(notify);
         }
