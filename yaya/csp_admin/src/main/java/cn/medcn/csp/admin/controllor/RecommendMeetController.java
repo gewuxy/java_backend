@@ -9,6 +9,7 @@ import cn.medcn.csp.admin.log.Log;
 import cn.medcn.meet.dto.MeetTuijianDTO;
 import cn.medcn.meet.model.Lecturer;
 import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.model.MeetTuijian;
 import cn.medcn.meet.model.Recommend;
 import cn.medcn.meet.service.MeetLecturerService;
 import cn.medcn.meet.service.MeetService;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.io.File;
 import java.io.IOException;
@@ -137,8 +139,8 @@ public class RecommendMeetController extends BaseController {
     public String selectOne(@RequestParam(value = "id", required = true) String id,Model model){
         Meet meet = meetService.selectByPrimaryKey(id);
         model.addAttribute("meet",meet);
-        String json = JSON.toJSONString(meet);
-        model.addAttribute("json",json);
+       String json = JSON.toJSONString(meet);
+       model.addAttribute("json",json);
         return json;
     }
 
@@ -151,25 +153,35 @@ public class RecommendMeetController extends BaseController {
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建推荐会议")
-    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId,String headimg){
-        System.out.println(meetId);
-        Meet meet = meetService.selectByPrimaryKey(meetId);
-        recommend.setResourceId(meetId);
-        Lecturer lecturer =new Lecturer();
-        lecturer.setMeetId(meetId);
-        lecturer.setHeadimg(headimg);
-        lecturer.setDepart(meetTuijianDTO.getLecturerDepart());
-        lecturer.setHospital(meetTuijianDTO.getLecturerHos());
-        lecturer.setName(meetTuijianDTO.getLecturer());
-        lecturer.setTitle(meetTuijianDTO.getLecturerTile());
-        meetLecturerService.insert(lecturer);
-        meet.setLecturerId(lecturer.getId());
-        recommendMeetService.insert(recommend);
-        meet.setLecturerId(lecturer.getId());
-        meet.setState(state);
-        meetService.updateByPrimaryKeySelective(meet);
-        return "redirect:/yaya/recommendMeet/list";
-    }
+    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId,String headimg,RedirectAttributes redirectAttributes){
+        Recommend recommend1 = recommendMeetService.selectByMeetId(meetId);
+        if (recommend1==null) {
+            Meet meet = meetService.selectByPrimaryKey(meetId);
+            recommend.setResourceId(meetId);
+            Lecturer lecturer = new Lecturer();
+            lecturer.setMeetId(meetId);
+            lecturer.setHeadimg(headimg);
+            lecturer.setDepart(meetTuijianDTO.getLecturerDepart());
+            lecturer.setHospital(meetTuijianDTO.getLecturerHos());
+            lecturer.setName(meetTuijianDTO.getLecturer());
+            lecturer.setTitle(meetTuijianDTO.getLecturerTile());
+            meetLecturerService.insert(lecturer);
+            meet.setLecturerId(lecturer.getId());
+            recommendMeetService.insert(recommend);
+            meet.setLecturerId(lecturer.getId());
+            meet.setState(state);
+            meetService.updateByPrimaryKeySelective(meet);
+            addFlashMessage(redirectAttributes,"添加成功");
+            return "redirect:/yaya/recommendMeet/list";
+        }else {
+          addErrorFlashMessage(redirectAttributes,"推荐会议重复");
+            return "redirect:/yaya/recommendMeet/list";
+        }
+
+
+        }
+
+
 
     /**
      * 查看推荐会议详情
@@ -188,15 +200,21 @@ public class RecommendMeetController extends BaseController {
         model.addAttribute("recommend",recommend);
         String meetId = recommend.getResourceId();
         Lecturer lecturer = meetLecturerService.selectByMeetId(meetId);
-        String headimg = lecturer.getHeadimg();
-        model.addAttribute("imgPath",appFileBase+headimg);
-        model.addAttribute("headimg",headimg);
+        if (lecturer != null){
+            String headimg = lecturer.getHeadimg();
+            if (headimg != null){
+                model.addAttribute("imgPath",appFileBase+headimg);
+                model.addAttribute("headimg",headimg);
+            }
+        }
         model.addAttribute("lecturer",lecturer);
         Meet meet = meetService.selectByPrimaryKey(meetId);
         model.addAttribute("meet",meet);
         List<String> departments= departmentService.findAlldepartment();
         model.addAttribute("departments",departments);
         return "recommendMeet/recommendMeetInfoEdit";
+
+
     }
 
     /**

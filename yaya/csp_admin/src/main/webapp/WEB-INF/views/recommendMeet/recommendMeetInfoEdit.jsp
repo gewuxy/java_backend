@@ -77,7 +77,7 @@
                    onchange="fileUpload()">
             <input class="btn-dr" type="button" value="上传头像" onclick="selectFile()">
             <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-            <input type="hidden" id="imgUrl" value="${headimg}" name="headimg">
+            <input type="hidden" id="imgUrl" value="" name="headimg">
         </div>
     </div>
     <div class="control-group">

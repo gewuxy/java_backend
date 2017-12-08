@@ -87,8 +87,10 @@ public class SysNotifyController extends BaseController {
             notify.setSenderName(systemUser.getUserName());
             notify.setSendTime(new Date());
             notify.setAcceptId(acceptId);
-            int insert = sysNotifyService.insert(notify);
-            System.out.println(insert);
+            if (notify.getIsRead() == null){
+                notify.setIsRead(false);
+            }
+            sysNotifyService.insert(notify);
             addFlashMessage(redirectAttributes,"发布成功");
             return "redirect:/csp/notify/list";
         } else {
@@ -142,6 +144,11 @@ public class SysNotifyController extends BaseController {
     @Log(name = "编辑页面")
     public String notifyEdit(@RequestParam(value = "id", required = true) String id, Model model,String userName) {
         SystemNotify notify = sysNotifyService.selectByPrimaryKey(id);
+        Boolean isRead = notify.getIsRead();
+        if (isRead == null){
+            notify.setIsRead(false);
+        }
+        sysNotifyService.updateByPrimaryKey(notify);
         CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(notify.getAcceptId());
         if (notify.getNotifyType() ==1){
             model.addAttribute("userName",cspUserInfo.getUserName());
@@ -161,6 +168,9 @@ public class SysNotifyController extends BaseController {
         Integer userId = SubjectUtils.getCurrentUserid();
         SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null){
+            if (notify.getIsRead() == null){
+                notify.setIsRead(false);
+            }
             notify.setSendTime(new Date());
             notify.setSenderName(systemUser.getUserName());
             sysNotifyService.updateByPrimaryKey(notify);
