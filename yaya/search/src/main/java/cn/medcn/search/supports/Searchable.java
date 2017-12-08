@@ -73,7 +73,6 @@ public class Searchable {
                 buffer.append(")");
             }
         }
-        System.out.println(buffer.toString());
         return buffer.toString();
     }
 
