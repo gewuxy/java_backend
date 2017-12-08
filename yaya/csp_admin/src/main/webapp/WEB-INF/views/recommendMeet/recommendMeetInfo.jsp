@@ -177,7 +177,22 @@
         <label class="control-label">排序序号:</label>
         <div class="controls">
             <input type="search" name="sort" id="sort" maxlength="50" class="required input-xlarge" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
-            <span class="help-inline"><font color="#a9a9a9">只允许输入数字*</font> </span>
+            <span class="help-inline"><font color="#a9a9a9">只允许输入1~10之间的数字*</font> </span>
+            <script type="text/jscript" language="javascript">
+                //                onafterpaste = "this.value=this.value.replace(/\D/g,'')"
+                $('#sort').keyup(function () {
+                    //                    alert(1);
+                    var inputdata = $(this).val().replace(/\D/g, '');
+                    console.info(inputdata);
+                    if (inputdata != '' && inputdata < 1) {
+                        inputdata = 1;
+                    }
+                    if (inputdata != '' && inputdata > 10) {
+                        inputdata = 10;
+                    }
+                    $(this).val(inputdata);
+                });
+            </script>
         </div>
     </div>
     <div class="control-group">
