@@ -100,10 +100,10 @@ public class RegistController extends BaseController{
     @ResponseBody
     public String searchOption(String name){
         if(name == null){
-            return APIUtils.success();
+            return success();
         }
         List<SystemRegion> options = systemRegionService.findRegionByPreName(name);
-        return APIUtils.success(options);
+        return success(options);
     }
 
     /**
@@ -117,7 +117,7 @@ public class RegistController extends BaseController{
         pageable.setPageSize(50);
         pageable.put("level",1);
         MyPage<SystemRegion> page = systemRegionService.findByPage(pageable);
-        return APIUtils.success(page);
+        return success(page);
     }
 
     private String setMsg(String id,String msg){

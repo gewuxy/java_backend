@@ -1,12 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/7
-  Time: 10:33
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -95,8 +88,6 @@
                         <h4>Q:下载的内容保存在哪里？在另外的客户端登录时，是否可以查阅以往的下载？</h4>
                         <p class="v2-fq-text">A:下载的内容保存在客户端里。在另外的客户端登陆时，要重新下载才能查阅。</p>
                     </div>
-
-
                 </div>
             </div>
             <div class="tab-box clearfix">
@@ -393,22 +384,6 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
 <script src="${ctxStatic}/js/v2/jquery.tools.min.js"></script>
-
-<script type="text/javascript">
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
-
-</script>
-
 </body>
 </html>

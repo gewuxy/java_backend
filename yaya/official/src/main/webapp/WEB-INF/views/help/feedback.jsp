@@ -82,18 +82,8 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-<script src="${statics}/js/v2/jquery.tools.min.js"></script>
-
 <script type="text/javascript">
-    /*固定栏*/
     jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-
             $("#submitBtn").click(function(){
                 var content = $.trim($("#content").val());
                 if(content == ''){
@@ -102,18 +92,14 @@
                     return false;
                 }
                 $.post('${ctx}/help/feedback',$("#feedForm").serialize(), function (data) {
-                    if (data.status == 0){
+                    if (data.code == 0){
                         layer.msg("发送意见反馈成功.");
                     }else{
                         layer.msg(data.msg);
                     }
                 },'json');
             });
-        });
     });
-
-
 </script>
-
 </body>
 </html>

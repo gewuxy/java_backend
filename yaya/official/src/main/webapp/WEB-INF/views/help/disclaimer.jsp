@@ -17,7 +17,7 @@
 
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_common.jsp" %>
+    <%@include file="/WEB-INF/include/header.jsp" %>
     <div class="v2-helpPage-main clearfix">
         <div class="page-width clearfix">
             <div class="v2-helpPage-item clearfix">
@@ -219,11 +219,12 @@
             </div>
         </div>
     </div>
-
     <%@include file="/WEB-INF/include/footer.jsp" %>
 </div>
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
+<%@include file="/WEB-INF/include/markWrap.jsp" %>
+<%@ include file="/WEB-INF/include/common_js.jsp" %>
 </body>
 </html>

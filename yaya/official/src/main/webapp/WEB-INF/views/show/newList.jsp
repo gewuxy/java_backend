@@ -74,15 +74,6 @@
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
         $("#pageForm").submit();
     }
-
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
 </script>
 </body>
 </html>

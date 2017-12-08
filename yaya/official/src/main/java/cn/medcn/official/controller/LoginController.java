@@ -31,21 +31,20 @@ public class LoginController extends BaseController{
     @RequestMapping(value="/login", method = RequestMethod.POST)
     @ResponseBody
     public String login(String account, String password, Boolean rememberMe){
-        Map<String,String> map = new HashMap<>();
         if(StringUtils.isEmpty(account)){
-            return APIUtils.error("用户名不能为空");
+            return error("用户名不能为空");
         }
         if(StringUtils.isEmpty(password)){
-            return APIUtils.error("密码不能为空");
+            return error("密码不能为空");
         }
         if(!RegexUtils.checkMobile(account) && !RegexUtils.checkEmail(account)){
-            return APIUtils.error("请输入正确的手机或者邮箱");
+            return error("请输入正确的手机或者邮箱");
         }
         try {
             Subject subject = SecurityUtils.getSubject();
             subject.login(new UsernamePasswordToken(account, password, rememberMe == null ? false : rememberMe));
         }catch (AuthenticationException e){
-            return APIUtils.error(e.getMessage());
+            return error(e.getMessage());
         }
         return success();
     }

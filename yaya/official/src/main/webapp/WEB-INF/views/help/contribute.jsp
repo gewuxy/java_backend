@@ -1,12 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/7
-  Time: 10:33
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,12 +7,9 @@
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
     <%@ include file="/WEB-INF/include/common_js.jsp" %>
 </head>
-
 <body>
 <div id="wrapper">
-
     <%@include file="/WEB-INF/include/header_help.jsp"%>
-
     <div class="v2-helpPage-main clearfix">
     <div class="page-width clearfix">
         <div class="v2-helpPage-Menu clearfix">
@@ -134,20 +124,9 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
-
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-<script src="${ctxStatic}/js/v2/jquery.tools.min.js"></script>
-
 <script type="text/javascript">
     /*固定栏*/
     jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-
         $("#roleUl>li").click(function(){
             var index = $(this).attr("index");
             if(index == 0){
@@ -167,9 +146,6 @@
             $(this).addClass("current");
         });
     });
-
-
 </script>
-
 </body>
 </html>

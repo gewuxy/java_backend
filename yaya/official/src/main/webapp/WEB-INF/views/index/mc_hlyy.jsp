@@ -27,7 +27,6 @@
 <body>
 <div id="wrapper">
     <%@include file="/WEB-INF/include/header_mc.jsp"%>
-
     <div class="v2-sub-main clearfix">
         <!--顶部介绍-->
         <div class="intr">
@@ -55,20 +54,17 @@
                 </div>
             </div>
         </div>
-
         <!--下载按钮-->
         <div class="download">
             <div class="dl-content">
                 <span>ios版</span> <span> iPad版 </span><span>Andriod版</span>
             </div>
-
             <div class="dl-btn">
                 <div class="dl-wz1"><a href="https://itunes.apple.com/cn/app/he-li-yong-yao-yaya/id589496796?l=en&mt=8" target="_blank">免费下载<span></span></a></div>
                 <div class="dl-wz2"><a href="https://itunes.apple.com/cn/app/id672613903" target="_blank">免费下载<span> </span></a><span></span></div>
                 <div class="dl-wz3"><a href="http://www.medcn.cn/apksoft/HeLiYongYao_3.2.5.apk">免费下载<span> </span></a><span></span></div>
             </div>
         </div>
-
         <!--详情介绍-->
         <div class="function-intr-w">
             <div class="intr-bj">
@@ -89,29 +85,12 @@
                 </div>
             </div>
         </div>
-
         <!--软件特色-->
         <%@include file="/WEB-INF/include/feature.jsp"%>
-
     </div>
-
-
     <%@include file="/WEB-INF/include/footer.jsp"%>
 </div>
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
 <script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript">
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
-
-</script>
 <!--旧版本代码-->
 <!--回到顶部-->
 <div class="gotop-wrapper">

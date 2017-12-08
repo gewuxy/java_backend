@@ -1,3 +1,24 @@
+/*<!--轮播广告-->*/
+$(window).bind("load resize",function(){
+    $("#carousel-05").carouFredSel({
+        width       : '100%',
+        items		: { visible	: 1 },
+        auto 	  	: { pauseOnHover: true, timeoutDuration:5000 },
+        swipe    	: { onTouch:true, onMouse:true },
+        pagination 	: "#carousel-page-05",
+//                                    prev 		: { button:"#carousel-prev-01"},
+//                                    next 		: { button:"#carousel-next-01"},
+        scroll 		: {	fx : "crossfade" }
+    });
+});
+/*固定栏*/
+jQuery(function($) {
+    $(document).ready( function() {
+        $('.fixed-nav').stickUp({
+            marginTop: 'auto'
+        });
+    });
+});
 /**
  * 登录
  * @returns {boolean}
