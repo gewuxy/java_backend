@@ -58,7 +58,7 @@ public class RegistController extends BaseController{
             try {
                 return patientUserService.sendCode(account,template);
             } catch (SystemException e){
-                return error(e.getMessage());
+                return setMsg("registAccount",e.getMessage());
             }
         }
     }
@@ -86,7 +86,7 @@ public class RegistController extends BaseController{
         patient.setActive(true);
         Integer info = patientUserService.insertSelective(patient);
         if (info == null){
-            return setMsg("mobile","注册失败，请重试");
+            return setMsg("registAccount","注册失败，请重试");
         }
         return success();
     }
@@ -164,7 +164,7 @@ public class RegistController extends BaseController{
         try {
             patientUserService.checkCaptchaIsOrNotValid(account, patient.getCaptcha());
         } catch (Exception e) {
-            return error(e.getMessage());
+            return setMsg("registAccount",e.getMessage());
         }
         return null;
     }

@@ -20,15 +20,22 @@
                             <div class="v2-news-graphic-item clearfix">
                                 <div class="fl v2-news-graphic-img">
                                     <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
-                                    <i class="v2-news-graphic-classIcon"><a href="#">${news.keywords}</a></i>
+                                    <i class="v2-news-graphic-classIcon"><a href="${ctx}/news/detail/${news.id}">${fn:split(news.keywords, "，")[0]}</a></i>
                                 </div>
                                 <div class="oh">
                                     <h3><a href="${ctx}/news/detail/${news.id}">${news.title}</a></h3>
-                                    <p class="v2-news-graphic-info">${news.summary}</p>
+                                    <p class="v2-news-graphic-info">
+                                            ${fn:substring(news.summary,0,100)}
+                                        <c:if test="${fn:length(news.summary) > 70}">
+                                             ....
+                                        </c:if>
+                                    </p>
                                     <p >关键字：
-                                        <c:forEach items="${news.keywords}" var="words" varStatus="stat">
+                                        <c:forEach items="${fn:split(news.keywords,'，')}" var="words" varStatus="stat">
                                             <a href="#" class="color-blue"> ${words} </a>
-
+                                            <c:if test="${fn:length(fn:split(news.keywords,'，')) - 1  != stat.index}">
+                                                |
+                                            </c:if>
                                         </c:forEach>
                                     </p>
                                     <p><span class="time fr"><fmt:formatDate value="${news.createTime}" pattern="yyyy/MM/dd"/></span><span>来源：${news.xfrom}</span></p>

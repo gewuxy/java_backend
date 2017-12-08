@@ -113,8 +113,9 @@ function sendMessage() {
          error: function (XMLHttpRequest, textStatus, errorThrown) { },
          success: function (data){
              if(data.code != 0){
-                 layer.msg(data.err);
+                 layer.msg(data.data.msg);
              }else{
+                 styleChange(data.data.id,2,"");
                  type == 1 ? layer.msg("验证码已发送到您的手机"): layer.msg("验证码已发送到您的邮箱");
              }
          }
@@ -191,7 +192,8 @@ $("#registBtn").click(function(){
     if(checkForm()){
         $.post($("#registForm").attr("action"), $("#registForm").serialize(),function (data) {
             if(data.code == 0){
-                alert("注册成功，请登录！")
+                layer.msg("注册成功，请登录！");
+                $("#registClose").click();
                 $(".fx-btn-1").click();
             }else{
                 styleChange(data.data.id,1,data.data.msg);

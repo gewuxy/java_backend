@@ -4,7 +4,7 @@
     <div class="dis-tbcell">
         <div class="distb-box fx-mask-box-1 v2-data-login pr">
             <div class="fx-mask-box clearfix" >
-                <span class="close-btn-fx"><img src="${ctxStatic}/images/v2/icon-close.png"></span>
+                <span class="close-btn-fx" ><img src="${ctxStatic}/images/v2/icon-close.png"></span>
                 <div class="formrow">
                     <div class="t-center " style="margin-bottom:25px;"><img src="${ctxStatic}/images/v2/logo-login.png" alt=""></div>
                     <div class="login_box login_tip login_tip_error"></div>
@@ -56,7 +56,7 @@
             </div>
         </div>
         <div class="distb-box fx-mask-box-2 pr">
-            <span class="close-btn-fx"><img src="${ctxStatic}/images/v2/icon-close.png"></span>
+            <span class="close-btn-fx" id="registClose"><img src="${ctxStatic}/images/v2/icon-close.png"></span>
             <div class="fx-mask-box fx-mask-box-max clearfix" >
                 <div class="row">
                     <div class="col-lg-6">
