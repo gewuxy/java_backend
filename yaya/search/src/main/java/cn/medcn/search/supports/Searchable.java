@@ -63,7 +63,7 @@ public class Searchable {
             }
 
             if (orMap.size() > 0) {
-                buffer.append(AND).append("(");
+                buffer.append(andMap.size() > 0 ? AND : EMPTY).append("(");
                 index = 0;
                 for (String key : orMap.keySet()) {
                     buffer.append(key).append(MATCH).append(orMap.get(key));
@@ -73,7 +73,6 @@ public class Searchable {
                 buffer.append(")");
             }
         }
-        System.out.println(buffer.toString());
         return buffer.toString();
     }
 

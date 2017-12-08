@@ -42,11 +42,11 @@
         <if test="categoryId != null">
             AND category_id in (select id from t_article_category where pre_id = #{categoryId})
         </if>
-        <if test="keyword != null">
-            AND (title like CONCAT('%',#{keyword}, '%') OR
-            author like CONCAT('%',#{keyword}, '%') OR
-            xfrom like CONCAT('%',#{keyword}, '%') OR
-            keywords like CONCAT('%',#{keyword}, '%')
+        <if test="keyWord != null">
+            AND (title like CONCAT('%',#{keyWord}, '%') OR
+            author like CONCAT('%',#{keyWord}, '%') OR
+            xfrom like CONCAT('%',#{keyWord}, '%') OR
+            keywords like CONCAT('%',#{keyWord}, '%')
             )
         </if>
         ORDER BY weight DESC

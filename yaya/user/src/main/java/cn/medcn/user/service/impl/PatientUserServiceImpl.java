@@ -45,7 +45,7 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
     protected SMSService medSmsService;
 
     @Autowired
-    protected RedisCacheUtils<String> redisCacheUtils;
+    protected RedisCacheUtils redisCacheUtils;
 
     @Autowired
     protected CSPEmailHelper emailHelper;
@@ -64,20 +64,20 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
      * @param captcha
      */
     public void checkCaptchaIsOrNotValid(String account, String captcha) throws SystemException{
-        // 从缓存获取验证码信息
-        Captcha result = (Captcha) redisCacheUtils.getCacheObject(account);
         try {
             Boolean bool = true;
             if(RegexUtils.checkMobile(account)){
+                Captcha result = (Captcha) redisCacheUtils.getCacheObject(account);
                  bool = medSmsService.verify(result.getMsgId(),captcha);
             }else{
-                bool = result.getMsgId().equals(captcha);
+                String result = (String) redisCacheUtils.getCacheObject(account);
+                bool = result.equals(captcha);
             }
             if (!bool) {
-                throw new SystemException("短信验证码错误");
+                throw new SystemException("验证码错误");
             }
         } catch (Exception e) {
-            throw new SystemException("短信验证码失败");
+            throw new SystemException("验证码失败");
         }
     }
 
@@ -89,11 +89,10 @@ public class PatientUserServiceImpl extends BaseServiceImpl<Patient> implements 
         // 检查用户邮箱是否已经注册过
         Patient patient = new Patient();
         patient.setEmail(email);
+        patient.setActive(true);
         Patient user = patientUserDAO.selectOne(patient);
         if (user != null) {
-            if (user.getActive()) {
-                return setMsg("registAccount","该邮箱账户已经存在");
-            }
+            return setMsg("registAccount","该邮箱账户已经存在");
         }
         String code = UUIDUtil.getRandom6();
         sendMail(email, code,template);

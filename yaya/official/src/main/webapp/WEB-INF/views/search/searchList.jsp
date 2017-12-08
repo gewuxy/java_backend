@@ -45,7 +45,7 @@
                             <p class="v2-searchText-error">没有查找到相关结果，我们正在努力搜集数据!</p>
                         </c:otherwise>
                     </c:choose>
-                    <div class="v2-newsList-bottomBorder">
+                    <div class="v2-newsList-bottomBorder" id="listView">
                         <c:if test="${not empty page.dataList}">
                             <c:choose>
                                 <c:when test="${searchType eq 'YSJY'}">
@@ -60,14 +60,17 @@
                                         <div class="v2-news-graphic-item clearfix">
                                             <div class="fl v2-news-graphic-img">
                                                 <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
-                                                <i class="v2-news-graphic-classIcon"><a href="#">${news.keywords}</a></i>
+                                                <i class="v2-news-graphic-classIcon"><a href="#">${fn:split(news.keywords, "，")[0]}</a></i>
                                             </div>
                                             <div class="oh">
                                                 <h3><a href="${ctx}/news/detail/${news.id}">${news.title}</a></h3>
                                                 <p class="v2-news-graphic-info">${news.summary}</p>
                                                 <p >关键字：
-                                                    <c:forEach items="${fn:split(news.keywords, ',')}" var="words" varStatus="stat">
+                                                    <c:forEach items="${fn:split(news.keywords,'，')}" var="words" varStatus="stat">
                                                         <a href="#" class="color-blue"> ${words} </a>
+                                                        <c:if test="${fn:length(fn:split(news.keywords,'，')) - 1  != stat.index}">
+                                                            |
+                                                        </c:if>
                                                     </c:forEach>
                                                 </p>
                                                 <p><span class="time fr"><fmt:formatDate value="${news.createTime}" pattern="yyyy/MM/dd"/></span><span>来源：${news.xfrom}</span></p>
@@ -96,6 +99,7 @@
                         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
                         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
                         <input  name="searchType" type="hidden" value="${searchType}"/>
+                        <input  id="dataList" name="page" type="hidden" value="${page.dataList}"/>
                         <input  name="keyWord" type="hidden" value="${keyWord}"/>
                     </form>
                 </div>
@@ -111,7 +115,11 @@
 <script>
     $(function(){
         $(".three").addClass("current");
+
+        var id = $("#dataList").val();
+        console.info(id);
     })
+
     function page(pageNum){
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
         $("#keyWord").val($("#searchWord").val());
