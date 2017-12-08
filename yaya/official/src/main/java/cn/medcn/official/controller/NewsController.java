@@ -38,7 +38,7 @@ public class NewsController extends BaseController {
     @ResponseBody
     public String ajaxTrends(Pageable pageable,String type){
         String category = "CATEGORY_" + type;
-        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
+        pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
             news.replaceJSPTAG(editorMediaPath);
@@ -54,7 +54,7 @@ public class NewsController extends BaseController {
     @RequestMapping(value="/trends")
     public String trends(Pageable pageable, Model model){
         pageable.setPageSize(10);
-        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
+        pageable.put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
             news.replaceJSPTAG(editorMediaPath);
@@ -87,7 +87,7 @@ public class NewsController extends BaseController {
     public String dtList(Pageable pageable, String type,Model model){
         pageable.setPageSize(4);
         String category = "CATEGORY_" + type;
-        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
+        pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
             news.replaceJSPTAG(editorMediaPath);

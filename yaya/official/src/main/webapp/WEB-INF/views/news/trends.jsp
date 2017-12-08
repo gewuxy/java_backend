@@ -26,7 +26,6 @@
             <!-- E slideshow -->
         </div>
     </div>
-
     <div class="v2-sub-main" style="padding:120px 0 80px;">
         <div class="page-width clearfix" style="width:980px;">
             <div class="row">
@@ -48,7 +47,6 @@
                                 </div>
                             </div>
                         </c:forEach>
-
                     </div>
                     <div class="v2-page-box">
                         <a <c:if test="${page.pageNum>1}"> href="javascript:page(${page.pageNum-1})"</c:if> class="v2-page-box-prev" title="上一页"></a>
@@ -70,23 +68,14 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:" >回到顶部</a>
 </div>
+<%@include file="/WEB-INF/include/markWrap.jsp" %>
 <%@ include file="/WEB-INF/include/common_js.jsp" %>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript">
     function page(pageNum){
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
         $("#keyWord").val($("#searchWord").val());
         $("#pageForm").submit();
     }
-
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
 </script>
 </body>
 </html>

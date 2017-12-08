@@ -115,9 +115,6 @@
 <script>
     $(function(){
         $(".three").addClass("current");
-
-        var id = $("#dataList").val();
-        console.info(id);
     })
 
     function page(pageNum){

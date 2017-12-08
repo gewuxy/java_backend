@@ -61,9 +61,9 @@ public class HelpController extends BaseController {
             emailHelper.sendFeedback(mailBean);
         } catch (Exception e) {
             e.printStackTrace();
-            return APIUtils.error("发送邮件失败，原因："+e.getMessage());
+            return error("发送邮件失败，原因："+e.getMessage());
         }
-        return APIUtils.success();
+        return success();
     }
 
     @RequestMapping(value="/disclaimer")

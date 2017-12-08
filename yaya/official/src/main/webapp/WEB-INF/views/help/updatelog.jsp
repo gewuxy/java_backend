@@ -1,12 +1,5 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/8
-  Time: 13:11
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,12 +9,11 @@
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_common.jsp" %>
+    <%@include file="/WEB-INF/include/header.jsp" %>
     <div class="v2-helpPage-main clearfix">
         <div class="page-width clearfix">
             <div class="v2-helpPage-item clearfix">
                 <h2 class="t-center"><img src="${ctxStatic}/images/upload/update-title.png" alt="免责声明"></h2>
-
                 <p><strong>2015年11月</strong></p>
                 <p>CFDA批准的说明书88580份；专业医师、药师建议3934篇；各类临床治疗指南2869篇CFDA批准的说明书88580份；专业医师、药师建议3934篇；各类临床治疗指南2869篇</p>
                 <p>&nbsp;</p>
@@ -98,5 +90,7 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
+<%@include file="/WEB-INF/include/markWrap.jsp" %>
+<%@ include file="/WEB-INF/include/common_js.jsp" %>
 </body>
 </html>

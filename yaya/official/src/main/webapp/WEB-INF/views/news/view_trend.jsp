@@ -60,16 +60,7 @@
 <!--弹出层-->
 <%@include file="/WEB-INF/include/markWrap.jsp" %>
 <%@ include file="/WEB-INF/include/common_js.jsp" %>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
 <script type="text/javascript">
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
     $(function(){
         $("html, body").scrollTop( $(".v2-sub-main").offset().top);
     })

@@ -6,7 +6,6 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -211,22 +210,6 @@
 <div class="gotop-wrapper index-gotop">
     <a class="gotop" href="javascript:;" >回到顶部</a>
 </div>
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-<script src="${ctxStatic}/js/v2/jquery.tools.min.js"></script>
-
-<script type="text/javascript">
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
-
-</script>
-
+<%@ include file="/WEB-INF/include/common_js.jsp" %>
 </body>
 </html>

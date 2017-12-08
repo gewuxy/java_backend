@@ -1,9 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/6
-  Time: 17:19
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
 <!DOCTYPE html>
@@ -11,14 +5,11 @@
 <head>
     <title>组员列表</title>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
-    <%@ include file="/WEB-INF/include/common_js.jsp" %>
 </head>
 <body>
 <div id="wrapper">
-    <%@include file="/WEB-INF/include/header_common.jsp"%>
-
+    <%@include file="/WEB-INF/include/header.jsp"%>
     <div class="v2-banner v2-banner-notPadding">
-
         <!-- S slideshow -->
         <div class="slideshow carousel responsive-carousel clearfix" >
             <div id="responsive-01">
@@ -31,15 +22,10 @@
                 </div>
             </div>
             <div class="carousel-btn carousel-btn-fixed" id="carousel-page-05"></div>
-
         </div>
         <!-- E slideshow -->
-
-
     </div>
-
     <div class="v2-sub-main">
-
         <div class="v2-full-area">
             <div class="page-width clearfix">
                 <div class="module-full-screen-title">
@@ -112,9 +98,6 @@
                                 <p>5、熟悉基于MySQL/Oracle的数据库编程， 掌握 SQL 语言和SQL性能优化。</p>
                                 <p>6、具备良好的沟通能力和团队协作精神。</p>
                             </div>
-
-
-
                         </div>
                         <div class="v2-join-item">
                             <h3 class="v2-join-item-title clearfix">
@@ -166,8 +149,6 @@
                                 <p>6、对DNS体系/CDN原理有一定的了解；</p>
                                 <p>7、对技术文档编写规范有一定了解，能阅读英文技术文档；</p>
                                 <p>8、良好的沟通和语言表达能力，逻辑清晰，学习能力强，有自我激励能力，乐于承担工作压力，责任心强。 </p>
-
-
                             </div>
                         </div>
                         <div class="v2-join-item">
@@ -192,8 +173,6 @@
                                 <p>3、熟悉移动互联网行业，熟悉各种软件商店、论坛的市场规则，对APP的推广和运营有一定的认识</p>
                                 <p>4、熟悉APP的各类指标，收集用户行为数据及相应统计方法，具备较强的理解和策划能力</p>
                                 <p>5、具备团队合作精神、良好沟通能及执行力。</p>
-
-
                             </div>
                         </div>
                     </div>
@@ -215,42 +194,10 @@
                 </div>
             </div>
         </div>
-
-
     </div>
-
     <%@include file="/WEB-INF/include/footer.jsp"%>
 </div>
-<!--弹出层-->
-<script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript">
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
-    $(window).load(function(){
-        $("#responsive-01").carouFredSel({
-            responsive	: true,
-            width       : '100%',
-            items		: { visible	: 1 },
-            auto 	  	: { pauseOnHover: true, timeoutDuration:5000 },
-            swipe    	: { onTouch:true, onMouse:true },
-            pagination 	: "#carousel-page-01"
-            //prev 		: { button:"#carousel-prev-01"},
-            //next 		: { button:"#carousel-next-01"},
-            //scroll : { fx : "coverfade", duration : 1200, timeoutDuration : 1500 }
-        });
-
-        $("#responsive-01 .carousel-item").show();
-    });
-
-
-
-</script>
+<%@include file="/WEB-INF/include/markWrap.jsp" %>
+<%@ include file="/WEB-INF/include/common_js.jsp" %>
 </body>
 </html>

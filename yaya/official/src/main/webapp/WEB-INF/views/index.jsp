@@ -86,28 +86,6 @@
 <%@include file="/WEB-INF/include/common_js.jsp"%>
 <script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
 <script>
-    /*<!--轮播广告-->*/
-    $(window).bind("load resize",function(){
-        $("#carousel-05").carouFredSel({
-            width       : '100%',
-            items		: { visible	: 1 },
-            auto 	  	: { pauseOnHover: true, timeoutDuration:5000 },
-            swipe    	: { onTouch:true, onMouse:true },
-            pagination 	: "#carousel-page-05",
-//                                    prev 		: { button:"#carousel-prev-01"},
-//                                    next 		: { button:"#carousel-next-01"},
-            scroll 		: {	fx : "crossfade" }
-        });
-    });
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
     $(function(){
         $(function(){
             $(".first").addClass("current");

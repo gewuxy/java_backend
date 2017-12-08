@@ -1,4 +1,4 @@
-package cn.medcn.official.model;
+package cn.medcn.article.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,13 +10,13 @@ import javax.persistence.Table;
 import java.util.Date;
 
 /**
- * by create HuangHuibin 2017/11/15
+ * by create HuangHuibin 2017/12/8
  */
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "t_off_search")
-public class OffSearch {
+@Table(name = "t_hot_search")
+public class HotSearch {
     @Id
     @GeneratedValue(generator = "JDBC")
     private Integer id;
@@ -24,8 +24,6 @@ public class OffSearch {
     private String searchUser;
     private String searchType;
     private Date searchTime;
-    private Integer times;
-
 
     public enum SearchType{
         YSJY(1, "药师建议"),
@@ -49,10 +47,4 @@ public class OffSearch {
             this.searchName = searchName;
         }
     }
-
-    public static void main(String[] args) {
-
-        System.out.println(OffSearch.SearchType.YSJY.getSearchType());
-    }
-
 }

@@ -50,14 +50,6 @@
     $(function(){
         $(".second").addClass("current");
     })
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
 </script>
 </body>
 </html>

@@ -1,9 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: lixuan
-  Date: 2017/3/6
-  Time: 17:36
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
 <%
@@ -89,13 +83,8 @@
                 </div>
             </div>
         </div>
-
     </div>
-
 </div>
-
-
-
     <%@include file="/WEB-INF/include/footer.jsp"%>
 </div>
 <div class="gotop-wrapper">
@@ -104,21 +93,6 @@
 <div class="v2-help-fixed">
     <a href="http://www.medcn.cn/app_bz.jsp?tag=jk" class="v2-help-button">帮助中心</a>
 </div>
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
 <script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-<script type="text/javascript">
-    /*固定栏*/
-    jQuery(function($) {
-        $(document).ready( function() {
-            $('.fixed-nav').stickUp({
-                marginTop: 'auto'
-            });
-        });
-    });
-
-
-</script>
-
-
 </body>
 </html>
