@@ -128,7 +128,6 @@ public abstract class SearchServiceImpl implements SearchService {
         query.setRows(searchable.getPageSize());
 
         query.setQuery(searchable.getQuery());
-
         return doSearch(client, query);
     }
 
