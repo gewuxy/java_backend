@@ -5,6 +5,7 @@ import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> implements CspUserPackageService {
+    @Autowired
     protected CspUserPackageDAO userPackageDAO;
 
     @Override
