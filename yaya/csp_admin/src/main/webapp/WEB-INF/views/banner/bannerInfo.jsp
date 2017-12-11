@@ -69,8 +69,23 @@
     <div class="control-group">
         <label class="control-label">Banner权重:</label>
         <div class="controls">
-            <input type="search" name="weight" id="weight" maxlength="50" class="required input-large">
-            <span class="help-inline">权重越大，排序越靠前</span>
+            <input type="search" name="weight" id="weight" maxlength="50" class="required input-large" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            <span class="help-inline">权重越大，排序越靠前,只允许输入1~10之间的数字</span>
+            <script type="text/jscript" language="javascript">
+                //                onafterpaste = "this.value=this.value.replace(/\D/g,'')"
+                $('#weight').keyup(function () {
+                    //                    alert(1);
+                    var inputdata = $(this).val().replace(/\D/g, '');
+                    console.info(inputdata);
+                    if (inputdata != '' && inputdata < 1) {
+                        inputdata = 1;
+                    }
+                    if (inputdata != '' && inputdata > 10) {
+                        inputdata = 10;
+                    }
+                    $(this).val(inputdata);
+                });
+            </script>
         </div>
     </div>
     <div class="control-group">
@@ -110,6 +125,7 @@
                 <option value="1"/>
                 合理用药
             </select>
+            <span class="help-inline"><font color="red">*必填</font> </span>
         </div>
     </div>
     <div class="control-group">
