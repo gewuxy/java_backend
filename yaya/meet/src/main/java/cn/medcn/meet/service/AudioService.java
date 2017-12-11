@@ -296,4 +296,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     Integer doCopyLiveToRecord(Integer courseId);
+
+    /**
+     * 复制水印
+     * @param oldCourseId
+     * @param newCourseId
+     */
+    void doCopyWatermark(Integer oldCourseId,Integer newCourseId);
 }

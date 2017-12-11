@@ -68,6 +68,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected LiveService liveService;
 
+    @Autowired
+    protected MeetWatermarkDAO watermarkDAO;
+
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
         return audioCourseDAO;
@@ -250,6 +253,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
         doCopyDetails(details, reprintCourse.getId());
+        //复制水印
+        doCopyWatermark(course.getId(),reprintCourse.getId());
         return reprintCourse.getId();
     }
 
@@ -881,7 +886,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public Integer doCopyLiveToRecord(Integer courseId) {
 
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
-        List<AudioCourseDetail> liveDetails = findLiveDetails(courseId);
+        List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
 
         AudioCourse copyCourse = new AudioCourse();
         BeanUtils.copyProperties(course, copyCourse);
@@ -894,9 +899,30 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
         //生成明细
         Integer copyCourseId = copyCourse.getId();
-        doCopyDetails(liveDetails, copyCourseId);
+        doCopyDetails(details, copyCourseId);
 
-        return copyCourse.getId();
+        //复制水印
+        doCopyWatermark(courseId,copyCourseId);
+
+        return copyCourseId;
+    }
+
+
+    /**
+     * 复制水印
+     * @param oldCourseId
+     * @param newCourseId
+     */
+    @Override
+    public void doCopyWatermark(Integer oldCourseId,Integer newCourseId) {
+        MeetWatermark watermark = new MeetWatermark();
+        watermark.setCourseId(oldCourseId);
+         watermark = watermarkDAO.selectOne(watermark);
+         if(watermark != null){
+             watermark.setCourseId(newCourseId);
+             watermark.setId(null);
+             watermarkDAO.insert(watermark);
+         }
     }
 
 
