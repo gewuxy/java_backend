@@ -185,7 +185,9 @@ public class PublicAccountController {
                 for (MaterialDTO dto : unitInfoDTO.getMaterialList()) {
                     dto.setMaterialUrl(appFileBase + dto.getMaterialUrl());
                     // 增加返回html文件路径
-                    dto.setHtmlUrl(appFileBase + dto.getHtmlUrl());
+                    if (cn.medcn.common.utils.StringUtils.isNotEmpty(dto.getHtmlUrl())) {
+                        dto.setHtmlUrl(appFileBase + dto.getHtmlUrl());
+                    }
                 }
             }
             if (Constants.DEFAULT_ATTENTION_PUBLIC_ACCOUNT.intValue() == unitInfoDTO.getId().intValue()) {
