@@ -1,6 +1,7 @@
 package cn.medcn.csp.controller.api;
 
 import cn.medcn.common.utils.CalendarUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.model.CspPackage;
@@ -44,22 +45,36 @@ public class MemberController extends CspBaseController{
     @ResponseBody
     public String expireRemind() {
         String userId = SecurityUtils.get().getId();
+        // 获取前端语言
+        String localStr = LocalUtils.getLocalStr();
+
         CspPackage cspPackage = packageService.findUserPackageById(userId);
+        int packgeId = cspPackage.getId();
         if (cspPackage != null && cspPackage.getPackageEnd() != null
-                && cspPackage.getId().intValue() > CspPackage.TypeId.STANDARD.getId()) {
+                && packgeId > CspPackage.TypeId.STANDARD.getId()) {
             try {
                 int diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
-                // 还有5天到期时提醒
                 if (diffDays == 5) {
+                    // 还有5天到期时提醒
                     return success(local("fivedays.expire.remind"));
+
                 } else if (diffDays == 0){ // 已经过期提醒
                     // 已经过期将套餐变更为标准版
                     CspUserPackage userPackage = userPackageService.selectByPrimaryKey(userId);
-
                     userPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
                     userPackageService.updateByPrimaryKeySelective(userPackage);
 
-                    return success(local(""));
+                    //  已经使用的会议数 -3 = 隐藏的会议数
+                    int hiddenMeetCount = cspPackage.getLimitMeets() - 3;
+                    String remind = null;
+                    if (localStr.equals(LocalUtils.Local.en_US.name())) {
+                        remind = hiddenMeetCount+" meeting(s) hidden. Please check in website.";
+                    } else if (localStr.equals(LocalUtils.Local.zh_TW.name())) {
+                        remind = "已隱藏"+hiddenMeetCount+"個會議，請在WEB端登錄查看";
+                    } else {
+                        remind = "已隐藏"+hiddenMeetCount+"个会议，请在WEB端登录查看";
+                    }
+                    return success(remind);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -68,5 +83,6 @@ public class MemberController extends CspBaseController{
         }
         return error(local("data.error"));
     }
+
 }
 
