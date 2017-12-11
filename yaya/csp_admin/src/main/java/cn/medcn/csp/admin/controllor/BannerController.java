@@ -169,9 +169,13 @@ public class BannerController extends BaseController{
     @Log(name = "修改Banner")
     public String updateBanner(Banner banner,RedirectAttributes redirectAttributes){
         if(banner != null){
-            banner.setCreateTime(new Date());
-            bannerService.updateByPrimaryKeySelective(banner);
-            addFlashMessage(redirectAttributes,"修改成功");
+            if (banner.getAppId()==null){
+                addErrorFlashMessage(redirectAttributes,"添加失败,用途为必填信息");
+            }else{
+                banner.setCreateTime(new Date());
+                bannerService.updateByPrimaryKeySelective(banner);
+                addFlashMessage(redirectAttributes,"修改成功");
+            }
         }else {
             addErrorFlashMessage(redirectAttributes,"修改失败");
         }
