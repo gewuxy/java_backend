@@ -15,18 +15,16 @@ import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
 import cn.medcn.csp.security.Principal;
-import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
-import cn.medcn.meet.service.CourseDeliveryService;
 import cn.medcn.meet.service.LiveService;
+import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.UserFluxService;
-import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -44,6 +42,7 @@ import java.util.List;
 import java.util.Map;
 
 import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
+import static cn.medcn.meet.dto.MeetMessageDTO.MessageType.live;
 
 /**
  * Created by lixuan on 2017/10/17.
@@ -81,6 +80,11 @@ public class MeetingMgrController extends CspBaseController {
 
     @Autowired
     protected UserFluxService userFluxService;
+
+    @Autowired
+    protected MeetWatermarkService watermarkService;
+
+
 
     /**
      * 查询当前用户的课件列表
@@ -213,6 +217,8 @@ public class MeetingMgrController extends CspBaseController {
             if (!editAble) {
                 throw new SystemException(courseNonEditAbleError());
             }
+            MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
+            model.addAttribute("watermark",watermark);
 
         } else {
             course = audioService.findLastDraft(principal.getId());
@@ -254,7 +260,7 @@ public class MeetingMgrController extends CspBaseController {
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
         float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
         model.addAttribute("flux", fluxValue);
-
+        model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
     }
 
@@ -471,6 +477,7 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
+        MeetWatermark newWatermark = course.getWatermark();
 
         //编辑操作需要判断是否可以进行修改
         if (ac.getId() != null && ac.getId() != 0) {
@@ -487,12 +494,9 @@ public class MeetingMgrController extends CspBaseController {
                 throw new SystemException(local("user.flux.not.enough"));
             }
         }
+        //更新操作，包括更新或生成水印
+        audioService.updateInfo(ac,course.getLive() ,newWatermark);
 
-        if (ac.getPlayType() != null && ac.getPlayType().intValue() > 0) {// 直播的情况下
-            audioService.updateAudioCourseInfo(ac, course.getLive());
-        } else {
-            audioService.updateAudioCourseInfo(ac, new AudioCoursePlay());
-        }
         addFlashMessage(redirectAttributes, local("operate.success"));
         return "redirect:/mgr/meet/list";
     }
