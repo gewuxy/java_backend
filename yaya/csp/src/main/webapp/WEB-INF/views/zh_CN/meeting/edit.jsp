@@ -97,14 +97,17 @@
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameCn}">
                                 </div>
+                                    <c:if test="${course != null && course.published}">
+                                        <input type="hidden" name="course.playType" value="${course.playType}">
+                                    </c:if>
                                     <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}" >
-                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} >
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''}>
+                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
 
                                     </label>
@@ -119,20 +122,20 @@
                                                                 >
                                                                 </label>
                                                             </span>
-                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请选择正确的直播开始结束时间</span>
+                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;开始时间至少为发布当天后一天的0点，时长最长24小时</span>
                                                 <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="${live.startTime}">
                                                 <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="${live.endTime}">
                                             </div>
 
                                         </div>
                                     </div>
-                                    <div class="cells-block clearfix checkbox-box" style="display: none;">
+                                    <div class="cells-block clearfix checkbox-box" style="display: block;">
                                                     <span class="checkboxIcon">
-                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} disabled>
+                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} >
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
                                                     </span>
                                         <div class="checkbox-main">
-                                            <p>流量消耗每人约1.7G/1小时，例如：本次直播时长30分钟，如100人在线预计消耗85G流量。</p>
+                                            <p>直播码率为500kbps的情况下，直播时长为1小时，观看人数为100人，则消耗的流量约为：22.5GB</p>
                                             <div class="text">流量剩余<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                         </div>
                                     </div>
@@ -475,7 +478,8 @@
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
-                if(startTime >= endTime){
+                var dateBeforeNow = new Date(Date.parse(startTime)).getDate() <= new Date().getDate();
+                if(startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||dateBeforeNow){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
@@ -550,7 +554,6 @@
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
             var timeArray = obj.value.split(" 至 ");
-
             $("#liveStartTime").val(timeArray[0]);
             $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);
