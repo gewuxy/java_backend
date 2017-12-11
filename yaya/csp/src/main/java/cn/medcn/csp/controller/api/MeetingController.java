@@ -133,6 +133,11 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("error", local("source.has.deleted"));
                 return localeView("/meeting/share_error");
             }
+            //增加会议是否被锁定判断
+            if (course.getLocked() != null && course.getLocked() == true) {
+                model.addAttribute("error", local("course.error.locked"));
+                return localeView("/meeting/share_error");
+            }
 
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
@@ -154,7 +159,7 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
                 Date now = new Date();
 
-                if (live.getEndTime().before(now)) {//直播已结束进入到录播模式
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal() || live.getEndTime().before(now)) {//直播已结束进入到录播模式
                     return localeView("/meeting/course_" + AudioCourse.PlayType.normal.getType());
                 } else if (live.getStartTime().after(now)){//直播未开始
                     model.addAttribute("error", local("share.live.not_start.error"));
