@@ -413,6 +413,32 @@ public class CalendarUtils {
          return sdf.format(date);
     }
 
+    /**
+     * 计算两个日期之间相差的天数
+     * @param startDate
+     * @param endDate
+     * @return
+     */
+    public static int daysBetween(Date startDate, Date endDate) throws ParseException {
+        int days = 0;
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        startDate = sdf.parse(sdf.format(startDate));
+        endDate = sdf.parse(sdf.format(endDate));
+
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(startDate);
+        long sTime = cal.getTimeInMillis();
+
+        cal.setTime(endDate);
+        long eTime = cal.getTimeInMillis();
+
+        if (eTime > sTime) {
+            long betweenDays = (eTime - sTime) / (1000*3600*24);
+            days = Integer.parseInt(String.valueOf(betweenDays));
+        }
+        return days;
+    }
+
     public static void main(String[] args) {
        /*Date date = calendarMonth(2);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));*/
