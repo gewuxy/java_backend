@@ -50,6 +50,8 @@ public class Live {
 
     protected Integer livePage; //正在直播的ppt页码
 
+    protected String pushUrl;//直播推流地址
+
     public enum LiveState{
         init(0),//初始状态
         usable(1),//可用的直播状态

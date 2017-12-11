@@ -96,13 +96,16 @@
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameEn}">
                                 </div>
                                 <div class="meeting-tab clearfix">
+                                    <c:if test="${course != null && course.published}">
+                                        <input type="hidden" name="course.playType" value="${course.playType}">
+                                    </c:if>
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
-                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} readonly>
+                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''}  ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i>Projective Recording</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''} readonly>
+                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''}  ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i>Projective Live Stream</div>
                                     </label>
                                         <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
@@ -116,7 +119,7 @@
                                                                 >
                                                                 </label>
                                                             </span>
-                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Please select the beginning time and end time.</span>
+                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;The start time is at least 0 o'clock on the day after today, and the longest time is 24 hours.</span>
                                                         <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.startTime" id="liveStartTime" value="${live.startTime}">
                                                         <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.endTime" id="liveEndTime" value="${live.endTime}">
                                                     </div>
@@ -129,7 +132,7 @@
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;Video Live Stream</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>Generally 1 audience takes 1.7G network flow per hour. Your live is set to 30 minutes. It is estimated to take 85G network flow given 100 audience(s) online.</p>
+                                                    <p>When the live code rate is 500kbps, the live length is 1 hours, and the number of people watching is 100, and the flow rate is about 22.5GB</p>
                                                     <div class="text">Network Flow Balance<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
@@ -480,7 +483,8 @@
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
-                if(startTime >= endTime){
+                var dateBeforeNow = new Date(Date.parse(startTime)).getDate() <= new Date().getDate();
+                if(startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||dateBeforeNow){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;

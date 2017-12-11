@@ -301,7 +301,7 @@ public class MeetingMgrController extends CspBaseController {
 
 
     protected void handleHttpPath(AudioCourse course) {
-        handleHttpUrl(fileBase, course);
+        audioService.handleHttpUrl(fileBase, course);
     }
 
     /**

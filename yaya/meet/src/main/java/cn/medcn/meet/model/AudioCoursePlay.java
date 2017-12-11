@@ -23,13 +23,14 @@ public class AudioCoursePlay implements Serializable {
     protected Integer courseId;
     // 当前播放的页码
     protected Integer playPage;
-    // 录播状态 0表示未开始 1表示录播中 2表示录播结束
+    // 录播状态 0表示未开始 1表示录播中 2表示录播中断 3表示录播结束
     protected Integer playState;
 
 
     public enum PlayState{
         init,
         playing,
+        pause,
         over;
     }
 

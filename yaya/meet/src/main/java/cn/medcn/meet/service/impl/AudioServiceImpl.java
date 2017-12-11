@@ -68,6 +68,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected LiveService liveService;
 
+    @Autowired
+    protected MeetWatermarkDAO watermarkDAO;
+
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
         return audioCourseDAO;
@@ -249,13 +252,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setInfo(course.getInfo());
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
-        for(AudioCourseDetail detail:details){
-            AudioCourseDetail reprintDetail = new AudioCourseDetail();
-            BeanUtils.copyProperties(detail, reprintDetail);
-            reprintDetail.setId(null);
-            reprintDetail.setCourseId(reprintCourse.getId());
-            audioCourseDetailDAO.insert(reprintDetail);
-        }
+        doCopyDetails(details, reprintCourse.getId());
+        //复制水印
+        doCopyWatermark(course.getId(),reprintCourse.getId());
         return reprintCourse.getId();
     }
 
@@ -877,4 +876,64 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         }
     }
 
+    /**
+     * 将直播课件copy成录播课件
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public Integer doCopyLiveToRecord(Integer courseId) {
+
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
+
+        AudioCourse copyCourse = new AudioCourse();
+        BeanUtils.copyProperties(course, copyCourse);
+        copyCourse.setId(null);
+        copyCourse.setCspUserId(null);//不属于任何人的
+        copyCourse.setPrimitiveId(courseId);
+        copyCourse.setCreateTime(new Date());
+        copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
+        audioCourseDAO.insert(copyCourse);
+
+        //生成明细
+        Integer copyCourseId = copyCourse.getId();
+        doCopyDetails(details, copyCourseId);
+
+        //复制水印
+        doCopyWatermark(courseId,copyCourseId);
+
+        return copyCourseId;
+    }
+
+
+    /**
+     * 复制水印
+     * @param oldCourseId
+     * @param newCourseId
+     */
+    @Override
+    public void doCopyWatermark(Integer oldCourseId,Integer newCourseId) {
+        MeetWatermark watermark = new MeetWatermark();
+        watermark.setCourseId(oldCourseId);
+         watermark = watermarkDAO.selectOne(watermark);
+         if(watermark != null){
+             watermark.setCourseId(newCourseId);
+             watermark.setId(null);
+             watermarkDAO.insert(watermark);
+         }
+    }
+
+
+    protected void doCopyDetails(List<AudioCourseDetail> details, Integer courseId){
+        for (AudioCourseDetail detail : details) {
+            //复制微课明细
+            AudioCourseDetail copyDetail = new AudioCourseDetail();
+            BeanUtils.copyProperties(detail, copyDetail);
+            copyDetail.setId(null);
+            copyDetail.setCourseId(courseId);
+            audioCourseDetailDAO.insert(copyDetail);
+        }
+    }
 }

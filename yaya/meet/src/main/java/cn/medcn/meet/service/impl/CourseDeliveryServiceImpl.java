@@ -12,8 +12,10 @@ import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.CourseDelivery;
+import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
+import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.service.AppUserService;
 import com.github.abel533.mapper.Mapper;
@@ -40,6 +42,9 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
 
     @Autowired
     protected AudioService audioService;
+
+    @Autowired
+    protected LiveService liveService;
 
     @Override
     public Mapper<CourseDelivery> getBaseMapper() {
@@ -93,13 +98,18 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {//录播投稿需要复制副本
                 //复制副本
                 courseId = audioService.doCopyCourse(course, null, null);
+            }else{  //直播，检查会议是否已结束，如果会议已结束，将直播复制成录播会议
+                Live live = liveService.findByCourseId(courseId);
+                if(live != null && live.getEndTime() != null && new Date().getTime() > live.getEndTime().getTime()){  //会议已结束
+                    courseId = audioService.doCopyLiveToRecord(courseId);
+                }
             }
 
+            //生成投稿记录
             CourseDelivery delivery = new CourseDelivery();
             delivery.setAcceptId(acceptId);
             delivery.setSourceId(courseId);
             delivery.setAuthorId(authorId);
-
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
                 CourseDelivery result = selectOne(delivery);
                 if(result != null){

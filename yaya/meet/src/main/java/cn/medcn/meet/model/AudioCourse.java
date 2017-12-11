@@ -51,6 +51,8 @@ public class AudioCourse implements Serializable {
     protected Integer categoryId;
     // 是否删除(csp可以删除会议)
     protected Boolean deleted;
+    //会议是否被锁定
+    protected Boolean locked;
 
     @Transient
     @JsonIgnore

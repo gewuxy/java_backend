@@ -14,7 +14,7 @@ public class MD5Utils {
 
     protected static final String ENCRYPT_DEFAULT_CHARSET = "utf-8";
 
-    protected static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
+    public static final String hexDigits[] = { "0", "1", "2", "3", "4", "5",
             "6", "7", "8", "9", "a", "b", "c", "d", "e", "f" };
 
     public static String byteArrayToHexString(byte b[]) {
