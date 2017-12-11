@@ -11,8 +11,8 @@ public class TXLiveUtils {
     //todo 所有腾讯直播相关的参数需替换成真实的值
 
     public final static String BIZID = "8888";
-
-    public final static String APPKEY = "123123123123";
+    //腾讯API鉴权key 主要用于回调时判断请求是否合法用
+    public final static String API_AUTHENTICATION_KEY = "123123123123";
     //防盗链key
     public final static String PICKPROOF_KEY = "asdfasdfasdfasdfasdf";
     //推流地址默认超时时长
@@ -118,10 +118,4 @@ public class TXLiveUtils {
         return MD5Utils.md5(signStr);
     }
 
-    public static void main(String[] args) {
-        String hexStr = timeToHexString(System.currentTimeMillis());
-        System.out.println(hexStr);
-
-        System.out.println(genPushUrl("123", 0));
-    }
 }

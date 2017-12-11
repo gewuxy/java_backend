@@ -63,6 +63,7 @@
             <mvc:exclude-mapping path="/api/charge/paypalCallback"/>
             <mvc:exclude-mapping path="/api/email/**"/>
             <mvc:exclude-mapping path="/api/meeting/share"/>
+            <mvc:exclude-mapping path="/api/live/**"/>
             <bean class="cn.medcn.csp.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
 
