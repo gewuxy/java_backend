@@ -451,6 +451,8 @@ public class MeetingController extends CspBaseController {
 //            audioCourse.setDetails(audioService.findLiveDetails(courseId));
 //        }
 
+
+
         audioService.handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
@@ -470,7 +472,16 @@ public class MeetingController extends CspBaseController {
         if (audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.ordinal()) {
             //查询出直播信息
             Live live = liveService.findByCourseId(courseId);
+
             if (live != null) {//改变直播状态
+                if (live.getStartTime().getTime() > System.currentTimeMillis()) {
+                    return error(local("share.live.not_start.error"));
+                }
+
+                if (live.getEndTime().getTime() < System.currentTimeMillis() || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                    return error(local("share.live.over"));
+                }
+
                 live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
                 liveService.updateByPrimaryKey(live);
             }
@@ -792,19 +803,6 @@ public class MeetingController extends CspBaseController {
             liveType = LiveOrderDTO.LIVE_TYPE_PPT;
         }
 
-        //1.1中增加获取视频推流地址
-        if (liveType == LiveOrderDTO.LIVE_TYPE_VIDEO) {
-
-
-            String pushUrl = null;
-            try {
-                pushUrl = getPushUrl(courseId);
-            } catch (SystemException e) {
-                return error(e.getMessage());
-            }
-            result.put("pushUrl", pushUrl);
-        }
-
         String wsUrl = genWsUrl(request, courseId);
         wsUrl += "&liveType=" + liveType;
 
@@ -879,6 +877,57 @@ public class MeetingController extends CspBaseController {
         order.setPageNum(pageNum == null ? 0 : pageNum);
         order.setVideoUrl(videoUrl);
         liveService.publish(order);
+    }
+
+
+    /**
+     * 开始视频直播 保存推拉流信息
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/live/video/start")
+    @ResponseBody
+    public String videoLiveStart(Integer courseId){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course.getDeleted() != null && course.getDeleted() == true) {
+            return error("source.has.deleted");
+        }
+        //增加会议是否被锁定判断
+        if (course.getLocked() != null && course.getLocked() == true) {
+            return error("course.error.locked");
+        }
+
+        Live live = liveService.findByCourseId(courseId);
+
+        Map<String, Object> result = new HashMap<>();
+        String pushUrl = null;
+
+        if (live != null) {
+            if (live.getStartTime().getTime() > System.currentTimeMillis()) {
+                return error(local("share.live.not_start.error"));
+            }
+
+            if (live.getEndTime().getTime() < System.currentTimeMillis() || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                return error(local("share.live.over"));
+            }
+
+            try {
+                pushUrl = getPushUrl(courseId);
+                String hlsPullUrl = TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.hls);
+                String rtmpPullUrl = TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.rtmp);
+                String flvPullUrl = TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.flv);
+                live.setHlsUrl(hlsPullUrl);
+                live.setHdlUrl(flvPullUrl);
+                live.setRtmpUrl(rtmpPullUrl);
+                liveService.updateByPrimaryKey(live);
+
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
+            result.put("pushUrl", pushUrl);
+        }
+
+        return success(result);
     }
 
 }
