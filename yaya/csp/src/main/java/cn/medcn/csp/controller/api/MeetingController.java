@@ -133,6 +133,11 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("error", local("source.has.deleted"));
                 return localeView("/meeting/share_error");
             }
+            //增加会议是否被锁定判断
+            if (course.getLocked() != null && course.getLocked() == true) {
+                model.addAttribute("error", local("course.error.locked"));
+                return localeView("/meeting/share_error");
+            }
 
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
