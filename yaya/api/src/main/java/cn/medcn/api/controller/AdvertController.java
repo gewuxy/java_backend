@@ -11,7 +11,9 @@ import cn.medcn.common.utils.TailorMadeUtils;
 import cn.medcn.user.dto.AdvertDTO;
 import cn.medcn.user.dto.BannerDTO;
 import cn.medcn.user.model.Advert;
+import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AdvertService;
+import cn.medcn.user.service.BannerService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +45,9 @@ public class AdvertController {
     @Autowired
     private ArticleService articleService;
 
+    @Autowired
+    protected BannerService bannerService;
+
     @Value("${app.file.base}")
     private String appFileBase;
 
@@ -69,7 +74,7 @@ public class AdvertController {
 
 
         Map<String, Object> map = Maps.newHashMap();
-        if(advert != null){
+        if (advert != null) {
             if (CheckUtils.isNotEmpty(advert.getImageUrl())) {
                 map.put("imageUrl", appFileBase + advert.getImageUrl());
             }
@@ -89,38 +94,28 @@ public class AdvertController {
     }
 
 
-
-
     /**
      * @return
      */
     @RequestMapping("/banner")
     @ResponseBody
     public String banner() {
-        Pageable pageable = new Pageable(1,5);
-
-        MyPage<Article> page = articleService.findAppBanners(pageable, YAYA_BANNER_CATEGORY_ID) ;
-
-        return APIUtils.success(getBannerDTO(page.getDataList()));
-    }
-
-
-    public List<BannerDTO> getBannerDTO(List<Article> bannerList) {
-
+        Pageable pageable = new Pageable(1, 5);
+        pageable.put("active", true);
+        MyPage<Banner> page = bannerService.findBannerList(pageable);
         List<BannerDTO> bannerDTOList = Lists.newArrayList();
-        if (bannerList != null) {
-            for (Article banner : bannerList) {
-                BannerDTO bannerDTO = new BannerDTO();
-                bannerDTO.setId(banner.getId());
-                bannerDTO.setTitle(banner.getTitle());
-                bannerDTO.setPageUrl(appFileBase+banner.getArticleImg());
-                bannerDTO.setLink(appYayaBase+"/view/banner/"+banner.getId());
-                bannerDTOList.add(bannerDTO);
-            }
-        }
-        return bannerDTOList;
-    }
 
+        for (Banner banner : page.getDataList()) {
+            BannerDTO bannerDTO = new BannerDTO();
+            bannerDTO.setId(banner.getId());
+            bannerDTO.setTitle(banner.getTitle());
+            bannerDTO.setPageUrl(appFileBase + banner.getImageUrl());
+            bannerDTO.setLink(appYayaBase + "/view/banner/" + banner.getId());
+            bannerDTOList.add(bannerDTO);
+        }
+
+        return APIUtils.success(bannerDTOList);
+    }
 
 
     public List<AdvertDTO> getAdvertDTO(List<Advert> advertList) {
@@ -128,8 +123,8 @@ public class AdvertController {
         if (advertList != null) {
             List advertDTOList = new ArrayList<>();
             for (Advert advert : advertList) {
-               AdvertDTO advertDTO = AdvertDTO.build(advert);
-               advertDTOList.add(advertDTO);
+                AdvertDTO advertDTO = AdvertDTO.build(advert);
+                advertDTOList.add(advertDTO);
             }
             return advertDTOList;
         }

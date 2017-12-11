@@ -8,6 +8,10 @@
           FROM t_app_banner b
           LEFT JOIN t_app_user u
           ON b.pub_user_id = u.id
+          WHERE 1 = 1
+          <if test="active != null">
+              AND b.active = #{active}
+          </if>
           ORDER BY b.weight DESC
     </select>
 
