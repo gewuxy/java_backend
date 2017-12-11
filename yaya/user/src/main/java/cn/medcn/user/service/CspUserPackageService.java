@@ -1,6 +1,7 @@
 package cn.medcn.user.service;
 
 import cn.medcn.common.service.BaseService;
+import cn.medcn.user.dto.CspUserPackageDTO;
 import cn.medcn.user.model.CspUserPackage;
 
 /**
@@ -8,4 +9,6 @@ import cn.medcn.user.model.CspUserPackage;
  */
 
 public interface CspUserPackageService extends BaseService<CspUserPackage> {
+
+    Boolean isNewUser(String UserId);
 }
