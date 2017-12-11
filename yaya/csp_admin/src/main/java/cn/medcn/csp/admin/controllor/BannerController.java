@@ -127,10 +127,14 @@ public class BannerController extends BaseController{
     @Log(name = "新建Banner")
     public String insertBanner(Banner banner,RedirectAttributes redirectAttributes){
         if (banner != null){
-            banner.setCreateTime(new Date());
-            banner.setId(UUIDUtil.getNowStringID());
-            bannerService.insert(banner);
-            addFlashMessage(redirectAttributes,"添加成功");
+            if (banner.getAppId()==null){
+                addErrorFlashMessage(redirectAttributes,"添加失败,用途为必填信息");
+            }else {
+                banner.setCreateTime(new Date());
+                banner.setId(UUIDUtil.getNowStringID());
+                bannerService.insert(banner);
+                addFlashMessage(redirectAttributes,"添加成功");
+            }
         }else {
             addErrorFlashMessage(redirectAttributes,"添加失败");
         }
