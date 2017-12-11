@@ -27,10 +27,14 @@ public class CspPackage implements Serializable {
     protected String packageTW;
     // 套餐版本 英文
     protected String packageUs;
-    // 金额 单位：人民币
-    protected String moneyRmb;
-    // 金额 单位：美元
-    protected String moneyUsd;
+    // 月费 单位：人民币
+    protected float monthRmb;
+    // 月费 单位：美元
+    protected float moneyUsd;
+    // 年费 单位：人民币
+    protected float yearRmb;
+    // 年费 单位：美元
+    protected float yearUsd;
     // 时效 单位：月
     protected Integer limitTime;
     // 限制会议  单位：个
@@ -48,4 +52,20 @@ public class CspPackage implements Serializable {
     @Transient
     protected Date packageEnd;
 
+
+    public enum TypeId {
+        STANDARD(1), // 标准版
+        PREMIUM(2),  // 高级版
+        PROFESSIONAL(3); // 专业版
+
+        private Integer id;
+
+        public Integer getId () {
+            return id;
+        }
+
+        TypeId(Integer id) {
+            this.id = id;
+        }
+    }
 }

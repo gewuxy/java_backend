@@ -21,6 +21,8 @@
 <div id="header" style="text-align: center;">
     <h3>${banner.title}</h3>
 </div>
+<div style="padding: 0 10px;">
 ${banner.content}
+</div>
 </body>
 </html>
