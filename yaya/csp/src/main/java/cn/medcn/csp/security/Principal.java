@@ -23,6 +23,9 @@ public class Principal implements Serializable{
 
     protected Boolean abroad;
 
+    //套餐id
+    protected Integer packageId;
+
     public Boolean getAbroad() {
         return abroad;
     }
@@ -78,6 +81,10 @@ public class Principal implements Serializable{
     public void setNickName(String nickName) {
         this.nickName = nickName;
     }
+
+    public void setPackageId(Integer packageId){this.packageId = packageId;}
+
+    public Integer getPackageId(){return packageId;}
 
     public static Principal build(CspUserInfo userInfo){
         if (userInfo != null) {
