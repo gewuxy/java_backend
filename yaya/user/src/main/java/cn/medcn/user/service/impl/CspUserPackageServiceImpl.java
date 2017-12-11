@@ -2,7 +2,6 @@ package cn.medcn.user.service.impl;
 
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.user.dao.CspUserPackageDAO;
-import cn.medcn.user.dto.CspUserPackageDTO;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;

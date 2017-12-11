@@ -44,24 +44,24 @@
             //初始化高级版选中
             tabsMainNum.eq(1).removeClass('none').siblings().addClass('none');
             var isNewUser = ${isNewUser};
-            if(isNewUser == true){
-                layer.open({
-                    type: 1,
-                    area: ['1116px', '935px'],
-                    fix: false, //不固定
-                    title:false,
-                    closeBtn:0,
-                    skin: 'member-popup-zIndex',
-                    offset: '70px',
-                    content: $('.member-popup-box'),
-                    success:function(layero, index){
-                        $("#hgTotal").html("16.67");
-                        $("#pfTotal").html("66");
-                    },
-                    cancel :function(){
-                    },
-                });
-            }
+//            if(isNewUser == true){
+//                layer.open({
+//                    type: 1,
+//                    area: ['1116px', '935px'],
+//                    fix: false, //不固定
+//                    title:false,
+//                    closeBtn:0,
+//                    skin: 'member-popup-zIndex',
+//                    offset: '70px',
+//                    content: $('.member-popup-box'),
+//                    success:function(layero, index){
+//                        $("#hgTotal").html("16.67");
+//                        $("#pfTotal").html("66");
+//                    },
+//                    cancel :function(){
+//                    },
+//                });
+//            }
 
             //初始化音频
             var asAllItem = audiojs.createAll();

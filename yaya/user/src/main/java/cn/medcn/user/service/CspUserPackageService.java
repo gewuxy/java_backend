@@ -1,7 +1,6 @@
 package cn.medcn.user.service;
 
 import cn.medcn.common.service.BaseService;
-import cn.medcn.user.dto.CspUserPackageDTO;
 import cn.medcn.user.model.CspUserPackage;
 
 /**
