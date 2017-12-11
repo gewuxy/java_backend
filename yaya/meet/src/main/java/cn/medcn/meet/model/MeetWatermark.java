@@ -28,6 +28,8 @@ public class MeetWatermark implements Serializable {
     /**课件id*/
     private Integer courseId;
 
+    private Boolean state;
+
     public enum Direction{
         LEFT_TOP,
         LEFT_BELOW,
