@@ -5,11 +5,12 @@ import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Liuchangling on 2017/12/8.
  */
-
+@Service
 public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> implements CspUserPackageService {
     protected CspUserPackageDAO userPackageDAO;
 

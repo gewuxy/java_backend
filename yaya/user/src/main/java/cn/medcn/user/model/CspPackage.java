@@ -6,7 +6,9 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * Created by Liuchangling on 2017/12/8.
@@ -19,8 +21,12 @@ import java.io.Serializable;
 public class CspPackage implements Serializable {
     @Id
     protected Integer id;
-    // 套餐版本
-    protected String version;
+    // 套餐版本 中文
+    protected String packageCn;
+    // 套餐版本 繁体
+    protected String packageTW;
+    // 套餐版本 英文
+    protected String packageUs;
     // 金额 单位：人民币
     protected String moneyRmb;
     // 金额 单位：美元
@@ -29,5 +35,17 @@ public class CspPackage implements Serializable {
     protected Integer limitTime;
     // 限制会议  单位：个
     protected Integer limitMeets;
+
+    // 已经使用的会议数
+    @Transient
+    protected Integer usedMeetCount;
+
+    // 套餐开始时间
+    @Transient
+    protected Date packageStart;
+
+    // 套餐结束时间
+    @Transient
+    protected Date packageEnd;
 
 }

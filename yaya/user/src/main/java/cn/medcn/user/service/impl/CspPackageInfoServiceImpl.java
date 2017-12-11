@@ -5,11 +5,12 @@ import cn.medcn.user.dao.CspPackageInfoDAO;
 import cn.medcn.user.model.CspPackageInfo;
 import cn.medcn.user.service.CspPackageInfoService;
 import com.github.abel533.mapper.Mapper;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by Liuchangling on 2017/12/8.
  */
-
+@Service
 public class CspPackageInfoServiceImpl extends BaseServiceImpl<CspPackageInfo> implements CspPackageInfoService {
     protected CspPackageInfoDAO packageInfoDAO;
 

@@ -116,7 +116,7 @@
                                                                 >
                                                                 </label>
                                                             </span>
-                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;請選擇正確的直播開始結束時間</span>
+                                                        <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;開始時間至少為發佈當天後一天的0點，時長最長24小時</span>
                                                         <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.startTime" id="liveStartTime" value="${live.startTime}">
                                                         <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.endTime" id="liveEndTime" value="${live.endTime}">
                                                     </div>
@@ -129,7 +129,7 @@
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;開啟視頻直播</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>流量消耗每人約1.7G/1小時，例如：本次直播時長30分鐘，如100人在線預計消耗85G流量。</p>
+                                                    <p>直播碼率為500kbps的情况下，直播時長為1小時，觀看人數為100人，則消耗的流量約為：22.5GB</p>
                                                     <div class="text">流量剩餘<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                                 </div>
                                             </div>
@@ -474,7 +474,8 @@
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
-                if(startTime >= endTime){
+                var dateBeforeNow = new Date(Date.parse(startTime)).getDate() <= new Date().getDate();
+                if(startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||dateBeforeNow){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
