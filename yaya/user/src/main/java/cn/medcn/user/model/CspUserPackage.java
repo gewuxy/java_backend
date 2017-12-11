@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.Date;
 @Table(name = "t_csp_user_package")
 public class CspUserPackage implements Serializable {
     // 用户id
+    @Id
     protected String userId;
     // 套餐id
     protected Integer packageId;

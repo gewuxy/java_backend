@@ -82,11 +82,15 @@ public class AppOnlineController extends BaseController {
     @Log(name = "修改APP列表")
     public String updateAppManage(AppVersion appVersion,RedirectAttributes redirectAttributes) {
         if (appVersion != null){
-            Integer version = Integer.valueOf(appVersion.getVersionStr().replace(".", ""));
-            appVersion.setVersion(version);
-            appVersion.setUpdateTime(new Date());
-            appVersionService.updateByPrimaryKeySelective(appVersion);
-            addFlashMessage(redirectAttributes,"修改成功");
+            if (appVersion.getVersionStr() == null ||appVersion.getVersionStr().equals("")){
+                addErrorFlashMessage(redirectAttributes,"修改失败,版本号信息必填");
+            }else{
+                Integer version = Integer.valueOf(appVersion.getVersionStr().replace(".", ""));
+                appVersion.setVersion(version);
+                appVersion.setUpdateTime(new Date());
+                appVersionService.updateByPrimaryKeySelective(appVersion);
+                addFlashMessage(redirectAttributes,"修改成功");
+            }
         }else {
             addErrorFlashMessage(redirectAttributes,"修改失败");
         }
@@ -115,15 +119,18 @@ public class AppOnlineController extends BaseController {
     @Log(name = "添加APP")
     public String addAppManage(AppVersion appVersion,RedirectAttributes redirectAttributes) {
         if (appVersion != null){
-            Integer version = Integer.valueOf(appVersion.getVersionStr().replace(".", ""));
-            appVersion.setUpdateTime(new Date());
-            appVersion.setVersion(version);
-            appVersionService.insert(appVersion);
-            addFlashMessage(redirectAttributes,"添加成功");
+            if (appVersion.getVersionStr() == null||appVersion.getVersionStr().equals("")){
+                addErrorFlashMessage(redirectAttributes,"修改失败,版本号信息必填");
+            }else{
+                Integer version = Integer.valueOf(appVersion.getVersionStr().replace(".", ""));
+                appVersion.setUpdateTime(new Date());
+                appVersion.setVersion(version);
+                appVersionService.insert(appVersion);
+                addFlashMessage(redirectAttributes,"添加成功");
+            }
         }else {
             addErrorFlashMessage(redirectAttributes,"添加失败");
         }
-
         return "redirect:/csp/appManage/list";
     }
 

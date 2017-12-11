@@ -95,14 +95,14 @@
         <div class="controls">
             <input type="search" name="versionStr" value="${appVersion.versionStr}" maxlength="50"
                    class="required input-xlarge" onkeyup="value=value.replace(/[^\d\.]/g,'')" onblur="value=value.replace(/[^\d\.]/g,'')"/>
-            <span class="help-inline"><font color="red">*</font> </span>
+            <span class="help-inline"><font color="#a9a9a9">(必填)只允许输入数字和小数点*</font> </span>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">版本信息描述:</label>
         <div class="controls">
             <textarea name="details" rows="3" maxlength="2000" class="input-xxlarge" >${appVersion.details}</textarea>
-            <span class="help-inline"><font color="red">*</font> </span>
+
         </div>
     </div>
     <div class="control-group">
