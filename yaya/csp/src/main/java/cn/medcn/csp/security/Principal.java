@@ -26,6 +26,9 @@ public class Principal implements Serializable{
     //套餐id
     protected Integer packageId;
 
+    // 过期提醒
+    protected String expireRemind;
+
     public Boolean getAbroad() {
         return abroad;
     }
@@ -85,6 +88,14 @@ public class Principal implements Serializable{
     public void setPackageId(Integer packageId){this.packageId = packageId;}
 
     public Integer getPackageId(){return packageId;}
+
+    public void setExpireRemind(String expireRemind) {
+        this.expireRemind = expireRemind;
+    }
+
+    public String getExpireRemind() {
+        return expireRemind;
+    }
 
     public static Principal build(CspUserInfo userInfo){
         if (userInfo != null) {
