@@ -672,6 +672,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         }
         audioCourse.setDeleted(false);
         audioCourse.setPublished(true);
+        audioCourse.setLocked(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -699,6 +700,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourse.setDeleted(false);
         audioCourse.setPlayType(AudioCourse.PlayType.normal.getType());
         audioCourse.setPublished(true);
+        audioCourse.setLocked(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 

@@ -24,6 +24,8 @@
     <script src="${ctxStatic}/phone/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="${ctxStatic}/phone/js/pinchzoom.min.js"></script>
+    <script src="${ctxStatic}/phone/js/weui.min.js"></script>
 
     <!-- 高清方案 -->
     <script>!function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);  flex(100, 1);</script>
@@ -38,7 +40,16 @@
 <body>
 <div class="warp">
 
-    <div class="CSPMeeting-gallery details-gallery " >
+    <div class="CSPMeeting-gallery details-gallery
+    <c:if test="${watermark != null}">
+        <c:choose>
+            <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
+            <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
+            <c:when test="${watermark.direction == 2}">logo-watermark-position-top-right</c:when>
+            <c:when test="${watermark.direction == 3}">logo-watermark-position-bottom-right</c:when>
+        </c:choose>
+        </c:if>" >
+
         <!-- Swiper -->
         <div class="swiper-container gallery-top video-countDown ">
             <!--根据ID 切换 PPT列表-->
@@ -47,15 +58,20 @@
                     <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="${detail.audioUrl}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
-                                <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
+                                <div class="swiper-zoom-container pinch-zoom" style="height:100%;">
+                                    <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
+                                </div>
                             </c:when>
                             <c:otherwise>
-                                <video src="${detail.videoUrl}"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video>
+                                <video src="${detail.videoUrl}"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div>
                             </c:otherwise>
                         </c:choose>
 
                     </div>
                 </c:forEach>
+                <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
+                    <div class="swiper-picture meeting-last-img meeting-last-img-EN" style="display:block; background-image:url('${ctxStatic}/images/meeting-last-img-EN.png')"></div>
+                </div>
             </div>
             <!--音频文件-->
             <div class="clearfix boxAudio t-center " >
@@ -76,6 +92,11 @@
                 <div class="swiper-pagination"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                 <span class="swiper-button-next "></span>
             </div>
+
+            <!--水印位置-->
+            <div class="logo-watermark ">
+                <div class="logo-watermark-item">${watermark.name}</div>
+            </div>
         </div>
 
         <!--buttonBottom-->
@@ -90,6 +111,9 @@
                     <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
                 </div>
                 <div class="flex-item">
+                    <div class="button button-icon-report report-popup-button-hook"><i></i></div>
+                </div>
+                <div class="flex-item">
                     <div class="button button-icon-onFull changeFull-hook"><i></i></div>
                 </div>
             </div>
@@ -102,7 +126,25 @@
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
 
-
+    <!--引导下载-->
+    <div class="CSPmeeting-ad-item">
+        <a href="https://www.cspmeeting.com/scan/qrcode?local=en_US">
+            <div class="flex">
+                <div class="flex-item">
+                    <div class="fl">
+                        <img src="${ctxStatic}/images/meeting-ad-logo.png" alt="">
+                    </div>
+                    <div class="oh">
+                        <div class="logo-title">CSPmeeting</div>
+                        <p>全球公测中</p>
+                    </div>
+                </div>
+                <div class="flex-item">
+                    <span class="ad-button">J</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
 </div>
 
@@ -112,7 +154,7 @@
         <div class="title"><h3>Info</h3></div>
         <div class="text hidden-box">
 
-            <p>${not empty course.info ? course.info : 'undefined'}</p>
+            <p>${course.info}</p>
         </div>
     </div>
 </div>
@@ -153,6 +195,7 @@
             console.log("load audio source error ...");
             console.log("is playing = " + playing);
             console.log("isVideo.length == " + isVideo.length);
+            clearTimeout(slideTimer);
             if (playing){
                 if (isVideo.length == 0){
                     slideToNext();
@@ -186,6 +229,27 @@
             $('.layer-hospital-popup-fullSize').show();
         });
 
+        //判断访问终端
+        var browser={
+            versions:function(){
+                var u = navigator.userAgent, app = navigator.appVersion;
+                return {
+                    trident: u.indexOf('Trident') > -1, //IE内核
+                    presto: u.indexOf('Presto') > -1, //opera内核
+                    webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                    gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//火狐内核
+                    mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                    ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                    android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                    iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+                    iPad: u.indexOf('iPad') > -1, //是否iPad
+                    webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
+                    iphoneSafari: u.indexOf('MicroMessenger') > -1
+                };
+            }(),
+            language:(navigator.browserLanguage || navigator.language).toLowerCase()
+        }
+
         //初始化默认竖屏
         var galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 0,
@@ -193,9 +257,20 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            onSlideChangeStart:function(swiper){
+                activeItemIsVideo = $('.swiper-slide-active').find('video');
+
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    //判断是否Iphone 的 Safari 浏览器
+                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                        $('.isIphoneSafari').show();
+                    }
+                }
+            },
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
-                activeItemIsVideo = $('.swiper-slide-active').find('video');
+                //activeItemIsVideo = $('.swiper-slide-active').find('video');
 
                 nextItemIsVideo = $('.swiper-slide-prev').find('video');
 
@@ -485,6 +560,62 @@
 ////                CSPMeetingGallery.height($(window).height());
 //            }
 //        }, false);
+
+        function report(type){
+            $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
+                layer.msg('Report success');
+            },'json');
+        }
+
+        //举报按钮
+        $('.report-popup-button-hook').on('click',function(){
+            weui.actionSheet([
+                {
+                    label: 'Pornography',
+                    onClick: function () {
+                        report(0);
+                        //layer.msg('举报成功');
+                    }
+                }, {
+                    label: 'Crime',
+                    onClick: function () {
+                        report(1);
+                        //layer.msg('举报成功');
+                    }
+                }, {
+                    label: 'Infringement',
+                    onClick: function () {
+                        report(2);
+                        //layer.msg('举报成功');
+                    }
+                }
+            ], [
+                {
+                    label: 'Cancel',
+                    onClick: function () {
+                        console.log('取消');
+                    }
+                }
+            ], {
+                className: 'custom-classname',
+                onClose: function(){
+                    console.log('关闭');
+                }
+            });
+        });
+
+        //触发图片放大缩小
+        $('div.pinch-zoom').each(function () {
+            new RTP.PinchZoom($(this), {});
+        });
+
+        //手机端 点击任何一个地方  自动播放音频
+        $('.isIphoneSafari').on('touchstart',function(){
+            $(this).hide();
+            activeItemIsVideo.get(0).load();
+            activeItemIsVideo.get(0).play();
+
+        });
 
 
     });
