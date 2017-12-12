@@ -84,4 +84,6 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
      * @return
      */
     CourseDeliveryDTO findMeetDetail(@Param("id")Integer id);
+
+    List<AudioCourse> findAudioCourseList(@Param("cspUserId") String cspUserId);
 }

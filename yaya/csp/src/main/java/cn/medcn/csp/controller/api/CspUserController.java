@@ -13,6 +13,7 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.*;
@@ -21,8 +22,6 @@ import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import com.google.common.collect.Sets;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -69,6 +68,10 @@ public class CspUserController extends CspBaseController {
 
     @Autowired
     protected CspUserPackageService userPackageService;
+
+    @Autowired
+    protected AudioService audioService;
+
     /**
      * 注册csp账号
      *
@@ -131,10 +134,12 @@ public class CspUserController extends CspBaseController {
         // 缓存用户套餐id
         CspPackage cspPackage = packageService.findUserPackageById(user.getId());
         if (cspPackage != null) {
+            // 缓存用户套餐信息
+            principal.setCspPackage(cspPackage);
             principal.setPackageId(cspPackage.getId());
 
             // 缓存用户套餐过期信息
-            String remind = cacheExpireRemind(cspPackage);
+            String remind = packageExpireRemind(cspPackage);
             principal.setExpireRemind(remind);
         }
 
@@ -142,17 +147,21 @@ public class CspUserController extends CspBaseController {
         return principal;
     }
 
-    //  用户过期信息
-    protected String cacheExpireRemind(CspPackage cspPackage) {
+    /**
+     * 缓存用户过期信息
+     * @param cspPackage
+     * @return
+     */
+    protected String packageExpireRemind(CspPackage cspPackage) {
         String remind = null;
         try {
             if (cspPackage != null && cspPackage.getPackageEnd() != null
                     && cspPackage.getId() > CspPackage.TypeId.STANDARD.getId()) {
 
                 int diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
-                if (diffDays == EXPIRE_DAYS) {
-                    // 还有5天到期时提醒
-                    remind = local("fivedays.expire.remind");
+                if (diffDays <= EXPIRE_DAYS && diffDays > NUMBER_ZERO) {
+                    // 还有5天倒计时到期时提醒
+                    remind = local("days.expire.remind", new Object[]{diffDays});
 
                 } else if (diffDays == 0){ // 已经过期提醒
                     //  已经使用的会议数 -3 = 隐藏的会议数
@@ -162,6 +171,9 @@ public class CspUserController extends CspBaseController {
                         int hiddenMeetCount = usedMeetCount - NUMBER_THREE;
                         remind = local("expire.remind.info", new Object[]{hiddenMeetCount});
                     }
+
+                    // 会议上锁
+                    audioService.doModifyAudioCourse(cspPackage.getUserId());
                 }
             }
 
@@ -218,18 +230,7 @@ public class CspUserController extends CspBaseController {
             }
 
             // 检查当前登录的用户 是否海外用户
-            abroad = userInfo.getAbroad();
-            if (abroad == null) {
-                abroad = false;
-            }
-            if (abroad && !LocalUtils.isAbroad()) {
-                // 海外账号 在国内登录
-                return error(local("en.user.login.error"));
-            }
-            if (!abroad && LocalUtils.isAbroad()) {
-                // 国内账号 在海外登录
-                return error(local("cn.user.login.error"));
-            }
+            checkUserIsAbroad(userInfo);
 
             // 更新用户登录信息
             userInfo.setLastLoginIp(request.getRemoteAddr());
@@ -237,19 +238,11 @@ public class CspUserController extends CspBaseController {
             cspUserService.updateByPrimaryKey(userInfo);
 
             // 缓存用户信息
-            cachePrincipal(userInfo);
+            Principal principal = cachePrincipal(userInfo);
 
-            // 用户信息
-            CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
-            if (needAvatarPrefix(dto.getAvatar())) {
-                dto.setAvatar(fileBase + dto.getAvatar());
-            }
+            // 返回给前端的用户数据
+            CspUserInfoDTO dto = buildCspUserInfoDTO(principal, userInfo);
 
-            // 查询当前用户绑定的第三方平台列表
-            List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userInfo.getId());
-            if (!CheckUtils.isEmpty(bindInfoList)) {
-                dto.setBindInfoList(bindInfoList);
-            }
             return success(dto);
 
         } catch (SystemException e){
@@ -258,7 +251,58 @@ public class CspUserController extends CspBaseController {
         } catch (PasswordErrorException pe) {
             return error(APIUtils.ERROR_PASSWORD, pe.getMessage());
         }
+    }
 
+    /**
+     * 检查当前登录的用户 是否海外用户
+     * @param userInfo
+     * @return
+     */
+    private String checkUserIsAbroad(CspUserInfo userInfo) {
+        Boolean abroad = userInfo.getAbroad();
+        if (abroad == null) {
+            abroad = false;
+        }
+        if (abroad && !LocalUtils.isAbroad()) {
+            // 海外账号 在国内登录
+            return error(local("en.user.login.error"));
+        }
+        if (!abroad && LocalUtils.isAbroad()) {
+            // 国内账号 在海外登录
+            return error(local("cn.user.login.error"));
+        }
+
+        return null;
+    }
+
+    /**
+     * 封装返回给前端的用户数据
+     * @param principal
+     * @param userInfo
+     * @return
+     */
+    private CspUserInfoDTO buildCspUserInfoDTO(Principal principal, CspUserInfo userInfo) {
+        // 用户信息
+        CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
+        if (needAvatarPrefix(dto.getAvatar())) {
+            dto.setAvatar(fileBase + dto.getAvatar());
+        }
+
+        // 查询当前用户绑定的第三方平台列表
+        List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userInfo.getId());
+        if (!CheckUtils.isEmpty(bindInfoList)) {
+            dto.setBindInfoList(bindInfoList);
+        }
+
+        // 返回用户套餐 及 套餐过期提醒
+        if (principal.getCspPackage() != null) {
+            dto.setCspPackage(principal.getCspPackage());
+        }
+        if (StringUtils.isNotEmpty(principal.getExpireRemind())) {
+            dto.setExpireRemind(principal.getExpireRemind());
+        }
+
+        return dto;
     }
 
     /**
@@ -531,8 +575,6 @@ public class CspUserController extends CspBaseController {
     }
 
 
-
-
     /**
      * 绑定手机号
      * @param mobile
@@ -650,16 +692,37 @@ public class CspUserController extends CspBaseController {
             dto.setBindInfoList(bindInfoList);
         }
 
-        // 获取当前用户套餐
-        CspPackage cspPackage = packageService.findUserPackageById(userId);
-        if (cspPackage != null) {
-            dto.setCspPackage(cspPackage);
-            // 过期提醒信息
-            String expire = cacheExpireRemind(cspPackage);
-            dto.setExpireRemind(expire);
-        }
+        // 查询用户套餐及是否过期
+        assignPackageAndExpire(dto);
 
+        // 修改缓存数据
+        String userToken = Constants.TOKEN + "_" + userInfo.getToken();
+        Principal principal = redisCacheUtils.getCacheObject(userToken);
+        if (principal != null) {
+            principal.setCspPackage(dto.getCspPackage());
+            principal.setPackageId(dto.getCspPackage().getId());
+            principal.setExpireRemind(dto.getExpireRemind());
+        }
+        redisCacheUtils.setCacheObject(userToken, principal, Constants.TOKEN_EXPIRE_TIME);
 
         return success(dto);
+    }
+
+    /**
+     * 查询用户套餐版本及过期信息
+     * @param userInfoDTO
+     */
+    private void assignPackageAndExpire(CspUserInfoDTO userInfoDTO) {
+        // 获取当前用户套餐
+        CspPackage cspPackage = packageService.findUserPackageById(userInfoDTO.getUid());
+        if (cspPackage != null) {
+            userInfoDTO.setCspPackage(cspPackage);
+            // 过期提醒信息
+            String expire = packageExpireRemind(cspPackage);
+            if (StringUtils.isNotEmpty(expire)) {
+                userInfoDTO.setExpireRemind(expire);
+            }
+        }
+
     }
 }

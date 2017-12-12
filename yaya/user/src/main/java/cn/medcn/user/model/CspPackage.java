@@ -40,6 +40,10 @@ public class CspPackage implements Serializable {
     // 限制会议  单位：个
     protected Integer limitMeets;
 
+    // 用户id
+    @Transient
+    protected String userId;
+
     // 已经使用的会议数
     @Transient
     protected Integer usedMeetCount;

@@ -960,4 +960,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             audioCourseDetailDAO.insert(copyDetail);
         }
     }
+
+
+    @Override
+    public void doModifyAudioCourse(String cspUserId) {
+        // 查询用户发布的会议 并加锁（发布最早的3个会议不需要加锁）
+        List<AudioCourse> audioCourseList = audioCourseDAO.findAudioCourseList(cspUserId);
+        if (!CheckUtils.isEmpty(audioCourseList)) {
+            for (int i = 3; i < audioCourseList.size() ; i++) {
+                AudioCourse course = audioCourseList.get(i);
+                course.setLocked(true);
+                audioCourseDAO.updateByPrimaryKey(course);
+            }
+        }
+    }
 }

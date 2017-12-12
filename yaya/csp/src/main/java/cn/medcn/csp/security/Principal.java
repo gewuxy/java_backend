@@ -1,5 +1,6 @@
 package cn.medcn.csp.security;
 
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 
 import java.io.Serializable;
@@ -25,6 +26,8 @@ public class Principal implements Serializable{
 
     //套餐id
     protected Integer packageId;
+
+    protected CspPackage cspPackage;
 
     // 过期提醒
     protected String expireRemind;
@@ -95,6 +98,14 @@ public class Principal implements Serializable{
 
     public String getExpireRemind() {
         return expireRemind;
+    }
+
+    public CspPackage getCspPackage() {
+        return cspPackage;
+    }
+
+    public void setCspPackage(CspPackage cspPackage) {
+        this.cspPackage = cspPackage;
     }
 
     public static Principal build(CspUserInfo userInfo){

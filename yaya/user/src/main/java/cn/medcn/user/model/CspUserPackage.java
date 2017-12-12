@@ -32,4 +32,5 @@ public class CspUserPackage implements Serializable {
     // 套餐更新来源 0:购买 1:后台修改
     protected Integer sourceType;
 
+
 }

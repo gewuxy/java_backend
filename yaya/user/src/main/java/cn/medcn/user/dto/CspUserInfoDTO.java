@@ -6,7 +6,6 @@ import cn.medcn.user.model.CspUserInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -85,6 +84,7 @@ public class CspUserInfoDTO  {
         } else {
             dto.setFlux(userInfo.getFlux());
         }
+
         return dto;
     }
 
