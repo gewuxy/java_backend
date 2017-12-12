@@ -3,13 +3,12 @@
 <mapper namespace="cn.medcn.user.dao.CspPackageDAO" >
 
     <select id="findUserPackageById" resultType="cn.medcn.user.model.CspPackage">
-        SELECT p.id,p.package_cn,p.package_tw,p.package_us,p.limit_time,p.limit_meets,count(c.id) as usedMeetCount,
-               up.package_start, up.package_end
+        SELECT p.id,p.package_cn,p.package_tw,p.package_us,p.limit_time,p.limit_meets,up.package_start, up.package_end,
+               ( SELECT count(c.id) from t_audio_course c WHERE c.csp_user_id=#{userId}
+				 and c.source_type = 1 and c.deleted != 1 AND c.locked != 1 ) as usedMeetCount
         FROM t_csp_user_package up
         LEFT JOIN t_csp_package p ON p.id = up.package_id
-        LEFT JOIN t_audio_course c on c.csp_user_id = up.user_id
-        and c.source_type = 1 and c.deleted != 1 AND c.locked != 1
-        WHERE up.user_id = #{userId} GROUP BY c.id
+        WHERE up.user_id = #{userId}
     </select>
 
 </mapper>

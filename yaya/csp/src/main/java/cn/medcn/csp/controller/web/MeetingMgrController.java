@@ -221,6 +221,7 @@ public class MeetingMgrController extends CspBaseController {
             if (!editAble) {
                 throw new SystemException(courseNonEditAbleError());
             }
+            //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
 
@@ -236,6 +237,7 @@ public class MeetingMgrController extends CspBaseController {
                 course.setTitle("");
                 course.setCreateTime(new Date());
                 course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+                course.setDeleted(false);
                 audioService.insert(course);
             }
         }

@@ -183,12 +183,16 @@ public class Constants {
 
     public static final String LOGIN_USER_ID_KEY = "csp_id";
 
-    // CSP用户缓存时长
+    // CSP用户缓存时长7天
     public static final int LOGIN_COOKIE_MAX_AGE = 7;
 
     public static final String JI_GUANG_APP_KEY = "61f4b84e5c33850ca329d67d";
 
     public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
+
+    // csp套餐过期时长还有5天时提醒
+    public static final int EXPIRE_DAYS = 5;
+
 
     /********** 合理用药 *************/
 

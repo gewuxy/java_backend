@@ -28,11 +28,16 @@ public class SpringUtils implements ApplicationContextAware {
     }
 
     public static String getMessage(String messageKey){
+        return getMessage(messageKey, null);
+    }
+
+
+    public static String getMessage(String messageKey, Object[] obj) {
         Locale locale = LocalUtils.get();
         if (locale == null) {
             locale = Locale.CHINA;
         }
-        return ctx.getMessage(messageKey, null, locale);
+        return ctx.getMessage(messageKey, obj, locale);
     }
 
 }
