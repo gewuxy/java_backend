@@ -130,11 +130,13 @@ public class CspUserController extends CspBaseController {
 
         // 缓存用户套餐id
         CspPackage cspPackage = packageService.findUserPackageById(user.getId());
-        principal.setPackageId(cspPackage.getId());
+        if (cspPackage != null) {
+            principal.setPackageId(cspPackage.getId());
 
-        // 缓存用户套餐过期信息
-        String remind = cacheExpireRemind(cspPackage);
-        principal.setExpireRemind(remind);
+            // 缓存用户套餐过期信息
+            String remind = cacheExpireRemind(cspPackage);
+            principal.setExpireRemind(remind);
+        }
 
         redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
@@ -148,15 +150,16 @@ public class CspUserController extends CspBaseController {
                     && cspPackage.getId() > CspPackage.TypeId.STANDARD.getId()) {
 
                 int diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
-                if (diffDays == 5) {
+                if (diffDays == EXPIRE_DAYS) {
                     // 还有5天到期时提醒
                     remind = local("fivedays.expire.remind");
 
                 } else if (diffDays == 0){ // 已经过期提醒
                     //  已经使用的会议数 -3 = 隐藏的会议数
                     int usedMeetCount = cspPackage.getUsedMeetCount();
-                    if (usedMeetCount > 3) {
-                        int hiddenMeetCount = usedMeetCount - 3;
+                    if (usedMeetCount > NUMBER_THREE) {
+                        // 只显示3个会议 其他的隐藏
+                        int hiddenMeetCount = usedMeetCount - NUMBER_THREE;
                         remind = local("expire.remind.info", new Object[]{hiddenMeetCount});
                     }
                 }
