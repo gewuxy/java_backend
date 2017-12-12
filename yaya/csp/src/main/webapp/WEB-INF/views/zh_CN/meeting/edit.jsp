@@ -38,9 +38,52 @@
                         <div class="upload-ppt-box">
                             <c:choose>
                                 <c:when test="${fn:length(course.details) > 0}">
-                                    <div class="upload-ppt-area upload-ppt-area-finish">
+                                    <div class="upload-ppt-area upload-ppt-area-finish logo-watermark">
                                         <img src="${fileBase}${course.details[0].imgUrl}" alt="">
+                                        <div class="logo-watermark-item watermark-position-right ">
+                                            <div class="logo-watermark-main">
+                                                <span class="logo-watermark-main-text" default-title='会讲'>${empty watermark?会讲:watermark.name}</span>
+                                                <div class="logo-watermark-edit watermark-edit-hook">
+                                                    <c:if test="${packageId == 3 || packageId == 4}">
+                                                        <div class="logo-watermark-input">
+                                                            <label for="watermark-input">
+                                                                <input type="text" name="" id="watermark-input" placeholder="输入水印">
+                                                            </label>
+                                                        </div>
+                                                    </c:if>
+                                                    <c:if test="${packageId != 1}">
+                                                        <div class="logo-watermark-edit-position">
+                                                            <div class="logo-watermark-edit-position-title">
+                                                                选择水印显示位置
+                                                            </div>
+                                                            <div class="logo-watermark-edit-position-item">
+                                                                <label for="positionTopLeft" class="watermark-radio watermark-radio-topLeft ">
+                                                                    <input type="radio" name="watermark" class="none" id="positionTopLeft" value="0" >
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                                <label for="positionTopRight" class="watermark-radio watermark-radio-topRight radio-on">
+                                                                    <input type="radio" name="watermark" class="none" id="positionTopRight" value="2" checked="true">
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                                <label for="positionBottomLeft" class="watermark-radio watermark-radio-bottomLeft">
+                                                                    <input type="radio" name="watermark" class="none" id="positionBottomLeft" value="1">
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                                <label for="positionBottomRight" class="watermark-radio watermark-radio-bottomRight">
+                                                                    <input type="radio" name="watermark" class="none" id="positionBottomRight" value="3">
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
+                                                    </c:if>
+                                                </div>
+                                                <div class="logo-watermark-border watermark-edit-hook"></div>
+                                                <div class="logo-watermark-outerBorder watermark-edit-hook"></div>
+                                            </div>
+
+                                        </div>
                                     </div>
+
                                 </c:when>
                                 <c:otherwise>
                                     <div class="upload-ppt-area">
@@ -82,6 +125,8 @@
                     <div class="col-lg-7">
                         <form action="${ctx}/mgr/meet/save" method="post" id="courseForm" name="courseForm">
                             <input type="hidden" name="course.id" value="${course.id}">
+                            <input type="hidden" name="watermark.direction" id="direction" value="2">
+                            <input type="hidden" name="watermark.state" id="state" value="1">
                             <div class="meeting-form-item login-form-item">
                                 <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="会议名称" value="${course.title}"></label>
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议名称</span>
@@ -97,7 +142,28 @@
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameCn}">
                                 </div>
-                                    <c:if test="${course != null && course.published}">
+                                <c:if test="${ not empty course.details && packageId > 1}">
+                                    <div class="cells-block meeting-watermark">
+                                        <span class="subject">水印&nbsp;&nbsp;<em class="muted">|</em>
+                                            <c:if test="${packageId == 2}">
+                                                <input type="text" class="classify-inputText expert-text" name="watermark.name" placeholder="会讲" value="会讲" disabled >
+                                            </c:if>
+                                            <c:if test="${packageId > 2}">
+                                                <input type="text" class="classify-inputText" placeholder="输入水印" name="watermark.name" value="${empty watermark ? 会讲:watermark.name}">
+                                            </c:if>
+                                            <div class="weui-cell__ft">
+                                                <label for="switchCP" class="mui-switch-box">
+                                                    <input type="checkbox" name="" id="switchCP" class="mui-switch none" checked >
+                                                    <div class="weui-switch-cp__box"></div>
+                                                </label>
+                                            </div>
+                                        </span>
+                                    </div>
+
+                                </c:if>
+
+
+                                <c:if test="${course != null && course.published}">
                                         <input type="hidden" name="course.playType" value="${course.playType}">
                                     </c:if>
                                     <div class="meeting-tab clearfix">
@@ -490,6 +556,12 @@
                 $timedate.parent().parent().next(".error").addClass("none");
             }
 
+            //设置水印的位置,状态
+            var direction = $('input:radio[name="watermark"]:checked').val();
+            $("#direction").val(direction);
+            var isCheck = $("#switchCP").is(":checked");
+            $("#state").val(isCheck ? 1 : 0);
+
             $("#courseForm").submit();
         });
 
@@ -572,6 +644,67 @@
         $(".chk-hook").change(function(){
             showLiveMessage();
         });
+
+        var watermarkItem = $('.logo-watermark-item');
+        var watermarkItemTitle = watermarkItem.find('.logo-watermark-main-text');
+        var watermarkItemEditBr = watermarkItem.find('.watermark-edit-hook');
+        var watermarkRadio = watermarkItem.find('.watermark-radio');
+        var watermarkIsShow = false;
+        var defaultTitle = "会讲"
+
+        //水印编辑区显示
+        watermarkItemTitle.on('click',function(){
+            if(watermarkIsShow == false){
+                watermarkItemEditBr.show();
+                watermarkIsShow = true;
+            } else if(watermarkIsShow == true) {
+                watermarkItemEditBr.hide();
+                watermarkIsShow = false;
+            }
+        });
+        //水印位置
+        watermarkRadio.off('click').on('click',function(){
+            if($(this).hasClass('watermark-radio-topLeft')){
+                $(this).parents('.logo-watermark-item').addClass('watermark-position-left').removeClass('watermark-position-right watermark-position-right-bottom watermark-position-left-bottom');
+            } else if ($(this).hasClass('watermark-radio-topRight')) {
+                $(this).parents('.logo-watermark-item').addClass('watermark-position-right').removeClass('watermark-position-left watermark-position-right-bottom watermark-position-left-bottom');
+            } else if ($(this).hasClass('watermark-radio-bottomLeft')) {
+                $(this).parents('.logo-watermark-item').addClass('watermark-position-left-bottom').removeClass('watermark-position-right watermark-position-left watermark-position-right-bottom');
+            } else if ($(this).hasClass('watermark-radio-bottomRight')) {
+                $(this).parents('.logo-watermark-item').addClass('watermark-position-right-bottom').removeClass('watermark-position-right watermark-position-left watermark-position-left-bottom');
+            }
+            $(this).addClass('radio-on').siblings().removeClass('radio-on');
+        });
+
+        //水印里的输入框
+        $('.logo-watermark-input').find('input').on('change',function(){
+            if($(this).val() == "" || $(this).val() == null) {
+                watermarkItemTitle.text(defaultTitle);
+                $('.classify-inputText').val("");
+            } else {
+                watermarkItemTitle.text($(this).val());
+                $('.classify-inputText').val($(this).val());
+            }
+        });
+
+        //表单的输入框
+        $('.classify-inputText').on('change',function(){
+            if($(this).val() == "" || $(this).val() == null) {
+                watermarkItemTitle.text(defaultTitle);
+                $('.logo-watermark-input').find('input').val("");
+            } else {
+                watermarkItemTitle.text($(this).val());
+                $('.logo-watermark-input').find('input').val($(this).val());
+            }
+        });
+        $('.mui-switch').on('click',function(){
+            if($(this).is(':checked')){
+                $('.logo-watermark-item').show();
+            } else {
+                $('.logo-watermark-item').hide();
+            }
+        });
+
 
 
     });

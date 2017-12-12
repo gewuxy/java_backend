@@ -24,13 +24,13 @@ public class CspPackage implements Serializable {
     // 套餐版本 中文
     protected String packageCn;
     // 套餐版本 繁体
-    protected String packageTW;
+    protected String packageTw;
     // 套餐版本 英文
     protected String packageUs;
     // 月费 单位：人民币
     protected float monthRmb;
     // 月费 单位：美元
-    protected float moneyUsd;
+    protected float monthUsd;
     // 年费 单位：人民币
     protected float yearRmb;
     // 年费 单位：美元

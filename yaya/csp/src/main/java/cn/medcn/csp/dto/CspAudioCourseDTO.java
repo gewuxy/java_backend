@@ -2,6 +2,7 @@ package cn.medcn.csp.dto;
 
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.Live;
+import cn.medcn.meet.model.MeetWatermark;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,5 +18,9 @@ public class CspAudioCourseDTO implements Serializable {
     protected AudioCourse course;
 
     protected Live live;
+
+    protected MeetWatermark watermark;
+
+
 
 }
