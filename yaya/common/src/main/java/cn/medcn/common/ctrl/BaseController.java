@@ -39,6 +39,15 @@ public class BaseController {
         return SpringUtils.getMessage(key);
     }
 
+    /**
+     * 获取国际化信息
+     * @param key
+     * @return
+     */
+    public String local(String key, Object[] obj){
+        return SpringUtils.getMessage(key, obj);
+    }
+
 
     protected boolean isAbroad(){
         return LocalUtils.isAbroad();
