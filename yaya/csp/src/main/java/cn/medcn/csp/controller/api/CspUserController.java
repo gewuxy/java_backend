@@ -133,7 +133,8 @@ public class CspUserController extends CspBaseController {
         principal.setPackageId(cspPackage.getId());
 
         // 缓存用户套餐过期信息
-        cacheExpireRemind(cspPackage);
+        String remind = cacheExpireRemind(cspPackage);
+        principal.setExpireRemind(remind);
 
         redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
@@ -650,9 +651,10 @@ public class CspUserController extends CspBaseController {
         CspPackage cspPackage = packageService.findUserPackageById(userId);
         if (cspPackage != null) {
             dto.setCspPackage(cspPackage);
+            // 过期提醒信息
+            String expire = cacheExpireRemind(cspPackage);
+            dto.setExpireRemind(expire);
         }
-
-        // 过期提醒信息
 
 
         return success(dto);
