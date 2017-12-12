@@ -51,6 +51,13 @@
       enctype="multipart/form-data">
     <input type="hidden" name="userId" value="${page.userId}">
     <div class="control-group">
+        <label class="control-label">banner标题:</label>
+        <div class="controls">
+            <input type="search" name="title"  id="title" maxlength="50" class="required input-large" value="${banner.title}" >
+        </div>
+    </div>
+
+    <div class="control-group">
         <label class="control-label">上传图片:</label>
         <div class="controls">
             <input type="file" name="file" id="uploadFile" style="display:none" multiple="multiple"

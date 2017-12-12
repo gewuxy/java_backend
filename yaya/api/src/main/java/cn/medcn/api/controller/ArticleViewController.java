@@ -9,7 +9,9 @@ import cn.medcn.data.service.DataFileService;
 import cn.medcn.meet.dto.MeetInfoDTO;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.model.Advert;
+import cn.medcn.user.model.Banner;
 import cn.medcn.user.service.AdvertService;
+import cn.medcn.user.service.BannerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -35,11 +37,14 @@ public class ArticleViewController extends BaseController {
     @Autowired
     protected AdvertService advertService;
 
+    @Autowired
+    protected BannerService bannerService;
+
 
 
     @RequestMapping(value="/banner/{id}")
     public String view(@PathVariable String id, Model model){
-        Article article = articleService.selectByPrimaryKey(id);
+        Banner article = bannerService.selectByPrimaryKey(id);
         model.addAttribute("banner", article);
         return "/banner/view";
     }

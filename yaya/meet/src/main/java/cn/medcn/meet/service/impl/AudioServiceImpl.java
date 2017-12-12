@@ -925,6 +925,30 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
          }
     }
 
+    @Override
+    public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark) {
+
+        //查找是否有水印记录
+        MeetWatermark watermark = new MeetWatermark();
+        watermark.setCourseId(ac.getId());
+        watermark = watermarkDAO.selectOne(watermark);
+        if(watermark != null){ //更新水印
+            watermark.setDirection(newWatermark.getDirection());
+            watermark.setName(newWatermark.getName());
+            watermark.setState(newWatermark.getState());
+            watermarkDAO.updateByPrimaryKey(watermark);
+        }else{ //生成水印
+            newWatermark.setCourseId(ac.getId());
+            watermarkDAO.insert(newWatermark);
+        }
+
+        if (ac.getPlayType() != null && ac.getPlayType().intValue() > 0) {// 直播的情况下
+            updateAudioCourseInfo(ac, live);
+        } else {
+            updateAudioCourseInfo(ac, new AudioCoursePlay());
+        }
+    }
+
 
     protected void doCopyDetails(List<AudioCourseDetail> details, Integer courseId){
         for (AudioCourseDetail detail : details) {

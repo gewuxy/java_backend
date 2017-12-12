@@ -8,4 +8,6 @@ import cn.medcn.user.model.CspUserPackage;
  */
 
 public interface CspUserPackageService extends BaseService<CspUserPackage> {
+
+    Boolean isNewUser(String UserId);
 }

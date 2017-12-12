@@ -93,7 +93,7 @@ public class CspRealm extends AuthorizingRealm {
 
         Principal principal = Principal.build(cspUser);
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(cspUser.getId());
-        principal.setPackageId(cspUserPackage.getPackageId());
+        principal.setPackageId(cspUserPackage == null? null:cspUserPackage.getPackageId());
 
         if (CheckUtils.isEmpty(principal.getAvatar())) {
             principal.setAvatar(fileBase + FilePath.PORTRAIT.path + "/admin-userImg.png");

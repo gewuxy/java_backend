@@ -303,4 +303,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param newCourseId
      */
     void doCopyWatermark(Integer oldCourseId,Integer newCourseId);
+
+
+    void updateInfo(AudioCourse audioCourse,Live live ,MeetWatermark newWatermark);
 }

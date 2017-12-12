@@ -21,6 +21,8 @@ public class Banner {
     @Id
     private String id;
 
+    private String title;
+
     //图片地址
     private String imageUrl;
 
