@@ -25,6 +25,9 @@
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
 
+    <script src="${ctxStatic}/phone/js/pinchzoom.min.js"></script>
+    <script src="${ctxStatic}/phone/js/weui.min.js"></script>
+
     <!-- 高清方案 -->
     <script>!function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);  flex(100, 1);</script>
     <style>
@@ -38,7 +41,14 @@
 <body>
 <div class="warp">
 
-    <div class="CSPMeeting-gallery details-gallery " >
+    <div class="CSPMeeting-gallery details-gallery <c:if test="${watermark != null}">
+        <c:choose>
+            <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
+            <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
+            <c:when test="${watermark.direction == 2}">logo-watermark-position-top-right</c:when>
+            <c:when test="${watermark.direction == 3}">logo-watermark-position-bottom-right</c:when>
+        </c:choose>
+    </c:if>" >
         <!-- Swiper -->
         <div class="swiper-container gallery-top video-countDown ">
             <!--根据ID 切换 PPT列表-->
@@ -47,10 +57,12 @@
                     <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.temp ? '':detail.audioUrl}" istemp="${detail.temp && status.index == 0 ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
-                                <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
+                                <div class="swiper-zoom-container pinch-zoom" style="height:100%;">
+                                    <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
+                                </div>
                             </c:when>
                             <c:otherwise>
-                                <video src="${detail.videoUrl}"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video>
+                                <video src="${detail.videoUrl}"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div>
                             </c:otherwise>
                         </c:choose>
 
@@ -76,6 +88,11 @@
                 <div class="swiper-pagination"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                 <span class="swiper-button-next "></span>
             </div>
+
+            <!--水印位置-->
+            <div class="logo-watermark ">
+                <div class="logo-watermark-item">${watermark.name}</div>
+            </div>
         </div>
 
         <!--buttonBottom-->
@@ -91,6 +108,9 @@
                 </div>
                 <div class="flex-item">
                     <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
+                </div>
+                <div class="flex-item">
+                    <div class="button button-icon-report report-popup-button-hook"><i></i></div>
                 </div>
                 <div class="flex-item">
                     <div class="button button-icon-onFull changeFull-hook"><i></i></div>
@@ -109,7 +129,25 @@
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
 
-
+    <!--引导下载-->
+    <div class="CSPmeeting-ad-item">
+        <a href="https://www.cspmeeting.com/scan/qrcode?local=zh_CN">
+            <div class="flex">
+                <div class="flex-item">
+                    <div class="fl">
+                        <img src="${ctxStatic}/images/meeting-ad-logo.png" alt="">
+                    </div>
+                    <div class="oh">
+                        <div class="logo-title">会讲</div>
+                        <p>全球公测中</p>
+                    </div>
+                </div>
+                <div class="flex-item">
+                    <span class="ad-button">Join</span>
+                </div>
+            </div>
+        </a>
+    </div>
 
 </div>
 
@@ -205,7 +243,7 @@
                         if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
                             $currentPage.find("video").attr("src", data.videoUrl);
                         } else {
-                            $currentPage.find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                            $currentPage.find("div").find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
                         }
                         $currentPage.attr("istemp", "0");
                     } else {
@@ -213,9 +251,9 @@
                         $(".icon-added").show();
                         $("#newLivePage").text("P " + totalPages);
 
-                        var newSlide = '<div class="swiper-slide" data-num="'+totalPages+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                        var newSlide = '<div class="swiper-slide" data-num="'+totalPages+'" audio-src=""><div class="swiper-zoom-container pinch-zoom" style="height:100%;"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div></div>';
                         if (data.videoUrl){
-                            newSlide = '<div class="swiper-slide" data-num="'+totalPages+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                            newSlide = '<div class="swiper-slide" data-num="'+totalPages+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div></div>';
                         }
 
                         galleryTop.appendSlide(newSlide);
@@ -287,6 +325,7 @@
         $("#audioPlayer")[0].addEventListener("error", function(){
             console.log("load audio source error ...");
             isVideo = $('.swiper-slide-active').find('video');
+            clearTimeout(slideTimer);
             if (playing){
                 if (isVideo.length == 0){
                     slideToNext();
@@ -615,6 +654,62 @@
             changeTrack();
         });
 
+
+        function report(type){
+            $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
+                layer.msg('Report successfully');
+            },'json');
+        }
+
+        //举报按钮
+        $('.report-popup-button-hook').on('click',function(){
+            weui.actionSheet([
+                {
+                    label: 'Pornography',
+                    onClick: function () {
+                        report(0);
+                        //layer.msg('举报成功');
+                    }
+                }, {
+                    label: 'Crime',
+                    onClick: function () {
+                        report(1);
+                        //layer.msg('举报成功');
+                    }
+                }, {
+                    label: 'Infringement',
+                    onClick: function () {
+                        report(2);
+                        //layer.msg('举报成功');
+                    }
+                }
+            ], [
+                {
+                    label: 'Cancel',
+                    onClick: function () {
+                        console.log('取消');
+                    }
+                }
+            ], {
+                className: 'custom-classname',
+                onClose: function(){
+                    console.log('关闭');
+                }
+            });
+        });
+
+        //触发图片放大缩小
+        $('div.pinch-zoom').each(function () {
+            new RTP.PinchZoom($(this), {});
+        });
+
+        //手机端 点击任何一个地方  自动播放音频
+        $('.isIphoneSafari').on('touchstart',function(){
+            $(this).hide();
+            activeItemIsVideo.get(0).load();
+            activeItemIsVideo.get(0).play();
+
+        });
 
 
     });

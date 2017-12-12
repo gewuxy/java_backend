@@ -3,13 +3,16 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.dto.AddressDTO;
+import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.service.EmailService;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
 import cn.medcn.csp.security.Principal;
@@ -20,6 +23,11 @@ import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
+import cn.medcn.meet.service.MeetWatermarkService;
+import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.EmailTemplate;
+import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -32,6 +40,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
@@ -67,6 +76,19 @@ public class MeetingController extends CspBaseController {
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Autowired
+    protected EmailTempService emailTempService;
+
+    @Autowired
+    protected MeetWatermarkService meetWatermarkService;
+
+    @Autowired
+    protected EmailService cspEmailService;
+
+    @Autowired
+    protected CspUserService cspUserService;
+
 
     /**
      * 会议阅览
@@ -112,12 +134,12 @@ public class MeetingController extends CspBaseController {
             boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
             //boolean isAbroad = false;
             AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
-            LocalUtils.set(address.isAbroad() ? Locale.US : Locale.SIMPLIFIED_CHINESE);
-            LocalUtils.setLocalStr(address.isAbroad() ? LocalUtils.Local.zh_CN.name() : LocalUtils.Local.en_US.name());
+//            LocalUtils.set(address.isAbroad() ? Locale.US : Locale.SIMPLIFIED_CHINESE);
+//            LocalUtils.setLocalStr(address.isAbroad() ? LocalUtils.Local.zh_CN.name() : LocalUtils.Local.en_US.name());
             linkError = local("share.link.error");
             abroadError = local("share.aboard.error");
 
-            if (address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
+            if (address != null && address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
                 model.addAttribute("error", abroadError);
                 return localeView("/meeting/share_error");
             }
@@ -146,6 +168,10 @@ public class MeetingController extends CspBaseController {
             audioService.handleHttpUrl(fileBase, course);
             model.addAttribute("course", course);
 
+            //设置会议水印
+            MeetWatermark watermark = meetWatermarkService.findWatermarkByCourseId(courseId);
+            model.addAttribute("watermark", watermark);
+
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
                 course.setDetails(audioService.findLiveDetails(courseId));
 
@@ -159,8 +185,9 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
                 Date now = new Date();
 
-                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal() || live.getEndTime().before(now)) {//直播已结束进入到录播模式
-                    return localeView("/meeting/course_" + AudioCourse.PlayType.normal.getType());
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal() || live.getEndTime().before(now)) {
+                    model.addAttribute("error", local("share.live.over"));
+                    return localeView("/meeting/share_error");
                 } else if (live.getStartTime().after(now)){//直播未开始
                     model.addAttribute("error", local("share.live.not_start.error"));
                     return localeView("/meeting/share_error");
@@ -928,6 +955,49 @@ public class MeetingController extends CspBaseController {
         }
 
         return success(result);
+    }
+
+
+    @RequestMapping(value = "/report")
+    @ResponseBody
+    public String report(Integer type, Integer courseId, String shareUrl){
+        EmailTemplate template = emailTempService.selectByPrimaryKey(EmailTempService.REPORT_TEMPLATE_ID);
+
+        if (template != null) {
+            MailBean mailBean = new MailBean();
+            mailBean.setSubject(template.getSubject());
+            mailBean.setToEmails(new String[]{cspEmailService.getEmailUserName()});
+            //mailBean.setToEmails(new String[]{"584479243@qq.com"});
+            mailBean.setFrom(cspEmailService.getEmailUserName());
+            mailBean.setFromName(template.getSender());
+
+            String content = template.getContent();
+            content = handleReportContent(content, courseId, shareUrl, type);
+            mailBean.setContext(content);
+
+            cspEmailService.send(mailBean);
+        }
+
+        return success();
+    }
+
+
+    protected String handleReportContent(String content, Integer courseId, String shareUrl, int reportType){
+        if (content != null) {
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            if (course != null) {
+                CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(course.getCspUserId() == null ? "" : course.getCspUserId());
+
+                content = content.replaceAll("@title", course.getTitle());
+                content = content.replaceAll("@link", shareUrl);
+                content = content.replaceAll("@report_type", ReportType.values()[reportType].label);
+                content = content.replaceAll("@user_name", cspUserInfo == null ? "未知" : cspUserInfo.getNickName());
+                content = content.replaceAll("@user_id", cspUserInfo == null ? "未知" : cspUserInfo.getId());
+                content = content.replaceAll("@Date", new SimpleDateFormat("yyyy/MM/dd HH:mm").format(new Date()));
+            }
+        }
+
+        return content;
     }
 
 }

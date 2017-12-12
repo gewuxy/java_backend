@@ -309,7 +309,7 @@
         function getShareUrl(){
             var shareUrl = '';
 
-            ajaxGet('${ctx}/mgr/meet/share/'+courseId, {}, function(data){
+            ajaxSyncGet('${ctx}/mgr/meet/share/'+courseId, {}, function(data){
                 shareUrl = data.data.shareUrl;
             });
 

@@ -27,6 +27,10 @@
 
     <script src="${ctxStatic}/phone/js/ckplayer.js"></script>
 
+
+    <script src="${ctxStatic}/phone/js/pinchzoom.min.js"></script>
+    <script src="${ctxStatic}/phone/js/weui.min.js"></script>
+
     <!-- 高清方案 -->
     <script>!function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);  flex(100, 1);</script>
     <style>
@@ -40,18 +44,27 @@
 <body>
 <div class="warp">
 
-    <div class="CSPMeeting-gallery CSPMeeting-gallery-live video-countDown" id="CSPMeeting-gallery-live">
+    <div class="CSPMeeting-gallery CSPMeeting-gallery-live video-countDown " id="CSPMeeting-gallery-live">
         <!-- Swiper -->
-        <div class="swiper-container gallery-top popup-volume">
+        <div class="swiper-container gallery-top popup-volume <c:if test="${watermark != null}">
+        <c:choose>
+            <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
+            <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
+            <c:when test="${watermark.direction == 2}">logo-watermark-position-top-right</c:when>
+            <c:when test="${watermark.direction == 3}">logo-watermark-position-bottom-right</c:when>
+        </c:choose>
+    </c:if>">
             <div class="swiper-wrapper" >
                 <c:forEach items="${course.details}" var="detail" varStatus="status">
                     <div class="swiper-slide" data-num="${status.index + 1}" audio-src="${detail.audioUrl}" istemp="${detail.temp && status.index == 0 ? 1 : 0}">
                         <c:choose>
                             <c:when test="${empty detail.videoUrl}">
-                                <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
+                                <div class="swiper-zoom-container pinch-zoom" style="height:100%;">
+                                    <div class="swiper-picture" style=" background-image:url('${detail.imgUrl}')"></div>
+                                </div>
                             </c:when>
                             <c:otherwise>
-                                <video src="${detail.videoUrl}"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video>
+                                <video src="${detail.videoUrl}"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div>
                             </c:otherwise>
                         </c:choose>
 
@@ -76,6 +89,11 @@
                 <span class="swiper-button-prev swiper-button-disabled"></span>
                 <div class="swiper-pagination"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                 <span class="swiper-button-next "></span>
+            </div>
+
+            <!--水印位置-->
+            <div class="logo-watermark ">
+                <div class="logo-watermark-item">${watermark.name}</div>
             </div>
 
         </div>
@@ -126,6 +144,9 @@
                     <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
                 </div>
                 <div class="flex-item">
+                    <div class="button button-icon-report report-popup-button-hook"><i></i></div>
+                </div>
+                <div class="flex-item">
                     <div class="button button-icon-onFull changeFull-hook"><i></i></div>
                 </div>
 
@@ -143,15 +164,12 @@
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
 
-
-
-
 </div>
 
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>Info</h3></div>
+        <div class="title"><h3>简介</h3></div>
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
@@ -636,14 +654,14 @@
                             lastPage.find("video").attr("src", data.videoUrl);
                         } else {
                             console.log("current img url = " + data.imgUrl);
-                            lastPage.find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                            lastPage.find("div").find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
                         }
                         lastPage.attr("istemp", "0");
                     } else {
                         totalPages ++;
-                        var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div>';
+                        var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-zoom-container pinch-zoom" style="height:100%;"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div></div>';
                         if (data.videoUrl != undefined && data.videoUrl != ''){
-                            newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video></div>';
+                            newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div></div>';
                         }
 
                         galleryTop.appendSlide(newSlide);
@@ -662,6 +680,63 @@
 
             return ws;
         }
+
+
+        function report(type){
+            $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
+                layer.msg('举报成功');
+            },'json');
+        }
+
+        //举报按钮
+        $('.report-popup-button-hook').on('click',function(){
+            weui.actionSheet([
+                {
+                    label: '色情',
+                    onClick: function () {
+                        report(0);
+                        //layer.msg('举报成功');
+                    }
+                }, {
+                    label: '违法犯罪',
+                    onClick: function () {
+                        report(1);
+                        //layer.msg('举报成功');
+                    }
+                }, {
+                    label: '侵权',
+                    onClick: function () {
+                        report(2);
+                        //layer.msg('举报成功');
+                    }
+                }
+            ], [
+                {
+                    label: '取消',
+                    onClick: function () {
+                        console.log('取消');
+                    }
+                }
+            ], {
+                className: 'custom-classname',
+                onClose: function(){
+                    console.log('关闭');
+                }
+            });
+        });
+
+        //触发图片放大缩小
+        $('div.pinch-zoom').each(function () {
+            new RTP.PinchZoom($(this), {});
+        });
+
+        //手机端 点击任何一个地方  自动播放音频
+        $('.isIphoneSafari').on('touchstart',function(){
+            $(this).hide();
+            activeItemIsVideo.get(0).load();
+            activeItemIsVideo.get(0).play();
+
+        });
 
     });
 
