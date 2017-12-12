@@ -895,6 +895,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         copyCourse.setPrimitiveId(courseId);
         copyCourse.setCreateTime(new Date());
         copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
+        copyCourse.setDeleted(false);
         audioCourseDAO.insert(copyCourse);
 
         //生成明细
@@ -927,7 +928,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Override
     public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark) {
-
         //查找是否有水印记录
         MeetWatermark watermark = new MeetWatermark();
         watermark.setCourseId(ac.getId());
