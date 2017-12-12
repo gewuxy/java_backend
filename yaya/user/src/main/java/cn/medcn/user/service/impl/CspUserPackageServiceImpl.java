@@ -20,4 +20,17 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     public Mapper<CspUserPackage> getBaseMapper() {
         return userPackageDAO;
     }
+
+    /**
+     * 判断是否有用户套餐信息
+     * @param userId
+     * @return
+     */
+    @Override
+    public Boolean isNewUser(String userId) {
+        CspUserPackage info = new CspUserPackage();
+        info.setUserId(userId);
+        Integer count = userPackageDAO.selectCount(info);
+        return count > 0 ? false:true;
+    }
 }

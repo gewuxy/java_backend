@@ -1,6 +1,7 @@
 package cn.medcn.user.dto;
 
 import cn.medcn.user.model.BindInfo;
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -58,6 +59,12 @@ public class CspUserInfoDTO  {
     protected int pptCount;
     //分享的ppt数量
     protected int shareCount;
+
+    // 用户套餐信息
+    protected CspPackage cspPackage;
+
+    // 过期提醒
+    protected String expireRemind;
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
         CspUserInfoDTO dto = new CspUserInfoDTO();

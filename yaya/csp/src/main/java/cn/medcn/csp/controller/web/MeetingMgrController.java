@@ -24,6 +24,7 @@ import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -84,6 +85,9 @@ public class MeetingMgrController extends CspBaseController {
     @Autowired
     protected MeetWatermarkService watermarkService;
 
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
+
 
 
     /**
@@ -125,7 +129,7 @@ public class MeetingMgrController extends CspBaseController {
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
-
+        model.addAttribute("isNewUser",cspUserPackageService.isNewUser(getWebPrincipal().getId()));
         return localeView("/meeting/list");
     }
 
