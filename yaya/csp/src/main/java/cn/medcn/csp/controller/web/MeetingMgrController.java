@@ -221,6 +221,7 @@ public class MeetingMgrController extends CspBaseController {
             if (!editAble) {
                 throw new SystemException(courseNonEditAbleError());
             }
+            //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
 
@@ -236,6 +237,7 @@ public class MeetingMgrController extends CspBaseController {
                 course.setTitle("");
                 course.setCreateTime(new Date());
                 course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+                course.setLocked(false);
                 audioService.insert(course);
             }
         }
@@ -499,7 +501,8 @@ public class MeetingMgrController extends CspBaseController {
             }
         }
         //更新操作，包括更新或生成水印
-        audioService.updateInfo(ac,course.getLive() ,newWatermark);
+        Integer packageId = getWebPrincipal().getPackageId();
+        audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
 
         addFlashMessage(redirectAttributes, local("operate.success"));
         return "redirect:/mgr/meet/list";

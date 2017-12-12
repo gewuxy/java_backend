@@ -250,6 +250,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setPlayType(course.getPlayType());
         reprintCourse.setCspUserId(course.getCspUserId());
         reprintCourse.setInfo(course.getInfo());
+        reprintCourse.setLocked(false);
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
         doCopyDetails(details, reprintCourse.getId());
@@ -672,6 +673,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         }
         audioCourse.setDeleted(false);
         audioCourse.setPublished(true);
+        audioCourse.setLocked(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -699,6 +701,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourse.setDeleted(false);
         audioCourse.setPlayType(AudioCourse.PlayType.normal.getType());
         audioCourse.setPublished(true);
+        audioCourse.setLocked(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -895,6 +898,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         copyCourse.setPrimitiveId(courseId);
         copyCourse.setCreateTime(new Date());
         copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
+        copyCourse.setLocked(false);
         audioCourseDAO.insert(copyCourse);
 
         //生成明细
@@ -926,19 +930,29 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
     @Override
-    public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark) {
-
+    public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark,Integer packageId) {
         //查找是否有水印记录
         MeetWatermark watermark = new MeetWatermark();
         watermark.setCourseId(ac.getId());
         watermark = watermarkDAO.selectOne(watermark);
         if(watermark != null){ //更新水印
-            watermark.setDirection(newWatermark.getDirection());
-            watermark.setName(newWatermark.getName());
-            watermark.setState(newWatermark.getState());
+            if(packageId != 1){  //标准版不能更新水印
+                watermark.setDirection(newWatermark.getDirection());
+                watermark.setState(newWatermark.getState());
+                if(packageId > 2){ //专业版才可以更新名称
+                    watermark.setName(newWatermark.getName());
+                }
+            }
             watermarkDAO.updateByPrimaryKey(watermark);
         }else{ //生成水印
             newWatermark.setCourseId(ac.getId());
+            if(packageId < 3){  //用默认的水印名称
+                newWatermark.setName(local("meet.default.watermark"));
+            }
+            if(packageId == 1){  //防止前台传假数据，使用默认的数据
+                newWatermark.setState(true);
+                newWatermark.setDirection(MeetWatermark.Direction.RIGHT_TOP.ordinal());
+            }
             watermarkDAO.insert(newWatermark);
         }
 

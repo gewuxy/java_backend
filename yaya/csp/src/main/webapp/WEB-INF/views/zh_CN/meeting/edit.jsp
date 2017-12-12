@@ -40,43 +40,53 @@
                                 <c:when test="${fn:length(course.details) > 0}">
                                     <div class="upload-ppt-area upload-ppt-area-finish logo-watermark">
                                         <img src="${fileBase}${course.details[0].imgUrl}" alt="">
-                                        <div class="logo-watermark-item watermark-position-right ">
+                                        <div <c:if test="${empty watermark || watermark.direction == 2}" >class="logo-watermark-item watermark-position-right "</c:if>
+                                             <c:if test="${watermark.direction == 0}" >class="logo-watermark-item watermark-position-left "</c:if>
+                                             <c:if test="${watermark.direction == 1}" >class="logo-watermark-item watermark-position-left-bottom "</c:if>
+                                             <c:if test="${watermark.direction == 3}" >class="logo-watermark-item watermark-position-right-bottom "</c:if>
+                                        >
                                             <div class="logo-watermark-main">
-                                                <span class="logo-watermark-main-text" default-title='会讲'>${empty watermark?会讲:watermark.name}</span>
-                                                <div class="logo-watermark-edit watermark-edit-hook">
-                                                    <c:if test="${packageId == 3 || packageId == 4}">
-                                                        <div class="logo-watermark-input">
-                                                            <label for="watermark-input">
-                                                                <input type="text" name="" id="watermark-input" placeholder="输入水印">
-                                                            </label>
-                                                        </div>
-                                                    </c:if>
-                                                    <c:if test="${packageId != 1}">
-                                                        <div class="logo-watermark-edit-position">
-                                                            <div class="logo-watermark-edit-position-title">
-                                                                选择水印显示位置
-                                                            </div>
-                                                            <div class="logo-watermark-edit-position-item">
-                                                                <label for="positionTopLeft" class="watermark-radio watermark-radio-topLeft ">
-                                                                    <input type="radio" name="watermark" class="none" id="positionTopLeft" value="0" >
-                                                                    <span class="icon"></span>
-                                                                </label>
-                                                                <label for="positionTopRight" class="watermark-radio watermark-radio-topRight radio-on">
-                                                                    <input type="radio" name="watermark" class="none" id="positionTopRight" value="2" checked="true">
-                                                                    <span class="icon"></span>
-                                                                </label>
-                                                                <label for="positionBottomLeft" class="watermark-radio watermark-radio-bottomLeft">
-                                                                    <input type="radio" name="watermark" class="none" id="positionBottomLeft" value="1">
-                                                                    <span class="icon"></span>
-                                                                </label>
-                                                                <label for="positionBottomRight" class="watermark-radio watermark-radio-bottomRight">
-                                                                    <input type="radio" name="watermark" class="none" id="positionBottomRight" value="3">
-                                                                    <span class="icon"></span>
+                                                <c:if test="${packageId == 1}">
+                                                    <span class="logo-watermark-main-text logo-watermark-tips-hook" default-title='会讲'>${empty watermark?"会讲":empty watermark.name?"会讲":watermark.name}</span>
+                                                    <div class="logo-watermark-tips watermark-tips-hook">升级版本，可关闭/自定义水印</div>
+                                                    <div class="logo-watermark-tips-border watermark-tips-hook"></div>
+                                                </c:if>
+                                                <c:if test="${packageId != 1}">
+                                                    <span class="logo-watermark-main-text" default-title='会讲'>${empty watermark?"会讲":empty watermark.name?"会讲":watermark.name}</span>
+                                                    <div class="logo-watermark-edit watermark-edit-hook">
+                                                        <c:if test="${packageId == 3 || packageId == 4}">
+                                                            <div class="logo-watermark-input">
+                                                                <label for="watermark-input">
+                                                                    <input type="text" name="" id="watermark-input" placeholder="输入水印" maxlength="18">
                                                                 </label>
                                                             </div>
-                                                        </div>
-                                                    </c:if>
-                                                </div>
+                                                        </c:if>
+                                                            <div class="logo-watermark-edit-position">
+                                                                <div class="logo-watermark-edit-position-title">
+                                                                    选择水印显示位置
+                                                                </div>
+                                                                <div class="logo-watermark-edit-position-item">
+                                                                    <label for="positionTopLeft" class="watermark-radio watermark-radio-topLeft ">
+                                                                        <input type="radio" name="watermark" class="none" id="positionTopLeft" value="0" >
+                                                                        <span class="icon"></span>
+                                                                    </label>
+                                                                    <label for="positionTopRight" class="watermark-radio watermark-radio-topRight">
+                                                                        <input type="radio" name="watermark" class="none" id="positionTopRight" value="2">
+                                                                        <span class="icon"></span>
+                                                                    </label>
+                                                                    <label for="positionBottomLeft" class="watermark-radio watermark-radio-bottomLeft">
+                                                                        <input type="radio" name="watermark" class="none" id="positionBottomLeft" value="1">
+                                                                        <span class="icon"></span>
+                                                                    </label>
+                                                                    <label for="positionBottomRight" class="watermark-radio watermark-radio-bottomRight">
+                                                                        <input type="radio" name="watermark" class="none" id="positionBottomRight" value="3">
+                                                                        <span class="icon"></span>
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </c:if>
+
                                                 <div class="logo-watermark-border watermark-edit-hook"></div>
                                                 <div class="logo-watermark-outerBorder watermark-edit-hook"></div>
                                             </div>
@@ -127,6 +137,7 @@
                             <input type="hidden" name="course.id" value="${course.id}">
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
+                            <input type="hidden" name="watermark.name" id="name" value="会讲">
                             <div class="meeting-form-item login-form-item">
                                 <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="会议名称" value="${course.title}"></label>
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议名称</span>
@@ -146,14 +157,14 @@
                                     <div class="cells-block meeting-watermark">
                                         <span class="subject">水印&nbsp;&nbsp;<em class="muted">|</em>
                                             <c:if test="${packageId == 2}">
-                                                <input type="text" class="classify-inputText expert-text" name="watermark.name" placeholder="会讲" value="会讲" disabled >
+                                                <input type="text" class="classify-inputText expert-text"  placeholder="会讲" id="waterName" value="${empty watermark ? "会讲":empty watermark.name ?"会讲":watermark.name}" disabled >
                                             </c:if>
                                             <c:if test="${packageId > 2}">
-                                                <input type="text" class="classify-inputText" placeholder="输入水印" name="watermark.name" value="${empty watermark ? 会讲:watermark.name}">
+                                                <input type="text" class="classify-inputText" placeholder="输入水印" id="waterName"  value="${empty watermark ? "会讲":watermark.name}" maxlength="18">
                                             </c:if>
                                             <div class="weui-cell__ft">
                                                 <label for="switchCP" class="mui-switch-box">
-                                                    <input type="checkbox" name="" id="switchCP" class="mui-switch none" checked >
+                                                    <input type="checkbox" name="" id="switchCP"  class="mui-switch none" <c:if test="${empty watermark || watermark.state == true}">checked</c:if> >
                                                     <div class="weui-switch-cp__box"></div>
                                                 </label>
                                             </div>
@@ -414,6 +425,18 @@
         //拖动上传
         var oFileSpan = $(".upload-ppt-area");					//选择文件框
 
+        //是否需要显示水印
+        var needShow = '${watermark.state}';
+        if(needShow == undefined || needShow == '' || needShow == "true"){
+            $('.logo-watermark-item').show();
+        }else{
+            $('.logo-watermark-item').hide();
+        }
+
+
+
+
+
         //拖拽外部文件，进入目标元素触发
         oFileSpan.on("dragenter",function(){
             $(this).css("border-color","#167AFE");
@@ -557,10 +580,32 @@
             }
 
             //设置水印的位置,状态
-            var direction = $('input:radio[name="watermark"]:checked').val();
-            $("#direction").val(direction);
-            var isCheck = $("#switchCP").is(":checked");
-            $("#state").val(isCheck ? 1 : 0);
+            if(${packageId == 1}){  //标准版
+                if(${not empty watermark}){
+                    var watermark = '${watermark}';
+                    $("#direction").val(watermark.direction);
+                    $("#name").val(watermark.name);
+                    $("#state").val(watermark.state);
+                }else{
+                    $("#direction").val(2);
+                    $("#name").val("会讲");
+                    $("#state").val(1);
+                }
+            }else{
+                var direction = $('input:radio[name="watermark"]:checked').val();
+                $("#direction").val(direction);
+                var isCheck = $("#switchCP").is(":checked");
+                $("#state").val(isCheck ? 1 : 0);
+                if(${packageId == 2}){
+                    if(${not empty watermark}){
+                        $("#name").val('${watermark.name}');
+                    }else{
+                        $("#name").val("会讲");
+                    }
+                }else{
+                    $("#name").val($("#waterName").val() == '' ? "会讲":$("#waterName").val());
+                }
+            }
 
             $("#courseForm").submit();
         });
@@ -652,16 +697,26 @@
         var watermarkIsShow = false;
         var defaultTitle = "会讲"
 
-        //水印编辑区显示
-        watermarkItemTitle.on('click',function(){
-            if(watermarkIsShow == false){
-                watermarkItemEditBr.show();
-                watermarkIsShow = true;
-            } else if(watermarkIsShow == true) {
-                watermarkItemEditBr.hide();
-                watermarkIsShow = false;
-            }
+        $('.logo-watermark-tips-hook').hover(function(){
+            $('.watermark-tips-hook').show();
+        },function(){
+            $('.watermark-tips-hook').hide();
         });
+
+
+        if(${packageId != 1}){
+            //水印编辑区显示
+            watermarkItemTitle.on('click',function(){
+                if(watermarkIsShow == false){
+                    watermarkItemEditBr.show();
+                    watermarkIsShow = true;
+                } else if(watermarkIsShow == true) {
+                    watermarkItemEditBr.hide();
+                    watermarkIsShow = false;
+                }
+            });
+        }
+
         //水印位置
         watermarkRadio.off('click').on('click',function(){
             if($(this).hasClass('watermark-radio-topLeft')){
@@ -704,6 +759,26 @@
                 $('.logo-watermark-item').hide();
             }
         });
+
+        if(${not empty watermark}){
+            var direction = "${watermark.direction}";
+            if(direction == 0){
+                $("#positionTopLeft").attr("checked","checked");
+                $("#positionTopLeft").parent().attr("class","watermark-radio watermark-radio-topLeft radio-on ");
+            }else if(direction == 1){
+                $("#positionBottomLeft").attr("checked","checked");
+                $("#positionBottomLeft").parent().attr("class","watermark-radio watermark-radio-bottomLeft radio-on ");
+            }else if(direction == 2){
+                $("#positionTopRight").attr("checked","checked");
+                $("#positionTopRight").parent().attr("class","watermark-radio watermark-radio-topRight radio-on ");
+            }else{
+                $("#positionBottomRight").attr("checked","checked");
+                $("#positionBottomRight").parent().attr("class","watermark-radio watermark-radio-bottomRight radio-on ");
+            }
+        }else{
+            $("#positionTopRight").attr("checked","checked");
+            $("#positionTopRight").parent().attr("class","watermark-radio watermark-radio-topRight radio-on ");
+        }
 
 
 
