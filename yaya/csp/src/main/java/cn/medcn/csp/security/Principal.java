@@ -26,14 +26,10 @@ public class Principal implements Serializable{
 
     //套餐id
     protected Integer packageId;
-
+    // 用户套餐
     protected CspPackage cspPackage;
 
-    // 过期提醒
-    protected String expireRemind;
 
-    // 过期时间 天数
-    protected Integer expireDays;
 
     public Boolean getAbroad() {
         return abroad;
@@ -95,13 +91,6 @@ public class Principal implements Serializable{
 
     public Integer getPackageId(){return packageId;}
 
-    public void setExpireRemind(String expireRemind) {
-        this.expireRemind = expireRemind;
-    }
-
-    public String getExpireRemind() {
-        return expireRemind;
-    }
 
     public CspPackage getCspPackage() {
         return cspPackage;
@@ -111,13 +100,6 @@ public class Principal implements Serializable{
         this.cspPackage = cspPackage;
     }
 
-    public Integer getExpireDays() {
-        return expireDays;
-    }
-
-    public void setExpireDays(Integer expireDays) {
-        this.expireDays = expireDays;
-    }
 
     public static Principal build(CspUserInfo userInfo){
         if (userInfo != null) {
