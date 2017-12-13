@@ -929,6 +929,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
          }
     }
 
+    /**
+     * 更新水印信息和course信息
+     * @param ac
+     * @param live
+     * @param newWatermark
+     * @param packageId
+     */
     @Override
     public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark,Integer packageId) {
         //查找是否有水印记录
