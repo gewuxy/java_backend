@@ -22,8 +22,10 @@ import cn.medcn.meet.service.CourseCategoryService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -88,6 +90,9 @@ public class MeetingMgrController extends CspBaseController {
     @Autowired
     protected CspUserPackageService cspUserPackageService;
 
+    @Autowired
+    protected CspPackageService cspPackageService;
+
 
 
     /**
@@ -109,9 +114,9 @@ public class MeetingMgrController extends CspBaseController {
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
 
-        if (meetCountOut()){
-            model.addAttribute("meetCountOut", true);
-        }
+//        if (meetCountOut()){
+//            model.addAttribute("meetCountOut", true);
+//        }
 
 
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
@@ -136,8 +141,15 @@ public class MeetingMgrController extends CspBaseController {
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
         model.addAttribute("isNewUser",cspUserPackageService.isNewUser(getWebPrincipal().getId()));
+//        List<CspPackage> pkList = cspPackageService.findAllPackage();
+//        model.addAttribute("pkList",pkList);
         return localeView("/meeting/list");
     }
+
+
+
+
+
 
     /**
      * 进入投屏界面

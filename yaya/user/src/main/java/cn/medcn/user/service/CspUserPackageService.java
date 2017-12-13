@@ -16,4 +16,6 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
     void doModifyUserPackage(List<CspUserPackage> userPackageList);
 
     List<CspUserPackage> findCspUserPackageList();
+
+    void addStanardInfo(String userId);
 }

@@ -28,4 +28,10 @@ public class CspConstants {
     //腾讯视频直播api超时时间 单位分钟
     public static final int TX_LIVE_API_TIME_OUT = 10;
 
+    //套餐订单标识
+    public static final String PACKAGE_ORDER_FLAG = "pk";
+
+    //流量订单标识
+    public static final String FLUX_ORDER_FLAG = "fx";
+
 }

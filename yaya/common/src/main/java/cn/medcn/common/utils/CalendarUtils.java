@@ -24,6 +24,19 @@ public class CalendarUtils {
     }
 
     /**
+     * 计算date日期month个月之后的时间
+     * @param date
+     * @param month
+     * @return
+     */
+    public static Date calendarMonth(Date date,int month){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.MONTH, month);
+        return calendar.getTime();
+    }
+
+    /**
      * 计算day天之后的时间
      * @param day
      * @return
@@ -41,6 +54,19 @@ public class CalendarUtils {
      */
     public static Date calendarYear(int year){
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.YEAR, year);
+        return calendar.getTime();
+    }
+
+    /**
+     * 计算dateyear之后的时间
+     * @param date
+     * @param year
+     * @return
+     */
+    public static Date calendarYear(Date date,int year){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         calendar.add(Calendar.YEAR, year);
         return calendar.getTime();
     }

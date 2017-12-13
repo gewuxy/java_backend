@@ -1,5 +1,6 @@
 package cn.medcn.user.service.impl;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.CspUserPackageDAO;
@@ -51,6 +52,17 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     @Override
     public List<CspUserPackage> findCspUserPackageList() {
         return userPackageDAO.findUserPackages();
+    }
+
+    @Override
+    public void addStanardInfo(String userId) {
+        //用户添加标准套餐信息
+        CspUserPackage userPackage = new CspUserPackage();
+        userPackage.setUserId(userId);
+        userPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
+        userPackage.setUpdateTime(new Date());
+        userPackage.setSourceType(Constants.NUMBER_ONE);
+        userPackageDAO.insertSelective(userPackage);
     }
 
 

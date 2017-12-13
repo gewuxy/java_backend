@@ -24,6 +24,8 @@ public class CspPackageOrder implements Serializable {
     protected String userId;
     // 套餐id
     protected Integer packageId;
+    //套餐数量
+    protected Integer num;
     // 币种  0:RMB 1:USD
     protected Integer currencyType;
     // 应该支付金额

@@ -8,4 +8,5 @@ import cn.medcn.user.model.CspUserPackageDetail;
  */
 
 public interface CspUserPackageDetailService extends BaseService<CspUserPackageDetail> {
+    void addUserHistoryInfo(String userId,Integer oldId,Integer newId,Integer updateType);
 }

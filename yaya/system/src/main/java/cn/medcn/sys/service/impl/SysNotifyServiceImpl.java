@@ -1,9 +1,11 @@
 package cn.medcn.sys.service.impl;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.sys.dao.SysMenuDAO;
 import cn.medcn.sys.dao.SystemNotifyDAO;
 import cn.medcn.sys.model.SystemMenu;
@@ -16,6 +18,7 @@ import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -66,4 +69,17 @@ public class SysNotifyServiceImpl extends BaseServiceImpl<SystemNotify> implemen
         return page;
     }
 
+    @Override
+    public void addNotify(String userId, String title, String content, String sender) {
+        SystemNotify notify = new SystemNotify();
+        notify.setSenderName(sender);
+        notify.setContent(content);
+        notify.setTitle(title);
+        notify.setSendTime(new Date());
+        notify.setIsRead(false);
+        notify.setAcceptId(userId);
+        notify.setNotifyType(Constants.NUMBER_ONE);
+        notify.setId(StringUtils.nowStr());
+        systemNotifyDAO.insert(notify);
+    }
 }
