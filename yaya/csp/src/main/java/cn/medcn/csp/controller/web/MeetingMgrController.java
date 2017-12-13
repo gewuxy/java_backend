@@ -111,10 +111,13 @@ public class MeetingMgrController extends CspBaseController {
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
 
-        if (meetCountOut() && CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null){
+        if (meetCountOut()){
             model.addAttribute("meetCountOut", true);
-        }
 
+            if (CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null) {
+                model.addAttribute("showTips", true);
+            }
+        }
 
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 

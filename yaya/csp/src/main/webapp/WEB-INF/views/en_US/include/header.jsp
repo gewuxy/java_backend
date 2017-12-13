@@ -29,7 +29,14 @@
                 </ul>
             </div>
             <div class="message"><a href="${ctx}/mgr/message/list" class="icon-message"><span id="msg"></span></a></div>
-            <div class="addMetting"><a href="${ctx}/mgr/meet/edit"  class="icon-addMetting"></a></div>
+            <div class="addMetting"><a style="cursor: pointer;" onclick="addMeetingClick()" class="icon-addMetting ${meetCountOut ? 'meeting-lock-item':''}" ></a></div>
+            <script>
+                function addMeetingClick(){
+                    if('${meetCountOut == null || !meetCountOut}' == "true"){
+                        window.location.href='${ctx}/mgr/meet/edit';
+                    }
+                }
+            </script>
         </div>
         <div class="fl">
             <a class="logo" href="/"></a>
