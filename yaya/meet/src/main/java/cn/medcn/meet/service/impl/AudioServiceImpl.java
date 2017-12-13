@@ -15,6 +15,7 @@ import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
+import cn.medcn.user.model.CspPackage;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -941,6 +942,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
          }
     }
 
+    /**
+     * 更新水印信息和course信息
+     * @param ac
+     * @param live
+     * @param newWatermark
+     * @param packageId
+     */
     @Override
     public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark,Integer packageId) {
         //查找是否有水印记录
@@ -948,20 +956,20 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         watermark.setCourseId(ac.getId());
         watermark = watermarkDAO.selectOne(watermark);
         if(watermark != null){ //更新水印
-            if(packageId != 1){  //标准版不能更新水印
+            if(packageId != CspPackage.TypeId.STANDARD.getId()){  //非标准版才能更新水印
                 watermark.setDirection(newWatermark.getDirection());
                 watermark.setState(newWatermark.getState());
-                if(packageId > 2){ //专业版才可以更新名称
+                if(packageId > CspPackage.TypeId.PREMIUM.getId()){ //专业版才可以更新名称
                     watermark.setName(newWatermark.getName());
                 }
             }
             watermarkDAO.updateByPrimaryKey(watermark);
         }else{ //生成水印
             newWatermark.setCourseId(ac.getId());
-            if(packageId < 3){  //用默认的水印名称
+            if(packageId < CspPackage.TypeId.PROFESSIONAL.getId()){  //用默认的水印名称
                 newWatermark.setName(local("meet.default.watermark"));
             }
-            if(packageId == 1){  //防止前台传假数据，使用默认的数据
+            if(packageId == CspPackage.TypeId.STANDARD.getId()){  //防止前台传假数据，使用默认的数据
                 newWatermark.setState(true);
                 newWatermark.setDirection(MeetWatermark.Direction.RIGHT_TOP.ordinal());
             }
