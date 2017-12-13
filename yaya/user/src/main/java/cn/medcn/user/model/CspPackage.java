@@ -56,6 +56,14 @@ public class CspPackage implements Serializable {
     @Transient
     protected Date packageEnd;
 
+    @Transient
+    // 套餐即将过期天数
+    protected Integer expireDays;
+
+    @Transient
+    // 套餐过期 隐藏的会议数
+    protected Integer hiddenMeetCount;
+
 
     public enum TypeId {
         STANDARD(1, "标准版"), // 标准版
