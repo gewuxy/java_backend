@@ -93,7 +93,7 @@
     </select>
     <!-- for api -->
     <select id="findCspMeetingListForApp" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked，
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,
         cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
         p.play_page,p.play_state, c.info,c.category_id
         FROM t_audio_course c
