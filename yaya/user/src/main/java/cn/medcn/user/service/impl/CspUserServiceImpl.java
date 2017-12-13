@@ -21,10 +21,7 @@ import cn.medcn.user.dao.UserFluxDAO;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
-import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.EmailTemplate;
-import cn.medcn.user.model.UserFlux;
+import cn.medcn.user.model.*;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import com.github.abel533.mapper.Mapper;
@@ -189,6 +186,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         userDTO.setUid(userInfo.getId());
         BindInfo bindUser = BindInfo.buildToBindInfo(userDTO);
         bindInfoDAO.insert(bindUser);
+
 
         return userInfo;
     }

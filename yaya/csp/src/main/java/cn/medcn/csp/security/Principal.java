@@ -32,6 +32,9 @@ public class Principal implements Serializable{
     // 过期提醒
     protected String expireRemind;
 
+    // 过期时间 天数
+    protected Integer expireDays;
+
     public Boolean getAbroad() {
         return abroad;
     }
@@ -106,6 +109,14 @@ public class Principal implements Serializable{
 
     public void setCspPackage(CspPackage cspPackage) {
         this.cspPackage = cspPackage;
+    }
+
+    public Integer getExpireDays() {
+        return expireDays;
+    }
+
+    public void setExpireDays(Integer expireDays) {
+        this.expireDays = expireDays;
     }
 
     public static Principal build(CspUserInfo userInfo){
