@@ -161,7 +161,7 @@ public class LoginController extends CspBaseController {
             return errorForwardUrl;
         }
 
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -248,7 +248,7 @@ public class LoginController extends CspBaseController {
             model.addAttribute("mobile", mobile);
             return errorForwardUrl;
         }
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -276,7 +276,7 @@ public class LoginController extends CspBaseController {
         CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
         CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile() , COOKIE_MAX_AGE);
 
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -424,7 +424,7 @@ public class LoginController extends CspBaseController {
             e.printStackTrace();
         }
 
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 

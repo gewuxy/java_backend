@@ -216,4 +216,9 @@ public class CspBaseController extends BaseController {
         return maxUsableCount > 0 && usedCount >= maxUsableCount;
     }
 
+
+    protected String defaultRedirectUrl(){
+        return "";
+    }
+
 }

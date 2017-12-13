@@ -277,7 +277,7 @@ public class MeetingMgrController extends CspBaseController {
         Principal principal = getWebPrincipal();
 
         if (meetCountOut()) {
-            return "redirect:/mgr/meet/list";
+            return defaultRedirectUrl();
         }
 
         AudioCourse course = null;
@@ -479,7 +479,7 @@ public class MeetingMgrController extends CspBaseController {
         audioService.updateByPrimaryKey(course);
 
         //判断是否有锁定的会议
-
+        //todo
 
         return success();
     }
@@ -565,7 +565,7 @@ public class MeetingMgrController extends CspBaseController {
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
 
         addFlashMessage(redirectAttributes, local("operate.success"));
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
