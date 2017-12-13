@@ -163,8 +163,9 @@ public class CspUserController extends CspBaseController {
 
                     // 还有5天倒计时到期时提醒
                     remind = local("days.expire.remind", new Object[]{diffDays});
-                    // 缓存过期时间
-                    principal.setExpireDays(diffDays);
+
+                    // 设置即将到期时间
+                    cspPackage.setExpireDays(diffDays);
 
                 } else if (diffDays == 0){ // 已经过期提醒
 
@@ -174,6 +175,9 @@ public class CspUserController extends CspBaseController {
                         // 只显示3个会议 其他的隐藏
                         int hiddenMeetCount = usedMeetCount - NUMBER_THREE;
                         remind = local("expire.remind.info", new Object[]{hiddenMeetCount});
+
+                        // 过期隐藏的会议数
+                        cspPackage.setHiddenMeetCount(hiddenMeetCount);
                     }
 
                     // 会议上锁
