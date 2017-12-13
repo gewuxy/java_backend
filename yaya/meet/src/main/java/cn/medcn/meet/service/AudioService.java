@@ -321,4 +321,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void updateInfo(AudioCourse audioCourse,Live live ,MeetWatermark newWatermark,Integer packageId);
 
     void doModifyAudioCourse(String cspUserId);
+
+    AudioCourse createNewCspCourse(String userId);
 }
