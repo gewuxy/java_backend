@@ -456,9 +456,12 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>更多</a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>更多 aa${course.locked}</a>
                                             </div>
                                         </div>
+                                        <c:if test="${course.locked}">
+                                            <div class="meeting-lock-item"></div>
+                                        </c:if>
                                     </div>
                                 </div>
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}

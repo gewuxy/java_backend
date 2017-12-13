@@ -51,11 +51,19 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
     List<CourseReprintDTO> findMyReprinted(Map<String, Object> params);
 
     /**
-     * 查询csp会议列表
+     * 查询csp会议列表web端
      * @param params
      * @return
      */
     List<CourseDeliveryDTO> findCspMeetingList(Map<String, Object> params);
+
+
+    /**
+     * 查询csp会议列表 app端
+     * @param params
+     * @return
+     */
+    List<CourseDeliveryDTO> findCspMeetingListForApp(Map<String, Object> params);
 
     /**
      * 查询最近未完善的PPT

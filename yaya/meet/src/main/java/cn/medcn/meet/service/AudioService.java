@@ -207,6 +207,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
      */
     MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) ;
 
+    /**
+     * 查询csp会议列表
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findCspMeetingListForApp(Pageable pageable) ;
+
     AudioCourse findLastDraft(String cspUserId);
 
     AudioCoursePlay findPlayState(Integer courseId);
@@ -305,6 +311,13 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void doCopyWatermark(Integer oldCourseId,Integer newCourseId);
 
 
+    /**
+     * 更新水印信息和course信息
+     * @param audioCourse
+     * @param live
+     * @param newWatermark
+     * @param packageId
+     */
     void updateInfo(AudioCourse audioCourse,Live live ,MeetWatermark newWatermark,Integer packageId);
 
     void doModifyAudioCourse(String cspUserId);

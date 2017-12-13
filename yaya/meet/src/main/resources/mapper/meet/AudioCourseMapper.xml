@@ -65,9 +65,9 @@
     </select>
 
 
-    <!-- csp method sql -->
+    <!-- csp method sql for web-->
     <select id="findCspMeetingList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,
         cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
         p.play_page,p.play_state, c.info,c.category_id
         FROM t_audio_course c
@@ -75,7 +75,33 @@
         LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
         WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
-        AND c.deleted != 1 AND c.locked != 1
+        AND c.deleted != 1
+        <if test="playType != null">
+            <choose>
+                <when test="playType == 0">
+                    AND c.play_type = 0
+                </when>
+                <otherwise>
+                    AND c.play_type > 0
+                </otherwise>
+            </choose>
+        </if>
+        <if test="keyword != null">
+            AND c.title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
+        GROUP BY c.id
+    </select>
+    <!-- for api -->
+    <select id="findCspMeetingListForApp" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,
+        cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
+        p.play_page,p.play_state, c.info,c.category_id
+        FROM t_audio_course c
+        LEFT JOIN t_csp_live l ON l.course_id = c.id
+        LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
+        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
+        AND c.deleted != 1 AND locked != 1
         <if test="playType != null">
             <choose>
                 <when test="playType == 0">
