@@ -168,9 +168,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         userInfo.setActive(false);//未激活
         cspUserInfoDAO.insert(userInfo);
 
-        // 新注册用户套餐为标准版
-
-
         // 发送激活邮箱链接
         sendMail(username, userInfo.getId(), template);
 
