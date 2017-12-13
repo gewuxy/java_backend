@@ -134,13 +134,9 @@ public class CspUserController extends CspBaseController {
         // 缓存用户套餐id
         CspPackage cspPackage = packageService.findUserPackageById(user.getId());
         if (cspPackage != null) {
-            // 缓存用户套餐信息
-            principal.setCspPackage(cspPackage);
-            principal.setPackageId(cspPackage.getId());
-
             // 缓存用户套餐过期信息
-            String remind = packageExpireRemind(cspPackage);
-            principal.setExpireRemind(remind);
+            packageExpireRemind(cspPackage, principal);
+
         }
 
         redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
@@ -152,36 +148,55 @@ public class CspUserController extends CspBaseController {
      * @param cspPackage
      * @return
      */
-    protected String packageExpireRemind(CspPackage cspPackage) {
+    protected String packageExpireRemind(CspPackage cspPackage, Principal principal) {
         String remind = null;
+
         try {
-            if (cspPackage != null && cspPackage.getPackageEnd() != null
-                    && cspPackage.getId() > CspPackage.TypeId.STANDARD.getId()) {
+            if (cspPackage != null) {
 
-                int diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
-                if (diffDays <= EXPIRE_DAYS && diffDays > NUMBER_ZERO) {
-                    // 还有5天倒计时到期时提醒
-                    remind = local("days.expire.remind", new Object[]{diffDays});
+                if (cspPackage.getPackageEnd() != null
+                        && cspPackage.getId() > CspPackage.TypeId.STANDARD.getId()) {
+                    // 缓存用户套餐信息
+                    principal.setPackageId(cspPackage.getId());
 
-                } else if (diffDays == 0){ // 已经过期提醒
-                    //  已经使用的会议数 -3 = 隐藏的会议数
-                    int usedMeetCount = cspPackage.getUsedMeetCount();
-                    if (usedMeetCount > NUMBER_THREE) {
-                        // 只显示3个会议 其他的隐藏
-                        int hiddenMeetCount = usedMeetCount - NUMBER_THREE;
-                        remind = local("expire.remind.info", new Object[]{hiddenMeetCount});
+                    int diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
+                    if (diffDays <= EXPIRE_DAYS && diffDays > NUMBER_ZERO) {
+
+                        // 还有5天倒计时到期时提醒
+                        remind = local("days.expire.remind", new Object[]{diffDays});
+
+                        // 设置即将到期时间
+                        cspPackage.setExpireDays(diffDays);
+
+                    } else if (diffDays == 0) { // 已经过期提醒
+
+                        //  已经使用的会议数 -3 = 隐藏的会议数
+                        int usedMeetCount = cspPackage.getUsedMeetCount();
+                        if (usedMeetCount > NUMBER_THREE) {
+                            // 只显示3个会议 其他的隐藏
+                            int hiddenMeetCount = usedMeetCount - NUMBER_THREE;
+                            remind = local("expire.remind.info", new Object[]{hiddenMeetCount});
+
+                            // 过期隐藏的会议数
+                            cspPackage.setHiddenMeetCount(hiddenMeetCount);
+                        }
+
+                        // 会议上锁
+                        audioService.doModifyAudioCourse(cspPackage.getUserId());
                     }
 
-                    // 会议上锁
-                    audioService.doModifyAudioCourse(cspPackage.getUserId());
                 }
+
+                if (StringUtils.isNotEmpty(remind)) {
+                    cspPackage.setExpireRemind(remind);
+                }
+                principal.setCspPackage(cspPackage);
             }
 
         } catch (ParseException e) {
             e.printStackTrace();
             remind = local("data.error");
         }
-
         return remind;
     }
 
@@ -297,9 +312,6 @@ public class CspUserController extends CspBaseController {
         // 返回用户套餐 及 套餐过期提醒
         if (principal.getCspPackage() != null) {
             dto.setCspPackage(principal.getCspPackage());
-        }
-        if (StringUtils.isNotEmpty(principal.getExpireRemind())) {
-            dto.setExpireRemind(principal.getExpireRemind());
         }
 
         return dto;
@@ -678,8 +690,10 @@ public class CspUserController extends CspBaseController {
     @RequestMapping("/info")
     @ResponseBody
     public String cspUserInfo() {
-        String userId = SecurityUtils.get().getId();
+        Principal principal = SecurityUtils.get();
+        String userId = principal.getId();
         CspUserInfo userInfo = cspUserService.findUserInfoById(userId);
+
         // 用户信息
         CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
         if (needAvatarPrefix(dto.getAvatar())) {
@@ -693,15 +707,14 @@ public class CspUserController extends CspBaseController {
         }
 
         // 查询用户套餐及是否过期
-        assignPackageAndExpire(dto);
+        assignPackageAndExpire(dto, principal);
 
         // 修改缓存数据
         String userToken = Constants.TOKEN + "_" + userInfo.getToken();
-        Principal principal = redisCacheUtils.getCacheObject(userToken);
+        principal = redisCacheUtils.getCacheObject(userToken);
         if (principal != null) {
             principal.setCspPackage(dto.getCspPackage());
             principal.setPackageId(dto.getCspPackage().getId());
-            principal.setExpireRemind(dto.getExpireRemind());
         }
         redisCacheUtils.setCacheObject(userToken, principal, Constants.TOKEN_EXPIRE_TIME);
 
@@ -712,16 +725,14 @@ public class CspUserController extends CspBaseController {
      * 查询用户套餐版本及过期信息
      * @param userInfoDTO
      */
-    private void assignPackageAndExpire(CspUserInfoDTO userInfoDTO) {
+    private void assignPackageAndExpire(CspUserInfoDTO userInfoDTO, Principal principal) {
         // 获取当前用户套餐
         CspPackage cspPackage = packageService.findUserPackageById(userInfoDTO.getUid());
         if (cspPackage != null) {
-            userInfoDTO.setCspPackage(cspPackage);
             // 过期提醒信息
-            String expire = packageExpireRemind(cspPackage);
-            if (StringUtils.isNotEmpty(expire)) {
-                userInfoDTO.setExpireRemind(expire);
-            }
+            packageExpireRemind(cspPackage, principal);
+
+            userInfoDTO.setCspPackage(cspPackage);
         }
 
     }

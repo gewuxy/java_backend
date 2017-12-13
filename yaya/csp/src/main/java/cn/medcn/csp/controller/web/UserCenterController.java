@@ -16,8 +16,10 @@ import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.UserFluxUsage;
+import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import cn.medcn.user.service.UserFluxService;
@@ -64,7 +66,8 @@ public class UserCenterController extends CspBaseController{
     @Autowired
     protected UserFluxService userFluxService;
 
-
+    @Autowired
+    protected CspPackageService packageService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -384,5 +387,17 @@ public class UserCenterController extends CspBaseController{
 
    }
 
-
+    /**
+     * 进入会员权限界面
+     * @return
+     */
+    @RequestMapping(value = "/memberManage")
+    public String memberManage(Model model){
+        Principal principal = getWebPrincipal();
+        String userId = principal.getId();
+        addBaseUserInfo(model);
+        CspPackage cspPackage = packageService.findUserPackageById(userId);
+        model.addAttribute("cspPackage",cspPackage);
+        return localeView("/userCenter/memberManage");
+    }
 }

@@ -62,8 +62,7 @@ public class CspUserInfoDTO  {
     // 用户套餐信息
     protected CspPackage cspPackage;
 
-    // 过期提醒
-    protected String expireRemind;
+
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
         CspUserInfoDTO dto = new CspUserInfoDTO();
