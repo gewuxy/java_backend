@@ -305,7 +305,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void doCopyWatermark(Integer oldCourseId,Integer newCourseId);
 
 
-    void updateInfo(AudioCourse audioCourse,Live live ,MeetWatermark newWatermark);
+    void updateInfo(AudioCourse audioCourse,Live live ,MeetWatermark newWatermark,Integer packageId);
 
     void doModifyAudioCourse(String cspUserId);
 }
