@@ -378,18 +378,23 @@
                 }
             });
         }
+
+        function closeMeetCountTips(){
+            $.get('${ctx}/mgr/meet/tips/close', {}, function (data) {
+                $("#meetCountTips").hide();
+            }, 'json');
+        }
     </script>
 </head>
 <body>
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
-        <div class="page-width clearfix">
+        <div class="page-width clearfix pr">
             <c:if test="${meetCountOut != null && meetCountOut}">
-                <div class="admin-tips">
+                <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
-                    <!--<span class="admin-tips-main"> <a href="user-06.html">还有 <strong class="color-blue">5</strong> 天到期</a> </span>-->
-                    <span class="admin-tips-close"></span>
+                    <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
                 </div>
             </c:if>
 
