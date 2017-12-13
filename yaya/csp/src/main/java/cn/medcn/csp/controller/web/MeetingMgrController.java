@@ -321,7 +321,7 @@ public class MeetingMgrController extends CspBaseController {
             model.addAttribute("play", audioService.findPlayState(course.getId()));
         }
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
+        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) / 100;
         model.addAttribute("flux", fluxValue);
         model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
@@ -351,9 +351,9 @@ public class MeetingMgrController extends CspBaseController {
         }
         String imgDir = FilePath.COURSE.path + "/" + courseId + "/ppt/";
         List<String> imgList = null;
-        if (result.getRelativePath().endsWith(".ppt") || result.getRelativePath().endsWith(".pptx")) {
+        if (result.getRelativePath().endsWith(FileTypeSuffix.PPT_SUFFIX_PPT.suffix) || result.getRelativePath().endsWith(FileTypeSuffix.PPT_SUFFIX_PPTX.suffix)) {
             imgList = openOfficeService.convertPPT(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
-        } else if (result.getRelativePath().endsWith(".pdf")) {
+        } else if (result.getRelativePath().endsWith(FileTypeSuffix.PDF_SUFFIX.suffix)) {
             imgList = openOfficeService.pdf2Images(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
         }
         if (CheckUtils.isEmpty(imgList)) {
