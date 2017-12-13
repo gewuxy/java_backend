@@ -26,6 +26,8 @@ public class Principal implements Serializable{
 
     //套餐id
     protected Integer packageId;
+    //是否未有套餐信息用户
+    protected Boolean newUser;
 
     protected CspPackage cspPackage;
 
@@ -39,6 +41,10 @@ public class Principal implements Serializable{
     public void setAbroad(Boolean abroad) {
         this.abroad = abroad;
     }
+
+    public Boolean getNewUser() { return newUser; }
+
+    public void setNewUser(Boolean newUser) { this.newUser = newUser; }
 
     public String getAvatar() {
         return avatar;

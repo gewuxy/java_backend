@@ -1,11 +1,17 @@
 package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.security.Principal;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.service.*;
+import com.paypal.api.payments.Links;
+import com.paypal.api.payments.Payment;
+import com.paypal.base.rest.APIContext;
+import com.paypal.base.rest.PayPalRESTException;
 import com.pingplusplus.Pingpp;
 import com.pingplusplus.exception.*;
 import com.pingplusplus.model.Charge;
@@ -77,11 +83,10 @@ public class PackageController extends CspBaseController{
      * @param currency
      * @param payType
      * @param limitTime
-     * @param model
      * @return
      */
     @RequestMapping(value="toPay")
-    public String allPay(Integer packageId, String currency, String payType, Integer limitTime,Model model){
+    public String allPay(Integer packageId, String currency, String payType, Integer limitTime) throws SystemException {
         String userId = getWebPrincipal().getId();
         packageId ++;
         if(packageId == CspPackage.TypeId.STANDARD.getId()){
@@ -89,8 +94,11 @@ public class PackageController extends CspBaseController{
             cspUserPackageService.addStanardInfo(userId);
             //添加用户历史版本信息
             cspUserPackageDetailService.addUserHistoryInfo(userId,null,packageId, Constants.NUMBER_ONE);
+            //更新用户信息缓存
+            getWebPrincipal().setNewUser(false);
             return "redirect:/mgr/meet/list";
         }
+        //校验参数信息
         String validata = checkParams(packageId,currency,payType,limitTime);
         if(validata != null){
             return validata;
@@ -98,44 +106,86 @@ public class PackageController extends CspBaseController{
         Map<String,Object> results = cspPackageService.getOrderParams(packageId,limitTime,currency);
         Float money = (Float) results.get("money");
         Integer num = (Integer) results.get("num");
+        if(currency.equals("CN")){  //人民币P++支付
+            return rnbPay(packageId,currency,payType,money,num);
+        }else{  //美元（目前只是paypal支付）
+            return usdPay(packageId,currency,payType,money,num);
+        }
+    }
+
+    /**
+     * 人民币支付
+     *
+     * @param packageId
+     * @param currency
+     * @param payType
+     * @param money
+     * @param num
+     * @return
+     */
+    public String rnbPay(Integer packageId, String currency, String payType,float money,Integer num){
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
         String orderNo = CspConstants.PACKAGE_ORDER_FLAG + StringUtils.nowStr();
         String ip = "10.0.0.96";
         //String ip = request.getRemoteAddr();
         Pingpp.privateKeyPath = path;
-        Charge charge = null;
         try {
             //生成Charge对象
-            charge = chargeService.createPackageCharge(orderNo,appId, money,num, payType, ip,appBase);
-        } catch (RateLimitException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (APIException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (ChannelException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (AuthenticationException e) {
+            chargeService.createPackageCharge(orderNo,appId, money,num, payType, ip,appBase);
+        } catch (Exception e) {
             e.printStackTrace();
             return error(e.getMessage());
         }
         //创建订单
-        cspPackageOrderService.createOrder(userId,orderNo,currency,packageId,num,money,payType);
-        //添加一条通知信息
-        model.addAttribute("charge",charge.toString());
+        cspPackageOrderService.createOrder(getWebPrincipal().getId(),orderNo,currency,packageId,num,money,payType);
         //微信扫码支付
         if("wx_pub_qr".equals(payType)){
             return localeView("/userCenter/wxPay");
         }
         return localeView("/userCenter/newPage");
+    }
+
+    /**
+     * 美元支付
+     *
+     * @param packageId
+     * @param currency
+     * @param payType
+     * @param money
+     * @param num
+     * @return
+     * @throws SystemException
+     */
+    public String usdPay(Integer packageId, String currency, String payType,float money,Integer num) throws SystemException {
+        //正式线mode为live，测试线mode为sandbox
+        APIContext apiContext = new APIContext(clientId, clientSecret, mode);
+        Payment payment = chargeService.generatePayment(num,appBase);           //需要修改此方法
+        Payment responsePayment;
+        String url = null;
+        try {
+            //响应对象
+            responsePayment = payment.create(apiContext);
+            Iterator links = responsePayment.getLinks().iterator();
+            while (links.hasNext()) {
+                Links link = (Links) links.next();
+                if (link.getRel().equalsIgnoreCase("approval_url")) {
+                    //用户登录paypal页面 url
+                    url = link.getHref();
+                    break;
+                }
+            }
+        } catch (PayPalRESTException e) {
+            throw new SystemException(e.getMessage());
+        }
+        if(url != null){
+            //创建订单
+            String orderNo = CspConstants.PACKAGE_ORDER_FLAG + responsePayment.getId();
+            //创建订单
+            cspPackageOrderService.createOrder(getWebPrincipal().getId(),orderNo,currency,packageId,num,money,payType);
+            return "redirect:" + url;
+        }
+        return error();
     }
 
     /**

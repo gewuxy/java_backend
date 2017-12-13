@@ -38,8 +38,9 @@
         var limitTimes = 1; //当前点击套餐时长
         var flag = "hg"; //当前套餐
 
+        //获取金额
         function sumMoney(){
-            var currency = $("#" + "View").find('input[name='+flag+'Currency]:checked').val();
+            var currency = $("#" + flag +  "View").find('input[name='+flag+'Currency]:checked').val();
             ajaxSyncPost('${ctx}/mgr/pay/getMoney', {'version': selectPk,"limitTimes":limitTimes,"currency":currency}, function(data){
                 if (data.code == 0){
                     selectPk == 1 ? $("#hgTotal").html(data.data): $("#pfTotal").html(data.data);
@@ -54,11 +55,12 @@
                 layer.msg("${err}");
             }
 
+            //选购套餐提交
             $('input[name="commitPay"]').click(function(){
                 if(selectPk != 0) {
-                    var limitTime =  $("#hgView").find('input[name='+flag+'TimeMode]:checked').val();
-                    var payType =  $("#hgView").find('input[name='+flag+'PayMode]:checked').val();
-                    var currency =  $("#hgView").find('input[name='+flag+'Currency]:checked').val();
+                    var limitTime =  $("#" + flag + "View").find('input[name='+flag+'TimeMode]:checked').val();
+                    var payType =  $("#" + flag + "View").find('input[name='+flag+'PayMode]:checked').val();
+                    var currency =  $("#" + flag + "View").find('input[name='+flag+'Currency]:checked').val();
                     $("#limitTime").val(limitTime);
                     $("#payType").val(payType);
                     $("#currency").val(currency);
@@ -70,8 +72,7 @@
             var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
             //初始化高级版选中
             tabsMainNum.eq(1).removeClass('none').siblings().addClass('none');
-            var isNewUser = ${isNewUser};
-            if(isNewUser == true){
+            if(${newUser}){
                 layer.open({
                     type: 1,
                     area: ['1116px', '935px'],
@@ -105,7 +106,6 @@
             //货币切换
             $(".money-state label").click(function(){
                 $(this).addClass('on').siblings().removeClass('on');
-                var currencyValue = "CN";
                 currencyValue = $(this).parents('.pay-mode').find('input[name='+flag+'Currency]:checked').val();
                 if( currencyValue == 'CN'){
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');

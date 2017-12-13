@@ -12,6 +12,7 @@ import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.model.CspPackage;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -209,8 +210,10 @@ public class CspBaseController extends BaseController {
      */
     protected boolean meetCountOut(){
         Principal principal = getWebPrincipal();
+        CspPackage cspPackage = principal.getCspPackage();
+        if(cspPackage == null) return false;
         //判断是否已经超出限制
-        int maxUsableCount = principal.getCspPackage().getLimitMeets();
+        int maxUsableCount = cspPackage.getLimitMeets();
         int usedCount = principal.getCspPackage().getUsedMeetCount();
 
         return maxUsableCount > 0 && usedCount >= maxUsableCount;

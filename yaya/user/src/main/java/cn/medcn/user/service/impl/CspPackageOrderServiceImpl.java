@@ -78,13 +78,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         Integer packageId = order.getPackageId();
         Integer oldPackage = null;
         Date start = new Date();
-        boolean isYearType = false;
-        if(packageId == CspPackage.TypeId.PROFESSIONAL.getId()){ //专业版
-            CspPackage cspPackage = cspPackageDAO.selectByPrimaryKey(packageId);
-            if(order.getShouldPay() >= cspPackage.getYearRmb()  ) {//年费
-                isYearType = true;
-            }
-        }
+        boolean isYearType = yearPay(packageId,order.getShouldPay());
         if(userPk == null){ //添加用户套餐信息
             CspUserPackage cspUserPackage = new CspUserPackage();
             cspUserPackage.setUserId(order.getUserId());
@@ -112,6 +106,18 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         StringBuffer content = new StringBuffer();
         content.append("您已成为会讲").append(CspPackage.TypeId.values()[packageId].getLabel()).append("会员用户，有效期").append(isYearType ? order.getNum() + "年":order.getNum() + "个月");
         sysNotifyService.addNotify(order.getUserId(),"购买成功",content+"。","敬信科技团队");
+    }
+
+    @Override
+    public Boolean yearPay(Integer packageId,float money){
+        boolean isYearType = false;
+        if(packageId == CspPackage.TypeId.PROFESSIONAL.getId()){ //专业版
+            CspPackage cspPackage = cspPackageDAO.selectByPrimaryKey(packageId);
+            if(money >= cspPackage.getYearRmb()  ) {//年费
+                isYearType = true;
+            }
+        }
+        return isYearType;
     }
 }
 

@@ -3,10 +3,13 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
+import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
+import cn.medcn.user.service.CspPackageOrderService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.pingplusplus.Pingpp;
@@ -40,6 +43,9 @@ public class ChargeController extends BaseController {
 
     @Autowired
     protected ChargeService chargeService;
+
+    @Autowired
+    protected CspPackageOrderService cspPackageOrderService;
 
     @Value("${apiKey}")
     private String apiKey;
@@ -161,20 +167,39 @@ public class ChargeController extends BaseController {
                 JSONObject object = JSON.parseObject(data.get("object").toString());
                 String orderNo = (String) object.get("order_no");
                 //查找订单
-                FluxOrder condition = new FluxOrder();
-                condition.setTradeId(orderNo);
-                FluxOrder result = chargeService.selectOne(condition);
-                if (result != null) {
-                    //更新订单状态，修改用户流量值
-                    chargeService.updateOrderAndUserFlux(result);
-                    //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
-                    if("wx_pub_qr".equals(result.getPlatform())){
-                        redisCacheUtils.setCacheObject(result.getTradeId(),1, (int)TimeUnit.HOURS.toSeconds(2));
+                if(orderNo.contains(CspConstants.FLUX_ORDER_FLAG)){
+                    //查找订单
+                    FluxOrder condition = new FluxOrder();
+                    condition.setTradeId(orderNo);
+                    FluxOrder result = chargeService.selectOne(condition);
+                    if (result != null) {
+                        //更新订单状态，修改用户流量值
+                        chargeService.updateOrderAndUserFlux(result);
+                        //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
+                        if("wx_pub_qr".equals(result.getPlatform())){
+                            redisCacheUtils.setCacheObject(result.getTradeId(),1, (int)TimeUnit.HOURS.toSeconds(2));
+                        }
+                        response.setStatus(200);
+                    } else {
+                        //没有找到订单
+                        response.setStatus(500);
                     }
-                    response.setStatus(200);
-                } else {
-                    //没有找到订单
-                    response.setStatus(500);
+                }else {
+                    CspPackageOrder condition = new CspPackageOrder();
+                    condition.setTradeId(orderNo);
+                    CspPackageOrder order = cspPackageOrderService.selectOne(condition);
+                    if (order != null) {
+                        //更新订单状态，修改用户流量值
+                        cspPackageOrderService.updateOrderAndUserPackageInfo(order);
+                        //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
+                        if ("wx_pub_qr".equals(order.getPlatForm())) {
+                            redisCacheUtils.setCacheObject(order.getTradeId(), 1, (int) TimeUnit.HOURS.toSeconds(2));
+                        }
+                        response.setStatus(200);
+                    } else {
+                        //没有找到订单
+                        response.setStatus(500);
+                    }
                 }
             }
         } else {

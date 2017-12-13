@@ -8,6 +8,7 @@ import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.net.SocketPermission;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,7 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         float money = (float) 0.00;
         Integer num = 1;
         if(limitTime % 12 == 0  ){
-            money = currency.equals("CN") ? pk.getYearRmb() * (limitTime / 12) :pk.getYearUsd() * (limitTime / 12);
+            money = currency.equals("CN") ? pk.getYearRmb()* (limitTime / 12) :pk.getYearUsd() * (limitTime / 12);
             num = limitTime / 12;
         }else{
             money = currency.equals("CN") ? pk.getMonthRmb() * limitTime : pk.getMonthUsd() * limitTime;

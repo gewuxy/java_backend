@@ -135,7 +135,7 @@
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last"  value="免费体验" style="position: relative; z-index:3;">
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免费体验" style="position: relative; z-index:3;">
                         </div>
                         <div class="member-buy-disabled-item"></div>
                     </div>

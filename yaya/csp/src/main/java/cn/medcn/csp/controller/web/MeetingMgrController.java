@@ -114,9 +114,9 @@ public class MeetingMgrController extends CspBaseController {
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
 
-//        if (meetCountOut()){
-//            model.addAttribute("meetCountOut", true);
-//        }
+        if (meetCountOut()){
+            model.addAttribute("meetCountOut", true);
+        }
 
 
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
@@ -140,9 +140,7 @@ public class MeetingMgrController extends CspBaseController {
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
-        model.addAttribute("isNewUser",cspUserPackageService.isNewUser(getWebPrincipal().getId()));
-//        List<CspPackage> pkList = cspPackageService.findAllPackage();
-//        model.addAttribute("pkList",pkList);
+        model.addAttribute("newUser",principal.getNewUser());
         return localeView("/meeting/list");
     }
 
