@@ -391,7 +391,7 @@
                                 ${(status.index) % 3 == 0 ? '<div class="row clearfix">':''}
                                 <div class="col-lg-4">
 
-                                    <div class="resource-list-item item-radius clearfix">
+                                    <div class="resource-list-item item-radius clearfix ${course.locked ? 'meeting-lock' : ''}">
                                         <div class="resource-img ">
                                             <c:choose>
                                                 <c:when test="${not empty course.coverUrl}">
@@ -440,6 +440,7 @@
                                                 <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>More</a>
                                             </div>
                                         </div>
+                                        <div class="meeting-lock-item"></div>
                                     </div>
                                 </div>
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}

@@ -207,6 +207,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
      */
     MyPage<CourseDeliveryDTO> findCspMeetingList(Pageable pageable) ;
 
+    /**
+     * 查询csp会议列表
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findCspMeetingListForApp(Pageable pageable) ;
+
     AudioCourse findLastDraft(String cspUserId);
 
     AudioCoursePlay findPlayState(Integer courseId);

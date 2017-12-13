@@ -552,6 +552,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingList(pageable.getParams()));
     }
 
+    /**
+     * 查询csp会议列表
+     *
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> findCspMeetingListForApp(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingListForApp(pageable.getParams()));
+    }
+
     @Override
     public AudioCourse findLastDraft(String cspUserId) {
         AudioCourse course = audioCourseDAO.findLastDraft(cspUserId);

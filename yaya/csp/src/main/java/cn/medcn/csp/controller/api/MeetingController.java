@@ -670,7 +670,7 @@ public class MeetingController extends CspBaseController {
         String cspUserId = principal.getId();
 
         pageable.put("cspUserId", cspUserId);
-        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
         if (!CheckUtils.isEmpty(page.getDataList())) {
             for (CourseDeliveryDTO deliveryDTO : page.getDataList()) {
