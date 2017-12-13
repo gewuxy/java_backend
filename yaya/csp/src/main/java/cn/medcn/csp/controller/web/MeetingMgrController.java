@@ -35,6 +35,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
 import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
 import static cn.medcn.meet.dto.MeetMessageDTO.MessageType.live;
 
@@ -100,7 +102,7 @@ public class MeetingMgrController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType) {
+    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType, HttpServletRequest request) {
         pageable.setPageSize(6);
 
         //打开了投稿箱的公众号列表
@@ -111,7 +113,7 @@ public class MeetingMgrController extends CspBaseController {
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
 
-        if (meetCountOut()){
+        if (meetCountOut() && CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null){
             model.addAttribute("meetCountOut", true);
         }
 
@@ -269,6 +271,11 @@ public class MeetingMgrController extends CspBaseController {
         convertClear(request);
 
         Principal principal = getWebPrincipal();
+
+        if (meetCountOut()) {
+            return "redirect:/mgr/meet/list";
+        }
+
         AudioCourse course = null;
         if (courseId != null) {
             course = audioService.findAudioCourse(courseId);
@@ -284,17 +291,7 @@ public class MeetingMgrController extends CspBaseController {
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
-                course = new AudioCourse();
-                course.setPlayType(AudioCourse.PlayType.normal.getType());
-                course.setPublished(false);
-                course.setDeleted(false);
-                course.setShared(false);
-                course.setCspUserId(principal.getId());
-                course.setTitle("");
-                course.setCreateTime(new Date());
-                course.setSourceType(AudioCourse.SourceType.csp.ordinal());
-                course.setLocked(false);
-                audioService.insert(course);
+                course = audioService.createNewCspCourse(principal.getId());
             }
         }
         if (course.getPlayType() == null) {
@@ -626,5 +623,13 @@ public class MeetingMgrController extends CspBaseController {
         } else {
             return error(courseNonDeleteAble());
         }
+    }
+
+    @RequestMapping(value = "/tips/close")
+    @ResponseBody
+    public String closeMeetOutTips(HttpServletResponse response){
+
+        CookieUtils.setCookie(response, MEET_COUNT_OUT_TIPS_KEY, "true");
+        return success();
     }
 }
