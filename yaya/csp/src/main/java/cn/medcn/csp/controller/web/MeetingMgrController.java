@@ -108,6 +108,12 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("accepterList", myPage.getDataList());
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
+
+        if (meetCountOut()){
+            model.addAttribute("meetCountOut", true);
+        }
+
+
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         pageable.put("sortType", sortType);
@@ -152,6 +158,14 @@ public class MeetingMgrController extends CspBaseController {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
 
+        if (course.getDeleted() != null && course.getDeleted()) {
+            throw new SystemException(local("source.has.deleted"));
+        }
+
+        if (course.getLocked() != null && course.getLocked()) {
+            throw new SystemException(local("course.error.locked"));
+        }
+
         model.addAttribute("course", course);
         String wsUrl = genWsUrl(request, courseId);
         model.addAttribute("wsUrl", wsUrl);
@@ -177,6 +191,21 @@ public class MeetingMgrController extends CspBaseController {
         } else {
             //查询出直播信息
             Live live = liveService.findByCourseId(courseId);
+            if (live == null) {
+                throw new SystemException(local("error.data"));
+            }
+
+            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                throw new SystemException(local("share.live.over"));
+            }
+
+            Date now = new Date();
+            if (live.getStartTime().after(now)) {
+                throw new SystemException(local("share.live.not_start.error"));
+            } else if (live.getEndTime().before(now)){
+                throw new SystemException(local("share.live.over"));
+            }
+
             model.addAttribute("live", live);
             return localeView("/meeting/screen");
         }
@@ -420,6 +449,9 @@ public class MeetingMgrController extends CspBaseController {
 
         course.setDeleted(true);
         audioService.updateByPrimaryKey(course);
+
+        //判断是否有锁定的会议
+
 
         return success();
     }

@@ -142,6 +142,16 @@
             $('.more-hook').on('click',function(){
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
+                var locked = $(this).attr("locked");
+
+                if (locked){
+                    $("#copyLi").hide();
+                    $("#editLi").hide();
+                } else {
+                    $("#copyLi").show();
+                    $("#editLi").show();
+                }
+
                 shareUrl = getShareUrl();
                 coverUrl = $("#cover_"+courseId).attr("src");
                 $("#copyShareUrl").val(shareUrl);
@@ -375,6 +385,14 @@
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix">
+            <c:if test="${meetCountOut != null && meetCountOut}">
+                <div class="admin-tips">
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
+                    <!--<span class="admin-tips-main"> <a href="user-06.html">还有 <strong class="color-blue">5</strong> 天到期</a> </span>-->
+                    <span class="admin-tips-close"></span>
+                </div>
+            </c:if>
+
             <div class="admin-row clearfix pr">
                 <div class="admin-screen-area">
                     <ul>
@@ -410,7 +428,7 @@
                                 ${(status.index) % 3 == 0 ? '<div class="row clearfix">':''}
                                 <div class="col-lg-4">
 
-                                    <div class="resource-list-item item-radius clearfix">
+                                    <div class="resource-list-item item-radius clearfix ${course.locked ? 'meeting-lock' : ''}">
                                         <div class="resource-img ">
                                             <c:choose>
                                                 <c:when test="${not empty course.coverUrl}">
@@ -456,7 +474,7 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>更多 aa${course.locked}</a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i>更多 </a>
                                             </div>
                                         </div>
                                         <c:if test="${course.locked}">
@@ -580,13 +598,13 @@
                             <p>复制链接</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="copyLi">
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
                             <p>复制副本</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
                             <p>编辑</p>
