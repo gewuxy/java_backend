@@ -58,18 +58,24 @@ public class CspPackage implements Serializable {
 
 
     public enum TypeId {
-        STANDARD(1), // 标准版
-        PREMIUM(2),  // 高级版
-        PROFESSIONAL(3); // 专业版
+        STANDARD(1, "标准版"), // 标准版
+        PREMIUM(2, "高级版"),  //
+        PROFESSIONAL(3, "专业版"); //
 
         private Integer id;
+        private String label;
 
         public Integer getId () {
             return id;
         }
 
-        TypeId(Integer id) {
+        public String getLabel() {
+            return label;
+        }
+
+        TypeId(Integer id, String label) {
             this.id = id;
+            this.label = label;
         }
     }
 }
