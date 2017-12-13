@@ -218,7 +218,7 @@ public class CspBaseController extends BaseController {
 
 
     protected String defaultRedirectUrl(){
-        return "";
+        return "redirect:/mgr/meet/list";
     }
 
 }
