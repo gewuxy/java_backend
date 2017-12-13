@@ -21,9 +21,9 @@ import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetWatermarkService;
-import cn.medcn.user.model.AppUser;
-import cn.medcn.user.model.UserFlux;
+import cn.medcn.user.model.*;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspUserPackageDetailService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +37,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -88,7 +89,8 @@ public class MeetingMgrController extends CspBaseController {
     @Autowired
     protected CspUserPackageService cspUserPackageService;
 
-
+    @Autowired
+    protected CspUserPackageDetailService cspUserPackageDetailService;
 
     /**
      * 查询当前用户的课件列表
@@ -113,8 +115,33 @@ public class MeetingMgrController extends CspBaseController {
             model.addAttribute("meetCountOut", true);
         }
 
-
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
+
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
+        //高级版和专业版进行时间提醒
+        if(cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
+            try {
+                //计算到期天数
+                int expireTimeCount = CalendarUtils.daysBetween(cspUserPackage.getPackageStart(),cspUserPackage.getPackageEnd());
+                model.addAttribute("expireTimeCount",expireTimeCount);
+                //到期自动降为标准版
+                if (expireTimeCount<= 0){
+                    //更新变更套餐详情
+                    CspUserPackageDetail cspUserPackageDetail = new CspUserPackageDetail();
+                    cspUserPackageDetail.setUserId(principal.getId());
+                    cspUserPackageDetail.setUpdateType(0);
+                    cspUserPackageDetail.setUpdateTime(new Date());
+                    cspUserPackageDetail.setAfterPackageId(CspPackage.TypeId.STANDARD.getId());
+                    cspUserPackageDetail.setBeforePackageId(cspUserPackage.getPackageId());
+                    cspUserPackageDetail.setId(StringUtils.nowStr());
+                    cspUserPackageDetailService.insert(cspUserPackageDetail);
+                    cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
+                    cspUserPackageService.updateByPrimaryKey(cspUserPackage);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
