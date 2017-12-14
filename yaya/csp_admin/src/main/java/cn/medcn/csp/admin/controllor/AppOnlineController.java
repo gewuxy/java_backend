@@ -5,6 +5,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.QRCodeUtils;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.user.model.AppVersion;
 import cn.medcn.user.service.AppVersionService;
@@ -65,7 +66,7 @@ public class AppOnlineController extends BaseController {
      */
     @RequestMapping(value = "/check")
     @Log(name = "查看APP详情")
-    public String checkAppManage(@RequestParam(value = "id", required = true) Integer id, Model model) {
+    public String checkAppManage(@RequestParam(value = "id") Integer id, Model model) {
         AppVersion appVersion = appVersionService.selectByPrimaryKey(id);
         model.addAttribute("appVersion", appVersion);
         return "/appManage/AppManageInfo";
@@ -82,7 +83,7 @@ public class AppOnlineController extends BaseController {
     @Log(name = "修改APP列表")
     public String updateAppManage(AppVersion appVersion,RedirectAttributes redirectAttributes) {
         if (appVersion != null){
-            if (appVersion.getVersionStr() == null ||appVersion.getVersionStr().equals("")){
+            if (StringUtils.isEmpty(appVersion.getVersionStr())){
                 addErrorFlashMessage(redirectAttributes,"修改失败,版本号信息必填");
             }else{
                 Integer version = Integer.valueOf(appVersion.getVersionStr().replace(".", ""));
@@ -92,7 +93,7 @@ public class AppOnlineController extends BaseController {
                 addFlashMessage(redirectAttributes,"修改成功");
             }
         }else {
-            addErrorFlashMessage(redirectAttributes,"修改失败");
+                addErrorFlashMessage(redirectAttributes,"修改失败");
         }
         return "redirect:/csp/appManage/list";
     }
@@ -119,7 +120,7 @@ public class AppOnlineController extends BaseController {
     @Log(name = "添加APP")
     public String addAppManage(AppVersion appVersion,RedirectAttributes redirectAttributes) {
         if (appVersion != null){
-            if (appVersion.getVersionStr() == null||appVersion.getVersionStr().equals("")){
+            if (StringUtils.isEmpty(appVersion.getVersionStr())){
                 addErrorFlashMessage(redirectAttributes,"修改失败,版本号信息必填");
             }else{
                 Integer version = Integer.valueOf(appVersion.getVersionStr().replace(".", ""));
@@ -129,7 +130,7 @@ public class AppOnlineController extends BaseController {
                 addFlashMessage(redirectAttributes,"添加成功");
             }
         }else {
-            addErrorFlashMessage(redirectAttributes,"添加失败");
+                addErrorFlashMessage(redirectAttributes,"添加失败");
         }
         return "redirect:/csp/appManage/list";
     }
@@ -142,8 +143,11 @@ public class AppOnlineController extends BaseController {
      */
     @RequestMapping(value = "/delete")
     @Log(name = "删除")
-    public String deleteAppManage(@RequestParam(value = "id", required = true) Integer id) {
-        appVersionService.deleteByPrimaryKey(id);
+    public String deleteAppManage(@RequestParam(value = "id") Integer id,RedirectAttributes redirectAttributes) {
+        int delCount = appVersionService.deleteByPrimaryKey(id);
+        if (delCount != 1){
+            addFlashMessage(redirectAttributes,"删除失败");
+        }
         return "redirect:/csp/appManage/list";
     }
 
