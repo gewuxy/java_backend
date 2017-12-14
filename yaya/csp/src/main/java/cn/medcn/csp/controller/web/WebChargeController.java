@@ -190,7 +190,7 @@ public class WebChargeController extends CspBaseController {
         }
         //支付成功
         if(createdPayment.getState().equals("approved")){
-            if(paymentId.contains(CspConstants.FLUX_ORDER_FLAG)){  //流量充值支付成功
+            if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //流量充值支付成功
                 //查找订单
                 FluxOrder order = new FluxOrder();
                 order.setTradeId(paymentId);

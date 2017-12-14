@@ -13,7 +13,6 @@ import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
-import com.sun.org.apache.xpath.internal.operations.Mod;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.UsernamePasswordToken;
@@ -175,13 +174,17 @@ public class LoginController extends CspBaseController {
         if (userInfo == null) {
             // 手机号码不存在，注册新用户
             userInfo = new CspUserInfo();
-            userInfo.setId(StringUtils.nowStr());
+            String userId =  StringUtils.nowStr();
+            userInfo.setId(userId);
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             userInfo.setFlux(0); // 用户流量
             cspUserService.insert(userInfo);
+
+            //新用户发送欢迎推送消息
+            sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
         }
     }
 
@@ -270,6 +273,9 @@ public class LoginController extends CspBaseController {
         CspUserInfo userInfo = cspUserService.selectByPrimaryKey(id);
         userInfo.setNickName(nickName);
         cspUserService.updateByPrimaryKeySelective(userInfo);
+
+        //新用户发送欢迎推送消息
+        sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
 
         // 将当前用户添加到cookie缓存 保存7天
         Principal principal = getWebPrincipal();
@@ -423,7 +429,6 @@ public class LoginController extends CspBaseController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-
         return "redirect:/mgr/meet/list";
     }
 

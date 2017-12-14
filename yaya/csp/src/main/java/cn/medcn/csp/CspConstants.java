@@ -30,8 +30,4 @@ public class CspConstants {
 
     //套餐订单标识
     public static final String PACKAGE_ORDER_FLAG = "pk";
-
-    //流量订单标识
-    public static final String FLUX_ORDER_FLAG = "fx";
-
 }

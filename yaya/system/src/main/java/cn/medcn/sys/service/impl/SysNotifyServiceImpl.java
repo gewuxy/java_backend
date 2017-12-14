@@ -69,6 +69,14 @@ public class SysNotifyServiceImpl extends BaseServiceImpl<SystemNotify> implemen
         return page;
     }
 
+    /**
+     * 添加消息
+     *
+     * @param userId
+     * @param title
+     * @param content
+     * @param sender
+     */
     @Override
     public void addNotify(String userId, String title, String content, String sender) {
         SystemNotify notify = new SystemNotify();

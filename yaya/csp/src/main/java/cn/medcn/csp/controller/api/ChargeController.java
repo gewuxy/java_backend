@@ -171,7 +171,7 @@ public class ChargeController extends CspBaseController {
                 JSONObject object = JSON.parseObject(data.get("object").toString());
                 String orderNo = (String) object.get("order_no");
                 //查找订单
-                if(orderNo.contains(CspConstants.FLUX_ORDER_FLAG)){
+                if(orderNo.contains(CspConstants.PACKAGE_ORDER_FLAG)){
                     //查找订单
                     FluxOrder condition = new FluxOrder();
                     condition.setTradeId(orderNo);

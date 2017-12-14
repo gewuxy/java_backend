@@ -14,6 +14,7 @@ import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.sys.dao.SystemNotifyDAO;
+import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dao.BindInfoDAO;
 import cn.medcn.user.dao.CspUserInfoDAO;
 import cn.medcn.user.dao.EmailTemplateDAO;
@@ -109,6 +110,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.findCspUserById(userId);
     }
 
+    @Autowired
+    protected SysNotifyService sysNotifyService;
+
     @Override
     public CspUserInfo findBindUserByUniqueId(String uniqueId) {
         return cspUserInfoDAO.findBindUserByUniqueId(uniqueId);
@@ -189,6 +193,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         userDTO.setUid(userInfo.getId());
         BindInfo bindUser = BindInfo.buildToBindInfo(userDTO);
         bindInfoDAO.insert(bindUser);
+
+        //发送注册成功推送消息
+        sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
 
         return userInfo;
     }

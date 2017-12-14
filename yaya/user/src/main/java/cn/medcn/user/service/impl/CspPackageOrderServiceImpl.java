@@ -105,7 +105,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         //推送购买成功消息
         StringBuffer content = new StringBuffer();
         content.append("您已成为会讲").append(CspPackage.TypeId.values()[packageId].getLabel()).append("会员用户，有效期").append(yearType ? order.getNum() + "年":order.getNum() + "个月");
-        sysNotifyService.addNotify(order.getUserId(),"购买成功",content+"。","敬信科技团队");
+        sysNotifyService.addNotify(order.getUserId(),"购买成功",content+"。",local("user.notify.sender"));
     }
 
     @Override
