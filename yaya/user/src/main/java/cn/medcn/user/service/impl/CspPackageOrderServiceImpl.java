@@ -9,12 +9,12 @@ import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspPackageOrderDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
-import cn.medcn.user.dao.CspUserPackageDetailDAO;
+import cn.medcn.user.dao.CspUserPackageHistoryDAO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspPackageOrderService;
-import cn.medcn.user.service.CspUserPackageDetailService;
+import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,10 +41,10 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     protected SystemNotifyDAO systemNotifyDAO;
 
     @Autowired
-    protected CspUserPackageDetailDAO cspUserPackageDetailDAO;
+    protected CspUserPackageHistoryDAO cspUserPackageHistoryDAO;
 
     @Autowired
-    protected CspUserPackageDetailService cspUserPackageDetailService;
+    protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
     @Autowired
     protected SysNotifyService sysNotifyService;
@@ -95,7 +95,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
         }
         //添加用户套餐历史信息
-        cspUserPackageDetailService.addUserHistoryInfo(order.getUserId(),oldPackage,packageId,Constants.NUMBER_ONE);
+        cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(),oldPackage,packageId,Constants.NUMBER_ONE);
 
         //推送购买成功消息
         StringBuffer content = new StringBuffer();

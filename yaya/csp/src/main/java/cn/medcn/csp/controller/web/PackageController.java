@@ -40,7 +40,7 @@ public class PackageController extends CspBaseController{
     protected CspUserPackageService cspUserPackageService;
 
     @Autowired
-    protected CspUserPackageDetailService cspUserPackageDetailService;
+    protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
     @Value("${app.csp.base}")
     protected String appBase;
@@ -93,7 +93,7 @@ public class PackageController extends CspBaseController{
             //标准版不需要支付添加用户套餐信息
             cspUserPackageService.addStanardInfo(userId);
             //添加用户历史版本信息
-            cspUserPackageDetailService.addUserHistoryInfo(userId,null,packageId, Constants.NUMBER_ONE);
+            cspUserPackageHistoryService.addUserHistoryInfo(userId,null,packageId, Constants.NUMBER_ONE);
             //更新用户信息缓存
             redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,Constants.NUMBER_ONE,(int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
             return "redirect:/mgr/meet/list";
@@ -162,7 +162,7 @@ public class PackageController extends CspBaseController{
     public String usdPay(Integer packageId, String currency, String payType,float money,Integer num) throws SystemException {
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
-        Payment payment = chargeService.generatePayment(num,appBase);           //需要修改此方法
+        Payment payment = chargeService.generatePayment(money);           //需要修改此方法
         Payment responsePayment;
         String url = null;
         try {
