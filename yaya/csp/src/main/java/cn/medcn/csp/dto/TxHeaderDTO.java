@@ -23,6 +23,8 @@ public class TxHeaderDTO implements Serializable {
 
     public static final String TX_HEADER_CHANNEL_ID_KEY = "channel_id";
 
+    public static final String TX_BODY_ERROR_CODE_KEY = "errcode";
+
     //时间戳 十进制
     protected long t;
     //签名
@@ -35,6 +37,8 @@ public class TxHeaderDTO implements Serializable {
     protected String channel_id;
 
     protected TxEventType txEventType;
+
+    protected Integer errcode = 0;
 
 
     /**

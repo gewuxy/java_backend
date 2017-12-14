@@ -246,8 +246,7 @@
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
                 var locked = $(this).attr("locked");
-
-                if (locked){
+                if (locked == "true"){
                     $("#copyLi").hide();
                     $("#editLi").hide();
                 } else {

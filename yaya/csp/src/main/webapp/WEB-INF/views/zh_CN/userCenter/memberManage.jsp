@@ -515,6 +515,7 @@
 
 <script>
     $(function(){
+        $("#config_6").parent().attr("class","cur");
         //缓存tabs内容区
         var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
 
