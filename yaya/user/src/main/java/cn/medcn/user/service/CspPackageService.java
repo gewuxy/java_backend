@@ -14,4 +14,5 @@ public interface CspPackageService extends BaseService<CspPackage> {
     CspPackage findUserPackageById(String userId);
     List<CspPackage> findAllPackage();
     Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency);
+    boolean newUser(String userId);
 }

@@ -1,9 +1,11 @@
 package cn.medcn.csp.controller.api;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
+import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.CspPackageOrder;
@@ -33,12 +35,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
+import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
+
 /**
  * Created by lixuan on 2017/9/12.
  */
 @Controller
 @RequestMapping("/api/charge/")
-public class ChargeController extends BaseController {
+public class ChargeController extends CspBaseController {
 
 
     @Autowired
@@ -63,7 +67,7 @@ public class ChargeController extends BaseController {
     protected String paypalSecret;
 
     @Autowired
-    private RedisCacheUtils redisCacheUtils;
+    protected RedisCacheUtils redisCacheUtils;
 
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
@@ -191,6 +195,8 @@ public class ChargeController extends BaseController {
                     if (order != null) {
                         //更新订单状态，修改用户流量值
                         cspPackageOrderService.updateOrderAndUserPackageInfo(order);
+                        //更新缓存
+                        redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
                         //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
                         if ("wx_pub_qr".equals(order.getPlatForm())) {
                             redisCacheUtils.setCacheObject(order.getTradeId(), 1, (int) TimeUnit.HOURS.toSeconds(2));

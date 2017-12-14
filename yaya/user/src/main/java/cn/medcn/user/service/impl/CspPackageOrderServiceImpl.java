@@ -58,7 +58,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         CspPackageOrder order = new CspPackageOrder();
         order.setNum(num);
         order.setUserId(userId);
-        order.setPayMoney(money);
+        order.setShouldPay(money);
         order.setCurrencyType(currency.equals("CN")?Constants.NUMBER_ZERO:Constants.NUMBER_ONE);
         order.setId(StringUtils.nowStr());
         order.setTradeId(orderNo);
@@ -78,12 +78,12 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         Integer packageId = order.getPackageId();
         Integer oldPackage = null;
         Date start = new Date();
-        boolean isYearType = yearPay(packageId,order.getShouldPay());
+        boolean yearType = yearPay(packageId,order.getShouldPay());
         if(userPk == null){ //添加用户套餐信息
             CspUserPackage cspUserPackage = new CspUserPackage();
             cspUserPackage.setUserId(order.getUserId());
             cspUserPackage.setPackageStart(start);
-            Date end  = isYearType ? CalendarUtils.calendarYear(order.getNum()):CalendarUtils.calendarMonth(order.getNum());
+            Date end  = yearType ? CalendarUtils.calendarYear(order.getNum()):CalendarUtils.calendarMonth(order.getNum());
             cspUserPackage.setPackageEnd(end);
             cspUserPackage.setPackageId(packageId);
             cspUserPackage.setUpdateTime(start);
@@ -94,7 +94,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             userPk.setUpdateTime(start);
             userPk.setPackageId(packageId);
             userPk.setPackageStart(start);
-            Date end  = isYearType ? CalendarUtils.calendarYear(userPk.getPackageEnd(),order.getNum()):CalendarUtils.calendarMonth(userPk.getPackageEnd(),order.getNum());
+            Date end  = yearType ? CalendarUtils.calendarYear(userPk.getPackageEnd(),order.getNum()):CalendarUtils.calendarMonth(userPk.getPackageEnd(),order.getNum());
             userPk.setPackageEnd(end);
             userPk.setSourceType(Constants.NUMBER_ONE);
             cspUserPackageDAO.updateByPrimaryKey(userPk);
@@ -104,20 +104,19 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
 
         //推送购买成功消息
         StringBuffer content = new StringBuffer();
-        content.append("您已成为会讲").append(CspPackage.TypeId.values()[packageId].getLabel()).append("会员用户，有效期").append(isYearType ? order.getNum() + "年":order.getNum() + "个月");
+        content.append("您已成为会讲").append(CspPackage.TypeId.values()[packageId].getLabel()).append("会员用户，有效期").append(yearType ? order.getNum() + "年":order.getNum() + "个月");
         sysNotifyService.addNotify(order.getUserId(),"购买成功",content+"。","敬信科技团队");
     }
 
     @Override
     public Boolean yearPay(Integer packageId,float money){
-        boolean isYearType = false;
         if(packageId == CspPackage.TypeId.PROFESSIONAL.getId()){ //专业版
             CspPackage cspPackage = cspPackageDAO.selectByPrimaryKey(packageId);
             if(money >= cspPackage.getYearRmb()  ) {//年费
-                isYearType = true;
+                return true;
             }
         }
-        return isYearType;
+        return false;
     }
 }
 
