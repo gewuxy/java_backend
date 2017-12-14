@@ -89,11 +89,7 @@
                     closeBtn: 0, //不显示关闭按钮
                     shade: 0.1,
                     area: ['1116px', '900px'],
-                    content: '${ctx}/mgr/pay/mark',
-                    success:function(layero, index){
-                    },
-                    cancel :function(){
-                    },
+                    content: '${ctx}/mgr/pay/mark'
                 });
             }
 
@@ -795,12 +791,9 @@
                 <div class="cancel-popup-main">
                     <p>超出套餐会议数量，请升级套餐后再试</p>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
-
-<%@include file="../include/memberMark.jsp" %>
 </body>
 </html>

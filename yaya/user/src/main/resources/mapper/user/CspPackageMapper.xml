@@ -11,4 +11,7 @@
         WHERE up.user_id = #{userId}
     </select>
 
+    <select id="findCspPackage" resultType="cn.medcn.user.model.CspPackage">
+        SELECT * FROM t_csp_package ORDER BY id DESC
+    </select>
 </mapper>

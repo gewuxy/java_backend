@@ -26,6 +26,16 @@
         }
 
         $(function () {
+            //获取套餐信息
+            ajaxSyncGet('${ctx}/mgr/pay/package', {}, function(data){
+                var course = data.data;
+                if (course == undefined){
+                    layer.msg("获取套餐信息失败，请刷新重试");
+                    return false;
+                }
+                initSwiper(course);
+            });
+
             var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
             //初始化高级版选中
             tabsMainNum.eq(1).removeClass('none').siblings().addClass('none');
@@ -78,6 +88,30 @@
                 sumMoney();
             })
         })
+
+        function initSwiper(course) {
+            var package = course.packages;
+            $("#price2").html(package[1].monthRmb);
+            $("#price3").html(package[2].monthRmb + "/月" + package[2].yearRmb + "年");
+            for(var i = 0;i < package.length;i++){
+                if(package[i].id == 2){
+                    $("#price" + i).html(package[i].monthRmb);
+                    $("#hgTotal").html(package[i].monthRmb);
+                }
+                if(package[i].id == 3) {
+                    $("#price" + i).html(package[i].monthRmb + "/月" + package[i].yearRmb + "年");
+                    $("#pfTotal").html(package[i].monthRmb);
+                }
+                $("#meets" + i).html(package[2].limitTimes == 0? "不限会议":package[2].limitTimes + "个会议");
+            }
+            for(var index in course.infos) {
+                var packageId = index.packageId;
+                if (index.state == true) $("#info" + packageId).appear('<li class="icon-li-selected">' + index.descript + '</li>');
+            }
+
+        }
+
+
     </script>
 
 
@@ -98,10 +132,10 @@
                         <div class="index-buy-main">
                             <div class="index-buy-info">
                                 <p>不限时长</p>
-                                <p>3个会议</p>
+                                <p id="meets1"></p>
                             </div>
                             <div class="index-buy-text">
-                                <ul>
+                                <ul id="info1">
                                     <li class="icon-li-selected">启用投屏录播</li>
                                     <li class="icon-li-selected">启用投屏直播</li>
                                     <li class="icon-li-selected">会讲水印</li>
@@ -112,15 +146,15 @@
                     <div class="index-buy-item  index-buy-item-current ">
                         <div class="index-buy-header">
                             <h4>高级版</h4>
-                            <h3 class="price">16.67元</h3>
+                            <h3 class="price" id="price2"></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
                                 <p>1个月有效</p>
-                                <p>10个会议</p>
+                                <p id="meets2"></p>
                             </div>
                             <div class="index-buy-text">
-                                <ul>
+                                <ul id="info2">
                                     <li class="icon-li-selected">启用投屏录播</li>
                                     <li class="icon-li-selected">启用投屏直播</li>
                                     <li class="icon-li-selected">昵称水印</li>
@@ -132,15 +166,15 @@
                     <div class="index-buy-item last">
                         <div class="index-buy-header">
                             <h4>专业版</h4>
-                            <h3 class="price">66元/660元</h3>
+                            <h3 class="price" id="price3"></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
                                 <p>1个月/1年有效</p>
-                                <p>不限会议</p>
+                                <p id="meets3">不限会议</p>
                             </div>
                             <div class="index-buy-text">
-                                <ul>
+                                <ul id="info3">
                                     <li class="icon-li-selected">启用投屏录播</li>
                                     <li class="icon-li-selected">启用投屏直播</li>
                                     <li class="icon-li-star">自定义水印</li>
@@ -277,7 +311,7 @@
                         <div class="formrow money">
                             <div class="formTitle color-black">支付金额</div>
                             <div class="formControls">
-                                <span class="payNum" id="hgTotal">0.00</span>
+                                <span class="payNum" id="hgTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn2" class="cn on">
                                             <input type="radio" name="hgCurrency" id="currency-cn2" checked="checked" class="none" value="CN">
@@ -360,7 +394,7 @@
                         <div class="formrow money">
                             <div class="formTitle color-black">支付金额</div>
                             <div class="formControls">
-                                <span class="payNum" id="pfTotal">0.00</span>
+                                <span class="payNum" id="pfTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn3" class="cn on">
                                             <input type="radio" name="pfCurrency" id="currency-cn3" checked="checked" class="none" value="CN">

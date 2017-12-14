@@ -24,7 +24,7 @@ public class CspPackageInfo implements Serializable {
     // 服务标识
     protected String iden;
     // 描述
-    protected String describe;
+    protected String descript;
     // 状态
     protected Boolean state;
 

@@ -17,6 +17,7 @@ import java.net.SocketPermission;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Liuchangling on 2017/12/8.
@@ -71,9 +72,14 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         Object newUser = redisCacheUtils.getCacheObject(Constants.CSP_NEW_USER + userId);
         if(newUser == null){
             CspUserPackage userPackage = cspUserPackageDAO.selectByPrimaryKey(userId);
-            redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,userPackage == null ? Constants.NUMBER_ZERO:Constants.NUMBER_ONE,Constants.NUMBER_ONE);
-            return userPackage == null ? true:false;
+            redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,userPackage == null ? Constants.NUMBER_ZERO:Constants.NUMBER_ONE,(int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+            return userPackage == null;
         }
-        return (Integer)newUser == Constants.NUMBER_ZERO?true:false;
+        return (Integer)newUser == Constants.NUMBER_ZERO;
+    }
+
+    @Override
+    public List<CspPackage> findCspPackage() {
+        return cspPackageDAO.findCspPackage();
     }
 }
