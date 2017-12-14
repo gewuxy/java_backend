@@ -46,14 +46,13 @@
                                         <tr>
                                             <td class="col-w-4 color-black">${v.meetName}</td>
                                             <td class="col-w-3">消耗${v.expense}M</td>
-                                            <c:if test="${v.expireDay > 0}">
+                                            <c:if test="${v.downloadCount < 5}">
+                                                <input type="hidden" id="count_${v.courseId}" value="${v.downloadCount}">
+                                                <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook">下载视频</a></td>
 
-                                                <td class="col-w-2"><a  class="color-blue"  href="${ctx}/mgr/user/download?courseId=${v.courseId}&meetName=${v.meetName}">下載視頻</a></td>
-                                                <td class="col-w-2 color-green1">${v.expireDay}天後過期</td>
                                             </c:if>
-                                            <c:if test="${v.expireDay == 0}">
-                                                <td class="col-w-2"><span class="color-gray">已過期</span></td>
-                                                <td class="col-w-2 color-green1">&nbsp;</td>
+                                            <c:if test="${v.downloadCount >= 5}">
+                                                <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook">邮件获取</a></td>
                                             </c:if>
                                         </tr>
                                     </c:forEach>
@@ -68,36 +67,72 @@
                         </div>
                         <div class="user-content item-radius pay-mode">
                             <form action="${ctx}/mgr/charge/toCharge" name="submitForm" id="submitForm" method="post" target="_blank">
-                                <div class="formrow flow login-form-item">
+                                <div class="formrow flow">
                                     <div class="formTitle color-black">充值流量</div>
                                     <div class="formControls">
-                                        <label for="" class="pr">
-                                            <input type="text" class="textInput" placeholder="輸入需充值的流量" id="flux" name="flux" oninput="fill()" maxlength="3">
-                                            <span >G</span>
-                                        </label>
-                                        <p ><span class="explain">1G流量=2元</span></p>
-                                        <span class="cells-block error none" id="errSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>姓名不能為空</span> </span>
+                                        <div class="pay-mode-list flow-mode-list" >
+                                            <label for="tid1" class="item item-radius" >
+                                                <input type="radio" name="flux" class="none" value="5" id="tid1">
+                                                5G
+                                            </label>
+                                            <label for="tid2" class="item item-radius" >
+                                                <input type="radio" name="flux" class="none" value="25" id="tid2" >
+                                                25G
+                                            </label>
+                                            <label for="tid3" class="item item-radius pay-on" >
+                                                <input type="radio" name="flux" class="none" value="100" id="tid3" checked>
+                                                100G
+                                            </label>
+                                            <label for="tid4" class="item item-radius" >
+                                                <input type="radio" name="flux" class="none" value="500" id="tid4" >
+                                                500G
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="formrow " style="margin-bottom:20px;" >
+                                <div class="formrow " >
                                     <div class="formTitle color-black">充值方式</div>
-                                    <div class="formControls">
-                                        <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
-                                            <label for="paypal" class="item item-radius pay-on">
-                                                <input type="radio" name="channel" class="none" value="paypal" id="paypal">
+                                    <div class="formControls" >
+                                        <div class="pay-mode-list CN-hook none" id="chinese">
+                                            <label for="id11" class="item item-radius pay-on">
+                                                <input type="radio" name="channel" class="none" value="alipay_pc_direct" id="id11" checked>
+                                                <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
+                                            </label>
+                                            <label for="id21" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id21">
+                                                <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
+                                            </label>
+                                            <label for="id31" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="upacp_pc" id="id31">
+                                                <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                            </label>
+                                        </div>
+                                        <div class="pay-mode-list EN-hook">
+                                            <label for="id5" class="item item-radius pay-on">
+                                                <input type="radio" name="channel" class="none" value="paypal" id="id5">
                                                 <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                             </label>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="formrow money">
-                                    <div class="formTitle color-black">支付&nbsp;&nbsp;¥</div>
+                                    <div class="formTitle color-black">支付金額</div>
                                     <div class="formControls">
-                                        <div class="payNum" id="money">0.00</div>
+                                        <span class="color-black"><span class="payNum">200</span> <span id="yuan">元</span></span> <span class="color-green">(100G流量)</span>
+                                        <span class="money-state">
+                                        <label for="currency-cn" class="cn on">
+                                            <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
+                                            CNY
+                                        </label>
+                                        <label for="currency-en" class="en">
+                                            <input type="radio" name="currency" id="currency-en" class="none" value="EN">
+                                            USD
+                                        </label>
+                                    </span>
                                     </div>
                                 </div>
                                 <div class="formrow last">
-                                    <input type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="確認支付">
+                                    <input  type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="確認支付">
                                 </div>
                             </form>
                         </div>
@@ -110,9 +145,7 @@
     <%@include file="../include/footer.jsp"%>
 </div>
 
-<form target="_blank" action="${ctx}/mgr/charge/createOrder" name="paypalForm" id="paypalForm" method="post">
-    <input type="hidden" class="flux" name="flux" value="0">
-</form>
+
 
 <!--彈出 充值-->
 <div class="cancel-popup-box">
@@ -135,11 +168,36 @@
     </div>
 </div>
 
+<!--彈出 郵件獲取-->
+<div class="videoListEmail-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p class="color-black" style="font-size:20px; margin-bottom:10px;">已超出下載權限，如需下載可通過郵件申請。</p>
+                    <p>發送郵件 “用戶名+會議名稱+直播日期” 至郵箱</p>
+                    <p><a href="mailto:service@CSPmeeting.com">service@CSPmeeting.com</a></p>
+                    <p>我們會盡快審核並返回下載鏈接到您的發件郵箱。</p>
+                    <!--<div class="admin-button t-right">-->
+                    <!--<a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到問題，重試</a>-->
+                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" value="我已付款成功">-->
+                    <!--</div>-->
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
 
 
 
 <script>
 
+    var currency = 2;
     $(function(){
         $.ajaxSetup({
             async : false
@@ -158,26 +216,32 @@
 
 
         $("#submitBtn").click(function () {
-            if(checkFlux()){
-                    var flux = $("#flux").val();
-                    $(".flux").val(flux);
-                    $("#paypalForm").submit();
-
-
-                //觸發充值彈出窗
-                layer.open({
-                    type: 1,
-                    area: ['560px', '250px'],
-                    fix: false, //不固定
-                    title:false,
-                    closeBtn:0,
-                    content: $('.cancel-popup-box'),
-                    success:function(){
-                    },
-                    cancel :function(){
-                    },
-                });
+            if(currency == 1){  //人民币支付
+                var channel = $('input[name="channel"]:checked').val();
+                if(channel == "paypal"){
+                    $("#id5").removeAttr("checked");
+                    $('#chinese').find('label[class="item item-radius pay-on"]').find('input').prop("checked",true);
+                }
+                $("#submitForm").submit();
+            }else{
+                var flux = $('input[name="flux"]:checked').val();
+                window.open("${ctx}/mgr/charge/createOrder?flux="+flux);
             }
+            $("#submitForm").submit();
+            //触发支付弹出窗
+            layer.open({
+                type: 1,
+                area: ['560px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('.cancel-popup-box'),
+                success:function(){
+                },
+                cancel :function(){
+                },
+            });
+
 
         });
 
@@ -186,44 +250,110 @@
         });
 
 
+
+        $('input[name="flux"]').click(function () {
+            var flux = $(this).val();
+            changeMoney(flux,currency);
+
+        });
+
+        $(".downButton-hook").click(function () {
+            var meetName = $(this).attr("meetName");
+            var courseId = $(this).attr("courseId");
+            var count = $("#count_"+courseId).val();
+
+            if(parseInt(count) >= 5){
+                layer.open({
+                    type: 1,
+                    area: ['560px', '320px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["我知道了"],
+                    content: $('.videoListEmail-popup-box'),
+                    success:function(){
+
+                    },
+                    cancel :function(){
+
+                    },
+                });
+
+                $(this).attr("class","color-gray videoListEmail-hook");
+                $(this).html("郵件獲取");
+            }else{
+                layer.msg("會議視頻提供5次有效下載，已下載"+ count+"次",{time:1000},function () {
+                    $("#count_"+courseId).val(parseInt(count) + 1);
+                    window.location.href="${ctx}/mgr/user/download?courseId="+courseId+"&meetName="+meetName;
+                });
+            }
+
+
+        });
+
     });
 
-    function fill(){
-        if(checkFlux()){
+    function changeMoney(flux,currency){
+        if(currency == 1){  //中文
             var channel = $('input[name="channel"]:checked').val();
-            if(channel != "paypal"){
-                $("#money").html(($("#flux").val())*2 + ".00");
+            $(".payNum").html(flux*2);
+            $("#yuan").html("元");
+            $(".color-green").html("("+flux+"G流量)");
+        }else{
+            if(flux == 5){
+                $(".payNum").html(1.75);
+            }else if(flux == 25){
+                $(".payNum").html(8.75);
+            }else if(flux == 100){
+                $(".payNum").html(35);
             }else{
-                $("#money").html(($("#flux").val())*1 + ".00");
+                $(".payNum").html(175);
             }
-        }else{
-            $("#money").html("0.00");
+            $("#yuan").html("美元");
+            $(".color-green").html("("+flux+"G流量)");
         }
     }
 
-    function checkChannel() {
-        var channel = $('input[name="channel"]:checked').val();
-        if(channel != "paypal"){
-            $("#money").html(($("#flux").val())*2 + ".00");
-        }else{
-            $("#money").html(($("#flux").val())*1 + ".00");
+    //货币切换
+    $(".money-state label").click(function(){
+        $(this).addClass('on').siblings().removeClass('on');
+        var currencyValue = $(this).parents('.pay-mode').find('input[name="currency"]:checked').val();
+        if( currencyValue == 'CN'){
+            currency = 1;
+            $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
+            //替换货币说明
+            $(this).parents('.pay-mode').find('.explain-cn-hook').removeClass('none').siblings().addClass('none');
+        } else if ( currencyValue =='EN' ){
+            currency = 2;
+            $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
+            //替换货币说明
+            $(this).parents('.pay-mode').find('.explain-en-hook').removeClass('none').siblings().addClass('none');
         }
-    }
+        var flux = $('input[name="flux"]:checked').val();
+        changeMoney(flux,currency);
+    });
 
-    function checkFlux() {
-        if(!Number.isInteger($("#flux").val()/1)){
-            $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").find('span').html("請輸入整數");
-            return false;
-        }else if(($("#flux").val()/1)<1){
-            $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").html("充值流量必須大於1G");
-            return false;
-        } else{
-            $("#errSpan").attr("class","cells-block error none");
-            return true;
-        }
-    }
+    //邮件获取
+    $('.videoListEmail-hook').on('click',function(){
+        layer.open({
+            type: 1,
+            area: ['560px', '320px'],
+            fix: false, //不固定
+            title:false,
+            closeBtn:0,
+            btn: ["我知道了"],
+            content: $('.videoListEmail-popup-box'),
+            success:function(){
+
+            },
+            cancel :function(){
+
+            },
+        });
+    });
+
+
+
 
 
 

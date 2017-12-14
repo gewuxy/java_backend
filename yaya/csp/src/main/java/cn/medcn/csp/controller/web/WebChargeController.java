@@ -76,10 +76,9 @@ public class WebChargeController extends CspBaseController {
         Pingpp.privateKeyPath = path;
         Charge charge = null;
 
-
+        Float money = FluxOrder.getInternalPrice(flux);
         try {
             //生成Charge对象
-            Float money = FluxOrder.getInternalPrice(flux);
             charge = chargeService.createCharge(orderNo,money, channel, ip);
         } catch (Exception e) {
             e.printStackTrace();
