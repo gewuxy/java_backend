@@ -34,4 +34,12 @@ public interface SysNotifyService extends BaseService<SystemNotify>{
      * @return
      */
     MyPage<SystemNotify> findMessageListByPage(Pageable pageable);
+
+    /**
+     * 个人信息推送
+     * @param userId
+     * @param title
+     * @param content
+     */
+    void addNotify(String userId,String title,String content,String sender);
 }

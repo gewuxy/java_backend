@@ -21,8 +21,12 @@ import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetWatermarkService;
+import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.UserFluxService;
@@ -86,6 +90,10 @@ public class MeetingMgrController extends CspBaseController {
 
     @Autowired
     protected CspUserPackageService cspUserPackageService;
+
+    @Autowired
+    protected CspPackageService cspPackageService;
+
 
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
@@ -178,7 +186,7 @@ public class MeetingMgrController extends CspBaseController {
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
-        model.addAttribute("isNewUser",cspUserPackageService.isNewUser(getWebPrincipal().getId()));
+        model.addAttribute("newUser",cspPackageService.newUser(getWebPrincipal().getId()));
         return localeView("/meeting/list");
     }
 

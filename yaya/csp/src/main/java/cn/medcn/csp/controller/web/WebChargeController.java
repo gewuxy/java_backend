@@ -1,11 +1,16 @@
 package cn.medcn.csp.controller.web;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.HttpUtils;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
+import cn.medcn.user.service.CspPackageOrderService;
+import cn.medcn.user.service.CspPackageService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.paypal.api.payments.*;
@@ -23,6 +28,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/9/12.
@@ -34,6 +40,12 @@ public class WebChargeController extends CspBaseController {
 
     @Autowired
     protected ChargeService chargeService;
+
+    @Autowired
+    protected CspPackageOrderService cspPackageOrderService;
+
+    @Autowired
+    protected CspPackageService cspPackageService;
 
     @Value("${app.csp.base}")
     protected String appBase;
@@ -177,6 +189,7 @@ public class WebChargeController extends CspBaseController {
 
         //支付成功
         if(createdPayment.getState().equals("approved")){
+            if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //流量充值支付成功
                 //查找订单
                 FluxOrder order = new FluxOrder();
                 order.setTradeId(paymentId);
@@ -188,9 +201,21 @@ public class WebChargeController extends CspBaseController {
                 //更新订单状态，修改用户流量值
                 chargeService.updateOrderAndUserFlux(order);
                 return "redirect:/mgr/charge/success?money="+(order.getMoney());
+            }else{  // 套餐购买支付成功
+                CspPackageOrder condition = new CspPackageOrder();
+                condition.setTradeId(paymentId);
+                CspPackageOrder order = cspPackageOrderService.selectOne(condition);
+                if (order == null) {
+                    throw new SystemException("No related orders");
+                }
+                //更新订单状态，修改用户套餐信息
+                cspPackageOrderService.updateOrderAndUserPackageInfo(order);
+                redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+                boolean yearType = cspPackageOrderService.yearPay(order.getPackageId(),order.getShouldPay());
+                Map<String,Object> results = cspPackageService.getOrderParams(order.getPackageId(),yearType == true ? order.getNum() * 12 : order.getNum(),"CN");
+                return "redirect:/mgr/charge/success?money="+ results.get("money");
+            }
         }
-
-
         return "";
     }
 

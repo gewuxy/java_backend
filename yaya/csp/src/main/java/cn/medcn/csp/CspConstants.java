@@ -31,4 +31,6 @@ public class CspConstants {
 
     public static final String MEET_COUNT_OUT_TIPS_KEY = "meet_count_out_tips";
 
+    //套餐订单标识
+    public static final String PACKAGE_ORDER_FLAG = "pk";
 }

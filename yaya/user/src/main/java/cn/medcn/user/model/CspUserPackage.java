@@ -29,12 +29,25 @@ public class CspUserPackage implements Serializable {
     protected Date packageEnd;
     // 当前版本更新时间
     protected Date updateTime;
-    // 套餐更新来源 0:购买 1:后台修改
+    // 套餐更新来源 0:过期自动降级 1:升级购买 2:管理员修改 3：绑定YaYa数字平台
     protected Integer sourceType;
 
-    public enum Type {
-        BUY(),
-        ADMIN_MODIFY();
+    public enum modifyType {
+        EXPIRE_DOWNGRADE(), // 过期降级
+        BUY_UPGRADE(),  // 升级购买
+        ADMIN_MODIFY(), // 管理员修改
+        BIND_YAYA(); // 绑定YaYa数字平台
     }
+    public static CspUserPackage build(String userId,Date start,Date end,Integer packageId,Integer sourceType){
+        CspUserPackage userPackage = new CspUserPackage();
+        userPackage.setUserId(userId);
+        userPackage.setPackageStart(start);
+        userPackage.setPackageEnd(end);
+        userPackage.setPackageId(packageId);
+        userPackage.setUpdateTime(new Date());
+        userPackage.setSourceType(sourceType);
+        return userPackage;
+    }
+
 
 }
