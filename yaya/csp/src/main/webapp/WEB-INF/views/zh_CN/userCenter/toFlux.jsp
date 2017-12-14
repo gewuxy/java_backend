@@ -66,49 +66,80 @@
                             </form>
 
                         </div>
+
+
                         <div class="user-content item-radius pay-mode">
                             <form action="${ctx}/mgr/charge/toCharge" name="submitForm" id="submitForm" method="post" target="_blank">
-                            <div class="formrow flow login-form-item">
+                            <div class="formrow flow">
                                 <div class="formTitle color-black">充值流量</div>
                                 <div class="formControls">
-                                    <label for="" class="pr">
-                                        <input type="text" class="textInput" placeholder="输入需充值的流量" id="flux" name="flux" oninput="fill()" maxlength="3" >
-                                        <span >G</span>
-                                    </label>
-                                    <p ><span class="explain">1G流量=2元</span></p>
-                                    <span class="cells-block error none" id="errSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>姓名不能为空</span> </span>
+                                    <div class="pay-mode-list flow-mode-list" >
+                                        <label for="tid1" class="item item-radius" >
+                                            <input type="radio" name="flux" class="none" value="5" id="tid1">
+                                            5G
+                                        </label>
+                                        <label for="tid2" class="item item-radius" >
+                                            <input type="radio" name="flux" class="none" value="25" id="tid2" >
+                                            25G
+                                        </label>
+                                        <label for="tid3" class="item item-radius pay-on" >
+                                            <input type="radio" name="flux" class="none" value="100" id="tid3" checked>
+                                            100G
+                                        </label>
+                                        <label for="tid4" class="item item-radius" >
+                                            <input type="radio" name="flux" class="none" value="500" id="tid4" >
+                                            500G
+                                        </label>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="formrow " style="margin-bottom:20px;" >
+                            <div class="formrow " >
                                 <div class="formTitle color-black">充值方式</div>
-                                <div class="formControls">
-                                    <div class="pay-mode-list" style="width:80%" onclick="checkChannel()">
-                                        <label for="id1" class="item item-radius pay-on">
-                                            <input type="radio" name="channel" class="none" value="alipay_pc_direct" checked="checked" id="id1">
+                                <div class="formControls" >
+                                    <div class="pay-mode-list CN-hook" id="chinese">
+                                        <label for="id11" class="item item-radius pay-on">
+                                            <input type="radio" name="channel" class="none" value="alipay_pc_direct" id="id11" checked>
                                             <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                         </label>
-                                        <label for="id2" class="item item-radius">
-                                            <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id2">
+                                        <label for="id21" class="item item-radius">
+                                            <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id21">
                                             <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                         </label>
-                                        <%--<label for="id3" class="item item-radius">--%>
-                                            <%--<input type="radio" name="channel" class="none" value="upacp_pc" id="id3">--%>
-                                            <%--<img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">--%>
-                                        <%--</label>--%>
+                                        <label for="id31" class="item item-radius">
+                                            <input type="radio" name="channel" class="none" value="upacp_pc" id="id31">
+                                            <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                        </label>
+                                    </div>
+                                    <div class="pay-mode-list EN-hook none">
+                                        <label for="id5" class="item item-radius pay-on">
+                                            <input type="radio" name="channel" class="none" value="paypal" id="id5">
+                                            <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
+                                        </label>
                                     </div>
                                 </div>
                             </div>
                             <div class="formrow money">
-                                <div class="formTitle color-black">支付&nbsp;&nbsp;¥</div>
+                                <div class="formTitle color-black">支付金额</div>
                                 <div class="formControls">
-                                    <div class="payNum" id="money">0.00</div>
+                                    <span class="color-black"><span class="payNum">200</span> <span id="yuan">元</span></span> <span class="color-green">(100G流量)</span>
+                                    <span class="money-state">
+                                        <label for="currency-cn" class="cn on">
+                                            <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
+                                            CNY
+                                        </label>
+                                        <label for="currency-en" class="en">
+                                            <input type="radio" name="currency" id="currency-en" class="none" value="EN">
+                                            USD
+                                        </label>
+                                    </span>
                                 </div>
                             </div>
-                                <div class="formrow last">
-                                    <input type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="确认支付">
-                                </div>
+                            <div class="formrow last">
+                                <input  type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="确认支付">
+                            </div>
                             </form>
                         </div>
+
                     </div>
 
                 </div>
@@ -146,6 +177,8 @@
 
 <script>
 
+    var currency = 1;
+
     $(function(){
         $.ajaxSetup({
             async : false
@@ -158,19 +191,23 @@
             console.log($('input[name="channel"]:checked').val());
         });
         
-        $("#flux").blur(function () {
-            checkFlux();
-        });
-        
+
 
         $("#submitBtn").click(function () {
-            if(checkFlux()){
+
+            if(currency == 1){  //人民币支付
                 var channel = $('input[name="channel"]:checked').val();
-                    $("#submitForm").submit();
-
-
-                //触发弹出窗
-                //投稿
+                if(channel == "paypal"){
+                    $("#id5").removeAttr("checked");
+                    $('#chinese').find('label[class="item item-radius pay-on"]').find('input').prop("checked",true);
+                }
+                $("#submitForm").submit();
+            }else{
+                var flux = $('input[name="flux"]:checked').val();
+                window.open("${ctx}/mgr/charge/createOrder?flux="+flux);
+            }
+                $("#submitForm").submit();
+                触发支付弹出窗
                     layer.open({
                         type: 1,
                         area: ['560px', '250px'],
@@ -183,7 +220,7 @@
                         cancel :function(){
                         },
                     });
-            }
+
 
         });
 
@@ -192,47 +229,57 @@
         });
 
 
+    });
 
+    $('input[name="flux"]').click(function () {
+        var flux = $(this).val();
+        changeMoney(flux,currency);
 
     });
 
-    function fill(){
-        if(checkFlux()){
+    function changeMoney(flux,currency){
+        if(currency == 1){  //中文
             var channel = $('input[name="channel"]:checked').val();
-            if(channel != "paypal"){
-                $("#money").html(($("#flux").val())*2 + ".00");
+            $(".payNum").html(flux*2);
+            $("#yuan").html("元");
+            $(".color-green").html("("+flux+"G流量)");
+        }else{
+            if(flux == 5){
+                $(".payNum").html(1.75);
+            }else if(flux == 25){
+                $(".payNum").html(8.75);
+            }else if(flux == 100){
+                $(".payNum").html(35);
             }else{
-                $("#money").html(($("#flux").val())*1 + ".00");
+                $(".payNum").html(175);
             }
-        }else{
-            $("#money").html("0.00");
+            $("#yuan").html("美元");
+            $(".color-green").html("("+flux+"G流量)");
         }
     }
 
-    function checkChannel() {
-        var channel = $('input[name="channel"]:checked').val();
-        if(channel != "paypal"){
-            $("#money").html(($("#flux").val())*2 + ".00");
-        }else{
-            $("#money").html(($("#flux").val())*1 + ".00");
-        }
-    }
 
-    function checkFlux() {
-        if(!Number.isInteger($("#flux").val()/1)){
-            $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").find('span').html("请输入整数");
-            return false;
-        }else if(($("#flux").val()/1)<1){
-            $("#errSpan").attr("class","cells-block error");
-            $("#errSpan").find('span').html("充值流量必须大于1G");
-            return false;
-        } else{
-            $("#errSpan").attr("class","cells-block error none");
-            return true;
-        }
-    }
 
+
+
+    //货币切换
+    $(".money-state label").click(function(){
+        $(this).addClass('on').siblings().removeClass('on');
+        var currencyValue = $(this).parents('.pay-mode').find('input[name="currency"]:checked').val();
+        if( currencyValue == 'CN'){
+            currency = 1;
+            $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
+            //替换货币说明
+            $(this).parents('.pay-mode').find('.explain-cn-hook').removeClass('none').siblings().addClass('none');
+        } else if ( currencyValue =='EN' ){
+            currency = 2;
+            $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
+            //替换货币说明
+            $(this).parents('.pay-mode').find('.explain-en-hook').removeClass('none').siblings().addClass('none');
+        }
+        var flux = $('input[name="flux"]:checked').val();
+        changeMoney(flux,currency);
+    });
 
 
 </script>

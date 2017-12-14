@@ -1,6 +1,8 @@
 package cn.medcn.csp.controller.api;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.SecurityUtils;
@@ -44,11 +46,6 @@ public class ChargeController extends BaseController {
     @Value("${apiKey}")
     private String apiKey;
 
-    @Value("${appId}")
-    private String appId;
-
-    @Value("${app.csp.base}")
-    private String appBase;
 
     @Value("${paypal_clientId}")
     protected String paypalId;
@@ -65,6 +62,15 @@ public class ChargeController extends BaseController {
     @RequestMapping("/toCharge")
     @ResponseBody
     public String toCharge(Integer flux, String channel, HttpServletRequest request)  {
+        // 流量值错误
+        if(flux == null || FluxOrder.getInternalPrice(flux) == null){
+            return error(local("flux.err.amount"));
+        }
+        //支付渠道为空
+        if(StringUtils.isEmpty(channel)){
+            return error(local("charge.err.channel"));
+        }
+
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
         String orderNo = StringUtils.nowStr();
@@ -75,25 +81,12 @@ public class ChargeController extends BaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, appId, flux, channel, ip,appBase);
-        } catch (RateLimitException e) {
+            Float money = FluxOrder.getInternalPrice(flux);
+            charge = chargeService.createCharge(orderNo, money, channel, ip);
+        } catch (Exception e) {
             e.printStackTrace();
-            return error(e.getMessage());
-        } catch (APIException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (ChannelException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
+            return error(local("charge.fail"));
+
         }
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
