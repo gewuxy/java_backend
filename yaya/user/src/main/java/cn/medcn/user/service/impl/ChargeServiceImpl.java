@@ -47,7 +47,6 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         return fluxOrderDAO;
     }
 
-
     /**
      * 创建Charge对象，返回给前端
      * @param orderNo
@@ -62,6 +61,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws com.pingplusplus.exception.APIConnectionException
      * @throws AuthenticationException
      */
+    @Override
     public Charge createCharge(String orderNo,Float money, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
@@ -237,6 +237,4 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         MyPage<FluxOrder> myPage = MyPage.page2Mypage((Page) fluxOrderDAO.findFluxOrderList(pageable.getParams()));
         return myPage;
     }
-
-
 }

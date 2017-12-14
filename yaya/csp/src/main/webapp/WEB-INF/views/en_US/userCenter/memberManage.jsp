@@ -40,15 +40,7 @@
                         <%@include file="./left.jsp" %>
                     </div>
                     <div class="col-lg-8">
-                        <div class="user-menu clearfix item-radius">
-                            <ul class="clearfix">
-                                <li ><a href="${ctx}/mgr/user/info">Me</a></li>
-                                <li ><a href="${ctx}/mgr/user/toAccount">Account </a></li>
-                                <li ><a href="${ctx}/mgr/user/toFlux">Network Flow </a></li>
-                                <li class="cur"><a href="${ctx}/mgr/user/memberManage">Authority</a></li>
-                                <li class="last"><a href="${ctx}/mgr/user/toReset">Change Password</a></li>
-                            </ul>
-                        </div>
+                        <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius member-mode">
                             <div class="member-mode-header clearfix">
                                 <div class="fr">
@@ -61,9 +53,12 @@
                                                                 ${cspPackage.usedMeetCount}
                                                         </i>
                                                     </c:if>
-                                                    <i class="hot">
-                                                            ${cspPackage.usedMeetCount}
-                                                    </i>
+                                                <c:if test="${cspPackage.usedMeetCount <= cspPackage.limitMeets}">
+                                                        <i class="hot">
+                                                                ${cspPackage.usedMeetCount}
+                                                        </i>
+                                                </c:if>
+
 
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
@@ -473,6 +468,7 @@
 
 <script>
     $(function(){
+        $("#config_6").parent().attr("class","cur");
         //缓存tabs内容区
         var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
 

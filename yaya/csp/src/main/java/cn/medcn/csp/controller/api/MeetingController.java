@@ -779,13 +779,10 @@ public class MeetingController extends CspBaseController {
      * @param courseId
      * @return
      */
-    protected String getPushUrl(Integer courseId) throws SystemException{
+    protected String getPushUrl(Integer courseId){
         Live live = liveService.findByCourseId(courseId);
         String pushUrl = null;
         if (live != null) {
-            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                throw new SystemException(local("share.live.over"));
-            }
 
            if (live.getVideoLive() != null && live.getVideoLive()) {//如果是视频直播
                 if (CheckUtils.isEmpty(live.getPushUrl())) {
@@ -840,6 +837,9 @@ public class MeetingController extends CspBaseController {
             result.put("duplicate", "0");
             if (liveType.equals(LiveOrderDTO.LIVE_TYPE_VIDEO)) {
                 result.put("wsUrl", wsUrl);
+                //返回视频推流地址
+                String pushUrl = getPushUrl(courseId);
+                result.put("pushUrl", pushUrl);
             }
         }
 
@@ -938,19 +938,7 @@ public class MeetingController extends CspBaseController {
                 return error(local("share.live.over"));
             }
 
-            try {
-                pushUrl = getPushUrl(courseId);
-                String hlsPullUrl = TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.hls);
-                String rtmpPullUrl = TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.rtmp);
-                String flvPullUrl = TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.flv);
-                live.setHlsUrl(hlsPullUrl);
-                live.setHdlUrl(flvPullUrl);
-                live.setRtmpUrl(rtmpPullUrl);
-                liveService.updateByPrimaryKey(live);
-
-            } catch (SystemException e) {
-                return error(e.getMessage());
-            }
+            pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
         }
 

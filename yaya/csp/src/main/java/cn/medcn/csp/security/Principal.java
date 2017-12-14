@@ -26,6 +26,7 @@ public class Principal implements Serializable{
 
     //套餐id
     protected Integer packageId;
+
     // 用户套餐
     protected CspPackage cspPackage;
 

@@ -1138,6 +1138,9 @@ a.color-wathet-blue:hover{color:#146ee3}
 .user-content .pay-mode-list .item{display: inline-block; padding:5px 15px; margin: 0 25px 5px 5px; width:100px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
 .user-content .pay-mode-list .pay-on {  border:2px solid #167AFE; }
 .user-content .pay-mode-list .mastercard { padding:2px 20px; }
+.user-content .time-mode-list .item{display: inline-block; padding:5px 15px; width:100px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
+.user-content .time-mode-list .pay-on {  border:2px solid #167AFE; }
+.user-content .time-mode-list .mastercard { padding:2px 20px; }
 .user-content .flow-mode-list .item{ width:auto; }
 .user-content .money .formTitle { width:72px; line-height: 75px; text-align: right; }
 .pay-mode .formrow .login-button {  margin-left: 110px; padding:12px 35px;}

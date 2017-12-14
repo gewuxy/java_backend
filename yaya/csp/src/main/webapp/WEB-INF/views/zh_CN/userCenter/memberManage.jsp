@@ -41,6 +41,7 @@
 <body >
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
+
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -50,16 +51,8 @@
                     </div>
 
                     <div class="col-lg-8">
-                        <div class="user-menu clearfix item-radius">
-                            <ul>
-                                <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
-                                <li><a href="${ctx}/mgr/user/toAccount">账号管理</a></li>
-                                <li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>
-                                <li class="cur"><a href="${ctx}/mgr/user/memberManage">会员管理</a></li>
-                                <li class="last"><a href="${ctx}/mgr/user/toReset">修改密码</a></li>
+                        <%@include file="user_include.jsp" %>
 
-                            </ul>
-                        </div>
                         <div class="user-content user-content-levelHeight item-radius member-mode">
                             <div class="member-mode-header clearfix">
                                 <div class="fr">
@@ -72,10 +65,11 @@
                                                                 ${cspPackage.usedMeetCount}
                                                             </i>
                                                     </c:if>
-                                                    <i class="hot">
-                                                            ${cspPackage.usedMeetCount}
-                                                    </i>
-
+                                                <c:if test="${cspPackage.usedMeetCount <= cspPackage.limitMeets}">
+                                                        <i class="hot">
+                                                                ${cspPackage.usedMeetCount}
+                                                        </i>
+                                                </c:if>
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
                                         <c:if test="${cspPackage.packageCn == '专业版'}">
@@ -521,6 +515,7 @@
 
 <script>
     $(function(){
+        $("#config_6").parent().attr("class","cur");
         //缓存tabs内容区
         var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
 

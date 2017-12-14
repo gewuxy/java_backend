@@ -12,6 +12,7 @@ import cn.medcn.csp.security.Principal;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.model.CspPackage;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

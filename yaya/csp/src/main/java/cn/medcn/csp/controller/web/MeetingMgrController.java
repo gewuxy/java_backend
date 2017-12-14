@@ -21,8 +21,12 @@ import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseCategoryService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetWatermarkService;
+import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.UserFluxService;
@@ -39,10 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
 import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
@@ -91,6 +92,10 @@ public class MeetingMgrController extends CspBaseController {
     protected CspUserPackageService cspUserPackageService;
 
     @Autowired
+    protected CspPackageService cspPackageService;
+
+
+    @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
     /**
@@ -123,28 +128,18 @@ public class MeetingMgrController extends CspBaseController {
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
-        Integer beforePackageId = cspUserPackage.getPackageId();
         //高级版和专业版进行时间提醒
         if(cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
             try {
-
                 //计算到期天数
                 int expireTimeCount = CalendarUtils.daysBetween(cspUserPackage.getPackageStart(),cspUserPackage.getPackageEnd());
                 model.addAttribute("expireTimeCount",expireTimeCount);
                 //到期自动降为标准版
                 if (expireTimeCount<= 0){
                     //更新变更套餐详情
-                    cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
-                    cspUserPackageService.updateByPrimaryKey(cspUserPackage);
-
-                    CspUserPackageHistory history = new CspUserPackageHistory();
-                    history.setId(StringUtils.nowStr());
-                    history.setUserId(cspUserPackage.getUserId());
-                    history.setBeforePackageId(beforePackageId);
-                    history.setAfterPackageId(cspUserPackage.getPackageId());
-                    history.setUpdateTime(new Date());
-                    history.setUpdateType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
-                    cspUserPackageHistoryService.insert(history);
+                    List<CspUserPackage> list = new ArrayList<>();
+                    list.add(cspUserPackage);
+                    cspUserPackageService.doModifyUserPackage(list);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -170,7 +165,7 @@ public class MeetingMgrController extends CspBaseController {
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
-        model.addAttribute("isNewUser",cspUserPackageService.isNewUser(getWebPrincipal().getId()));
+        model.addAttribute("newUser",cspPackageService.newUser(getWebPrincipal().getId()));
         return localeView("/meeting/list");
     }
 

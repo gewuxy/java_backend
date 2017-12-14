@@ -38,5 +38,16 @@ public class CspUserPackage implements Serializable {
         ADMIN_MODIFY(), // 管理员修改
         BIND_YAYA(); // 绑定YaYa数字平台
     }
+    public static CspUserPackage build(String userId,Date start,Date end,Integer packageId,Integer sourceType){
+        CspUserPackage userPackage = new CspUserPackage();
+        userPackage.setUserId(userId);
+        userPackage.setPackageStart(start);
+        userPackage.setPackageEnd(end);
+        userPackage.setPackageId(packageId);
+        userPackage.setUpdateTime(new Date());
+        userPackage.setSourceType(sourceType);
+        return userPackage;
+    }
+
 
 }
