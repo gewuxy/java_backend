@@ -134,24 +134,17 @@ public class MeetingMgrController extends CspBaseController {
                 //到期自动降为标准版
                 if (expireTimeCount<= 0){
                     //更新变更套餐详情
-                    CspUserPackageHistory cspUserPackageHistory = new CspUserPackageHistory();
-                    cspUserPackageHistory.setUserId(principal.getId());
-                    cspUserPackageHistory.setUpdateType(0);
-                    cspUserPackageHistory.setUpdateTime(new Date());
-                    cspUserPackageHistory.setAfterPackageId(CspPackage.TypeId.STANDARD.getId());
-                    cspUserPackageHistory.setBeforePackageId(cspUserPackage.getPackageId());
-                    cspUserPackageHistory.setId(StringUtils.nowStr());
-                    cspUserPackageHistoryService.insert(cspUserPackageHistory);
                     cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
                     cspUserPackageService.updateByPrimaryKey(cspUserPackage);
-                    CspUserPackageDetail detail = new CspUserPackageDetail();
-                    detail.setId(StringUtils.nowStr());
-                    detail.setUserId(cspUserPackage.getUserId());
-                    detail.setBeforePackageId(beforePackageId);
-                    detail.setAfterPackageId(cspUserPackage.getPackageId());
-                    detail.setUpdateTime(new Date());
-                    detail.setUpdateType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
-                    cspUserPackageDetailService.insert(detail);
+                    
+                    CspUserPackageHistory history = new CspUserPackageHistory();
+                    history.setId(StringUtils.nowStr());
+                    history.setUserId(cspUserPackage.getUserId());
+                    history.setBeforePackageId(beforePackageId);
+                    history.setAfterPackageId(cspUserPackage.getPackageId());
+                    history.setUpdateTime(new Date());
+                    history.setUpdateType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
+                    cspUserPackageHistoryService.insert(history);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
