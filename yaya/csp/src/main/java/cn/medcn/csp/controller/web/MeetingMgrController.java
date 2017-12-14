@@ -39,10 +39,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
 import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
@@ -136,14 +133,17 @@ public class MeetingMgrController extends CspBaseController {
                 if (expireTimeCount<= 0){
                     cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
                     cspUserPackageService.updateByPrimaryKey(cspUserPackage);
-                    CspUserPackageDetail detail = new CspUserPackageDetail();
+                    /*CspUserPackageDetail detail = new CspUserPackageDetail();
                     detail.setId(StringUtils.nowStr());
                     detail.setUserId(cspUserPackage.getUserId());
                     detail.setBeforePackageId(beforePackageId);
                     detail.setAfterPackageId(cspUserPackage.getPackageId());
                     detail.setUpdateTime(new Date());
                     detail.setUpdateType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
-                    cspUserPackageDetailService.insert(detail);
+                    cspUserPackageDetailService.insert(detail);*/
+                    List<CspUserPackage> list = new ArrayList<>();
+                    list.add(cspUserPackage);
+                    cspUserPackageService.doModifyUserPackage(list);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
