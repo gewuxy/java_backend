@@ -136,7 +136,7 @@ public class MeetingMgrController extends CspBaseController {
                     //更新变更套餐详情
                     cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
                     cspUserPackageService.updateByPrimaryKey(cspUserPackage);
-                    
+
                     CspUserPackageHistory history = new CspUserPackageHistory();
                     history.setId(StringUtils.nowStr());
                     history.setUserId(cspUserPackage.getUserId());
