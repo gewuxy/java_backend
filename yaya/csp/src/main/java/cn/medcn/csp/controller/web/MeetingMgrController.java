@@ -128,39 +128,18 @@ public class MeetingMgrController extends CspBaseController {
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
-        Integer beforePackageId = cspUserPackage.getPackageId();
         //高级版和专业版进行时间提醒
         if(cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
             try {
-
                 //计算到期天数
                 int expireTimeCount = CalendarUtils.daysBetween(cspUserPackage.getPackageStart(),cspUserPackage.getPackageEnd());
                 model.addAttribute("expireTimeCount",expireTimeCount);
                 //到期自动降为标准版
                 if (expireTimeCount<= 0){
                     //更新变更套餐详情
-                    cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
-                    cspUserPackageService.updateByPrimaryKey(cspUserPackage);
-                    /*CspUserPackageDetail detail = new CspUserPackageDetail();
-                    detail.setId(StringUtils.nowStr());
-                    detail.setUserId(cspUserPackage.getUserId());
-                    detail.setBeforePackageId(beforePackageId);
-                    detail.setAfterPackageId(cspUserPackage.getPackageId());
-                    detail.setUpdateTime(new Date());
-                    detail.setUpdateType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
-                    cspUserPackageDetailService.insert(detail);*/
                     List<CspUserPackage> list = new ArrayList<>();
                     list.add(cspUserPackage);
                     cspUserPackageService.doModifyUserPackage(list);
-
-                    CspUserPackageHistory history = new CspUserPackageHistory();
-                    history.setId(StringUtils.nowStr());
-                    history.setUserId(cspUserPackage.getUserId());
-                    history.setBeforePackageId(beforePackageId);
-                    history.setAfterPackageId(cspUserPackage.getPackageId());
-                    history.setUpdateTime(new Date());
-                    history.setUpdateType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
-                    cspUserPackageHistoryService.insert(history);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();
