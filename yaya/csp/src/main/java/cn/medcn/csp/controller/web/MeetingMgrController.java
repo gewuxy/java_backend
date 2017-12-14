@@ -140,7 +140,7 @@ public class MeetingMgrController extends CspBaseController {
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
-        model.addAttribute("newUser",principal.getNewUser());
+        model.addAttribute("newUser",cspPackageService.newUser(getWebPrincipal().getId()));
         return localeView("/meeting/list");
     }
 
