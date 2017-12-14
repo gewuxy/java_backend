@@ -99,7 +99,7 @@ public class SkipController extends CspBaseController {
 
                 Subject subject = SecurityUtils.getSubject();
                 subject.login(token);
-                return "redirect:/mgr/meet/list";
+                return defaultRedirectUrl();
 
             } catch (AuthenticationException e) {
                 CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);

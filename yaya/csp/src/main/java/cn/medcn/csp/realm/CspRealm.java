@@ -6,8 +6,10 @@ import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.CspUserPackage;
+import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import org.apache.shiro.authc.*;
@@ -34,7 +36,7 @@ public class CspRealm extends AuthorizingRealm {
     protected CspUserService cspUserService;
 
     @Autowired
-    protected CspUserPackageService cspUserPackageService;
+    protected CspPackageService cspPackageService;
 
     @Value("${app.file.base}")
     protected String fileBase;
@@ -92,8 +94,9 @@ public class CspRealm extends AuthorizingRealm {
         }
 
         Principal principal = Principal.build(cspUser);
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(cspUser.getId());
-        principal.setPackageId(cspUserPackage == null? 1:cspUserPackage.getPackageId());
+        CspPackage cspPackage = cspPackageService.findUserPackageById(cspUser.getId());
+        principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
+        principal.setCspPackage(cspPackage);
 
         if (CheckUtils.isEmpty(principal.getAvatar())) {
             principal.setAvatar(fileBase + FilePath.PORTRAIT.path + "/admin-userImg.png");

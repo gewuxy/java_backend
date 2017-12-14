@@ -35,6 +35,46 @@
         var shareUrl = "";
         var coverUrl = "";
 
+        /*-------- 将关闭提示放入cookie 只提示一次 ---------*/
+        function cookiesave(n, v, mins, dn, path)
+        {
+            if(n)
+            {
+                if(!mins) mins = 365 * 24 * 60;
+                if(!path) path = "/";
+                var date = new Date();
+                date.setTime(date.getTime() + (mins * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+                if(dn) dn = "domain=" + dn + "; ";
+                document.cookie = n + "=" + v + expires + "; " + dn + "path=" + path;
+            }
+        }
+        function cookieget(n)
+        {
+            var name = n + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i<ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+        function closeclick(){
+            document.getElementById('note').style.display='none';
+            cookiesave('closeclick','closeclick','','','');
+        }
+        function clickclose(){
+            if(cookieget('closeclick')=='closeclick'){
+                document.getElementById('note').style.display='none';
+            }else{
+                document.getElementById('note').style.display='block';
+            }
+        }
+        window.onload=clickclose;
+
+        /*------end -------*/
+
         $(function(){
             if("${err}"){
                 layer.msg("${err}");
@@ -142,6 +182,16 @@
             $('.more-hook').on('click',function(){
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
+                var locked = $(this).attr("locked");
+
+                if (locked){
+                    $("#copyLi").hide();
+                    $("#editLi").hide();
+                } else {
+                    $("#copyLi").show();
+                    $("#editLi").show();
+                }
+
                 shareUrl = getShareUrl();
                 coverUrl = $("#cover_"+courseId).attr("src");
                 $("#copyShareUrl").val(shareUrl);
@@ -294,6 +344,56 @@
                     }
                 });
             });
+
+            //弹出锁定的元素，弹出提示
+            $('.meeting-lock-item').on('click',function(){
+                //弹出提示
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["升级"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+
+            //弹出提示
+            if ("${meetCountOut}" && "${param.keyword}" == '' && "${param.playType}" == "" && "${param.sortType}" == '' && "${param.pageNum}" == ''){
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["升级"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            }
+
+
         });
 
         const accessUrl = '${ctx}/mgr/meet/list';
@@ -368,13 +468,33 @@
                 }
             });
         }
+
+        function closeMeetCountTips(){
+            $.get('${ctx}/mgr/meet/tips/close', {}, function (data) {
+                $("#meetCountTips").hide();
+            }, 'json');
+        }
     </script>
 </head>
 <body>
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
-        <div class="page-width clearfix">
+        <div class="page-width clearfix pr">
+            <c:if test="${showTips != null && showTips}">
+                <div class="admin-tips" id="meetCountTips">
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
+                    <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
+                </div>
+            </c:if>
+
+            <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
+                <div class="admin-tips" id="note" style="display:none;">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
+                    <span class="admin-tips-close" onclick="closeclick()"></span>
+                </div>
+            </c:if>
+
             <div class="admin-row clearfix pr">
                 <div class="admin-screen-area">
                     <ul>
@@ -410,7 +530,7 @@
                                 ${(status.index) % 3 == 0 ? '<div class="row clearfix">':''}
                                 <div class="col-lg-4">
 
-                                    <div class="resource-list-item item-radius clearfix">
+                                    <div class="resource-list-item item-radius clearfix ${course.locked ? 'meeting-lock' : ''}">
                                         <div class="resource-img ">
                                             <c:choose>
                                                 <c:when test="${not empty course.coverUrl}">
@@ -456,9 +576,12 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>更多</a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i>更多 </a>
                                             </div>
                                         </div>
+                                        <c:if test="${course.locked}">
+                                            <div class="meeting-lock-item"></div>
+                                        </c:if>
                                     </div>
                                 </div>
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
@@ -577,13 +700,13 @@
                             <p>复制链接</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="copyLi">
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
                             <p>复制副本</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
                             <p>编辑</p>
@@ -666,6 +789,25 @@
         </div>
     </div>
 </div>
+
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="meetCountOut">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p>超出套餐会议数量，请升级套餐后再试</p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 <%@include file="../include/memberMark.jsp" %>
 </body>
 </html>

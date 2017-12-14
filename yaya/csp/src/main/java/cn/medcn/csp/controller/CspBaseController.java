@@ -181,7 +181,10 @@ public class CspBaseController extends BaseController {
      */
     protected boolean isWeChat(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent").toLowerCase();
-        return userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+        if (userAgent == null || userAgent.indexOf("micromessenger") == -1) {
+            return false ;
+        }
+        return true;
     }
 
     /**
@@ -201,6 +204,24 @@ public class CspBaseController extends BaseController {
             }
         }
         return isMobile;
+    }
+
+    /**
+     * 检测用户会议是否已经超出限制
+     * @return
+     */
+    protected boolean meetCountOut(){
+        Principal principal = getWebPrincipal();
+        //判断是否已经超出限制
+        int maxUsableCount = principal.getCspPackage().getLimitMeets();
+        int usedCount = principal.getCspPackage().getUsedMeetCount();
+
+        return maxUsableCount > 0 && usedCount >= maxUsableCount;
+    }
+
+
+    protected String defaultRedirectUrl(){
+        return "redirect:/mgr/meet/list";
     }
 
 }

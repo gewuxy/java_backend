@@ -553,6 +553,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingList(pageable.getParams()));
     }
 
+    /**
+     * 查询csp会议列表
+     *
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> findCspMeetingListForApp(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingListForApp(pageable.getParams()));
+    }
+
     @Override
     public AudioCourse findLastDraft(String cspUserId) {
         AudioCourse course = audioCourseDAO.findLastDraft(cspUserId);
@@ -995,5 +1007,33 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 audioCourseDAO.updateByPrimaryKey(course);
             }
         }
+    }
+
+    @Override
+    public AudioCourse createNewCspCourse(String userId) {
+        AudioCourse course = new AudioCourse();
+        course.setPlayType(AudioCourse.PlayType.normal.getType());
+        course.setPublished(false);
+        course.setDeleted(false);
+        course.setShared(false);
+        course.setCspUserId(userId);
+        course.setTitle("");
+        course.setCreateTime(new Date());
+        course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+        course.setLocked(false);
+        audioCourseDAO.insert(course);
+        return course;
+    }
+
+
+    /**
+     * 查找用户最早未删除的且锁定的课件
+     *
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public AudioCourse findEarliestCourse(String cspUserId) {
+        return audioCourseDAO.findEarliestCourse(cspUserId);
     }
 }

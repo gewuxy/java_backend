@@ -155,11 +155,11 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("error", local("source.has.deleted"));
                 return localeView("/meeting/share_error");
             }
-            //增加会议是否被锁定判断
-            if (course.getLocked() != null && course.getLocked() == true) {
-                model.addAttribute("error", local("course.error.locked"));
-                return localeView("/meeting/share_error");
-            }
+//            //增加会议是否被锁定判断
+//            if (course.getLocked() != null && course.getLocked() == true) {
+//                model.addAttribute("error", local("course.error.locked"));
+//                return localeView("/meeting/share_error");
+//            }
 
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
@@ -300,12 +300,12 @@ public class MeetingController extends CspBaseController {
         FileUtils.deleteTargetFile(sourcePath);
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if (playType == null) {
-            playType = 0;
+            playType = AudioCourse.PlayType.normal.getType();
         }
 
         detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
-        if (playType == 0) {
+        if (playType == AudioCourse.PlayType.normal.getType()) {
             audioService.updateDetail(detail);
         }
 
@@ -355,7 +355,7 @@ public class MeetingController extends CspBaseController {
 
     protected void handleLiveOrRecord(Integer courseId, Integer playType, Integer pageNum, AudioCourseDetail detail){
         if (playType == null) {
-            playType = 0;
+            playType = AudioCourse.PlayType.normal.getType();
         }
         if (playType > AudioCourse.PlayType.normal.ordinal()) {
             handleLiveDetail(courseId, detail);
@@ -670,7 +670,7 @@ public class MeetingController extends CspBaseController {
         String cspUserId = principal.getId();
 
         pageable.put("cspUserId", cspUserId);
-        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
         if (!CheckUtils.isEmpty(page.getDataList())) {
             for (CourseDeliveryDTO deliveryDTO : page.getDataList()) {

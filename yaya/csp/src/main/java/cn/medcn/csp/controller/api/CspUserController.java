@@ -134,13 +134,9 @@ public class CspUserController extends CspBaseController {
         // 缓存用户套餐id
         CspPackage cspPackage = packageService.findUserPackageById(user.getId());
         if (cspPackage != null) {
-            // 缓存用户套餐信息
-            principal.setCspPackage(cspPackage);
-            principal.setPackageId(cspPackage.getId());
-
             // 缓存用户套餐过期信息
-            String remind = packageExpireRemind(cspPackage);
-            principal.setExpireRemind(remind);
+            packageExpireRemind(cspPackage, principal);
+
         }
 
         redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + user.getToken(), principal, Constants.TOKEN_EXPIRE_TIME);
@@ -152,42 +148,57 @@ public class CspUserController extends CspBaseController {
      * @param cspPackage
      * @return
      */
-    protected String packageExpireRemind(CspPackage cspPackage) {
+    protected String packageExpireRemind(CspPackage cspPackage, Principal principal) {
         String remind = null;
-        try {
-            if (cspPackage != null && cspPackage.getPackageEnd() != null
-                    && cspPackage.getId() > CspPackage.TypeId.STANDARD.getId()) {
 
-                int diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
+        try {
+            if (cspPackage != null) {
+                // 缓存用户套餐信息
+                principal.setPackageId(cspPackage.getId());
+                int diffDays = 0;
+                if (cspPackage.getPackageEnd() != null) {
+                    diffDays = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
+                }
+
+                // 还有5天倒计时到期时提醒
                 if (diffDays <= EXPIRE_DAYS && diffDays > NUMBER_ZERO) {
-                    // 还有5天倒计时到期时提醒
                     remind = local("days.expire.remind", new Object[]{diffDays});
 
-                } else if (diffDays == 0){ // 已经过期提醒
+                    // 设置即将到期时间
+                    cspPackage.setExpireDays(diffDays);
+
+                } else if (diffDays == 0) { // 已经过期提醒
                     //  已经使用的会议数 -3 = 隐藏的会议数
                     int usedMeetCount = cspPackage.getUsedMeetCount();
                     if (usedMeetCount > NUMBER_THREE) {
                         // 只显示3个会议 其他的隐藏
                         int hiddenMeetCount = usedMeetCount - NUMBER_THREE;
                         remind = local("expire.remind.info", new Object[]{hiddenMeetCount});
+
+                        // 过期隐藏的会议数
+                        cspPackage.setHiddenMeetCount(hiddenMeetCount);
                     }
 
                     // 会议上锁
                     audioService.doModifyAudioCourse(cspPackage.getUserId());
                 }
+
+                if (StringUtils.isNotEmpty(remind)) {
+                    cspPackage.setExpireRemind(remind);
+                }
+                principal.setCspPackage(cspPackage);
             }
 
         } catch (ParseException e) {
             e.printStackTrace();
             remind = local("data.error");
         }
-
         return remind;
     }
 
     /**
      * 邮箱+密码、手机+验证码登录 、第三方账号登录
-     * type 1=微信 2=微博 3=Facebook 4=Twitter 5=YaYa医师 6=手机 7=邮箱
+     * {@link BindInfo.Type}
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
      * @param email 邮箱
@@ -230,7 +241,18 @@ public class CspUserController extends CspBaseController {
             }
 
             // 检查当前登录的用户 是否海外用户
-            checkUserIsAbroad(userInfo);
+            abroad = userInfo.getAbroad();
+            if (abroad == null) {
+                abroad = false;
+            }
+            if (abroad && !LocalUtils.isAbroad()) {
+                // 海外账号 在国内登录
+                return error(local("en.user.login.error"));
+            }
+            if (!abroad && LocalUtils.isAbroad()) {
+                // 国内账号 在海外登录
+                return error(local("cn.user.login.error"));
+            }
 
             // 更新用户登录信息
             userInfo.setLastLoginIp(request.getRemoteAddr());
@@ -253,27 +275,6 @@ public class CspUserController extends CspBaseController {
         }
     }
 
-    /**
-     * 检查当前登录的用户 是否海外用户
-     * @param userInfo
-     * @return
-     */
-    private String checkUserIsAbroad(CspUserInfo userInfo) {
-        Boolean abroad = userInfo.getAbroad();
-        if (abroad == null) {
-            abroad = false;
-        }
-        if (abroad && !LocalUtils.isAbroad()) {
-            // 海外账号 在国内登录
-            return error(local("en.user.login.error"));
-        }
-        if (!abroad && LocalUtils.isAbroad()) {
-            // 国内账号 在海外登录
-            return error(local("cn.user.login.error"));
-        }
-
-        return null;
-    }
 
     /**
      * 封装返回给前端的用户数据
@@ -297,9 +298,6 @@ public class CspUserController extends CspBaseController {
         // 返回用户套餐 及 套餐过期提醒
         if (principal.getCspPackage() != null) {
             dto.setCspPackage(principal.getCspPackage());
-        }
-        if (StringUtils.isNotEmpty(principal.getExpireRemind())) {
-            dto.setExpireRemind(principal.getExpireRemind());
         }
 
         return dto;
@@ -625,7 +623,7 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 绑定或解绑第三方账号
-     * third_party_id 1代表微信，2代表微博，3代表facebook,4代表twitter,5代表YaYa医师
+     * {@link BindInfo.Type}
      * 解绑只传third_party_id，YaYa医师绑定传YaYa账号，密码,third_party_id
      */
     @RequestMapping("/changeBindStatus")
@@ -660,7 +658,7 @@ public class CspUserController extends CspBaseController {
     @ResponseBody
     public String cspLoginVideo(Integer version) {
         if (version == null) {
-            return error(local("user.param.empty"));
+            version = 0;
         }
         AppVideo video = appVideoService.findCspAppVideo();
         if (video != null && version < video.getVersion()) {
@@ -678,8 +676,10 @@ public class CspUserController extends CspBaseController {
     @RequestMapping("/info")
     @ResponseBody
     public String cspUserInfo() {
-        String userId = SecurityUtils.get().getId();
+        Principal principal = SecurityUtils.get();
+        String userId = principal.getId();
         CspUserInfo userInfo = cspUserService.findUserInfoById(userId);
+
         // 用户信息
         CspUserInfoDTO dto = CspUserInfoDTO.buildToCspUserInfoDTO(userInfo);
         if (needAvatarPrefix(dto.getAvatar())) {
@@ -693,15 +693,14 @@ public class CspUserController extends CspBaseController {
         }
 
         // 查询用户套餐及是否过期
-        assignPackageAndExpire(dto);
+        assignPackageAndExpire(dto, principal);
 
         // 修改缓存数据
         String userToken = Constants.TOKEN + "_" + userInfo.getToken();
-        Principal principal = redisCacheUtils.getCacheObject(userToken);
+        principal = redisCacheUtils.getCacheObject(userToken);
         if (principal != null) {
             principal.setCspPackage(dto.getCspPackage());
             principal.setPackageId(dto.getCspPackage().getId());
-            principal.setExpireRemind(dto.getExpireRemind());
         }
         redisCacheUtils.setCacheObject(userToken, principal, Constants.TOKEN_EXPIRE_TIME);
 
@@ -712,16 +711,14 @@ public class CspUserController extends CspBaseController {
      * 查询用户套餐版本及过期信息
      * @param userInfoDTO
      */
-    private void assignPackageAndExpire(CspUserInfoDTO userInfoDTO) {
+    private void assignPackageAndExpire(CspUserInfoDTO userInfoDTO, Principal principal) {
         // 获取当前用户套餐
         CspPackage cspPackage = packageService.findUserPackageById(userInfoDTO.getUid());
         if (cspPackage != null) {
-            userInfoDTO.setCspPackage(cspPackage);
             // 过期提醒信息
-            String expire = packageExpireRemind(cspPackage);
-            if (StringUtils.isNotEmpty(expire)) {
-                userInfoDTO.setExpireRemind(expire);
-            }
+            packageExpireRemind(cspPackage, principal);
+
+            userInfoDTO.setCspPackage(cspPackage);
         }
 
     }

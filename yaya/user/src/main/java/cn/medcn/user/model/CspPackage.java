@@ -56,20 +56,37 @@ public class CspPackage implements Serializable {
     @Transient
     protected Date packageEnd;
 
+    @Transient
+    // 套餐即将过期天数
+    protected Integer expireDays;
+
+    @Transient
+    // 套餐过期 隐藏的会议数
+    protected Integer hiddenMeetCount;
+
+    // 过期提醒
+    @Transient
+    protected String expireRemind;
 
     public enum TypeId {
-        STANDARD(1), // 标准版
-        PREMIUM(2),  // 高级版
-        PROFESSIONAL(3); // 专业版
+        STANDARD(1, "标准版"), // 标准版
+        PREMIUM(2, "高级版"),  //
+        PROFESSIONAL(3, "专业版"); //
 
         private Integer id;
+        private String label;
 
         public Integer getId () {
             return id;
         }
 
-        TypeId(Integer id) {
+        public String getLabel() {
+            return label;
+        }
+
+        TypeId(Integer id, String label) {
             this.id = id;
+            this.label = label;
         }
     }
 }

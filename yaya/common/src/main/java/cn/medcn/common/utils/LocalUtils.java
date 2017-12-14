@@ -38,6 +38,14 @@ public class LocalUtils {
         return threadLocal.get();
     }
 
+    /**
+     * 是否是海外的请求
+     * @return
+     */
+    public boolean isAbroadRequest(){
+        return !get().equals(Locale.CHINA);
+    }
+
 
     public static Locale getByKey(String key){
         if (CheckUtils.isEmpty(key)) {
@@ -52,5 +60,10 @@ public class LocalUtils {
         en_US(),
         zh_CN(),
         zh_TW();
+    }
+
+    public enum Abroad{
+        N(),
+        Y();
     }
 }
