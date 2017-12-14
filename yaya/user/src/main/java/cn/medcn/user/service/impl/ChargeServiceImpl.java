@@ -62,7 +62,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws AuthenticationException
      */
     @Override
-    public Charge createCharge(String orderNo,Float money, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
+    public Charge createCharge(String orderNo,Float money, String channel, String ip,String subject) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
@@ -75,7 +75,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("channel", channel);
         chargeParams.put("currency", "cny");
         chargeParams.put("client_ip", ip);
-        chargeParams.put("subject", "流量充值");
+        chargeParams.put("subject", subject);
         chargeParams.put("body", "流量充值");
 
         Map<String, String> extraMap = null;

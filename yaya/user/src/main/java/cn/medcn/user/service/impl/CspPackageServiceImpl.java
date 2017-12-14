@@ -45,7 +45,7 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
     @Override
     public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency) {
         CspPackage pk = cspPackageDAO.selectByPrimaryKey(packageId);
-        float money = (float) 0.00;
+        float money = 0.00f;
         Integer num = 1;
         if(limitTime % 12 == 0  ){
             money = currency.equals("CN") ? pk.getYearRmb()* (limitTime / 12) :pk.getYearUsd() * (limitTime / 12);

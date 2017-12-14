@@ -36,4 +36,11 @@ public interface UserFluxService extends BaseService<UserFlux> {
      * @return
      */
     UserFluxUsage addUserFluxUsage(String userId, String courseId, int flux);
+
+
+    /**
+     * 更新视频下载次数
+     * @param usage
+     */
+    int updateVideoDownloadCount(UserFluxUsage usage);
 }

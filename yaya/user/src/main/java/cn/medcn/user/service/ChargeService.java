@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface ChargeService extends BaseService<FluxOrder> {
 
-    Charge createCharge(String orderNo, Float money, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
+    Charge createCharge(String orderNo, Float money, String channel, String ip,String subject) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
 
     void createOrder(String id, String orderNo, Integer amount, String channel);
 
