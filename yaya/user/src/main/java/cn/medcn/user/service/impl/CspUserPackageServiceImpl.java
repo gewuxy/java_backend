@@ -2,6 +2,7 @@ package cn.medcn.user.service.impl;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.dao.CspUserPackageDetailDAO;
@@ -104,6 +105,4 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         detail.setUpdateType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
         packageDetailDAO.insert(detail);
     }
-
-
 }

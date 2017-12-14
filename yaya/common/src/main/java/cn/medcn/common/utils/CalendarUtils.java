@@ -40,7 +40,6 @@ public class CalendarUtils {
         return calendar.getTime();
     }
 
-
     /**
      * 计算day天之后的时间
      * @param day
@@ -48,6 +47,18 @@ public class CalendarUtils {
      */
     public static Date calendarDay(int day){
         Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.DAY_OF_MONTH, day);
+        return calendar.getTime();
+    }
+
+    /**
+     * 计算date时间day天之后的时间
+     * @param day
+     * @return
+     */
+    public static Date calendarDay(Date date,int day){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, day);
         return calendar.getTime();
     }
@@ -62,6 +73,7 @@ public class CalendarUtils {
         calendar.add(Calendar.YEAR, year);
         return calendar.getTime();
     }
+
 
     /**
      * 获取本月第一天的开始时间
@@ -477,7 +489,8 @@ public class CalendarUtils {
             Date startTime = sdf.parse(st);
             Date endTime = new Date();
             System.out.println("ss: "+formatTimesDiff(startTime, endTime,0));
-            System.out.println(sdf.format(nextDateStartTime()));
+            System.out.println(sdf.format(calendarDay(1)));
+            Calendar calendar = Calendar.getInstance();
         } catch (ParseException e) {
             e.printStackTrace();
         }

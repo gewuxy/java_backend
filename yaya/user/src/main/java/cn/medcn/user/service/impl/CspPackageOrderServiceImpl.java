@@ -15,6 +15,7 @@ import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspPackageOrderService;
 import cn.medcn.user.service.CspUserPackageDetailService;
+import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -48,6 +49,9 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     @Autowired
     protected SysNotifyService sysNotifyService;
 
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
+
     @Override
     public Mapper<CspPackageOrder> getBaseMapper() {
         return packageOrderDAO;
@@ -77,27 +81,18 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         CspUserPackage userPk = cspUserPackageDAO.selectByPrimaryKey(order.getUserId());
         Integer packageId = order.getPackageId();
         Integer oldPackage = null;
-        Date start = new Date();
+        Date currentTime = new Date();
+        //开始时间
+        Date start = CalendarUtils.nextDateStartTime();
+        //是否是年费套餐
         boolean yearType = yearPay(packageId,order.getShouldPay());
         if(userPk == null){ //添加用户套餐信息
-            CspUserPackage cspUserPackage = new CspUserPackage();
-            cspUserPackage.setUserId(order.getUserId());
-            cspUserPackage.setPackageStart(start);
-            Date end  = yearType ? CalendarUtils.calendarYear(order.getNum()):CalendarUtils.calendarMonth(order.getNum());
-            cspUserPackage.setPackageEnd(end);
-            cspUserPackage.setPackageId(packageId);
-            cspUserPackage.setUpdateTime(start);
-            cspUserPackage.setSourceType(Constants.NUMBER_ONE);
-            cspUserPackageDAO.insert(cspUserPackage);
+            Date end  = yearType ? CalendarUtils.calendarDay(start,order.getNum() * 365):CalendarUtils.calendarDay(start,order.getNum() * 30);
+            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
         }else{ // 更新用户套餐信息
             oldPackage = userPk.getPackageId();
-            userPk.setUpdateTime(start);
-            userPk.setPackageId(packageId);
-            userPk.setPackageStart(start);
-            Date end  = yearType ? CalendarUtils.calendarYear(userPk.getPackageEnd(),order.getNum()):CalendarUtils.calendarMonth(userPk.getPackageEnd(),order.getNum());
-            userPk.setPackageEnd(end);
-            userPk.setSourceType(Constants.NUMBER_ONE);
-            cspUserPackageDAO.updateByPrimaryKey(userPk);
+            Date end  = yearType ? CalendarUtils.calendarDay(userPk.getPackageEnd(),order.getNum() * 365):CalendarUtils.calendarDay(userPk.getPackageEnd(),order.getNum() * 30);
+            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
         }
         //添加用户套餐历史信息
         cspUserPackageDetailService.addUserHistoryInfo(order.getUserId(),oldPackage,packageId,Constants.NUMBER_ONE);
@@ -118,5 +113,6 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         }
         return false;
     }
+
 }
 
