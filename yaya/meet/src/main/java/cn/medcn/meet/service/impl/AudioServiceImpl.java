@@ -1024,4 +1024,16 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourseDAO.insert(course);
         return course;
     }
+
+
+    /**
+     * 查找用户最早未删除的且锁定的课件
+     *
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public AudioCourse findEarliestCourse(String cspUserId) {
+        return audioCourseDAO.findEarliestCourse(cspUserId);
+    }
 }
