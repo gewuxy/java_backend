@@ -102,4 +102,9 @@ public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements Us
 
         return userFluxUsage;
     }
+
+    @Override
+    public int updateVideoDownloadCount(UserFluxUsage usage) {
+        return userFluxUsageDAO.updateByPrimaryKeySelective(usage);
+    }
 }

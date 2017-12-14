@@ -33,4 +33,7 @@ public class UserFluxUsage implements Serializable{
     protected Date expireTime;
 
     protected String meetingId;
+
+    //视频下载次数
+    protected Integer downloadCount;
 }

@@ -41,6 +41,9 @@ public class VideoLiveRecordDTO {
   //过期天数
   private int expireDay;
 
+  //视频下载次数
+  private int downloadCount;
+
 
   //计算过期天数
   public static void transExpireDay(List<VideoLiveRecordDTO> list){

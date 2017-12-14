@@ -10,6 +10,7 @@ import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
+import cn.medcn.user.model.UserFluxUsage;
 import org.jdom.JDOMException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.multipart.MultipartFile;
@@ -169,4 +170,5 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     CspUserInfo selectByUserName(String userName);
 
     MyPage<CspUserInfo> findUserList(Pageable pageable);
+
 }
