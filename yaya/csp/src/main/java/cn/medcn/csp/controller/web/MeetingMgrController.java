@@ -522,7 +522,7 @@ public class MeetingMgrController extends CspBaseController {
         boolean abroad = principal.getAbroad();
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
-                .append(local).append("&abroad=" + (abroad ? 1 : 0));
+                .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
         String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
 
         StringBuffer buffer2 = new StringBuffer();
