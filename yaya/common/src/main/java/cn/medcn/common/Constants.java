@@ -195,6 +195,26 @@ public class Constants {
     // csp套餐过期时长还有5天时提醒
     public static final int EXPIRE_DAYS = 5;
 
+    //5g流量
+    public static final Integer FIVE_G = 5;
+    //25g流量
+    public static final Integer TWENTY_FIVE_G = 25;
+    //100g流量
+    public static final Integer ONE_HUNDRED_G = 100;
+    //500g流量
+    public static final Integer FIVE_HUNDRED_G = 500;
+
+    //5g流量
+    public static final Float FIVE_G_PRICE = 1.75f;
+    //25g流量
+    public static final Float TWENTY_FIVE_G_PRICE = 8.75f;
+    //100g流量
+    public static final Float ONE_HUNDRED_G_PRICE = 35.00f;
+    //500g流量
+    public static final Float FIVE_HUNDRED_G_PRICE = 175.00f;
+
+
+
 
     /********** 合理用药 *************/
 

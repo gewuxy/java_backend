@@ -321,4 +321,13 @@ public interface AudioService extends BaseService<AudioCourse>  {
     void updateInfo(AudioCourse audioCourse,Live live ,MeetWatermark newWatermark,Integer packageId);
 
     void doModifyAudioCourse(String cspUserId);
+
+    AudioCourse createNewCspCourse(String userId);
+
+    /**
+     * 查找用户最早未删除的且锁定的课件
+     * @param cspUserId
+     * @return
+     */
+    AudioCourse findEarliestCourse(String cspUserId);
 }

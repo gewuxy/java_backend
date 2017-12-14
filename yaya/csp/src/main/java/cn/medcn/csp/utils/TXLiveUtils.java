@@ -1,30 +1,39 @@
 package cn.medcn.csp.utils;
 
+import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.UrlConverter;
+
+import static cn.medcn.csp.CspConstants.TX_LIVE_API_TIME_OUT;
 
 /**
- * 腾讯直播工具类
+ * 腾讯直播API
  * Created by lixuan on 2017/12/8.
  */
 public class TXLiveUtils {
-
-    //todo 所有腾讯直播相关的参数需替换成真实的值
-
-    public final static String BIZID = "8888";
+    //腾讯视频直播 appId
+    private static final String APP_ID = "1254946096";
+    //腾讯推拉流子域名标识
+    private final static String BIZ_ID = "17932";
     //腾讯API鉴权key 主要用于回调时判断请求是否合法用
-    public final static String API_AUTHENTICATION_KEY = "123123123123";
+    private final static String API_AUTHENTICATION_KEY = "7d13dea73dba1fdc83a621f600359d3b";
     //防盗链key
-    public final static String PICKPROOF_KEY = "asdfasdfasdfasdfasdf";
+    private final static String PICK_PROOF_KEY = "807f96218e8343557a2cac85c7c2329c";
     //推流地址默认超时时长
-    public final static int PUSH_URL_DEFAULT_EXPIRE = 24 * 3600;
+    private final static int PUSH_URL_DEFAULT_EXPIRE = 24 * 3600;
 
-    public final static String PUSH_URL = "rtmp://%s.livepush.mycloud.com/live/%s";
+    private final static String PUSH_URL = "rtmp://%s.livepush.mycloud.com/live/%s";
 
-    public final static String RTMP_PULL_URL = "rtmp://%s.liveplay.mycloud.com/live/%s";
+    private final static String RTMP_PULL_URL = "rtmp://%s.liveplay.mycloud.com/live/%s";
 
-    public final static String HLS_PULL_URL = "http://%s.liveplay.mycloud.com/live/%s.m3u8";
+    private final static String HLS_PULL_URL = "http://%s.liveplay.mycloud.com/live/%s.m3u8";
 
-    public final static String FLV_PULL_URL = "http://%s.liveplay.mycloud.com/live/%s.flv";
+    private final static String FLV_PULL_URL = "http://%s.liveplay.mycloud.com/live/%s.flv";
+
+    private final static String TX_SECRET_KEY = "txSecret";
+
+    private final static String TX_TIME_KEY = "txTime";
 
 
     public enum StreamPullType{
@@ -44,17 +53,13 @@ public class TXLiveUtils {
             expire = System.currentTimeMillis() + PUSH_URL_DEFAULT_EXPIRE * 1000;
         }
 
-        String pushUrl = String.format(PUSH_URL, BIZID, channelId);
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(pushUrl);
+        String pushUrl = String.format(PUSH_URL, BIZ_ID, channelId);
 
         String hexStr = timeToHexString(expire);
 
-        buffer.append("?txSecret=")
-                .append(genTxSecret(channelId, hexStr))
-                .append("&txTime=")
-                .append(hexStr);
-        return buffer.toString();
+        UrlConverter converter = UrlConverter.newInstance(pushUrl).put(TX_SECRET_KEY, genTxSecret(channelId, hexStr)).
+                put(TX_TIME_KEY, hexStr);
+        return converter.convert();
     }
 
     /**
@@ -66,13 +71,13 @@ public class TXLiveUtils {
         String pullUrl = null;
         switch (pullType) {
             case flv:
-                pullUrl = String.format(FLV_PULL_URL, BIZID, channelId);
+                pullUrl = String.format(FLV_PULL_URL, BIZ_ID, channelId);
                 break;
             case rtmp:
-                pullUrl = String.format(RTMP_PULL_URL, BIZID, channelId);
+                pullUrl = String.format(RTMP_PULL_URL, BIZ_ID, channelId);
                 break;
             case hls:
-                pullUrl = String.format(HLS_PULL_URL, BIZID, channelId);
+                pullUrl = String.format(HLS_PULL_URL, BIZ_ID, channelId);
                 break;
             default:
                 break;
@@ -114,8 +119,32 @@ public class TXLiveUtils {
      * @return
      */
     private static String genTxSecret(String channelId, String hexStr){
-        String signStr = channelId + PICKPROOF_KEY + hexStr;
+        String signStr = channelId + PICK_PROOF_KEY + hexStr;
         return MD5Utils.md5(signStr);
+    }
+
+
+    /**
+     * 验证签名
+     * @param sign
+     * @param t
+     * @return
+     */
+    public static void verify(String sign, long t) throws SystemException {
+
+        if (CheckUtils.isEmpty(sign)) {
+            throw new SystemException("sign can not be null");
+        }
+
+        long now = System.currentTimeMillis();
+        //请求已经超过10分钟 视为无效请求
+        if (now > (t + TX_LIVE_API_TIME_OUT * 60) * 1000) {
+            throw new SystemException("tx live api request time out ");
+        }
+
+        if (!sign.equals(MD5Utils.md5(API_AUTHENTICATION_KEY + t))) {
+            throw new SystemException("invalid sign : " + sign);
+        }
     }
 
 }

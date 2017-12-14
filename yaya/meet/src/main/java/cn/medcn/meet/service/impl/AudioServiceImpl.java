@@ -1008,4 +1008,32 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             }
         }
     }
+
+    @Override
+    public AudioCourse createNewCspCourse(String userId) {
+        AudioCourse course = new AudioCourse();
+        course.setPlayType(AudioCourse.PlayType.normal.getType());
+        course.setPublished(false);
+        course.setDeleted(false);
+        course.setShared(false);
+        course.setCspUserId(userId);
+        course.setTitle("");
+        course.setCreateTime(new Date());
+        course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+        course.setLocked(false);
+        audioCourseDAO.insert(course);
+        return course;
+    }
+
+
+    /**
+     * 查找用户最早未删除的且锁定的课件
+     *
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public AudioCourse findEarliestCourse(String cspUserId) {
+        return audioCourseDAO.findEarliestCourse(cspUserId);
+    }
 }

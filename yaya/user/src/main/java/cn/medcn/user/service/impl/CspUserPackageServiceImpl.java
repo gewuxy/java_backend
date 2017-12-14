@@ -5,10 +5,10 @@ import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.CspUserPackageDAO;
-import cn.medcn.user.dao.CspUserPackageDetailDAO;
+import cn.medcn.user.dao.CspUserPackageHistoryDAO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserPackage;
-import cn.medcn.user.model.CspUserPackageDetail;
+import cn.medcn.user.model.CspUserPackageHistory;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     protected CspUserPackageDAO userPackageDAO;
 
     @Autowired
-    protected CspUserPackageDetailDAO packageDetailDAO;
+    protected CspUserPackageHistoryDAO packageHistoryDAO;
 
     @Override
     public Mapper<CspUserPackage> getBaseMapper() {
@@ -82,7 +82,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
             userPackage.setPackageStart(null);
             userPackage.setPackageEnd(null);
             userPackage.setUpdateTime(new Date());
-            userPackage.setSourceType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
+            userPackage.setSourceType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
             userPackageDAO.updateByPrimaryKey(userPackage);
 
             // 记录用户套餐变更明细
@@ -96,13 +96,13 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
      * @param beforePackageId
      */
     private void doAddUserPackageDetail(CspUserPackage userPackage, Integer beforePackageId) {
-        CspUserPackageDetail detail = new CspUserPackageDetail();
-        detail.setId(StringUtils.nowStr());
-        detail.setUserId(userPackage.getUserId());
-        detail.setBeforePackageId(beforePackageId);
-        detail.setAfterPackageId(userPackage.getPackageId());
-        detail.setUpdateTime(new Date());
-        detail.setUpdateType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
-        packageDetailDAO.insert(detail);
+        CspUserPackageHistory history = new CspUserPackageHistory();
+        history.setId(StringUtils.nowStr());
+        history.setUserId(userPackage.getUserId());
+        history.setBeforePackageId(beforePackageId);
+        history.setAfterPackageId(userPackage.getPackageId());
+        history.setUpdateTime(new Date());
+        history.setUpdateType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
+        packageHistoryDAO.insert(history);
     }
 }

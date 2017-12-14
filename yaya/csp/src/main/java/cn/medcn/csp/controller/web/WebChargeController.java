@@ -72,8 +72,15 @@ public class WebChargeController extends CspBaseController {
      */
     @RequestMapping("/toCharge")
     public String toCharge(Integer flux, String channel, HttpServletRequest request,Model model)  {
+        // 流量值错误
+        if(flux == null || FluxOrder.getInternalPrice(flux) == null){
+            return error(local("flux.err.amount"));
+        }
+        //支付渠道为空
+        if(StringUtils.isEmpty(channel)){
+            return error(local("charge.err.channel"));
+        }
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
-
         Pingpp.apiKey = apiKey;
         String orderNo = StringUtils.nowStr();
         String userId = getWebPrincipal().getId();
@@ -84,25 +91,11 @@ public class WebChargeController extends CspBaseController {
 
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo,appId, flux, channel, ip,appBase);
-        } catch (RateLimitException e) {
+            Float money = FluxOrder.getInternalPrice(flux);
+            charge = chargeService.createCharge(orderNo,money, channel, ip);
+        } catch (Exception e) {
             e.printStackTrace();
-            return error(e.getMessage());
-        } catch (APIException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (ChannelException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (InvalidRequestException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (APIConnectionException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
-        } catch (AuthenticationException e) {
-            e.printStackTrace();
-            return error(e.getMessage());
+            return error(local("charge.fail"));
         }
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
@@ -131,9 +124,14 @@ public class WebChargeController extends CspBaseController {
         if(flux == null){
             throw new SystemException("please enter flux amount");
         }
+
+        if(FluxOrder.getOverseasPrice(flux) == null){
+            throw new SystemException("Incorrect flux amount");
+        }
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
-        Payment payment = chargeService.generatePayment(flux,appBase);
+        Float money = FluxOrder.getOverseasPrice(flux);
+        Payment payment = chargeService.generatePayment(money);
         Payment responsePayment;
         String url = null;
         try {
@@ -188,6 +186,7 @@ public class WebChargeController extends CspBaseController {
         } catch (PayPalRESTException e) {
             throw new SystemException(e.getMessage());
         }
+
         //支付成功
         if(createdPayment.getState().equals("approved")){
             if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //流量充值支付成功
@@ -197,11 +196,11 @@ public class WebChargeController extends CspBaseController {
                 order = chargeService.selectOne(order);
                 //没有相关订单
                 if(order == null ){
-                    throw new SystemException("No related orders");
+                   throw new SystemException("No related orders");
                 }
                 //更新订单状态，修改用户流量值
                 chargeService.updateOrderAndUserFlux(order);
-                return "redirect:/mgr/charge/success?money="+(order.getFlux()/1024);
+                return "redirect:/mgr/charge/success?money="+(order.getMoney());
             }else{  // 套餐购买支付成功
                 CspPackageOrder condition = new CspPackageOrder();
                 condition.setTradeId(paymentId);

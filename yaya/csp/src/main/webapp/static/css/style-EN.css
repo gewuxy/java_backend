@@ -573,7 +573,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 *******/
 
 .admin-header { box-shadow: 0 4px 12px 0 rgba(136,138,169,0.20); background:#fff; height:80px; position: relative; z-index: 5;  }
-.admin-header .logo{ background:url(../images/admin-logo.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
+.admin-header .logo{ background:url(../images/admin-logo-en.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
 .admin-header .login-header { position: static; padding-top:25px;}
 .admin-header .login-header a{ color:#7A8B9F; }
 .admin-header .login-header .login-language { border-color:#7a8b9f;}
@@ -1124,9 +1124,10 @@ a.color-wathet-blue:hover{color:#146ee3}
 .user-content  .user-portrait-upload .login-button { width:auto; padding:10px 20px; margin:38px auto 0; }
 
 .pay-mode .formTitle{ margin-right:35px;}
-.user-content .pay-mode-list .item{display: inline-block; padding:10px 20px; margin: 10px 25px 20px 5px; width:90px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
+.user-content .pay-mode-list .item{display: inline-block; padding:5px 15px; margin: 0 25px 5px 5px; width:90px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
 .user-content .pay-mode-list .pay-on {  border:2px solid #167AFE; }
 .user-content .pay-mode-list .mastercard { padding:2px 20px; }
+.user-content .flow-mode-list .item{ width:auto; }
 .user-content .money .formTitle { width:100px; line-height: 75px; text-align: right; }
 .pay-mode .formrow .login-button {  margin-left: 110px; padding:12px 35px;}
 .user-content .payNum { font-size: 36px; color: #3B3A34;}

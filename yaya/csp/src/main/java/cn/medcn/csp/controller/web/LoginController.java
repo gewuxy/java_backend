@@ -160,7 +160,7 @@ public class LoginController extends CspBaseController {
             return errorForwardUrl;
         }
 
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -251,7 +251,7 @@ public class LoginController extends CspBaseController {
             model.addAttribute("mobile", mobile);
             return errorForwardUrl;
         }
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -274,15 +274,13 @@ public class LoginController extends CspBaseController {
         userInfo.setNickName(nickName);
         cspUserService.updateByPrimaryKeySelective(userInfo);
 
-        //新用户发送欢迎推送消息
-        sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
 
         // 将当前用户添加到cookie缓存 保存7天
         Principal principal = getWebPrincipal();
         CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
         CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile() , COOKIE_MAX_AGE);
 
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -429,7 +427,8 @@ public class LoginController extends CspBaseController {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return "redirect:/mgr/meet/list";
+
+        return defaultRedirectUrl();
     }
 
 

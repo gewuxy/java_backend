@@ -24,8 +24,10 @@ import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
+import cn.medcn.user.model.*;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.user.service.CspPackageService;
+import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,15 +39,17 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
 import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
-import static cn.medcn.meet.dto.MeetMessageDTO.MessageType.live;
 
 /**
  * Created by lixuan on 2017/10/17.
@@ -94,6 +98,8 @@ public class MeetingMgrController extends CspBaseController {
     protected CspPackageService cspPackageService;
 
 
+    @Autowired
+    protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
     /**
      * 查询当前用户的课件列表
@@ -103,7 +109,7 @@ public class MeetingMgrController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType) {
+    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType, HttpServletRequest request) {
         pageable.setPageSize(6);
 
         //打开了投稿箱的公众号列表
@@ -116,10 +122,42 @@ public class MeetingMgrController extends CspBaseController {
 
         if (meetCountOut()){
             model.addAttribute("meetCountOut", true);
+
+            if (CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null) {
+                model.addAttribute("showTips", true);
+            }
         }
 
-
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
+
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
+        Integer beforePackageId = cspUserPackage.getPackageId();
+        //高级版和专业版进行时间提醒
+        if(cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
+            try {
+
+                //计算到期天数
+                int expireTimeCount = CalendarUtils.daysBetween(cspUserPackage.getPackageStart(),cspUserPackage.getPackageEnd());
+                model.addAttribute("expireTimeCount",expireTimeCount);
+                //到期自动降为标准版
+                if (expireTimeCount<= 0){
+                    //更新变更套餐详情
+                    cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
+                    cspUserPackageService.updateByPrimaryKey(cspUserPackage);
+
+                    CspUserPackageHistory history = new CspUserPackageHistory();
+                    history.setId(StringUtils.nowStr());
+                    history.setUserId(cspUserPackage.getUserId());
+                    history.setBeforePackageId(beforePackageId);
+                    history.setAfterPackageId(cspUserPackage.getPackageId());
+                    history.setUpdateTime(new Date());
+                    history.setUpdateType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
+                    cspUserPackageHistoryService.insert(history);
+                }
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
@@ -143,11 +181,6 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("newUser",cspPackageService.newUser(getWebPrincipal().getId()));
         return localeView("/meeting/list");
     }
-
-
-
-
-
 
     /**
      * 进入投屏界面
@@ -252,6 +285,11 @@ public class MeetingMgrController extends CspBaseController {
         convertClear(request);
 
         Principal principal = getWebPrincipal();
+
+        if (meetCountOut()) {
+            return defaultRedirectUrl();
+        }
+
         AudioCourse course = null;
         if (courseId != null) {
             course = audioService.findAudioCourse(courseId);
@@ -267,17 +305,7 @@ public class MeetingMgrController extends CspBaseController {
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
-                course = new AudioCourse();
-                course.setPlayType(AudioCourse.PlayType.normal.getType());
-                course.setPublished(false);
-                course.setDeleted(false);
-                course.setShared(false);
-                course.setCspUserId(principal.getId());
-                course.setTitle("");
-                course.setCreateTime(new Date());
-                course.setSourceType(AudioCourse.SourceType.csp.ordinal());
-                course.setLocked(false);
-                audioService.insert(course);
+                course = audioService.createNewCspCourse(principal.getId());
             }
         }
         if (course.getPlayType() == null) {
@@ -303,7 +331,7 @@ public class MeetingMgrController extends CspBaseController {
             model.addAttribute("play", audioService.findPlayState(course.getId()));
         }
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) * 1.0f / 100;
+        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) / 100;
         model.addAttribute("flux", fluxValue);
         model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
@@ -333,9 +361,9 @@ public class MeetingMgrController extends CspBaseController {
         }
         String imgDir = FilePath.COURSE.path + "/" + courseId + "/ppt/";
         List<String> imgList = null;
-        if (result.getRelativePath().endsWith(".ppt") || result.getRelativePath().endsWith(".pptx")) {
+        if (result.getRelativePath().endsWith(FileTypeSuffix.PPT_SUFFIX_PPT.suffix) || result.getRelativePath().endsWith(FileTypeSuffix.PPT_SUFFIX_PPTX.suffix)) {
             imgList = openOfficeService.convertPPT(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
-        } else if (result.getRelativePath().endsWith(".pdf")) {
+        } else if (result.getRelativePath().endsWith(FileTypeSuffix.PDF_SUFFIX.suffix)) {
             imgList = openOfficeService.pdf2Images(fileUploadBase + result.getRelativePath(), imgDir, courseId, request);
         }
         if (CheckUtils.isEmpty(imgList)) {
@@ -460,8 +488,17 @@ public class MeetingMgrController extends CspBaseController {
         course.setDeleted(true);
         audioService.updateByPrimaryKey(course);
 
-        //判断是否有锁定的会议
-
+        //当前删除的会议如果是锁定状态则不处理 否则需要解锁用户最早的一个锁定的会议
+        if (course.getLocked() != null || !course.getLocked()) {
+            //判断是否有锁定的会议
+            if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()){
+                AudioCourse earliestActiveCourse = audioService.findEarliestCourse(principal.getId());
+                if (earliestActiveCourse != null) {
+                    earliestActiveCourse.setLocked(false);
+                }
+                audioService.updateByPrimaryKey(earliestActiveCourse);
+            }
+        }
 
         return success();
     }
@@ -504,7 +541,7 @@ public class MeetingMgrController extends CspBaseController {
         boolean abroad = principal.getAbroad();
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
-                .append(local).append("&abroad=" + (abroad ? 1 : 0));
+                .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
         String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
 
         StringBuffer buffer2 = new StringBuffer();
@@ -547,7 +584,7 @@ public class MeetingMgrController extends CspBaseController {
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
 
         addFlashMessage(redirectAttributes, local("operate.success"));
-        return "redirect:/mgr/meet/list";
+        return defaultRedirectUrl();
     }
 
 
@@ -609,5 +646,13 @@ public class MeetingMgrController extends CspBaseController {
         } else {
             return error(courseNonDeleteAble());
         }
+    }
+
+    @RequestMapping(value = "/tips/close")
+    @ResponseBody
+    public String closeMeetOutTips(HttpServletResponse response){
+
+        CookieUtils.setCookie(response, MEET_COUNT_OUT_TIPS_KEY, "true");
+        return success();
     }
 }

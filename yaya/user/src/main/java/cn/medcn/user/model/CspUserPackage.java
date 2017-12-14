@@ -1,7 +1,5 @@
 package cn.medcn.user.model;
 
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.user.dto.OAuthUserDTO;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -34,6 +32,10 @@ public class CspUserPackage implements Serializable {
     // 套餐更新来源 0:购买 1:后台修改
     protected Integer sourceType;
 
+    public enum Type {
+        BUY(),
+        ADMIN_MODIFY();
+    }
     public static CspUserPackage build(String userId,Date start,Date end,Integer packageId,Integer sourceType){
         CspUserPackage userPackage = new CspUserPackage();
         userPackage.setUserId(userId);

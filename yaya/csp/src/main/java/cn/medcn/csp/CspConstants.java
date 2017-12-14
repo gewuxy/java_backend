@@ -28,6 +28,9 @@ public class CspConstants {
     //腾讯视频直播api超时时间 单位分钟
     public static final int TX_LIVE_API_TIME_OUT = 10;
 
+
+    public static final String MEET_COUNT_OUT_TIPS_KEY = "meet_count_out_tips";
+
     //套餐订单标识
     public static final String PACKAGE_ORDER_FLAG = "pk";
 }

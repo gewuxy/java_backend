@@ -42,7 +42,7 @@ public class LiveCallbackController extends CspBaseController{
         TxHeaderDTO header = getTxHeader(request);
 
         try {
-            verify(header.getSign(), header.getT());
+            TXLiveUtils.verify(header.getSign(), header.getT());
         } catch (SystemException e) {
             LogUtils.error(log, e.getMessage());
             return success();
@@ -90,23 +90,7 @@ public class LiveCallbackController extends CspBaseController{
     }
 
 
-    /**
-     * 验证签名
-     * @param sign
-     * @param t
-     * @return
-     */
-    protected void verify(String sign, long t) throws SystemException{
-        long now = System.currentTimeMillis();
-        //请求已经超过10分钟 视为无效请求
-        if (now > (t + TX_LIVE_API_TIME_OUT * 60) * 1000) {
-            throw new SystemException("tx live api request time out ");
-        }
 
-        if (!sign.equals(MD5Utils.md5(TXLiveUtils.API_AUTHENTICATION_KEY + t))) {
-            throw new SystemException("invalid sign : " + sign);
-        }
-    }
 
     /**
      * 处理断流时的回调

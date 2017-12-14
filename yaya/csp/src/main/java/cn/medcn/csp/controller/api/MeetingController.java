@@ -300,12 +300,12 @@ public class MeetingController extends CspBaseController {
         FileUtils.deleteTargetFile(sourcePath);
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if (playType == null) {
-            playType = 0;
+            playType = AudioCourse.PlayType.normal.getType();
         }
 
         detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
-        if (playType == 0) {
+        if (playType == AudioCourse.PlayType.normal.getType()) {
             audioService.updateDetail(detail);
         }
 
@@ -355,7 +355,7 @@ public class MeetingController extends CspBaseController {
 
     protected void handleLiveOrRecord(Integer courseId, Integer playType, Integer pageNum, AudioCourseDetail detail){
         if (playType == null) {
-            playType = 0;
+            playType = AudioCourse.PlayType.normal.getType();
         }
         if (playType > AudioCourse.PlayType.normal.ordinal()) {
             handleLiveDetail(courseId, detail);
