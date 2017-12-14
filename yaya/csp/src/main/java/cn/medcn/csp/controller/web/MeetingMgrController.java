@@ -46,7 +46,6 @@ import java.util.Map;
 
 import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
 import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
-import static cn.medcn.meet.dto.MeetMessageDTO.MessageType.live;
 
 /**
  * Created by lixuan on 2017/10/17.

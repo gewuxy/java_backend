@@ -124,6 +124,15 @@
             $('.more-hook').on('click',function(){
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
+
+                var locked = $(this).attr("locked");
+                if (locked == "true"){
+                    $("#copyLi").hide();
+                    $("#editLi").hide();
+                } else {
+                    $("#copyLi").show();
+                    $("#editLi").show();
+                }
                 shareUrl = getShareUrl();
                 coverUrl = $("#cover_"+courseId).attr("src");
                 $("#copyShareUrl").val(shareUrl);
