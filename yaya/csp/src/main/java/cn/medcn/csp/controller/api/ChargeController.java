@@ -91,7 +91,7 @@ public class ChargeController extends CspBaseController {
         Float money = FluxOrder.getInternalPrice(flux);
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, money, channel, ip);
+            charge = chargeService.createCharge(orderNo, money, channel, ip,"流量充值");
         } catch (Exception e) {
             e.printStackTrace();
             return error(local("charge.fail"));
