@@ -11,13 +11,13 @@ import java.util.Date;
 
 /**
  * Created by Liuchangling on 2017/12/12.
- * 用户套餐变更明细记录
+ * 用户套餐变更历史记录
  */
 @Data
 @NoArgsConstructor
 @Entity
-@Table (name = "t_csp_user_package_detail")
-public class CspUserPackageDetail implements Serializable {
+@Table (name = "t_csp_user_package_history")
+public class CspUserPackageHistory implements Serializable {
     @Id
     private String  id;
     // 用户id

@@ -14,10 +14,7 @@ import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.sys.dao.SystemNotifyDAO;
-import cn.medcn.user.dao.BindInfoDAO;
-import cn.medcn.user.dao.CspUserInfoDAO;
-import cn.medcn.user.dao.EmailTemplateDAO;
-import cn.medcn.user.dao.UserFluxDAO;
+import cn.medcn.user.dao.*;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
@@ -37,6 +34,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
@@ -95,6 +94,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     @Autowired
     protected JavaMailSenderImpl cspMailSender;
+
+    @Autowired
+    protected CspUserPackageDAO userPackageDAO;
 
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
@@ -187,9 +189,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         BindInfo bindUser = BindInfo.buildToBindInfo(userDTO);
         bindInfoDAO.insert(bindUser);
 
-
+        // 如果是YaYa医师账号登录 默认用户套餐为专业版
+        if (bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
+            // TODO 等辉彬的方法
+        }
         return userInfo;
     }
+
 
     /**
      * 缓存信息和发送绑定或找回密码邮件
@@ -349,6 +355,16 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         info.setBindDate(new Date());
         bindInfoDAO.insert(info);
 
+        // 绑定YaYa医师账号前 检查当前csp用户是否已经购买过套餐
+        if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
+            CspUserPackage userPackage = userPackageDAO.selectByPrimaryKey(info.getUserId());
+            if (userPackage != null) {
+                // 购买过套餐 重设结束时间 在原有套餐的结束时间累加
+
+            } else {
+                // 设置为专业版套餐
+            }
+        }
 
     }
 
