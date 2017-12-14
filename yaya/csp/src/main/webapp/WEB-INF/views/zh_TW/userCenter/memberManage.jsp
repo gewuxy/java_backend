@@ -473,6 +473,7 @@
 
 <script>
     $(function(){
+        $("#config_6").parent().attr("class","cur");
         //緩存tabs內容區
         var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
 
