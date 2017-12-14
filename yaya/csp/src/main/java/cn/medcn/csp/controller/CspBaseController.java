@@ -181,7 +181,10 @@ public class CspBaseController extends BaseController {
      */
     protected boolean isWeChat(HttpServletRequest request) {
         String userAgent = request.getHeader("user-agent").toLowerCase();
-        return userAgent == null || userAgent.indexOf("micromessenger") == -1 ? false : true;
+        if (userAgent == null || userAgent.indexOf("micromessenger") == -1) {
+            return false ;
+        }
+        return true;
     }
 
     /**
@@ -214,6 +217,11 @@ public class CspBaseController extends BaseController {
         int usedCount = principal.getCspPackage().getUsedMeetCount();
 
         return maxUsableCount > 0 && usedCount >= maxUsableCount;
+    }
+
+
+    protected String defaultRedirectUrl(){
+        return "redirect:/mgr/meet/list";
     }
 
 }

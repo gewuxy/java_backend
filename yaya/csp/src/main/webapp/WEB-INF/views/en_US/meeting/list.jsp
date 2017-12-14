@@ -318,6 +318,54 @@
                     }
                 });
             });
+
+            //弹出锁定的元素，弹出提示
+            $('.meeting-lock-item').on('click',function(){
+                //弹出提示
+                layer.open({
+                    type: 1,
+                    area: ['440px', '350px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["upgrade"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+
+            //弹出提示
+            if ("${meetCountOut}" && "${param.keyword}" == '' && "${param.playType}" == "" && "${param.sortType}" == '' && "${param.pageNum}" == ''){
+                layer.open({
+                    type: 1,
+                    area: ['440px', '350px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["upgrade"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            }
         });
 
         const accessUrl = '${ctx}/mgr/meet/list';
@@ -392,6 +440,12 @@
                 }
             });
         }
+
+        function closeMeetCountTips(){
+            $.get('${ctx}/mgr/meet/tips/close', {}, function (data) {
+                $("#meetCountTips").hide();
+            }, 'json');
+        }
     </script>
 </head>
 <body>
@@ -405,6 +459,13 @@
                         <span class="admin-tips-close" onclick="closeclick()"></span>
                     </div>
                 </c:if>
+        <div class="page-width clearfix pr">
+            <c:if test="${showTips != null && showTips}">
+                <div class="admin-tips" id="meetCountTips">
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">The number of your meetings has exceeded the set limit, please delete part of the meeting or upgrade the set meal to continue to use</a> </span>
+                    <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
+                </div>
+            </c:if>
             <div class="admin-row clearfix pr">
                 <div class="admin-screen-area">
                     <ul>
@@ -608,13 +669,13 @@
                             <p>Copy Link</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="copyLi">
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
                             <p>Duplicate</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
                             <p>Edit</p>
@@ -699,5 +760,24 @@
         </div>
     </div>
 </div>
+
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="meetCountOut">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p>Beyond the number of set meals, please try to upgrade the set meal and try again</p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

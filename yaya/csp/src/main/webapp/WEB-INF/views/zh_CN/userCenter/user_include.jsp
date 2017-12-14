@@ -10,6 +10,9 @@
         <li><a href="${ctx}/mgr/user/toAccount" id="config_2">账号管理 </a></li>
         <li ><a href="${ctx}/mgr/user/toFlux" id="config_3">流量管理</a></li>
         <li><a href="${ctx}/mgr/user/memberManage" id="config_4">会员管理</a></li>
+        <li><a href="${ctx}/mgr/user/toAvatar" id="config_2">头像设置 </a></li>
+        <li ><a href="${ctx}/mgr/user/toAccount" id="config_3">账号管理</a></li>
+        <li><a href="${ctx}/mgr/user/toFlux" id="config_4">流量管理</a></li>
         <li class="last"><a href="${ctx}/mgr/user/toReset" id="config_5">修改密码</a></li>
     </ul>
 </div>

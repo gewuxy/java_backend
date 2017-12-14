@@ -161,4 +161,8 @@
         and deleted != 1 AND locked != 1 AND csp_user_id = #{cspUserId}
         ORDER BY create_time asc
     </select>
+    
+    <select id="findEarliestCourse" resultType="cn.medcn.meet.model.AudioCourse">
+        select * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND locked = true AND deleted = false ORDER by create_time asc limit 1
+    </select>
 </mapper>

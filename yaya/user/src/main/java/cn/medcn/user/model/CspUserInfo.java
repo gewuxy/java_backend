@@ -83,4 +83,10 @@ public class CspUserInfo implements Serializable{
     }
 
 
+    public enum AbroadType{
+        home,
+        abroad;
+    }
+
+
 }

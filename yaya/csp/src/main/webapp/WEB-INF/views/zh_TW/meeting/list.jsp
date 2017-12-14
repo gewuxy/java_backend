@@ -315,6 +315,54 @@
                     }
                 });
             });
+
+            //弹出锁定的元素，弹出提示
+            $('.meeting-lock-item').on('click',function(){
+                //弹出提示
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["陞級"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+
+            //弹出提示
+            if ("${meetCountOut}" && "${param.keyword}" == '' && "${param.playType}" == "" && "${param.sortType}" == '' && "${param.pageNum}" == ''){
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["陞級"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            }
         });
 
         const accessUrl = '${ctx}/mgr/meet/list';
@@ -389,6 +437,12 @@
             });
 
         }
+
+        function closeMeetCountTips(){
+            $.get('${ctx}/mgr/meet/tips/close', {}, function (data) {
+                $("#meetCountTips").hide();
+            }, 'json');
+        }
     </script>
 </head>
 <body>
@@ -400,6 +454,13 @@
                 <div class="admin-tips" id="note" style="display:none;">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">還有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
                     <span class="admin-tips-close" onclick="closeclick()"></span>
+                </div>
+            </c:if>
+        <div class="page-width clearfix pr">
+            <c:if test="${showTips != null && showTips}">
+                <div class="admin-tips" id="meetCountTips">
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的會議數量已超過套餐許可權，請删除部分會議或陞級套餐後繼續使用</a> </span>
+                    <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
                 </div>
             </c:if>
             <div class="admin-row clearfix pr">
@@ -437,7 +498,7 @@
                                 ${(status.index) % 3 == 0 ? '<div class="row clearfix">':''}
                                 <div class="col-lg-4">
 
-                                    <div class="resource-list-item item-radius clearfix">
+                                    <div class="resource-list-item item-radius clearfix ${course.locked ? 'meeting-lock' : ''}">
                                         <div class="resource-img ">
                                             <c:choose>
                                                 <c:when test="${not empty course.coverUrl}">
@@ -486,6 +547,9 @@
                                                 <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>更多</a>
                                             </div>
                                         </div>
+                                        <c:if test="${course.locked}">
+                                            <div class="meeting-lock-item"></div>
+                                        </c:if>
                                     </div>
                                 </div>
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
@@ -604,13 +668,13 @@
                             <p>複製連結</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="copyLi">
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
                             <p>複製</p>
                         </a>
                     </li>
-                    <li>
+                    <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
                             <p>編輯</p>
@@ -696,7 +760,23 @@
     </div>
 </div>
 
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="meetCountOut">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p>超出套餐會議數量，請陞級套餐後再試</p>
+                </div>
 
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

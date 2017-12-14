@@ -344,6 +344,56 @@
                     }
                 });
             });
+
+            //弹出锁定的元素，弹出提示
+            $('.meeting-lock-item').on('click',function(){
+                //弹出提示
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["升级"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+
+            //弹出提示
+            if ("${meetCountOut}" && "${param.keyword}" == '' && "${param.playType}" == "" && "${param.sortType}" == '' && "${param.pageNum}" == ''){
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["升级"],
+                    content: $('#meetCountOut'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='user-06.html';
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            }
+
+
         });
 
         const accessUrl = '${ctx}/mgr/meet/list';
@@ -431,7 +481,7 @@
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix pr">
-            <c:if test="${meetCountOut != null && meetCountOut}">
+            <c:if test="${showTips != null && showTips}">
                 <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
@@ -739,6 +789,25 @@
         </div>
     </div>
 </div>
+
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="meetCountOut">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p>超出套餐会议数量，请升级套餐后再试</p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 <%@include file="../include/memberMark.jsp" %>
 </body>
 </html>
