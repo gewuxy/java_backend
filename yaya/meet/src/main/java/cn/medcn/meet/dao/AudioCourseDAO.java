@@ -94,4 +94,11 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
     CourseDeliveryDTO findMeetDetail(@Param("id")Integer id);
 
     List<AudioCourse> findAudioCourseList(@Param("cspUserId") String cspUserId);
+
+    /**
+     * 查找用户最早未删除的且锁定的课件
+     * @param cspUserId
+     * @return
+     */
+    AudioCourse findEarliestCourse(@Param("cspUserId") String cspUserId);
 }

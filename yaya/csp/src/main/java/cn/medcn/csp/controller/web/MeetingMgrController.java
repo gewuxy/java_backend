@@ -478,8 +478,17 @@ public class MeetingMgrController extends CspBaseController {
         course.setDeleted(true);
         audioService.updateByPrimaryKey(course);
 
-        //判断是否有锁定的会议
-        //todo
+        //当前删除的会议如果是锁定状态则不处理 否则需要解锁用户最早的一个锁定的会议
+        if (course.getLocked() != null || !course.getLocked()) {
+            //判断是否有锁定的会议
+            if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()){
+                AudioCourse earliestActiveCourse = audioService.findEarliestCourse(principal.getId());
+                if (earliestActiveCourse != null) {
+                    earliestActiveCourse.setLocked(false);
+                }
+                audioService.updateByPrimaryKey(earliestActiveCourse);
+            }
+        }
 
         return success();
     }
@@ -522,7 +531,7 @@ public class MeetingMgrController extends CspBaseController {
         boolean abroad = principal.getAbroad();
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
-                .append(local).append("&abroad=" + (abroad ? 1 : 0));
+                .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
         String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
 
         StringBuffer buffer2 = new StringBuffer();
