@@ -28,12 +28,13 @@ public class CspUserPackageHistory implements Serializable {
     private Integer afterPackageId;
     // 变更时间
     private Date updateTime;
-    // 变更方式 0:过期自动降级 1:升级购买 2:管理员修改
+    // 变更方式 0:过期自动降级 1:升级购买 2:管理员修改 3：绑定YaYa数字平台
     private Integer updateType;
 
     public enum modifyType {
         EXPIRE_DOWNGRADE(), // 过期降级
         BUY_UPGRADE(),  // 升级购买
-        ADMIN_MODIFY(); // 管理员修改
+        ADMIN_MODIFY(), // 管理员修改
+        BIND_YAYA(); // 绑定YaYa数字平台
     }
 }
