@@ -1,5 +1,6 @@
 package cn.medcn.common.utils;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 
 import java.text.ParseException;
@@ -24,17 +25,21 @@ public class CalendarUtils {
     }
 
     /**
-     * 计算date日期month个月之后的时间
-     * @param date
-     * @param month
+     * 后一天的开始时间
+     *
      * @return
      */
-    public static Date calendarMonth(Date date,int month){
+    public static Date nextDateStartTime(){
+        Date date = calendarDay(Constants.NUMBER_ONE);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
-        calendar.add(Calendar.MONTH, month);
+        calendar.set(Calendar.HOUR_OF_DAY,0);
+        calendar.set(Calendar.MINUTE,0);
+        calendar.set(Calendar.SECOND,0);
+        calendar.set(Calendar.MILLISECOND,0);
         return calendar.getTime();
     }
+
 
     /**
      * 计算day天之后的时间
@@ -54,19 +59,6 @@ public class CalendarUtils {
      */
     public static Date calendarYear(int year){
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.YEAR, year);
-        return calendar.getTime();
-    }
-
-    /**
-     * 计算dateyear之后的时间
-     * @param date
-     * @param year
-     * @return
-     */
-    public static Date calendarYear(Date date,int year){
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
         calendar.add(Calendar.YEAR, year);
         return calendar.getTime();
     }
@@ -477,13 +469,15 @@ public class CalendarUtils {
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-dd-MM HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String st = "2017-10-13 09:49:54";
 
         try {
+
             Date startTime = sdf.parse(st);
             Date endTime = new Date();
             System.out.println("ss: "+formatTimesDiff(startTime, endTime,0));
+            System.out.println(sdf.format(nextDateStartTime()));
         } catch (ParseException e) {
             e.printStackTrace();
         }
