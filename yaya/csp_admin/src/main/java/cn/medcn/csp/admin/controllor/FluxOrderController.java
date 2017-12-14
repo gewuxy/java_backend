@@ -64,12 +64,7 @@ public class FluxOrderController extends BaseController{
     @Log(name = "查看个人订单列表")
     public String checkOrder(@RequestParam(value = "id", required = true) String id,Model model){
             FluxOrder fluxOrder=chargeService.selectByPrimaryKey(id);
-           /* Integer flux = 0;
-            for (FluxOrder order: fluxOrder) {
-            String userId = order.getUserId();
-            UserFlux userFlux = userFluxService.selectByPrimaryKey(userId);
-            flux = userFlux.getFlux();
-        }*/String userId = fluxOrder.getUserId();
+            String userId = fluxOrder.getUserId();
 
             UserFlux userFlux = userFluxService.selectByPrimaryKey(userId);
             CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(userId);

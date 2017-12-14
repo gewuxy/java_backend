@@ -123,9 +123,11 @@ public class MeetingMgrController extends CspBaseController {
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
+        Integer beforePackageId = cspUserPackage.getPackageId();
         //高级版和专业版进行时间提醒
         if(cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
             try {
+
                 //计算到期天数
                 int expireTimeCount = CalendarUtils.daysBetween(cspUserPackage.getPackageStart(),cspUserPackage.getPackageEnd());
                 model.addAttribute("expireTimeCount",expireTimeCount);
@@ -142,6 +144,14 @@ public class MeetingMgrController extends CspBaseController {
                     cspUserPackageHistoryService.insert(cspUserPackageHistory);
                     cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
                     cspUserPackageService.updateByPrimaryKey(cspUserPackage);
+                    CspUserPackageDetail detail = new CspUserPackageDetail();
+                    detail.setId(StringUtils.nowStr());
+                    detail.setUserId(cspUserPackage.getUserId());
+                    detail.setBeforePackageId(beforePackageId);
+                    detail.setAfterPackageId(cspUserPackage.getPackageId());
+                    detail.setUpdateTime(new Date());
+                    detail.setUpdateType(CspUserPackageDetail.modifyType.EXPIRE_DOWNGRADE.ordinal());
+                    cspUserPackageDetailService.insert(detail);
                 }
             } catch (ParseException e) {
                 e.printStackTrace();

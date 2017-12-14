@@ -1,5 +1,6 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.Constants;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -10,6 +11,8 @@ import javax.persistence.Table;
 import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 /** 流量购买记录
  * Created by LiuLP on 2017/4/24.
@@ -63,5 +66,30 @@ public class FluxOrder implements Serializable{
 
     @Transient
     protected String meetName;
+
+    protected float money;
+
+    public static Float getOverseasPrice(Integer flux){
+        Map<Integer,Float> map = new HashMap<>();
+        map.put(Constants.FIVE_G,Constants.FIVE_G_PRICE);
+        map.put(Constants.TWENTY_FIVE_G,Constants.TWENTY_FIVE_G_PRICE);
+        map.put(Constants.ONE_HUNDRED_G,Constants.ONE_HUNDRED_G_PRICE);
+        map.put(Constants.FIVE_HUNDRED_G,Constants.FIVE_HUNDRED_G_PRICE);
+        return map.get(flux);
+    }
+
+    public static Float getInternalPrice(Integer flux){
+        Map<Integer,Float> map = new HashMap<>();
+        map.put(Constants.FIVE_G,Constants.FIVE_G * 2f);
+        map.put(Constants.TWENTY_FIVE_G,Constants.TWENTY_FIVE_G * 2f);
+        map.put(Constants.ONE_HUNDRED_G,Constants.ONE_HUNDRED_G * 2f);
+        map.put(Constants.FIVE_HUNDRED_G,Constants.FIVE_HUNDRED_G * 2f);
+        return map.get(flux);
+    }
+
+
+
+
+
 
 }
