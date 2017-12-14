@@ -53,4 +53,9 @@ public class LocalUtils {
         zh_CN(),
         zh_TW();
     }
+
+    public enum Abroad{
+        N(),
+        Y();
+    }
 }
