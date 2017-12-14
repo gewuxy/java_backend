@@ -73,26 +73,26 @@ public class RecommendMeetController extends BaseController {
     @RequestMapping(value = "/list")
     @Log(name = "推荐会议列表 搜索会议")
     public String recommendMeetList(Pageable pageable, Model model, String meetName, Integer recType, Boolean recFlag,Integer sort) {
-        if (!StringUtils.isEmpty(meetName)) {
+        if (StringUtils.isNotEmpty(meetName)) {
             pageable.getParams().put("meetName", meetName);
             model.addAttribute("meetName", meetName);
         }
-        if (StringUtils.isNotEmpty(String.valueOf(recType))) {
+        if (recType != null) {
             pageable.getParams().put("recType", recType);
             model.addAttribute("recType", recType);
         }
-        if (StringUtils.isNotEmpty(String.valueOf(recFlag))) {
+        if (recFlag != null) {
             pageable.getParams().put("recFlag", recFlag);
             model.addAttribute("recFlag", recFlag);
         }
-        if (StringUtils.isNotEmpty(String.valueOf(sort))) {
+        if (sort != null) {
             pageable.getParams().put("sort", sort);
             model.addAttribute("sort", sort);
         }
 
             MyPage<Recommend> myPage=recommendMeetService.recommendMeetList(pageable);
             model.addAttribute("page", myPage);
-             return "/recommendMeet/recommendMeetList";
+            return "/recommendMeet/recommendMeetList";
     }
 
     /**
@@ -139,21 +139,21 @@ public class RecommendMeetController extends BaseController {
     public String selectOne(@RequestParam(value = "id", required = true) String id,Model model){
         Meet meet = meetService.selectByPrimaryKey(id);
         model.addAttribute("meet",meet);
-       String json = JSON.toJSONString(meet);
-       model.addAttribute("json",json);
+        String json = JSON.toJSONString(meet);
+        model.addAttribute("json",json);
         return json;
     }
 
     /**
      * 新建推荐会议
      * @param recommend
-     * @param meetTuijianDTO
+     * @param dto
      * @param state 会议状态
      * @return
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建推荐会议")
-    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO meetTuijianDTO,Short state,String meetId,String headimg,RedirectAttributes redirectAttributes){
+    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO dto,Short state,String meetId,String headimg,RedirectAttributes redirectAttributes){
         Recommend recommend1 = recommendMeetService.selectByMeetId(meetId);
         if (recommend1==null) {
             Meet meet = meetService.selectByPrimaryKey(meetId);
@@ -161,23 +161,30 @@ public class RecommendMeetController extends BaseController {
             Lecturer lecturer = new Lecturer();
             lecturer.setMeetId(meetId);
             lecturer.setHeadimg(headimg);
-            lecturer.setDepart(meetTuijianDTO.getLecturerDepart());
-            lecturer.setHospital(meetTuijianDTO.getLecturerHos());
-            lecturer.setName(meetTuijianDTO.getLecturer());
-            lecturer.setTitle(meetTuijianDTO.getLecturerTile());
-            meetLecturerService.insert(lecturer);
+            lecturer.setDepart(dto.getLecturerDepart());
+            lecturer.setHospital(dto.getLecturerHos());
+            lecturer.setName(dto.getLecturer());
+            lecturer.setTitle(dto.getLecturerTile());
+            int lecturerCount = meetLecturerService.insert(lecturer);
+            if (lecturerCount != 1){
+                addFlashMessage(redirectAttributes,"添加讲师失败");
+            }
             meet.setLecturerId(lecturer.getId());
-            recommendMeetService.insert(recommend);
+            int recommendMeetCount = recommendMeetService.insert(recommend);
+            if (recommendMeetCount != 1){
+                addFlashMessage(redirectAttributes,"添加推荐会议失败");
+            }
             meet.setLecturerId(lecturer.getId());
             meet.setState(state);
-            meetService.updateByPrimaryKeySelective(meet);
+            int meetCount = meetService.updateByPrimaryKeySelective(meet);
+            if (meetCount != 1){
+                addFlashMessage(redirectAttributes,"会议更改失败");
+            }
             addFlashMessage(redirectAttributes,"添加成功");
-            return "redirect:/yaya/recommendMeet/list";
         }else {
           addErrorFlashMessage(redirectAttributes,"推荐会议重复");
-            return "redirect:/yaya/recommendMeet/list";
         }
-
+        return "redirect:/yaya/recommendMeet/list";
 
         }
 
@@ -213,8 +220,6 @@ public class RecommendMeetController extends BaseController {
         List<String> departments= departmentService.findAlldepartment();
         model.addAttribute("departments",departments);
         return "recommendMeet/recommendMeetInfoEdit";
-
-
     }
 
     /**
@@ -227,32 +232,48 @@ public class RecommendMeetController extends BaseController {
      */
     @RequestMapping(value = "/update")
     @Log(name = "修改")
-    public String updateRecommendMeet(Recommend recommend,Lecturer lecturer,String meetName,Short state,Integer lecturerId){
+    public String updateRecommendMeet(Recommend recommend,Lecturer lecturer,String meetName,Short state,Integer lecturerId,RedirectAttributes redirectAttributes){
         String meetId = recommend.getResourceId();
         Meet meet = meetService.selectByPrimaryKey(meetId);
         meet.setMeetName(meetName);
         lecturer.setId(lecturerId);
         lecturer.setMeetId(meetId);
-        meetLecturerService.updateByPrimaryKey(lecturer);
-        recommendMeetService.updateByPrimaryKey(recommend);
+        int lecturerCount = meetLecturerService.updateByPrimaryKey(lecturer);
+        if (lecturerCount != 1){
+            addErrorFlashMessage(redirectAttributes,"修改主讲者失败");
+        }
+        int recommendMeetCount = recommendMeetService.updateByPrimaryKey(recommend);
+        if (recommendMeetCount != 1){
+            addErrorFlashMessage(redirectAttributes,"修改推荐会议失败");
+        }
         meet.setLecturerId(lecturer.getId());
         meet.setTuijian(recommend.getRecFlag());
         meet.setState(state);
-        meetService.updateByPrimaryKeySelective(meet);
+        int meetCount = meetService.updateByPrimaryKeySelective(meet);
+        if (meetCount != 1){
+            addErrorFlashMessage(redirectAttributes,"修改会议失败");
+        }
         return "redirect:/yaya/recommendMeet/list";
     }
 
     /**
-     * 关闭会议
+     * 关闭推荐
      * @param id
      * @return
      */
     @RequestMapping(value = "/close")
-    @Log(name = "关闭会议")
-    public String closeRecommendMeet(@RequestParam(value = "id", required = true) Integer id){
+    @Log(name = "关闭推荐")
+    public String closeRecommendMeet(@RequestParam(value = "id", required = true) Integer id,RedirectAttributes redirectAttributes){
         Recommend recommend = recommendMeetService.selectByPrimaryKey(id);
-       recommend.setRecFlag(false);
-       recommendMeetService.updateByPrimaryKey(recommend);
+        if (recommend != null){
+            recommend.setRecFlag(false);
+            int recommendMeet = recommendMeetService.updateByPrimaryKey(recommend);
+            if (recommendMeet != 1){
+                addErrorFlashMessage(redirectAttributes,"关闭推荐失败");
+            }
+        }else {
+            addErrorFlashMessage(redirectAttributes,"推荐会不存在");
+        }
         return "redirect:/yaya/recommendMeet/list";
     }
 

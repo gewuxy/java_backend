@@ -19,6 +19,8 @@
                                 <li><a href="${ctx}/mgr/user/toAvatar">頭像設置</a></li>
                                 <li><a href="${ctx}/mgr/user/toAccount">賬號管理</a></li>
                                 <%--<li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>--%>
+                                <li><a href="${ctx}/mgr/user/memberManage">會員管理</a></li>
+                                <li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>
                                 <li><a href="${ctx}/index/17103116063862386794">幫助中心</a></li>
                                 <li class="last"><a href="${ctx}/mgr/user/logout">退出賬號</a></li>
                             </ul>

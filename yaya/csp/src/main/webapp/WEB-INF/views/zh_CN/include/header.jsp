@@ -18,7 +18,7 @@
                                 <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
                                 <li><a href="${ctx}/mgr/user/toAvatar">头像设置</a></li>
                                 <li><a href="${ctx}/mgr/user/toAccount">账号管理</a></li>
-                                <%--<li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>--%>
+                                <li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>
                                 <li><a href="${ctx}/mgr/user/memberManage">会员管理</a></li>
                                 <li><a href="${ctx}/index/17103116063862386794">帮助中心</a></li>
                                 <li class="last"><a href="${ctx}/mgr/user/logout">退出账号</a></li>
@@ -30,14 +30,7 @@
                 </ul>
             </div>
             <div class="message"><a href="${ctx}/mgr/message/list" class="icon-message"><span id="msg"></span></a></div>
-            <div class="addMetting"><a style="cursor: pointer;" onclick="addMeetingClick()" class="icon-addMetting ${meetCountOut ? 'meeting-lock-item':''}" ></a></div>
-            <script>
-                function addMeetingClick(){
-                    if('${meetCountOut == null || !meetCountOut}' == "true"){
-                        window.location.href='${ctx}/mgr/meet/edit';
-                    }
-                }
-            </script>
+            <div class="addMetting"><a href="${ctx}/mgr/meet/edit"  class="icon-addMetting"></a></div>
         </div>
         <div class="fl">
             <a class="logo" href="/"></a>

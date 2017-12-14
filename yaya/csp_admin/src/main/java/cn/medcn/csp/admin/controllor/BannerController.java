@@ -79,13 +79,12 @@ public class BannerController extends BaseController{
     /**
      * 图片上传
      * @param file
-     * @param model
      * @return
      */
     @RequestMapping(value = "/upload")
     @ResponseBody
     @Log(name = "图片上传")
-    public String uploadImg(MultipartFile file,Model model){
+    public String uploadImg(MultipartFile file){
         if (file == null) {
             return error("不能上传空文件");
         }

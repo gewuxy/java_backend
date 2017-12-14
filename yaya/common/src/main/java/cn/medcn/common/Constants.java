@@ -186,12 +186,34 @@ public class Constants {
     // CSP用户缓存时长7天
     public static final int LOGIN_COOKIE_MAX_AGE = 7;
 
+    public static final String CSP_NEW_USER = "new_user";
+
     public static final String JI_GUANG_APP_KEY = "61f4b84e5c33850ca329d67d";
 
     public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
 
     // csp套餐过期时长还有5天时提醒
     public static final int EXPIRE_DAYS = 5;
+
+    //5g流量
+    public static final Integer FIVE_G = 5;
+    //25g流量
+    public static final Integer TWENTY_FIVE_G = 25;
+    //100g流量
+    public static final Integer ONE_HUNDRED_G = 100;
+    //500g流量
+    public static final Integer FIVE_HUNDRED_G = 500;
+
+    //5g流量
+    public static final Float FIVE_G_PRICE = 1.75f;
+    //25g流量
+    public static final Float TWENTY_FIVE_G_PRICE = 8.75f;
+    //100g流量
+    public static final Float ONE_HUNDRED_G_PRICE = 35.00f;
+    //500g流量
+    public static final Float FIVE_HUNDRED_G_PRICE = 175.00f;
+
+
 
 
     /********** 合理用药 *************/

@@ -19,6 +19,9 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
+    <script src="${ctxStatic}/js/jquery.min.js"></script>
+    <script src="${ctxStatic}/js/animate.min.js"></script>
+
 </head>
 <body>
 <div id="wrapper">

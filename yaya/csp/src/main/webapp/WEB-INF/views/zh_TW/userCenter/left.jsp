@@ -1,9 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="user-left-box">
     <div class="user-userinfo clearfix item-radius">
-        <div class="img"><img <c:if test="${not empty dto.avatar}">src="${dto.avatar}"</c:if>
+        <div class="img"><a href="${ctx}/mgr/user/toAvatar" class="admin-user-head" title="編輯頭像"><img <c:if test="${not empty dto.avatar}">src="${dto.avatar}"</c:if>
                               <c:if test="${empty dto.avatar}">src="${ctxStatic}/images/img/user-default.png"</c:if>
-                              id="image" alt="" style="widtH:126px; height:126px;"></div>
+                              id="image" alt="" style="widtH:126px; height:126px;"><i></i></a></div>
         <div class="name" id="name">${dto.nickName}</div>
         <div class="email">${dto.email == null ? dto.mobile:dto.email}</div>
         <div class="binding">

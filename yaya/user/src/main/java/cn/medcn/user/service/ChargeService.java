@@ -15,7 +15,7 @@ import java.util.List;
  */
 public interface ChargeService extends BaseService<FluxOrder> {
 
-    Charge createCharge(String orderNo, String appId, Integer flux, String channel, String ip,String appBase) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
+    Charge createCharge(String orderNo, Float money, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
 
     void createOrder(String id, String orderNo, Integer amount, String channel);
 
@@ -39,11 +39,10 @@ public interface ChargeService extends BaseService<FluxOrder> {
 
     /**
      * 生成paypal支付对象
-     * @param flux
-     * @param appBase
+     * @param money
      * @return
      */
-    Payment generatePayment(Integer flux,String appBase);
+    Payment generatePayment(Float money);
 
     /**
      * 流量订单列表

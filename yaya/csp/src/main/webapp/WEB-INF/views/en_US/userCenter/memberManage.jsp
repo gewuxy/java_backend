@@ -1,11 +1,12 @@
 <%--
   Created by IntelliJ IDEA.
-  User: jianliang
-  Date: 2017/12/11
-  Time: 14:07
+  User: Administrator
+  Date: 2017/12/13
+  Time: 14:18
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +20,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
 
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
@@ -28,20 +29,9 @@
     <script src="${ctxStatic}/js/html5.js"></script>
     <![endif]-->
 </head>
-<script>
-    $("#tid1").click(function () {
-        var tid1Val = $('input:radio:checked').val();
-        alert(tid1Val);
-    })
-    $("#tid2").click(function () {
-        var tid2Val = $('input:radio:checked').val();
-        alert(tid2Val);
-    })
-</script>
 <body >
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
-
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -49,123 +39,122 @@
                     <div class="col-lg-4">
                         <%@include file="./left.jsp" %>
                     </div>
-
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
-
                         <div class="user-content user-content-levelHeight item-radius member-mode">
                             <div class="member-mode-header clearfix">
                                 <div class="fr">
                                     <div class="resource-label">
-                                        <c:if test="${cspPackage.packageCn == '标准版' || cspPackage.packageCn == '高级版'}" >
+                                        <c:if test="${cspPackage.packageUs == 'standardEdition' || cspPackage.packageUs == 'premiumEdition'}" >
                                             <span>
 
                                                     <c:if test="${cspPackage.usedMeetCount > cspPackage.limitMeets}">
                                                         <i class="hot" style="color: red">
                                                                 ${cspPackage.usedMeetCount}
-                                                            </i>
+                                                        </i>
                                                     </c:if>
                                                 <c:if test="${cspPackage.usedMeetCount <= cspPackage.limitMeets}">
                                                         <i class="hot">
                                                                 ${cspPackage.usedMeetCount}
                                                         </i>
                                                 </c:if>
+
+
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
-                                        <c:if test="${cspPackage.packageCn == '专业版'}">
+                                        <c:if test="${cspPackage.packageUs == 'professionalEdition'}">
                                             <span><i class="hot">${cspPackage.usedMeetCount}</i><i class="muted">|</i>∞</span>
                                         </c:if>
                                     </div>
-                                    <p class="t-center">会议数量</p>
+                                    <p class="t-center">Number of Meetings</p>
                                 </div>
                                 <div class="fl">
                                     <div class="clearfix">
                                         <div class="fl"></div>
-
-                                            <c:if test="${cspPackage.packageCn == '标准版'}">
                                         <div class="oh">
-                                                <h5 class="title">${cspPackage.packageCn}</h5>
-                                                <div class="member-mode-tips">已生效</div>
+                                            <c:if test="${cspPackage.packageUs == 'standardEdition'}">
+                                                <div class="oh">
+                                                    <h5 class="title">${cspPackage.packageUs}</h5>
+                                                    <div class="member-mode-tips">Valid</div>
+                                                </div>
+                                            </c:if>
+                                            <c:if test="${cspPackage.packageUs == 'premiumEdition' || cspPackage.packageUs == 'professionalEdition' }">
+                                                <div class="oh">
+                                                    <h5 class="title">${cspPackage.packageUs}</h5>
+                                                    <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                </div>
+                                            </c:if>
                                         </div>
-                                            </c:if>
-                                            <c:if test="${cspPackage.packageCn == '高级版' || cspPackage.packageCn == '专业版' }">
-                                                <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
-                                                    <div class="oh">
-                                                        <h5 class="title">${cspPackage.packageCn}</h5>
-                                                        <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
-                                                    </div>
-                                            </c:if>
-
                                     </div>
                                 </div>
                             </div>
                             <div class="member-mode-main">
                                 <div class="member-mode-fnList">
-                                    <c:if test="${cspPackage.packageCn == '标准版'}">
-                                    <ul>
-                                        <li>
-                                            <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                            <p>投屏录播</p>
-                                        </li><li>
-                                        <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                        <p>投屏直播</p>
-                                    </li><li>
-                                        <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                        <p>3个会议</p>
-                                    </li><li>
-                                        <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
-                                        <p class="color-gray-03">无广告</p>
-                                    </li><li>
-                                        <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
-                                        <p class="color-gray-03">可关闭水印</p>
-                                    </li>
-                                    </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageCn == '高级版'}">
+                                    <c:if test="${cspPackage.packageUs == 'standardEdition'}">
                                         <ul>
                                             <li>
                                                 <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏录播</p>
+                                                <p class="text">Projective<br />Record</p>
                                             </li><li>
                                             <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
+                                            <p class="text">Projective <br />Live Stream</p>
                                         </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                            <p>10个会议</p>
+                                            <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
+                                            <p class="text">3 Meetings</p>
                                         </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p>无广告</p>
+                                            <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
+                                            <p class="color-gray-03 text" >Ads Free</p>
                                         </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p>可关闭水印</p>
+                                            <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
+                                            <p class="color-gray-03 text" >Closable <br /> Watermark</p>
                                         </li>
                                         </ul>
                                     </c:if>
-                                    <c:if test="${cspPackage.packageCn == '专业版'}">
+                                    <c:if test="${cspPackage.packageUs == 'premiumEdition'}">
                                         <ul>
                                             <li>
                                                 <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏录播</p>
+                                                <p class="text">Projective<br />Record</p>
                                             </li><li>
                                             <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
+                                            <p class="text">Projective <br />Live Stream</p>
                                         </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                            <p>无限会议</p>
+                                            <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
+                                            <p class="text">10 Meetings</p>
                                         </li><li>
                                             <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p>无广告</p>
+                                            <p class="text" >Ads Free</p>
                                         </li><li>
                                             <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p>自定义水印</p>
+                                            <p class="text" >Closable <br /> Watermark</p>
+                                        </li>
+                                        </ul>
+                                    </c:if>
+                                    <c:if test="${cspPackage.packageUs == 'professionalEdition'}">
+                                        <ul>
+                                            <li>
+                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
+                                                <p class="text">Projective<br />Record</p>
+                                            </li><li>
+                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
+                                            <p class="text">Projective <br />Live Stream</p>
+                                        </li><li>
+                                            <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
+                                            <p class="text">Unlimited</p>
+                                        </li><li>
+                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
+                                            <p class="text" >Ads Free</p>
+                                        </li><li>
+                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
+                                            <p class="text" >Customized <br /> Watermark</p>
                                         </li>
                                         </ul>
                                     </c:if>
                                 </div>
                             </div>
                             <div class="member-mode-footer member-footer-position t-center">
-                                <a href="javascript:;" type="button" class="button login-button buttonBlue member-buy-hook">升级续费</a>
-                                <p><a href="${ctx}/index/17103116063862386794" target="_blank">有疑问，帮助中心</a></p>
+                                <a href="javascript:;" type="button" class="button login-button buttonBlue member-buy-hook">Upgrade / Renew</a>
+                                <p><a href="${ctx}/index/17103116063862386794" target="_blank">Need help?</a></p>
 
                             </div>
 
@@ -178,7 +167,7 @@
     </div>
     <div class="admin-bottom">
         <div class="page-width clearfix">
-            <p class="t-center">粤ICP备12087993号 © 2012-2017 敬信科技 版权所有 </p>
+            <p class="t-center">Copyright © 2012-2017 Jingxin Tech. All Rights Reserved.</p>
         </div>
 
     </div>
@@ -189,43 +178,43 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-main member-buy-popup-main">
             <div class="member-buy-header">
-                <h6 class="title">请选择您购买的套餐</h6>
+                <h6 class="title">Please select the edition you want</h6>
                 <div class="member-buy-tabs-menu clearfix">
                     <div class="index-buy-item ">
                         <div class="index-buy-header">
-                            <h4>标准版</h4>
-                            <h3 class="price">免费</h3>
+                            <h4>Standard Edition</h4>
+                            <h3 class="price">Free</h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>不限时长</p>
-                                <p>3个会议</p>
+                                <p>Permanent Usage</p>
+                                <p>3 Meetings</p>
                             </div>
                             <div class="index-buy-text">
                                 <ul>
-                                    <li class="icon-li-selected">启用投屏录播</li>
-                                    <li class="icon-li-selected">启用投屏直播</li>
-                                    <li class="icon-li-selected">会讲水印</li>
+                                    <li class="icon-li-selected">Projective Record</li>
+                                    <li class="icon-li-selected">Projective Live Stream</li>
+                                    <li class="icon-li-selected">Watermark of CSPmeeting</li>
                                 </ul>
                             </div>
                         </div>
                     </div>
                     <div class="index-buy-item  index-buy-item-current ">
                         <div class="index-buy-header">
-                            <h4>高级版</h4>
-                            <h3 class="price">16.67元</h3>
+                            <h4>Premium Edition</h4>
+                            <h3 class="price">2.5 USD</h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>1个月有效</p>
-                                <p>10个会议</p>
+                                <p>One-Month Usage</p>
+                                <p>10 Meetings</p>
                             </div>
                             <div class="index-buy-text">
                                 <ul>
-                                    <li class="icon-li-selected">启用投屏录播</li>
-                                    <li class="icon-li-selected">启用投屏直播</li>
-                                    <li class="icon-li-selected">昵称水印</li>
-                                    <li class="icon-li-selected">无广告</li>
+                                    <li class="icon-li-selected">Projective Record</li>
+                                    <li class="icon-li-selected">Projective Live Stream</li>
+                                    <li class="icon-li-selected">Watermark of Nickname</li>
+                                    <li class="icon-li-selected">Ads free</li>
                                 </ul>
                             </div>
                         </div>
@@ -233,20 +222,20 @@
                     </div>
                     <div class="index-buy-item last">
                         <div class="index-buy-header">
-                            <h4>专业版</h4>
-                            <h3 class="price">66元/660元</h3>
+                            <h4>Professional Edition</h4>
+                            <h3 class="price">9.9 / 99 USD</h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>1个月/1年有效</p>
-                                <p>不限会议</p>
+                                <p>One-Month / One-Year Usage</p>
+                                <p>Unlimited Number of Meetings</p>
                             </div>
                             <div class="index-buy-text">
                                 <ul>
-                                    <li class="icon-li-selected">启用投屏录播</li>
-                                    <li class="icon-li-selected">启用投屏直播</li>
-                                    <li class="icon-li-star">自定义水印</li>
-                                    <li class="icon-li-selected">无广告</li>
+                                    <li class="icon-li-selected">Projective Record</li>
+                                    <li class="icon-li-selected">Projective Live Stream</li>
+                                    <li class="icon-li-star">Customized Watermark</li>
+                                    <li class="icon-li-selected">Ads free</li>
                                 </ul>
                             </div>
                         </div>
@@ -254,149 +243,131 @@
                 </div>
             </div>
             <div class="member-buy-tabs-main">
-
-                <%--标准版--%>
                 <div class="member-buy-content">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">使用时长</div>
+                            <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
                                 <div class="pay-mode-list time-mode-list">
                                     <label for="tid1" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="tid1">
-                                        1个月
+                                        1 month
                                     </label>
                                     <label for="tid2" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="3" id="tid2">
-                                        3个月
+                                        <input type="radio" name="payMode" class="none" value="2" id="tid2">
+                                        3 month
                                     </label>
                                     <label for="tid3" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="6" id="tid3">
-                                        6个月
+                                        <input type="radio" name="payMode" class="none" value="3" id="tid3">
+                                        6 month
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook none">
                                     <label for="id11" class="item item-radius pay-on">
-                                        <input type="radio" name="platForm" class="none" value="alipay" id="id11">
-                                        <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="1" id="id11">
+                                        <img src="./images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="id21" class="item item-radius">
-                                        <input type="radio" name="platForm" class="none" value="wechat" id="id21">
-                                        <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="2" id="id21">
+                                        <img src="./images/img/user-icon-wechat.png" alt="">
                                     </label>
                                     <label for="id31" class="item item-radius">
-                                        <input type="radio" name="platForm" class="none" value="unionpay" id="id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="3" id="id31">
+                                        <img src="./images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
+                                <div class="pay-mode-list EN-hook ">
                                     <label for="id5" class="item item-radius pay-on">
-                                        <input type="radio" name="platForm" class="none" value="paypal" id="id5">
-                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="5" id="id5">
+                                        <img src="./images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
                                 <span class="payNum">0.00</span>
-                                <script>
-
-                                </script>
                                 <span class="money-state">
-                                        <label for="currency-cn" class="cn on">
-                                            <input type="radio" name="currencyType" id="currency-cn" class="none" value="0">
+                                        <label for="currency-cn" class="cn ">
+                                            <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
                                             CNY
                                         </label>
-                                        <label for="currency-en" class="en">
-                                            <input type="radio" name="currencyType" id="currency-en" class="none" value="1">
+                                        <label for="currency-en" class="en on">
+                                            <input type="radio" name="currency" id="currency-en" class="none" value="EN">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <input href="#" type="button" id="freeButton" class="button login-button buttonBlue cancel-hook last" value="免费体验" style="position: relative; z-index:3;">
-                            <script>
-                                $("#freeButton").click(function () {
-                                    location.href="${ctx}/mgr/user/memberManage";
-                                })
-                            </script>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" value="Try Now" style="position: relative; z-index:3;">
                         </div>
                         <div class="member-buy-disabled-item"></div>
                     </div>
                 </div>
-
-
-                <%--高级版--%>
-
                 <div class="member-buy-content none">
                     <div class="user-content item-radius pay-mode">
-                        <form action="${ctx}/mgr/pay/premiumPay" method="post">
                         <div class="formrow">
-                            <div class="formTitle color-black">使用时长</div>
+                            <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
-                                <div class="pay-mode-list time-mode-list" id="payModeSelectId">
+                                <div class="pay-mode-list time-mode-list">
                                     <label for="2tid1" class="item item-radius pay-on">
-                                        <input type="radio" name="payMode" class="none" value="1" id="2tid1" checked="checked">
-                                        1个月
+                                        <input type="radio" name="payMode" class="none" value="1" id="2tid1">
+                                        1 month
                                     </label>
                                     <label for="2tid2" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="3" id="2tid2">
-                                        3个月
+                                        <input type="radio" name="payMode" class="none" value="2" id="2tid2">
+                                        3 month
                                     </label>
                                     <label for="2tid3" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="6" id="2tid3">
-                                        6个月
+                                        <input type="radio" name="payMode" class="none" value="3" id="2tid3">
+                                        6 month
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook" id="changePayMode">
+                                <div class="pay-mode-list CN-hook none">
                                     <label for="2id11" class="item item-radius pay-on">
-                                        <input type="radio" name="platForm" class="none" value="alipay" id="2id11" checked="checked">
-                                        <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="1" id="2id11">
+                                        <img src="./images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="2id21" class="item item-radius">
-                                        <input type="radio" name="platForm" class="none" value="wechat" id="2id21">
-                                        <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="2" id="2id21">
+                                        <img src="./images/img/user-icon-wechat.png" alt="">
                                     </label>
                                     <label for="2id31" class="item item-radius">
-                                        <input type="radio" name="platForm" class="none" value="unionpay" id="2id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="3" id="2id31">
+                                        <img src="./images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
-
-                                <div class="pay-mode-list EN-hook none">
+                                <div class="pay-mode-list EN-hook ">
                                     <label for="2id5" class="item item-radius pay-on">
-                                        <input type="radio" name="platForm" class="none" value="paypal" id="2id5">
-                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="5" id="2id5">
+                                        <img src="./images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
-                                <input value="" name="shouldPay" id="shouldPay" type="hidden">
-                                <span class="payNum" id="money">
-                                    16.67</span>
+                                <span class="payNum">0.00</span>
                                 <span class="money-state">
-                                        <label for="currency-cn2" class="cn on">
-                                            <input type="radio" name="currencyType" id="currency-cn2" class="none" value="0" checked="checked">
+                                        <label for="currency-cn2" class="cn ">
+                                            <input type="radio" name="currency" id="currency-cn2" class="none" value="CN">
                                             CNY
                                         </label>
-                                        <label for="currency-en2" class="en">
-                                            <input type="radio" name="currencyType" id="currency-en2" class="none" value="1">
+                                        <label for="currency-en2" class="en on">
+                                            <input type="radio" name="currency" id="currency-en2" class="none" value="EN">
                                             USD
                                         </label>
                                     </span>
@@ -404,96 +375,80 @@
                         </div>
                         <div class="formrow t-center last">
                             <!--返回按钮-->
-                            <%--<a href="javascript:;" class="button login-button layui-layer-close">取消</a>--%>
-                            <input type="submit" class="button login-button buttonBlue cancel-hook last" value="确认支付" id="payBtn">
-                            <script>
-                                $(document).ready(function(){
-                                    var moneyVal = document.getElementById("money").innerText;
-                                    var payMode = $('input[name="payMode"]:checked').val();
-                                    $("#shouldPay").val((moneyVal*payMode).toFixed(2));
-                                    $("#payModeSelectId").click(function () {
-                                        var payMode = $('input[name="payMode"]:checked').val();
-                                         $("#money").html((moneyVal*payMode).toFixed(2));
-                                    })
-                                });
-                            </script>
+                            <!--<a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>-->
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" value="Confirm Payment">
                         </div>
-                        </form>
                     </div>
                 </div>
-
-
-                <%--专业版--%>
                 <div class="member-buy-content none">
                     <div class="user-content item-radius pay-mode">
-                        <form action="">
                         <div class="formrow">
-                            <div class="formTitle color-black">使用时长</div>
+                            <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
                                 <div class="pay-mode-list time-mode-list">
                                     <label for="3tid1" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="3tid1" >
-                                        1个月
+                                        1 month
                                     </label>
                                     <label for="3tid2" class="item item-radius">
                                         <input type="radio" name="payMode" class="none" value="2" id="3tid2">
-                                        3个月
+                                        3 month
                                     </label>
                                     <label for="3tid3" class="item item-radius">
                                         <input type="radio" name="payMode" class="none" value="3" id="3tid3">
-                                        6个月
+                                        6 month
                                     </label>
                                     <label for="3tid4" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="12" id="3tid4">
-                                        1年
+                                        <input type="radio" name="payMode" class="none" value="1" id="3tid4">
+                                        1 year
                                     </label>
                                     <label for="3tid5" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="24" id="3tid5">
-                                        2年
+                                        <input type="radio" name="payMode" class="none" value="2" id="3tid5">
+                                        2 year
                                     </label>
                                     <label for="3tid6" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="36" id="3tid6">
-                                        3年
+                                        <input type="radio" name="payMode" class="none" value="3" id="3tid6">
+                                        3 year
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook none">
                                     <label for="3id11" class="item item-radius pay-on">
-                                        <input type="radio" name="platForm" class="none" value="alipay" id="3id11">
-                                        <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="1" id="3id11">
+                                        <img src="./images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="3id21" class="item item-radius">
-                                        <input type="radio" name="platForm" class="none" value="wechat" id="3id21">
-                                        <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="2" id="3id21">
+                                        <img src="./images/img/user-icon-wechat.png" alt="">
                                     </label>
                                     <label for="3id31" class="item item-radius">
-                                        <input type="radio" name="platForm" class="none" value="unionpay" id="3id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="3" id="3id31">
+                                        <img src="./images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
+                                <div class="pay-mode-list EN-hook ">
                                     <label for="3id5" class="item item-radius pay-on">
-                                        <input type="radio" name="platForm" class="none" value="5" id="3id5">
-                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
+                                        <input type="radio" name="payMode" class="none" value="5" id="3id5">
+                                        <img src="./images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
                                 <span class="payNum">0.00</span>
                                 <span class="money-state">
-                                        <label for="currency-cn3" class="cn on">
-                                            <input type="radio" name="currencyType" id="currency-cn3" class="none" value="0">
+                                        <label for="currency-cn3" class="cn ">
+                                            <input type="radio" name="currency" id="currency-cn3" class="none" value="CN">
                                             CNY
                                         </label>
-                                        <label for="currency-en3" class="en">
-                                            <input type="radio" name="currencyType" id="currency-en3" class="none" value="1">
+                                        <label for="currency-en3" class="en on">
+                                            <input type="radio" name="currency" id="currency-en3" class="none" value="EN">
                                             USD
                                         </label>
                                     </span>
@@ -501,17 +456,15 @@
                         </div>
                         <div class="formrow t-center last">
                             <!--返回按钮-->
-                            <!--<a href="javascript:;" class="button login-button layui-layer-close">取消</a>-->
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" value="确认支付">
+                            <!--<a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>-->
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" value="Confirm Payment">
                         </div>
-                        </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
-
 
 <script>
     $(function(){
@@ -542,12 +495,12 @@
         //选择充值方式
         $(".pay-mode-list label").click(function(){
             $(this).addClass('pay-on').siblings().removeClass('pay-on');
-            console.log($('input[name="platForm"]:checked').val());
+            console.log($('input[name="payMode"]:checked').val());
         });
         //货币切换
         $(".money-state label").click(function(){
             $(this).addClass('on').siblings().removeClass('on');
-            var currencyValue = $(this).parents('.pay-mode').find('input[name="currency"]:checked').val();
+            var currencyValue = $(this).parents('.pay-mode').find('input[name="currency"]:checked').val()
             if( currencyValue == 'CN'){
                 $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
             } else if ( currencyValue =='EN' ){
@@ -564,6 +517,8 @@
             tabsMainNum.eq(index).removeClass('none').siblings().addClass('none');
             $(this).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
         });
+
+
 
     })
 </script>

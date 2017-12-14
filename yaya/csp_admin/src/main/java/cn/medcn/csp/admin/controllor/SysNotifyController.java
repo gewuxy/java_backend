@@ -4,6 +4,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.csp.admin.utils.SubjectUtils;
@@ -79,9 +80,9 @@ public class SysNotifyController extends BaseController {
     @RequestMapping(value = "/insert")
     @Log(name = "发布公告")
     public String sendMessage(SystemNotify notify,String acceptId,RedirectAttributes redirectAttributes) {
-        Integer userId = SubjectUtils.getCurrentUserid();
-        SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null) {
+            Integer userId = SubjectUtils.getCurrentUserid();
+            SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
             notify.setId(UUIDUtil.getNowStringID());
             notify.setSenderId(String.valueOf(userId));
             notify.setSenderName(systemUser.getUserName());
@@ -90,7 +91,11 @@ public class SysNotifyController extends BaseController {
             if (notify.getIsRead() == null){
                 notify.setIsRead(false);
             }
-            sysNotifyService.insert(notify);
+            int notifyCount = sysNotifyService.insert(notify);
+            if (notifyCount != 1 ){
+                addFlashMessage(redirectAttributes,"发布失败");
+                return "/notify/notifyInfo";
+            }
             addFlashMessage(redirectAttributes,"发布成功");
             return "redirect:/csp/notify/list";
         } else {
@@ -142,19 +147,24 @@ public class SysNotifyController extends BaseController {
      */
     @RequestMapping(value = "/edit")
     @Log(name = "编辑页面")
-    public String notifyEdit(@RequestParam(value = "id", required = true) String id, Model model,String userName) {
+    public String notifyEdit(@RequestParam(value = "id", required = true) String id, Model model) {
         SystemNotify notify = sysNotifyService.selectByPrimaryKey(id);
-        Boolean isRead = notify.getIsRead();
-        if (isRead == null){
-            notify.setIsRead(false);
+        if (!StringUtils.isEmpty(notify)){
+            Boolean isRead = notify.getIsRead();
+            if (isRead == null){
+                notify.setIsRead(false);
+            }
+            sysNotifyService.updateByPrimaryKey(notify);
+            CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(notify.getAcceptId());
+            if (notify.getNotifyType() ==1){
+                model.addAttribute("userName",cspUserInfo.getUserName());
+            }
+            model.addAttribute("notify", notify);
+            return "/notify/notifyInfoEdit";
+        }else{
+            error("公告不存在");
+            return "/notify/notifyList";
         }
-        sysNotifyService.updateByPrimaryKey(notify);
-        CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(notify.getAcceptId());
-        if (notify.getNotifyType() ==1){
-            model.addAttribute("userName",cspUserInfo.getUserName());
-        }
-        model.addAttribute("notify", notify);
-        return "/notify/notifyInfoEdit";
     }
 
     /**
@@ -165,19 +175,23 @@ public class SysNotifyController extends BaseController {
     @RequestMapping(value = "/update")
     @Log(name = "修改页面")
     public String update( SystemNotify notify,RedirectAttributes redirectAttributes) {
-        Integer userId = SubjectUtils.getCurrentUserid();
-        SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
         if (notify != null){
+            Integer userId = SubjectUtils.getCurrentUserid();
+            SystemUser systemUser = cspSysUserService.selectByPrimaryKey(userId);
             if (notify.getIsRead() == null){
                 notify.setIsRead(false);
             }
             notify.setSendTime(new Date());
             notify.setSenderName(systemUser.getUserName());
-            sysNotifyService.updateByPrimaryKey(notify);
+            int notifyCount = sysNotifyService.updateByPrimaryKey(notify);
+            if (notifyCount != 1){
+                addFlashMessage(redirectAttributes,"修改失败");
+                return "/notify/notifyInfoEdit";
+            }
             addFlashMessage(redirectAttributes,"修改成功");
             return "redirect:/csp/notify/list";
         }else{
-            addFlashMessage(redirectAttributes,"修改失败");
+            addFlashMessage(redirectAttributes,"公告修改参数出现错误");
             return "/notify/notifyInfoEdit";
         }
     }
@@ -190,7 +204,10 @@ public class SysNotifyController extends BaseController {
     @RequestMapping(value = "/delete")
     @Log(name = "删除")
     public String delete(@RequestParam(value = "id", required = true) String id,RedirectAttributes redirectAttributes) {
-        sysNotifyService.deleteByPrimaryKey(id);
+        int notifyCount = sysNotifyService.deleteByPrimaryKey(id);
+        if (notifyCount != 1){
+            addFlashMessage(redirectAttributes,"删除失败");
+        }
         addFlashMessage(redirectAttributes,"删除成功");
         return "redirect:/csp/notify/list";
     }

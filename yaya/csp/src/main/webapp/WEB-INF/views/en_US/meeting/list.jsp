@@ -11,22 +11,25 @@
 <head>
     <title>Meeting Management - CSPmeeting</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <%--<link rel="SHORTCUT ICON" href="./images/v2/icon.ico" />--%>
+    <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-
-
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
-
     <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
 
+    <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/audio.js"></script>
-    <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
-    <script src="${ctxStatic}/js/zclip/jquery.zclip.min.js"></script>
-
-    <script id="-mob-share" src="//f1.webshare.mob.com/code/mob-share.js"></script>
+    <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+    <script src="${ctxStatic}/js/layer/layer.js"></script>
+    <!--[if lt IE 9]>
+    <script src="${ctxStatic}/js/html5.js"></script>
+    <![endif]-->
 
     <script>
         const shareSdkAppKey = "21454499cef00";
@@ -34,6 +37,46 @@
         var courseTitle = "";
         var shareUrl = "";
         var coverUrl = "";
+
+        /*-------- 将关闭提示放入cookie 只提示一次 ---------*/
+        function cookiesave(n, v, mins, dn, path)
+        {
+            if(n)
+            {
+                if(!mins) mins = 365 * 24 * 60;
+                if(!path) path = "/";
+                var date = new Date();
+                date.setTime(date.getTime() + (mins * 60 * 1000));
+                var expires = "; expires=" + date.toGMTString();
+                if(dn) dn = "domain=" + dn + "; ";
+                document.cookie = n + "=" + v + expires + "; " + dn + "path=" + path;
+            }
+        }
+        function cookieget(n)
+        {
+            var name = n + "=";
+            var ca = document.cookie.split(';');
+            for(var i=0;i<ca.length;i++) {
+                var c = ca[i];
+                while (c.charAt(0)==' ') c = c.substring(1,c.length);
+                if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
+            }
+            return "";
+        }
+        function closeclick(){
+            document.getElementById('note').style.display='none';
+            cookiesave('closeclick','closeclick','','','');
+        }
+        function clickclose(){
+            if(cookieget('closeclick')=='closeclick'){
+                document.getElementById('note').style.display='none';
+            }else{
+                document.getElementById('note').style.display='block';
+            }
+        }
+        window.onload=clickclose;
+
+        /*------end -------*/
 
         $(function(){
             if("${err}"){
@@ -417,6 +460,13 @@
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
+        <div class="page-width clearfix pr">
+                <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
+                    <div class="admin-tips" id="note" style="display:none;">
+                        <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">Expiring in <strong class="color-blue">${expireTimeCount}</strong> days</a> </span>
+                        <span class="admin-tips-close" onclick="closeclick()"></span>
+                    </div>
+                </c:if>
         <div class="page-width clearfix pr">
             <c:if test="${showTips != null && showTips}">
                 <div class="admin-tips" id="meetCountTips">
