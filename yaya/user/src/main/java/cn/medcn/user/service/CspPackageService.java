@@ -12,7 +12,22 @@ import java.util.Map;
 public interface CspPackageService extends BaseService<CspPackage> {
     // 获取用户当前套餐版本
     CspPackage findUserPackageById(String userId);
-    List<CspPackage> findAllPackage();
+
+    /**
+     * 获取当前参数相对金额跟数量
+     *
+     * @param packageId
+     * @param limitTime
+     * @param currency
+     * @return
+     */
     Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency);
+
+    /**
+     * 根据是否有套餐判断是否新用户
+     *
+     * @param userId
+     * @return
+     */
     boolean newUser(String userId);
 }
