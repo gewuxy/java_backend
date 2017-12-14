@@ -2,7 +2,6 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
@@ -41,9 +40,6 @@ public class PackageController extends CspBaseController{
 
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
-
-    @Value("${app.csp.base}")
-    protected String appBase;
 
     @Value("${apiKey}")
     private String apiKey;
@@ -133,10 +129,10 @@ public class PackageController extends CspBaseController{
         Charge charge = null;
         try {
             //生成Charge对象
-            charge = chargeService.createPackageCharge(orderNo,appId, money,num, payType, ip,appBase);
+            charge = chargeService.createCharge(orderNo, money,payType,ip);
         } catch (Exception e) {
             e.printStackTrace();
-            return error(e.getMessage());
+            return error(local("charge.fail"));
         }
         //创建订单
         cspPackageOrderService.createOrder(getWebPrincipal().getId(),orderNo,currency,packageId,num,money,payType);

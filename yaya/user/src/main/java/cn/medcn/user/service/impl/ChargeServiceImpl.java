@@ -47,41 +47,6 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         return fluxOrderDAO;
     }
 
-    public Charge createPackageCharge(String orderNo, String appId, Float money, Integer num, String channel, String ip, String appBase) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
-        Map<String, Object> chargeParams = new HashMap();
-        chargeParams.put("order_no", orderNo);
-        //单位为对应币种的最小货币单位，人民币为分。如订单总金额为 1 元， amount 为 100
-        chargeParams.put("amount", money * 100);
-        Map<String, String> app = new HashMap();
-        //appId
-        app.put("id", appId);
-        chargeParams.put("app", app);
-        chargeParams.put("channel", channel);
-        chargeParams.put("currency", "cny");
-        chargeParams.put("client_ip", ip);
-        chargeParams.put("subject", "购买套餐");
-        chargeParams.put("body", "购买套餐");
-        Map<String, String> extraMap = null;
-        //支付宝手机网页支付,支付宝电脑网站支付
-        if ("alipay_wap".equals(channel) || "alipay_pc_direct".equals(channel)) {
-            extraMap = new HashMap();
-            extraMap.put("success_url", appBase + "mgr/charge/success?money="+money);
-            chargeParams.put("extra", extraMap);
-            //银联全渠道手机网页支付,银联PC网页支付,微信h5支付
-        }else if ("upacp_wap".equals(channel) || "upacp_pc".equals(channel)) {
-            extraMap = new HashMap();
-            extraMap.put("result_url", appBase + "mgr/charge/success?money="+money);
-            chargeParams.put("extra", extraMap);
-            //微信公众号扫码支付
-        }else if("wx_pub_qr".equals(channel)){
-            extraMap = new HashMap();
-            extraMap.put("product_id",orderNo);
-            chargeParams.put("extra", extraMap);
-        }
-        return Charge.create(chargeParams);
-    }
-
-
     /**
      * 创建Charge对象，返回给前端
      * @param orderNo
@@ -96,6 +61,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws com.pingplusplus.exception.APIConnectionException
      * @throws AuthenticationException
      */
+    @Override
     public Charge createCharge(String orderNo,Float money, String channel, String ip) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
