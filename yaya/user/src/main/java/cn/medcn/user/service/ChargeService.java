@@ -28,8 +28,6 @@ public interface ChargeService extends BaseService<FluxOrder> {
      */
     String createPaypalOrder(String userId, Integer flux);
 
-    Charge createPackageCharge(String orderNo, String appId, Float money, Integer num, String channel, String ip, String appBase) throws RateLimitException, APIException, ChannelException, InvalidRequestException, APIConnectionException, AuthenticationException;
-
     /**
      * 创建web paypal订单
      * @param userId

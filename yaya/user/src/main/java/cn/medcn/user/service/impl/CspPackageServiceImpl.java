@@ -43,11 +43,6 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
     }
 
     @Override
-    public List<CspPackage> findAllPackage() {
-        return cspPackageDAO.findAllPackage();
-    }
-
-    @Override
     public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency) {
         CspPackage pk = cspPackageDAO.selectByPrimaryKey(packageId);
         float money = (float) 0.00;
