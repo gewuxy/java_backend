@@ -42,7 +42,7 @@ public class AdvertController extends BaseController {
     @RequestMapping("/advert")
     @ResponseBody
     public String advert() {
-        Integer abroad = LocalUtils.isAbroad() ? 1 : 0 ;
+        Integer abroad = LocalUtils.isAbroad() ? LocalUtils.Abroad.Y.ordinal() : LocalUtils.Abroad.N.ordinal() ;
         Advert advert = advertService.findCspAdvert(abroad);
         Map<String, Object> map = new HashMap<String, Object>();
         if (advert != null) {
