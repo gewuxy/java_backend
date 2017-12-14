@@ -1156,7 +1156,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .pay-mode .money-state .en { -moz-border-radius: 0 3px  3px 0 ; -webkit-border-radius:0 3px  3px 0; border-radius: 0 3px  3px 0 ;}
 .pay-mode .money-state .on { color:#fff; background-color:#167afe;}
 
-.member-popup-box { display: none;}
+/*.member-popup-box { display: none;}*/
 .member-mode {}
 .member-mode .resource-label { margin:5px 0 10px;}
 .member-mode .resource-label span { margin-right:0;}

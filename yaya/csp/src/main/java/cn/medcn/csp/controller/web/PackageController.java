@@ -23,6 +23,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 用户套餐选购
  * by create HuangHuibin 2017/12/12
  */
 @Controller
@@ -71,6 +72,11 @@ public class PackageController extends CspBaseController{
     public String getSumMoney(Integer version,Integer limitTimes,String currency){
         Map<String,Object> map = cspPackageService.getOrderParams(version + 1,limitTimes,currency);
         return success(map.get("money"));
+    }
+
+    @RequestMapping(value = "/mark")
+    public String mark(){
+        return localeView("/include/member_mark");
     }
 
     /**

@@ -34,21 +34,6 @@
         var courseTitle = "";
         var shareUrl = "";
         var coverUrl = "";
-        var selectPk = 1;  //当前选中的套餐
-        var limitTimes = 1; //当前点击套餐时长
-        var flag = "hg"; //当前套餐
-
-        //获取金额
-        function sumMoney(){
-            var currency = $("#" + flag +  "View").find('input[name='+flag+'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney', {'version': selectPk,"limitTimes":limitTimes,"currency":currency}, function(data){
-                if (data.code == 0){
-                    selectPk == 1 ? $("#hgTotal").html(data.data): $("#pfTotal").html(data.data);
-                } else {
-                    layer.msg(data.err);
-                }
-            });
-        }
 
         /*-------- 将关闭提示放入cookie 只提示一次 ---------*/
         function cookiesave(n, v, mins, dn, path)
@@ -95,76 +80,22 @@
                 layer.msg("${err}");
             }
 
-            //选购套餐提交
-            $('input[name="commitPay"]').click(function(){
-                if(selectPk != 0) {
-                    var limitTime =  $("#" + flag + "View").find('input[name='+flag+'TimeMode]:checked').val();
-                    var payType =  $("#" + flag + "View").find('input[name='+flag+'PayMode]:checked').val();
-                    var currency =  $("#" + flag + "View").find('input[name='+flag+'Currency]:checked').val();
-                    $("#limitTime").val(limitTime);
-                    $("#payType").val(payType);
-                    $("#currency").val(currency);
-                }
-                $("#packageId").val(selectPk);
-                $("#rechargeFrom").submit();
-            });
-
-            var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
-            //初始化高级版选中
-            tabsMainNum.eq(1).removeClass('none').siblings().addClass('none');
             if(${newUser}){
                 layer.open({
-                    type: 1,
-                    area: ['1116px', '935px'],
-                    fix: false, //不固定
-                    title:false,
-                    closeBtn:0,
-                    skin: 'member-popup-zIndex',
-                    offset: '70px',
-                    content: $('.member-popup-box'),
+                    type: 2,
+                    title: false,
+                    skin: 'layui-layer-nobg', //没有背景色
+                    shadeClose: false,
+                    closeBtn: 0, //不显示关闭按钮
+                    shade: 0.1,
+                    area: ['1116px', '900px'],
+                    content: '${ctx}/mgr/pay/mark',
                     success:function(layero, index){
-                        $("#hgTotal").html("16.67");
-                        $("#pfTotal").html("66");
                     },
                     cancel :function(){
                     },
                 });
             }
-
-            //选择购买时长
-            $(".time-mode-list label").click(function(){
-                $(this).addClass('pay-on').siblings().removeClass('pay-on');
-                limitTimes = $(this).children().eq(0).val();
-                sumMoney();
-            });
-
-            //支付方式
-            $(".pay-mode-list label").click(function(){
-                $(this).addClass('pay-on').siblings().removeClass('pay-on');
-            });
-
-            //货币切换
-            $(".money-state label").click(function(){
-                $(this).addClass('on').siblings().removeClass('on');
-                currencyValue = $(this).parents('.pay-mode').find('input[name='+flag+'Currency]:checked').val();
-                if( currencyValue == 'CN'){
-                    $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if ( currencyValue =='EN' ){
-                    $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
-                }
-                sumMoney();
-            });
-
-            //选择不同版本
-            $(".member-buy-tabs-menu").find('.index-buy-item').on('click',function(){
-                var index = $(this).index();
-                selectPk = index;
-                console.log(selectPk);
-                tabsMainNum.eq(index).removeClass('none').siblings().addClass('none');
-                $(this).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
-                sumMoney();
-            })
-
 
             //初始化音频
             var asAllItem = audiojs.createAll();
