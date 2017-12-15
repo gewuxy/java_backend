@@ -69,6 +69,16 @@
         </mvc:interceptor>
 
         <mvc:interceptor>
+            <mvc:mapping path="/mgr/**"/>
+            <bean class="cn.medcn.csp.interceptor.WebLogInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
+            <mvc:mapping path="/api/**"/>
+            <bean class="cn.medcn.csp.interceptor.ApiLogInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
             <mvc:mapping path="/**"/>
             <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor"/>
         </mvc:interceptor>

@@ -5,7 +5,8 @@ package cn.medcn.user.model;
  */
 public enum AppInfo {
     YAYA(0, "YAYA医师"),
-    HLYY(1, "合理用药");
+    CSP(1, "会讲"),
+    HLYY(2, "合理用药");
 
     private Integer appId;
 
