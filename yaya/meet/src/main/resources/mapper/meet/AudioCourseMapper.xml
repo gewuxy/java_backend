@@ -131,9 +131,10 @@
 
     <select id="findAllMeetForManage" resultType="cn.medcn.meet.model.AudioCourse">
         SELECT c.id,c.deleted,c.`title`,c.`category`,c.`create_time`,c.`published`,c.`share_type`,c.`play_type`,
-        csu.`user_name`
+        csu.`user_name`,cl.start_time,csu.id AS userId
         FROM `t_audio_course` c
         LEFT JOIN `t_csp_user_info` csu ON c.`csp_user_id` = csu.`id`
+        LEFT JOIN t_csp_live cl ON cl.course_id = c.id
         WHERE c.`source_type` = 1
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
