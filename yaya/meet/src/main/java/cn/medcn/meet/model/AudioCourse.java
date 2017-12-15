@@ -61,6 +61,15 @@ public class AudioCourse implements Serializable {
     @Transient
     private List<AudioCourseDetail> details;
 
+    //直播开始时间
+    @Transient
+    private Date startTime;
+
+
+    //该会议的持有者id
+    @Transient
+    private String userId;
+
 
     public enum PlayType{
         normal(0),//录播

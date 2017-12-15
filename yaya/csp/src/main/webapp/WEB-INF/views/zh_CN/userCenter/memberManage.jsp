@@ -101,68 +101,65 @@
                             </div>
                             <div class="member-mode-main">
                                 <div class="member-mode-fnList">
-                                    <c:if test="${cspPackage.packageCn == '标准版'}">
+
                                     <ul>
+                                        <c:forEach var="info" items="${cspPackageInfos}">
+                                        <c:if test="${info.iden =='LB'}">
                                         <li>
                                             <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                            <p>投屏录播</p>
-                                        </li><li>
+                                            <p>${info.descriptCn}</p>
+                                        </li>
+                                        </c:if>
+                                        <c:if test="${info.iden =='ZB'}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                        <p>投屏直播</p>
-                                    </li><li>
+                                        <p>${info.descriptCn}</p>
+                                        </li>
+                                        </c:if>
+                                        <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                        <p>3个会议</p>
-                                    </li><li>
+                                        <p>${info.limitMeets}个会议</p>
+                                        </li>
+                                        </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
+                                                <p>${info.limitMeets}个会议</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
+                                                <p>无限会议</p>
+                                            </li>
+                                            </c:if>
+
+                                        <c:if test="${info.iden =='GG' && info.state == false}">
+                                        <li>
                                         <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
-                                        <p class="color-gray-03">无广告</p>
-                                    </li><li>
+                                        <p class="color-gray-03">${info.descriptCn}</p>
+                                        </li>
+                                        </c:if>
+                                            <c:if test="${info.iden =='GG' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
+                                                    <p>${info.descriptCn}</p>
+                                                </li>
+                                            </c:if>
+                                        <c:if test="${info.iden =='SY' && info.state == false}">
+                                        <li>
                                         <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
-                                        <p class="color-gray-03">可关闭水印</p>
-                                    </li>
+                                        <p class="color-gray-03">${info.descriptCn}</p>
+                                        </li>
+                                        </c:if>
+                                            <c:if test="${info.iden =='SY' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
+                                                    <p>${info.descriptCn}</p>
+                                                </li>
+                                            </c:if>
+                                        </c:forEach>
                                     </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageCn == '高级版'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏录播</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                            <p>10个会议</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p>无广告</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p>可关闭水印</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageCn == '专业版'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏录播</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                            <p>无限会议</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p>无广告</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p>自定义水印</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
                                 </div>
                             </div>
+
                             <div class="member-mode-footer member-footer-position t-center">
                                 <a href="javascript:;" type="button" class="button login-button buttonBlue member-buy-hook" id="btn">升级续费</a>
                                 <p><a href="${ctx}/index/17103116063862386794" target="_blank">有疑问，帮助中心</a></p>

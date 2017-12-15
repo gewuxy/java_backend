@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -32,5 +33,7 @@ public class CspPackageInfo implements Serializable {
     // 状态
     protected Boolean state;
 
+    @Transient
+    protected Integer limitMeets;
 
 }
