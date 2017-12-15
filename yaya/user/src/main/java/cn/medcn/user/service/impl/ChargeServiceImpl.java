@@ -36,8 +36,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
     @Autowired
     protected UserFluxDAO userFluxDAO;
 
-    @Value("${appId}")
-    private String appId;
+
 
     @Value("${app.csp.base}")
     private String appBase;
@@ -62,7 +61,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
      * @throws AuthenticationException
      */
     @Override
-    public Charge createCharge(String orderNo,Float money, String channel, String ip,String subject) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
+    public Charge createCharge(String orderNo,Float money, String channel, String ip,String subject,String appId) throws RateLimitException, APIException, ChannelException, InvalidRequestException, com.pingplusplus.exception.APIConnectionException, AuthenticationException {
         Map<String, Object> chargeParams = new HashMap();
 
         chargeParams.put("order_no", orderNo);
