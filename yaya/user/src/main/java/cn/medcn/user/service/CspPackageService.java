@@ -2,6 +2,7 @@ package cn.medcn.user.service;
 
 import cn.medcn.common.service.BaseService;
 import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.CspPackageInfo;
 
 import java.util.List;
 import java.util.Map;
@@ -30,4 +31,11 @@ public interface CspPackageService extends BaseService<CspPackage> {
      * @return
      */
     boolean newUser(String userId);
+
+    /**
+     * 获取所有套餐信息
+     *
+     * @return
+     */
+    List<CspPackage> findCspPackage();
 }

@@ -12,4 +12,6 @@ import java.util.List;
 public interface CspPackageDAO extends Mapper<CspPackage> {
 
     CspPackage findUserPackageById(@Param("userId") String userId);
+
+    List<CspPackage> findCspPackage();
 }

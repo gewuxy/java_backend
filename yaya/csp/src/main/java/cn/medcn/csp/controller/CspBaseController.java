@@ -214,7 +214,9 @@ public class CspBaseController extends BaseController {
     protected boolean meetCountOut(){
         Principal principal = getWebPrincipal();
         //判断是否已经超出限制
-        int maxUsableCount = principal.getCspPackage().getLimitMeets();
+        CspPackage cspPackage = principal.getCspPackage();
+        if(cspPackage == null) return false;
+        int maxUsableCount = cspPackage.getLimitMeets();
         int usedCount = principal.getCspPackage().getUsedMeetCount();
 
         return maxUsableCount > 0 && usedCount >= maxUsableCount;
