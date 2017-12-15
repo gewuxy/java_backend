@@ -68,7 +68,7 @@
             if(cookieget('closeclick')=='closeclick'){
                 document.getElementById('note').style.display='none';
             }else{
-                document.getElementById('note').style.display='block';
+                //document.getElementById('note').style.display='block';
             }
         }
         window.onload=clickclose;
