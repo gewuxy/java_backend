@@ -25,6 +25,8 @@ public class TxHeaderDTO implements Serializable {
 
     public static final String TX_BODY_ERROR_CODE_KEY = "errcode";
 
+    public static final String TX_VIDEO_DOWNLOAD_URL_KEY = "video_url";
+
     //时间戳 十进制
     protected long t;
     //签名

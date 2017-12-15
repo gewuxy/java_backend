@@ -1,6 +1,9 @@
 package cn.medcn.user.service.impl;
 
+import cn.medcn.common.Constants;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.UserFluxDAO;
 import cn.medcn.user.dao.UserFluxUsageDAO;
@@ -25,6 +28,9 @@ public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements Us
 
     @Autowired
     protected UserFluxUsageDAO userFluxUsageDAO;
+
+    @Autowired
+    protected RedisCacheUtils<String> redisCacheUtils;
 
     @Override
     public Mapper<UserFlux> getBaseMapper() {
@@ -106,5 +112,31 @@ public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements Us
     @Override
     public int updateVideoDownloadCount(UserFluxUsage usage) {
         return userFluxUsageDAO.updateByPrimaryKeySelective(usage);
+    }
+
+
+
+    /**
+     * 更新下载次数，删除缓存中的下载地址，只能下载一次
+     * @param key
+     * @param courseId
+     */
+    @Override
+    public void updateDownloadCountAndDeleteRedisKey(String key, String courseId) throws SystemException {
+        //将缓存中的数据删除
+        redisCacheUtils.delete(Constants.VIDEO_DOWNLOAD_URL + key);
+        //更新下载次数
+        UserFluxUsage usage = new UserFluxUsage();
+        usage.setMeetingId(courseId);
+        usage = userFluxUsageDAO.selectOne(usage);
+        if(usage == null){
+            throw new SystemException("获取下载次数失败");
+        }
+        usage.setDownloadCount(usage.getDownloadCount() + 1);
+        int count = userFluxUsageDAO.updateByPrimaryKeySelective(usage);
+        if(count != 1){
+            throw new SystemException("更新下载次数失败");
+        }
+
     }
 }

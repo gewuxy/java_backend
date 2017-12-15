@@ -207,7 +207,21 @@ public class LiveCallbackController extends CspBaseController {
      */
     protected void onRecordOver(String requestBody) {
 
-        // todo 处理视频下载
+        TxHeaderDTO header = getTxHeader(requestBody);
+        if (header != null) {
+            String downLoadUrl = (String) JsonUtils.getValue(requestBody, TX_VIDEO_DOWNLOAD_URL_KEY);
+
+            Integer courseId = parseCourseId(header.getChannel_id());
+
+            if (courseId != null) {
+                Live live = liveService.findByCourseId(courseId);
+
+                if (live != null) {
+                    live.setReplayUrl(downLoadUrl);
+                    liveService.updateByPrimaryKey(live);
+                }
+            }
+        }
     }
 
     /**
@@ -216,7 +230,7 @@ public class LiveCallbackController extends CspBaseController {
      * @param requestBody
      */
     protected void onScreenCapture(String requestBody) {
-        // todo 暂时未做处理
+        // do nothing
     }
 
 

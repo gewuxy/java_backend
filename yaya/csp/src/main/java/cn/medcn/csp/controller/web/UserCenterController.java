@@ -5,6 +5,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.utils.DownloadUtils;
 import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
@@ -369,43 +370,11 @@ public class UserCenterController extends CspBaseController{
            throw new SystemException(local("download.fail"));
        }
        //打开下载框
-       openDownloadBox(meetName, response, usage.getVideoDownUrl());
+       DownloadUtils.openDownloadBox(meetName, response, usage.getVideoDownUrl());
 
    }
 
 
-    /**
-     * 打开视频下载框
-     * @param meetName
-     * @param response
-     * @param downUrl
-     * @throws SystemException
-     */
-    private void openDownloadBox(String meetName, HttpServletResponse response, String downUrl) throws SystemException {
-
-        try {
-            response.reset();
-            response.setContentType("application/octet-stream");
-            meetName = URLEncoder.encode(meetName,"UTF-8");
-            response.setHeader("Content-Disposition", "attachment;filename=\"" + meetName +".mp4" + "\"");
-            URL url=new URL(downUrl);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.connect();
-            Integer fileLength = conn.getContentLength();
-            response.setContentLength(fileLength);
-            BufferedInputStream ins=new BufferedInputStream(conn.getInputStream());
-            int i = ins.read();
-            while(i!=-1){
-                response.getOutputStream().write(i);
-            }
-            ins.close();
-            response.getOutputStream().close();
-            conn.disconnect();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new SystemException(e.getMessage());
-        }
-    }
 
     /**
      * 进入会员权限界面
