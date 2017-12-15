@@ -95,6 +95,7 @@ public class PackageController extends CspBaseController{
         List<CspPackageInfo> infos = cspPackageInfoService.select(new CspPackageInfo());
         Map<String,Object> map = new HashMap<>();
         map.put("packages",packages);
+        map.put("package",getWebPrincipal().getPackageId());
         map.put("infos",infos);
         return success(map);
     }
@@ -115,9 +116,9 @@ public class PackageController extends CspBaseController{
             //标准版不需要支付添加用户套餐信息
             cspUserPackageService.addStanardInfo(userId);
             //添加用户历史版本信息
-            cspUserPackageHistoryService.addUserHistoryInfo(userId,null,packageId, Constants.NUMBER_ONE);
+            cspUserPackageHistoryService.addUserHistoryInfo(userId,getWebPrincipal().getCspPackage() != null ? getWebPrincipal().getPackageId(): null ,packageId, Constants.NUMBER_ONE);
             //更新用户信息缓存
-            redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,Constants.NUMBER_ONE,(int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+            updatePackagePrincipal(userId);
             return "redirect:/mgr/meet/list";
         }
         //校验参数信息

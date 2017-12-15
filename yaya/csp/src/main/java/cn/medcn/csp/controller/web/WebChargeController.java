@@ -197,7 +197,8 @@ public class WebChargeController extends CspBaseController {
                 }
                 //更新订单状态，修改用户套餐信息
                 cspPackageOrderService.updateOrderAndUserPackageInfo(order);
-                redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+                //更新用户套餐信息缓存
+                updatePackagePrincipal(order.getUserId());
                 boolean yearType = cspPackageOrderService.yearPay(order.getPackageId(),order.getShouldPay());
                 Map<String,Object> results = cspPackageService.getOrderParams(order.getPackageId(),yearType == true ? order.getNum() * 12 : order.getNum(),"CN");
                 return "redirect:/mgr/charge/success?money="+ results.get("money");

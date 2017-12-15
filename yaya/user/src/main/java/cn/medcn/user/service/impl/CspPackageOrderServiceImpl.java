@@ -81,7 +81,6 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         CspUserPackage userPk = cspUserPackageDAO.selectByPrimaryKey(order.getUserId());
         Integer packageId = order.getPackageId();
         Integer oldPackage = null;
-        Date currentTime = new Date();
         //开始时间
         Date start = CalendarUtils.nextDateStartTime();
         //是否是年费套餐
@@ -91,7 +90,10 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
         }else{ // 更新用户套餐信息
             oldPackage = userPk.getPackageId();
-            Date end  = yearType ? CalendarUtils.calendarDay(userPk.getPackageEnd(),order.getNum() * 365):CalendarUtils.calendarDay(userPk.getPackageEnd(),order.getNum() * 30);
+            Date endStart = CalendarUtils.nextDateStartTime();
+            //结束时间不为空从以前结束时间开始算
+            if(userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
+            Date end  = yearType ? CalendarUtils.calendarDay(endStart,order.getNum() * 365):CalendarUtils.calendarDay(endStart,order.getNum() * 30);
             cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
         }
         //添加用户套餐历史信息

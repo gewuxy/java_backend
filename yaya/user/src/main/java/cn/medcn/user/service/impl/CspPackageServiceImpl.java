@@ -61,23 +61,6 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         return map;
     }
 
-    /**
-     * 判断是否是新用户
-     *
-     * @param userId
-     * @return
-     */
-    @Override
-    public boolean newUser(String userId) {
-        Object newUser = redisCacheUtils.getCacheObject(Constants.CSP_NEW_USER + userId);
-        if(newUser == null){
-            CspUserPackage userPackage = cspUserPackageDAO.selectByPrimaryKey(userId);
-            redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,userPackage == null ? Constants.NUMBER_ZERO:Constants.NUMBER_ONE,(int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
-            return userPackage == null;
-        }
-        return (Integer)newUser == Constants.NUMBER_ZERO;
-    }
-
     @Override
     public List<CspPackage> findCspPackage() {
         return cspPackageDAO.findCspPackage();
