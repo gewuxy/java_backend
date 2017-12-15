@@ -155,7 +155,7 @@ public class PackageController extends CspBaseController{
         Charge charge = null;
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, money,payType,ip,"套餐购买");
+            charge = chargeService.createCharge(orderNo, money,payType,ip,"套餐购买",appId);
         } catch (Exception e) {
             e.printStackTrace();
             return error(local("charge.fail"));

@@ -55,6 +55,8 @@ public class ChargeController extends CspBaseController {
     @Value("${apiKey}")
     private String apiKey;
 
+    @Value("${appId}")
+    private String appId;
 
     @Value("${paypal_clientId}")
     protected String paypalId;
@@ -142,16 +144,7 @@ public class ChargeController extends CspBaseController {
         Boolean isTrue = null;
         try {
             isTrue = SignatureUtil.verifyData(body, signature, publicKey);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return;
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-            return;
-        } catch (SignatureException e) {
-            e.printStackTrace();
-            return;
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
