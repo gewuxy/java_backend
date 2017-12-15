@@ -37,6 +37,12 @@ public class CspBaseController extends BaseController {
     @Value("${web.socket.url}")
     protected String webSocketUrl;
 
+    @Value("${app.is.pro}")
+    protected Integer appPro;
+
+
+
+
     /**
      * 获取web端用户认证信息
      * @return

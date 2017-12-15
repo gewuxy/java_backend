@@ -23,11 +23,11 @@ public class CspPackageInfo implements Serializable {
     protected Integer packageId;
     // 服务标识
     protected String iden;
-    // 描述中文
+    // 描述
     protected String descriptCn;
     // 描述
     protected String descriptTw;
-    // 描述英文
+    // 描述
     protected String descriptUs;
     // 状态
     protected Boolean state;
