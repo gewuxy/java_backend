@@ -127,6 +127,7 @@ public class PackageController extends CspBaseController{
         }
         Map<String,Object> results = cspPackageService.getOrderParams(packageId,limitTime,currency);
         Float money = (Float) results.get("money");
+        money = appPro == 0 ? 0.01f:money;
         Integer num = (Integer) results.get("num");
         if(currency.equals("CN")){  //人民币P++支付
             return rnbPay(packageId,currency,payType,money,num,model);

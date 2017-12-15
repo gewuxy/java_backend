@@ -3,10 +3,6 @@
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script>
         var selectPk = 1;  //当前选中的套餐
@@ -91,30 +87,25 @@
 
         function initSwiper(course) {
             var package = course.packages;
-            $("#price2").html(package[1].monthRmb);
-            $("#price3").html(package[2].monthRmb + "/月" + package[2].yearRmb + "年");
             for(var i = 0;i < package.length;i++){
-                if(package[i].id == 2){
-                    $("#price" + i).html(package[i].monthRmb);
+                var packageId = package[i].id;
+                if(packageId == 2){
+                    $("#price" + packageId).html(package[i].monthRmb + "元");
                     $("#hgTotal").html(package[i].monthRmb);
                 }
-                if(package[i].id == 3) {
-                    $("#price" + i).html(package[i].monthRmb + "/月" + package[i].yearRmb + "年");
+                if(packageId == 3) {
+                    $("#price" + packageId).html(package[i].monthRmb + "元/" + package[i].yearRmb + "元");
                     $("#pfTotal").html(package[i].monthRmb);
                 }
-                $("#meets" + i).html(package[2].limitTimes == 0? "不限会议":package[2].limitTimes + "个会议");
+                $("#meets" + packageId).html(package[i].limitMeets == 0? "不限会议":package[i].limitMeets + "个会议");
             }
-            for(var index in course.infos) {
-                var packageId = index.packageId;
-                if (index.state == true) $("#info" + packageId).appear('<li class="icon-li-selected">' + index.descript + '</li>');
+            var info = course.infos;
+            for(var j = 0;j < info.length;j++){
+                var id = info[j].packageId;
+                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descript + '</li>');
             }
-
         }
-
-
     </script>
-
-
 </head>
 <body>
 <!--弹出购买会员项-->
@@ -136,9 +127,6 @@
                             </div>
                             <div class="index-buy-text">
                                 <ul id="info1">
-                                    <li class="icon-li-selected">启用投屏录播</li>
-                                    <li class="icon-li-selected">启用投屏直播</li>
-                                    <li class="icon-li-selected">会讲水印</li>
                                 </ul>
                             </div>
                         </div>
@@ -155,10 +143,6 @@
                             </div>
                             <div class="index-buy-text">
                                 <ul id="info2">
-                                    <li class="icon-li-selected">启用投屏录播</li>
-                                    <li class="icon-li-selected">启用投屏直播</li>
-                                    <li class="icon-li-selected">昵称水印</li>
-                                    <li class="icon-li-selected">无广告</li>
                                 </ul>
                             </div>
                         </div>
@@ -175,10 +159,6 @@
                             </div>
                             <div class="index-buy-text">
                                 <ul id="info3">
-                                    <li class="icon-li-selected">启用投屏录播</li>
-                                    <li class="icon-li-selected">启用投屏直播</li>
-                                    <li class="icon-li-star">自定义水印</li>
-                                    <li class="icon-li-selected">无广告</li>
                                 </ul>
                             </div>
                         </div>
