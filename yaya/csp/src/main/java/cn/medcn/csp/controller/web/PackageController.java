@@ -6,6 +6,7 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.CspPackageInfo;
 import cn.medcn.user.service.*;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -42,6 +43,9 @@ public class PackageController extends CspBaseController{
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
+    @Autowired
+    protected CspPackageInfoService cspPackageInfoService;
+
     @Value("${apiKey}")
     private String apiKey;
 
@@ -74,9 +78,25 @@ public class PackageController extends CspBaseController{
         return success(map.get("money"));
     }
 
+    /**
+     * 打开套餐选购页面
+     *
+     * @return
+     */
     @RequestMapping(value = "/mark")
     public String mark(){
         return localeView("/include/member_mark");
+    }
+
+    @RequestMapping(value = "/package")
+    @ResponseBody
+    public String packageList(){
+        List<CspPackage> packages = cspPackageService.findCspPackage();
+        List<CspPackageInfo> infos = cspPackageInfoService.select(new CspPackageInfo());
+        Map<String,Object> map = new HashMap<>();
+        map.put("packages",packages);
+        map.put("infos",infos);
+        return success(map);
     }
 
     /**
@@ -135,7 +155,7 @@ public class PackageController extends CspBaseController{
         Charge charge = null;
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, money,payType,ip);
+            charge = chargeService.createCharge(orderNo, money,payType,ip,"套餐购买");
         } catch (Exception e) {
             e.printStackTrace();
             return error(local("charge.fail"));
