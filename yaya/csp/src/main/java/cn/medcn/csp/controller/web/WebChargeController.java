@@ -188,19 +188,7 @@ public class WebChargeController extends CspBaseController {
 
         //支付成功
         if(createdPayment.getState().equals("approved")){
-            if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //流量充值支付成功
-                //查找订单
-                FluxOrder order = new FluxOrder();
-                order.setTradeId(paymentId);
-                order = chargeService.selectOne(order);
-                //没有相关订单
-                if(order == null ){
-                   throw new SystemException("No related orders");
-                }
-                //更新订单状态，修改用户流量值
-                chargeService.updateOrderAndUserFlux(order);
-                return "redirect:/mgr/charge/success?money="+(order.getMoney());
-            }else{  // 套餐购买支付成功
+            if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //套餐购买支付成功
                 CspPackageOrder condition = new CspPackageOrder();
                 condition.setTradeId(paymentId);
                 CspPackageOrder order = cspPackageOrderService.selectOne(condition);
@@ -213,6 +201,18 @@ public class WebChargeController extends CspBaseController {
                 boolean yearType = cspPackageOrderService.yearPay(order.getPackageId(),order.getShouldPay());
                 Map<String,Object> results = cspPackageService.getOrderParams(order.getPackageId(),yearType == true ? order.getNum() * 12 : order.getNum(),"CN");
                 return "redirect:/mgr/charge/success?money="+ results.get("money");
+            }else{  //流量充值支付成功
+                //查找订单
+                FluxOrder order = new FluxOrder();
+                order.setTradeId(paymentId);
+                order = chargeService.selectOne(order);
+                //没有相关订单
+                if(order == null ){
+                    throw new SystemException("No related orders");
+                }
+                //更新订单状态，修改用户流量值
+                chargeService.updateOrderAndUserFlux(order);
+                return "redirect:/mgr/charge/success?money="+(order.getMoney());
             }
         }
         return "";
