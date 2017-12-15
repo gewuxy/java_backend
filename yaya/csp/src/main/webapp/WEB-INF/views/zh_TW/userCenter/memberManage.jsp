@@ -178,17 +178,41 @@
     $(function(){
         $("#config_6").parent().attr("class","cur");
         $("#btn").click(function () {
+            alert()
             layer.open({
                 type: 2,
                 title: false,
-                skin: 'layui-layer-nobg', //没有背景色
+                fix: false, //不固定
+                skin: 'member-popup-zIndex', //没有背景色
                 shadeClose: false,
+                offset: '70px',
                 closeBtn: 0, //不显示关闭按钮
                 shade: 0.1,
-                area: ['1116px', '900px'],
+                area: ['1116px', '930px'],
                 content: '${ctx}/mgr/pay/mark'
             })
         })
+
+
+//        layer.open({
+//            type: 1,
+//            area: ['1116px', '930px'],
+//            fix: false, //不固定
+//            title:false,
+//            closeBtn:0,
+//            skin: 'member-popup-zIndex',
+//            offset: '70px',
+//            content: $('.member-popup-box'),
+//            success:function(layero, index){
+//
+//            },
+//            cancel :function(){
+//
+//            },
+//        });
+
+
+
     })
 </script>
 </body>
