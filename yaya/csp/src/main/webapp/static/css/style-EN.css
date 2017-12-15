@@ -566,6 +566,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .position-phone-login { margin-top:38px;}
 .position-resetEmail-login { margin-top:117px; }
 .position-message-login { margin-top:129px;}
+.wechat-state { text-align: center; color:#666;}
+.wechat-state .price { font-size:30px;}
 
 
 /*******
@@ -573,7 +575,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 *******/
 
 .admin-header { box-shadow: 0 4px 12px 0 rgba(136,138,169,0.20); background:#fff; height:80px; position: relative; z-index: 5;  }
-.admin-header .logo{ background:url(../images/admin-logo-en.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
+.admin-header .logo{ background:url(../images/admin-logo.png) no-repeat; display: block; width:162px; height:33px; float:left; margin-top:25px;}
 .admin-header .login-header { position: static; padding-top:25px;}
 .admin-header .login-header a{ color:#7A8B9F; }
 .admin-header .login-header .login-language { border-color:#7a8b9f;}
@@ -1151,7 +1153,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .member-mode-header .fr .t-center { color:#7A8B9F;}
 .member-mode .title { font-size:28px; font-weight: normal; color:#3b3a34; line-height: 1; margin-bottom:15px;}
 .member-mode .member-mode-tips { display: inline-block; border:1px solid #DCE3EA; padding:2px 12px; font-size:12px; color:#7a8b9f; -moz-border-radius: 15px; -webkit-border-radius:15px; border-radius: 15px; }
-.member-mode-fnList ul li { display: inline-block; text-align: center; color:#A4B3C6; width:20%; margin-bottom:40px; vertical-align: top;}
+.member-mode-fnList ul { font-size:0;}
+.member-mode-fnList ul li { display: inline-block; text-align: center; color:#A4B3C6; width:20%; margin-bottom:40px; vertical-align: top; font-size: 14px;}
 .member-mode-fnList .text { line-height: 1.4; margin-top:5px;}
 .member-footer-position { margin-top:350px; }
 .member-mode-footer {}

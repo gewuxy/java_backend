@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.user.dao.CspPackageInfoDAO" >
-
+    <select id="selectByPackageId" resultType="cn.medcn.user.model.CspPackageInfo">
+        SELECT i.*,p.limit_meets FROM t_csp_package_info i
+        LEFT JOIN t_csp_package p  ON p.id = i.package_id
+        WHERE i.package_id =  #{packageId}
+    </select>
 </mapper>

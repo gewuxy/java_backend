@@ -15,14 +15,8 @@ import cn.medcn.meet.model.Meet;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
-import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.UserFluxUsage;
-import cn.medcn.user.service.CspPackageService;
-import cn.medcn.user.service.CspUserService;
-import cn.medcn.user.service.EmailTempService;
-import cn.medcn.user.service.UserFluxService;
+import cn.medcn.user.model.*;
+import cn.medcn.user.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -68,6 +62,9 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected CspPackageService packageService;
+
+    @Autowired
+    protected CspPackageInfoService cspPackageInfoService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -420,6 +417,8 @@ public class UserCenterController extends CspBaseController{
         String userId = principal.getId();
         addBaseUserInfo(model);
         CspPackage cspPackage = packageService.findUserPackageById(userId);
+        List<CspPackageInfo> cspPackageInfos= cspPackageInfoService.selectByPackageId(cspPackage.getId());
+        model.addAttribute("cspPackageInfos",cspPackageInfos);
         model.addAttribute("cspPackage",cspPackage);
         return localeView("/userCenter/memberManage");
     }
