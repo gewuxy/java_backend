@@ -64,9 +64,9 @@ public class CspBaseController extends BaseController {
      */
     protected Principal getWebPrincipal(){
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        String userId = principal.getToken();
+        String token  = principal.getToken();
         //从缓存信息里查询最新版
-        return getPackageCache(userId);
+        return getPackageCache(token);
     }
 
     /**
@@ -261,6 +261,24 @@ public class CspBaseController extends BaseController {
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
         redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+    }
+
+    /**
+     * 套餐变更时添加提示信息
+     *
+     * @param packageId
+     * @param type
+     */
+    protected void updatePackageMsg(Integer packageId,Integer type){
+        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
+        String token = principal.getToken();
+        Principal setPrincipal = getPackageCache(token);
+        if(type == Constants.NUMBER_ZERO){ // 删除提示信息
+            setPrincipal.setPkChangeMsg(null);
+        }else{   // 添加提示信息
+            setPrincipal.setPkChangeMsg(local("package.buy.success.msg",new Object[]{CspPackage.TypeId.values()[packageId - 1].getId()}));
+        }
+        redisCacheUtils.setCacheObject(setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
     }
 
     /**
