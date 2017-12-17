@@ -23,7 +23,7 @@
         //获取金额
         function sumMoney(){
             var currency = $("#" + flag +  "View").find('input[name='+flag+'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney', {'version': selectPk,"limitTimes":limitTimes,"currency":currency}, function(data){
+            ajaxSyncPost('${ctx}/mgr/pay/getMoney ', {'version': selectPk,"limitTimes":limitTimes,"currency":currency}, function(data){
                 if (data.code == 0){
                     selectPk == 1 ? $("#hgTotal").html(data.data): $("#pfTotal").html(data.data);
                 } else {
