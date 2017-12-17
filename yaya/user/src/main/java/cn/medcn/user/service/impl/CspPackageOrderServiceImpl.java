@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 
 /**
+ * 套餐操作
+ *
  * Created by Liuchangling on 2017/12/8.
  */
 @Service
@@ -57,13 +59,24 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         return packageOrderDAO;
     }
 
+    /**
+     * 创建套餐订单
+     *
+     * @param userId
+     * @param orderNo
+     * @param currency
+     * @param packageId
+     * @param num
+     * @param money
+     * @param payType
+     */
     @Override
-    public void createOrder(String userId, String orderNo,String currency, Integer packageId, Integer num, Float money, String payType) {
+    public void createOrder(String userId, String orderNo, Integer currency, Integer packageId, Integer num, Float money, String payType) {
         CspPackageOrder order = new CspPackageOrder();
         order.setNum(num);
         order.setUserId(userId);
         order.setShouldPay(money);
-        order.setCurrencyType(currency.equals("CN")?Constants.NUMBER_ZERO:Constants.NUMBER_ONE);
+        order.setCurrencyType(currency);
         order.setId(StringUtils.nowStr());
         order.setTradeId(orderNo);
         order.setPlatForm(payType);
@@ -73,6 +86,11 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         packageOrderDAO.insertSelective(order);
     }
 
+    /**
+     * 更新订单状态，更新用户套餐信息，添加套餐历史信息
+     *
+     * @param order
+     */
     @Override
     public void updateOrderAndUserPackageInfo(CspPackageOrder order) {
         //更新已支付状态
@@ -84,35 +102,42 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         //开始时间
         Date start = CalendarUtils.nextDateStartTime();
         //是否是年费套餐
-        boolean yearType = yearPay(packageId,order.getShouldPay());
-        if(userPk == null){ //添加用户套餐信息
-            Date end  = yearType ? CalendarUtils.calendarDay(start,order.getNum() * 365):CalendarUtils.calendarDay(start,order.getNum() * 30);
-            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
-        }else{ // 更新用户套餐信息
+        boolean yearType = yearPay(packageId, order.getShouldPay());
+        if (userPk == null) { //添加用户套餐信息
+            Date end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * 365) : CalendarUtils.calendarDay(start, order.getNum() * 30);
+            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
+        } else { // 更新用户套餐信息
             oldPackage = userPk.getPackageId();
             Date endStart = CalendarUtils.nextDateStartTime();
             //结束时间不为空从以前结束时间开始算
-            if(userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
-            Date end  = yearType ? CalendarUtils.calendarDay(endStart,order.getNum() * 365):CalendarUtils.calendarDay(endStart,order.getNum() * 30);
-            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(),start,end,packageId,Constants.NUMBER_ONE));
+            if (userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
+            Date end = yearType ? CalendarUtils.calendarDay(endStart, order.getNum() * 365) : CalendarUtils.calendarDay(endStart, order.getNum() * 30);
+            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
         }
         //添加用户套餐历史信息
-        cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(),oldPackage,packageId,Constants.NUMBER_ONE);
+        cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(), oldPackage, packageId, Constants.NUMBER_ONE);
 
         //推送购买成功消息
         StringBuffer content = new StringBuffer();
         content.append("您已成为会讲");
-        content.append(CspPackage.TypeId.values()[packageId].getLabel());
-        content.append("会员用户，有效期").append(yearType ? order.getNum() + "年。":order.getNum() + "个月。");
+        content.append(CspPackage.TypeId.values()[packageId - 1].getLabel());
+        content.append("会员用户，有效期").append(yearType ? order.getNum() + "年。" : order.getNum() + "个月。");
         content.append("订单号为").append(order.getId());
-        sysNotifyService.addNotify(order.getUserId(),"购买成功",content+"。",local("user.notify.sender"));
+        sysNotifyService.addNotify(order.getUserId(), local("package.notify.pay.success"), content + "。", local("user.notify.sender"));
     }
 
+    /**
+     * 判断缴费是否是年费类型
+     *
+     * @param packageId
+     * @param money
+     * @return
+     */
     @Override
-    public Boolean yearPay(Integer packageId,float money){
-        if(packageId == CspPackage.TypeId.PROFESSIONAL.getId()){ //专业版
+    public Boolean yearPay(Integer packageId, float money) {
+        if (packageId == CspPackage.TypeId.PROFESSIONAL.getId()) { //专业版
             CspPackage cspPackage = cspPackageDAO.selectByPrimaryKey(packageId);
-            if(money >= cspPackage.getYearRmb()  ) {//年费
+            if (money >= cspPackage.getYearRmb()) {//年费
                 return true;
             }
         }

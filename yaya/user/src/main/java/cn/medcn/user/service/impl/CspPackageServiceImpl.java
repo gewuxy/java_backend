@@ -43,24 +43,37 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         return cspPackageDAO.findUserPackageById(userId);
     }
 
+    /**
+     * 获取当前参数的价格及订单数量信息
+     *
+     * @param packageId
+     * @param limitTime
+     * @param currency
+     * @return
+     */
     @Override
-    public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency) {
+    public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, Integer currency) {
         CspPackage pk = cspPackageDAO.selectByPrimaryKey(packageId);
         float money = 0.00f;
         Integer num = 1;
-        if(limitTime % 12 == 0  ){
-            money = currency.equals("CN") ? pk.getYearRmb()* (limitTime / 12) :pk.getYearUsd() * (limitTime / 12);
+        if (limitTime % 12 == 0) {
+            money = currency == 0 ? pk.getYearRmb() * (limitTime / 12) : pk.getYearUsd() * (limitTime / 12);
             num = limitTime / 12;
-        }else{
-            money = currency.equals("CN") ? pk.getMonthRmb() * limitTime : pk.getMonthUsd() * limitTime;
+        } else {
+            money = currency == 0 ? pk.getMonthRmb() * limitTime : pk.getMonthUsd() * limitTime;
             num = limitTime;
         }
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("money",(float)Math.round(money*10000)/10000);
-        map.put("num",num);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("money", (float) Math.round(money * 10000) / 10000);
+        map.put("num", num);
         return map;
     }
 
+    /**
+     * 获取所有套餐信息
+     *
+     * @return
+     */
     @Override
     public List<CspPackage> findCspPackage() {
         return cspPackageDAO.findCspPackage();

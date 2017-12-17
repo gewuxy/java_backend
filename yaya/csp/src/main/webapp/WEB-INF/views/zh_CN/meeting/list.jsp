@@ -82,19 +82,17 @@
 
             //判断是否新用户，新用户弹出购买套餐
             if(${newUser}){
-                $("#btn").click(function () {
-                    layer.open({
-                        type: 2,
-                        title: false,
-                        fix: false, //不固定
-                        skin: 'member-popup-zIndex', //没有背景色
-                        shadeClose: false,
-                        offset: '70px',
-                        closeBtn: 0, //不显示关闭按钮
-                        shade: 0.1,
-                        area: ['1116px', '930px'],
-                        content: '${ctx}/mgr/pay/mark'
-                    })
+                layer.open({
+                    type: 2,
+                    title: false,
+                    fix: false, //不固定
+                    skin: 'member-popup-zIndex', //没有背景色
+                    shadeClose: false,
+                    offset: '70px',
+                    closeBtn: 0, //不显示关闭按钮
+                    shade: 0.1,
+                    area: ['1116px', '930px'],
+                    content: '${ctx}/mgr/pay/mark'
                 })
             }
 

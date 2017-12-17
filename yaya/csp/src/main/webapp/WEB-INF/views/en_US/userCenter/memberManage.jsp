@@ -168,6 +168,28 @@
     </div>
 </div>
 
+<!--弹出 充值-->
+<div class="cancel-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form >
+                <div class="cancel-popup-main">
+                    <p>请在支付页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <div class="admin-button t-right">
+                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"
+                               value="我已付款成功">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 
 <script>

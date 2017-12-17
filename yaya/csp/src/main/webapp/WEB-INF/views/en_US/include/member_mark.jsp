@@ -21,37 +21,49 @@
         var initId = 1;
 
         //获取金额
-        function sumMoney(){
-            var currency = $("#" + flag +  "View").find('input[name='+flag+'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney', {'version': selectPk,"limitTimes":limitTimes,"currency":currency}, function(data){
-                if (data.code == 0){
-                    selectPk == 1 ? $("#hgTotal").html(data.data): $("#pfTotal").html(data.data);
+        function sumMoney() {
+            var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
+            ajaxSyncPost('${ctx}/mgr/pay/getMoney ', {
+                'version': selectPk,
+                "limitTimes": limitTimes,
+                "currency": currency
+            }, function (data) {
+                if (data.code == 0) {
+                    selectPk == 1 ? $("#hgTotal").html(data.data) : $("#pfTotal").html(data.data);
                 } else {
                     layer.msg(data.err);
                 }
             });
         }
 
-        function initPackage(userPackage){
+        //初始化版本选择
+        function initPackage(packageId) {
             //低版本不能选择
-            if(userPackage != undefined){
-                initId = userPackage.packageId;
-                var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
-                if(initId != 1) tabsMainNum.eq(initId - 1).removeClass('none').siblings().addClass('none');
-                for(var k = 0;k < initId;k++){
-                    $("#menu" + initId).addClass("member-buy-disabled");
+            initId = packageId;
+            if (packageId != undefined) {
+                if (initId != 1) {
+                    $(".member-buy-tabs-menu").find('.index-buy-item').eq(initId - 1).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
+                    if (initId != 1) $(".member-buy-tabs-main").find('.member-buy-content').eq(initId - 1).removeClass('none').siblings().addClass('none');
+                    selectPk = initId - 1;
+                    flag = initId == 3 ? "pf" : "hg";
                 }
+                //是否需要不能选择
+                for (var k = 1; k < initId; k++) {
+                    $("#disabledItem" + k).addClass("member-buy-disabled-item");
+                }
+            } else {
+                //新用户隐藏取消按钮
+                $(".layui-layer-close").remove();
             }
-
         }
 
         $(function () {
             var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
             tabsMainNum.eq(1).removeClass('none').siblings().addClass('none');
             //获取套餐信息
-            ajaxSyncGet('${ctx}/mgr/pay/package', {}, function(data){
+            ajaxSyncGet('${ctx}/mgr/pay/package', {}, function (data) {
                 var course = data.data;
-                if (course == undefined){
+                if (course == undefined) {
                     layer.msg("获取套餐信息失败，请刷新重试");
                     return false;
                 }
@@ -61,77 +73,103 @@
                 initSwiper(course);
             });
 
+            //取消选购
+            $(".layui-layer-close").click(function () {
+                parent.layer.closeAll();
+            });
+
             //选购套餐提交
-            $('input[name="commitPay"]').click(function(){
+            $('input[name="commitPay"]').click(function () {
                 //低于当前版本不能购买
-                if(initId < selectPk + 1){
-                    layer.msg("当前套餐版本低于之前版本，不能购买");
+                if (initId == 1) {//原始版本是基础版
+                    layer.msg("您已经是标准版用户，请选购其他版本。");
                     return false;
                 }
-                if(selectPk != 0) {
-                    var limitTime =  $("#" + flag + "View").find('input[name='+flag+'TimeMode]:checked').val();
-                    var payType =  $("#" + flag + "View").find('input[name='+flag+'PayMode]:checked').val();
-                    var currency =  $("#" + flag + "View").find('input[name='+flag+'Currency]:checked').val();
+                if (selectPk + 1 < initId) {
+                    layer.msg("当前套餐版本低于之前版本，不能购买。");
+                    return false;
+                }
+                if (selectPk != 0) {
+                    var limitTime = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
+                    var payType = $("#" + flag + "View").find('input[name=' + flag + 'PayMode]:checked').val();
+                    var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
                     $("#limitTime").val(limitTime);
                     $("#payType").val(payType);
                     $("#currency").val(currency);
                 }
                 $("#packageId").val(selectPk);
                 $("#rechargeFrom").submit();
+                openLayerMsg();
             });
 
             //选择购买时长
-            $(".time-mode-list label").click(function(){
+            $(".time-mode-list label").click(function () {
                 $(this).addClass('pay-on').siblings().removeClass('pay-on');
                 limitTimes = $(this).children().eq(0).val();
                 sumMoney();
             });
 
             //支付方式
-            $(".pay-mode-list label").click(function(){
+            $(".pay-mode-list label").click(function () {
                 $(this).addClass('pay-on').siblings().removeClass('pay-on');
             });
 
             //货币切换
-            $(".money-state label").click(function(){
+            $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
-                var currencyValue = $(this).parents('.pay-mode').find('input[name='+flag+'Currency]:checked').val();
-                if( currencyValue == 'CN'){
+                var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
+                if (currencyValue == 'CN') {
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if ( currencyValue =='EN' ){
+                } else if (currencyValue == 'EN') {
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
             });
 
             //选择不同版本
-            $(".member-buy-tabs-menu").find('.index-buy-item').on('click',function(){
+            $(".member-buy-tabs-menu").find('.index-buy-item').on('click', function () {
                 var index = $(this).index();
                 selectPk = index;
-                flag = selectPk == 1 ? "hg": "pf";
+                flag = selectPk == 1 ? "hg" : "pf";
                 tabsMainNum.eq(index).removeClass('none').siblings().addClass('none');
                 $(this).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
                 sumMoney();
             })
         })
 
+        function openLayerMsg(){
+            //触发支付弹出窗
+            parent.layer.open({
+                type: 1,
+                area: ['560px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('.cancel-popup-box'),
+                success:function(){
+                },
+                cancel :function(){
+                },
+            });
+        }
+
         //加载选购套餐信息
         function initSwiper(course) {
             var package = course.packages;
-            for(var i = 0;i < package.length;i++){
+            for (var i = 0; i < package.length; i++) {
                 var packageId = package[i].id;
-                if(packageId == 2){
+                if (packageId == 2) {
                     $("#price" + packageId).html(package[i].monthUsd + "USD");
                     $("#hgTotal").html(package[i].monthUsd);
                 }
-                if(packageId == 3) {
+                if (packageId == 3) {
                     $("#price" + packageId).html(package[i].monthUsd + "USD/" + package[i].yearUsd + "USD");
                     $("#pfTotal").html(package[i].monthUsd);
                 }
-                $("#meets" + packageId).html(package[i].limitMeets == 0? "Unlimited Number of Meetings":package[i].limitMeets + "Meetings");
+                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "Unlimited Number of Meetings" : package[i].limitMeets + "Meetings");
             }
             var info = course.infos;
-            for(var j = 0;j < info.length;j++){
+            for (var j = 0; j < info.length; j++) {
                 var id = info[j].packageId;
                 if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptUs + '</li>');
             }
@@ -162,7 +200,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="index-buy-item  index-buy-item-current ">
+                    <div class="index-buy-item  index-buy-item-current">
                         <div class="index-buy-header">
                             <h4>Premium Edition</h4>
                             <h3 class="price" id="price2"></h3>
@@ -198,7 +236,7 @@
             </div>
             <div class="member-buy-tabs-main">
                 <div class="member-buy-content">
-                    <div class="user-content item-radius pay-mode member-buy-disabled" id="menu1">
+                    <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
                             <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
@@ -240,10 +278,6 @@
                                         <input type="radio" name="payMode" class="none" value="4" id="id4">
                                         <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
                                     </label>
-                                    <label for="id5" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="5" id="id5">
-                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -253,24 +287,25 @@
                                 <span class="payNum">0.00</span>
                                 <span class="money-state">
                                         <label for="currency-cn" class="cn on">
-                                            <input type="radio" name="currency" id="currency-cn" checked="checked" class="none" value="CN">
+                                            <input type="radio" name="currency" id="currency-cn" class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en" class="en">
-                                            <input type="radio" name="currency" id="currency-en" class="none" value="EN">
+                                            <input type="radio" name="currency" id="currency-en" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now" style="position: relative; z-index:3;">
                         </div>
                         <div class="member-buy-disabled-item"></div>
                     </div>
                 </div>
                 <div class="member-buy-content none" id="hgView">
-                    <div class="user-content item-radius pay-mode" id="menu2">
+                    <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
                             <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
@@ -312,10 +347,6 @@
                                         <input type="radio" name="hgPayMode" class="none" value="4" id="2id4">
                                         <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
                                     </label>
-                                    <label for="2id5" class="item item-radius">
-                                        <input type="radio" name="hgPayMode" class="none" value="5" id="2id5">
-                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
-                                    </label>
                                 </div>
                             </div>
                         </div>
@@ -325,23 +356,25 @@
                                 <span class="payNum" id="hgTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn2" class="cn on">
-                                            <input type="radio" name="hgCurrency" id="currency-cn2" checked="checked" class="none" value="CN">
+                                            <input type="radio" name="hgCurrency" id="currency-cn2"  class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en2" class="en">
-                                            <input type="radio" name="hgCurrency" id="currency-en2" class="none" value="EN">
+                                            <input type="radio" name="hgCurrency" id="currency-en2" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment" style="position: relative; z-index:3;">
                         </div>
+                        <div id="disabledItem2"></div>
                     </div>
                 </div>
                 <div class="member-buy-content none" id="pfView">
-                    <div class="user-content item-radius pay-mode" id="menu3">
+                    <div class="user-content item-radius pay-mode">
                         <div class="formrow">
                             <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
@@ -364,7 +397,7 @@
                                     </label>
                                     <label for="3tid5" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="24" id="3tid5">
-                                        2 year年
+                                        2 year
                                     </label>
                                     <label for="3tid6" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="36" id="3tid6">
@@ -374,7 +407,7 @@
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook">
                                     <label for="3id11" class="item item-radius pay-on">
@@ -395,32 +428,30 @@
                                         <input type="radio" name="pfPayMode" class="none" value="4" id="3id4">
                                         <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
                                     </label>
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
-                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
-                                    </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">Recharge Channel</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
                                 <span class="payNum" id="pfTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn3" class="cn on">
-                                            <input type="radio" name="pfCurrency" id="currency-cn3" checked="checked" class="none" value="CN">
+                                            <input type="radio" name="pfCurrency" id="currency-cn3"  class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en3" class="en">
-                                            <input type="radio" name="pfCurrency" id="currency-en3" class="none" value="EN">
+                                            <input type="radio" name="pfCurrency" id="currency-en3" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
+                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment">
                         </div>
+                        <div id="disabledItem3"></div>
                     </div>
                 </div>
             </div>

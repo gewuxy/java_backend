@@ -178,7 +178,6 @@
     $(function(){
         $("#config_6").parent().attr("class","cur");
         $("#btn").click(function () {
-            alert()
             layer.open({
                 type: 2,
                 title: false,
@@ -192,27 +191,6 @@
                 content: '${ctx}/mgr/pay/mark'
             })
         })
-
-
-//        layer.open({
-//            type: 1,
-//            area: ['1116px', '930px'],
-//            fix: false, //不固定
-//            title:false,
-//            closeBtn:0,
-//            skin: 'member-popup-zIndex',
-//            offset: '70px',
-//            content: $('.member-popup-box'),
-//            success:function(layero, index){
-//
-//            },
-//            cancel :function(){
-//
-//            },
-//        });
-
-
-
     })
 </script>
 </body>
