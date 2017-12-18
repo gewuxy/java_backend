@@ -62,7 +62,12 @@ public class CspUserInfo implements Serializable{
     // 是否有激活 未激活=0 已激活=1
     protected Boolean active;
 
+    //注册渠道。
     protected Integer registerFrom;
+
+    //注册设备，0表示app端，1表示web端
+    protected Integer registerDevice;
+
 
     @Transient
     protected Integer flux; // 流量
@@ -82,6 +87,7 @@ public class CspUserInfo implements Serializable{
         userInfo.setActive(true);
         userInfo.setAbroad(dto.getAbroad() == null ? false : dto.getAbroad());
         userInfo.setRegisterFrom(dto.getThirdPartyId());
+        userInfo.setRegisterDevice(dto.getRegisterDevice());
         return userInfo;
     }
 
@@ -89,6 +95,11 @@ public class CspUserInfo implements Serializable{
     public enum AbroadType{
         home,
         abroad;
+    }
+
+    public enum RegisterDevice{
+        APP,
+        WEB;
     }
 
 

@@ -108,7 +108,8 @@ public class CspUserController extends CspBaseController {
         // 获取邮箱模板
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
         try {
-
+            //添加用户的注册设备
+            userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             return cspUserService.register(userInfo,template);
 
         } catch (SystemException e){
@@ -422,6 +423,8 @@ public class CspUserController extends CspBaseController {
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             userInfo.setRegisterFrom(BindInfo.Type.MOBILE.getTypeId());
+            //添加用户的注册设备
+            userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             cspUserService.insert(userInfo);
             userInfo.setFlux(0); // 用户流量
         }
@@ -449,6 +452,8 @@ public class CspUserController extends CspBaseController {
         CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
+            //添加注册用户的设备
+            userDTO.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
             userInfo.setFlux(0);
         }
