@@ -606,4 +606,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return page;
     }
 
+    @Override
+    public List<CspUserInfo> selectRegisterTime() {
+        return cspUserInfoDAO.selectRegisterTime();
+    }
+
 }
