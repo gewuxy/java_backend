@@ -351,7 +351,7 @@ public class UserCenterController extends CspBaseController {
         model.addAttribute("flux", flux);
         //直播视频记录
         MyPage<VideoLiveRecordDTO> myPage = cspUserService.findVideoLiveRecord(pageable);
-        VideoLiveRecordDTO.transExpireDay(myPage.getDataList());
+//        VideoLiveRecordDTO.transExpireDay(myPage.getDataList());
         model.addAttribute("page", myPage);
         return localeView("/userCenter/toFlux");
     }

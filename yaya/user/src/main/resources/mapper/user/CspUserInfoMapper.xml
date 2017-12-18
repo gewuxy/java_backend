@@ -32,7 +32,7 @@
 
     <!--t_csp_user_flux_usage的meeting_id是course_id-->
     <select id="findVideoLiveRecord" resultType="cn.medcn.user.dto.VideoLiveRecordDTO">
-        SELECT tu.id,tu.expense,tu.expire_time,t.title AS meetName,tu.meeting_id AS courseId,tu.download_count FROM  t_csp_user_flux_usage tu
+        SELECT tu.id,tu.expense,tu.expire_time,t.title AS meetName,tu.meeting_id AS courseId,tu.download_count,tl.replay_url FROM  t_csp_user_flux_usage tu
         INNER JOIN t_audio_course t ON t.id = tu.meeting_id
         INNER JOIN t_csp_live tl ON tl.course_id=tu.meeting_id
         WHERE tu.user_id = #{userId} ORDER BY tu.expense_time DESC
@@ -70,6 +70,10 @@
 
     <select id="selectRegisterTime" resultType="cn.medcn.user.model.CspUserInfo">
         SELECT * FROM t_csp_user_info i WHERE i.register_time &lt; '2017-12-31 23:59:59'
+    </select>
+
+    <select id="selectRegisterCount" resultType="Integer">
+        SELECT count(id) FROM t_csp_user_info  WHERE abroad=#{location} and TO_DAYS(NOW())-TO_DAYS(register_time) = 1
     </select>
 
 </mapper>
