@@ -9,6 +9,7 @@ import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.dto.IOSPayViewDTO;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.CspPackageOrder;
@@ -48,7 +49,7 @@ import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
 @RequestMapping("/api/charge/")
 public class ChargeController extends CspBaseController {
 
-    protected static final String SHOW_PAY_KEY = "show_pay";
+
 
 
     @Autowired
@@ -266,27 +267,28 @@ public class ChargeController extends CspBaseController {
      */
     @RequestMapping(value = "/show")
     @ResponseBody
-    public String showPay(HttpServletRequest request){
-        ServletContext context = request.getServletContext();
-        Map<String, Boolean> showPayMap = (Map<String, Boolean>) context.getAttribute(SHOW_PAY_KEY);
+    public String showPay(){
+        String version = LocalUtils.getAppVersion();
+        IOSPayViewDTO viewDTO = redisCacheUtils.getCacheObject(IOSPayViewDTO.getCacheKey(version));
+
         Map<String, Boolean> result = new HashMap<>();
         Boolean show = true;
 
-        if (showPayMap != null) {
-            show = showPayMap.get(LocalUtils.getAppVersion());
+        if (viewDTO != null) {
+            show = viewDTO.getShow();
             if (show == null) {
                 show = true;
             }
         }
 
-        result.put(SHOW_PAY_KEY, show);
+        result.put(IOSPayViewDTO.SHOW_PAY_KEY, show);
         return success(result);
     }
 
 
     @RequestMapping(value = "/pay_view/change")
     @ResponseBody
-    public String changePayView(Boolean show, HttpServletRequest request, String version){
+    public String changePayView(Boolean show, String version){
         if (CheckUtils.isEmpty(version)) {
             return error("Params error : version can not be null");
         }
@@ -294,13 +296,14 @@ public class ChargeController extends CspBaseController {
         if (show == null) {
             show = false;
         }
-        ServletContext context = request.getServletContext();
-        Map<String, Boolean> showPayMap = (Map<String, Boolean>) context.getAttribute(SHOW_PAY_KEY);
-        if (showPayMap == null) {
-            showPayMap = new HashMap<>();
+
+        String cacheKey = IOSPayViewDTO.getCacheKey(version);
+        IOSPayViewDTO viewDTO = redisCacheUtils.getCacheObject(cacheKey);
+        if (viewDTO == null) {
+            viewDTO = new IOSPayViewDTO(show, version);
         }
-        showPayMap.put(version, show);
-        context.setAttribute(SHOW_PAY_KEY, showPayMap);
+        viewDTO.setShow(show);
+        redisCacheUtils.setCacheObject(cacheKey, viewDTO);
 
         return success();
     }

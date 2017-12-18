@@ -213,6 +213,9 @@ public class LiveCallbackController extends CspBaseController {
 
             Integer courseId = parseCourseId(header.getChannel_id());
 
+            //下载视频
+
+
             if (courseId != null) {
                 Live live = liveService.findByCourseId(courseId);
 
