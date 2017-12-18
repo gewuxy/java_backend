@@ -54,4 +54,5 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
 
     List<CspUserInfo> selectRegisterTime();
 
+    int selectRegisterCount(int location);
 }

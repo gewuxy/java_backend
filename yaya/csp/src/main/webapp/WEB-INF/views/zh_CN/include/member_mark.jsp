@@ -23,7 +23,7 @@
         //获取金额
         function sumMoney() {
             var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney ', {
+            ajaxSyncPost('${ctx}/mgr/pay/money ', {
                 'version': selectPk,
                 "limitTimes": limitTimes,
                 "currency": currency
@@ -441,7 +441,7 @@
         </div>
     </div>
 </div>
-<form id="rechargeFrom" type="hidden" name="rechargeForm" method="post" action="${ctx}/mgr/pay/toPay" target="_blank">
+<form id="rechargeFrom" type="hidden" name="rechargeForm" method="post" action="${ctx}/mgr/pay/pay" target="_blank">
     <input type="hidden" name="limitTime" id="limitTime" value="">
     <input type="hidden" name="payType" id="payType" value="">
     <input type="hidden" name="currency" id="currency" value="">
