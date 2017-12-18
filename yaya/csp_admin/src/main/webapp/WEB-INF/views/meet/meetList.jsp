@@ -49,7 +49,7 @@
                             <a data-href="/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要关闭该会议吗？', this)">关闭</a>
                         </c:if>
                         <c:if test="${meet.deleted != false}">
-                            &nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                         </c:if>
                     </shiro:hasPermission>
                     <c:if test="${not empty meet.startTime && meet.playType == 2}">
