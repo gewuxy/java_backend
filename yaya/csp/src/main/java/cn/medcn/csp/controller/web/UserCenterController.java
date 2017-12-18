@@ -427,6 +427,7 @@ public class UserCenterController extends CspBaseController{
         List<CspPackageInfo> cspPackageInfos= cspPackageInfoService.selectByPackageId(cspPackage.getId());
         model.addAttribute("cspPackageInfos",cspPackageInfos);
         model.addAttribute("cspPackage",cspPackage);
+        model.addAttribute("successMsg",principal.getPkChangeMsg());
         return localeView("/userCenter/memberManage");
     }
 }

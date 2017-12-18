@@ -41,7 +41,6 @@
 <body >
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
-
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="user-module clearfix">
@@ -49,17 +48,14 @@
                     <div class="col-lg-4">
                         <%@include file="./left.jsp" %>
                     </div>
-
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
-
                         <div class="user-content user-content-levelHeight item-radius member-mode">
                             <div class="member-mode-header clearfix">
                                 <div class="fr">
                                     <div class="resource-label">
                                         <c:if test="${cspPackage.packageCn == '标准版' || cspPackage.packageCn == '高级版'}" >
                                             <span>
-
                                                     <c:if test="${cspPackage.usedMeetCount > cspPackage.limitMeets}">
                                                         <i class="hot" style="color: red">
                                                                 ${cspPackage.usedMeetCount}
@@ -81,7 +77,6 @@
                                 <div class="fl">
                                     <div class="clearfix">
                                         <div class="fl"></div>
-
                                             <c:if test="${cspPackage.packageCn == '标准版'}">
                                         <div class="oh">
                                                 <h5 class="title">${cspPackage.packageCn}</h5>
@@ -95,13 +90,11 @@
                                                         <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                                     </div>
                                             </c:if>
-
                                     </div>
                                 </div>
                             </div>
                             <div class="member-mode-main">
                                 <div class="member-mode-fnList">
-
                                     <ul>
                                         <c:forEach var="info" items="${cspPackageInfos}">
                                         <c:if test="${info.iden =='LB'}">
@@ -130,7 +123,6 @@
                                                 <p>无限会议</p>
                                             </li>
                                             </c:if>
-
                                         <c:if test="${info.iden =='GG' && info.state == false}">
                                         <li>
                                         <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
@@ -159,14 +151,10 @@
                                     </ul>
                                 </div>
                             </div>
-
                             <div class="member-mode-footer member-footer-position t-center">
                                 <a href="javascript:;" type="button" class="button login-button buttonBlue member-buy-hook" id="btn">升级续费</a>
                                 <p><a href="${ctx}/index/17103116063862386794" target="_blank">有疑问，帮助中心</a></p>
-
                             </div>
-
-
                         </div>
                     </div>
                 </div>
@@ -177,7 +165,6 @@
         <div class="page-width clearfix">
             <p class="t-center">粤ICP备12087993号 © 2012-2017 敬信科技 版权所有 </p>
         </div>
-
     </div>
 </div>
 <!--弹出 充值-->
@@ -200,8 +187,51 @@
         </div>
     </div>
 </div>
+
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="pkSuccessMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close clearMsg"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p id="backMsg">已成功购买，请前往使用</p>
+                </div>
+                <div class="admin-button t-right " >
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="确定"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     $(function(){
+
+        var pkSuccessMsg = '${successMsg}';
+        //购买提示不为空显示
+        if(isNotEmpty(pkSuccessMsg)){
+            //弹出提示
+            layer.open({
+                type: 1,
+                area: ['440px', '240px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('#pkSuccessMsg'),
+                success:function(){
+                    $("#backMsg").html(pkSuccessMsg);
+                },
+            });
+        }
+
+        //清除提示信息
+        $(".clearMsg").on('click',function(){
+            ajaxGet('${ctx}/mgr/pay/update/msg', {}, function(data){});
+        });
+
         $("#config_6").parent().attr("class","cur");
         $("#btn").click(function () {
             layer.open({
@@ -216,12 +246,12 @@
                 area: ['1116px', '930px'],
                 content: '${ctx}/mgr/pay/mark',
                 success:function(layero,index){
+                    //付款弹出层
                     var body = layer.getChildFrame('body', index);
-                   // var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
                     body.find(".cancel-hook").on('click',function(){
                         layer.open({
                             type: 1,
-                            area: ['560px', '250px'],
+                            area: ['560px', '350px'],
                             fix: false, //不固定
                             title:false,
                             closeBtn:0,

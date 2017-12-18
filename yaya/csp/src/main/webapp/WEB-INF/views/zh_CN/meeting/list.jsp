@@ -68,7 +68,7 @@
             if(cookieget('closeclick')=='closeclick'){
                 document.getElementById('note').style.display='none';
             }else{
-               document.getElementById('note').style.display='block';
+              // document.getElementById('note').style.display='block';
             }
         }
         window.onload=clickclose;
@@ -86,14 +86,45 @@
                     type: 2,
                     title: false,
                     fix: false, //不固定
-                    skin: 'member-popup-zIndex', //没有背景色
+                    skin: 'member-popup-zIndex',
                     shadeClose: false,
                     offset: '70px',
                     closeBtn: 0, //不显示关闭按钮
                     shade: 0.1,
                     area: ['1116px', '930px'],
-                    content: '${ctx}/mgr/pay/mark'
+                    content: '${ctx}/mgr/pay/mark',
+                    success:function(layero,index){
+                        //付款弹出层
+                        var body = layer.getChildFrame('body', index);
+                        body.find(".cancel-hook").on('click',function(){
+                            layer.open({
+                                type: 1,
+                                area: ['560px', '300px'],
+                                fix: false, //不固定
+                                title:false,
+                                closeBtn:0,
+                                content: $('#pkBuyMsg')
+                            });
+                        })
+                    }
                 })
+            }
+
+            var pkSuccessMsg = '${successMsg}';
+            //购买提示不为空显示
+            if(isNotEmpty(pkSuccessMsg)){
+                //弹出提示
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    content: $('#pkSuccessMsg'),
+                    success:function(){
+                        $("#backMsg").html(pkSuccessMsg);
+                    },
+                });
             }
 
             //初始化音频
@@ -103,6 +134,11 @@
                 var dataSrc = $(".swiper-slide-active").attr('audio-src');
                 asAllItem[0].load(dataSrc);
                 asAllItem[0].play();
+            });
+
+            //清除提示信息
+            $(".clearMsg").on('click',function(){
+                ajaxGet('${ctx}/mgr/pay/update/msg', {}, function(data){});
             });
 
             //超出出现下拉框
@@ -217,7 +253,6 @@
                     },
                 });
             });
-
 
             function loadCourseInfo(courseId){
                 var course ;
@@ -802,7 +837,46 @@
     </div>
 </div>
 
+<!--弹出 充值-->
+<div class="cancel-popup-box" id="pkBuyMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form >
+                <div class="cancel-popup-main">
+                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <div class="admin-button t-right">
+                        <a href="${ctx}/mgr/meeting/list"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已付款成功">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="pkSuccessMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close clearMsg"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p id="backMsg">已成功购买，请前往使用</p>
+                </div>
+                <div class="admin-button t-right " >
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="确定"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

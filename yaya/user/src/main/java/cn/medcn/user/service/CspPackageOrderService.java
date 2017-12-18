@@ -8,7 +8,7 @@ import cn.medcn.user.model.CspPackageOrder;
  */
 public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
 
-    void updateOrderAndUserPackageInfo(CspPackageOrder order);
+    Integer updateOrderAndUserPackageInfo(CspPackageOrder order);
 
     void createOrder(String userId, String orderNo,Integer currency, Integer packageId, Integer num, Float money, String payType);
 
