@@ -215,7 +215,9 @@ public class LiveCallbackController extends CspBaseController {
         if (header != null) {
             String downLoadUrl = (String) JsonUtils.getValue(requestBody, TX_VIDEO_DOWNLOAD_URL_KEY);
 
-            String fileName = StringUtils.nowStr() + "." + FileTypeSuffix.VIDEO_SUFFIX_MP4.suffix;
+            String fileFormat = (String) JsonUtils.getValue(requestBody, "file_format");
+
+            String fileName = StringUtils.nowStr() + "." + fileFormat;
 
             Integer courseId = parseCourseId(header.getChannel_id());
 
@@ -238,7 +240,7 @@ public class LiveCallbackController extends CspBaseController {
                         //已经存在的情况下 需要整合两段视频
                         File existedFile = new File(fileUploadBase + live.getReplayUrl());
                         if (existedFile.exists()) {
-                            String newSaveFileName = StringUtils.nowStr() + "." + FileTypeSuffix.VIDEO_SUFFIX_MP4.suffix;
+                            String newSaveFileName = StringUtils.nowStr() + "." + fileFormat;
                             String mergePath = fileUploadBase + videoReplayBasePath + newSaveFileName;
                             FFMpegUtils.concatMp4(mergePath,
                                     deleteFlag,
