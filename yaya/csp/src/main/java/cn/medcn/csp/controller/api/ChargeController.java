@@ -24,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,6 +45,8 @@ import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
 @Controller
 @RequestMapping("/api/charge/")
 public class ChargeController extends CspBaseController {
+
+    protected static final String SHOW_PAY_KEY = "show_pay";
 
 
     @Autowired
@@ -252,6 +255,40 @@ public class ChargeController extends CspBaseController {
             return success();
         }
         return error();
+    }
+
+    /**
+     * APP端是否显示充值流量的界面
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/show")
+    @ResponseBody
+    public String showPay(HttpServletRequest request){
+        ServletContext context = request.getServletContext();
+        Object showPay = context.getAttribute(SHOW_PAY_KEY);
+        Map<String, Boolean> showPayMap = new HashMap<>();
+        Boolean show = false;
+
+        if (showPay != null) {
+            show = (Boolean) showPay;
+        }
+
+        showPayMap.put(SHOW_PAY_KEY, show);
+        return success(showPayMap);
+    }
+
+
+    @RequestMapping(value = "/pay_view/change")
+    @ResponseBody
+    public String changePayView(Boolean show, HttpServletRequest request){
+        if (show == null) {
+            show = false;
+        }
+
+        request.getServletContext().setAttribute(SHOW_PAY_KEY, show);
+
+        return success();
     }
 
 }

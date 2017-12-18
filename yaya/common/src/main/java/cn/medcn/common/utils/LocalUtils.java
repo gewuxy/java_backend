@@ -47,6 +47,14 @@ public class LocalUtils {
     }
 
     /**
+     * 是否是海外的请求
+     * @return
+     */
+    public boolean isAbroadRequest(){
+        return !get().equals(Locale.CHINA);
+    }
+
+    /**
      * 是否是国外 并且iOS系统 这种情况需要设置特定的极光ID
      * @return
      */
@@ -67,5 +75,10 @@ public class LocalUtils {
         en_US(),
         zh_CN(),
         zh_TW();
+    }
+
+    public enum Abroad{
+        N(),
+        Y();
     }
 }
