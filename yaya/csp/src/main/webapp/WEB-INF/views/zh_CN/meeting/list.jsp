@@ -68,7 +68,7 @@
             if(cookieget('closeclick')=='closeclick'){
                 document.getElementById('note').style.display='none';
             }else{
-                //document.getElementById('note').style.display='block';
+                document.getElementById('note').style.display='block';
             }
         }
         window.onload=clickclose;
@@ -480,7 +480,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
+            <c:if test="${expireTimeCCounount <= 5  && expireTimet >0}">
                 <div class="admin-tips" id="note">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
                     <span class="admin-tips-close" onclick="closeclick()"></span>
@@ -801,5 +801,8 @@
         </div>
     </div>
 </div>
+
+
+
 </body>
 </html>
