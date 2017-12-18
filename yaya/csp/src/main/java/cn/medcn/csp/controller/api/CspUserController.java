@@ -421,6 +421,7 @@ public class CspUserController extends CspBaseController {
             userInfo.setRegisterTime(new Date());
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
+            userInfo.setRegisterFrom(BindInfo.Type.MOBILE.getTypeId());
             cspUserService.insert(userInfo);
             userInfo.setFlux(0); // 用户流量
         }

@@ -3,6 +3,8 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,6 +47,8 @@ import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
 @Controller
 @RequestMapping("/api/charge/")
 public class ChargeController extends CspBaseController {
+
+    protected static final String SHOW_PAY_KEY = "show_pay";
 
 
     @Autowired
@@ -252,6 +257,52 @@ public class ChargeController extends CspBaseController {
             return success();
         }
         return error();
+    }
+
+    /**
+     * APP端是否显示充值流量的界面
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/show")
+    @ResponseBody
+    public String showPay(HttpServletRequest request){
+        ServletContext context = request.getServletContext();
+        Map<String, Boolean> showPayMap = (Map<String, Boolean>) context.getAttribute(SHOW_PAY_KEY);
+        Map<String, Boolean> result = new HashMap<>();
+        Boolean show = true;
+
+        if (showPayMap != null) {
+            show = showPayMap.get(LocalUtils.getAppVersion());
+            if (show == null) {
+                show = true;
+            }
+        }
+
+        result.put(SHOW_PAY_KEY, show);
+        return success(result);
+    }
+
+
+    @RequestMapping(value = "/pay_view/change")
+    @ResponseBody
+    public String changePayView(Boolean show, HttpServletRequest request, String version){
+        if (CheckUtils.isEmpty(version)) {
+            return error("Params error : version can not be null");
+        }
+
+        if (show == null) {
+            show = false;
+        }
+        ServletContext context = request.getServletContext();
+        Map<String, Boolean> showPayMap = (Map<String, Boolean>) context.getAttribute(SHOW_PAY_KEY);
+        if (showPayMap == null) {
+            showPayMap = new HashMap<>();
+        }
+        showPayMap.put(version, show);
+        context.setAttribute(SHOW_PAY_KEY, showPayMap);
+
+        return success();
     }
 
 }

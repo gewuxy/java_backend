@@ -330,7 +330,7 @@
             $("#copyBtn").click(function(){
                 ajaxPost('${ctx}/mgr/meet/copy/'+courseId, {'title': $("#courseTitle").val()}, function(data){
                     if (data.code == 0){
-                        window.location.href = "${ctx}/mgr/list";
+                        window.location.href = "${ctx}/mgr/meet/list";
                     } else {
                         layer.msg(data.err);
                     }

@@ -64,6 +64,8 @@ public class CspUserInfo implements Serializable{
     //是否是老用户(在2018-01-01 之前注册) 0 = 老用户 1=新用户
     protected Boolean state;
 
+    protected Integer registerFrom;
+
     @Transient
     protected Integer flux; // 流量
 
@@ -81,6 +83,7 @@ public class CspUserInfo implements Serializable{
         userInfo.setRegisterTime(new Date());
         userInfo.setActive(true);
         userInfo.setAbroad(dto.getAbroad() == null ? false : dto.getAbroad());
+        userInfo.setRegisterFrom(dto.getThirdPartyId());
         return userInfo;
     }
 

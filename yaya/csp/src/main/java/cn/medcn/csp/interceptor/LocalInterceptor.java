@@ -1,5 +1,6 @@
 package cn.medcn.csp.interceptor;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.LocalUtils;
@@ -33,6 +34,12 @@ public class LocalInterceptor implements HandlerInterceptor {
 
         LocalUtils.setLocalStr(local);
         LocalUtils.set(LocalUtils.getByKey(local));
+
+        String osType = httpServletRequest.getHeader(Constants.APP_OS_TYPE_KEY);
+        LocalUtils.setOsTypeLocal(CheckUtils.isEmpty(osType) ? Constants.OS_TYPE_ANDROID : osType);
+
+        String appVersion = httpServletRequest.getHeader(Constants.APP_VERSION_KEY);
+        LocalUtils.setAppVersion(appVersion);
         return true;
     }
 
