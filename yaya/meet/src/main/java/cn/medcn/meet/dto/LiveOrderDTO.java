@@ -37,6 +37,8 @@ public class LiveOrderDTO implements Serializable{
 
     public static final int ORDER_LIVE_START = 11;//直播开始
 
+    public static final int ORDER_LIVE_STREAM_PUSH = 12;//直播推流
+
     public static final int ORDER_SCAN_SUCCESS = 100;
 
     public static final String LIVE_TYPE_PPT = "0";

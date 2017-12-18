@@ -5,6 +5,7 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
+import cn.medcn.common.utils.DownloadUtils;
 import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
@@ -15,14 +16,8 @@ import cn.medcn.meet.model.Meet;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
-import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.UserFluxUsage;
-import cn.medcn.user.service.CspPackageService;
-import cn.medcn.user.service.CspUserService;
-import cn.medcn.user.service.EmailTempService;
-import cn.medcn.user.service.UserFluxService;
+import cn.medcn.user.model.*;
+import cn.medcn.user.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -68,6 +63,9 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected CspPackageService packageService;
+
+    @Autowired
+    protected CspPackageInfoService cspPackageInfoService;
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -345,7 +343,7 @@ public class UserCenterController extends CspBaseController{
      * @return
      */
    @RequestMapping("/download")
-    public void downLoad(String courseId,String meetName,HttpServletResponse response) throws SystemException, UnsupportedEncodingException {
+    public void downLoad(String courseId,String meetName,HttpServletResponse response) throws SystemException {
 
        String userId = getWebPrincipal().getId();
        if(StringUtils.isEmpty(userId)){
@@ -359,33 +357,24 @@ public class UserCenterController extends CspBaseController{
             throw new SystemException(local("source.not.exists"));
         }
 
-       HttpURLConnection conn= null;
-       BufferedInputStream ins = null;
-
-       response.reset();
-       response.setContentType("application/octet-stream");
-       meetName = URLEncoder.encode(meetName,"UTF-8");
-       response.setHeader("Content-Disposition", "attachment;filename=\"" + meetName +".mp4" + "\"");
-       try {
-           URL url=new URL(usage.getVideoDownUrl());
-           conn = (HttpURLConnection)url.openConnection();
-           conn.connect();
-           Integer fileLength = conn.getContentLength();
-           response.setContentLength(fileLength);
-            ins=new BufferedInputStream(conn.getInputStream());
-           int i = ins.read();
-           while(i!=-1){
-               response.getOutputStream().write(i);
-           }
-           ins.close();
-           response.getOutputStream().close();
-           conn.disconnect();
-       } catch (IOException e) {
-           throw new SystemException(e.getMessage());
+        Integer downloadCount = usage.getDownloadCount();
+        //下载次数大于5，不允许下载
+        if(downloadCount != null && downloadCount > 5){
+            throw new SystemException(local("download.count.err"));
+        }
+       //更新视频下载次数
+       usage.setDownloadCount(downloadCount == null ? 1: downloadCount + 1);
+       int count = userFluxService.updateVideoDownloadCount(usage);
+       //更新异常
+       if(count != 1){
+           throw new SystemException(local("download.fail"));
        }
-
+       //打开下载框
+       DownloadUtils.openDownloadBox(meetName, response, usage.getVideoDownUrl());
 
    }
+
+
 
     /**
      * 进入会员权限界面
@@ -397,6 +386,8 @@ public class UserCenterController extends CspBaseController{
         String userId = principal.getId();
         addBaseUserInfo(model);
         CspPackage cspPackage = packageService.findUserPackageById(userId);
+        List<CspPackageInfo> cspPackageInfos= cspPackageInfoService.selectByPackageId(cspPackage.getId());
+        model.addAttribute("cspPackageInfos",cspPackageInfos);
         model.addAttribute("cspPackage",cspPackage);
         return localeView("/userCenter/memberManage");
     }

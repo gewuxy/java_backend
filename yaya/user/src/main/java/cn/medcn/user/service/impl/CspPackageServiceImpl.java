@@ -17,6 +17,7 @@ import java.net.SocketPermission;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Liuchangling on 2017/12/8.
@@ -42,43 +43,39 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         return cspPackageDAO.findUserPackageById(userId);
     }
 
+    /**
+     * 获取当前参数的价格及订单数量信息
+     *
+     * @param packageId
+     * @param limitTime
+     * @param currency
+     * @return
+     */
     @Override
-    public List<CspPackage> findAllPackage() {
-        return cspPackageDAO.findAllPackage();
-    }
-
-    @Override
-    public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency) {
+    public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, Integer currency) {
         CspPackage pk = cspPackageDAO.selectByPrimaryKey(packageId);
-        float money = (float) 0.00;
+        float money = 0.00f;
         Integer num = 1;
-        if(limitTime % 12 == 0  ){
-            money = currency.equals("CN") ? pk.getYearRmb()* (limitTime / 12) :pk.getYearUsd() * (limitTime / 12);
+        if (limitTime % 12 == 0) {
+            money = currency == 0 ? pk.getYearRmb() * (limitTime / 12) : pk.getYearUsd() * (limitTime / 12);
             num = limitTime / 12;
-        }else{
-            money = currency.equals("CN") ? pk.getMonthRmb() * limitTime : pk.getMonthUsd() * limitTime;
+        } else {
+            money = currency == 0 ? pk.getMonthRmb() * limitTime : pk.getMonthUsd() * limitTime;
             num = limitTime;
         }
-        Map<String,Object> map = new HashMap<String,Object>();
-        map.put("money",(float)Math.round(money*10000)/10000);
-        map.put("num",num);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("money", (float) Math.round(money * 10000) / 10000);
+        map.put("num", num);
         return map;
     }
 
     /**
-     * 判断是否是新用户
+     * 获取所有套餐信息
      *
-     * @param userId
      * @return
      */
     @Override
-    public boolean newUser(String userId) {
-        Object newUser = redisCacheUtils.getCacheObject(Constants.CSP_NEW_USER + userId);
-        if(newUser == null){
-            CspUserPackage userPackage = cspUserPackageDAO.selectByPrimaryKey(userId);
-            redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,userPackage == null ? Constants.NUMBER_ZERO:Constants.NUMBER_ONE,Constants.NUMBER_ONE);
-            return userPackage == null ? true:false;
-        }
-        return (Integer)newUser == Constants.NUMBER_ZERO?true:false;
+    public List<CspPackage> findCspPackage() {
+        return cspPackageDAO.findCspPackage();
     }
 }

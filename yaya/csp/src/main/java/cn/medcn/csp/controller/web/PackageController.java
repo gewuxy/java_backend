@@ -2,11 +2,11 @@ package cn.medcn.csp.controller.web;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.CspPackageInfo;
 import cn.medcn.user.service.*;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
@@ -24,11 +24,12 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * 用户套餐选购
  * by create HuangHuibin 2017/12/12
  */
 @Controller
 @RequestMapping("/mgr/pay")
-public class PackageController extends CspBaseController{
+public class PackageController extends CspBaseController {
 
     @Autowired
     protected CspPackageService cspPackageService;
@@ -42,8 +43,8 @@ public class PackageController extends CspBaseController{
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
-    @Value("${app.csp.base}")
-    protected String appBase;
+    @Autowired
+    protected CspPackageInfoService cspPackageInfoService;
 
     @Value("${apiKey}")
     private String apiKey;
@@ -65,6 +66,7 @@ public class PackageController extends CspBaseController{
 
     /**
      * 获取金额
+     *
      * @param version
      * @param limitTimes
      * @param currency
@@ -72,44 +74,86 @@ public class PackageController extends CspBaseController{
      */
     @RequestMapping(value = "/getMoney")
     @ResponseBody
-    public String getSumMoney(Integer version,Integer limitTimes,String currency){
-        Map<String,Object> map = cspPackageService.getOrderParams(version + 1,limitTimes,currency);
+    public String getSumMoney(Integer version, Integer limitTimes, Integer currency) {
+        Map<String, Object> map = cspPackageService.getOrderParams(version + 1, limitTimes, currency);
         return success(map.get("money"));
     }
 
     /**
+     * 打开套餐选购页面
+     *
+     * @return
+     */
+    @RequestMapping(value = "/mark")
+    public String mark() {
+        return localeView("/include/member_mark");
+    }
+
+    /**
+     * 获取套餐信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/package")
+    @ResponseBody
+    public String packageList() {
+        List<CspPackage> packages = cspPackageService.findCspPackage();
+        List<CspPackageInfo> infos = cspPackageInfoService.select(new CspPackageInfo());
+        Map<String, Object> map = new HashMap<>();
+        map.put("packages", packages);
+        map.put("package", getWebPrincipal().getPackageId());
+        map.put("infos", infos);
+        return success(map);
+    }
+
+    /**
+     * 更新用户套餐提示信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/updatePackageMsg")
+    @ResponseBody
+    public String updatePackageMsg() {
+        updatePackageMsg(null,Constants.NUMBER_ZERO);
+        return success();
+    }
+
+
+    /**
      * 套餐支付
+     *
      * @param packageId
      * @param currency
      * @param payType
      * @param limitTime
      * @return
      */
-    @RequestMapping(value="toPay")
-    public String allPay(Integer packageId, String currency, String payType, Integer limitTime,Model model) throws SystemException {
+    @RequestMapping(value = "toPay")
+    public String allPay(Integer packageId, Integer currency, String payType, Integer limitTime, Model model) throws SystemException {
         String userId = getWebPrincipal().getId();
-        packageId ++;
-        if(packageId == CspPackage.TypeId.STANDARD.getId()){
+        packageId++;
+        if (packageId == CspPackage.TypeId.STANDARD.getId()) {
             //标准版不需要支付添加用户套餐信息
             cspUserPackageService.addStanardInfo(userId);
             //添加用户历史版本信息
-            cspUserPackageHistoryService.addUserHistoryInfo(userId,null,packageId, Constants.NUMBER_ONE);
+            cspUserPackageHistoryService.addUserHistoryInfo(userId, getWebPrincipal().getCspPackage() != null ? getWebPrincipal().getPackageId() : null, packageId, Constants.NUMBER_ONE);
             //更新用户信息缓存
-            redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + userId,Constants.NUMBER_ONE,(int) TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+            updatePackagePrincipal(userId);
             return "redirect:/mgr/meet/list";
         }
         //校验参数信息
-        String validata = checkParams(packageId,currency,payType,limitTime);
-        if(validata != null){
+        String validata = checkParams(packageId, currency, payType, limitTime);
+        if (validata != null) {
             return validata;
         }
-        Map<String,Object> results = cspPackageService.getOrderParams(packageId,limitTime,currency);
+        Map<String, Object> results = cspPackageService.getOrderParams(packageId, limitTime, currency);
         Float money = (Float) results.get("money");
+        money = appPro == 0 ? 0.01f : money;
         Integer num = (Integer) results.get("num");
-        if(currency.equals("CN")){  //人民币P++支付
-            return rnbPay(packageId,currency,payType,money,num,model);
-        }else{  //美元（目前只是paypal支付）
-            return usdPay(packageId,currency,payType,money,num);
+        if (currency == 0) {  //人民币P++支付
+            return rnbPay(packageId, currency, payType, money, num, model);
+        } else {  //美元（目前只是paypal支付）
+            return usdPay(packageId, currency, payType, money, num);
         }
     }
 
@@ -123,7 +167,7 @@ public class PackageController extends CspBaseController{
      * @param num
      * @return
      */
-    public String rnbPay(Integer packageId, String currency, String payType,float money,Integer num,Model model){
+    public String rnbPay(Integer packageId, Integer currency, String payType, float money, Integer num, Model model) {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
         String orderNo = CspConstants.PACKAGE_ORDER_FLAG + StringUtils.nowStr();
@@ -133,16 +177,16 @@ public class PackageController extends CspBaseController{
         Charge charge = null;
         try {
             //生成Charge对象
-            charge = chargeService.createPackageCharge(orderNo,appId, money,num, payType, ip,appBase);
+            charge = chargeService.createCharge(orderNo, money, payType, ip, local("package.charge.buy"), appId);
         } catch (Exception e) {
             e.printStackTrace();
-            return error(e.getMessage());
+            return error(local("package.charge.fail"));
         }
         //创建订单
-        cspPackageOrderService.createOrder(getWebPrincipal().getId(),orderNo,currency,packageId,num,money,payType);
-        model.addAttribute("charge",charge.toString());
+        cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType);
+        model.addAttribute("charge", charge.toString());
         //微信扫码支付
-        if("wx_pub_qr".equals(payType)){
+        if ("wx_pub_qr".equals(payType)) {
             return localeView("/userCenter/wxPay");
         }
         return localeView("/userCenter/newPage");
@@ -159,7 +203,7 @@ public class PackageController extends CspBaseController{
      * @return
      * @throws SystemException
      */
-    public String usdPay(Integer packageId, String currency, String payType,float money,Integer num) throws SystemException {
+    public String usdPay(Integer packageId, Integer currency, String payType, float money, Integer num) throws SystemException {
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         Payment payment = chargeService.generatePayment(money);           //需要修改此方法
@@ -180,11 +224,11 @@ public class PackageController extends CspBaseController{
         } catch (PayPalRESTException e) {
             throw new SystemException(e.getMessage());
         }
-        if(url != null){
+        if (url != null) {
             //创建订单
             String orderNo = CspConstants.PACKAGE_ORDER_FLAG + responsePayment.getId();
             //创建订单
-            cspPackageOrderService.createOrder(getWebPrincipal().getId(),orderNo,currency,packageId,num,money,payType);
+            cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType);
             return "redirect:" + url;
         }
         return error();
@@ -192,23 +236,24 @@ public class PackageController extends CspBaseController{
 
     /**
      * 校验参数
+     *
      * @param packageId
      * @param currency
      * @param payType
      * @param limitTime
      * @return
      */
-    public String checkParams(Integer packageId,String currency,String payType,Integer limitTime){
-        if(packageId == null){
+    public String checkParams(Integer packageId, Integer currency, String payType, Integer limitTime) {
+        if (packageId == null) {
             return error(local("error.param"));
         }
-        if(StringUtils.isEmpty(currency)){
+        if (currency == null) {
             return error(local("error.param"));
         }
-        if(StringUtils.isEmpty(payType)){
+        if (StringUtils.isEmpty(payType)) {
             return error(local("error.param"));
         }
-        if(limitTime == null){
+        if (limitTime == null) {
             return error(local("error.param"));
         }
         return null;

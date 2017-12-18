@@ -34,21 +34,6 @@
         var courseTitle = "";
         var shareUrl = "";
         var coverUrl = "";
-        var selectPk = 1;  //当前选中的套餐
-        var limitTimes = 1; //当前点击套餐时长
-        var flag = "hg"; //当前套餐
-
-        //获取金额
-        function sumMoney(){
-            var currency = $("#" + flag +  "View").find('input[name='+flag+'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney', {'version': selectPk,"limitTimes":limitTimes,"currency":currency}, function(data){
-                if (data.code == 0){
-                    selectPk == 1 ? $("#hgTotal").html(data.data): $("#pfTotal").html(data.data);
-                } else {
-                    layer.msg(data.err);
-                }
-            });
-        }
 
         /*-------- 将关闭提示放入cookie 只提示一次 ---------*/
         function cookiesave(n, v, mins, dn, path)
@@ -83,7 +68,7 @@
             if(cookieget('closeclick')=='closeclick'){
                 document.getElementById('note').style.display='none';
             }else{
-                document.getElementById('note').style.display='block';
+                //document.getElementById('note').style.display='block';
             }
         }
         window.onload=clickclose;
@@ -95,76 +80,27 @@
                 layer.msg("${err}");
             }
 
-            //选购套餐提交
-            $('input[name="commitPay"]').click(function(){
-                if(selectPk != 0) {
-                    var limitTime =  $("#" + flag + "View").find('input[name='+flag+'TimeMode]:checked').val();
-                    var payType =  $("#" + flag + "View").find('input[name='+flag+'PayMode]:checked').val();
-                    var currency =  $("#" + flag + "View").find('input[name='+flag+'Currency]:checked').val();
-                    $("#limitTime").val(limitTime);
-                    $("#payType").val(payType);
-                    $("#currency").val(currency);
-                }
-                $("#packageId").val(selectPk);
-                $("#rechargeFrom").submit();
-            });
-
-            var tabsMainNum = $(".member-buy-tabs-main").find('.member-buy-content');
-            //初始化高级版选中
-            tabsMainNum.eq(1).removeClass('none').siblings().addClass('none');
+            //判断是否新用户，新用户弹出购买套餐
             if(${newUser}){
                 layer.open({
-                    type: 1,
-                    area: ['1116px', '935px'],
+                    type: 2,
+                    title: false,
                     fix: false, //不固定
-                    title:false,
-                    closeBtn:0,
-                    skin: 'member-popup-zIndex',
+                    skin: 'member-popup-zIndex', //没有背景色
+                    shadeClose: false,
                     offset: '70px',
-                    content: $('.member-popup-box'),
-                    success:function(layero, index){
-                        $("#hgTotal").html("16.67");
-                        $("#pfTotal").html("66");
-                    },
-                    cancel :function(){
-                    },
-                });
+                    closeBtn: 0, //不显示关闭按钮
+                    shade: 0.1,
+                    area: ['1116px', '930px'],
+                    content: '${ctx}/mgr/pay/mark'
+                })
             }
 
-            //选择购买时长
-            $(".time-mode-list label").click(function(){
-                $(this).addClass('pay-on').siblings().removeClass('pay-on');
-                limitTimes = $(this).children().eq(0).val();
-                sumMoney();
-            });
+            var successMsg = ${successMsg};
 
-            //支付方式
-            $(".pay-mode-list label").click(function(){
-                $(this).addClass('pay-on').siblings().removeClass('pay-on');
-            });
+            if(successMsg != undefined){
 
-            //货币切换
-            $(".money-state label").click(function(){
-                $(this).addClass('on').siblings().removeClass('on');
-                currencyValue = $(this).parents('.pay-mode').find('input[name='+flag+'Currency]:checked').val();
-                if( currencyValue == 'CN'){
-                    $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if ( currencyValue =='EN' ){
-                    $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
-                }
-                sumMoney();
-            });
-
-            //选择不同版本
-            $(".member-buy-tabs-menu").find('.index-buy-item').on('click',function(){
-                var index = $(this).index();
-                selectPk = index;
-                console.log(selectPk);
-                tabsMainNum.eq(index).removeClass('none').siblings().addClass('none');
-                $(this).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
-                sumMoney();
-            })
-
+            }
 
             //初始化音频
             var asAllItem = audiojs.createAll();
@@ -246,8 +182,7 @@
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
                 var locked = $(this).attr("locked");
-
-                if (locked){
+                if (locked == "true"){
                     $("#copyLi").hide();
                     $("#editLi").hide();
                 } else {
@@ -552,9 +487,12 @@
             </c:if>
 
             <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
-                <div class="admin-tips" id="note" style="display:none;">
+                <div class="admin-tips" id="note">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
                     <span class="admin-tips-close" onclick="closeclick()"></span>
+                    <script>
+
+                    </script>
                 </div>
             </c:if>
 
@@ -865,12 +803,9 @@
                 <div class="cancel-popup-main">
                     <p>超出套餐会议数量，请升级套餐后再试</p>
                 </div>
-
             </form>
         </div>
     </div>
 </div>
-
-<%@include file="../include/memberMark.jsp" %>
 </body>
 </html>

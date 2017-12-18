@@ -5,6 +5,13 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.UrlConverter;
 
+import java.io.UnsupportedEncodingException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import static cn.medcn.csp.CspConstants.TX_LIVE_API_TIME_OUT;
 
 /**
@@ -23,17 +30,37 @@ public class TXLiveUtils {
     //推流地址默认超时时长
     private final static int PUSH_URL_DEFAULT_EXPIRE = 24 * 3600;
 
-    private final static String PUSH_URL = "rtmp://%s.livepush.mycloud.com/live/%s";
+    private final static String BASE_PUSH_URL = "livepush.myqcloud.com/live/";
 
-    private final static String RTMP_PULL_URL = "rtmp://%s.liveplay.mycloud.com/live/%s";
+    private final static String BASE_PULL_URL = "liveplay.myqcloud.com/live/";
 
-    private final static String HLS_PULL_URL = "http://%s.liveplay.mycloud.com/live/%s.m3u8";
+    private final static String RTMP_PREFIX = "rtmp://";
 
-    private final static String FLV_PULL_URL = "http://%s.liveplay.mycloud.com/live/%s.flv";
+    private final static String HTTP_PREFIX = "http://";
+
+    private final static String HLS_SUFFIX = ".m3u8";
+
+    private final static String FLV_SUFFIX = ".flv";
 
     private final static String TX_SECRET_KEY = "txSecret";
 
     private final static String TX_TIME_KEY = "txTime";
+
+    private final static String BIZ_ID_KEY = "bizid";
+
+    private static String getFileName(String channelId){
+        return BIZ_ID + "_" + channelId;
+    }
+
+    /**
+     * 获取基础推流地址
+     * @return
+     */
+    private static String getBasePushUrl(String channelId){
+        StringBuilder builder = new StringBuilder();
+        builder.append(RTMP_PREFIX).append(BIZ_ID).append(".").append(BASE_PUSH_URL).append(getFileName(channelId));
+        return builder.toString();
+    }
 
 
     public enum StreamPullType{
@@ -45,7 +72,7 @@ public class TXLiveUtils {
     /**
      * 根据频道ID生成推流腾讯直播推流地址
      * @param channelId 频道ID csp中用课件的ID
-     * @param expire 推流地址过期时间 单位秒
+     * @param expire 推流地址过期时间 单位毫秒
      * @return
      */
     public static String genPushUrl(String channelId, long expire){
@@ -53,12 +80,13 @@ public class TXLiveUtils {
             expire = System.currentTimeMillis() + PUSH_URL_DEFAULT_EXPIRE * 1000;
         }
 
-        String pushUrl = String.format(PUSH_URL, BIZ_ID, channelId);
-
-        String hexStr = timeToHexString(expire);
+        String pushUrl = getBasePushUrl(channelId);
+        //过期时间加上15分钟
+        String hexStr = Long.toHexString(expire / 1000 + 15 * 60).toUpperCase();
 
         UrlConverter converter = UrlConverter.newInstance(pushUrl).put(TX_SECRET_KEY, genTxSecret(channelId, hexStr)).
-                put(TX_TIME_KEY, hexStr);
+                put(TX_TIME_KEY, hexStr).
+                put(BIZ_ID_KEY, BIZ_ID);
         return converter.convert();
     }
 
@@ -68,16 +96,18 @@ public class TXLiveUtils {
      * @return
      */
     public static String genStreamPullUrl(String channelId, StreamPullType pullType){
+
+        String fileNamePrefix = getFileName(channelId);
         String pullUrl = null;
         switch (pullType) {
             case flv:
-                pullUrl = String.format(FLV_PULL_URL, BIZ_ID, channelId);
+                pullUrl = HTTP_PREFIX + BIZ_ID + "." + BASE_PULL_URL + fileNamePrefix + FLV_SUFFIX;
                 break;
             case rtmp:
-                pullUrl = String.format(RTMP_PULL_URL, BIZ_ID, channelId);
+                pullUrl = RTMP_PREFIX + BIZ_ID + "." + BASE_PULL_URL + fileNamePrefix;
                 break;
             case hls:
-                pullUrl = String.format(HLS_PULL_URL, BIZ_ID, channelId);
+                pullUrl = HTTP_PREFIX + BIZ_ID + "." + BASE_PULL_URL + fileNamePrefix + HLS_SUFFIX;
                 break;
             default:
                 break;
@@ -85,41 +115,12 @@ public class TXLiveUtils {
         return pullUrl;
     }
 
-
-    /**
-     * 将long型时间戳转换成16进制字符串
-     * @param time
-     * @return
-     */
-    private static String timeToHexString(long time){
-        StringBuffer buffer = new StringBuffer();
-        int remainder = (int)(time % 16); //余数
-        int quotient = (int)(time / 16); //商
-
-        boolean convertOver = false;
-        while(!convertOver){
-
-            if (quotient == 0) {
-                convertOver = true;
-            }
-
-            buffer.append(MD5Utils.hexDigits[remainder]);
-            remainder = quotient % 16;
-            quotient = quotient / 16;
-
-        }
-
-        buffer.reverse();
-        String result = buffer.toString().toUpperCase();
-        return result;
-    }
-
     /**
      * 生成防盗链密码
      * @return
      */
     private static String genTxSecret(String channelId, String hexStr){
-        String signStr = channelId + PICK_PROOF_KEY + hexStr;
+        String signStr = PICK_PROOF_KEY + getFileName(channelId) + hexStr;
         return MD5Utils.md5(signStr);
     }
 
@@ -145,6 +146,12 @@ public class TXLiveUtils {
         if (!sign.equals(MD5Utils.md5(API_AUTHENTICATION_KEY + t))) {
             throw new SystemException("invalid sign : " + sign);
         }
+    }
+
+    public static void main(String[] args) {
+        System.out.println(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date(1469848425000l)));
+        System.out.println(Long.toHexString(1469848425 ));
+
     }
 
 }

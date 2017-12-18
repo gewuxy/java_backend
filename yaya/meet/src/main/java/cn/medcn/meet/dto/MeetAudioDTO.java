@@ -36,6 +36,8 @@ public class MeetAudioDTO implements Serializable {
 
     protected Date serverTime;//传递给前端的服务器当前时间
 
+    protected String pullUrl;//播放端
+
 
     public static MeetAudioDTO build(MeetAudio meetAudio){
         MeetAudioDTO dto = new MeetAudioDTO();

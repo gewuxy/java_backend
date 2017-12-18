@@ -1,10 +1,8 @@
 package cn.medcn.csp.realm;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.LocalUtils;
-import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.common.utils.SpringUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
@@ -34,6 +32,9 @@ public class CspRealm extends AuthorizingRealm {
 
     @Autowired
     protected CspUserService cspUserService;
+
+    @Autowired
+    protected RedisCacheUtils redisCacheUtils;
 
     @Autowired
     protected CspPackageService cspPackageService;
@@ -93,11 +94,19 @@ public class CspRealm extends AuthorizingRealm {
             throw new AuthenticationException(SpringUtils.getMessage("en.user.web.login.error"));
         }
 
+        String userToken = cspUser.getToken();
+        //检测用户是否有token，如果没有进行添加
+        if(StringUtils.isEmpty(userToken)) {
+            cspUser.setToken(UUIDUtil.getUUID());
+            cspUserService.updateByPrimaryKeySelective(cspUser);
+        }
         Principal principal = Principal.build(cspUser);
         CspPackage cspPackage = cspPackageService.findUserPackageById(cspUser.getId());
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
-        principal.setNewUser(cspPackage == null? true:false);
         principal.setCspPackage(cspPackage);
+        principal.setNewUser(cspPackage == null);
+        //添加用户信息缓存
+        redisCacheUtils.setCacheObject(userToken,principal, Constants.TOKEN_EXPIRE_TIME);
 
         if (CheckUtils.isEmpty(principal.getAvatar())) {
             principal.setAvatar(fileBase + FilePath.PORTRAIT.path + "/admin-userImg.png");

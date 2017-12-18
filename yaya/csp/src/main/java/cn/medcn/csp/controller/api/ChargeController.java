@@ -55,15 +55,14 @@ public class ChargeController extends CspBaseController {
     @Value("${apiKey}")
     private String apiKey;
 
+    @Value("${appId}")
+    private String appId;
 
     @Value("${paypal_clientId}")
     protected String paypalId;
 
     @Value("${paypal_secret}")
     protected String paypalSecret;
-
-    @Autowired
-    protected RedisCacheUtils redisCacheUtils;
 
     /**
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
@@ -88,10 +87,10 @@ public class ChargeController extends CspBaseController {
         Pingpp.privateKeyPath = path;
         Charge charge = null;
 
+        Float money = FluxOrder.getInternalPrice(flux);
         try {
             //生成Charge对象
-            Float money = FluxOrder.getInternalPrice(flux);
-            charge = chargeService.createCharge(orderNo, money, channel, ip);
+            charge = chargeService.createCharge(orderNo, money, channel, ip,"流量充值",appId);
         } catch (Exception e) {
             e.printStackTrace();
             return error(local("charge.fail"));
@@ -142,16 +141,7 @@ public class ChargeController extends CspBaseController {
         Boolean isTrue = null;
         try {
             isTrue = SignatureUtil.verifyData(body, signature, publicKey);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-            return;
-        } catch (InvalidKeyException e) {
-            e.printStackTrace();
-            return;
-        } catch (SignatureException e) {
-            e.printStackTrace();
-            return;
-        } catch (UnsupportedEncodingException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             return;
         }
@@ -164,6 +154,27 @@ public class ChargeController extends CspBaseController {
                 String orderNo = (String) object.get("order_no");
                 //查找订单
                 if(orderNo.contains(CspConstants.PACKAGE_ORDER_FLAG)){
+                    CspPackageOrder condition = new CspPackageOrder();
+                    condition.setTradeId(orderNo);
+                    CspPackageOrder order = cspPackageOrderService.selectOne(condition);
+                    if (order != null) {
+                        //更新订单状态，修改用户流量值
+                        cspPackageOrderService.updateOrderAndUserPackageInfo(order);
+                        //更新缓存
+                        redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+                       //更新用户套餐缓存信息
+                        updatePackagePrincipal(order.getUserId());
+                        updatePackageMsg(order.getPackageId(),Constants.NUMBER_ONE);
+                        //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
+                        if ("wx_pub_qr".equals(order.getPlatForm())) {
+                            redisCacheUtils.setCacheObject(order.getTradeId(), 1, (int) TimeUnit.HOURS.toSeconds(2));
+                        }
+                        response.setStatus(200);
+                    } else {
+                        //没有找到订单
+                        response.setStatus(500);
+                    }
+                }else {
                     //查找订单
                     FluxOrder condition = new FluxOrder();
                     condition.setTradeId(orderNo);
@@ -174,24 +185,6 @@ public class ChargeController extends CspBaseController {
                         //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
                         if("wx_pub_qr".equals(result.getPlatform())){
                             redisCacheUtils.setCacheObject(result.getTradeId(),1, (int)TimeUnit.HOURS.toSeconds(2));
-                        }
-                        response.setStatus(200);
-                    } else {
-                        //没有找到订单
-                        response.setStatus(500);
-                    }
-                }else {
-                    CspPackageOrder condition = new CspPackageOrder();
-                    condition.setTradeId(orderNo);
-                    CspPackageOrder order = cspPackageOrderService.selectOne(condition);
-                    if (order != null) {
-                        //更新订单状态，修改用户流量值
-                        cspPackageOrderService.updateOrderAndUserPackageInfo(order);
-                        //更新缓存
-                        redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
-                        //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
-                        if ("wx_pub_qr".equals(order.getPlatForm())) {
-                            redisCacheUtils.setCacheObject(order.getTradeId(), 1, (int) TimeUnit.HOURS.toSeconds(2));
                         }
                         response.setStatus(200);
                     } else {

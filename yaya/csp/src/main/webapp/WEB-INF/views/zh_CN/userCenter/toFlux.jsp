@@ -46,14 +46,13 @@
                                         <tr>
                                             <td class="col-w-4 color-black">${v.meetName}</td>
                                             <td class="col-w-3">消耗${v.expense}M</td>
-                                            <c:if test="${v.expireDay > 0}">
+                                            <c:if test="${v.downloadCount < 5}">
+                                                <input type="hidden" id="count_${v.courseId}" value="${v.downloadCount}">
+                                                <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook">下载视频</a></td>
 
-                                                <td class="col-w-2"><a  class="color-blue"  href="${ctx}/mgr/user/download?courseId=${v.courseId}&meetName=${v.meetName}" >下载视频</a></td>
-                                                <td class="col-w-2 color-green1">${v.expireDay}天后过期</td>
                                             </c:if>
-                                            <c:if test="${v.expireDay == 0}">
-                                                <td class="col-w-2"><span class="color-gray">已过期</span></td>
-                                                <td class="col-w-2 color-green1">&nbsp;</td>
+                                            <c:if test="${v.downloadCount >= 5}">
+                                                <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook">邮件获取</a></td>
                                             </c:if>
                                         </tr>
                                     </c:forEach>
@@ -172,6 +171,30 @@
     </div>
 </div>
 
+<!--弹出 邮件获取-->
+<div class="videoListEmail-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p class="color-black" style="font-size:20px; margin-bottom:10px;">已超出下载权限，如需下载可通过邮件申请。</p>
+                    <p>发送邮件 “用户名+会议名称+直播日期” 至邮箱</p>
+                    <p><a href="mailto:service@CSPmeeting.com">service@CSPmeeting.com</a></p>
+                    <p>我们会尽快审核并返回下载链接到您的发件邮箱。</p>
+                    <!--<div class="admin-button t-right">-->
+                    <!--<a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>-->
+                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" value="我已付款成功">-->
+                    <!--</div>-->
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
 
 
 
@@ -207,7 +230,7 @@
                 window.open("${ctx}/mgr/charge/createOrder?flux="+flux);
             }
                 $("#submitForm").submit();
-                触发支付弹出窗
+                //触发支付弹出窗
                     layer.open({
                         type: 1,
                         area: ['560px', '250px'],
@@ -229,13 +252,48 @@
         });
 
 
+        $('input[name="flux"]').click(function () {
+            var flux = $(this).val();
+            changeMoney(flux,currency);
+
+        });
+
+        $(".downButton-hook").click(function () {
+            var meetName = $(this).attr("meetName");
+            var courseId = $(this).attr("courseId");
+            var count = $("#count_"+courseId).val();
+
+            if(parseInt(count) >= 5){
+                layer.open({
+                    type: 1,
+                    area: ['560px', '320px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["我知道了"],
+                    content: $('.videoListEmail-popup-box'),
+                    success:function(){
+
+                    },
+                    cancel :function(){
+
+                    },
+                });
+
+                $(this).attr("class","color-gray videoListEmail-hook");
+                $(this).html("邮件获取");
+            }else{
+                layer.msg("会议视频提供5次有效下载，已下载"+ count+"次",{time:1000},function () {
+                    $("#count_"+courseId).val(parseInt(count) + 1);
+                    window.location.href="${ctx}/mgr/user/download?courseId="+courseId+"&meetName="+meetName;
+                });
+            }
+
+        });
+
     });
 
-    $('input[name="flux"]').click(function () {
-        var flux = $(this).val();
-        changeMoney(flux,currency);
 
-    });
 
     function changeMoney(flux,currency){
         if(currency == 1){  //中文
@@ -280,6 +338,28 @@
         var flux = $('input[name="flux"]:checked').val();
         changeMoney(flux,currency);
     });
+
+
+    //邮件获取
+    $('.videoListEmail-hook').on('click',function(){
+        layer.open({
+            type: 1,
+            area: ['560px', '320px'],
+            fix: false, //不固定
+            title:false,
+            closeBtn:0,
+            btn: ["我知道了"],
+            content: $('.videoListEmail-popup-box'),
+            success:function(){
+
+            },
+            cancel :function(){
+
+            },
+        });
+    });
+
+
 
 
 </script>

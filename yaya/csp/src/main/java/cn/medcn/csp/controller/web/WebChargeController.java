@@ -71,13 +71,13 @@ public class WebChargeController extends CspBaseController {
      * 购买流量，需要传递flux(流量值),channel(支付渠道)
      */
     @RequestMapping("/toCharge")
-    public String toCharge(Integer flux, String channel, HttpServletRequest request,Model model)  {
+    public String toCharge(Integer flux, String channel, HttpServletRequest request, Model model) {
         // 流量值错误
-        if(flux == null || FluxOrder.getInternalPrice(flux) == null){
+        if (flux == null || FluxOrder.getInternalPrice(flux) == null) {
             return error(local("flux.err.amount"));
         }
         //支付渠道为空
-        if(StringUtils.isEmpty(channel)){
+        if (StringUtils.isEmpty(channel)) {
             return error(local("charge.err.channel"));
         }
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
@@ -88,26 +88,23 @@ public class WebChargeController extends CspBaseController {
         Pingpp.privateKeyPath = path;
         Charge charge = null;
 
-
+        Float money = FluxOrder.getInternalPrice(flux);
         try {
             //生成Charge对象
-            Float money = FluxOrder.getInternalPrice(flux);
-            charge = chargeService.createCharge(orderNo,money, channel, ip);
+            charge = chargeService.createCharge(orderNo, money, channel, ip, "流量充值", appId);
         } catch (Exception e) {
             e.printStackTrace();
             return error(local("charge.fail"));
         }
         //创建订单
         chargeService.createOrder(userId, orderNo, flux, channel);
-        model.addAttribute("charge",charge.toString());
+        model.addAttribute("charge", charge.toString());
 
         //微信扫码支付
-        if("wx_pub_qr".equals(channel)){
+        if ("wx_pub_qr".equals(channel)) {
             return localeView("/userCenter/wxPay");
         }
         return localeView("/userCenter/newPage");
-
-
 
 
     }
@@ -189,19 +186,7 @@ public class WebChargeController extends CspBaseController {
 
         //支付成功
         if(createdPayment.getState().equals("approved")){
-            if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //流量充值支付成功
-                //查找订单
-                FluxOrder order = new FluxOrder();
-                order.setTradeId(paymentId);
-                order = chargeService.selectOne(order);
-                //没有相关订单
-                if(order == null ){
-                   throw new SystemException("No related orders");
-                }
-                //更新订单状态，修改用户流量值
-                chargeService.updateOrderAndUserFlux(order);
-                return "redirect:/mgr/charge/success?money="+(order.getMoney());
-            }else{  // 套餐购买支付成功
+            if(paymentId.contains(CspConstants.PACKAGE_ORDER_FLAG)){  //套餐购买支付成功
                 CspPackageOrder condition = new CspPackageOrder();
                 condition.setTradeId(paymentId);
                 CspPackageOrder order = cspPackageOrderService.selectOne(condition);
@@ -210,10 +195,24 @@ public class WebChargeController extends CspBaseController {
                 }
                 //更新订单状态，修改用户套餐信息
                 cspPackageOrderService.updateOrderAndUserPackageInfo(order);
-                redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
+                //更新用户套餐信息缓存
+                updatePackagePrincipal(order.getUserId());
+                updatePackageMsg(order.getPackageId(),Constants.NUMBER_ONE);
                 boolean yearType = cspPackageOrderService.yearPay(order.getPackageId(),order.getShouldPay());
-                Map<String,Object> results = cspPackageService.getOrderParams(order.getPackageId(),yearType == true ? order.getNum() * 12 : order.getNum(),"CN");
+                Map<String,Object> results = cspPackageService.getOrderParams(order.getPackageId(),yearType == true ? order.getNum() * 12 : order.getNum(),Constants.NUMBER_ZERO);
                 return "redirect:/mgr/charge/success?money="+ results.get("money");
+            }else{  //流量充值支付成功
+                //查找订单
+                FluxOrder order = new FluxOrder();
+                order.setTradeId(paymentId);
+                order = chargeService.selectOne(order);
+                //没有相关订单
+                if(order == null ){
+                    throw new SystemException("No related orders");
+                }
+                //更新订单状态，修改用户流量值
+                chargeService.updateOrderAndUserFlux(order);
+                return "redirect:/mgr/charge/success?money="+(order.getMoney());
             }
         }
         return "";

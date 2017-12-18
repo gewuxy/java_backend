@@ -414,6 +414,7 @@ public class MeetController extends BaseController {
                 Live live = liveService.findByCourseId(course.getId());
                 if (live != null) {
                     audioDTO.setLiveState(live.getLiveState());
+                    audioDTO.setPullUrl(live.getRtmpUrl());
                 }
 //                audioDTO.setVideoLive(live);
             }

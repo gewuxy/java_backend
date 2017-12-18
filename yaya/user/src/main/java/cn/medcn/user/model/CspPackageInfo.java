@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -24,9 +25,15 @@ public class CspPackageInfo implements Serializable {
     // 服务标识
     protected String iden;
     // 描述
-    protected String describe;
+    protected String descriptCn;
+    // 描述
+    protected String descriptTw;
+    // 描述
+    protected String descriptUs;
     // 状态
     protected Boolean state;
 
+    @Transient
+    protected Integer limitMeets;
 
 }

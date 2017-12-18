@@ -1,5 +1,7 @@
 package cn.medcn.user.service;
 
+import cn.medcn.common.Constants;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.UserFluxUsage;
@@ -36,4 +38,21 @@ public interface UserFluxService extends BaseService<UserFlux> {
      * @return
      */
     UserFluxUsage addUserFluxUsage(String userId, String courseId, int flux);
+
+
+    /**
+     * 更新视频下载次数
+     * @param usage
+     */
+    int updateVideoDownloadCount(UserFluxUsage usage);
+
+
+    /**
+     * 更新下载次数，删除缓存中的下载地址，只能下载一次
+     * @param key
+     * @param courseId
+     */
+    public void updateDownloadCountAndDeleteRedisKey(String key, String courseId) throws SystemException;
+
+
 }
