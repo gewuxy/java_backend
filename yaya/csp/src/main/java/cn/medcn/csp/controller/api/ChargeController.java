@@ -3,6 +3,8 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
@@ -266,27 +268,36 @@ public class ChargeController extends CspBaseController {
     @ResponseBody
     public String showPay(HttpServletRequest request){
         ServletContext context = request.getServletContext();
-        Object showPay = context.getAttribute(SHOW_PAY_KEY);
-        Map<String, Boolean> showPayMap = new HashMap<>();
-        Boolean show = false;
+        Map<String, Boolean> showPayMap = (Map<String, Boolean>) context.getAttribute(SHOW_PAY_KEY);
+        Map<String, Boolean> result = new HashMap<>();
+        Boolean show = true;
 
-        if (showPay != null) {
-            show = (Boolean) showPay;
+        if (showPayMap != null) {
+            show = showPayMap.get(LocalUtils.getAppVersion());
         }
 
-        showPayMap.put(SHOW_PAY_KEY, show);
-        return success(showPayMap);
+        result.put(SHOW_PAY_KEY, show == null ? true : show);
+        return success(result);
     }
 
 
     @RequestMapping(value = "/pay_view/change")
     @ResponseBody
-    public String changePayView(Boolean show, HttpServletRequest request){
+    public String changePayView(Boolean show, HttpServletRequest request, String version){
+        if (CheckUtils.isEmpty(version)) {
+            return error("Params error : version can not be null");
+        }
+
         if (show == null) {
             show = false;
         }
-
-        request.getServletContext().setAttribute(SHOW_PAY_KEY, show);
+        ServletContext context = request.getServletContext();
+        Map<String, Boolean> showPayMap = (Map<String, Boolean>) context.getAttribute(SHOW_PAY_KEY);
+        if (showPayMap == null) {
+            showPayMap = new HashMap<>();
+        }
+        showPayMap.put(version, show);
+        context.setAttribute(SHOW_PAY_KEY, showPayMap);
 
         return success();
     }

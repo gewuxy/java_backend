@@ -46,7 +46,7 @@
 
     <div class="CSPMeeting-gallery CSPMeeting-gallery-live video-countDown " id="CSPMeeting-gallery-live">
         <!-- Swiper -->
-        <div class="swiper-container gallery-top popup-volume <c:if test="${watermark != null}">
+        <div class="swiper-container gallery-top popup-volume <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
             <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>

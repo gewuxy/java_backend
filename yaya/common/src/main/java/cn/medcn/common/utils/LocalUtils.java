@@ -17,6 +17,16 @@ public class LocalUtils {
 
     protected static final ThreadLocal<String> osTypeLocal = new ThreadLocal<>();
 
+    protected static final ThreadLocal<String> appVersionLocal = new ThreadLocal<>();
+
+    public static String getAppVersion(){
+        return appVersionLocal.get();
+    }
+
+    public static void setAppVersion(String version){
+        appVersionLocal.set(version);
+    }
+
     public static void setOsTypeLocal(String osType){
         osTypeLocal.set(osType);
     }

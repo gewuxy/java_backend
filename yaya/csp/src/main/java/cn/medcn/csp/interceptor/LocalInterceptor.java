@@ -37,6 +37,9 @@ public class LocalInterceptor implements HandlerInterceptor {
 
         String osType = httpServletRequest.getHeader(Constants.APP_OS_TYPE_KEY);
         LocalUtils.setOsTypeLocal(CheckUtils.isEmpty(osType) ? Constants.OS_TYPE_ANDROID : osType);
+
+        String appVersion = httpServletRequest.getHeader(Constants.APP_VERSION_KEY);
+        LocalUtils.setAppVersion(appVersion);
         return true;
     }
 

@@ -41,7 +41,7 @@
 <div class="warp">
 
     <div class="CSPMeeting-gallery details-gallery
-    <c:if test="${watermark != null}">
+    <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
             <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
