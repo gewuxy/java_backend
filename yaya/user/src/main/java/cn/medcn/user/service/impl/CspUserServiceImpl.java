@@ -177,6 +177,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         userInfo.setPassword(MD5Utils.md5(password));
         userInfo.setRegisterTime(new Date());
         userInfo.setActive(false);//未激活
+        //注册来源
+        userInfo.setRegisterFrom(BindInfo.Type.EMAIL.getTypeId());
         cspUserInfoDAO.insert(userInfo);
 
         // 发送激活邮箱链接
@@ -602,6 +604,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
         MyPage<CspUserInfo> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findUserList(pageable.getParams()));
         return page;
+    }
+
+    @Override
+    public List<CspUserInfo> selectRegisterTime() {
+        return cspUserInfoDAO.selectRegisterTime();
     }
 
 }
