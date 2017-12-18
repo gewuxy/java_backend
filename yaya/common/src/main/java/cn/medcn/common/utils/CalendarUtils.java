@@ -12,6 +12,8 @@ import java.util.Date;
  * Created by lixuan on 2017/1/16.
  */
 public class CalendarUtils {
+    // 一个月默认为30天
+    public static final int DEFAULT_MONTH = 30;
 
     /**
      * 计算month个月之后的时间

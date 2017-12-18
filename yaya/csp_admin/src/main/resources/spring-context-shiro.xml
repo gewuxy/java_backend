@@ -71,7 +71,6 @@
         <property name="filterChainDefinitions">
             <value>
                 /login=anon
-                /csp/meet/download=anon
                 /validateCode=anon
                 /logout=logout
                 /static/**=anon
