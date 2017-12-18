@@ -151,7 +151,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @param orderId
      */
     public void addNotify(String userId, Date start, Date end, Integer packageId, String orderId) {
-        String packageDesc = CspPackage.TypeId.values()[packageId - 1].getLabel();
+        String packageDesc = CspPackage.getLocalPackage(packageId);
         try {
             Integer betweenDay = CalendarUtils.daysBetween(start, end);
             if (betweenDay > CalendarUtils.DEFAULT_YEAR) {
@@ -159,7 +159,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
                 Integer extra = betweenDay - CalendarUtils.DEFAULT_YEAR * yearNum;
                 sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId}), local("user.notify.sender"));
             } else {
-                sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.year", new Object[]{packageDesc, betweenDay, orderId}), local("user.notify.sender"));
+                sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.day", new Object[]{packageDesc,betweenDay , orderId}), local("user.notify.sender"));
             }
         } catch (ParseException e) {
             e.getMessage();

@@ -842,7 +842,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/meeting/list"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form >
@@ -868,7 +868,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p id="backMsg">已成功购买，请前往使用</p>
+                    <p id="backMsg"></p>
                 </div>
                 <div class="admin-button t-right " >
                     <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="确定"/>
