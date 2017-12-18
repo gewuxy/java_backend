@@ -1,5 +1,7 @@
 package cn.medcn.common.utils;
 
+import cn.medcn.common.Constants;
+
 import java.util.Locale;
 
 /**
@@ -12,6 +14,12 @@ public class LocalUtils {
     protected static final ThreadLocal<String> strLocal = new ThreadLocal<>();
 
     protected static final ThreadLocal<Boolean> abroadLocal = new ThreadLocal<>();
+
+    protected static final ThreadLocal<String> osTypeLocal = new ThreadLocal<>();
+
+    public static void setOsTypeLocal(String osType){
+        osTypeLocal.set(osType);
+    }
 
 
     public static Boolean isAbroad(){
@@ -39,13 +47,12 @@ public class LocalUtils {
     }
 
     /**
-     * 是否是海外的请求
+     * 是否是国外 并且iOS系统 这种情况需要设置特定的极光ID
      * @return
      */
-    public boolean isAbroadRequest(){
-        return !get().equals(Locale.CHINA);
+    public static Boolean isAbroadAndIOS() {
+        return isAbroad() && Constants.OS_TYPE_IOS.equalsIgnoreCase(osTypeLocal.get());
     }
-
 
     public static Locale getByKey(String key){
         if (CheckUtils.isEmpty(key)) {
@@ -60,10 +67,5 @@ public class LocalUtils {
         en_US(),
         zh_CN(),
         zh_TW();
-    }
-
-    public enum Abroad{
-        N(),
-        Y();
     }
 }

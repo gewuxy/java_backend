@@ -188,9 +188,14 @@ public class Constants {
 
     public static final String CSP_NEW_USER = "new_user";
 
+    //csp 极光推送APP_key
     public static final String JI_GUANG_APP_KEY = "61f4b84e5c33850ca329d67d";
-
+    //csp 极光推送secret
     public static final String JI_GUANG_SECRET = "fce25fcc5975048a9f1c32e5";
+    //csp IOS海外版极光APP_KEY
+    public static final String JI_GUANG_ABROAD_IOS_APP_KEY = "ae935212b3eadfb048436f4d";
+    //csp IOS海外版极光SECRET
+    public static final String JI_GUANG_ABROAD_IOS_SECRET = "8eab8b0c3a314d0950b31bf9";
 
     // csp套餐过期时长还有5天时提醒
     public static final int EXPIRE_DAYS = 5;
