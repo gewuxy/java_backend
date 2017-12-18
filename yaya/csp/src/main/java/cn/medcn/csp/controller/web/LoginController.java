@@ -181,6 +181,7 @@ public class LoginController extends CspBaseController {
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             userInfo.setFlux(0); // 用户流量
+            userInfo.setRegisterFrom(BindInfo.Type.MOBILE.getTypeId());
             cspUserService.insert(userInfo);
 
             //新用户发送欢迎推送消息

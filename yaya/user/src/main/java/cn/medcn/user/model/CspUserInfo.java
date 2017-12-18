@@ -62,6 +62,8 @@ public class CspUserInfo implements Serializable{
     // 是否有激活 未激活=0 已激活=1
     protected Boolean active;
 
+    protected Integer registerFrom;
+
     @Transient
     protected Integer flux; // 流量
 
@@ -79,6 +81,7 @@ public class CspUserInfo implements Serializable{
         userInfo.setRegisterTime(new Date());
         userInfo.setActive(true);
         userInfo.setAbroad(dto.getAbroad() == null ? false : dto.getAbroad());
+        userInfo.setRegisterFrom(dto.getThirdPartyId());
         return userInfo;
     }
 
