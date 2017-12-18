@@ -51,4 +51,7 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
     CspUserInfo selectByUserName(String userName);
 
     List<CspUserInfo> findUserList(Map<String, Object> params);
+
+    List<CspUserInfo> selectRegisterTime();
+
 }
