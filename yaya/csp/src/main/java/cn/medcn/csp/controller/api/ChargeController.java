@@ -164,6 +164,7 @@ public class ChargeController extends CspBaseController {
                         redisCacheUtils.setCacheObject(Constants.CSP_NEW_USER + order.getUserId(),Constants.NUMBER_ONE,(int)TimeUnit.DAYS.toSeconds(Constants.NUMBER_ONE));
                        //更新用户套餐缓存信息
                         updatePackagePrincipal(order.getUserId());
+                        updatePackageMsg(order.getPackageId(),Constants.NUMBER_ONE);
                         //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
                         if ("wx_pub_qr".equals(order.getPlatForm())) {
                             redisCacheUtils.setCacheObject(order.getTradeId(), 1, (int) TimeUnit.HOURS.toSeconds(2));

@@ -3,6 +3,7 @@ package cn.medcn.user.service.impl;
 import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.UserFluxDAO;
@@ -11,6 +12,8 @@ import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.UserFluxUsage;
 import cn.medcn.user.service.UserFluxService;
 import com.github.abel533.mapper.Mapper;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +25,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Service
 public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements UserFluxService {
+
+    private static Log log = LogFactory.getLog(UserFluxServiceImpl.class);
 
     @Autowired
     protected UserFluxDAO userFluxDAO;
@@ -122,20 +127,20 @@ public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements Us
      * @param courseId
      */
     @Override
-    public void updateDownloadCountAndDeleteRedisKey(String key, String courseId) throws SystemException {
+    public void updateDownloadCountAndDeleteRedisKey(String key, String courseId,String userId) throws SystemException {
         //将缓存中的数据删除
         redisCacheUtils.delete(Constants.VIDEO_DOWNLOAD_URL + key);
         //更新下载次数
-        UserFluxUsage usage = new UserFluxUsage();
-        usage.setMeetingId(courseId);
-        usage = userFluxUsageDAO.selectOne(usage);
+        UserFluxUsage usage = findUsage(userId,courseId);
         if(usage == null){
-            throw new SystemException("获取下载次数失败");
+            LogUtils.error(log,"获取下载次数失败");
+            throw new SystemException(local("download.fail"));
         }
         usage.setDownloadCount(usage.getDownloadCount() + 1);
         int count = userFluxUsageDAO.updateByPrimaryKeySelective(usage);
         if(count != 1){
-            throw new SystemException("更新下载次数失败");
+            LogUtils.error(log,"更新下载次数失败");
+            throw new SystemException(local("download.fail"));
         }
 
     }

@@ -107,6 +107,19 @@ public class PackageController extends CspBaseController {
     }
 
     /**
+     * 更新用户套餐提示信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/updatePackageMsg")
+    @ResponseBody
+    public String updatePackageMsg() {
+        updatePackageMsg(null,Constants.NUMBER_ZERO);
+        return success();
+    }
+
+
+    /**
      * 套餐支付
      *
      * @param packageId
