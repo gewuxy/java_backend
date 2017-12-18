@@ -177,4 +177,11 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     List<CspUserInfo> selectRegisterTime();
+
+    /**
+     * 获取昨天的注册用户数量
+     * @param location
+     * @return
+     */
+    int selectRegisterCount(int location);
 }

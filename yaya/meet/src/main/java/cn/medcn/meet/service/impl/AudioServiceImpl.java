@@ -639,6 +639,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 copy.setStartTime(new Date());
                 copy.setEndTime(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(1)));
             }
+            copy.setVideoLive(live.getVideoLive());
             copy.setLivePage(0);
             copy.setPlayCount(0);
             copy.setCourseId(newCourseId);

@@ -55,8 +55,8 @@ public class Live {
     public enum LiveState{
         init(0),//初始状态
         usable(1),//可用的直播状态
-        pause(2),//已关闭
-        closed(3);
+        pause(2),//中断
+        closed(3);//关闭
 
         private Integer type;
 

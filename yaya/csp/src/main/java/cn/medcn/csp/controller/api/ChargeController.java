@@ -3,10 +3,13 @@ package cn.medcn.csp.controller.api;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
+import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.dto.IOSPayViewDTO;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
 import cn.medcn.user.model.CspPackageOrder;
@@ -24,6 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -44,6 +48,8 @@ import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
 @Controller
 @RequestMapping("/api/charge/")
 public class ChargeController extends CspBaseController {
+
+
 
 
     @Autowired
@@ -250,6 +256,54 @@ public class ChargeController extends CspBaseController {
             return success();
         }
         return error();
+    }
+
+    /**
+     * APP端是否显示充值流量的界面
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/show")
+    @ResponseBody
+    public String showPay(){
+        String version = LocalUtils.getAppVersion();
+        IOSPayViewDTO viewDTO = redisCacheUtils.getCacheObject(IOSPayViewDTO.getCacheKey(version));
+
+        Map<String, Boolean> result = new HashMap<>();
+        Boolean show = true;
+
+        if (viewDTO != null) {
+            show = viewDTO.getShow();
+            if (show == null) {
+                show = true;
+            }
+        }
+
+        result.put(IOSPayViewDTO.SHOW_PAY_KEY, show);
+        return success(result);
+    }
+
+
+    @RequestMapping(value = "/pay_view/change")
+    @ResponseBody
+    public String changePayView(Boolean show, String version){
+        if (CheckUtils.isEmpty(version)) {
+            return error("Params error : version can not be null");
+        }
+
+        if (show == null) {
+            show = false;
+        }
+
+        String cacheKey = IOSPayViewDTO.getCacheKey(version);
+        IOSPayViewDTO viewDTO = redisCacheUtils.getCacheObject(cacheKey);
+        if (viewDTO == null) {
+            viewDTO = new IOSPayViewDTO(show, version);
+        }
+        viewDTO.setShow(show);
+        redisCacheUtils.setCacheObject(cacheKey, viewDTO);
+
+        return success();
     }
 
 }

@@ -82,7 +82,7 @@ public class TXLiveUtils {
 
         String pushUrl = getBasePushUrl(channelId);
         //过期时间加上15分钟
-        String hexStr = Long.toHexString(expire / 1000 + 15 * 60).toUpperCase();
+        String hexStr = Long.toHexString((expire + 15 * 60 * 1000) / 1000 ).toUpperCase();
 
         UrlConverter converter = UrlConverter.newInstance(pushUrl).put(TX_SECRET_KEY, genTxSecret(channelId, hexStr)).
                 put(TX_TIME_KEY, hexStr).

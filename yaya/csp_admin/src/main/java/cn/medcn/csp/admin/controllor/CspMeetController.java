@@ -13,8 +13,10 @@ import cn.medcn.meet.dto.MeetInfoDTO;
 import cn.medcn.meet.dto.VideoDownloadDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
+import cn.medcn.meet.model.Live;
 import cn.medcn.meet.model.Meet;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetService;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.model.UserFluxUsage;
@@ -48,6 +50,10 @@ public class CspMeetController extends BaseController{
 
     @Autowired
     private AudioService audioService;
+
+    @Autowired
+    private LiveService liveService;
+
 
     @Autowired
     protected UserFluxService userFluxService;
@@ -120,11 +126,11 @@ public class CspMeetController extends BaseController{
         VideoDownloadDTO result = redisCacheUtils.getCacheObject(Constants.VIDEO_DOWNLOAD_URL + key);
         //缓存中的视频链接不存在，重新获取下载地址
         if(result == null){
-            UserFluxUsage usage = userFluxService.findUsage(userId,courseId);
-            if(usage == null){
+            Live live = liveService.findByCourseId(Integer.valueOf(courseId));
+            if(live == null){
                 return error("找不到相关视频");
             }
-            if(StringUtils.isEmpty(usage.getVideoDownUrl())){
+            if(StringUtils.isEmpty(live.getReplayUrl())){
                 return error("找不到视频链接");
             }
 
@@ -134,7 +140,7 @@ public class CspMeetController extends BaseController{
                return error("获取视频名称失败");
             }
 
-            String url = usage.getVideoDownUrl();
+            String url = fileBase + live.getReplayUrl();
             String fileName = course.getTitle();
             VideoDownloadDTO dto = new VideoDownloadDTO();
             dto.setCourseId(courseId);
