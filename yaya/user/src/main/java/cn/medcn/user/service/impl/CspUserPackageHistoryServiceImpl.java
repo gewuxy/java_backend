@@ -25,8 +25,16 @@ public class CspUserPackageHistoryServiceImpl extends BaseServiceImpl<CspUserPac
         return packageHistoryDAO;
     }
 
+    /**
+     * 添加用户套餐信息历史
+     *
+     * @param userId
+     * @param oldId
+     * @param newId
+     * @param updateType
+     */
     @Override
-    public void addUserHistoryInfo(String userId,Integer oldId,Integer newId,Integer updateType){
+    public void addUserHistoryInfo(String userId, Integer oldId, Integer newId, Integer updateType) {
         CspUserPackageHistory detail = new CspUserPackageHistory();
         detail.setBeforePackageId(oldId);
         detail.setUserId(userId);

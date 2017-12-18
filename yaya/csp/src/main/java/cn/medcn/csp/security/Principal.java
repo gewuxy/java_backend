@@ -24,13 +24,24 @@ public class Principal implements Serializable{
 
     protected Boolean abroad;
 
+    //是否新用户
+    protected Boolean newUser;
+
     //套餐id
     protected Integer packageId;
 
     // 用户套餐
     protected CspPackage cspPackage;
 
+    //购买成功消息
+    protected String pkChangeMsg;
 
+    public void setPkChangeMsg(String pkChangeMsg){ this.pkChangeMsg = pkChangeMsg;}
+
+    public String getPkChangeMsg(){return pkChangeMsg;}
+    public Boolean getNewUser(){return newUser;}
+
+    public void setNewUser(Boolean newUser){this.newUser = newUser;}
 
     public Boolean getAbroad() {
         return abroad;

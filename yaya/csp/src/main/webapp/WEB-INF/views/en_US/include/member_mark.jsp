@@ -118,9 +118,9 @@
             $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
                 var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
-                if (currencyValue == 0) {
+                if (currencyValue == 'CN') {
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if (currencyValue == 1) {
+                } else if (currencyValue == 'EN') {
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
@@ -137,8 +137,8 @@
             })
         })
 
-        //触发支付弹出窗
         function openLayerMsg(){
+            //触发支付弹出窗
             parent.layer.open({
                 type: 1,
                 area: ['560px', '250px'],
@@ -159,19 +159,19 @@
             for (var i = 0; i < package.length; i++) {
                 var packageId = package[i].id;
                 if (packageId == 2) {
-                    $("#price" + packageId).html(package[i].monthRmb + "元");
-                    $("#hgTotal").html(package[i].monthRmb);
+                    $("#price" + packageId).html(package[i].monthUsd + "USD");
+                    $("#hgTotal").html(package[i].monthUsd);
                 }
                 if (packageId == 3) {
-                    $("#price" + packageId).html(package[i].monthRmb + "元/" + package[i].yearRmb + "元");
-                    $("#pfTotal").html(package[i].monthRmb);
+                    $("#price" + packageId).html(package[i].monthUsd + "USD/" + package[i].yearUsd + "USD");
+                    $("#pfTotal").html(package[i].monthUsd);
                 }
-                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "不限会议" : package[i].limitMeets + "个会议");
+                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "Unlimited Number of Meetings" : package[i].limitMeets + "Meetings");
             }
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
                 var id = info[j].packageId;
-                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptCn + '</li>');
+                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptUs + '</li>');
             }
         }
     </script>
@@ -182,16 +182,16 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-main member-buy-popup-main">
             <div class="member-buy-header">
-                <h6 class="title">请选择您购买的套餐</h6>
+                <h6 class="title">Please select the edition you want</h6>
                 <div class="member-buy-tabs-menu clearfix" >
                     <div class="index-buy-item ">
                         <div class="index-buy-header">
-                            <h4>标准版</h4>
-                            <h3 class="price">免费</h3>
+                            <h4>Standard Edition</h4>
+                            <h3 class="price">Free</h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>不限时长</p>
+                                <p>Permanent Usage</p>
                                 <p id="meets1"></p>
                             </div>
                             <div class="index-buy-text">
@@ -202,12 +202,12 @@
                     </div>
                     <div class="index-buy-item  index-buy-item-current">
                         <div class="index-buy-header">
-                            <h4>高级版</h4>
+                            <h4>Premium Edition</h4>
                             <h3 class="price" id="price2"></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>1个月有效</p>
+                                <p>One-Month Usage</p>
                                 <p id="meets2"></p>
                             </div>
                             <div class="index-buy-text">
@@ -218,13 +218,13 @@
                     </div>
                     <div class="index-buy-item last">
                         <div class="index-buy-header">
-                            <h4>专业版</h4>
+                            <h4>Professional Edition</h4>
                             <h3 class="price" id="price3"></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>1个月/1年有效</p>
-                                <p id="meets3">不限会议</p>
+                                <p>One-Month / One-Year Usage</p>
+                                <p id="meets3">Unlimited Number of Meetings</p>
                             </div>
                             <div class="index-buy-text">
                                 <ul id="info3">
@@ -238,26 +238,26 @@
                 <div class="member-buy-content">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买时长</div>
+                            <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="tid1" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="tid1">
-                                        1个月
+                                        1 month
                                     </label>
                                     <label for="tid2" class="item item-radius">
                                         <input type="radio" name="payMode" class="none" value="3" id="tid2">
-                                        3个月
+                                        3 month
                                     </label>
                                     <label for="tid3" class="item item-radius">
                                         <input type="radio" name="payMode" class="none" value="6" id="tid3">
-                                        6个月
+                                        6 month
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow" >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook">
                                     <label for="id11" class="item item-radius pay-on">
@@ -282,24 +282,24 @@
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
                                 <span class="payNum">0.00</span>
                                 <span class="money-state">
                                         <label for="currency-cn" class="cn on">
-                                            <input type="radio" name="currency" id="currency-cn" checked="checked" class="none" value="0">
+                                            <input type="radio" name="currency" id="currency-cn" class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en" class="en">
-                                            <input type="radio" name="currency" id="currency-en" class="none" value="1">
+                                            <input type="radio" name="currency" id="currency-en" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免费体验" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now" style="position: relative; z-index:3;">
                         </div>
                         <div class="member-buy-disabled-item"></div>
                     </div>
@@ -307,26 +307,26 @@
                 <div class="member-buy-content none" id="hgView">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买时长</div>
+                            <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="2tid1" class="item item-radius pay-on">
                                         <input type="radio" name="hgTimeMode" class="none" checked="checked" value="1" id="2tid1">
-                                        1个月
+                                        1 month
                                     </label>
                                     <label for="2tid2" class="item item-radius">
                                         <input type="radio" name="hgTimeMode" class="none" value="3" id="2tid2">
-                                        3个月
+                                        3 month
                                     </label>
                                     <label for="2tid3" class="item item-radius">
                                         <input type="radio" name="hgTimeMode" class="none" value="6" id="2tid3">
-                                        6个月
+                                        6 month
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook">
                                     <label for="2id11" class="item item-radius pay-on">
@@ -351,24 +351,24 @@
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
                                 <span class="payNum" id="hgTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn2" class="cn on">
-                                            <input type="radio" name="hgCurrency" id="currency-cn2" checked="checked" class="none" value="0">
+                                            <input type="radio" name="hgCurrency" id="currency-cn2"  class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en2" class="en">
-                                            <input type="radio" name="hgCurrency" id="currency-en2" class="none" value="1">
+                                            <input type="radio" name="hgCurrency" id="currency-en2" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment" style="position: relative; z-index:3;">
                         </div>
                         <div id="disabledItem2"></div>
                     </div>
@@ -376,38 +376,38 @@
                 <div class="member-buy-content none" id="pfView">
                     <div class="user-content item-radius pay-mode">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买时长</div>
+                            <div class="formTitle color-black">Valid Through</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="3tid1" class="item item-radius pay-on">
                                         <input type="radio" name="pfTimeMode" class="none"  checked="checked"  value="1" id="3tid1" >
-                                        1个月
+                                        1 month
                                     </label>
                                     <label for="3tid2" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="3" id="3tid2">
-                                        3个月
+                                        3 month
                                     </label>
                                     <label for="3tid3" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="6" id="3tid3">
-                                        6个月
+                                        6 month
                                     </label>
                                     <label for="3tid4" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="12" id="3tid4">
-                                        1年
+                                        1 year
                                     </label>
                                     <label for="3tid5" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="24" id="3tid5">
-                                        2年
+                                        2 year
                                     </label>
                                     <label for="3tid6" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="36" id="3tid6">
-                                        3年
+                                        3 year
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">Recharge Channel</div>
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook">
                                     <label for="3id11" class="item item-radius pay-on">
@@ -432,24 +432,24 @@
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black">Amount</div>
                             <div class="formControls">
                                 <span class="payNum" id="pfTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn3" class="cn on">
-                                            <input type="radio" name="pfCurrency" id="currency-cn3" checked="checked" class="none" value="0">
+                                            <input type="radio" name="pfCurrency" id="currency-cn3"  class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en3" class="en">
-                                            <input type="radio" name="pfCurrency" id="currency-en3" class="none" value="1">
+                                            <input type="radio" name="pfCurrency" id="currency-en3" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付">
+                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment">
                         </div>
                         <div id="disabledItem3"></div>
                     </div>
@@ -464,26 +464,6 @@
     <input type="hidden" name="currency" id="currency" value="">
     <input type="hidden" name="packageId" id="packageId" value="">
 </form>
-<!--弹出 充值-->
-<div class="cancel-popup-box">
-    <div class="layer-hospital-popup">
-        <div class="layer-hospital-popup-title">
-            <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
-        </div>
-        <div class="layer-hospital-popup-main ">
-            <form >
-                <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
-                    <div class="admin-button t-right">
-                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已付款成功">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </body>
 </html>
 

@@ -34,20 +34,8 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     }
 
     /**
-     * 判断是否有用户套餐信息
-     * @param userId
-     * @return
-     */
-    @Override
-    public Boolean isNewUser(String userId) {
-        CspUserPackage info = new CspUserPackage();
-        info.setUserId(userId);
-        Integer count = userPackageDAO.selectCount(info);
-        return count > 0 ? false:true;
-    }
-
-    /**
      * 定时获取套餐过期的用户
+     *
      * @return
      */
     @Override
@@ -55,6 +43,11 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         return userPackageDAO.findUserPackages();
     }
 
+    /**
+     * 用户选择标准版添加套餐信息
+     *
+     * @param userId
+     */
     @Override
     public void addStanardInfo(String userId) {
         //用户添加标准套餐信息
@@ -73,7 +66,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
      */
     @Override
     public void doModifyUserPackage(List<CspUserPackage> userPackageList) {
-        Integer beforePackageId ;
+        Integer beforePackageId;
         for (CspUserPackage userPackage : userPackageList) {
             // 变更之前的套餐id
             beforePackageId = userPackage.getPackageId();
@@ -92,6 +85,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
     /**
      * 保存用户套餐变更明细
+     *
      * @param userPackage
      * @param beforePackageId
      */

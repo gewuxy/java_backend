@@ -218,7 +218,7 @@ public class Constants {
     //500g流量
     public static final Float FIVE_HUNDRED_G_PRICE = 175.00f;
 
-
+    public static final String VIDEO_DOWNLOAD_URL = "video_download_";
 
 
     /********** 合理用药 *************/

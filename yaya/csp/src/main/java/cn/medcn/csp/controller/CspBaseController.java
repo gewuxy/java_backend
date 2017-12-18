@@ -13,6 +13,12 @@ import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserPackage;
+import cn.medcn.user.service.CspPackageInfoService;
+import cn.medcn.user.service.CspPackageService;
+import cn.medcn.user.service.CspUserPackageService;
+import cn.medcn.user.service.CspUserService;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +40,15 @@ public class CspBaseController extends BaseController {
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+    @Autowired
+    protected CspPackageService cspPackageService;
+
+    @Autowired
+    protected CspUserService cspUserService;
+
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
+
     @Value("${web.socket.url}")
     protected String webSocketUrl;
 
@@ -48,7 +63,10 @@ public class CspBaseController extends BaseController {
      * @return
      */
     protected Principal getWebPrincipal(){
-        return (Principal) SecurityUtils.getSubject().getPrincipal();
+        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
+        String token  = principal.getToken();
+        //从缓存信息里查询最新版
+        return getPackageCache(token);
     }
 
     /**
@@ -226,6 +244,51 @@ public class CspBaseController extends BaseController {
         int usedCount = principal.getCspPackage().getUsedMeetCount();
 
         return maxUsableCount > 0 && usedCount >= maxUsableCount;
+    }
+
+    /**
+     * 缓存更新用户套餐信息(用户套餐更改，会议数量更改，套餐基础信息变更 使用)
+     *
+     * @param userId
+     * @return
+     */
+    protected void updatePackagePrincipal(String userId){
+        CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
+        String token = userInfo.getToken();
+        Principal principal  = Principal.build(userInfo);
+        CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
+        principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
+        principal.setCspPackage(cspPackage);
+        principal.setNewUser(cspPackage == null);
+        redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+    }
+
+    /**
+     * 套餐变更时添加提示信息
+     *
+     * @param packageId
+     * @param type
+     */
+    protected void updatePackageMsg(Integer packageId,Integer type){
+        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
+        String token = principal.getToken();
+        Principal setPrincipal = getPackageCache(token);
+        if(type == Constants.NUMBER_ZERO){ // 删除提示信息
+            setPrincipal.setPkChangeMsg(null);
+        }else{   // 添加提示信息
+            setPrincipal.setPkChangeMsg(local("package.buy.success.msg",new Object[]{CspPackage.TypeId.values()[packageId - 1].getId()}));
+        }
+        redisCacheUtils.setCacheObject(setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
+    }
+
+    /**
+     * 根据token获取缓存
+     *
+     * @param token
+     * @return
+     */
+    protected Principal getPackageCache(String token){
+        return redisCacheUtils.getCacheObject(token);
     }
 
 

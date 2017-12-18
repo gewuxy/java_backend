@@ -165,7 +165,8 @@ public class MeetingMgrController extends CspBaseController {
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
-        model.addAttribute("newUser",cspPackageService.newUser(getWebPrincipal().getId()));
+        model.addAttribute("newUser",principal.getNewUser());
+        model.addAttribute("successMsg",principal.getPkChangeMsg());
         return localeView("/meeting/list");
     }
 

@@ -12,8 +12,6 @@ import java.util.List;
 
 public interface CspUserPackageService extends BaseService<CspUserPackage> {
 
-    Boolean isNewUser(String UserId);
-
     void doModifyUserPackage(List<CspUserPackage> userPackageList);
 
     List<CspUserPackage> findCspUserPackageList();

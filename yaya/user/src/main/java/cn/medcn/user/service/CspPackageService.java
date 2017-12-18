@@ -22,15 +22,7 @@ public interface CspPackageService extends BaseService<CspPackage> {
      * @param currency
      * @return
      */
-    Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, String currency);
-
-    /**
-     * 根据是否有套餐判断是否新用户
-     *
-     * @param userId
-     * @return
-     */
-    boolean newUser(String userId);
+    Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, Integer currency);
 
     /**
      * 获取所有套餐信息

@@ -80,17 +80,26 @@
                 layer.msg("${err}");
             }
 
+            //判断是否新用户，新用户弹出购买套餐
             if(${newUser}){
                 layer.open({
                     type: 2,
                     title: false,
-                    skin: 'layui-layer-nobg', //没有背景色
+                    fix: false, //不固定
+                    skin: 'member-popup-zIndex', //没有背景色
                     shadeClose: false,
+                    offset: '70px',
                     closeBtn: 0, //不显示关闭按钮
                     shade: 0.1,
-                    area: ['1116px', '900px'],
+                    area: ['1116px', '930px'],
                     content: '${ctx}/mgr/pay/mark'
-                });
+                })
+            }
+
+            var successMsg = ${successMsg};
+
+            if(successMsg != undefined){
+
             }
 
             //初始化音频
@@ -478,9 +487,12 @@
             </c:if>
 
             <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
-                <div class="admin-tips" id="note" style="display:none;">
+                <div class="admin-tips" id="note">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
                     <span class="admin-tips-close" onclick="closeclick()"></span>
+                    <script>
+
+                    </script>
                 </div>
             </c:if>
 

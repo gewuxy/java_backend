@@ -90,66 +90,61 @@
                             </div>
                             <div class="member-mode-main">
                                 <div class="member-mode-fnList">
-                                    <c:if test="${cspPackage.packageUs == 'standardEdition'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p class="text">Projective<br />Record</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p class="text">Projective <br />Live Stream</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                            <p class="text">3 Meetings</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
-                                            <p class="color-gray-03 text" >Ads Free</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
-                                            <p class="color-gray-03 text" >Closable <br /> Watermark</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageUs == 'premiumEdition'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p class="text">Projective<br />Record</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p class="text">Projective <br />Live Stream</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                            <p class="text">10 Meetings</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p class="text" >Ads Free</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p class="text" >Closable <br /> Watermark</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageUs == 'professionalEdition'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p class="text">Projective<br />Record</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p class="text">Projective <br />Live Stream</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                            <p class="text">Unlimited</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p class="text" >Ads Free</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p class="text" >Customized <br /> Watermark</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
+                                    <ul>
+                                        <c:forEach var="info" items="${cspPackageInfos}">
+                                            <c:if test="${info.iden =='LB'}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
+                                                    <p class="text">${info.descriptUs}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='ZB'}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
+                                                <p class="text">${info.descriptUs}</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
+                                                <p class="text">${info.limitMeets}Meetings</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
+                                                <p class="text">${info.limitMeets}Meetings</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
+                                                <p class="text">Unlimited</p>
+                                            </li>
+                                            </c:if>
+
+                                            <c:if test="${info.iden =='GG' && info.state == false}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
+                                                    <p class="color-gray-03 text" >${info.descriptUs}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='GG' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
+                                                    <p class="text">${info.descriptUs}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='SY' && info.state == false}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
+                                                    <p class="color-gray-03 text">${info.descriptUs}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='SY' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
+                                                    <p class="text">${info.descriptUs}</p>
+                                                </li>
+                                            </c:if>
+                                        </c:forEach>
+                                    </ul>
                                 </div>
                             </div>
                             <div class="member-mode-footer member-footer-position t-center">
@@ -173,6 +168,28 @@
     </div>
 </div>
 
+<!--弹出 充值-->
+<div class="cancel-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form >
+                <div class="cancel-popup-main">
+                    <p>请在支付页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <div class="admin-button t-right">
+                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"
+                               value="我已付款成功">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 
 <script>
@@ -182,11 +199,13 @@
             layer.open({
                 type: 2,
                 title: false,
-                skin: 'layui-layer-nobg', //没有背景色
+                fix: false, //不固定
+                skin: 'member-popup-zIndex', //没有背景色
                 shadeClose: false,
+                offset: '70px',
                 closeBtn: 0, //不显示关闭按钮
                 shade: 0.1,
-                area: ['1116px', '900px'],
+                area: ['1116px', '930px'],
                 content: '${ctx}/mgr/pay/mark'
             })
         })

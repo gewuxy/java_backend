@@ -94,66 +94,63 @@
                             </div>
                             <div class="member-mode-main">
                                 <div class="member-mode-fnList">
-                                    <c:if test="${cspPackage.packageTw == '標準版'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏錄播</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                            <p>3個會議</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
-                                            <p class="color-gray-03">無廣告</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
-                                            <p class="color-gray-03">可關閉水印</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageTw == '高級版'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏錄播</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                            <p>10個會議</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p>無廣告</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p>可關閉水印</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
-                                    <c:if test="${cspPackage.packageTw == '專業版'}">
-                                        <ul>
-                                            <li>
-                                                <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                                <p>投屏錄播</p>
-                                            </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                            <p>投屏直播</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                            <p>無限會議</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                            <p>無廣告</p>
-                                        </li><li>
-                                            <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                            <p>自定義水印</p>
-                                        </li>
-                                        </ul>
-                                    </c:if>
+                                    <ul>
+                                        <c:forEach var="info" items="${cspPackageInfos}">
+                                            <c:if test="${info.iden =='LB'}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
+                                                    <p>${info.descriptTw}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='ZB'}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
+                                                <p>${info.descriptTw}</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
+                                                <p>${info.limitMeets}個會議</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
+                                                <p>${info.limitMeets}個會議</p>
+                                            </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
+                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
+                                                <p>無限會議</p>
+                                            </li>
+                                            </c:if>
+
+                                            <c:if test="${info.iden =='GG' && info.state == false}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
+                                                    <p class="color-gray-03">${info.descriptTw}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='GG' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
+                                                    <p>${info.descriptTw}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='SY' && info.state == false}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
+                                                    <p class="color-gray-03">${info.descriptTw}</p>
+                                                </li>
+                                            </c:if>
+                                            <c:if test="${info.iden =='SY' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
+                                                    <p>${info.descriptTw}</p>
+                                                </li>
+                                            </c:if>
+                                        </c:forEach>
+                                    </ul>
+
+
                                 </div>
                             </div>
                             <div class="member-mode-footer member-footer-position t-center">
@@ -184,11 +181,13 @@
             layer.open({
                 type: 2,
                 title: false,
-                skin: 'layui-layer-nobg', //没有背景色
+                fix: false, //不固定
+                skin: 'member-popup-zIndex', //没有背景色
                 shadeClose: false,
+                offset: '70px',
                 closeBtn: 0, //不显示关闭按钮
                 shade: 0.1,
-                area: ['1116px', '900px'],
+                area: ['1116px', '930px'],
                 content: '${ctx}/mgr/pay/mark'
             })
         })
