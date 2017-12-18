@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
@@ -477,6 +478,12 @@ public class LoginController extends CspBaseController {
         CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
         CookieUtils.clearCookie(response, LOGIN_USER_KEY);
         return "redirect:/mgr/logout";
+    }
+
+    private String oldUserSendProfessionalEdition(){
+        //查出老用户 2018 -01 -01
+        List<CspUserInfo> cspUserInfos= cspUserService.selectRegisterTime();
+        return "";
     }
 
 }
