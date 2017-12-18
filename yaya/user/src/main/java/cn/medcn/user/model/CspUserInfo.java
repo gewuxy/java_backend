@@ -61,6 +61,8 @@ public class CspUserInfo implements Serializable{
     protected Boolean abroad;
     // 是否有激活 未激活=0 已激活=1
     protected Boolean active;
+    //是否是老用户(在2018-01-01 之前注册) 0 = 老用户 1=新用户
+    protected Boolean state;
 
     //注册渠道。
     protected Integer registerFrom;

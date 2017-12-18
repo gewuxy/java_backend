@@ -274,9 +274,12 @@ public class ChargeController extends CspBaseController {
 
         if (showPayMap != null) {
             show = showPayMap.get(LocalUtils.getAppVersion());
+            if (show == null) {
+                show = true;
+            }
         }
 
-        result.put(SHOW_PAY_KEY, show == null ? true : show);
+        result.put(SHOW_PAY_KEY, show);
         return success(result);
     }
 
