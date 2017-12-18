@@ -180,6 +180,26 @@
 
     </div>
 </div>
+<!--弹出 充值-->
+<div class="cancel-popup-box" id="pkBuyMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form >
+                <div class="cancel-popup-main">
+                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <div class="admin-button t-right">
+                        <a href="${ctx}/mgr/user/memberManage"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已付款成功">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
     $(function(){
         $("#config_6").parent().attr("class","cur");
@@ -194,9 +214,23 @@
                 closeBtn: 0, //不显示关闭按钮
                 shade: 0.1,
                 area: ['1116px', '930px'],
-                content: '${ctx}/mgr/pay/mark'
+                content: '${ctx}/mgr/pay/mark',
+                success:function(layero,index){
+                    var body = layer.getChildFrame('body', index);
+                   // var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                    body.find(".cancel-hook").on('click',function(){
+                        layer.open({
+                            type: 1,
+                            area: ['560px', '250px'],
+                            fix: false, //不固定
+                            title:false,
+                            closeBtn:0,
+                            content: $('#pkBuyMsg')
+                        });
+                    })
+                }
             })
-        })
+        });
     })
 </script>
 </body>

@@ -99,7 +99,6 @@
                 }
                 $("#packageId").val(selectPk);
                 $("#rechargeFrom").submit();
-                openLayerMsg();
             });
 
             //选择购买时长
@@ -136,22 +135,6 @@
                 sumMoney();
             })
         })
-
-        //触发支付弹出窗
-        function openLayerMsg(){
-            parent.layer.open({
-                type: 1,
-                area: ['560px', '250px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.cancel-popup-box'),
-                success:function(){
-                },
-                cancel :function(){
-                },
-            });
-        }
 
         //加载选购套餐信息
         function initSwiper(course) {
@@ -297,9 +280,9 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免费体验" style="position: relative; z-index:3;">
+                        <div class="formrow t-center last" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免费体验">
                         </div>
                         <div class="member-buy-disabled-item"></div>
                     </div>
@@ -366,9 +349,9 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付" style="position: relative; z-index:3;">
+                        <div class="formrow t-center last" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付">
                         </div>
                         <div id="disabledItem2"></div>
                     </div>
@@ -447,7 +430,7 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
+                        <div class="formrow t-center last" style="position: relative; z-index:3;">
                             <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付">
                         </div>
@@ -464,26 +447,6 @@
     <input type="hidden" name="currency" id="currency" value="">
     <input type="hidden" name="packageId" id="packageId" value="">
 </form>
-<!--弹出 充值-->
-<div class="cancel-popup-box">
-    <div class="layer-hospital-popup">
-        <div class="layer-hospital-popup-title">
-            <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
-        </div>
-        <div class="layer-hospital-popup-main ">
-            <form >
-                <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
-                    <div class="admin-button t-right">
-                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已付款成功">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
 </body>
 </html>
 
