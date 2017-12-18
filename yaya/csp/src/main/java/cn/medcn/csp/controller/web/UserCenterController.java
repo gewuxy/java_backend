@@ -5,19 +5,21 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
-import cn.medcn.common.utils.DownloadUtils;
-import cn.medcn.common.utils.LocalUtils;
-import cn.medcn.common.utils.RedisCacheUtils;
-import cn.medcn.common.utils.StringUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.security.Principal;
 import cn.medcn.csp.security.SecurityUtils;
+import cn.medcn.meet.dto.VideoDownloadDTO;
+import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -43,6 +45,8 @@ import java.util.List;
 @RequestMapping(value = "/mgr/user")
 public class UserCenterController extends CspBaseController{
 
+    private static Log log = LogFactory.getLog(UserCenterController.class);
+
     @Autowired
     protected CspUserService cspUserService;
 
@@ -63,6 +67,9 @@ public class UserCenterController extends CspBaseController{
 
     @Autowired
     protected CspPackageService packageService;
+
+    @Autowired
+    private AudioService audioService;
 
     @Autowired
     protected CspPackageInfoService cspPackageInfoService;
@@ -374,6 +381,37 @@ public class UserCenterController extends CspBaseController{
 
    }
 
+
+    /**
+     * 下载视频
+     * @param key
+     */
+    @RequestMapping("/cache/download")
+    public void downloadVideo(String key,HttpServletResponse response) throws Exception {
+        if(org.springframework.util.StringUtils.isEmpty(key)){
+            throw new SystemException(local("user.param.empty"));
+        }
+        VideoDownloadDTO dto = redisCacheUtils.getCacheObject(Constants.VIDEO_DOWNLOAD_URL + key);
+
+        //下载地址不存在
+        if(dto == null){
+            throw new SystemException(local("download.address.expired"));
+        }
+
+        String url = dto.getDownloadUrl();
+        String fileName = dto.getFileName();
+        String courseId = dto.getCourseId();
+        String userId = dto.getUserId();
+
+        try{
+            //更新下载次数，并且将缓存中的数据删除
+            userFluxService.updateDownloadCountAndDeleteRedisKey(key, courseId,userId);
+            DownloadUtils.openDownloadBox(fileName,response,url);
+        }catch (Exception e){
+            throw new SystemException(e.getMessage());
+        }
+
+    }
 
 
     /**

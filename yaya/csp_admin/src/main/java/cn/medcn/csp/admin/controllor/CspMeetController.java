@@ -5,14 +5,12 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.DownloadUtils;
-import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.common.utils.RedisCacheUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.CourseReprintDTO;
 import cn.medcn.meet.dto.MeetInfoDTO;
+import cn.medcn.meet.dto.VideoDownloadDTO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
 import cn.medcn.meet.model.Meet;
@@ -32,6 +30,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * by create HuangHuibin 2017/11/9
@@ -40,8 +40,8 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping(value="/csp/meet")
 public class CspMeetController extends BaseController{
 
-    @Value("${csp.admin.base}")
-    protected String adminBase;
+    @Value("${app.csp.base}")
+    protected String cspBase;
 
     @Value("${app.file.base}")
     protected String fileBase;
@@ -116,10 +116,10 @@ public class CspMeetController extends BaseController{
             return error("courseId不能为空");
         }
 
-        String courseId_downloadUrl = redisCacheUtils.getCacheObject(Constants.VIDEO_DOWNLOAD_URL + courseId);
         String key = MD5Utils.md5(courseId + userId);
-        //缓存中的视频链接不存在，重新获取下载地址，将courseId和下载地址存入缓存,以下划线连接
-        if(StringUtils.isEmpty(courseId_downloadUrl)){
+        VideoDownloadDTO result = redisCacheUtils.getCacheObject(Constants.VIDEO_DOWNLOAD_URL + key);
+        //缓存中的视频链接不存在，重新获取下载地址
+        if(result == null){
             UserFluxUsage usage = userFluxService.findUsage(userId,courseId);
             if(usage == null){
                 return error("找不到相关视频");
@@ -127,46 +127,29 @@ public class CspMeetController extends BaseController{
             if(StringUtils.isEmpty(usage.getVideoDownUrl())){
                 return error("找不到视频链接");
             }
-            courseId_downloadUrl = courseId + "_" + usage.getVideoDownUrl();
+
+            //获取视频名称
+            AudioCourse course = audioService.selectByPrimaryKey(Integer.parseInt(courseId));
+            if(course == null){
+               return error("获取视频名称失败");
+            }
+
+            String url = usage.getVideoDownUrl();
+            String fileName = course.getTitle();
+            VideoDownloadDTO dto = new VideoDownloadDTO();
+            dto.setCourseId(courseId);
+            dto.setDownloadUrl(url);
+            dto.setUserId(userId);
+            dto.setFileName(fileName);
 
             //将下载链接存到缓存中，默认30天超时
-            redisCacheUtils.setCacheObject(Constants.VIDEO_DOWNLOAD_URL + key,courseId_downloadUrl,Constants.TOKEN_EXPIRE_TIME);
+            redisCacheUtils.setCacheObject(Constants.VIDEO_DOWNLOAD_URL + key,dto,Constants.TOKEN_EXPIRE_TIME);
         }
 
-
-        return success(adminBase + "/csp/meet/download?key=" + key);
+        return success(cspBase + "/mgr/user/cache/download?key=" + key);
     }
 
-    /**
-     * 下载视频
-     * @param key
-     */
-    @RequestMapping("/download")
-    public void downloadVideo(String key,HttpServletResponse response) throws Exception {
-        if(StringUtils.isEmpty(key)){
-            throw new SystemException("参数不能为空");
-        }
-        String courseId_downloadUrl = redisCacheUtils.getCacheObject(Constants.VIDEO_DOWNLOAD_URL + key);
-        //下载地址不存在
-        if(StringUtils.isEmpty(courseId_downloadUrl)){
-            throw new SystemException("下载地址不存在");
-        }
-        String courseId = courseId_downloadUrl.substring(0,courseId_downloadUrl.indexOf("_"));
-        AudioCourse course = audioService.selectByPrimaryKey(Integer.parseInt(courseId));
-        if(course == null){
-            throw new SystemException("获取视频名称失败");
-        }
-        String url = courseId_downloadUrl.substring(courseId_downloadUrl.indexOf("_")+1);
-        String fileName = course.getTitle();
-        try{
-            //更新下载次数，并且将缓存中的数据删除
-            userFluxService.updateDownloadCountAndDeleteRedisKey(key, courseId);
-            DownloadUtils.openDownloadBox(fileName,response,url);
-        }catch (Exception e){
-            throw new SystemException("下载失败");
-        }
 
-    }
 
 
 }

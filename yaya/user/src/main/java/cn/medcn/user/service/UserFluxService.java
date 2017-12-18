@@ -52,7 +52,7 @@ public interface UserFluxService extends BaseService<UserFlux> {
      * @param key
      * @param courseId
      */
-    public void updateDownloadCountAndDeleteRedisKey(String key, String courseId) throws SystemException;
+    public void updateDownloadCountAndDeleteRedisKey(String key, String courseId,String userId) throws SystemException;
 
 
 }
