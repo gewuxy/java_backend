@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -46,6 +47,8 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.DEFAULT_LOCAL;
+import static cn.medcn.common.Constants.NUMBER_THREE;
+import static cn.medcn.common.utils.CalendarUtils.DEFAULT_MONTH;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -123,6 +126,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 查询用户绑定的第三方平台列表
+     *
      * @param userId
      * @return
      */
@@ -137,7 +141,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public String register(CspUserInfo userInfo,EmailTemplate template) throws SystemException {
+    public String register(CspUserInfo userInfo, EmailTemplate template) throws SystemException {
         if (userInfo == null) {
             return APIUtils.error(local("user.param.empty"));
         }
@@ -148,7 +152,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if (cspUser != null) {
             // 检查是否有激活
             if (cspUser.getActive()) {
-                return APIUtils.error(APIUtils.USER_EXIST_CODE,local("user.username.existed"));
+                return APIUtils.error(APIUtils.USER_EXIST_CODE, local("user.username.existed"));
             } else {
                 // 发送激活邮箱链接
                 sendMail(username, userInfo.getId(), template);
@@ -184,6 +188,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 添加第三方平台用户及绑定用户信息
+     *
      * @param userDTO
      * @return
      */
@@ -198,25 +203,39 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         bindInfoDAO.insert(bindUser);
 
         //发送注册成功推送消息
-        sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
+        sysNotifyService.addNotify(userInfo.getId(), local("user.notify.title"), local("user.notify.content"), local("user.notify.sender"));
 
         // 如果是YaYa医师账号登录 默认用户套餐为专业版
         if (bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
-            // TODO 等辉彬的方法
+            insertUserPackage(userInfo.getId());
         }
         return userInfo;
     }
 
+    /**
+     * 给使用YaYa账号绑定或登录的用户  添加专业版套餐
+     *
+     * @param userId
+     */
+    private void insertUserPackage(String userId) {
+        Date startTime = CalendarUtils.nextDateStartTime();
+        // 专业版默认为3个月
+        Date endTime = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
+        CspUserPackage userPackage = CspUserPackage.build(userId, startTime, endTime,
+                CspPackage.TypeId.PROFESSIONAL.getId(), CspUserPackage.modifyType.BIND_YAYA.ordinal());
+        userPackageDAO.insert(userPackage);
+    }
 
     /**
      * 缓存信息和发送绑定或找回密码邮件
+     *
      * @param email
      * @param userId
      * @param template
      * @return
      */
     @Override
-    public void sendMail(String email, String userId,EmailTemplate template) throws SystemException {
+    public void sendMail(String email, String userId, EmailTemplate template) throws SystemException {
         String code = StringUtils.uniqueStr();
         String url = null;
         // 发送注册激活邮箱邮件
@@ -246,7 +265,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             cspMailSender.setUsername(sender);
             cspMailSender.setPassword(password);
             cspMailSender.setHost(serverHost);
-            emailHelper.sendMail(url,template.getContent(),cspMailSender,bean);
+            emailHelper.sendMail(url, template.getContent(), cspMailSender, bean);
         } catch (JDOMException e) {
             e.printStackTrace();
             throw new SystemException(local("email.address.error"));
@@ -258,6 +277,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 发送绑定邮件
+     *
      * @param email
      * @param password
      * @param userId
@@ -266,15 +286,16 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public void sendBindMail(String email, String password, String userId, String localStr) throws SystemException {
         //将密码插入到数据库
-        insertPassword(email,password,userId);
+        insertPassword(email, password, userId);
         //获取邮件模板对象
-        EmailTemplate template = tempService.getTemplate(localStr,EmailTemplate.Type.BIND.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
-        sendMail(email,userId, template);
+        EmailTemplate template = tempService.getTemplate(localStr, EmailTemplate.Type.BIND.getLabelId(), EmailTemplate.UseType.CSP.getLabelId());
+        sendMail(email, userId, template);
     }
 
 
     /**
      * 绑定手机号
+     *
      * @param mobile
      * @param captcha
      * @param userId
@@ -283,12 +304,12 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public void doBindMobile(String mobile, String captcha, String userId) throws SystemException {
         CspUserInfo result = findByLoginName(mobile);
         //该手机号已被绑定
-        if(result != null){
+        if (result != null) {
             throw new SystemException(local("mobile.was.bound"));
         }
         CspUserInfo info = selectByPrimaryKey(userId);
         //用户已绑定手机号
-        if(!StringUtils.isEmpty(info.getMobile())){
+        if (!StringUtils.isEmpty(info.getMobile())) {
             throw new SystemException(local("user.has.mobile"));
         }
         info.setMobile(mobile);
@@ -298,24 +319,25 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 解绑邮箱或手机
+     *
      * @param type
      * @param userId
      * @return
      */
     @Override
     public void doUnbindEmailOrMobile(Integer type, String userId) throws SystemException {
-        if(type != BindInfo.Type.MOBILE.getTypeId() && type != BindInfo.Type.EMAIL.getTypeId()){
+        if (type != BindInfo.Type.MOBILE.getTypeId() && type != BindInfo.Type.EMAIL.getTypeId()) {
             throw new SystemException(local("error.param"));
         }
         CspUserInfo info = selectByPrimaryKey(userId);
-        if(type == BindInfo.Type.EMAIL.getTypeId()){
+        if (type == BindInfo.Type.EMAIL.getTypeId()) {
             //用户没有绑定邮箱
-            if(StringUtils.isEmpty(info.getEmail())){
+            if (StringUtils.isEmpty(info.getEmail())) {
                 throw new SystemException(local("user.not.exist.email"));
             }
-        }else{
+        } else {
             //用户没有绑定手机
-            if(StringUtils.isEmpty(info.getMobile())){
+            if (StringUtils.isEmpty(info.getMobile())) {
                 throw new SystemException(local("user.not.exist.mobile"));
             }
         }
@@ -324,12 +346,12 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         bindInfo.setUserId(userId);
         int count = bindInfoDAO.selectCount(bindInfo);
         //用户没有绑定第三方账号，并且只绑定了手机或邮箱的情况下不能解绑
-        if(count < 1 && (StringUtils.isEmpty(info.getEmail())|| StringUtils.isEmpty(info.getMobile()))){
+        if (count < 1 && (StringUtils.isEmpty(info.getEmail()) || StringUtils.isEmpty(info.getMobile()))) {
             throw new SystemException(local("user.only.one.account"));
         }
-        if(type ==  BindInfo.Type.EMAIL.getTypeId()){
+        if (type == BindInfo.Type.EMAIL.getTypeId()) {
             info.setEmail("");
-        }else{
+        } else {
             info.setMobile("");
         }
         updateByPrimaryKeySelective(info);
@@ -338,6 +360,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 绑定第三方账号
+     *
      * @param info
      * @param userId
      * @return
@@ -348,7 +371,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         condition.setUniqueId(info.getUniqueId());
         condition.setThirdPartyId(info.getThirdPartyId());
         condition = bindInfoDAO.selectOne(condition);
-        if(condition != null){  //该第三方账号已被使用
+        if (condition != null) {  //该第三方账号已被使用
             throw new SystemException(local("user.exist.account"));
         }
 
@@ -356,7 +379,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         condition2.setUserId(userId);
         condition2.setThirdPartyId(info.getThirdPartyId());
         condition2 = bindInfoDAO.selectOne(condition2);
-        if(condition2 != null){  //当前的账号已绑定其他第三方账号
+        if (condition2 != null) {  //当前的账号已绑定其他第三方账号
             throw new SystemException(local("user.exist.ThirdAccount"));
         }
 
@@ -367,13 +390,30 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         bindInfoDAO.insert(info);
 
         // 绑定YaYa医师账号前 检查当前csp用户是否已经购买过套餐
-        if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
+        if (info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
             CspUserPackage userPackage = userPackageDAO.selectByPrimaryKey(info.getUserId());
             if (userPackage != null) {
-                // 购买过套餐 重设结束时间 在原有套餐的结束时间累加
+                Date startTime = CalendarUtils.nextDateStartTime();
+                // 专业版套餐默认为3个月
+                Date endTime = null;
 
+                // 购买过套餐 重设结束时间 在原有套餐的结束时间累加
+                if (userPackage.getPackageId() >= CspPackage.TypeId.PREMIUM.getId()) {
+                    // 绑定前 购买过高级版 结束时间 需在原有剩余时间上累加
+                   /* int remainDays = CalendarUtils.daysBetween(userPackage.getPackageStart(), userPackage.getPackageEnd());
+                    if (remainDays > 0) {
+                        endTime = CalendarUtils.calendarDay((DEFAULT_MONTH * NUMBER_THREE) + remainDays);
+                    }*/
+                }
+                userPackage.setUpdateTime(new Date());
+                userPackage.setPackageStart(startTime);
+                userPackage.setPackageEnd(endTime);
+                userPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
+                userPackage.setSourceType(CspUserPackage.modifyType.BIND_YAYA.ordinal());
+                userPackageDAO.updateByPrimaryKeySelective(userPackage);
             } else {
                 // 设置为专业版套餐
+                insertUserPackage(userId);
             }
         }
 
@@ -381,6 +421,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 解绑第三方账号
+     *
      * @param thirdPartId
      * @param userId
      * @return
@@ -391,7 +432,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         condition.setUserId(userId);
         condition.setThirdPartyId(thirdPartId);
         condition = bindInfoDAO.selectOne(condition);
-        if(condition == null){  //用户没绑定此第三方账号，不能解绑
+        if (condition == null) {  //用户没绑定此第三方账号，不能解绑
             throw new SystemException(local("user.notExist.ThirdAccount"));
         }
 
@@ -399,11 +440,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         String email = user.getEmail();
         String mobile = user.getMobile();
         //没有绑定手机和邮箱
-        if(StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)){
+        if (StringUtils.isEmpty(email) && StringUtils.isEmpty(mobile)) {
             BindInfo condition2 = new BindInfo();
             condition2.setUserId(userId);
             int count = bindInfoDAO.selectCount(condition2);
-            if(count <= 1){  //没有绑定其他第三方账号，不能解绑
+            if (count <= 1) {  //没有绑定其他第三方账号，不能解绑
                 throw new SystemException(local("user.only.one.account"));
             }
         }
@@ -412,7 +453,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public void doBindMail(String email, String userId,String key) throws SystemException {
+    public void doBindMail(String email, String userId, String key) throws SystemException {
 
         CspUserInfo info = selectByPrimaryKey(userId);
         if (info == null) { //用户不存在
@@ -427,11 +468,12 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 修改头像
+     *
      * @param file
      * @return 头像地址
      */
     @Override
-    public String updateAvatar(MultipartFile file,String userId) throws SystemException {
+    public String updateAvatar(MultipartFile file, String userId) throws SystemException {
         //相对路径
         String relativePath = FilePath.PORTRAIT.path + File.separator;
         //文件保存路径
@@ -461,6 +503,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 修改密码
+     *
      * @param userId
      * @param oldPwd
      * @param newPwd
@@ -468,7 +511,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public void resetPwd(String userId, String oldPwd, String newPwd) throws SystemException {
         CspUserInfo result = selectByPrimaryKey(userId);
-        if(!MD5Utils.md5(oldPwd).equals(result.getPassword())){
+        if (!MD5Utils.md5(oldPwd).equals(result.getPassword())) {
             throw new SystemException(local("user.error.old.password"));
         }
         result.setPassword(MD5Utils.md5(newPwd));
@@ -477,6 +520,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * csp web端查找用户信息
+     *
      * @param userId
      * @return
      */
@@ -487,22 +531,23 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 将用户密码插入到数据库
+     *
      * @param email
      * @param password
      * @param userId
      */
     @Override
     public void insertPassword(String email, String password, String userId) throws SystemException {
-        if(!StringUtils.isEmail(email)){
-            throw  new SystemException(local("user.error.email.format"));
+        if (!StringUtils.isEmail(email)) {
+            throw new SystemException(local("user.error.email.format"));
         }
-        if(StringUtils.isEmpty(password)){
-            throw  new SystemException(local("user.password.notnull"));
+        if (StringUtils.isEmpty(password)) {
+            throw new SystemException(local("user.password.notnull"));
         }
 
         CspUserInfo user = selectByPrimaryKey(userId);
         if (!StringUtils.isEmpty(user.getEmail())) {  //当前账号已绑定邮箱
-            throw  new SystemException(local("user.has.email"));
+            throw new SystemException(local("user.has.email"));
         }
         CspUserInfo info = findByLoginName(email);
         if (info != null) { //当前邮箱已被绑定
@@ -516,27 +561,28 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
     /**
      * 视频直播记录
+     *
      * @param pageable
      * @return
      */
     @Override
     public MyPage<VideoLiveRecordDTO> findVideoLiveRecord(Pageable pageable) {
-        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
         List<VideoLiveRecordDTO> list = cspUserInfoDAO.findVideoLiveRecord(pageable.getParams());
-        return MyPage.page2Mypage((Page)list);
+        return MyPage.page2Mypage((Page) list);
     }
 
     /**
      * 用户流量
+     *
      * @param userId
      * @return
      */
     @Override
     public int findFlux(String userId) {
         UserFlux flux = userFluxDAO.selectByPrimaryKey(userId);
-        return flux == null? 0:flux.getFlux();
+        return flux == null ? 0 : flux.getFlux();
     }
-
 
 
     @Override
