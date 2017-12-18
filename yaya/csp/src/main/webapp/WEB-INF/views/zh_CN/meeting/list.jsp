@@ -96,12 +96,6 @@
                 })
             }
 
-            var successMsg = ${successMsg};
-
-            if(successMsg != undefined){
-
-            }
-
             //初始化音频
             var asAllItem = audiojs.createAll();
             //切换yi
