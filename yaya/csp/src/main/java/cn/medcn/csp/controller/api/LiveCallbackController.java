@@ -1,9 +1,9 @@
 package cn.medcn.csp.controller.api;
 
+import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.SystemException;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.JsonUtils;
-import cn.medcn.common.utils.LogUtils;
+import cn.medcn.common.supports.FileTypeSuffix;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.TxHeaderDTO;
 import cn.medcn.csp.utils.TXLiveUtils;
@@ -14,15 +14,13 @@ import cn.medcn.meet.service.LiveService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 import static cn.medcn.csp.dto.TxHeaderDTO.*;
 
@@ -38,6 +36,12 @@ public class LiveCallbackController extends CspBaseController {
 
     @Autowired
     protected LiveService liveService;
+
+    @Value("${app.file.upload.base}")
+    protected String fileUploadBase;
+
+    @Value("${app.file.base}")
+    protected String appFileBase;
 
     @RequestMapping(value = "/callback/tx")
     @ResponseBody
@@ -211,16 +215,40 @@ public class LiveCallbackController extends CspBaseController {
         if (header != null) {
             String downLoadUrl = (String) JsonUtils.getValue(requestBody, TX_VIDEO_DOWNLOAD_URL_KEY);
 
+            String fileName = StringUtils.nowStr() + "." + FileTypeSuffix.VIDEO_SUFFIX_MP4.suffix;
+
             Integer courseId = parseCourseId(header.getChannel_id());
 
-            //下载视频
-
+            boolean deleteFlag = true;
 
             if (courseId != null) {
+                //下载视频
+                FileUtils.downloadNetWorkFile(downLoadUrl, fileUploadBase + FilePath.COURSE.path + "/" + courseId + "/replay/", fileName);
+
+                String videoReplayBasePath = FilePath.COURSE.path + "/" + courseId + "/replay/";
+                String savedFilePath = videoReplayBasePath + fileName;
+
                 Live live = liveService.findByCourseId(courseId);
 
                 if (live != null) {
-                    live.setReplayUrl(downLoadUrl);
+                    String previousURL = live.getReplayUrl();
+                    if (CheckUtils.isEmpty(previousURL)) {//不存在点播地址的情况下
+                        live.setReplayUrl(savedFilePath);
+                    } else {
+                        //已经存在的情况下 需要整合两段视频
+                        File existedFile = new File(fileUploadBase + live.getReplayUrl());
+                        if (existedFile.exists()) {
+                            String newSaveFileName = StringUtils.nowStr() + "." + FileTypeSuffix.VIDEO_SUFFIX_MP4.suffix;
+                            String mergePath = fileUploadBase + videoReplayBasePath + newSaveFileName;
+                            FFMpegUtils.concatMp4(mergePath,
+                                    deleteFlag,
+                                    fileUploadBase + live.getReplayUrl(), fileUploadBase + videoReplayBasePath + fileName);
+                            live.setReplayUrl(videoReplayBasePath + newSaveFileName);
+
+                        } else {
+                            live.setReplayUrl(savedFilePath);
+                        }
+                    }
                     liveService.updateByPrimaryKey(live);
                 }
             }
