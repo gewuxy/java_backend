@@ -99,7 +99,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         packageOrderDAO.updateByPrimaryKey(order);
         CspUserPackage userPk = cspUserPackageDAO.selectByPrimaryKey(order.getUserId());
         Integer packageId = order.getPackageId();
-        Integer oldPackage = null;
+        Integer oldPackageId = null;
         Date end = null;
         //开始时间
         Date start = CalendarUtils.nextDateStartTime();
@@ -109,7 +109,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_MONTH);
             cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
         } else { // 更新用户套餐信息
-            oldPackage = userPk.getPackageId();
+            oldPackageId = userPk.getPackageId();
             Date endStart = CalendarUtils.nextDateStartTime();
             //结束时间不为空从以前结束时间开始算
             if (userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
@@ -117,10 +117,10 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
         }
         //添加用户套餐历史信息
-        cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(), oldPackage, packageId, Constants.NUMBER_ONE);
+        cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(), oldPackageId, packageId, Constants.NUMBER_ONE);
         //推送购买成功消息
-        addNotify(order.getUserId(),start,end,packageId,order.getTradeId());
-        return oldPackage;
+        addNotify(oldPackageId,order.getUserId(),start,end,packageId,order.getTradeId());
+        return oldPackageId;
     }
 
     /**
@@ -150,20 +150,33 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @param packageId
      * @param orderId
      */
-    public void addNotify(String userId, Date start, Date end, Integer packageId, String orderId) {
+    public void addNotify(Integer oldPackageId, String userId, Date start, Date end, Integer packageId, String orderId) {
         String packageDesc = CspPackage.getLocalPackage(packageId);
+        String content = "";
+        String title = local("package.notify.pay.success");
         try {
             Integer betweenDay = CalendarUtils.daysBetween(start, end);
             if (betweenDay > CalendarUtils.DEFAULT_YEAR) {
                 Integer yearNum = betweenDay / CalendarUtils.DEFAULT_YEAR;
                 Integer extra = betweenDay - CalendarUtils.DEFAULT_YEAR * yearNum;
-                sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId}), local("user.notify.sender"));
+                if (oldPackageId != null) { //续费
+                    title = local("package.notify.keep.success");
+                    content = local("package.keep,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
+                } else {//购买
+                    content = local("package.buy,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
+                }
             } else {
-                sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.day", new Object[]{packageDesc,betweenDay , orderId}), local("user.notify.sender"));
+                if (oldPackageId != null) { //续费
+                    title = local("package.notify.keep.success");
+                    content = local("package.keep,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
+                } else {     // 购买
+                    content = local("package.buy,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
+                }
             }
         } catch (ParseException e) {
             e.getMessage();
         }
+        sysNotifyService.addNotify(userId, title, content, local("user.notify.sender"));
     }
 
 }
