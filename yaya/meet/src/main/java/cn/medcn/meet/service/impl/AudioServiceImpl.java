@@ -252,6 +252,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setCspUserId(course.getCspUserId());
         reprintCourse.setInfo(course.getInfo());
         reprintCourse.setLocked(false);
+        reprintCourse.setGuide(course.getGuide());
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
         doCopyDetails(details, reprintCourse.getId());
@@ -688,6 +689,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourse.setDeleted(false);
         audioCourse.setPublished(true);
         audioCourse.setLocked(false);
+        audioCourse.setGuide(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -716,6 +718,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourse.setPlayType(AudioCourse.PlayType.normal.getType());
         audioCourse.setPublished(true);
         audioCourse.setLocked(false);
+        audioCourse.setGuide(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -1022,6 +1025,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         course.setCreateTime(new Date());
         course.setSourceType(AudioCourse.SourceType.csp.ordinal());
         course.setLocked(false);
+        course.setGuide(false);
         audioCourseDAO.insert(course);
         return course;
     }
@@ -1036,5 +1040,11 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public AudioCourse findEarliestCourse(String cspUserId) {
         return audioCourseDAO.findEarliestCourse(cspUserId);
+    }
+
+
+    @Override
+    public AudioCourse doCopyGuideCourse(String cspUserId) {
+        return null;
     }
 }

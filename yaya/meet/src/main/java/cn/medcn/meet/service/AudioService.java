@@ -15,6 +15,10 @@ import java.util.Map;
  * Created by lixuan on 2017/4/25.
  */
 public interface AudioService extends BaseService<AudioCourse>  {
+
+    //用户引导课件ID
+    Integer GUIDE_SOURCE_ID = 1;
+
     /**
      * 批量生成ppt+语音信息
      * @param list
@@ -330,4 +334,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     AudioCourse findEarliestCourse(String cspUserId);
+
+    AudioCourse doCopyGuideCourse(String cspUserId);
 }
