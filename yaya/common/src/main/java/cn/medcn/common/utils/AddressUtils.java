@@ -14,6 +14,10 @@ public class AddressUtils {
 
     protected static final String IP_CHECK_URL = "http://ip.taobao.com/service/getIpInfo.php";
 
+    public static final String DEFAULT_PROVINCE = "广东省";
+
+    public static final String DEFAULT_CITY = "广州市";
+
     /**
      * 根据IP返回地理位置
      * @param ip
@@ -40,6 +44,17 @@ public class AddressUtils {
         return JSON.parseObject(data, AddressDTO.class);
     }
 
+    /**
+     * 判断IP是否是局域网IP
+     * @param ip
+     * @return
+     */
+    public static boolean isLan(String ip){
+        if (ip == null) {
+            ip = "";
+        }
+        return ip.startsWith("192.168") || ip.startsWith("10.0") || ip.startsWith("172");
+    }
 
 
 

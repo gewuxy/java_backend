@@ -53,6 +53,7 @@
                 }
             } else {
                 //新用户隐藏取消按钮
+                $("#newUser").attr("position","relative");
                 $(".layui-layer-close").remove();
             }
         }
@@ -280,11 +281,11 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now" style="position: relative; z-index:3;">
+                        <div class="formrow t-center last" id="newUser">
+                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now"/>
                         </div>
-                        <div class="member-buy-disabled-item"></div>
+                        <div id="disabledItem1"></div>
                     </div>
                 </div>
                 <div class="member-buy-content none" id="hgView">
@@ -350,8 +351,8 @@
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment"/>
                         </div>
                         <div id="disabledItem2"></div>
                     </div>
