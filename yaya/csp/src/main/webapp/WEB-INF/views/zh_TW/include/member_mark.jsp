@@ -23,7 +23,7 @@
         //获取金额
         function sumMoney() {
             var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney ', {
+            ajaxSyncPost('${ctx}/mgr/pay/money ', {
                 'version': selectPk,
                 "limitTimes": limitTimes,
                 "currency": currency
@@ -64,7 +64,7 @@
             ajaxSyncGet('${ctx}/mgr/pay/package', {}, function (data) {
                 var course = data.data;
                 if (course == undefined) {
-                    layer.msg("获取套餐信息失败，请刷新重试");
+                    layer.msg("獲取套餐信息失敗，請刷新重試!");
                     return false;
                 }
                 //初始化套餐选择
@@ -82,11 +82,11 @@
             $('input[name="commitPay"]').click(function () {
                 //低于当前版本不能购买
                 if (initId == 1) {//原始版本是基础版
-                    layer.msg("您已经是标准版用户，请选购其他版本。");
+                    layer.msg("您已經是標準版用戶，請選購其他版本。");
                     return false;
                 }
                 if (selectPk + 1 < initId) {
-                    layer.msg("当前套餐版本低于之前版本，不能购买。");
+                    layer.msg("當前套餐版本低於之前版本，不能購買。");
                     return false;
                 }
                 if (selectPk != 0) {
@@ -117,9 +117,9 @@
             $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
                 var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
-                if (currencyValue == 'CN') {
+                if (currencyValue == 0) {
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if (currencyValue == 'EN') {
+                } else if (currencyValue == 1) {
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
@@ -154,7 +154,7 @@
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
                 var id = info[j].packageId;
-                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptUs + '</li>');
+                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptTw + '</li>');
             }
         }
     </script>

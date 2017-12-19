@@ -491,6 +491,8 @@ public class MeetingMgrController extends CspBaseController {
             }
         }
 
+        updatePackagePrincipal(principal.getId());
+
         return success();
     }
 
@@ -520,6 +522,9 @@ public class MeetingMgrController extends CspBaseController {
             return error(local("meeting.error.not_mine"));
         }
         audioService.addCourseCopy(courseId, title);
+
+        updatePackagePrincipal(principal.getId());
+
         return success();
     }
 
@@ -573,6 +578,8 @@ public class MeetingMgrController extends CspBaseController {
         //更新操作，包括更新或生成水印
         Integer packageId = getWebPrincipal().getPackageId();
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
+
+        updatePackagePrincipal(getWebPrincipal().getId());
 
         addFlashMessage(redirectAttributes, local("operate.success"));
         return defaultRedirectUrl();

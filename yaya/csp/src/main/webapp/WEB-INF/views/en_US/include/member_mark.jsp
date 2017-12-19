@@ -23,7 +23,7 @@
         //获取金额
         function sumMoney() {
             var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney ', {
+            ajaxSyncPost('${ctx}/mgr/pay/money ', {
                 'version': selectPk,
                 "limitTimes": limitTimes,
                 "currency": currency
@@ -99,7 +99,6 @@
                 }
                 $("#packageId").val(selectPk);
                 $("#rechargeFrom").submit();
-                openLayerMsg();
             });
 
             //选择购买时长
@@ -118,9 +117,9 @@
             $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
                 var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
-                if (currencyValue == 'CN') {
+                if (currencyValue == 0) {
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if (currencyValue == 'EN') {
+                } else if (currencyValue == 1) {
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
@@ -136,22 +135,6 @@
                 sumMoney();
             })
         })
-
-        function openLayerMsg(){
-            //触发支付弹出窗
-            parent.layer.open({
-                type: 1,
-                area: ['560px', '250px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.cancel-popup-box'),
-                success:function(){
-                },
-                cancel :function(){
-                },
-            });
-        }
 
         //加载选购套餐信息
         function initSwiper(course) {

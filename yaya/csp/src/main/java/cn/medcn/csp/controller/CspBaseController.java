@@ -55,18 +55,21 @@ public class CspBaseController extends BaseController {
     @Value("${app.is.pro}")
     protected Integer appPro;
 
-
-
-
     /**
      * 获取web端用户认证信息
+     *
      * @return
      */
-    protected Principal getWebPrincipal(){
+    protected Principal getWebPrincipal() {
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        String token  = principal.getToken();
+        String token = principal.getToken();
         //从缓存信息里查询最新版
-        return getPackageCache(token);
+        Principal principalCache = getPackageCache(token);
+        if (principalCache == null) {
+            //如果缓存过期更新缓存
+            return updatePackagePrincipal(principal.getId());
+        }
+        return principalCache;
     }
 
     /**
@@ -252,31 +255,35 @@ public class CspBaseController extends BaseController {
      * @param userId
      * @return
      */
-    protected void updatePackagePrincipal(String userId){
+    protected Principal updatePackagePrincipal(String userId) {
         CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
         String token = userInfo.getToken();
-        Principal principal  = Principal.build(userInfo);
+        Principal principal = Principal.build(userInfo);
         CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
         redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+        return principal;
     }
 
     /**
-     * 套餐变更时添加提示信息
+     * 通过付费的套餐变更时添加提示信息
      *
      * @param packageId
-     * @param type
+     * @param type  添加信息类型
      */
-    protected void updatePackageMsg(Integer packageId,Integer type){
-        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        String token = principal.getToken();
-        Principal setPrincipal = getPackageCache(token);
-        if(type == Constants.NUMBER_ZERO){ // 删除提示信息
+    protected void updatePackageMsg(String userId, Integer packageId, Integer type) {
+        CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
+        Principal setPrincipal = getPackageCache(userInfo.getToken());
+        if (type == Constants.NUMBER_ZERO) { // 删除提示信息
             setPrincipal.setPkChangeMsg(null);
-        }else{   // 添加提示信息
-            setPrincipal.setPkChangeMsg(local("package.buy.success.msg",new Object[]{CspPackage.TypeId.values()[packageId - 1].getId()}));
+        } else if (type == Constants.NUMBER_ONE) {   // 续费成功
+            setPrincipal.setPkChangeMsg(local("package.keep.success"));
+        } else if (type == Constants.NUMBER_TWO) {  // 选择标准版
+            setPrincipal.setPkChangeMsg(local("package.standran.success.msg"));
+        } else {                            // 购买高级或者专业版
+            setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{CspPackage.getLocalPackage(packageId)}));
         }
         redisCacheUtils.setCacheObject(setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
     }
@@ -287,13 +294,17 @@ public class CspBaseController extends BaseController {
      * @param token
      * @return
      */
-    protected Principal getPackageCache(String token){
+    protected Principal getPackageCache(String token) {
         return redisCacheUtils.getCacheObject(token);
     }
 
 
     protected String defaultRedirectUrl(){
         return "redirect:/mgr/meet/list";
+    }
+
+    protected String accountFrozenError(){
+        return error(local("user.unActive.email"));
     }
 
 }

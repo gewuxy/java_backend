@@ -63,6 +63,9 @@ public class CspUserInfoDTO  {
     // 用户套餐信息
     protected CspPackage cspPackage;
 
+    //注册设备
+    protected Integer registerDevice;
+
 
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {

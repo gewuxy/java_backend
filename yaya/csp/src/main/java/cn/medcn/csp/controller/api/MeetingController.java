@@ -226,6 +226,10 @@ public class MeetingController extends CspBaseController {
         }
 
         int newCourseId = audioService.addCourseCopy(courseId, title);
+
+        //更改用户缓存信息
+        updatePackagePrincipal(principal.getId());
+
         Map<String, Object> map = new HashMap<>();
         map.put("id", newCourseId);
         return success(map);
@@ -724,6 +728,8 @@ public class MeetingController extends CspBaseController {
         }
         //逻辑删除
         audioService.deleteCspCourse(id);
+
+        updatePackagePrincipal(principal.getId());
         return success();
 
     }

@@ -613,4 +613,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.selectByMobile(mobile);
     }
 
+    /**
+     * 获取昨天的注册用户数量
+     * @param location
+     * @return
+     */
+    @Override
+    public int selectRegisterCount(int location) {
+        return cspUserInfoDAO.selectRegisterCount(location);
+    }
+
 }

@@ -20,6 +20,11 @@ public abstract class BaseServiceImpl<T> implements BaseService<T> {
         return SpringUtils.getMessage(key);
     }
 
+    @Override
+    public String local(String key, Object[] params) {
+        return SpringUtils.getMessage(key,params);
+    }
+
     public boolean isAbroad(){
         return LocalUtils.isAbroad();
     }

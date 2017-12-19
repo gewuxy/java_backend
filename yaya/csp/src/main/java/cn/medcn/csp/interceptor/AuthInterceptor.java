@@ -50,6 +50,14 @@ public class AuthInterceptor implements HandlerInterceptor {
             }
 
         }
+
+        //判断用户是否已经被冻结
+        if (principal.getActive() != null && !principal.getActive()) {
+            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
+            return false;
+        }
+
+
         redisCacheUtils.setCacheObject(cacheKey, principal, Constants.TOKEN_EXPIRE_TIME);
         SecurityUtils.set(principal);
         return true;

@@ -213,7 +213,10 @@ public class LoginController extends CspBaseController {
             userInfo.setAbroad(LocalUtils.isAbroad());
             userInfo.setFlux(0); // 用户流量
             userInfo.setState(false);
+            //添加用户的注册方式
             userInfo.setRegisterFrom(BindInfo.Type.MOBILE.getTypeId());
+            //添加用户的注册设备
+            userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
             cspUserService.insert(userInfo);
 
             //新用户发送欢迎推送消息
@@ -449,6 +452,8 @@ public class LoginController extends CspBaseController {
             if (!LocalUtils.getLocalStr().equals(DEFAULT_LOCAL)) { // 海外
                 dto.setAbroad(true);
             }
+            //添加用户的注册设备
+            dto.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
             //去添加绑定账号
             userInfo = cspUserService.saveThirdPartyUserInfo(dto);
         }
@@ -506,6 +511,8 @@ public class LoginController extends CspBaseController {
     public String register(CspUserInfo userInfo) {
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
        try {
+           //添加用户的注册设备
+           userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
             return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
             return error(local(e.getMessage()));

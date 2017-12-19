@@ -72,7 +72,7 @@ public class PackageController extends CspBaseController {
      * @param currency
      * @return
      */
-    @RequestMapping(value = "/getMoney")
+    @RequestMapping(value = "/money")
     @ResponseBody
     public String getSumMoney(Integer version, Integer limitTimes, Integer currency) {
         Map<String, Object> map = cspPackageService.getOrderParams(version + 1, limitTimes, currency);
@@ -111,13 +111,13 @@ public class PackageController extends CspBaseController {
      *
      * @return
      */
-    @RequestMapping(value = "/updatePackageMsg")
+    @RequestMapping(value = "/update/msg")
     @ResponseBody
     public String updatePackageMsg() {
-        updatePackageMsg(null,Constants.NUMBER_ZERO);
+        String userId = getWebPrincipal().getId();
+        updatePackageMsg(userId,null,Constants.NUMBER_ZERO);
         return success();
     }
-
 
     /**
      * 套餐支付
@@ -128,7 +128,7 @@ public class PackageController extends CspBaseController {
      * @param limitTime
      * @return
      */
-    @RequestMapping(value = "toPay")
+    @RequestMapping(value = "pay")
     public String allPay(Integer packageId, Integer currency, String payType, Integer limitTime, Model model) throws SystemException {
         String userId = getWebPrincipal().getId();
         packageId++;
@@ -139,6 +139,8 @@ public class PackageController extends CspBaseController {
             cspUserPackageHistoryService.addUserHistoryInfo(userId, getWebPrincipal().getCspPackage() != null ? getWebPrincipal().getPackageId() : null, packageId, Constants.NUMBER_ONE);
             //更新用户信息缓存
             updatePackagePrincipal(userId);
+            //添加提示
+            updatePackageMsg(userId,packageId,Constants.NUMBER_TWO);
             return "redirect:/mgr/meet/list";
         }
         //校验参数信息
@@ -206,7 +208,7 @@ public class PackageController extends CspBaseController {
     public String usdPay(Integer packageId, Integer currency, String payType, float money, Integer num) throws SystemException {
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
-        Payment payment = chargeService.generatePayment(money);           //需要修改此方法
+        Payment payment = chargeService.generatePayment(money);
         Payment responsePayment;
         String url = null;
         try {

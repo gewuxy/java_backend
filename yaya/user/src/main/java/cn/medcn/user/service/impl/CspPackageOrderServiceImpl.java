@@ -20,6 +20,7 @@ import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.Date;
 
 /**
@@ -92,38 +93,34 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @param order
      */
     @Override
-    public void updateOrderAndUserPackageInfo(CspPackageOrder order) {
+    public Integer updateOrderAndUserPackageInfo(CspPackageOrder order) {
         //更新已支付状态
         order.setState(Constants.NUMBER_ONE);
         packageOrderDAO.updateByPrimaryKey(order);
         CspUserPackage userPk = cspUserPackageDAO.selectByPrimaryKey(order.getUserId());
         Integer packageId = order.getPackageId();
         Integer oldPackage = null;
+        Date end = null;
         //开始时间
         Date start = CalendarUtils.nextDateStartTime();
         //是否是年费套餐
         boolean yearType = yearPay(packageId, order.getShouldPay());
         if (userPk == null) { //添加用户套餐信息
-            Date end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * 365) : CalendarUtils.calendarDay(start, order.getNum() * 30);
+            end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_MONTH);
             cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
         } else { // 更新用户套餐信息
             oldPackage = userPk.getPackageId();
             Date endStart = CalendarUtils.nextDateStartTime();
             //结束时间不为空从以前结束时间开始算
             if (userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
-            Date end = yearType ? CalendarUtils.calendarDay(endStart, order.getNum() * 365) : CalendarUtils.calendarDay(endStart, order.getNum() * 30);
+            end = yearType ? CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_MONTH);
             cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
         }
         //添加用户套餐历史信息
         cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(), oldPackage, packageId, Constants.NUMBER_ONE);
-
         //推送购买成功消息
-        StringBuffer content = new StringBuffer();
-        content.append("您已成为会讲");
-        content.append(CspPackage.TypeId.values()[packageId - 1].getLabel());
-        content.append("会员用户，有效期").append(yearType ? order.getNum() + "年。" : order.getNum() + "个月。");
-        content.append("订单号为").append(order.getId());
-        sysNotifyService.addNotify(order.getUserId(), local("package.notify.pay.success"), content + "。", local("user.notify.sender"));
+        addNotify(order.getUserId(),start,end,packageId,order.getTradeId());
+        return oldPackage;
     }
 
     /**
@@ -142,6 +139,31 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             }
         }
         return false;
+    }
+
+    /**
+     * 购买成功推送消息
+     *
+     * @param userId
+     * @param start
+     * @param end
+     * @param packageId
+     * @param orderId
+     */
+    public void addNotify(String userId, Date start, Date end, Integer packageId, String orderId) {
+        String packageDesc = CspPackage.getLocalPackage(packageId);
+        try {
+            Integer betweenDay = CalendarUtils.daysBetween(start, end);
+            if (betweenDay > CalendarUtils.DEFAULT_YEAR) {
+                Integer yearNum = betweenDay / CalendarUtils.DEFAULT_YEAR;
+                Integer extra = betweenDay - CalendarUtils.DEFAULT_YEAR * yearNum;
+                sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId}), local("user.notify.sender"));
+            } else {
+                sysNotifyService.addNotify(userId, local("package.notify.pay.success"), local("package.buy,success.notify.day", new Object[]{packageDesc,betweenDay , orderId}), local("user.notify.sender"));
+            }
+        } catch (ParseException e) {
+            e.getMessage();
+        }
     }
 
 }

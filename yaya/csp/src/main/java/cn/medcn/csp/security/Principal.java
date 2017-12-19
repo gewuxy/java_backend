@@ -41,6 +41,8 @@ public class Principal implements Serializable{
     protected String pkChangeMsg;
     //老用戶為true 新用戶為false
     protected Boolean state;
+    //是否冻结 true 表示未冻结 false 表示已冻结
+    protected Boolean active;
 
 //
 //    public void setPkChangeMsg(String pkChangeMsg){ this.pkChangeMsg = pkChangeMsg;}
@@ -131,6 +133,8 @@ public class Principal implements Serializable{
             principle.setAbroad(userInfo.getAbroad() == null ? false : userInfo.getAbroad());
             principle.setAvatar(userInfo.getAvatar());
             principle.setState(userInfo.getState());
+            principle.setActive(userInfo.getActive());
+
             return principle;
         }
 
