@@ -68,8 +68,11 @@
         </if>
     </select>
 
-    <select id="selectRegisterTime" resultType="cn.medcn.user.model.CspUserInfo">
-        SELECT * FROM t_csp_user_info i WHERE i.register_time &lt; '2017-12-31 23:59:59'
+    <select id="selectByMobile" resultType="cn.medcn.user.model.CspUserInfo">
+        SELECT * FROM  t_csp_user_info i WHERE 1 = 1
+        <if test="_parameter != null">
+            AND mobile = #{mobile}
+        </if>
     </select>
 
 </mapper>

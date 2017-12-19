@@ -172,9 +172,5 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     MyPage<CspUserInfo> findUserList(Pageable pageable);
 
-    /**
-     * 查出所有在上线之前的用户
-     * @return
-     */
-    List<CspUserInfo> selectRegisterTime();
+    CspUserInfo selectByMobile(String mobile);
 }

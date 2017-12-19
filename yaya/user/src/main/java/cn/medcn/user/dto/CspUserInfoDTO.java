@@ -50,7 +50,8 @@ public class CspUserInfoDTO  {
     protected String token;
     // 用户流量值
     protected Integer flux;
-
+    //是否老用户
+    protected Boolean state;
     // 用户绑定的第三方平台
     protected List<BindInfo> bindInfoList;
 
