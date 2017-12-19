@@ -412,7 +412,7 @@
                     },
                     yes:function(){
                         //成功跳去会员页面，让用户升级
-                        window.location.href='user-06.html';
+                        window.location.href='${ctx}/mgr/user/memberManage';
                     },
                     cancel :function(){
 
@@ -825,7 +825,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/memberManage"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form action="">
