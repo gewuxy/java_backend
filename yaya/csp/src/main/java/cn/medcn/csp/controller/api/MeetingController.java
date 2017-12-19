@@ -221,6 +221,11 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
+
+        if (meetCountOut()) {
+            return error(local("meet.error.count.out"));
+        }
+
         if (courseId == null || courseId ==0
                 || StringUtils.isEmpty(title)) {
             return error(local("error.param"));
