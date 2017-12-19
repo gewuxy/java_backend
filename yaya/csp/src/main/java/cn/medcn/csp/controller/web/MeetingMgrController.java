@@ -25,11 +25,7 @@ import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.*;
-import cn.medcn.user.service.AppUserService;
-import cn.medcn.user.service.CspPackageService;
-import cn.medcn.user.service.CspUserPackageHistoryService;
-import cn.medcn.user.service.CspUserPackageService;
-import cn.medcn.user.service.UserFluxService;
+import cn.medcn.user.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -94,6 +90,9 @@ public class MeetingMgrController extends CspBaseController {
     @Autowired
     protected CspPackageService cspPackageService;
 
+    @Autowired
+    protected CspUserService cspUserService;
+
 
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
@@ -128,6 +127,7 @@ public class MeetingMgrController extends CspBaseController {
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
+        CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
         //高级版和专业版进行时间提醒
         if(cspUserPackage != null && cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
             try {
@@ -145,6 +145,7 @@ public class MeetingMgrController extends CspBaseController {
                 e.printStackTrace();
             }
         }
+
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
@@ -169,6 +170,8 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("successMsg",principal.getPkChangeMsg());
         return localeView("/meeting/list");
     }
+
+
 
     /**
      * 进入投屏界面
@@ -488,6 +491,8 @@ public class MeetingMgrController extends CspBaseController {
             }
         }
 
+        updatePackagePrincipal(principal.getId());
+
         return success();
     }
 
@@ -517,6 +522,9 @@ public class MeetingMgrController extends CspBaseController {
             return error(local("meeting.error.not_mine"));
         }
         audioService.addCourseCopy(courseId, title);
+
+        updatePackagePrincipal(principal.getId());
+
         return success();
     }
 
@@ -570,6 +578,8 @@ public class MeetingMgrController extends CspBaseController {
         //更新操作，包括更新或生成水印
         Integer packageId = getWebPrincipal().getPackageId();
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
+
+        updatePackagePrincipal(getWebPrincipal().getId());
 
         addFlashMessage(redirectAttributes, local("operate.success"));
         return defaultRedirectUrl();

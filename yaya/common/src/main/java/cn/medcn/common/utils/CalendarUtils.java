@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
+import static cn.medcn.common.Constants.NUMBER_THREE;
+
 /**
  * Created by lixuan on 2017/1/16.
  */
@@ -474,6 +476,20 @@ public class CalendarUtils {
         return days;
     }
 
+    /**
+     * 指定日期加上月数
+     * @param date
+     * @param monthCount
+     * @return
+     */
+    public static Date dateAddMonth(Date date,int monthCount){
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(date);
+        rightNow.add(Calendar.MONTH, monthCount);// 日期加3个月
+        Date endDate = rightNow.getTime();
+        return endDate;
+    }
+
     public static void main(String[] args) {
        /*Date date = calendarMonth(2);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));*/
@@ -486,7 +502,7 @@ public class CalendarUtils {
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
 
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String st = "2017-10-13 09:49:54";
 
         try {
@@ -498,6 +514,13 @@ public class CalendarUtils {
             Calendar calendar = Calendar.getInstance();
         } catch (ParseException e) {
             e.printStackTrace();
-        }
+        }*/
+        Date date = dateAddMonth(new Date(), -2);
+        System.out.println(date);
+
+        Date date1 = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
+        System.out.println(date1);
+
+        System.out.println(new Date() != date1);
     }
 }

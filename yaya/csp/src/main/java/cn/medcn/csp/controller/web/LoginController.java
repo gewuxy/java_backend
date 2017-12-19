@@ -10,6 +10,7 @@ import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
@@ -80,22 +81,53 @@ public class LoginController extends CspBaseController {
     public String login(String username, String password, Integer thirdPartyId,
                         String mobile, String captcha, Model model,
                         HttpServletResponse response, HttpServletRequest request){
-
         // 默认为邮箱密码登录
         if (thirdPartyId == null) {
             thirdPartyId = BindInfo.Type.EMAIL.getTypeId();
         }
 
+        String redirectUrl = null;
+        CspUserInfo cspUserInfo = null;
         if (thirdPartyId == BindInfo.Type.EMAIL.getTypeId()) {
             // 邮箱登录
-            return loginByEmail(username, password, model, response);
+            redirectUrl = loginByEmail(username, password, model, response);
+            cspUserInfo = cspUserService.selectByUserName(username);
 
         } else if (thirdPartyId == BindInfo.Type.MOBILE.getTypeId()) {
             // 手机登录
-            return loginByMobile(mobile, captcha, model, response, request);
-
+            redirectUrl = loginByMobile(mobile, captcha, model, response, request);
+            cspUserInfo = cspUserService.selectByMobile(mobile);
         }
-        return null ;
+
+
+        //判断是否是老用户
+        if (cspUserInfo.getState() == true){
+            oldUserSendProfessionalEdition(cspUserInfo);
+            cspUserInfo.setState(false);
+            cspUserService.updateByPrimaryKey(cspUserInfo);
+        }else {
+            oldUserSendProfessionalEdition(cspUserInfo);
+        }
+        updatePackagePrincipal(cspUserInfo.getId());
+
+        return redirectUrl ;
+    }
+
+
+    /**
+     * 老用户赠送三个月专业版
+     */
+    private void oldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
+        String userId = cspUserInfo.getId();
+        //根据id查出版本信息
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
+        if (cspUserInfo.getState() == true){
+            //赠送三个月的套餐
+            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
+        }
+        if (cspUserInfo.getState() == false && cspUserPackage!= null){
+            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
+        }
     }
 
 
@@ -146,7 +178,6 @@ public class LoginController extends CspBaseController {
     private String emailLogin(String username, String password, String errorForwardUrl, Model model, HttpServletResponse response) {
         UsernamePasswordToken token = new UsernamePasswordToken(username, password);
         Subject subject = SecurityUtils.getSubject();
-
         try {
             subject.login(token);
 
@@ -182,6 +213,7 @@ public class LoginController extends CspBaseController {
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             userInfo.setFlux(0); // 用户流量
+            userInfo.setState(false);
             //添加用户的注册方式
             userInfo.setRegisterFrom(BindInfo.Type.MOBILE.getTypeId());
             //添加用户的注册设备
@@ -191,6 +223,14 @@ public class LoginController extends CspBaseController {
             //新用户发送欢迎推送消息
             sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
         }
+    }
+
+    public boolean checkUserByMobiles(String mobile) {
+        CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
+        if (userInfo == null){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -215,28 +255,32 @@ public class LoginController extends CspBaseController {
         }
 
         try {
-            // 检查手机号码是否注册
-            checkUserByMobile(mobile);
-
-            // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常时 浪费短信验证码）
-            UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
-            token.setHost("mobile");
-            Subject subject = SecurityUtils.getSubject();
-            subject.login(token);
-
             // 检查验证码是否有效
             checkCaptchaIsOrNotValid(mobile, captcha);
-
-            Principal principal = getWebPrincipal();
-            // 如果该用户没有昵称 需设置昵称才能登录
-            if (principal != null && principal.getNickName() == null) {
-                model.addAttribute("id", principal.getId());
-                return localeView("/login/to_set_nickname");
+            // 检查手机号码是否注册
+            if (checkUserByMobiles(mobile)== false){
+                checkUserByMobile(mobile);
             }
 
-            // 如果用户有昵称 直接登录 缓存登录用户账号
-            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
-            CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile() , COOKIE_MAX_AGE);
+                // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常时 浪费短信验证码）
+                UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
+                token.setHost("mobile");
+                Subject subject = SecurityUtils.getSubject();
+
+                subject.login(token);
+
+
+                Principal principal = getWebPrincipal();
+                // 如果该用户没有昵称 需设置昵称才能登录
+                if (principal != null && principal.getNickName() == null) {
+                    model.addAttribute("id", principal.getId());
+                    return localeView("/login/to_set_nickname");
+                }
+
+                // 如果用户有昵称 直接登录 缓存登录用户账号
+                CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
+                CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile() , COOKIE_MAX_AGE);
+
 
         } catch (AuthenticationException e) {
 
@@ -424,6 +468,17 @@ public class LoginController extends CspBaseController {
 
             // 将当前用户添加到cookie缓存 保存7天
             Principal principal = getWebPrincipal();
+
+            CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
+            //判断是否是老用户
+            if (cspUserInfo.getState() == true){
+                oldUserSendProfessionalEdition(cspUserInfo);
+                cspUserInfo.setState(false);
+                cspUserService.updateByPrimaryKey(cspUserInfo);
+            }else {
+                oldUserSendProfessionalEdition(cspUserInfo);
+            }
+            updatePackagePrincipal(cspUserInfo.getId());
             CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
             String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
             CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
@@ -486,12 +541,6 @@ public class LoginController extends CspBaseController {
         CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
         CookieUtils.clearCookie(response, LOGIN_USER_KEY);
         return "redirect:/mgr/logout";
-    }
-
-    private String oldUserSendProfessionalEdition(){
-        //查出老用户 2018 -01 -01
-        List<CspUserInfo> cspUserInfos= cspUserService.selectRegisterTime();
-        return "";
     }
 
 }

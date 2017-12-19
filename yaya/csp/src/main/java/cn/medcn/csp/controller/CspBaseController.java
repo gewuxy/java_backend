@@ -303,4 +303,8 @@ public class CspBaseController extends BaseController {
         return "redirect:/mgr/meet/list";
     }
 
+    protected String accountFrozenError(){
+        return error(local("user.unActive.email"));
+    }
+
 }
