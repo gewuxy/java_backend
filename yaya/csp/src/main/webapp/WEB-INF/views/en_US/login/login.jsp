@@ -35,10 +35,10 @@
 
                     <!--切换 登录-->
                     <div class="login-box-main position-button-login">
-                        <a href="javascript:;" title="Login with Facebook" class=" login-button buttonBlue-02" onclick="facebookLogin()">Login with Facebook</a>
-                        <a href="javascript:;" id="twitter" title="Login with Twitter" class=" login-button buttonBlue-03" onclick="twitterLogin()">Login with Twitter</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=7" title="Login by E-mail" class=" login-button buttonBlue">Login by E-mail</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Platform" class=" login-button buttonBlue-04 last">Login with Jingxin Platform</a>
+                        <a href="javascript:;" title="Login with Facebook" class=" login-button buttonBlue-02" style="color: #ffffff;" onclick="facebookLogin()">Login with Facebook</a>
+                        <a href="javascript:;" id="twitter" title="Login with Twitter" class=" login-button buttonBlue-03" style="color: #ffffff;" onclick="twitterLogin()">Login with Twitter</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=7" title="Login by E-mail" class=" login-button buttonBlue" style="color: #ffffff;">Login by E-mail</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Platform" style="color: #ffffff;" class=" login-button buttonBlue-04 last">Login with Jingxin Platform</a>
                         <span class="cells-block error ${not empty error ? '':'none'} ">
                             <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;
                             <span id="errorMessage">${error}</span>

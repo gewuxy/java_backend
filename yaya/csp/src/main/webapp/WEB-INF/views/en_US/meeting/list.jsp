@@ -583,10 +583,10 @@
                                     <span><i class="hot">
                                         <c:choose>
                                             <c:when test="${course.playType == 0}">
-                                                ${course.playPage + 1}
+                                                ${course.playPage}
                                             </c:when>
                                             <c:otherwise>
-                                                ${course.livePage + 1}
+                                                ${course.livePage}
                                             </c:otherwise>
                                         </c:choose>
                                     </i><i class="muted">|</i>${course.pageCount}</span>
