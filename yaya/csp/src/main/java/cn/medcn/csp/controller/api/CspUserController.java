@@ -241,6 +241,11 @@ public class CspUserController extends CspBaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
+            Boolean active = userInfo.getActive();
+            if (active != null && !active) {
+                return accountFrozenError();
+            }
+
             // 检查当前登录的用户 是否海外用户
             abroad = userInfo.getAbroad();
             if (abroad == null) {

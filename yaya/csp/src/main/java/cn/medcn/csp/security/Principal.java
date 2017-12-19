@@ -2,12 +2,16 @@ package cn.medcn.csp.security;
 
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 
 /**
  * Created by lixuan on 2017/9/12.
  */
+@Data
+@NoArgsConstructor
 public class Principal implements Serializable{
 
     protected String id;
@@ -35,6 +39,8 @@ public class Principal implements Serializable{
 
     //购买成功消息
     protected String pkChangeMsg;
+
+    protected Boolean active;
 
     public void setPkChangeMsg(String pkChangeMsg){ this.pkChangeMsg = pkChangeMsg;}
 
@@ -123,6 +129,7 @@ public class Principal implements Serializable{
             principle.setToken(userInfo.getToken());
             principle.setAbroad(userInfo.getAbroad() == null ? false : userInfo.getAbroad());
             principle.setAvatar(userInfo.getAvatar());
+            principle.setActive(userInfo.getActive());
 
             return principle;
         }
