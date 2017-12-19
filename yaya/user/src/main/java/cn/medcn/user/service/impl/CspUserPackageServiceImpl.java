@@ -70,12 +70,12 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     @Override
     public void modifyOldUser(CspUserPackage cspUserPackage, String userId) {
         Integer beforePackageId = cspUserPackage.getPackageId();
-        modifyOldUserVersion(cspUserPackage,userId);
+        doModifyOldUserVersion(cspUserPackage,userId);
     }
 
     @Override
     public void modifySendPackageTimeOut(CspUserPackage cspUserPackage, Integer packageId) {
-        sendPackageTimeOut(cspUserPackage,packageId);
+        doSendPackageTimeOut(cspUserPackage,packageId);
     }
 
 
@@ -124,7 +124,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
      * @param cspUserPackage
      * @param userId
      */
-    private void modifyOldUserVersion(CspUserPackage cspUserPackage,String userId){
+    private void doModifyOldUserVersion(CspUserPackage cspUserPackage,String userId){
         Date startTime = CalendarUtils.nextDateStartTime();
         Date endTime = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
         cspUserPackage.setUserId(userId);
@@ -144,7 +144,12 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
     }
 
-    private void sendPackageTimeOut(CspUserPackage cspUserPackage,Integer beforePackageId){
+    /**
+     * 到期还原以前的版本
+     * @param cspUserPackage
+     * @param beforePackageId
+     */
+    private void doSendPackageTimeOut(CspUserPackage cspUserPackage,Integer beforePackageId){
 
         //到期之后还原以前的版本
         if (cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){

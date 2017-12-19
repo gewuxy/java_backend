@@ -307,4 +307,35 @@ public class CspBaseController extends BaseController {
         return error(local("user.unActive.email"));
     }
 
+    /**
+     * 判断是否是老用户
+     * @param cspUserInfo
+     */
+    protected void modifyOldUser(CspUserInfo cspUserInfo){
+        if (cspUserInfo != null && cspUserInfo.getState() == true){
+            doOldUserSendProfessionalEdition(cspUserInfo);
+            cspUserInfo.setState(false);
+            cspUserService.updateByPrimaryKey(cspUserInfo);
+        }else {
+            doOldUserSendProfessionalEdition(cspUserInfo);
+        }
+        updatePackagePrincipal(cspUserInfo.getId());
+    }
+
+    /**
+     * 老用户赠送三个月专业版
+     */
+    private void doOldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
+        String userId = cspUserInfo.getId();
+        //根据id查出版本信息
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
+        if ( cspUserInfo != null && cspUserInfo.getState() == true){
+            //赠送三个月的套餐
+            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
+        }
+        if ( cspUserInfo != null && cspUserInfo.getState() == false ){
+            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
+        }
+    }
+
 }

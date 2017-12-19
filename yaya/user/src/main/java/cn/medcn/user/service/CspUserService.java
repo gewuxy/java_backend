@@ -197,4 +197,5 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     void updateUserRegion(UserRegionDTO region);
 
     UserRegionDTO brPopUserRegion();
+
 }

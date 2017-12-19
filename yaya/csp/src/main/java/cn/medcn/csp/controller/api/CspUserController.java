@@ -276,16 +276,7 @@ public class CspUserController extends CspBaseController {
             // 返回给前端的用户数据
             CspUserInfoDTO dto = buildCspUserInfoDTO(principal, userInfo);
 
-            CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
-            //判断是否是老用户
-            if (cspUserInfo.getState() == true){
-                oldUserSendProfessionalEdition(cspUserInfo);
-                cspUserInfo.setState(false);
-                cspUserService.updateByPrimaryKey(cspUserInfo);
-            }else {
-                oldUserSendProfessionalEdition(cspUserInfo);
-            }
-            updatePackagePrincipal(cspUserInfo.getId());
+            modifyOldUser(userInfo);
             return success(dto);
 
         } catch (SystemException e){
