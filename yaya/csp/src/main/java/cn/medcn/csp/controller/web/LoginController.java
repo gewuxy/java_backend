@@ -91,7 +91,7 @@ public class LoginController extends CspBaseController {
         if (thirdPartyId == BindInfo.Type.EMAIL.getTypeId()) {
             // 邮箱登录
             redirectUrl = loginByEmail(username, password, model, response);
-            cspUserInfo = cspUserService.selectByUserName(username);
+            cspUserInfo = cspUserService.selectByEmail(username);
 
         } else if (thirdPartyId == BindInfo.Type.MOBILE.getTypeId()) {
             // 手机登录

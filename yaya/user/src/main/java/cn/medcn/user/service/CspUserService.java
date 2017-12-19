@@ -198,4 +198,5 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     UserRegionDTO brPopUserRegion();
 
+    CspUserInfo selectByEmail(String username);
 }
