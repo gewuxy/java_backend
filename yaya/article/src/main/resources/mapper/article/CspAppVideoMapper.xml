@@ -3,7 +3,7 @@
 <mapper namespace="cn.medcn.article.dao.CspAppVideoDAO" >
 
     <select id="findCspAppVideo" resultType="cn.medcn.article.model.AppVideo">
-        SELECT * FROM t_csp_app_video;
+        SELECT * FROM t_csp_app_video limit 1;
     </select>
 
 

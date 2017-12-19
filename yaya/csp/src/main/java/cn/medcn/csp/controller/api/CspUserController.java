@@ -276,6 +276,16 @@ public class CspUserController extends CspBaseController {
             // 返回给前端的用户数据
             CspUserInfoDTO dto = buildCspUserInfoDTO(principal, userInfo);
 
+            CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
+            //判断是否是老用户
+            if (cspUserInfo.getState() == true){
+                oldUserSendProfessionalEdition(cspUserInfo);
+                cspUserInfo.setState(false);
+                cspUserService.updateByPrimaryKey(cspUserInfo);
+            }else {
+                oldUserSendProfessionalEdition(cspUserInfo);
+            }
+            updatePackagePrincipal(cspUserInfo.getId());
             return success(dto);
 
         } catch (SystemException e){
@@ -283,6 +293,22 @@ public class CspUserController extends CspBaseController {
 
         } catch (PasswordErrorException pe) {
             return error(APIUtils.ERROR_PASSWORD, pe.getMessage());
+        }
+    }
+
+    /**
+     * 老用户赠送三个月专业版
+     */
+    private void oldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
+        //根据id查出版本信息
+        String userId = cspUserInfo.getId();
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
+        if (cspUserInfo.getState() == true){
+            //赠送三个月的套餐
+            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
+        }
+        if (cspUserInfo.getState() == false && cspUserPackage!= null){
+            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
         }
     }
 
@@ -433,6 +459,7 @@ public class CspUserController extends CspBaseController {
             userInfo.setActive(true);
             userInfo.setAbroad(LocalUtils.isAbroad());
             userInfo.setRegisterFrom(BindInfo.Type.MOBILE.getTypeId());
+            userInfo.setState(false);
             //添加用户的注册设备
             userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             cspUserService.insert(userInfo);

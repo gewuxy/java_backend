@@ -181,6 +181,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         userInfo.setActive(false);//未激活
         //注册来源
         userInfo.setRegisterFrom(BindInfo.Type.EMAIL.getTypeId());
+        userInfo.setState(false);
         cspUserInfoDAO.insert(userInfo);
 
         //将修改用户地理位置任务放到队列中
@@ -202,6 +203,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO) {
         // 将第三方用户信息 保存到csp用户表
         CspUserInfo userInfo = CspUserInfo.buildToUserInfo(userDTO);
+        userInfo.setState(false);
         cspUserInfoDAO.insert(userInfo);
 
         // 添加绑定第三方平台用户信息
@@ -612,8 +614,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public List<CspUserInfo> selectRegisterTime() {
-        return cspUserInfoDAO.selectRegisterTime();
+    public CspUserInfo selectByMobile(String mobile) {
+        return cspUserInfoDAO.selectByMobile(mobile);
     }
 
     /**

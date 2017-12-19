@@ -53,6 +53,7 @@
                 }
             } else {
                 //新用户隐藏取消按钮
+                $("#newUser").attr("position","relative");
                 $(".layui-layer-close").remove();
             }
         }
@@ -280,11 +281,11 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last" style="position: relative; z-index:3;">
+                        <div class="formrow t-center last" id="newUser">
                             <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免费体验">
                         </div>
-                        <div class="member-buy-disabled-item"></div>
+                        <div id="disabledItem1"></div>
                     </div>
                 </div>
                 <div class="member-buy-content none" id="hgView">
@@ -349,7 +350,7 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last" style="position: relative; z-index:3;">
+                        <div class="formrow t-center last">
                             <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付">
                         </div>

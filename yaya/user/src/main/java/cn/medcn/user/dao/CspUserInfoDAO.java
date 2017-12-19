@@ -52,6 +52,7 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
 
     List<CspUserInfo> findUserList(Map<String, Object> params);
 
+    CspUserInfo selectByMobile(String mobile);
     List<CspUserInfo> selectRegisterTime();
 
     int selectRegisterCount(int location);
