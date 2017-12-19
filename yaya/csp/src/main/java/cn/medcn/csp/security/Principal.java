@@ -39,7 +39,7 @@ public class Principal implements Serializable{
 
     //购买成功消息
     protected String pkChangeMsg;
-
+    //是否冻结 true 表示未冻结 false 表示已冻结
     protected Boolean active;
 
     public void setPkChangeMsg(String pkChangeMsg){ this.pkChangeMsg = pkChangeMsg;}
