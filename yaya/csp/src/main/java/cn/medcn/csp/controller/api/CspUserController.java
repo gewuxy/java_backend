@@ -108,16 +108,16 @@ public class CspUserController extends CspBaseController {
         }
 
         // 获取邮箱模板
-        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(), EmailTemplate.Type.REGISTER.getLabelId(), EmailTemplate.UseType.CSP.getLabelId());
         try {
             //添加用户的注册设备
             userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
 
             userInfo.setLastLoginIp(request.getRemoteAddr());
 
-            return cspUserService.register(userInfo,template);
+            return cspUserService.register(userInfo, template);
 
-        } catch (SystemException e){
+        } catch (SystemException e) {
             return error(e.getMessage());
         }
 
@@ -151,6 +151,7 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 缓存用户过期信息
+     *
      * @param cspPackage
      * @return
      */
@@ -207,7 +208,8 @@ public class CspUserController extends CspBaseController {
      * {@link BindInfo.Type}
      * 登录检查用户是否存在csp账号，如果存在，登录成功返回用户信息；
      * 反之，根据客户端传过来的第三方信息，保存到数据库，再返回登录成功及用户信息
-     * @param email 邮箱
+     *
+     * @param email        邮箱
      * @param password     密码
      * @param thirdPartyId 第三方平台id
      * @param mobile       手机
@@ -222,7 +224,7 @@ public class CspUserController extends CspBaseController {
                         HttpServletRequest request) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
-           return error(local("user.empty.ThirdPartyId"));
+            return error(local("user.empty.ThirdPartyId"));
         }
 
         // 获取app header中是否海外登录
@@ -278,17 +280,21 @@ public class CspUserController extends CspBaseController {
 
             CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
             //判断是否是老用户
-            if (cspUserInfo.getState() == true){
+            if (cspUserInfo.getState() == true) {
                 oldUserSendProfessionalEdition(cspUserInfo);
                 cspUserInfo.setState(false);
                 cspUserService.updateByPrimaryKey(cspUserInfo);
-            }else {
+            } else {
                 oldUserSendProfessionalEdition(cspUserInfo);
             }
             updatePackagePrincipal(cspUserInfo.getId());
+
+            //判断用户是否已经存在新手引导会议
+            audioService.doCopyGuideCourse(principal.getId());
+
             return success(dto);
 
-        } catch (SystemException e){
+        } catch (SystemException e) {
             return error(e.getMessage());
 
         } catch (PasswordErrorException pe) {
@@ -299,22 +305,23 @@ public class CspUserController extends CspBaseController {
     /**
      * 老用户赠送三个月专业版
      */
-    private void oldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
+    private void oldUserSendProfessionalEdition(CspUserInfo cspUserInfo) {
         //根据id查出版本信息
         String userId = cspUserInfo.getId();
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
-        if (cspUserInfo.getState() == true){
+        if (cspUserInfo.getState() == true) {
             //赠送三个月的套餐
-            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
+            cspUserPackageService.modifyOldUser(cspUserPackage, userId);
         }
-        if (cspUserInfo.getState() == false && cspUserPackage!= null){
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
+        if (cspUserInfo.getState() == false && cspUserPackage != null) {
+            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage, cspUserPackage.getPackageId());
         }
     }
 
 
     /**
      * 封装返回给前端的用户数据
+     *
      * @param principal
      * @param userInfo
      * @return
@@ -342,6 +349,7 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 退出登录
+     *
      * @param request
      * @return
      */
@@ -350,7 +358,7 @@ public class CspUserController extends CspBaseController {
     public String logout(HttpServletRequest request) {
         String token = request.getHeader(Constants.TOKEN);
         if (StringUtils.isNotEmpty(token)) {
-            String cacheKey = Constants.TOKEN+"_" + token;
+            String cacheKey = Constants.TOKEN + "_" + token;
             redisCacheUtils.delete(cacheKey);
         }
         return success();
@@ -359,13 +367,14 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 登录成功 绑定极光
+     *
      * @param registrationId
      * @param request
      * @return
      */
     @RequestMapping(value = "/bindJPush")
     @ResponseBody
-    public String bindJpush(String registrationId, HttpServletRequest request){
+    public String bindJpush(String registrationId, HttpServletRequest request) {
         String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
 
         Principal principal = SecurityUtils.get();
@@ -374,7 +383,7 @@ public class CspUserController extends CspBaseController {
         Set<String> tags = Sets.newHashSet();
         try {
 
-            if(!StringUtils.isEmpty(osType)){
+            if (!StringUtils.isEmpty(osType)) {
                 tags.add(osType);
             }
 
@@ -393,6 +402,7 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 邮箱登录
+     *
      * @param email
      * @param password
      */
@@ -431,7 +441,7 @@ public class CspUserController extends CspBaseController {
      * @param mobile
      * @param captcha
      */
-    protected CspUserInfo loginByMobile(String mobile, String captcha) throws SystemException{
+    protected CspUserInfo loginByMobile(String mobile, String captcha) throws SystemException {
         if (StringUtils.isEmpty(mobile)) {
             throw new SystemException(local("user.empty.mobile"));
         }
@@ -472,11 +482,12 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 第三方平台登录
+     *
      * @param userDTO
      * @return
      * @throws SystemException
      */
-    protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) throws SystemException{
+    protected CspUserInfo loginByThirdParty(CspUserInfoDTO userDTO) throws SystemException {
         if (userDTO == null) {
             throw new SystemException(local("user.param.empty"));
         }
@@ -531,7 +542,6 @@ public class CspUserController extends CspBaseController {
     }
 
 
-
     /**
      * 修改头像
      *
@@ -547,12 +557,12 @@ public class CspUserController extends CspBaseController {
         String userId = SecurityUtils.get().getId();
         String url = null;
         try {
-            url = cspUserService.updateAvatar(file,userId);
+            url = cspUserService.updateAvatar(file, userId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
-        Map<String,String> map = new HashMap<>();
-        map.put("url",url);
+        Map<String, String> map = new HashMap<>();
+        map.put("url", url);
         return success(map);
     }
 
@@ -560,17 +570,17 @@ public class CspUserController extends CspBaseController {
     /**
      * 更新个人信息中的姓名和简介
      */
-    @RequestMapping(value="/updateInfo",method = RequestMethod.POST)
+    @RequestMapping(value = "/updateInfo", method = RequestMethod.POST)
     @ResponseBody
     public String updateInfo(CspUserInfo info) {
 
         //修改昵称,昵称为空
-        if(info.getInfo() == null && StringUtils.isEmpty(info.getNickName())){
+        if (info.getInfo() == null && StringUtils.isEmpty(info.getNickName())) {
             return error(local("user.empty.nickname"));
         }
-       info.setId(SecurityUtils.get().getId());
-       cspUserService.updateByPrimaryKeySelective(info);
-       return success();
+        info.setId(SecurityUtils.get().getId());
+        cspUserService.updateByPrimaryKeySelective(info);
+        return success();
     }
 
 
@@ -581,14 +591,14 @@ public class CspUserController extends CspBaseController {
      */
     @RequestMapping("/resetPwd")
     @ResponseBody
-    public String resetPwd(String oldPwd,String newPwd) {
+    public String resetPwd(String oldPwd, String newPwd) {
 
-        if(StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)){
+        if (StringUtils.isEmpty(oldPwd) || StringUtils.isEmpty(newPwd)) {
             return error(local("user.empty.password"));
         }
         String userId = SecurityUtils.get().getId();
         try {
-            cspUserService.resetPwd(userId,oldPwd,newPwd);
+            cspUserService.resetPwd(userId, oldPwd, newPwd);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -601,12 +611,12 @@ public class CspUserController extends CspBaseController {
      */
     @RequestMapping("/toBind")
     @ResponseBody
-    public String toBind(String email,String password) {
+    public String toBind(String email, String password) {
 
         String userId = SecurityUtils.get().getId();
         String localStr = LocalUtils.getLocalStr();
         try {
-            cspUserService.sendBindMail(email,password,userId,localStr);
+            cspUserService.sendBindMail(email, password, userId, localStr);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -618,25 +628,26 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 绑定手机号
+     *
      * @param mobile
      * @param captcha
      * @return
      */
     @RequestMapping("/bindMobile")
     @ResponseBody
-    public String bindMobile(String mobile,String captcha)  {
-        if(!StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)){
+    public String bindMobile(String mobile, String captcha) {
+        if (!StringUtils.isMobile(mobile) || StringUtils.isEmpty(captcha)) {
             return error(local("error.param"));
         }
         try {
             //检查验证码合法性
-            checkCaptchaIsOrNotValid(mobile,captcha);
+            checkCaptchaIsOrNotValid(mobile, captcha);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
         String userId = SecurityUtils.get().getId();
         try {
-            cspUserService.doBindMobile(mobile,captcha,userId);
+            cspUserService.doBindMobile(mobile, captcha, userId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -645,17 +656,18 @@ public class CspUserController extends CspBaseController {
 
 
     /**
-     *解绑手机或邮箱
+     * 解绑手机或邮箱
+     *
      * @param type 6代表手机,7代表邮箱
      * @return
      */
     @RequestMapping("/unbind")
     @ResponseBody
-    public String unbindEmailOrMobile(Integer type){
+    public String unbindEmailOrMobile(Integer type) {
 
         String userId = SecurityUtils.get().getId();
         try {
-            cspUserService.doUnbindEmailOrMobile(type,userId);
+            cspUserService.doUnbindEmailOrMobile(type, userId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -671,29 +683,30 @@ public class CspUserController extends CspBaseController {
      */
     @RequestMapping("/changeBindStatus")
     @ResponseBody
-    public String changeBindStatus(BindInfo info)  {
+    public String changeBindStatus(BindInfo info) {
         String userId = SecurityUtils.get().getId();
         //第三方账号绑定操作
         if (!StringUtils.isEmpty(info.getUniqueId())) {
             try {
-                cspUserService.doBindThirdAccount(info,userId);
+                cspUserService.doBindThirdAccount(info, userId);
             } catch (SystemException e) {
                 return error(e.getMessage());
             }
-        }else {
+        } else {
             //解绑操作
             try {
-                cspUserService.doUnbindThirdAccount(info.getThirdPartyId(),userId);
+                cspUserService.doUnbindThirdAccount(info.getThirdPartyId(), userId);
             } catch (SystemException e) {
                 return error(e.getMessage());
             }
         }
-            return success();
+        return success();
     }
 
 
     /**
      * 获取csp登录页面的背景视频
+     *
      * @param version 前端传过来的版本号 不等于当前视频的版本号 才会返回视频url，反之不返回数据
      * @return
      */
@@ -714,6 +727,7 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 前端定时请求此接口获取用户信息
+     *
      * @return
      */
     @RequestMapping("/info")
@@ -752,6 +766,7 @@ public class CspUserController extends CspBaseController {
 
     /**
      * 查询用户套餐版本及过期信息
+     *
      * @param userInfoDTO
      */
     private void assignPackageAndExpire(CspUserInfoDTO userInfoDTO, Principal principal) {

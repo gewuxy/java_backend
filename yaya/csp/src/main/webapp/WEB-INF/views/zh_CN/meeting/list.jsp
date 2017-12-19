@@ -294,7 +294,8 @@
                     anim:2,
                     content: $('.player-popup-box'),
                     success:function(){
-                        var added = 105;
+//                        var added = 105;
+                        var added = 608;
                         var newOffset;
 
                         //幻灯片轮播
@@ -316,8 +317,9 @@
 
                                 //获取默认偏移值
                                 var defaultOffset = swiper.snapGrid;
-                                for(var i =0; i<defaultOffset.length; i++){
-                                    defaultOffset[i] = defaultOffset[i] - added ;
+                                defaultOffset[0] = -160;
+                                for(var i =1; i<defaultOffset.length; i++){
+                                    defaultOffset[i] = defaultOffset[i-1] + added ;
                                 }
                                 //更新偏移值
                                 var updateOffset = defaultOffset.slice(1);

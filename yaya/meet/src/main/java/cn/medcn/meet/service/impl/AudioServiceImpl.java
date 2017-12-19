@@ -231,7 +231,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * 复制微课信息
      * @param course
      * @param userId
-     * @param newTitle
+     * @param newTitle 标题为空的时候 默认设置为源课件的标题
      */
     @Override
     public Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
@@ -1044,7 +1044,36 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
 
     @Override
-    public AudioCourse doCopyGuideCourse(String cspUserId) {
-        return null;
+    public Integer doCopyGuideCourse(String cspUserId) {
+        if (!checkGuideExists(cspUserId)) {
+            AudioCourse course = selectByPrimaryKey(GUIDE_SOURCE_ID);
+            Integer courseId = null;
+            if (course != null) {
+                course.setCspUserId(cspUserId);
+                course.setGuide(true);
+                courseId = doCopyCourse(course, null, null);
+            }
+            return courseId;
+
+        } else {
+            return 0;
+        }
+    }
+
+
+    /**
+     * 检测用户是否已经存在新手引导课件
+     *
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public boolean checkGuideExists(String cspUserId) {
+        AudioCourse cond = new AudioCourse();
+        cond.setSourceType(AudioCourse.SourceType.csp.ordinal());
+        cond.setCspUserId(cspUserId);
+        cond.setGuide(true);
+
+        return selectCount(cond) > 0;
     }
 }
