@@ -280,7 +280,7 @@ public class CspUserController extends CspBaseController {
             }else {
                 oldUserSendProfessionalEdition(cspUserInfo);
             }
-
+            updatePackagePrincipal(cspUserInfo.getId());
             return success(dto);
 
         } catch (SystemException e){

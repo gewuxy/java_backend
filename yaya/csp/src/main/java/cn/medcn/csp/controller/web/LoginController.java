@@ -108,6 +108,7 @@ public class LoginController extends CspBaseController {
         }else {
             oldUserSendProfessionalEdition(cspUserInfo);
         }
+        updatePackagePrincipal(cspUserInfo.getId());
 
         return redirectUrl ;
     }
@@ -477,6 +478,7 @@ public class LoginController extends CspBaseController {
             }else {
                 oldUserSendProfessionalEdition(cspUserInfo);
             }
+            updatePackagePrincipal(cspUserInfo.getId());
             CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
             String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
             CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
