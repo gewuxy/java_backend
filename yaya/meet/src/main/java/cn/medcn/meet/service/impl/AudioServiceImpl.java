@@ -231,7 +231,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * 复制微课信息
      * @param course
      * @param userId
-     * @param newTitle
+     * @param newTitle 标题为空的时候 默认设置为源课件的标题
      */
     @Override
     public Integer doCopyCourse(AudioCourse course, Integer userId, String newTitle){
@@ -252,6 +252,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setCspUserId(course.getCspUserId());
         reprintCourse.setInfo(course.getInfo());
         reprintCourse.setLocked(false);
+        reprintCourse.setGuide(course.getGuide());
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
         doCopyDetails(details, reprintCourse.getId());
@@ -688,6 +689,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourse.setDeleted(false);
         audioCourse.setPublished(true);
         audioCourse.setLocked(false);
+        audioCourse.setGuide(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -716,6 +718,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         audioCourse.setPlayType(AudioCourse.PlayType.normal.getType());
         audioCourse.setPublished(true);
         audioCourse.setLocked(false);
+        audioCourse.setGuide(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -1022,6 +1025,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         course.setCreateTime(new Date());
         course.setSourceType(AudioCourse.SourceType.csp.ordinal());
         course.setLocked(false);
+        course.setGuide(false);
         audioCourseDAO.insert(course);
         return course;
     }
@@ -1036,5 +1040,40 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public AudioCourse findEarliestCourse(String cspUserId) {
         return audioCourseDAO.findEarliestCourse(cspUserId);
+    }
+
+
+    @Override
+    public Integer doCopyGuideCourse(String cspUserId) {
+        if (!checkGuideExists(cspUserId)) {
+            AudioCourse course = selectByPrimaryKey(GUIDE_SOURCE_ID);
+            Integer courseId = null;
+            if (course != null) {
+                course.setCspUserId(cspUserId);
+                course.setGuide(true);
+                courseId = doCopyCourse(course, null, null);
+            }
+            return courseId;
+
+        } else {
+            return 0;
+        }
+    }
+
+
+    /**
+     * 检测用户是否已经存在新手引导课件
+     *
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public boolean checkGuideExists(String cspUserId) {
+        AudioCourse cond = new AudioCourse();
+        cond.setSourceType(AudioCourse.SourceType.csp.ordinal());
+        cond.setCspUserId(cspUserId);
+        cond.setGuide(true);
+
+        return selectCount(cond) > 0;
     }
 }

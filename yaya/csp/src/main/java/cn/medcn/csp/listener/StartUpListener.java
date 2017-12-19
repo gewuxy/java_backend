@@ -4,8 +4,10 @@ import cn.medcn.common.utils.LogUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.tasks.FlowMonitorTask;
 import cn.medcn.csp.tasks.UserPackageTask;
+import cn.medcn.csp.tasks.UserRegionUpdateTask;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.service.CspUserPackageService;
+import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.UserFluxService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -52,6 +54,14 @@ public class StartUpListener extends ContextLoaderListener {
         Runnable userPackageTask = new UserPackageTask(userPackageService, audioService);
         // 调度器
         notifyService.scheduleWithFixedDelay(userPackageTask, 5, 3600, TimeUnit.SECONDS);
+
+        CspUserService cspUserService = ctx.getBean(CspUserService.class);
+
+        //启动用户地理位置修改线程
+        Runnable regionTask = new UserRegionUpdateTask(cspUserService);
+        Thread regionThread = new Thread(regionTask);
+        regionThread.start();
+
         LogUtils.info(log, "init context successed ! --- modifyUserPackageTask --- ");
     }
 

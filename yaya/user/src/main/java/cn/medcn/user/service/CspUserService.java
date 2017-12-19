@@ -6,6 +6,7 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.sys.model.SystemNotify;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
@@ -24,6 +25,8 @@ import java.util.List;
  * Created by Liuchangling on 2017/9/26.
  */
 public interface CspUserService extends BaseService<CspUserInfo>{
+    // 处理用户地理位置信息队列
+    String USER_REGION_TOPIC_KEY = "user_region_queue";
 
     CspUserInfo findUserInfoById(String userId);
 
@@ -180,4 +183,20 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     int selectRegisterCount(int location);
+
+    /**
+     * 将用户地理位置信息放入队列中
+     * @param region
+     */
+    void pushToUserRegionQueue(UserRegionDTO region);
+
+    /**
+     * 修改用户地理位置信息
+     * @param region
+     */
+    void updateUserRegion(UserRegionDTO region);
+
+    UserRegionDTO brPopUserRegion();
+
+    CspUserInfo selectByEmail(String username);
 }

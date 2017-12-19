@@ -4,6 +4,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.CspUserPackage;
@@ -38,6 +39,9 @@ public class CspRealm extends AuthorizingRealm {
 
     @Autowired
     protected CspPackageService cspPackageService;
+
+    @Autowired
+    protected AudioService audioService;
 
     @Value("${app.file.base}")
     protected String fileBase;
@@ -107,6 +111,9 @@ public class CspRealm extends AuthorizingRealm {
         principal.setNewUser(cspPackage == null);
         //添加用户信息缓存
         redisCacheUtils.setCacheObject(userToken,principal, Constants.TOKEN_EXPIRE_TIME);
+
+        //判断用户是否存在新手引导课件 不存在则添加
+        audioService.doCopyGuideCourse(principal.getId());
 
         if (CheckUtils.isEmpty(principal.getAvatar())) {
             principal.setAvatar(fileBase + FilePath.PORTRAIT.path + "/admin-userImg.png");

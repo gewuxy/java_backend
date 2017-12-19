@@ -91,7 +91,7 @@ public class LoginController extends CspBaseController {
         if (thirdPartyId == BindInfo.Type.EMAIL.getTypeId()) {
             // 邮箱登录
             redirectUrl = loginByEmail(username, password, model, response);
-            cspUserInfo = cspUserService.selectByUserName(username);
+            cspUserInfo = cspUserService.selectByEmail(username);
 
         } else if (thirdPartyId == BindInfo.Type.MOBILE.getTypeId()) {
             // 手机登录
@@ -99,36 +99,13 @@ public class LoginController extends CspBaseController {
             cspUserInfo = cspUserService.selectByMobile(mobile);
         }
 
-
-        //判断是否是老用户
-        if (cspUserInfo.getState() == true){
-            oldUserSendProfessionalEdition(cspUserInfo);
-            cspUserInfo.setState(false);
-            cspUserService.updateByPrimaryKey(cspUserInfo);
-        }else {
-            oldUserSendProfessionalEdition(cspUserInfo);
-        }
-        updatePackagePrincipal(cspUserInfo.getId());
+        modifyOldUser(cspUserInfo);
 
         return redirectUrl ;
     }
 
 
-    /**
-     * 老用户赠送三个月专业版
-     */
-    private void oldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
-        String userId = cspUserInfo.getId();
-        //根据id查出版本信息
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
-        if (cspUserInfo.getState() == true){
-            //赠送三个月的套餐
-            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
-        }
-        if (cspUserInfo.getState() == false && cspUserPackage!= null){
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
-        }
-    }
+
 
 
     /**
@@ -469,16 +446,7 @@ public class LoginController extends CspBaseController {
             // 将当前用户添加到cookie缓存 保存7天
             Principal principal = getWebPrincipal();
 
-            CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
-            //判断是否是老用户
-            if (cspUserInfo.getState() == true){
-                oldUserSendProfessionalEdition(cspUserInfo);
-                cspUserInfo.setState(false);
-                cspUserService.updateByPrimaryKey(cspUserInfo);
-            }else {
-                oldUserSendProfessionalEdition(cspUserInfo);
-            }
-            updatePackagePrincipal(cspUserInfo.getId());
+            modifyOldUser(userInfo);
             CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
             String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
             CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
@@ -510,11 +478,12 @@ public class LoginController extends CspBaseController {
      */
     @RequestMapping(value = "/register")
     @ResponseBody
-    public String register(CspUserInfo userInfo) {
+    public String register(CspUserInfo userInfo, HttpServletRequest request) {
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
        try {
            //添加用户的注册设备
            userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
+            userInfo.setLastLoginIp(request.getRemoteAddr());
             return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
             return error(local(e.getMessage()));
