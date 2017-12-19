@@ -9,7 +9,10 @@ import cn.medcn.csp.admin.Constants;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
+import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserPackage;
+import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,6 +34,9 @@ public class CspUserController extends BaseController {
 
    @Autowired
    private CspUserService cspUsersService;
+
+   @Autowired
+   protected CspUserPackageService cspUserPackageService;
 
    @Autowired
    private SystemRegionService systemRegionService;
@@ -50,9 +57,9 @@ public class CspUserController extends BaseController {
             pageable.put("active",0);
         }
         model.addAttribute("listType",listType);
-        MyPage<CspUserInfo> page = cspUsersService.findCspUserList(pageable);
+        MyPage<CspUserInfoDTO> page = cspUsersService.findCspUserList(pageable);
         model.addAttribute("page", page);
-        return "/user/cspUserList";
+        return listType == 2 ? "/user/frozenList":"/user/cspUserList";
     }
 
     /**
@@ -108,6 +115,19 @@ public class CspUserController extends BaseController {
             cspUsersService.updateByPrimaryKeySelective(user);
         }
         addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
+        StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
+        if (listType != null) {
+            buffer.append("?listType=").append(listType);
+        }
+        return buffer.toString();
+    }
+
+    @RequestMapping(value = "/package")
+    @Log(name="更新套餐信息")
+    public String packages(CspUserPackage packageInfo, String updateTimes,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
+        System.out.println(updateTimes);
+        cspUserPackageService.updateByPrimaryKey(packageInfo);
+        addFlashMessage(redirectAttributes, "更新成功");
         StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
         if (listType != null) {
             buffer.append("?listType=").append(listType);

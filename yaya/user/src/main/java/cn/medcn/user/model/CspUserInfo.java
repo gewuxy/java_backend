@@ -54,8 +54,11 @@ public class CspUserInfo implements Serializable{
     protected String token;
 
     protected Date registerTime;
+    protected Date updateTime;
+    protected String frozenReason;
 
     protected String info;
+    protected String remark;
 
     // 国内=0、海外=1
     protected Boolean abroad;

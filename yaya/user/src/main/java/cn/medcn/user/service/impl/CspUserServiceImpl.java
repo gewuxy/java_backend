@@ -595,9 +595,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
 
     @Override
-    public MyPage<CspUserInfo> findCspUserList(Pageable pageable) {
+    public MyPage<CspUserInfoDTO> findCspUserList(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
-        MyPage<CspUserInfo> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
+        MyPage<CspUserInfoDTO> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
         return page;
     }
 
