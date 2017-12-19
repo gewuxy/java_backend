@@ -16,6 +16,7 @@ import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
@@ -76,10 +77,11 @@ public class CspUserController extends CspBaseController {
      * 注册csp账号
      *
      * @param userInfo
+     * @param request
      */
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     @ResponseBody
-    public String register(CspUserInfo userInfo) {
+    public String register(CspUserInfo userInfo, HttpServletRequest request) {
         if (userInfo == null) {
             return error(local("user.param.empty"));
         }
@@ -110,6 +112,9 @@ public class CspUserController extends CspBaseController {
         try {
             //添加用户的注册设备
             userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
+
+            userInfo.setLastLoginIp(request.getRemoteAddr());
+
             return cspUserService.register(userInfo,template);
 
         } catch (SystemException e){

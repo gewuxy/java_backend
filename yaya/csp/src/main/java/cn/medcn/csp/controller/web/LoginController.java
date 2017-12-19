@@ -455,11 +455,12 @@ public class LoginController extends CspBaseController {
      */
     @RequestMapping(value = "/register")
     @ResponseBody
-    public String register(CspUserInfo userInfo) {
+    public String register(CspUserInfo userInfo, HttpServletRequest request) {
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
        try {
            //添加用户的注册设备
            userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
+            userInfo.setLastLoginIp(request.getRemoteAddr());
             return cspUserService.register(userInfo,template);
         } catch (SystemException e) {
             return error(local(e.getMessage()));
