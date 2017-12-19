@@ -172,7 +172,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/user/toFlux"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/memberManage"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form >
@@ -209,14 +209,13 @@
 </div>
 <script>
     $(function(){
-
         var pkSuccessMsg = '${successMsg}';
         //购买提示不为空显示
         if(isNotEmpty(pkSuccessMsg)){
             //弹出提示
             layer.open({
                 type: 1,
-                area: ['440px', '240px'],
+                area: ['450px', '250px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
@@ -251,7 +250,7 @@
                     body.find(".cancel-hook").on('click',function(){
                         layer.open({
                             type: 1,
-                            area: ['560px', '350px'],
+                            area: ['500px', '250px'],
                             fix: false, //不固定
                             title:false,
                             closeBtn:0,

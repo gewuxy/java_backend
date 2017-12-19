@@ -283,7 +283,7 @@ public class CspBaseController extends BaseController {
         } else if (type == Constants.NUMBER_TWO) {  // 选择标准版
             setPrincipal.setPkChangeMsg(local("package.standran.success.msg"));
         } else {                            // 购买高级或者专业版
-            setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{CspPackage.TypeId.values()[packageId - 1].getLabel()}));
+            setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{CspPackage.getLocalPackage(packageId)}));
         }
         redisCacheUtils.setCacheObject(setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
     }

@@ -208,7 +208,7 @@ public class PackageController extends CspBaseController {
     public String usdPay(Integer packageId, Integer currency, String payType, float money, Integer num) throws SystemException {
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
-        Payment payment = chargeService.generatePayment(money);           //需要修改此方法
+        Payment payment = chargeService.generatePayment(money);
         Payment responsePayment;
         String url = null;
         try {
