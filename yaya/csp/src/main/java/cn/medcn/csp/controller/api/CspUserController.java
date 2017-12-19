@@ -292,6 +292,7 @@ public class CspUserController extends CspBaseController {
             //判断用户是否已经存在新手引导会议
             audioService.doCopyGuideCourse(principal.getId());
 
+            modifyOldUser(userInfo);
             return success(dto);
 
         } catch (SystemException e) {

@@ -671,4 +671,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public UserRegionDTO brPopUserRegion() {
         return (UserRegionDTO) redisCacheUtils.bRPopFromQueue(USER_REGION_TOPIC_KEY);
     }
+
+    @Override
+    public CspUserInfo selectByEmail(String username) {
+        return cspUserInfoDAO.selectByEmail(username);
+    }
+
 }
