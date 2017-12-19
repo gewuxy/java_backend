@@ -59,10 +59,10 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="changePackage(${user.uid},${user.packageId})">升级</a></li>
-                            <li><a href="#">降级</a></li>
-                            <li><a href="#">时间修改</a></li>
-                            <li><a href="#">账号冻结</a></li>
+                            <li><a href="#" onclick="changePackage(1,${user.uid},${user.packageId})">升级</a></li>
+                            <li><a href="#" onclick="changePackage(2,${user.uid},${user.packageId})">降级</a></li>
+                            <li><a href="#" onclick="changePackage(3,${user.uid},${user.packageId})">时间修改</a></li>
+                            <li><a href="#" onclick="changePackage(4,${user.uid},${user.packageId})">账号冻结</a></li>
                         </ul>
                     </div>
                 </th>
@@ -100,7 +100,7 @@
             <form class="form-horizontal form-bordered form-row-strippe" id="modalForm" action="/csp/user/package" method="post">
                 <div class="modal-body" >
                     <div class="control-group">
-                        <label class="control-label">升级为:</label>
+                        <label class="control-label packageLable">升级为:</label>
                         <div class="controls">
                             <select id="packageId" name="packageId" style="width: 130px;">
                                 <option value="">请选择</option>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div>
-                        <label class="control-label">有效期至:</label>
+                        <label class="control-label timeLable">有效期至:</label>
                         <div class="controls">
                             <input type="text" name="updateTimes" id="updateTimes" placeholder="点击选择开始时间">
                         </div>
@@ -119,6 +119,7 @@
                 </div>
                 <div class="modal-footer bg-info">
                     <input type="hidden" name="userId" id="userId" value=""/>
+                    <input type="hidden" name="actionType" id="actionType" value=""/>
                     <button type="button" class="btn green">返回</button>
                     <button type="button" class="btn btn-primary" onclick="submitBtn()">提交</button>
                 </div>
@@ -135,14 +136,29 @@
         initLaydate("updateTimes");
     })
 
-    function changePackage(userId,packageId){
+    function changePackage(actionType,userId,packageId){
         $("#packageId").select2().val(packageId).trigger("change");
         $("#userId").val(userId);
+        $("#actionType").val(actionType);
+        if(actionType == 1){ //升级
+            $(".modal-title").html("升级");
+            $(".packageLable").val("升级为：");
+            $(".timeLable").val("有效期至：");
+        }else if(actionType == 2){
+            $(".modal-title").html("降级");
+            $(".packageLable").val("降级为：");
+            $(".timeLable").val("有效期至：");
+        }else{
+            $(".modal-title").html("修改时间");
+            $(".packageLable").val("当前为：");
+            $(".timeLable").val("修改时间至：");
+        }
         $("#myModal").modal("show");
     }
 
     function submitBtn() {
-        top.layer.confirm("确认升级吗", function(){
+        top.layer.confirm("确认提交吗", function(){
+            $("#updateTimes").val($("#updateTimes").val() + " 23:59:59");
            $("#modalForm").submit();
            top.layer.closeAll('dialog');
         });
