@@ -684,9 +684,6 @@ public class MeetingController extends CspBaseController {
         String cspUserId = principal.getId();
 
         pageable.put("cspUserId", cspUserId);
-        
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
-        //audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
 
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
@@ -715,7 +712,7 @@ public class MeetingController extends CspBaseController {
         }
         Map<String, Object> result = new HashMap<>();
         result.put("list", page.getDataList());
-        CspPackage cspPackage = cspPackageService.findUserPackageById(principal.getId());
+        CspPackage cspPackage = principal.getCspPackage();
         result.put("hideCount", cspPackage.getHiddenMeetCount() == null ? 0 : cspPackage.getHiddenMeetCount());
         result.put("packageId", cspPackage.getId());
 
