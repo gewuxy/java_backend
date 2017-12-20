@@ -1,5 +1,6 @@
 package cn.medcn.user.dao;
 
+import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.CspUserInfo;
@@ -62,4 +63,6 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
     int selectNewUser();
 
     int selectAllUserCount();
+
+    List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map);
 }

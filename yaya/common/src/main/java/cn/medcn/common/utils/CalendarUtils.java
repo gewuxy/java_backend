@@ -3,12 +3,11 @@ package cn.medcn.common.utils;
 import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.SystemException;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-
-import static cn.medcn.common.Constants.NUMBER_THREE;
 
 /**
  * Created by lixuan on 2017/1/16.
@@ -16,9 +15,6 @@ import static cn.medcn.common.Constants.NUMBER_THREE;
 public class CalendarUtils {
     // 一个月默认为30天
     public static final int DEFAULT_MONTH = 30;
-
-    // 一年默认为365天
-    public static final int DEFAULT_YEAR = 365;
 
     /**
      * 计算month个月之后的时间
@@ -103,11 +99,50 @@ public class CalendarUtils {
     }
 
     /**
+     * 获取当前时间所在月份第一天的开始时间
+     * @return
+     */
+    public static Date getMonthFirstDay(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.add(Calendar.MONTH, 0);
+        //设置为1号,当前日期既为本月第一天
+        c.set(Calendar.DAY_OF_MONTH,1);
+        //将小时至0
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        //将分钟至0
+        c.set(Calendar.MINUTE, 0);
+        //将秒至0
+        c.set(Calendar.SECOND,0);
+        //将毫秒至0
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTime();
+    }
+
+
+    /**
      * 获取本月最后一天结束时间
      * @return
      */
     public static Date getMonthLastDay(){
         Calendar ca = Calendar.getInstance();
+        ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
+        //将小时至23
+        ca.set(Calendar.HOUR_OF_DAY, 23);
+        //将分钟至59
+        ca.set(Calendar.MINUTE, 59);
+        //将秒至59
+        ca.set(Calendar.SECOND,59);
+        return ca.getTime();
+    }
+
+    /**
+     * 获取当前时间所在月份最后一天结束时间
+     * @return
+     */
+    public static Date getMonthLastDay(Date date){
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(date);
         ca.set(Calendar.DAY_OF_MONTH, ca.getActualMaximum(Calendar.DAY_OF_MONTH));
         //将小时至23
         ca.set(Calendar.HOUR_OF_DAY, 23);
@@ -135,6 +170,27 @@ public class CalendarUtils {
         c.set(Calendar.MILLISECOND, 0);
         return c.getTime();
     }
+
+    /**
+     * 获取当前时间所在周的周一时间
+     * @return
+     */
+    public static Date getWeekFirstDay(Date date){
+        Calendar c = Calendar.getInstance();
+        c.setTime(date);
+        c.set(Calendar.DAY_OF_WEEK, Calendar.MONDAY);
+        //将小时至0
+        c.set(Calendar.HOUR_OF_DAY, 0);
+        //将分钟至0
+        c.set(Calendar.MINUTE, 0);
+        //将秒至0
+        c.set(Calendar.SECOND,0);
+        //将毫秒至0
+        c.set(Calendar.MILLISECOND, 0);
+        return c.getTime();
+    }
+
+
 
     /**
      * 根据偏移量计算offset之前的周一
@@ -231,6 +287,25 @@ public class CalendarUtils {
     }
 
     /**
+     * 获取本周最后一天结束时间
+     * @return
+     */
+    public static Date getWeekLastDay(Date date){
+        Calendar c = Calendar.getInstance();
+        //设置周一为一周的开始时间
+        c.setTime(date);
+        c.setFirstDayOfWeek(Calendar.MONDAY);
+        c.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        //将小时至23
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        //将分钟至59
+        c.set(Calendar.MINUTE,59);
+        //将秒至59
+        c.set(Calendar.SECOND,59);
+        return c.getTime();
+    }
+
+    /**
      * 根据日期 获取星期名
      * @param day
      * @return
@@ -281,6 +356,17 @@ public class CalendarUtils {
     }
 
     /**
+     * 获取当年的第一天
+     * @return
+     */
+    public static Date getCurrYearFirstDay(Date date){
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int currentYear = cal.get(Calendar.YEAR);
+        return getYearFirstDay(currentYear);
+    }
+
+    /**
      * 获取某年第一天日期
      * @param year 年份
      * @return Date
@@ -301,6 +387,19 @@ public class CalendarUtils {
         Calendar currCal=Calendar.getInstance();
         int currentYear = currCal.get(Calendar.YEAR);
         return getYearLastDay(currentYear);
+    }
+
+    /**
+     * 获取当年的最后一天
+     * @return
+     */
+    public static Date getCurrYearLastDay(Date date) throws ParseException {
+        Calendar cal=Calendar.getInstance();
+        cal.setTime(date);
+        int currentYear = cal.get(Calendar.YEAR);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date lastDate = format.parse(currentYear + "-12-31 23:59");
+        return lastDate;
     }
 
     /**
@@ -476,21 +575,48 @@ public class CalendarUtils {
         return days;
     }
 
-    /**
-     * 指定日期加上月数
-     * @param date
-     * @param monthCount
-     * @return
-     */
-    public static Date dateAddMonth(Date date,int monthCount){
-        Calendar rightNow = Calendar.getInstance();
-        rightNow.setTime(date);
-        rightNow.add(Calendar.MONTH, monthCount);// 日期加3个月
-        Date endDate = rightNow.getTime();
-        return endDate;
+
+
+
+    public static Date getQuarterFirstDate(Date date) throws ParseException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);//获取月份
+        int year = cal.get(Calendar.YEAR); //获取年份
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date firstDate = null;
+        if(month <= 3){
+            return format.parse(year + "-01-01 00:00");
+        } else if (month > 3 && month <= 6) {
+            return format.parse(year + "04-01 00:00");
+        }else if(month > 6 && month <=9){
+            return format.parse(year + "07-01 00:00");
+        }else{
+            return format.parse(year + "10-01 00:00");
+        }
     }
 
-    public static void main(String[] args) {
+    public static Date getQuarterLastDate(Date date) throws ParseException {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        int month = cal.get(Calendar.MONTH);//获取月份
+        int year = cal.get(Calendar.YEAR); //获取年份
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+        Date firstDate = null;
+        if(month <= 3){
+            return format.parse(year + "-03-31 23:59");
+        } else if (month > 3 && month <= 6) {
+            return format.parse(year + "06-30 23:59");
+        }else if(month > 6 && month <=9){
+            return format.parse(year + "09-30 23:59");
+        }else{
+            return format.parse(year + "12-31 23:59");
+        }
+    }
+
+
+
+    public static void main(String[] args)  {
        /*Date date = calendarMonth(2);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));*/
         //sec = (diff / Constants.NUMBER_THOUSAND - TimeUnit.DAYS.toSeconds(day) - TimeUnit.MINUTES.toSeconds(min));
@@ -502,7 +628,7 @@ public class CalendarUtils {
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
 
-        /*SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String st = "2017-10-13 09:49:54";
 
         try {
@@ -514,13 +640,10 @@ public class CalendarUtils {
             Calendar calendar = Calendar.getInstance();
         } catch (ParseException e) {
             e.printStackTrace();
-        }*/
-        Date date = dateAddMonth(new Date(), -2);
-        System.out.println(date);
-
-        Date date1 = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
-        System.out.println(date1);
-
-        System.out.println(new Date() != date1);
+        }
     }
+
+
+
+
 }

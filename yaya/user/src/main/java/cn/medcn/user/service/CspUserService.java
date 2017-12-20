@@ -5,6 +5,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.sys.model.SystemNotify;
+import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
@@ -20,6 +21,7 @@ import javax.mail.MessagingException;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Liuchangling on 2017/9/26.
@@ -183,6 +185,13 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @return
      */
     int selectRegisterCount(int location);
+
+    /**
+     * 新注册的用户列表
+     * @param map
+     * @return
+     */
+    List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map);
 
     /**
      * 将用户地理位置信息放入队列中

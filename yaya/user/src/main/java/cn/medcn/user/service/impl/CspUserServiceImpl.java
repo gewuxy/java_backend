@@ -22,6 +22,7 @@ import cn.medcn.user.dao.EmailTemplateDAO;
 import cn.medcn.user.dao.UserFluxDAO;
 import cn.medcn.user.dao.*;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
@@ -46,6 +47,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.DEFAULT_LOCAL;
@@ -626,6 +628,18 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public int selectRegisterCount(int location) {
         return cspUserInfoDAO.selectRegisterCount(location);
+    }
+
+
+    /**
+     * 新注册的csp用户列表
+     * @param map
+     * @return
+     */
+    @Override
+    public List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map) {
+
+        return cspUserInfoDAO.findNewlyRegisterList(map);
     }
 
     /**
