@@ -224,6 +224,11 @@ public class CspUserController extends BaseController {
         return success(options);
     }
 
+    /**
+     * 更新用户缓存
+     *
+     * @param userId
+     */
     public void adminUpdateUserInfoCache(String userId){
         CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
         String token = userInfo.getToken();
@@ -235,7 +240,7 @@ public class CspUserController extends BaseController {
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
-        redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
     }
 
 }
