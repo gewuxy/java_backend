@@ -482,7 +482,7 @@ public class MeetingController extends CspBaseController {
         }
 
         if (audioCourse.getDeleted()) {
-            throw new SystemException(local("source.has.deleted"));
+            throw new SystemException(local("course.error.api.deleted"));
         }
         if (audioCourse.getLocked() != null && audioCourse.getLocked()) {
             throw new SystemException(local("course.error.api.locked"));
@@ -843,7 +843,7 @@ public class MeetingController extends CspBaseController {
         }
 
         if (course.getDeleted() != null && course.getDeleted()) {
-            return error(local("source.has.deleted"));
+            return error(local("course.error.api.deleted"));
         }
 
         if (course.getLocked() != null && course.getLocked()) {
