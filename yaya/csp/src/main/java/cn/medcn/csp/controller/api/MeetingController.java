@@ -24,6 +24,7 @@ import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetWatermarkService;
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
@@ -221,6 +222,11 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
+
+        if (meetCountOut()) {
+            return error(local("meet.error.count.out"));
+        }
+
         if (courseId == null || courseId ==0
                 || StringUtils.isEmpty(title)) {
             return error(local("error.param"));
@@ -704,6 +710,10 @@ public class MeetingController extends CspBaseController {
 
             }
         }
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", page.getDataList());
+        CspPackage cspPackage = cspPackageService.findUserPackageById(principal.getId());
+        result.put("hideCount", cspPackage.getHiddenMeetCount() == null ? 0 : cspPackage.getHiddenMeetCount());
 
         return success(page.getDataList());
     }

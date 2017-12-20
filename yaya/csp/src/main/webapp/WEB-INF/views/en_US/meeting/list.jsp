@@ -296,7 +296,8 @@
                     content: $('.player-popup-box'),
                     success:function(){
 
-                        var added = 105;
+                        //var added = 105;
+                        var added = 608;
                         var newOffset;
 
                         //幻灯片轮播
@@ -318,8 +319,9 @@
 
                                 //获取默认偏移值
                                 var defaultOffset = swiper.snapGrid;
-                                for(var i =0; i<defaultOffset.length; i++){
-                                    defaultOffset[i] = defaultOffset[i] - added ;
+                                defaultOffset[0] = -160;
+                                for(var i =1; i<defaultOffset.length; i++){
+                                    defaultOffset[i] = defaultOffset[i-1] + added ;
                                 }
                                 //更新偏移值
                                 var updateOffset = defaultOffset.slice(1);
@@ -413,7 +415,7 @@
                     },
                     yes:function(){
                         //成功跳去会员页面，让用户升级
-                        window.location.href='user-06.html';
+                        window.location.href='${ctx}/mgr/user/memberManage';
                     },
                     cancel :function(){
 
@@ -581,10 +583,10 @@
                                     <span><i class="hot">
                                         <c:choose>
                                             <c:when test="${course.playType == 0}">
-                                                ${course.playPage + 1}
+                                                ${course.playPage}
                                             </c:when>
                                             <c:otherwise>
-                                                ${course.livePage + 1}
+                                                ${course.livePage}
                                             </c:otherwise>
                                         </c:choose>
                                     </i><i class="muted">|</i>${course.pageCount}</span>
@@ -820,7 +822,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/memberManage"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form action="">

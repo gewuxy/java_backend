@@ -1,15 +1,19 @@
 package cn.medcn.csp.admin.controllor;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.csp.admin.Constants;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
+import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserPackage;
+import cn.medcn.user.service.CspUserPackageHistoryService;
+import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -19,6 +23,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -32,7 +38,13 @@ public class CspUserController extends BaseController {
    private CspUserService cspUsersService;
 
    @Autowired
+   protected CspUserPackageService cspUserPackageService;
+
+   @Autowired
    private SystemRegionService systemRegionService;
+
+   @Autowired
+   protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
     @RequestMapping(value = "/list")
     @Log(name = "csp用户列表")
@@ -50,9 +62,9 @@ public class CspUserController extends BaseController {
             pageable.put("active",0);
         }
         model.addAttribute("listType",listType);
-        MyPage<CspUserInfo> page = cspUsersService.findCspUserList(pageable);
+        MyPage<CspUserInfoDTO> page = cspUsersService.findCspUserList(pageable);
         model.addAttribute("page", page);
-        return "/user/cspUserList";
+        return listType == 2 ? "/user/frozenList":"/user/cspUserList";
     }
 
     /**
@@ -96,18 +108,34 @@ public class CspUserController extends BaseController {
     @RequestMapping(value = "/update")
     @Log(name="更新csp用户信息")
     public String stopOrActive(CspUserInfo user,Integer actionType,Integer listType,Integer isReset, RedirectAttributes redirectAttributes) {
-        if(actionType == 1){ //停用
+        if(actionType == Constants.NUMBER_ONE){ //停用
             user.setActive(false);
             cspUsersService.updateByPrimaryKeySelective(user);
-        }else if(actionType == 2){   //删除
+        }else if(actionType == Constants.NUMBER_TWO){   //删除
             cspUsersService.deleteByPrimaryKey(user);
         }else{   //修改用户信息
-            if(isReset == 1){   //密码重置
+            if(isReset == Constants.NUMBER_ONE){   //密码重置
                 user.setPassword(MD5Utils.MD5Encode(Constants.RESET_PASSWORD));
             }
             cspUsersService.updateByPrimaryKeySelective(user);
         }
         addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
+        StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
+        if (listType != null) {
+            buffer.append("?listType=").append(listType);
+        }
+        return buffer.toString();
+    }
+
+    @RequestMapping(value = "/package")
+    @Log(name="更新套餐信息")
+    public String packages(CspUserPackage packageInfo, String updateTimes,Integer oldId,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
+        System.out.println(updateTimes);
+        //更新版本信息
+        cspUserPackageService.updateByPrimaryKey(packageInfo);
+        //添加历史版本信息
+        cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
+        addFlashMessage(redirectAttributes, "更新成功");
         StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
         if (listType != null) {
             buffer.append("?listType=").append(listType);
@@ -128,6 +156,11 @@ public class CspUserController extends BaseController {
         }
         List<SystemRegion> options = systemRegionService.findRegionByPreName(name);
         return success(options);
+    }
+
+    public static void main(String[] args) throws ParseException {
+        SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
+        System.out.printf(String.valueOf(sdf.parse("2017-10-10 23:59:59")));
     }
 
 }

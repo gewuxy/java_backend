@@ -30,6 +30,7 @@
 <script src="${ctxStatic}/js/layer_util.js"></script>
 <script src="${ctxStatic}/js/common.js" type="text/javascript"></script>
 <script src="${ctxStatic}/jquery-select2/3.4/select2.min.js"></script>
+<script type="text/javascript" src="${ctxStatic}/laydate/laydate.js"></script>
 <link href="${ctxStatic}/jquery-select2/3.4/select2.min.css" type="text/css" rel="stylesheet" />
 
 

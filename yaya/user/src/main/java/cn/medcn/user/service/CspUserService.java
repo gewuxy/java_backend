@@ -169,7 +169,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param pageable
      * @return
      */
-    MyPage<CspUserInfo> findCspUserList(Pageable pageable);
+    MyPage<CspUserInfoDTO> findCspUserList(Pageable pageable);
 
     CspUserInfo selectByUserName(String userName);
 

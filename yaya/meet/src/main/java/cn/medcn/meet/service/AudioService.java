@@ -337,5 +337,18 @@ public interface AudioService extends BaseService<AudioCourse>  {
      */
     AudioCourse findEarliestCourse(String cspUserId);
 
-    AudioCourse doCopyGuideCourse(String cspUserId);
+    /**
+     * 复制新手引导课件
+     * 返回新的课件ID
+     * @param cspUserId
+     * @return
+     */
+    Integer doCopyGuideCourse(String cspUserId);
+
+    /**
+     * 检测用户是否已经存在新手引导课件
+     * @param cspUserId
+     * @return
+     */
+    boolean checkGuideExists(String cspUserId);
 }

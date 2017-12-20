@@ -38,18 +38,33 @@
         WHERE tu.user_id = #{userId} ORDER BY tu.expense_time DESC
     </select>
 
-    <select id="findCspUserList" resultType="cn.medcn.user.model.CspUserInfo">
-        SELECT * FROM t_csp_user_info WHERE 1=1
+    <select id="findCspUserList" resultType="cn.medcn.user.dto.CspUserInfoDTO">
+        SELECT cui.id as uid,cui.`abroad`,cui.`frozen_reason`,cui.`nick_name`,cui.`remark`,
+        cui.`register_time`,cui.`state`,cup.`package_start`,cup.`package_end`,cui.`active`,
+        cup.`package_id`,temp.payTimes,temp.payMoneyCn,temp.payMoneyUs
+        FROM t_csp_user_info cui
+        LEFT JOIN t_csp_user_package cup
+        ON cui.`id` = cup.`user_id`
+        LEFT JOIN
+        (SELECT user_id,COUNT(user_id) AS payTimes,
+        SUM(CASE WHEN currency_type=0 THEN should_pay END) AS payMoneyCN,
+        SUM(CASE WHEN currency_type=1 THEN should_pay END) AS payMoneyUs
+        FROM `t_csp_package_order` WHERE state = 1 GROUP BY user_id) temp
+        ON temp.user_id = cui.id
+        LEFT JOIN
+        (SELECT csp_user_id,COUNT(csp_user_id) AS meets FROM  `t_audio_course` WHERE source_type = 1 AND published = 1 AND deleted != 1 GROUP BY csp_user_id) meet
+        ON meet.csp_user_id=cui.`id`
+        WHERE 1=1
         <if test="abroad != null">
-            AND abroad = #{abroad}
+            AND cui.abroad = #{abroad}
         </if>
         <if test="active != null">
-            AND active = #{active}
+            AND cui.active = #{active}
         </if>
         <if test="keyWord != null">
-            AND (nick_name like CONCAT(#{keyWord}, '%') OR
-            user_name like CONCAT(#{keyWord}, '%') OR
-            mobile like CONCAT(#{keyWord}, '%')
+            AND (cui.nick_name like CONCAT(#{keyWord}, '%') OR
+            cui.user_name like CONCAT(#{keyWord}, '%') OR
+            cui.mobile like CONCAT(#{keyWord}, '%')
             )
         </if>
     </select>
