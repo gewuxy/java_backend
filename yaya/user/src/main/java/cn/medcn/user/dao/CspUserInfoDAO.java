@@ -58,4 +58,8 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
     int selectRegisterCount(int location);
 
     CspUserInfo selectByEmail(String username);
+
+    int selectNewUser();
+
+    int selectAllUserCount();
 }

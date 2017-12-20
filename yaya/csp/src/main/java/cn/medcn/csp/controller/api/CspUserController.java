@@ -287,22 +287,6 @@ public class CspUserController extends CspBaseController {
         }
     }
 
-    /**
-     * 老用户赠送三个月专业版
-     */
-    private void oldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
-        //根据id查出版本信息
-        String userId = cspUserInfo.getId();
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
-        if (cspUserInfo.getState() == true){
-            //赠送三个月的套餐
-            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
-        }
-        if (cspUserInfo.getState() == false && cspUserPackage!= null){
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
-        }
-    }
-
 
     /**
      * 封装返回给前端的用户数据

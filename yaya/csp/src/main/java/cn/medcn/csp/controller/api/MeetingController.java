@@ -25,6 +25,7 @@ import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
@@ -674,6 +675,10 @@ public class MeetingController extends CspBaseController {
         String cspUserId = principal.getId();
 
         pageable.put("cspUserId", cspUserId);
+        
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
+        audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
+
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
         if (!CheckUtils.isEmpty(page.getDataList())) {

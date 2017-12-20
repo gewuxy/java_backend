@@ -12,4 +12,8 @@ import java.util.List;
 public interface CspUserPackageDAO extends Mapper<CspUserPackage>{
 
     List<CspUserPackage> findUserPackages();
+
+    int selectPremiumEdition();
+
+    int selectProfessionalEdition();
 }

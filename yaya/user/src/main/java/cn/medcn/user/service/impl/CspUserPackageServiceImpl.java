@@ -78,6 +78,16 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         doSendPackageTimeOut(cspUserPackage,packageId);
     }
 
+    @Override
+    public int selectPremiumEdition() {
+        return userPackageDAO.selectPremiumEdition();
+    }
+
+    @Override
+    public int selectProfessionalEdition() {
+        return userPackageDAO.selectProfessionalEdition();
+    }
+
 
     /**
      * 定时获取套餐过期的用户

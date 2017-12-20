@@ -166,4 +166,19 @@
     <select id="findEarliestCourse" resultType="cn.medcn.meet.model.AudioCourse">
         select * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND locked = true AND deleted = false ORDER by create_time asc limit 1
     </select>
+
+    <update id="updateByUserId">
+        UPDATE t_audio_course SET locked = 1 WHERE csp_user_id = #{cspUserId} AND source_type = 1
+        and deleted != 1;
+    </update>
+
+    <update id="updateByUserIdOpen">
+       UPDATE t_audio_course SET locked = 0 WHERE csp_user_id = #{cspUserId} AND source_type = 1
+        and deleted != 1 and id  in (select c.id from (SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} ORDER BY create_time asc limit #{meets}) as c );
+    </update>
+
+    <update id="updateByUserIdOpenAll">
+        UPDATE t_audio_course SET locked = 0 WHERE csp_user_id = #{cspUserId} AND source_type = 1
+        and deleted != 1 ORDER BY create_time asc;
+    </update>
 </mapper>

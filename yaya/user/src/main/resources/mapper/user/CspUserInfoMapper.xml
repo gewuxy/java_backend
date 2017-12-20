@@ -86,4 +86,13 @@
         </if>
     </select>
 
+    <select id="selectNewUser" resultType="Integer">
+        select count(id) from t_csp_user_info
+        where date(register_time)=curdate()-INTERVAL 1 day
+    </select>
+
+    <select id="selectAllUserCount" resultType="Integer">
+        select count(id) from t_csp_user_info
+    </select>
+
 </mapper>

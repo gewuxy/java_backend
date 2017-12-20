@@ -15,6 +15,7 @@ import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
+import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.model.CspPackage;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
@@ -71,6 +72,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Autowired
     protected MeetWatermarkDAO watermarkDAO;
+
+    @Autowired
+    protected CspPackageDAO cspPackageDAO;
 
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
@@ -1011,6 +1015,23 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 audioCourseDAO.updateByPrimaryKey(course);
             }
         }
+    }
+
+    @Override
+    public void doModifyAudioCourseByPackageId(String cspUserId, int packageId) {
+        // 查询用户发布的会议
+        CspPackage cspPackage = cspPackageDAO.selectByPrimaryKey(packageId);
+        Integer meets = cspPackage.getLimitMeets();
+        if(meets == 0){
+            //放开所有的会议
+            audioCourseDAO.updateByUserIdOpenAll(cspUserId);
+        }else{
+            //把所有的会议加锁
+            audioCourseDAO.updateByUserId(cspUserId);
+            //放开固定的会议
+            audioCourseDAO.updateByUserIdOpen(cspUserId,meets);
+        }
+
     }
 
     @Override

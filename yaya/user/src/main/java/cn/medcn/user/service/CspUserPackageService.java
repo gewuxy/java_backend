@@ -23,4 +23,7 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
 
     void modifySendPackageTimeOut(CspUserPackage cspUserPackage, Integer packageId);
 
+    int selectPremiumEdition();
+
+    int selectProfessionalEdition();
 }

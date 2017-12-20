@@ -141,6 +141,11 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         return false;
     }
 
+    @Override
+    public Double selectNewMoney() {
+        return cspPackageDAO.selectNewMoney();
+    }
+
     /**
      * 购买成功推送消息
      *

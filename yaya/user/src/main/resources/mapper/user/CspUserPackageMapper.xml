@@ -5,4 +5,12 @@
         SELECT * from t_csp_user_package where package_id >1
         and DATE_FORMAT(package_end, '%Y-%m-%d') &lt;=  CURDATE();
     </select>
+
+    <select id="selectPremiumEdition" resultType="Integer">
+        SELECT count(*) FROM t_csp_user_package where package_id = 2
+    </select>
+
+    <select id="selectProfessionalEdition" resultType="Integer">
+        SELECT count(*) FROM t_csp_user_package where package_id = 3
+    </select>
 </mapper>
