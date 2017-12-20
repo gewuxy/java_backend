@@ -302,7 +302,7 @@ public class CspBaseController extends BaseController {
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
-        redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN +"_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
 
