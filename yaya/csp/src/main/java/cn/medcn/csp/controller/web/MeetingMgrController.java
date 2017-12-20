@@ -271,7 +271,7 @@ public class MeetingMgrController extends CspBaseController {
 
         Principal principal = getWebPrincipal();
 
-        if (meetCountOut()) {
+        if (courseId == null && meetCountOut()) {
             return defaultRedirectUrl();
         }
 

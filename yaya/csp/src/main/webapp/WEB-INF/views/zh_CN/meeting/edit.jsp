@@ -19,6 +19,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
     <link rel="stylesheet" href="${ctxStatic}/css/daterangepicker.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
 
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <style>
@@ -242,7 +243,7 @@
             <div class="metting-classify-popup-main">
                 <div class="fl clearfix">
 
-                    <div class="metting-classify-popup-tab">
+                    <div class="metting-classify-popup-tab hidden-box">
                         <ul id="rootList">
                             <c:set var="rootId" value="${rootList[0].id}"/>
                             <c:forEach items="${rootList}" var="c" varStatus="status">
@@ -264,7 +265,7 @@
                 </div>
                 <div class="oh clearfix">
 
-                    <div class="metting-classify-popup-tab-item">
+                    <div class="metting-classify-popup-tab-item hidden-box">
                         <ul id="subList">
 
                             <c:forEach items="${subList}" var="cc" varStatus="status">
@@ -317,6 +318,7 @@
 
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
+<script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 
 <script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
 
@@ -635,15 +637,21 @@
         $('.meeting-classify-hook').on('click',function(){
             layer.open({
                 type: 1,
-                area: ['732px', '916px'],
+                area: ['732px', '90%'],
                 fix: false, //不固定
                 title:false,
                 anim:5,
                 closeBtn:0,
                 content: $('.meeting-classify-popup-box'),
-                success:function(){
+                success:function(layero){
 
-
+                    //弹出层高度 - （标题 + 标题到内容的间距 + 弹出层的内边距)
+                    var popupHeight = layero.height() - 85;
+                    //触发滚动条控件
+                    $('.hidden-box').perfectScrollbar();
+                    //设置两栏的高度不超过弹出层高度
+                    layero.find('.metting-classify-popup-tab').height(popupHeight * 0.8);
+                    layero.find('.metting-classify-popup-tab-item').height(popupHeight * 0.8);
 
                 },
                 cancel :function(){
