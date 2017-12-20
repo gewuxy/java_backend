@@ -1,8 +1,5 @@
-package cn.medcn.csp.security;
+package cn.medcn.user.model;
 
-import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserInfos;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +10,37 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-public class Principal extends CspUserInfos implements Serializable{
+public class Principal implements Serializable{
+
+    protected String id;
+
+    protected String nickName;
+
+    protected String mobile;
+
+    protected String email;
+
+    protected String token;
+
+    protected String avatar;
+
+    protected Boolean abroad;
+
+    //是否新用户
+    protected Boolean newUser;
+
+    //套餐id
+    protected Integer packageId;
+
+    // 用户套餐
+    protected CspPackage cspPackage;
+
+    //购买成功消息
+    protected String pkChangeMsg;
+    //老用戶為true 新用戶為false
+    protected Boolean state;
+    //是否冻结 true 表示未冻结 false 表示已冻结
+    protected Boolean active;
 
     public static Principal build(CspUserInfo userInfo){
         if (userInfo != null) {

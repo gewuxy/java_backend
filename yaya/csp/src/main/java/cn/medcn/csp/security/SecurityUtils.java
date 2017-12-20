@@ -1,5 +1,7 @@
 package cn.medcn.csp.security;
 
+import cn.medcn.user.model.Principal;
+
 /**
  * Created by lixuan on 2017/9/18.
  */

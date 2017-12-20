@@ -207,8 +207,6 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     CspUserInfo selectByEmail(String username);
 
-    CspUserInfos build(CspUserInfo userInfo);
-
     int selectNewUser();
 
     int selectAllUserCount();

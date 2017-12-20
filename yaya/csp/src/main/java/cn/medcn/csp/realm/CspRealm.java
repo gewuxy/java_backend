@@ -3,13 +3,11 @@ package cn.medcn.csp.realm;
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.utils.*;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.Principal;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspPackageService;
-import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -18,8 +16,6 @@ import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-
-import static cn.medcn.common.Constants.DEFAULT_LOCAL;
 
 
 /**

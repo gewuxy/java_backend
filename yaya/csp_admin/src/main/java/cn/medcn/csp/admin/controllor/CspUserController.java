@@ -12,10 +12,7 @@ import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
 import cn.medcn.user.dto.CspUserInfoDTO;
-import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserInfos;
-import cn.medcn.user.model.CspUserPackage;
+import cn.medcn.user.model.*;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
@@ -229,7 +226,7 @@ public class CspUserController extends BaseController {
         if(StringUtils.isEmpty(token)){  //没有token无需更新
             return ;
         }
-        CspUserInfos principal = cspUserService.build(userInfo);
+        Principal principal = Principal.build(userInfo);
         CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
