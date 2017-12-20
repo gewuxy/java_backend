@@ -342,7 +342,7 @@
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
                 nextItemIsVideo = $('.swiper-slide-prev').find('video');
-
+                clearTimeout(slideTimer);
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
 

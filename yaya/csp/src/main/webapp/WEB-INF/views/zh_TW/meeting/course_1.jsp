@@ -403,6 +403,7 @@
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
+                clearTimeout(slideTimer);
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
 //                if (!dataSrc.length && !activeItemIsVideo.length){

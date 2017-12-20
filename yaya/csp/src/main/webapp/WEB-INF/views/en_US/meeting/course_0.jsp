@@ -271,7 +271,7 @@
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 //activeItemIsVideo = $('.swiper-slide-active').find('video');
-
+                clearTimeout(slideTimer);
                 nextItemIsVideo = $('.swiper-slide-prev').find('video');
 
                 //触发切换音频
