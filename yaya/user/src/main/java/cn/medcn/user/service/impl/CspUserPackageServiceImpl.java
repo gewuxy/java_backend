@@ -17,6 +17,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+import static cn.medcn.common.Constants.NUMBER_THREE;
+import static cn.medcn.common.utils.CalendarUtils.DEFAULT_MONTH;
+
 /**
  * Created by Liuchangling on 2017/12/8.
  */
@@ -59,6 +62,32 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         userPackageDAO.insertSelective(userPackage);
     }
 
+    /**
+     * 老用户赠送三个月的专业版
+     * @param cspUserPackage
+     * @param userId
+     */
+    @Override
+    public void modifyOldUser(CspUserPackage cspUserPackage, String userId) {
+        Integer beforePackageId = cspUserPackage.getPackageId();
+        doModifyOldUserVersion(cspUserPackage,userId);
+    }
+
+    @Override
+    public void modifySendPackageTimeOut(CspUserPackage cspUserPackage, Integer packageId) {
+        doSendPackageTimeOut(cspUserPackage,packageId);
+    }
+
+    @Override
+    public int selectPremiumEdition() {
+        return userPackageDAO.selectPremiumEdition();
+    }
+
+    @Override
+    public int selectProfessionalEdition() {
+        return userPackageDAO.selectProfessionalEdition();
+    }
+
 
     /**
      * 定时获取套餐过期的用户
@@ -99,4 +128,52 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         history.setUpdateType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
         packageHistoryDAO.insert(history);
     }
+
+    /**
+     * 老用户赠送三个月的专业版
+     * @param cspUserPackage
+     * @param userId
+     */
+    private void doModifyOldUserVersion(CspUserPackage cspUserPackage,String userId){
+        Date startTime = CalendarUtils.nextDateStartTime();
+        Date endTime = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
+        cspUserPackage.setUserId(userId);
+        cspUserPackage.setSourceType(CspUserPackage.modifyType.ADMIN_MODIFY.ordinal());
+        cspUserPackage.setUpdateTime(new Date());
+        if (cspUserPackage.getPackageId() == CspPackage.TypeId.STANDARD.getId()){
+            cspUserPackage.setPackageStart(startTime);
+            cspUserPackage.setPackageEnd(endTime);
+        } else {
+            //高级和专业版 在原有的基础上加上三个月
+            cspUserPackage.setPackageEnd(CalendarUtils.dateAddMonth(cspUserPackage.getPackageEnd(),NUMBER_THREE));
+        }
+        cspUserPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
+        userPackageDAO.updateByPrimaryKey(cspUserPackage);
+        //添加到套餐详情中
+        doAddUserPackageDetail(cspUserPackage,cspUserPackage.getPackageId());
+
+    }
+
+    /**
+     * 到期还原以前的版本
+     * @param cspUserPackage
+     * @param beforePackageId
+     */
+    private void doSendPackageTimeOut(CspUserPackage cspUserPackage,Integer beforePackageId){
+
+        //到期之后还原以前的版本
+        if (cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
+            if (new Date() == CalendarUtils.dateAddMonth(cspUserPackage.getPackageEnd(),-NUMBER_THREE)){
+                cspUserPackage.setUpdateTime(new Date());
+                cspUserPackage.setSourceType(CspUserPackage.modifyType.EXPIRE_DOWNGRADE.ordinal());
+                //高级和专业版 在原有的基础上加上三个月
+                cspUserPackage.setPackageStart(CalendarUtils.dateAddMonth(cspUserPackage.getPackageStart(),NUMBER_THREE));
+                cspUserPackage.setPackageId(beforePackageId);
+                userPackageDAO.updateByPrimaryKey(cspUserPackage);
+                doAddUserPackageDetail(cspUserPackage,cspUserPackage.getPackageId());
+            }
+        }
+    }
+
+
 }

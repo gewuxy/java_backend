@@ -194,10 +194,10 @@ public class WebChargeController extends CspBaseController {
                     throw new SystemException("No related orders");
                 }
                 //更新订单状态，修改用户套餐信息
-                cspPackageOrderService.updateOrderAndUserPackageInfo(order);
+                Integer oldPackageId = cspPackageOrderService.updateOrderAndUserPackageInfo(order);
                 //更新用户套餐信息缓存
                 updatePackagePrincipal(order.getUserId());
-                updatePackageMsg(order.getPackageId(),Constants.NUMBER_ONE);
+                updatePackageMsg(order.getUserId(),order.getPackageId(),oldPackageId == null ? Constants.NUMBER_THREE:Constants.NUMBER_ONE);
                 boolean yearType = cspPackageOrderService.yearPay(order.getPackageId(),order.getShouldPay());
                 Map<String,Object> results = cspPackageService.getOrderParams(order.getPackageId(),yearType == true ? order.getNum() * 12 : order.getNum(),Constants.NUMBER_ZERO);
                 return "redirect:/mgr/charge/success?money="+ results.get("money");

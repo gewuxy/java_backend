@@ -1,6 +1,7 @@
 package cn.medcn.user.service;
 
 import cn.medcn.common.service.BaseService;
+import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.CspUserPackage;
 
 import java.util.Date;
@@ -17,4 +18,12 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
     List<CspUserPackage> findCspUserPackageList();
 
     void addStanardInfo(String userId);
+
+    void modifyOldUser(CspUserPackage cspUserPackage, String userId);
+
+    void modifySendPackageTimeOut(CspUserPackage cspUserPackage, Integer packageId);
+
+    int selectPremiumEdition();
+
+    int selectProfessionalEdition();
 }

@@ -23,7 +23,7 @@
         //获取金额
         function sumMoney() {
             var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
-            ajaxSyncPost('${ctx}/mgr/pay/getMoney ', {
+            ajaxSyncPost('${ctx}/mgr/pay/money ', {
                 'version': selectPk,
                 "limitTimes": limitTimes,
                 "currency": currency
@@ -53,6 +53,7 @@
                 }
             } else {
                 //新用户隐藏取消按钮
+                $("#newUser").attr("position","relative");
                 $(".layui-layer-close").remove();
             }
         }
@@ -99,7 +100,6 @@
                 }
                 $("#packageId").val(selectPk);
                 $("#rechargeFrom").submit();
-                openLayerMsg();
             });
 
             //选择购买时长
@@ -118,9 +118,9 @@
             $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
                 var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
-                if (currencyValue == 'CN') {
+                if (currencyValue == 0) {
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if (currencyValue == 'EN') {
+                } else if (currencyValue == 1) {
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
@@ -136,22 +136,6 @@
                 sumMoney();
             })
         })
-
-        function openLayerMsg(){
-            //触发支付弹出窗
-            parent.layer.open({
-                type: 1,
-                area: ['560px', '250px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                content: $('.cancel-popup-box'),
-                success:function(){
-                },
-                cancel :function(){
-                },
-            });
-        }
 
         //加载选购套餐信息
         function initSwiper(course) {
@@ -297,11 +281,11 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now" style="position: relative; z-index:3;">
+                        <div class="formrow t-center last" id="newUser">
+                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now"/>
                         </div>
-                        <div class="member-buy-disabled-item"></div>
+                        <div id="disabledItem1"></div>
                     </div>
                 </div>
                 <div class="member-buy-content none" id="hgView">
@@ -367,8 +351,8 @@
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative;">Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment"/>
                         </div>
                         <div id="disabledItem2"></div>
                     </div>

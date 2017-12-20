@@ -54,14 +54,17 @@ public class CspUserInfo implements Serializable{
     protected String token;
 
     protected Date registerTime;
+    protected Date updateTime;
+    protected String frozenReason;
 
     protected String info;
+    protected String remark;
 
     // 国内=0、海外=1
     protected Boolean abroad;
     // 是否有激活 未激活=0 已激活=1
     protected Boolean active;
-    //是否是老用户(在2018-01-01 之前注册) 0 = 老用户 1=新用户
+    //是否是老用户(在2018-01-01 之前注册) 0 = 新用户用户 1=老用户
     protected Boolean state;
 
     //注册渠道。

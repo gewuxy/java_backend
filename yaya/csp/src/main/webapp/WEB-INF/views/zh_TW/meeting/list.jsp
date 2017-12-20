@@ -87,14 +87,45 @@
                     type: 2,
                     title: false,
                     fix: false, //不固定
-                    skin: 'member-popup-zIndex', //没有背景色
+                    skin: 'member-popup-zIndex',
                     shadeClose: false,
                     offset: '70px',
                     closeBtn: 0, //不显示关闭按钮
                     shade: 0.1,
                     area: ['1116px', '930px'],
-                    content: '${ctx}/mgr/pay/mark'
+                    content: '${ctx}/mgr/pay/mark',
+                    success:function(layero,index){
+                        //付款弹出层
+                        var body = layer.getChildFrame('body', index);
+                        body.find(".cancel-hook").on('click',function(){
+                            layer.open({
+                                type: 1,
+                                area: ['560px', '300px'],
+                                fix: false, //不固定
+                                title:false,
+                                closeBtn:0,
+                                content: $('#pkBuyMsg')
+                            });
+                        })
+                    }
                 })
+            }
+
+            var pkSuccessMsg = '${successMsg}';
+            //购买提示不为空显示
+            if(isNotEmpty(pkSuccessMsg)){
+                //弹出提示
+                layer.open({
+                    type: 1,
+                    area: ['440px', '240px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    content: $('#pkSuccessMsg'),
+                    success:function(){
+                        $("#backMsg").html(pkSuccessMsg);
+                    },
+                });
             }
 
             //初始化音频
@@ -263,7 +294,7 @@
                     content: $('.player-popup-box'),
                     success:function(){
 
-                        var added = 105;
+                        var added = 608;
                         var newOffset;
 
                         //幻灯片轮播
@@ -285,8 +316,9 @@
 
                                 //获取默认偏移值
                                 var defaultOffset = swiper.snapGrid;
-                                for(var i =0; i<defaultOffset.length; i++){
-                                    defaultOffset[i] = defaultOffset[i] - added ;
+                                defaultOffset[0] = -160;
+                                for(var i =1; i<defaultOffset.length; i++){
+                                    defaultOffset[i] = defaultOffset[i-1] + added ;
                                 }
                                 //更新偏移值
                                 var updateOffset = defaultOffset.slice(1);
@@ -380,7 +412,7 @@
                     },
                     yes:function(){
                         //成功跳去会员页面，让用户升级
-                        window.location.href='user-06.html';
+                        window.location.href='${ctx}/mgr/user/memberManage';
                     },
                     cancel :function(){
 
@@ -548,10 +580,10 @@
                                     <span><i class="hot">
                                         <c:choose>
                                             <c:when test="${course.playType == 0}">
-                                                ${course.playPage + 1}
+                                                ${course.playPage}
                                             </c:when>
                                             <c:otherwise>
-                                                ${course.livePage + 1}
+                                                ${course.livePage}
                                             </c:otherwise>
                                         </c:choose>
                                     </i><i class="muted">|</i>${course.pageCount}</span>
@@ -789,7 +821,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/user/memberManage"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form action="">
@@ -801,6 +833,45 @@
         </div>
     </div>
 </div>
+<!--弹出 充值-->
+<div class="cancel-popup-box" id="pkBuyMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/meeting/list"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form >
+                <div class="cancel-popup-main">
+                    <p>請在充值頁面完成付款，付款完成前請不要關閉此窗口</p>
+                    <div class="admin-button t-right">
+                        <a href="${ctx}/mgr/meeting/list"  class="button color-blue min-btn layui-layer-close" >付款遇到問題，重試</a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已經付款成功">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="pkSuccessMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close clearMsg"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p id="backMsg"></p>
+                </div>
+                <div class="admin-button t-right " >
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="确定"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 </body>
 </html>

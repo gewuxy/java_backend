@@ -2,6 +2,7 @@ package cn.medcn.user.service.impl;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.FilePath;
+import cn.medcn.common.dto.AddressDTO;
 import cn.medcn.common.email.CSPEmailHelper;
 import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
@@ -22,6 +23,7 @@ import cn.medcn.user.dao.UserFluxDAO;
 import cn.medcn.user.dao.*;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.CspUserService;
@@ -179,7 +181,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         userInfo.setActive(false);//未激活
         //注册来源
         userInfo.setRegisterFrom(BindInfo.Type.EMAIL.getTypeId());
+        userInfo.setState(false);
         cspUserInfoDAO.insert(userInfo);
+
+        //将修改用户地理位置任务放到队列中
+        pushToUserRegionQueue(new UserRegionDTO(userInfo.getId(), userInfo.getLastLoginIp()));
 
         // 发送激活邮箱链接
         sendMail(username, userInfo.getId(), template);
@@ -197,6 +203,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public CspUserInfo saveThirdPartyUserInfo(CspUserInfoDTO userDTO) {
         // 将第三方用户信息 保存到csp用户表
         CspUserInfo userInfo = CspUserInfo.buildToUserInfo(userDTO);
+        userInfo.setState(false);
         cspUserInfoDAO.insert(userInfo);
 
         // 添加绑定第三方平台用户信息
@@ -588,9 +595,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
 
     @Override
-    public MyPage<CspUserInfo> findCspUserList(Pageable pageable) {
+    public MyPage<CspUserInfoDTO> findCspUserList(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
-        MyPage<CspUserInfo> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
+        MyPage<CspUserInfoDTO> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findCspUserList(pageable.getParams()));
         return page;
     }
 
@@ -607,8 +614,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public List<CspUserInfo> selectRegisterTime() {
-        return cspUserInfoDAO.selectRegisterTime();
+    public CspUserInfo selectByMobile(String mobile) {
+        return cspUserInfoDAO.selectByMobile(mobile);
     }
 
     /**
@@ -619,6 +626,65 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public int selectRegisterCount(int location) {
         return cspUserInfoDAO.selectRegisterCount(location);
+    }
+
+    /**
+     * 将用户地理位置信息放入队列中
+     *
+     * @param region
+     */
+    @Override
+    public void pushToUserRegionQueue(UserRegionDTO region) {
+        redisCacheUtils.pushToQueue(USER_REGION_TOPIC_KEY, region);
+    }
+
+    /**
+     * 修改用户地理位置信息
+     *
+     * @param region
+     */
+    @Override
+    public void updateUserRegion(UserRegionDTO region) {
+        if (region != null && CheckUtils.isNotEmpty(region.getUserId()) && CheckUtils.isNotEmpty(region.getIp())) {
+
+            CspUserInfo userInfo = selectByPrimaryKey(region.getUserId());
+            if (userInfo != null) {
+                if (AddressUtils.isLan(region.getIp())) {
+                    userInfo.setProvince(AddressUtils.DEFAULT_PROVINCE);
+                    userInfo.setCity(AddressUtils.DEFAULT_CITY);
+
+                    updateByPrimaryKey(userInfo);
+                } else {
+                    AddressDTO address = AddressUtils.parseAddress(region.getIp());
+                    if (address != null) {
+                        userInfo.setProvince(address.getRegion());
+                        userInfo.setCity(address.getCity());
+
+                        updateByPrimaryKey(userInfo);
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
+    public UserRegionDTO brPopUserRegion() {
+        return (UserRegionDTO) redisCacheUtils.bRPopFromQueue(USER_REGION_TOPIC_KEY);
+    }
+
+    @Override
+    public CspUserInfo selectByEmail(String username) {
+        return cspUserInfoDAO.selectByEmail(username);
+    }
+
+    @Override
+    public int selectNewUser() {
+        return cspUserInfoDAO.selectNewUser();
+    }
+
+    @Override
+    public int selectAllUserCount() {
+        return cspUserInfoDAO.selectAllUserCount();
     }
 
 }
