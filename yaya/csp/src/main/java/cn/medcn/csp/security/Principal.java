@@ -2,6 +2,7 @@ package cn.medcn.csp.security;
 
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserInfos;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,115 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @NoArgsConstructor
-public class Principal implements Serializable{
-
-    protected String id;
-
-    protected String nickName;
-
-    protected String mobile;
-
-    protected String email;
-
-    protected String token;
-
-    protected String avatar;
-
-    protected Boolean abroad;
-
-    //是否新用户
-    protected Boolean newUser;
-
-    //套餐id
-    protected Integer packageId;
-
-    // 用户套餐
-    protected CspPackage cspPackage;
-
-    //购买成功消息
-    protected String pkChangeMsg;
-    //老用戶為true 新用戶為false
-    protected Boolean state;
-    //是否冻结 true 表示未冻结 false 表示已冻结
-    protected Boolean active;
-
-//
-//    public void setPkChangeMsg(String pkChangeMsg){ this.pkChangeMsg = pkChangeMsg;}
-//
-//    public String getPkChangeMsg(){return pkChangeMsg;}
-//    public Boolean getNewUser(){return newUser;}
-//
-//    public void setNewUser(Boolean newUser){this.newUser = newUser;}
-//
-//    public Boolean getAbroad() {
-//        return abroad;
-//    }
-//
-//    public void setAbroad(Boolean abroad) {
-//        this.abroad = abroad;
-//    }
-//
-//    public String getAvatar() {
-//        return avatar;
-//    }
-//
-//    public void setAvatar(String avatar) {
-//        this.avatar = avatar;
-//    }
-//
-//    public String getMobile() {
-//        return mobile;
-//    }
-//
-//    public void setMobile(String mobile) {
-//        this.mobile = mobile;
-//    }
-//
-//    public String getEmail() {
-//        return email;
-//    }
-//
-//    public void setEmail(String email) {
-//        this.email = email;
-//    }
-//
-//    public String getToken() {
-//        return token;
-//    }
-//
-//    public void setToken(String token) {
-//        this.token = token;
-//    }
-//
-//    public String getId() {
-//        return id;
-//    }
-//
-//    public void setId(String id) {
-//        this.id = id;
-//    }
-//
-//    public String getNickName() {
-//        return nickName;
-//    }
-//
-//    public void setNickName(String nickName) {
-//        this.nickName = nickName;
-//    }
-//
-//    public void setPackageId(Integer packageId){this.packageId = packageId;}
-//
-//    public Integer getPackageId(){return packageId;}
-//
-//
-//    public CspPackage getCspPackage() {
-//        return cspPackage;
-//    }
-//
-//    public void setCspPackage(CspPackage cspPackage) {
-//        this.cspPackage = cspPackage;
-//    }
-
+public class Principal extends CspUserInfos implements Serializable{
 
     public static Principal build(CspUserInfo userInfo){
         if (userInfo != null) {

@@ -4,14 +4,19 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.MD5Utils;
+import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
 import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.CspUserInfos;
 import cn.medcn.user.model.CspUserPackage;
+import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
@@ -23,8 +28,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -45,6 +49,15 @@ public class CspUserController extends BaseController {
 
    @Autowired
    protected CspUserPackageHistoryService cspUserPackageHistoryService;
+
+   @Autowired
+   protected CspUserService cspUserService;
+
+   @Autowired
+   protected CspPackageService cspPackageService;
+
+   @Autowired
+   protected RedisCacheUtils redisCacheUtils;
 
     @RequestMapping(value = "/list")
     @Log(name = "csp用户列表")
@@ -127,14 +140,66 @@ public class CspUserController extends BaseController {
         return buffer.toString();
     }
 
+
     @RequestMapping(value = "/package")
     @Log(name="更新套餐信息")
-    public String packages(CspUserPackage packageInfo, String updateTimes,Integer oldId,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
+    public String packages(CspUserPackage packageInfo,String updateTimes,String frozenReason,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
         System.out.println(updateTimes);
-        //更新版本信息
+        if(actionType == 4 || actionType == 5){ // 冻结或者解冻
+            CspUserInfo user = new CspUserInfo();
+            user.setId(packageInfo.getUserId());
+            user.setUpdateTime(new Date());
+            if(actionType == 4){
+                user.setFrozenReason(frozenReason);
+                user.setActive(false);
+            }else{
+                user.setFrozenReason("");
+                user.setActive(true);
+            }
+            cspUserService.updateByPrimaryKeySelective(user);
+        }else{  //升级降级修改时间
+            Integer currentId = packageInfo.getPackageId();
+            // 更新开始时间
+            packageInfo.setPackageStart(CalendarUtils.nextDateStartTime());
+            if(currentId == Constants.NUMBER_ONE){ //标准版
+                packageInfo.setPackageStart(null);
+                packageInfo.setPackageEnd(null);
+            }
+            //更新套餐版本信息
+            cspUserPackageService.updateByPrimaryKey(packageInfo);
+            CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
+            //添加历史版本信息
+            if(oldPackage.getPackageId() != currentId){
+                cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldPackage.getPackageId(),packageInfo.getPackageId(), Constants.NUMBER_TWO);
+            }
+        }
+        //更新缓存信息
+        adminUpdateUserInfoCache(packageInfo.getUserId());
+        addFlashMessage(redirectAttributes, "更新成功");
+        StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
+        if (listType != null) {
+            buffer.append("?listType=").append(listType);
+        }
+        return buffer.toString();
+    }
+
+    @RequestMapping(value = "/active")
+    @Log(name="冻结或者解冻")
+    public String active(CspUserPackage packageInfo, Integer listType, RedirectAttributes redirectAttributes) {
+        Integer currentId = packageInfo.getPackageId();
+        // 更新开始时间
+        packageInfo.setPackageStart(CalendarUtils.nextDateStartTime());
+        if(currentId == Constants.NUMBER_ONE){ //标准版
+            packageInfo.setPackageStart(null);
+            packageInfo.setPackageEnd(null);
+        }
+        //更新套餐版本信息
         cspUserPackageService.updateByPrimaryKey(packageInfo);
+        CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
+        //更新缓存信息
+        adminUpdateUserInfoCache(packageInfo.getUserId());
         //添加历史版本信息
-        cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
+        cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldPackage.getPackageId(),packageInfo.getPackageId(), Constants.NUMBER_TWO);
         addFlashMessage(redirectAttributes, "更新成功");
         StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
         if (listType != null) {
@@ -158,9 +223,18 @@ public class CspUserController extends BaseController {
         return success(options);
     }
 
-    public static void main(String[] args) throws ParseException {
-        SimpleDateFormat sdf =   new SimpleDateFormat( " yyyy-MM-dd HH:mm:ss " );
-        System.out.printf(String.valueOf(sdf.parse("2017-10-10 23:59:59")));
+    public void adminUpdateUserInfoCache(String userId){
+        CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
+        String token = userInfo.getToken();
+        if(StringUtils.isEmpty(token)){  //没有token无需更新
+            return ;
+        }
+        CspUserInfos principal = cspUserService.build(userInfo);
+        CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
+        principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
+        principal.setCspPackage(cspPackage);
+        principal.setNewUser(cspPackage == null);
+        redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
     }
 
 }

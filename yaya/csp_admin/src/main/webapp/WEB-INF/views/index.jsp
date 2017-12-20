@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@include file="/WEB-INF/include/page_context.jsp"%>
+<!DOCTYPE html>
 <html>
 <head>
     <title>敬信药草园--运营管理系统</title>
@@ -116,7 +117,7 @@
                 <li id="themeSwitch" class="dropdown">
                 </li>
                 <li id="userInfo" class="dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="个人信息"><i class="icon-user"></i>&nbsp;您好, <shiro:principal property="nickname" />&nbsp;<span id="notifyNum" class="label label-info hide"></span></a>
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="#" title="个人信息"><i class="icon-user"></i>&nbsp;您好, <shiro:principal property="nickName" />&nbsp;<span id="notifyNum" class="label label-info hide"></span></a>
                     <ul class="dropdown-menu">
                         <li><a href="${ctx}/sys/user/info" target="mainFrame"><i class="icon-user"></i>&nbsp; 个人信息</a></li>
                         <li><a href="${ctx}/sys/user/pwd" target="mainFrame"><i class="icon-lock"></i>&nbsp;  修改密码</a></li>
