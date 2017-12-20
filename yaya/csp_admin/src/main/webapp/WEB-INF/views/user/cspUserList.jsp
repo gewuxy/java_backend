@@ -105,7 +105,7 @@
                             <label class="control-label packageLable">升级为:</label>
                             <div class="controls">
                                 <select id="packageId" name="packageId" style="width: 130px;">
-                                    <option value="">请选择</option>
+                                    <option value="">未登录</option>
                                     <option value="1">标准版</option>
                                     <option value="2">高级版</option>
                                     <option value="3">专业版</option>
@@ -134,6 +134,8 @@
                     <input type="hidden" name="userId" id="userId" value=""/>
                     <input type="hidden" name="packageEnd" id="packageEnd" value=""/>
                     <input type="hidden" name="actionType" id="actionType" value=""/>
+                    <input type="hidden" name="oldId" id="oldId" value=""/>
+                    <input type="hidden" name="listType"  value="${listType}"/>
                     <button type="button" class="btn green">返回</button>
                     <button type="button" class="btn btn-primary" onclick="submitBtn()">提交</button>
                 </div>
@@ -146,7 +148,7 @@
     $(function () {
         var active = '${listType}';
         $(".nav-tabs li:eq(" + active +")").addClass("active");
-
+        initDateRangePicker("packageEnd");
     })
 
     function active(actionType,userId){
@@ -164,10 +166,10 @@
         if(packageId != undefined){
             $("#packageId").select2().val(packageId).trigger("change");
         }
+        $("#packageEnd").val(packageEnd);
         $("#userId").val(userId);
         $("#actionType").val(actionType);
-        initDateRangePicker("packageEnd");
-
+        $("#oldId").val(packageId);
         if(actionType == 1){ //升级
             $(".modal-title").html("升级");
             $(".packageLable").html("升级为：");
@@ -177,6 +179,11 @@
             $(".packageLable").html("降级为：");
             $(".timeLable").html("有效期至：");
         }else{
+            if(isEmpty(packageId) || packageId == 1){
+                layer.msg("该版本不能修改时间");
+                return false;
+            }
+            $("#packageId").prop("disabled", true);
             $(".modal-title").html("修改时间");
             $(".packageLable").html("当前为：");
             $(".timeLable").html("修改时间至：");
@@ -186,8 +193,52 @@
 
     function submitBtn() {
         top.layer.confirm("确认提交吗", function(){
+            top.layer.closeAll('dialog');
+            var actionType = $("#actionType").val();
+            var oldId = $("#oldId").val();
+            var packageId = $("#packageId").val();
+            if(actionType == 1 || actionType == 2) {
+                if(actionType == 1){  // 升级
+                    if (packageId == "" || packageId <= oldId) {
+                        layer.msg("请选择比当前高的套餐后进行升级");
+                        return false;
+                    }
+                }else{
+                    if(packageId >= oldId){
+                        layer.msg("请选择比当前低的套餐后进行降级");
+                        return false;
+                    }
+                    if(packageId == ""){
+                        layer.msg("降级最低版本为标准版");
+                        return false;
+                    }
+                }
+                if(packageId != 1){
+                    if(isEmpty($("#packageEnd").val())){
+                        layer.msg("有效期时间不能为空");
+                        return false;
+                    }
+                }
+            }
+            $("#packageId").prop("disabled", false);
            $("#modalForm").submit();
-           top.layer.closeAll('dialog');
+        });
+    }
+
+    function initDateRangePicker(id){
+        $('#updateTimes').dateRangePicker({
+            singleMonth: true,
+            showShortcuts: false,
+            showTopbar: false,
+            format: 'YYYY-MM-DD 23:59:59',
+            autoClose: false,
+            singleDate:true,
+            time: {
+                enabled: true
+            }
+        }).bind('datepicker-change',function(event,obj){
+            $(this).find("input").val(obj.value);
+            $("#" + id).val(obj.value);
         });
     }
 </script>

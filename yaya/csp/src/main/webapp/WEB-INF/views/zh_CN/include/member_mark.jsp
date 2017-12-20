@@ -81,15 +81,6 @@
 
             //选购套餐提交
             $('input[name="commitPay"]').click(function () {
-                //低于当前版本不能购买
-                if (initId == 1) {//原始版本是基础版
-                    layer.msg("您已经是标准版用户，请选购其他版本。");
-                    return false;
-                }
-                if (selectPk + 1 < initId) {
-                    layer.msg("当前套餐版本低于之前版本，不能购买。");
-                    return false;
-                }
                 if (selectPk != 0) {
                     var limitTime = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
                     var payType = $("#" + flag + "View").find('input[name=' + flag + 'PayMode]:checked').val();

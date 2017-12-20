@@ -14,14 +14,6 @@ function initFormValidate(){
 }
 
 /**
- * 初始化翻页地址
- * @param action
- */
-function initPage(action){
-    $("#pageForm").attr("action", ctx + action);
-}
-
-/**
  * 初始化日期控件
  * @param id
  */
@@ -31,21 +23,11 @@ function initLaydate(id){
     });
 }
 
-function initDateRangePicker(id){
-    $('#updateTimes').dateRangePicker({
-        singleMonth: true,
-        showShortcuts: false,
-        showTopbar: false,
-        format: 'YYYY-MM-DD 23:59:59',
-        autoClose: false,
-        singleDate:true,
-        time: {
-            enabled: true
-        }
-    }).bind('datepicker-change',function(event,obj){
-        $(this).find("input").val(obj.value);
-        $("#" + id).val(obj.value);
-    });;
+function isEmpty(value) {
+    if (value != null && value !== undefined && value!== ''){
+        return false;
+    }
+    return true;
 }
 
 function dateToString(now){
@@ -73,3 +55,4 @@ function dateToString(now){
     var dateTime = year + "-" + month + "-" + day +" "+ hour +":"+minute+":"+second;
     return dateTime;
 }
+

@@ -140,16 +140,15 @@ public class CspUserController extends BaseController {
 
     @RequestMapping(value = "/package")
     @Log(name="更新套餐信息")
-    public String packages(CspUserPackage packageInfo,String updateTimes,String frozenReason,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
-        System.out.println(updateTimes);
+    public String packages(CspUserPackage packageInfo,String frozenReason,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
         if(actionType == 4 || actionType == 5){ // 冻结或者解冻
             CspUserInfo user = new CspUserInfo();
             user.setId(packageInfo.getUserId());
             user.setUpdateTime(new Date());
-            if(actionType == 4){
+            if(actionType == 4){  //冻结
                 user.setFrozenReason(frozenReason);
                 user.setActive(false);
-            }else{
+            }else{  //解冻
                 user.setFrozenReason("");
                 user.setActive(true);
             }
@@ -162,13 +161,18 @@ public class CspUserController extends BaseController {
                 packageInfo.setPackageStart(null);
                 packageInfo.setPackageEnd(null);
             }
-            //更新套餐版本信息
-            cspUserPackageService.updateByPrimaryKey(packageInfo);
+            packageInfo.setUpdateTime(new Date());
+            packageInfo.setSourceType(Constants.NUMBER_TWO);
             CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
-            //添加历史版本信息
-            if(oldPackage.getPackageId() != currentId){
-                cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldPackage.getPackageId(),packageInfo.getPackageId(), Constants.NUMBER_TWO);
+            Integer oldpackageId = null;
+            if(oldPackage == null){   // 未有套餐信息
+                cspUserPackageService.insertSelective(packageInfo);
+            }else{
+                //更新套餐版本信息
+                cspUserPackageService.updateByPrimaryKey(packageInfo);
+                oldpackageId = oldPackage.getPackageId();
             }
+             cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldpackageId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
         }
         //更新缓存信息
         adminUpdateUserInfoCache(packageInfo.getUserId());
