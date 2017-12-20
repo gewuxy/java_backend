@@ -374,14 +374,10 @@
                 content: $('.meeting-faq-popup-keyboard'),
                 success: function (swiper) {
                     popupPalyer.play();
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height(0);
+                    }
                 },
                 end:function(){
                     popupPalyer.play();
@@ -400,17 +396,17 @@
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
                     popupPalyer.play();
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height(0);
+                    }
                 },
                 end:function(){
                     popupPalyer.play();
+                    //关闭时还原高度。
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height('auto');
+                    }
                 }
             })
         });
@@ -569,6 +565,10 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
+            //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+            if(browser.isAndroid || activeItemIsVideo.length > 0){
+                activeItemIsVideo.height(0);
+            }
             weui.actionSheet([
                 {
                     label: 'Pornography',
@@ -593,12 +593,20 @@
                 {
                     label: 'Cancel',
                     onClick: function () {
+                        //关闭时还原高度。
+                        if(browser.isAndroid || activeItemIsVideo.length > 0){
+                            activeItemIsVideo.height('auto');
+                        }
                         console.log('取消');
                     }
                 }
             ], {
                 className: 'custom-classname',
                 onClose: function(){
+                    //关闭时还原高度。
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height('auto');
+                    }
                     console.log('关闭');
                 }
             });
