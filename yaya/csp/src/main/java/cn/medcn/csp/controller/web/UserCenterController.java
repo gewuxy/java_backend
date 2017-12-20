@@ -7,13 +7,10 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.dto.VideoDownloadDTO;
-import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.Live;
-import cn.medcn.meet.model.Meet;
-import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.user.dto.CspUserInfoDTO;
@@ -33,11 +30,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.util.Date;
 import java.util.List;
 
 /**

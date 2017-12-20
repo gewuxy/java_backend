@@ -2,8 +2,7 @@ package cn.medcn.csp.interceptor;
 
 import cn.medcn.common.Constants;
 import cn.medcn.common.utils.*;
-import cn.medcn.csp.CspConstants;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;

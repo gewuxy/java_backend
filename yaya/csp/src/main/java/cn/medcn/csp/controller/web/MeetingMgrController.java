@@ -14,7 +14,7 @@ import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;

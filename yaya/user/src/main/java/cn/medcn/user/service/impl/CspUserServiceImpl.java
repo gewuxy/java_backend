@@ -691,6 +691,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.selectByEmail(username);
     }
 
+
     @Override
     public int selectNewUser() {
         return cspUserInfoDAO.selectNewUser();

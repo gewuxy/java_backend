@@ -9,11 +9,9 @@ import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
-import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.EmailTemplate;
-import cn.medcn.user.model.UserFluxUsage;
+import cn.medcn.user.model.*;
 import org.jdom.JDOMException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.multipart.MultipartFile;
 

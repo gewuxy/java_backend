@@ -17,11 +17,11 @@ public class Principal implements Serializable {
 
     private Integer id;
 
-    private String username;
+    private String userName;
 
-    private String headimg;
+    private String headImg;
 
-    private String nickname;
+    private String nickName;
 
     private Integer roleId;
 
@@ -33,10 +33,10 @@ public class Principal implements Serializable {
     public static Principal build(SystemUser user){
         Principal principal = new Principal();
         if(user != null){
-            principal.setUsername(user.getUserName());
-            principal.setHeadimg(user.getHeadImg());
+            principal.setUserName(user.getUserName());
+            principal.setHeadImg(user.getHeadImg());
             principal.setId(user.getId());
-            principal.setNickname(user.getRealName());
+            principal.setNickName(user.getRealName());
             principal.setRoleId(user.getRoleId());
         }
         return principal;
