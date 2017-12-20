@@ -714,6 +714,7 @@ public class MeetingController extends CspBaseController {
         result.put("list", page.getDataList());
         CspPackage cspPackage = cspPackageService.findUserPackageById(principal.getId());
         result.put("hideCount", cspPackage.getHiddenMeetCount() == null ? 0 : cspPackage.getHiddenMeetCount());
+        result.put("packageId", cspPackage.getId());
 
         return success(page.getDataList());
     }
