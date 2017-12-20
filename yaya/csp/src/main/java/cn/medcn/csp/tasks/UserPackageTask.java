@@ -37,11 +37,6 @@ public class UserPackageTask implements Runnable {
             userPackageService.doModifyUserPackage(userPackageList);
             log.info("UserPackageTask doModifyUserPackage user size: "+ userPackageList.size());
 
-            for (CspUserPackage userPackage : userPackageList) {
-                // 给套餐过期用户的会议 加锁（发布最早的3个会议不需要加锁）
-                audioService.doModifyAudioCourse(userPackage.getUserId());
-                log.info("UserPackageTask doModifyAudioCourse .....");
-            }
         }
 
     }

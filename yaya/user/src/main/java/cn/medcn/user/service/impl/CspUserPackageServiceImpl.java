@@ -109,6 +109,8 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
             // 记录用户套餐变更明细
             doAddUserPackageDetail(userPackage, beforePackageId);
+
+            //todo 锁定或者解锁会议
         }
     }
 
@@ -162,7 +164,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     private void doSendPackageTimeOut(CspUserPackage cspUserPackage,Integer beforePackageId){
 
         //到期之后还原以前的版本
-        if (cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
+        if (cspUserPackage.getPackageId().intValue() != CspPackage.TypeId.STANDARD.getId()){
             if (new Date() == CalendarUtils.dateAddMonth(cspUserPackage.getPackageEnd(),-NUMBER_THREE)){
                 cspUserPackage.setUpdateTime(new Date());
                 cspUserPackage.setSourceType(CspUserPackage.modifyType.EXPIRE_DOWNGRADE.ordinal());

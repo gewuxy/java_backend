@@ -5,7 +5,7 @@
     <select id="findUserPackageById" resultType="cn.medcn.user.model.CspPackage">
         SELECT p.id,p.package_cn,p.package_tw,p.package_us,p.limit_time,p.limit_meets,up.package_start, up.package_end,
                up.user_id, ( SELECT count(c.id) from t_audio_course c WHERE c.csp_user_id=#{userId}
-			   and c.source_type = 1 and c.deleted != 1 AND c.guide != 1) as usedMeetCount
+			   and c.source_type = 1 and c.deleted != 1 AND locked=false AND c.guide != 1) as usedMeetCount
         FROM t_csp_user_package up
         LEFT JOIN t_csp_package p ON p.id = up.package_id
         WHERE up.user_id = #{userId}

@@ -177,7 +177,7 @@ public class SkipController extends CspBaseController {
             // 手机浏览器扫描 再判断ios或安卓手机
             if (isIOSDevice(request) ) { // ios系统
                 // 海外版 下载
-                if (local.equals(LocalUtils.Local.en_US)) {
+                if (local.equals(LocalUtils.Local.en_US.name())) {
                     appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting_US.type);
                 } else { // 国内版 下载
                     appVersion = appUrl(AppVersion.DRIVE_TAG.IOS.type, AppVersion.APP_TYPE.CSPMeeting_CN.type);
@@ -189,7 +189,7 @@ public class SkipController extends CspBaseController {
 
             } else { // 安卓系统
                 // 海外版 下载
-                if (local.equals(LocalUtils.Local.en_US)) {
+                if (local.equals(LocalUtils.Local.en_US.name())) {
                     appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting_US.type);
                 } else { // 国内版 下载
                     appVersion = appUrl(AppVersion.DRIVE_TAG.ANDROID.type, AppVersion.APP_TYPE.CSPMeeting_CN.type);
