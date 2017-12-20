@@ -691,29 +691,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.selectByEmail(username);
     }
 
-    /**
-     * 后台建立用户信息
-     *
-     * @param userInfo
-     * @return
-     */
-    @Override
-    public CspUserInfos build(CspUserInfo userInfo) {
-        if (userInfo != null) {
-            CspUserInfos principle = new CspUserInfos();
-            principle.setId(userInfo.getId());
-            principle.setMobile(userInfo.getMobile());
-            principle.setEmail(userInfo.getEmail());
-            principle.setNickName(userInfo.getNickName());
-            principle.setToken(userInfo.getToken());
-            principle.setAbroad(userInfo.getAbroad() == null ? false : userInfo.getAbroad());
-            principle.setAvatar(userInfo.getAvatar());
-            principle.setState(userInfo.getState());
-            principle.setActive(userInfo.getActive());
-            return principle;
-        }
-        return null;
-    }
 
     @Override
     public int selectNewUser() {
