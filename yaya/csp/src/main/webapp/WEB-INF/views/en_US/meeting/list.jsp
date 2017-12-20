@@ -518,7 +518,7 @@
         <div class="page-width clearfix pr">
             <c:if test="${showTips != null && showTips}">
                 <div class="admin-tips" id="meetCountTips">
-                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">The number of your meetings has exceeded the set limit, please delete part of the meeting or upgrade the set meal to continue to use</a> </span>
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">The number of your meetings has exceeded the set limit, please delete part of the meeting or upgrade the set meal to continue to use</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
                 </div>
             </c:if>

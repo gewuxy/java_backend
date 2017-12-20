@@ -512,7 +512,7 @@
         <div class="page-width clearfix pr">
             <c:if test="${showTips != null && showTips}">
                 <div class="admin-tips" id="meetCountTips">
-                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
                 </div>
             </c:if>
