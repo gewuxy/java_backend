@@ -62,12 +62,17 @@
 
             </div>
         </div>
+
+        <div class="fullPage-button-box">
+            <i class="fullPage-button fullPage-button-on fullPage-hook"></i><i class="fullPage-button fullPage-button-off fullPage-hook none"></i>
+        </div>
     </div>
 </div>
 <script src="${ctxStatic}/js/audio.js"></script>
 <script src="${ctxStatic}/js/swiper.jquery.js"></script>
 <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 <script src="${ctxStatic}/js/layer/layer.js"></script>
+<script src="${ctxStatic}/js/screenfull.min.js"></script>
 <script>
     var swiper;
 
@@ -80,9 +85,23 @@
     $(function(){
 
 
-        //调整高度
-        $('.swiper-fullPage').find('.swiper-container-metting-full').height($(window).height());
+        //默认屏幕高度
+        var resizeHeight = $(window).height();
 
+        //初始化高度
+        $('.swiper-fullPage').find('.swiper-container-metting-full').height(resizeHeight);
+
+        //全屏按钮
+        $('.fullPage-hook').on('click',function(){
+            if (screenfull.enabled && !screenfull.element) {
+                screenfull.toggle();
+                $('.swiper-container-metting-full').height(window.screen.height);
+            } else {
+                screenfull.exit();
+                $('.swiper-container-metting-full').height(resizeHeight);
+            }
+            $(this).addClass('none').siblings().removeClass('none');
+        });
 
 
         //幻灯片轮播
