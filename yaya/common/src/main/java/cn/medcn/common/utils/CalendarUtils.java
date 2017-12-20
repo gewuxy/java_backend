@@ -16,6 +16,8 @@ public class CalendarUtils {
     // 一个月默认为30天
     public static final int DEFAULT_MONTH = 30;
 
+    public static final int DEFAULT_YEAR = 365;
+
     /**
      * 计算month个月之后的时间
      * @param month
