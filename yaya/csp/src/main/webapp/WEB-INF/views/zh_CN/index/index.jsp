@@ -28,7 +28,7 @@
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
                     <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "登录"}</strong>&nbsp;&nbsp;<i></i> </a>
-                    <a href="javascript:;" class="index-download index-qrcode">下载App<span class="qrcode-01 qrcode-top"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
+                    <a href="javascript:;" class="index-download index-qrcode">下载App<span class="qrcode-01 qrcode-top"><img id="qrCode" src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 </div>
             </div>
         </div>
@@ -421,6 +421,29 @@
                 $(this).find('.qrcode-01').hide();
             }
         })
+
+
+        // 先读取缓存
+        function getCookie(cookieName){
+            var temp ;
+            $.ajax({
+                url:'${ctx}/cookie/get',
+                data:{'cookieName':cookieName},
+                async:false,
+                success:function (data) {
+                    temp = data;
+                }
+            });
+            return temp;
+        }
+
+        var cookie_local = getCookie('_local');
+
+        if (cookie_local == "en_US" || cookie_local == "zh_TW") {
+            $("#qrCode").attr("src","${ctxStatic}/upload/img/qrcode_abroad.png");
+        } else {
+            $("#qrCode").attr("src","${ctxStatic}/upload/img/qrcode.png");
+        }
 
     });
 
