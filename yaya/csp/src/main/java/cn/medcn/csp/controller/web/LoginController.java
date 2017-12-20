@@ -97,7 +97,9 @@ public class LoginController extends CspBaseController {
             cspUserInfo = cspUserService.selectByMobile(mobile);
         }
 
-        modifyOldUser(cspUserInfo);
+        if (cspUserInfo != null){
+            modifyOldUser(cspUserInfo);
+        }
 
         return redirectUrl ;
     }
@@ -331,7 +333,6 @@ public class LoginController extends CspBaseController {
 
                     // 根据第三方用户唯一id 查询用户是否存在
                     CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
-
                     if(principal != null){
                         //第三方绑定操作
                         doThirdPartWebBind(oAuthUser,thirdPartyId,redirectAttributes);

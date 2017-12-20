@@ -57,8 +57,22 @@ public class CspUserInfoController extends BaseController {
         model.addAttribute("standardEdition",standardEdition);
         model.addAttribute("premiumEditionCount",premiumEditionCount);
         model.addAttribute("professionalEditionCount",professionalEditionCount);
+        List<SystemRegion> systemRegions = systemRegionService.selectByPreId();
+        List<CspUserInfo> cspUserInfos = cspUserService.selectByIp();
+       /* for ( CspUserInfo cspUserInfo : cspUserInfos ) {
+            Integer count = cspUserInfo.getCount();
+            String lastLoginIp = cspUserInfo.getLastLoginIp();
+            AddressDTO dto = AddressUtils.parseAddress(lastLoginIp);
+            String region = dto.getRegion();
+            if (region == null || region == ""){
+                return error();
+            } else {
+                int i = count / allUserCount ;
+                System.out.println(i);
+            }
+        }*/
 
-        List<CspUserInfo> cspUserInfos = cspUserService.select(new CspUserInfo());
+       /* List<CspUserInfo> cspUserInfos = cspUserService.select(new CspUserInfo());
         List<SystemRegion> systemRegions = systemRegionService.selectByPreId();
         for ( CspUserInfo cspUserInfo : cspUserInfos ) {
             int count = 0;
@@ -72,7 +86,7 @@ public class CspUserInfoController extends BaseController {
                 }
             }
 
-        }
+        }*/
 
         return "cspIndex/cspIndexList";
     }

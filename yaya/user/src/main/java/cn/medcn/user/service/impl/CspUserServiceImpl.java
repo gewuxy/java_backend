@@ -702,4 +702,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         return cspUserInfoDAO.selectAllUserCount();
     }
 
+    @Override
+    public List<CspUserInfo> selectByIp() {
+        return cspUserInfoDAO.selectByIp();
+    }
+
 }

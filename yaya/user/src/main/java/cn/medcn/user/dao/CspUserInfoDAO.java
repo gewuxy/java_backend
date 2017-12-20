@@ -65,4 +65,6 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
     int selectAllUserCount();
 
     List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map);
+
+    List<CspUserInfo> selectByIp();
 }

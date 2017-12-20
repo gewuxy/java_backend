@@ -211,4 +211,6 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     int selectAllUserCount();
 
+    List<CspUserInfo> selectByIp();
+
 }
