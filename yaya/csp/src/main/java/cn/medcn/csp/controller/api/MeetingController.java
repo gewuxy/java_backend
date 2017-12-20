@@ -222,7 +222,7 @@ public class MeetingController extends CspBaseController {
             return error(local("meeting.error.not_mine"));
         }
 
-        if (meetCountOut(CspUserInfo.RegisterDevice.APP)) {
+        if (meetCountNotEnough(CspUserInfo.RegisterDevice.APP)) {
             return error(local("meet.error.count.out"));
         }
 

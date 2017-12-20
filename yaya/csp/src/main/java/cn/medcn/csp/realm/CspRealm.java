@@ -106,7 +106,7 @@ public class CspRealm extends AuthorizingRealm {
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
         //添加用户信息缓存
-        redisCacheUtils.setCacheObject(userToken,principal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + userToken, principal, Constants.TOKEN_EXPIRE_TIME);
 
         //判断用户是否存在新手引导课件 不存在则添加
         audioService.doCopyGuideCourse(principal.getId());

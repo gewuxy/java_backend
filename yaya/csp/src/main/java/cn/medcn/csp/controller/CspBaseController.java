@@ -233,12 +233,7 @@ public class CspBaseController extends BaseController {
         return isMobile;
     }
 
-    /**
-     * 检测用户会议是否已经超出限制
-     * @param loginType
-     * @return
-     */
-    protected boolean meetCountOut(CspUserInfo.RegisterDevice drive){
+    protected Principal getCommonPrincipal(CspUserInfo.RegisterDevice drive){
         Principal principal = null;
         switch (drive) {
             case APP:
@@ -248,6 +243,16 @@ public class CspBaseController extends BaseController {
                 principal = getWebPrincipal();
                 break;
         }
+        return principal;
+    }
+
+    /**
+     * 检测用户会议是否已经达到限制
+     * @param drive
+     * @return
+     */
+    protected boolean meetCountNotEnough(CspUserInfo.RegisterDevice drive){
+        Principal principal = getCommonPrincipal(drive);
         if(principal != null){
             //判断是否已经超出限制
             CspPackage cspPackage = principal.getCspPackage();
@@ -256,6 +261,27 @@ public class CspBaseController extends BaseController {
             int usedCount = principal.getCspPackage().getUsedMeetCount();
 
             return maxUsableCount > 0 && usedCount >= maxUsableCount;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * 检测用户会议是否已经超出限制
+     * @param drive
+     * @return
+     */
+    protected boolean meetCountOut(CspUserInfo.RegisterDevice drive){
+        Principal principal = getCommonPrincipal(drive);
+        if(principal != null){
+            //判断是否已经超出限制
+            CspPackage cspPackage = principal.getCspPackage();
+            if(cspPackage == null) return false;
+            int maxUsableCount = cspPackage.getLimitMeets();
+            int usedCount = principal.getCspPackage().getUsedMeetCount();
+
+            return maxUsableCount > 0 && usedCount > maxUsableCount;
         } else {
             return false;
         }
@@ -276,7 +302,7 @@ public class CspBaseController extends BaseController {
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
-        redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN +"_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
 

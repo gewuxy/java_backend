@@ -105,7 +105,7 @@ public class MeetingMgrController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType, HttpServletRequest request) {
+    public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType, HttpServletRequest request, Boolean showWarn) {
         pageable.setPageSize(6);
 
         //打开了投稿箱的公众号列表
@@ -116,7 +116,11 @@ public class MeetingMgrController extends CspBaseController {
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
 
-        if (meetCountOut(CspUserInfo.RegisterDevice.WEB)){
+        if (showWarn == null) {
+            showWarn = false;
+        }
+
+        if (meetCountOut(CspUserInfo.RegisterDevice.WEB) || showWarn){
             model.addAttribute("meetCountOut", true);
 
             if (CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null) {
@@ -271,8 +275,8 @@ public class MeetingMgrController extends CspBaseController {
 
         Principal principal = getWebPrincipal();
 
-        if (courseId == null && meetCountOut(CspUserInfo.RegisterDevice.WEB)) {
-            return defaultRedirectUrl();
+        if (courseId == null && meetCountNotEnough(CspUserInfo.RegisterDevice.WEB)) {//如果是新增
+            return defaultRedirectUrl() + "?showWarn=true" ;
         }
 
         AudioCourse course = null;
@@ -515,6 +519,10 @@ public class MeetingMgrController extends CspBaseController {
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
+        if (meetCountNotEnough(CspUserInfo.RegisterDevice.WEB)) {
+            return error(local("meet.error.count.out"));
+        }
+
         audioService.addCourseCopy(courseId, title);
 
         updatePackagePrincipal(principal.getId());
