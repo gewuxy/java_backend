@@ -614,6 +614,20 @@ public class CalendarUtils {
         }
     }
 
+    /**
+     * 指定日期加上月数
+     * @param date
+     * @param monthCount
+     * @return
+     */
+    public static Date dateAddMonth(Date date,int monthCount){
+        Calendar rightNow = Calendar.getInstance();
+        rightNow.setTime(date);
+        rightNow.add(Calendar.MONTH, monthCount);// 日期加3个月
+        Date endDate = rightNow.getTime();
+        return endDate;
+    }
+
 
 
     public static void main(String[] args)  {
