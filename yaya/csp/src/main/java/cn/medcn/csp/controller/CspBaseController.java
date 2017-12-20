@@ -8,12 +8,9 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.user.model.Principal;
+import cn.medcn.user.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
-import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
@@ -22,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Driver;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -237,17 +235,31 @@ public class CspBaseController extends BaseController {
 
     /**
      * 检测用户会议是否已经超出限制
+     * @param loginType
      * @return
      */
-    protected boolean meetCountOut(){
-        Principal principal = getWebPrincipal();
-        //判断是否已经超出限制
-        CspPackage cspPackage = principal.getCspPackage();
-        if(cspPackage == null) return false;
-        int maxUsableCount = cspPackage.getLimitMeets();
-        int usedCount = principal.getCspPackage().getUsedMeetCount();
+    protected boolean meetCountOut(CspUserInfo.RegisterDevice drive){
+        Principal principal = null;
+        switch (drive) {
+            case APP:
+                principal = cn.medcn.csp.security.SecurityUtils.get();
+                break;
+            case WEB:
+                principal = getWebPrincipal();
+                break;
+        }
+        if(principal != null){
+            //判断是否已经超出限制
+            CspPackage cspPackage = principal.getCspPackage();
+            if(cspPackage == null) return false;
+            int maxUsableCount = cspPackage.getLimitMeets();
+            int usedCount = principal.getCspPackage().getUsedMeetCount();
 
-        return maxUsableCount > 0 && usedCount >= maxUsableCount;
+            return maxUsableCount > 0 && usedCount >= maxUsableCount;
+        } else {
+            return false;
+        }
+
     }
 
     /**
