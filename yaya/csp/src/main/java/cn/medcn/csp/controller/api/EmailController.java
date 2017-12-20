@@ -10,6 +10,7 @@ import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.RegexUtils;
+import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
@@ -47,6 +48,9 @@ public class EmailController extends BaseController{
     @Autowired
     protected EmailTempService tempService;
 
+    @Autowired
+    protected SysNotifyService sysNotifyService;
+
     @Value("${app.yaya.base}")
     private String appBaseUrl;
 
@@ -69,6 +73,8 @@ public class EmailController extends BaseController{
                 userInfo.setActive(true);
                 cspUserService.updateByPrimaryKey(userInfo);
                 redisCacheUtils.delete(key);
+                //发送推送消息
+                sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
             }
             model.addAttribute("email", email);
             return localeView("/register/activeOk");
