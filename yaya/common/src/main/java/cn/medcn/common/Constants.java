@@ -219,6 +219,7 @@ public class Constants {
     public static final Float FIVE_HUNDRED_G_PRICE = 175.00f;
 
     public static final String VIDEO_DOWNLOAD_URL = "video_download_";
+    public static final String RESET_PASSWORD = "123456";
 
 
     /********** 合理用药 *************/
