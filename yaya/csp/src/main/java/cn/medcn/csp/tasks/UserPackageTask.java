@@ -35,6 +35,9 @@ public class UserPackageTask implements Runnable {
         if (!CheckUtils.isEmpty(userPackageList)) {
             // 用户套餐过期 降级为标准版
             userPackageService.doModifyUserPackage(userPackageList);
+            for ( CspUserPackage cspUserPackage : userPackageList ) {
+                audioService.doModifyAudioCourseByPackageId(cspUserPackage.getUserId(),cspUserPackage.getPackageId());
+            }
             log.info("UserPackageTask doModifyUserPackage user size: "+ userPackageList.size());
 
         }

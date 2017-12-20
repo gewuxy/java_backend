@@ -683,7 +683,7 @@ public class MeetingController extends CspBaseController {
         pageable.put("cspUserId", cspUserId);
         
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
-        audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
+        //audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
 
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 

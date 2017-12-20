@@ -128,8 +128,17 @@ public class MeetingMgrController extends CspBaseController {
 
         //高级版和专业版进行时间提醒
         Integer packageId = principal.getPackageId() == null ? CspPackage.TypeId.STANDARD.getId() : principal.getPackageId();
-        if(packageId != CspPackage.TypeId.STANDARD.getId()){
-            model.addAttribute("expireTimeCount",principal.getCspPackage().getExpireDays());
+        CspPackage cspPackage = principal.getCspPackage();
+        if (cspPackage != null){
+            if(packageId != CspPackage.TypeId.STANDARD.getId()) {
+                try {
+                    int expireTimeCount = CalendarUtils.daysBetween(cspPackage.getPackageStart(), cspPackage.getPackageEnd());
+                    model.addAttribute("expireTimeCount",expireTimeCount);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
         pageable.put("sortType", sortType);

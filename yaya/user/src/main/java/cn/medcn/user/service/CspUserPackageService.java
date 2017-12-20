@@ -21,8 +21,6 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
 
     void modifyOldUser(CspUserPackage cspUserPackage, String userId);
 
-    void modifySendPackageTimeOut(CspUserPackage cspUserPackage, Integer packageId);
-
     int selectPremiumEdition();
 
     int selectProfessionalEdition();

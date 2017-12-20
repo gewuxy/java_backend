@@ -4,6 +4,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.dao.CspUserPackageHistoryDAO;
 import cn.medcn.user.model.CspPackage;
@@ -30,6 +31,11 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
     @Autowired
     protected CspUserPackageHistoryDAO packageHistoryDAO;
+
+    @Autowired
+    protected CspPackageDAO cspPackageDAO;
+
+    @Autowired
 
     @Override
     public Mapper<CspUserPackage> getBaseMapper() {
@@ -69,14 +75,9 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
      */
     @Override
     public void modifyOldUser(CspUserPackage cspUserPackage, String userId) {
-        Integer beforePackageId = cspUserPackage.getPackageId();
         doModifyOldUserVersion(cspUserPackage,userId);
     }
 
-    @Override
-    public void modifySendPackageTimeOut(CspUserPackage cspUserPackage, Integer packageId) {
-        doSendPackageTimeOut(cspUserPackage,packageId);
-    }
 
     @Override
     public int selectPremiumEdition() {
@@ -111,6 +112,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
             doAddUserPackageDetail(userPackage, beforePackageId);
 
             //todo 锁定或者解锁会议
+
         }
     }
 
@@ -155,27 +157,4 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         doAddUserPackageDetail(cspUserPackage,cspUserPackage.getPackageId());
 
     }
-
-    /**
-     * 到期还原以前的版本
-     * @param cspUserPackage
-     * @param beforePackageId
-     */
-    private void doSendPackageTimeOut(CspUserPackage cspUserPackage,Integer beforePackageId){
-
-        //到期之后还原以前的版本
-        if (cspUserPackage.getPackageId().intValue() != CspPackage.TypeId.STANDARD.getId()){
-            if (new Date() == CalendarUtils.dateAddMonth(cspUserPackage.getPackageEnd(),-NUMBER_THREE)){
-                cspUserPackage.setUpdateTime(new Date());
-                cspUserPackage.setSourceType(CspUserPackage.modifyType.EXPIRE_DOWNGRADE.ordinal());
-                //高级和专业版 在原有的基础上加上三个月
-                cspUserPackage.setPackageStart(CalendarUtils.dateAddMonth(cspUserPackage.getPackageStart(),NUMBER_THREE));
-                cspUserPackage.setPackageId(beforePackageId);
-                userPackageDAO.updateByPrimaryKey(cspUserPackage);
-                doAddUserPackageDetail(cspUserPackage,cspUserPackage.getPackageId());
-            }
-        }
-    }
-
-
 }
