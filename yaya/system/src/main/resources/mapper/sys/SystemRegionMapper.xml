@@ -19,4 +19,8 @@
     <select id="findAll" resultType="cn.medcn.sys.model.SystemRegion">
         SELECT id, pre_id, `name`, level FROM t_sys_region
     </select>
+
+    <select id="selectByPreId" resultType="cn.medcn.sys.model.SystemRegion">
+        SELECT `name` FROM t_sys_region WHERE pre_id = 0;
+    </select>
 </mapper>

@@ -60,6 +60,6 @@ public class AddressUtils {
 
     public static void main(String[] args) {
         AddressDTO address = parseAddress("59.111.90.245");
-        System.out.println(address.getIsp());
+        System.out.println(address.getRegion() + address.getCity());
     }
 }

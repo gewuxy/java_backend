@@ -41,4 +41,7 @@ public interface SystemRegionService extends BaseService<SystemRegion> {
      * @return
      */
     List<SystemRegion> getPCZRelationList();
+
+    List<SystemRegion> selectByPreId();
+
 }
