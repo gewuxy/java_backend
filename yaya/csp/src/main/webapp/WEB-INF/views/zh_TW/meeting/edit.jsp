@@ -310,7 +310,7 @@
 
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
-
+<script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 <script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
 
 <script>
@@ -629,7 +629,7 @@
         $('.meeting-classify-hook').on('click',function(){
             layer.open({
                 type: 1,
-                area: ['732px', '916px'],
+                area: ['732px', '90%'],
                 fix: false, //不固定
                 title:false,
                 anim:5,
@@ -637,7 +637,13 @@
                 content: $('.meeting-classify-popup-box'),
                 success:function(){
 
-
+//弹出层高度 - （标题 + 标题到内容的间距 + 弹出层的内边距)
+                    var popupHeight = layero.height() - 85;
+                    //触发滚动条控件
+                    $('.hidden-box').perfectScrollbar();
+                    //设置两栏的高度不超过弹出层高度
+                    layero.find('.metting-classify-popup-tab').height(popupHeight * 0.8);
+                    layero.find('.metting-classify-popup-tab-item').height(popupHeight * 0.8);
 
                 },
                 cancel :function(){

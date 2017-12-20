@@ -482,8 +482,12 @@ public class MeetingController extends CspBaseController {
         }
 
         if (audioCourse.getDeleted()) {
-            throw new SystemException(local("source.has.deleted"));
+            throw new SystemException(local("course.error.api.deleted"));
         }
+        if (audioCourse.getLocked() != null && audioCourse.getLocked()) {
+            throw new SystemException(local("course.error.api.locked"));
+        }
+
 
 //        if (audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
 //            audioCourse.setDetails(audioService.findLiveDetails(courseId));
@@ -683,7 +687,7 @@ public class MeetingController extends CspBaseController {
         pageable.put("cspUserId", cspUserId);
         
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
-        audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
+        //audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
 
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
@@ -714,8 +718,9 @@ public class MeetingController extends CspBaseController {
         result.put("list", page.getDataList());
         CspPackage cspPackage = cspPackageService.findUserPackageById(principal.getId());
         result.put("hideCount", cspPackage.getHiddenMeetCount() == null ? 0 : cspPackage.getHiddenMeetCount());
+        result.put("packageId", cspPackage.getId());
 
-        return success(page.getDataList());
+        return success(result);
     }
 
 
@@ -838,7 +843,11 @@ public class MeetingController extends CspBaseController {
         }
 
         if (course.getDeleted() != null && course.getDeleted()) {
-            return error(local("source.has.deleted"));
+            return error(local("course.error.api.deleted"));
+        }
+
+        if (course.getLocked() != null && course.getLocked()) {
+            return error(local("course.error.api.locked"));
         }
 
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);

@@ -314,9 +314,6 @@ public class CspUserController extends CspBaseController {
             //赠送三个月的套餐
             cspUserPackageService.modifyOldUser(cspUserPackage, userId);
         }
-        if (cspUserInfo.getState() == false && cspUserPackage != null) {
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage, cspUserPackage.getPackageId());
-        }
     }
 
 

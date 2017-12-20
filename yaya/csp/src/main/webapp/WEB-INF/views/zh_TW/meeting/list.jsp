@@ -391,7 +391,7 @@
                         window.location.href='user-06.html';
                     },
                     cancel :function(){
-
+                        layer.closeAll();
                     },
                 });
             });
@@ -821,7 +821,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/user/memberManage"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+            <div class="layui-layer-close"><a><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form action="">

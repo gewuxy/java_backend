@@ -9,8 +9,10 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.security.Principal;
+import cn.medcn.meet.dao.AudioCourseDAO;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.AudioCourseDetail;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
@@ -54,6 +56,9 @@ public class CspBaseController extends BaseController {
 
     @Value("${app.is.pro}")
     protected Integer appPro;
+
+    @Autowired
+    protected AudioService audioService;
 
     /**
      * 获取web端用户认证信息
@@ -316,8 +321,6 @@ public class CspBaseController extends BaseController {
             doOldUserSendProfessionalEdition(cspUserInfo);
             cspUserInfo.setState(false);
             cspUserService.updateByPrimaryKey(cspUserInfo);
-        }else {
-            doOldUserSendProfessionalEdition(cspUserInfo);
         }
         updatePackagePrincipal(cspUserInfo.getId());
     }
@@ -332,9 +335,6 @@ public class CspBaseController extends BaseController {
         if ( cspUserInfo != null && cspUserInfo.getState() == true){
             //赠送三个月的套餐
             cspUserPackageService.modifyOldUser(cspUserPackage,userId);
-        }
-        if ( cspUserInfo != null && cspUserInfo.getState() == false ){
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
         }
     }
 

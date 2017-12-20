@@ -14,4 +14,7 @@ public interface SystemRegionDAO extends Mapper<SystemRegion> {
     List<SystemRegion> findByPage(Map<String, Object> params);
 
     List<SystemRegion> findAll();
+
+    List<SystemRegion> selectByPreId();
+
 }

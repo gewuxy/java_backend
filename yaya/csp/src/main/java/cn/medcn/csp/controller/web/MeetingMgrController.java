@@ -126,26 +126,20 @@ public class MeetingMgrController extends CspBaseController {
 
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(principal.getId());
-        CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
         //高级版和专业版进行时间提醒
-        if(cspUserPackage != null && cspUserPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
-            try {
-                //计算到期天数
-                int expireTimeCount = CalendarUtils.daysBetween(cspUserPackage.getPackageStart(),cspUserPackage.getPackageEnd());
-                model.addAttribute("expireTimeCount",expireTimeCount);
-                //到期自动降为标准版
-                if (expireTimeCount<= 0){
-                    //更新变更套餐详情
-                    List<CspUserPackage> list = new ArrayList<>();
-                    list.add(cspUserPackage);
-                    cspUserPackageService.doModifyUserPackage(list);
+        Integer packageId = principal.getPackageId() == null ? CspPackage.TypeId.STANDARD.getId() : principal.getPackageId();
+        CspPackage cspPackage = principal.getCspPackage();
+        if (cspPackage != null){
+            if(packageId != CspPackage.TypeId.STANDARD.getId()) {
+                try {
+                    int expireTimeCount = CalendarUtils.daysBetween(cspPackage.getPackageStart(), cspPackage.getPackageEnd());
+                    model.addAttribute("expireTimeCount",expireTimeCount);
+
+                } catch (ParseException e) {
+                    e.printStackTrace();
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
         }
-
 
         pageable.put("sortType", sortType);
         pageable.put("cspUserId", principal.getId());
@@ -156,8 +150,6 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("playType", playType);
         model.addAttribute("sortType", sortType);
 
-        audioService.doModifyAudioCourseByPackageId(principal.getId(),cspUserPackage.getPackageId());
-
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
 
         //如果第二页或其他页数查找到无会议时，用前一页的会议列表代替(不加以下判断，删除会议时可能会出现无会议内容的情况)
@@ -165,8 +157,6 @@ public class MeetingMgrController extends CspBaseController {
             pageable.setPageNum(pageable.getPageNum() - 1);
             page = audioService.findCspMeetingList(pageable);
         }
-
-
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
         model.addAttribute("page", page);
@@ -281,7 +271,7 @@ public class MeetingMgrController extends CspBaseController {
 
         Principal principal = getWebPrincipal();
 
-        if (meetCountOut()) {
+        if (courseId == null && meetCountOut()) {
             return defaultRedirectUrl();
         }
 
