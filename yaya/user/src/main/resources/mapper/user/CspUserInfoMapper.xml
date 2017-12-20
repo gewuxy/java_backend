@@ -25,7 +25,7 @@
         SELECT tu.avatar,tu.email,tu.nick_name,tu.mobile,tu.info,count(tc.id) AS pptCount,
         (SELECT count(ts.id)  FROM t_csp_share ts WHERE ts.user_id = #{userId}) AS shareCount
         FROM t_csp_user_info tu
-         LEFT JOIN t_audio_course tc ON tu.id = tc.csp_user_id AND tc.deleted = 0
+         LEFT JOIN t_audio_course tc ON tu.id = tc.csp_user_id AND tc.deleted = 0 AND tc.published = 1 AND guide != 1
          WHERE tu.id = #{userId} GROUP BY tc.csp_user_id
     </select>
 
@@ -74,6 +74,15 @@
 
     <select id="selectRegisterCount" resultType="Integer">
         SELECT count(id) FROM t_csp_user_info  WHERE abroad=#{location} and TO_DAYS(NOW())-TO_DAYS(register_time) = 1
+    </select>
+
+    <select id="findNewlyRegisterList" resultType="cn.medcn.user.dto.CspNewlyStaticDTO">
+      SELECT
+      count(register_from = 1) AS weiBoCount,count(register_from = 2) AS weiXinCount,count(register_from = 3) AS facebookCount,
+      count(register_from = 4) AS witterCount,count(register_from = 5) AS yaYaCount, count(register_from = 6) AS mobileCount,
+      count(register_from = 7) AS emailCount,date_format(register_time,#{format})as indexDate
+        FROM t_csp_user_info WHERE abroad=#{location} AND (register_time BETWEEN #{startTime} AND #{endTime})
+        GROUP BY indexDate
     </select>
 
 </mapper>
