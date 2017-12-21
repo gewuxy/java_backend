@@ -49,7 +49,9 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a  data-href="${ctx}/csp/user/package?actionType=5&listType=2&userId=${user.uid}" onclick="layerConfirm('确认解冻？', this)">解冻</a></li>
+                            <shiro:hasPermission name="csp:user:active">
+                                <li><a  data-href="${ctx}/csp/user/package?actionType=5&listType=2&userId=${user.uid}" onclick="layerConfirm('确认解冻？', this)">解冻</a></li>
+                            </shiro:hasPermission>
                         </ul>
                     </div>
                 </th>
