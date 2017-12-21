@@ -358,12 +358,27 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            onSlideChangeStart:function(swiper){
+                activeItemIsVideo = $('.swiper-slide-active').find('video');
+
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    //判断是否Iphone 的 Safari 浏览器
+                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                        $('.isIphoneSafari').show();
+                    }
+                    //判断是否已经播放完成
+                    activeItemIsVideo.get(0).addEventListener('ended',function(){
+                        galleryTop.slideNext();
+                    });
+                }
+            },
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
                 nextItemIsVideo = $('.swiper-slide-prev').find('video');
-                clearTimeout(slideTimer);
+                //clearTimeout(slideTimer);
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
 
@@ -715,6 +730,11 @@
             if(browser.isAndroid || activeItemIsVideo.length > 0){
                 activeItemIsVideo.height(0);
             }
+
+            //解决黑边与遮挡
+            if(isAndroid) {
+                $("#ck-video").attr('style','margin-top:9999px');
+            }
             weui.actionSheet([
                 {
                     label: '色情',
@@ -744,6 +764,10 @@
                         if(browser.isAndroid || activeItemIsVideo.length > 0){
                             activeItemIsVideo.height('auto');
                         }
+                        //还原设置
+                        if(isAndroid) {
+                            $("#ck-video").attr('style','margin-top:0');
+                        }
                     }
                 }
             ], {
@@ -753,6 +777,10 @@
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.height('auto');
+                    }
+                    //还原设置
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','margin-top:0');
                     }
                 }
             });

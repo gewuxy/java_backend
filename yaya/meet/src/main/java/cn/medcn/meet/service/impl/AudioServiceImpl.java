@@ -959,6 +959,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param packageId
      */
     @Override
+    @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#ac.id")
     public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark,Integer packageId) {
         //查找是否有水印记录
         MeetWatermark watermark = new MeetWatermark();

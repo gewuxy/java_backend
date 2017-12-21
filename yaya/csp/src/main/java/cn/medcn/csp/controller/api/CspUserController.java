@@ -190,7 +190,7 @@ public class CspUserController extends CspBaseController {
                     }
 
                     // 会议上锁
-                    audioService.doModifyAudioCourse(cspPackage.getUserId());
+                    audioService.doModifyAudioCourseByPackageId(cspPackage.getUserId(), cspPackage.getId());
                 }
 
                 if (StringUtils.isNotEmpty(remind)) {

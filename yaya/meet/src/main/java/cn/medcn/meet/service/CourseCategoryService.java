@@ -21,4 +21,11 @@ public interface CourseCategoryService extends BaseService<CourseCategory> {
      * @return
      */
     List<CourseCategory> findByLevel(Integer level);
+
+    /**
+     * 查询包含父级内容的栏目
+     * @param id
+     * @return
+     */
+    CourseCategory findCategoryHasParent(Integer id);
 }
