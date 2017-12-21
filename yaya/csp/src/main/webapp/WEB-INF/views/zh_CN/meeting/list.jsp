@@ -558,7 +558,7 @@
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">有效期为
                         <strong class="color-blue">
                                 ${expireTimeCount}
-                        </strong>
+                        </strong> 天
                     </a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
