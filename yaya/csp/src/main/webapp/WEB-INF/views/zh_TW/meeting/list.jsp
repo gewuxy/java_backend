@@ -391,7 +391,7 @@
                         window.location.href='user-06.html';
                     },
                     cancel :function(){
-
+                        layer.closeAll();
                     },
                 });
             });
@@ -515,7 +515,7 @@
         <div class="page-width clearfix pr">
             <c:if test="${showTips != null && showTips}">
                 <div class="admin-tips" id="meetCountTips">
-                    <span class="admin-tips-main"> <a href="${ctx}/mgr/">您的會議數量已超過套餐許可權，請删除部分會議或陞級套餐後繼續使用</a> </span>
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">您的會議數量已超過套餐許可權，請删除部分會議或陞級套餐後繼續使用</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
                 </div>
             </c:if>
@@ -821,7 +821,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/user/memberManage"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+            <div class="layui-layer-close"><a><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form action="">

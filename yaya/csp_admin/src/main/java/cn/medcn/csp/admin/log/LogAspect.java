@@ -57,8 +57,8 @@ public class LogAspect {
             if(principal!=null){
                 SystemLog log=new SystemLog();
                 log.setUserId(principal.getId());
-                log.setRealName(principal.getNickname());
-                log.setUserName(principal.getUsername());
+                log.setRealName(principal.getNickName());
+                log.setUserName(principal.getUserName());
                 log.setLogDate(new Date());
                 log.setAction(request.getServletPath());
                 log.setActionName(actionName);
@@ -88,7 +88,7 @@ public class LogAspect {
             logger.info("异常信息:" + e.getMessage());
             logger.info("异常方法:" + (joinPoint.getTarget().getClass().getName() + "." + joinPoint.getSignature().getName() + "()"));
             logger.info("方法描述:" + getControllerMethodDescription(joinPoint));
-            logger.info("请求人:" +  principal.getUsername());
+            logger.info("请求人:" +  principal.getUserName());
             logger.info("请求IP:" + ip);
             logger.info("请求参数:" + params);
         } catch (Exception ex) {

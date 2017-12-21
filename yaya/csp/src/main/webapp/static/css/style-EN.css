@@ -461,7 +461,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .index-buy-item .index-buy-header h3 { font-size:32px; font-weight: normal;}
 .index-buy-item .index-buy-main { background:#fff; padding:30px 25px 40px; }
 .index-buy-item .index-buy-info{ border-bottom:1px solid #c3c8cf; padding-bottom:25px; text-align: center; font-size:16px; color:#7a8b9f;}
-.index-buy-item .index-buy-text { padding:20px 0 40px;}
+.index-buy-item .index-buy-text { padding:20px 0 40px; min-height:147px;}
+.index-box .index-buy-item .index-buy-text { padding-bottom:0; }
 .index-buy-item .index-buy-text ul li { font-size:16px; padding:0 5px 0 30px; }
 .index-buy-item .index-buy-text ul .icon-li-star { background:url(../images/icon-li-star.png) no-repeat left center;}
 .index-buy-item .index-buy-text ul .icon-li-close { background:url(../images/icon-li-close.png) no-repeat left center;}
@@ -975,6 +976,10 @@ a.color-wathet-blue:hover{color:#146ee3}
 .swiper-fullPage .metting-btn-item .swiper-button-next { background:url(../images/swiper-full-next.png) no-repeat right center; padding-left:0;}
 .swiper-fullPage  .swiper-pagination i { color:#A4B3C6;}
 .swiper-fullPage .swiper-pagination { width:auto;     vertical-align: top; font-size:24px; margin-left:40px; position: relative; top:18px;}
+.swiper-fullPage .fullPage-button-box { position: absolute; right: 48px; bottom: 50px; z-index: 2; }
+.swiper-fullPage .fullPage-button { display: block; width: 60px; height: 60px; cursor: pointer; }
+.swiper-fullPage .fullPage-button-on { background:url(../images/icon-fullPage-on.png) no-repeat; }
+.swiper-fullPage .fullPage-button-off { background:url(../images/icon-fullPage-off.png) no-repeat; }
 
 .full-qrcode { width:100%; height:100%; background:#000; position: fixed; top:0; left:0; z-index: 10001; background: rgba(0, 0, 0, 0.7);     display: table;}
 .full-qrcode-item {        display: table-cell; vertical-align: middle;}
@@ -1212,6 +1217,10 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
 .position-medcn-accredit .login-form-item .login-formInput { background-color:#F3F6F8;; -moz-border-radius: 4px; -webkit-border-radius: 4px; border-radius: 4px; }
 .login-accredit .login-bottom p{ font-size:14px;}
 
+/*会议弹出层*/
+.member-popup-zIndex { position: absolute !important;  -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}
+.member-popup-zIndex iframe{  -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}
+
 
 @media screen and (max-width:1200px) {
     body {  min-width: 1200px; overflow: hidden;   }
@@ -1221,7 +1230,7 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
 }
 
 @media screen and (max-height:950px) {
-    .member-popup-zIndex { position: absolute !important;}
+    /*.member-popup-zIndex { position: absolute !important;}*/
 }
 
 /* Safari 6 - 10 hack */

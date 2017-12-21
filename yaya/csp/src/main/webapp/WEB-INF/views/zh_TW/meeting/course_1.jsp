@@ -175,6 +175,27 @@
     var health_timeout = 3000;
     var myWs;
     var wsUrl = "${wsUrl}";
+
+    //判断访问终端
+    var browser={
+        versions:function(){
+            var u = navigator.userAgent, app = navigator.appVersion;
+            return {
+                trident: u.indexOf('Trident') > -1, //IE内核
+                presto: u.indexOf('Presto') > -1, //opera内核
+                webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1,//火狐内核
+                mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
+                ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+                iPad: u.indexOf('iPad') > -1, //是否iPad
+                webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
+                iphoneSafari: u.indexOf('MicroMessenger') > -1
+            };
+        }(),
+        language:(navigator.browserLanguage || navigator.language).toLowerCase()
+    }
     $(function(){
 
         console.log("current locale is en");
@@ -403,6 +424,7 @@
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
+                clearTimeout(slideTimer);
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
 //                if (!dataSrc.length && !activeItemIsVideo.length){
@@ -534,17 +556,17 @@
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
                     popupPalyer.play();
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height(0);
+                    }
                 },
                 end:function(){
                     popupPalyer.play();
+                    //关闭时还原高度。
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height('auto');
+                    }
                 }
             })
         });
@@ -663,6 +685,10 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
+            //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+            if(browser.isAndroid || activeItemIsVideo.length > 0){
+                activeItemIsVideo.height(0);
+            }
             weui.actionSheet([
                 {
                     label: '色情',
@@ -688,12 +714,20 @@
                     label: '取消',
                     onClick: function () {
                         console.log('取消');
+                        //关闭时还原高度。
+                        if(browser.isAndroid || activeItemIsVideo.length > 0){
+                            activeItemIsVideo.height('auto');
+                        }
                     }
                 }
             ], {
                 className: 'custom-classname',
                 onClose: function(){
                     console.log('关闭');
+                    //关闭时还原高度。
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height('auto');
+                    }
                 }
             });
         });

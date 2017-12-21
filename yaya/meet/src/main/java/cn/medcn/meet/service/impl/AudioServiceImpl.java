@@ -567,6 +567,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public MyPage<CourseDeliveryDTO> findCspMeetingListForApp(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        PageHelper.orderBy("c.create_time " + (pageable.get("sortType") == null ? "desc" : pageable.get("sortType")));
         return MyPage.page2Mypage((Page) audioCourseDAO.findCspMeetingListForApp(pageable.getParams()));
     }
 

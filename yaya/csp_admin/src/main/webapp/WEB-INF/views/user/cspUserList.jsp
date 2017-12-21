@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<html>
+<!DOCTYPE html>
+<html >
 <head>
     <title>CSP用户管理</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
@@ -59,10 +60,14 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="#" onclick="changePackage(1,${user.uid},${user.packageId})">升级</a></li>
-                            <li><a href="#" onclick="changePackage(2,${user.uid},${user.packageId})">降级</a></li>
-                            <li><a href="#" onclick="changePackage(3,${user.uid},${user.packageId})">时间修改</a></li>
-                            <li><a href="#" onclick="changePackage(4,${user.uid},${user.packageId})">账号冻结</a></li>
+                            <shiro:hasPermission name="csp:user:edit">
+                                <li><a href="#" onclick="changePackages(1,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">升级</a></li>
+                                <li><a href="#" onclick="changePackages(2,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">降级</a></li>
+                                <li><a href="#" onclick="changePackages(3,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">时间修改</a></li>
+                            </shiro:hasPermission>
+                            <shiro:hasPermission name="csp:user:active">
+                                <li><a href="#" onclick="active(4,'${user.uid}')">账号冻结</a></li>
+                            </shiro:hasPermission>
                         </ul>
                     </div>
                 </th>
@@ -97,29 +102,44 @@
                 </button>
                 <h4 class="modal-title" style="text-align: center">升级</h4>
             </div>
-            <form class="form-horizontal form-bordered form-row-strippe" id="modalForm" action="/csp/user/package" method="post">
-                <div class="modal-body" >
-                    <div class="control-group">
-                        <label class="control-label packageLable">升级为:</label>
-                        <div class="controls">
-                            <select id="packageId" name="packageId" style="width: 130px;">
-                                <option value="">请选择</option>
-                                <option value="1">标准版</option>
-                                <option value="2">高级版</option>
-                                <option value="3">专业版</option>
-                            </select>
+            <form class="form-horizontal form-bordered form-row-strippe" id="modalForm" action="${ctx}/csp/user/package" method="post">
+                <div class="modal-body">
+                    <div id="packageChange">
+                        <div class="control-group">
+                            <label class="control-label packageLable">升级为:</label>
+                            <div class="controls">
+                                <select id="packageId" name="packageId" style="width: 130px;">
+                                    <option value="">未登录</option>
+                                    <option value="1">标准版</option>
+                                    <option value="2">高级版</option>
+                                    <option value="3">专业版</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="control-label timeLable">有效期至:</label>
+                            <div class="controls">
+                               <span class="time-tj">
+                                    <label for="times" id="updateTimes">
+                                        <input type="text" disabled="" class="timedate-input " placeholder="" id="times" name="times">
+                                    </label>
+                                </span>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="control-label timeLable">有效期至:</label>
+                    <div id="dongjie">
+                        <label class="control-label">冻结原因:</label>
                         <div class="controls">
-                            <input type="text" name="updateTimes" id="updateTimes" placeholder="点击选择开始时间">
+                            <input type="search" placeholder="冻结原因" id="frozenReason" name="frozenReason">
                         </div>
                     </div>
                 </div>
                 <div class="modal-footer bg-info">
                     <input type="hidden" name="userId" id="userId" value=""/>
+                    <input type="hidden" name="packageEnd" id="packageEnd" value=""/>
                     <input type="hidden" name="actionType" id="actionType" value=""/>
+                    <input type="hidden" name="oldId" id="oldId" value=""/>
+                    <input type="hidden" name="listType"  value="${listType}"/>
                     <button type="button" class="btn green">返回</button>
                     <button type="button" class="btn btn-primary" onclick="submitBtn()">提交</button>
                 </div>
@@ -132,35 +152,99 @@
     $(function () {
         var active = '${listType}';
         $(".nav-tabs li:eq(" + active +")").addClass("active");
-
-        initLaydate("updateTimes");
+        initDateRangePicker("packageEnd");
     })
 
-    function changePackage(actionType,userId,packageId){
-        $("#packageId").select2().val(packageId).trigger("change");
+    function active(actionType,userId){
+        $("#packageChange").hide();
+        $("#dongjie").show();
+        $("#actionType").val(actionType);
+        $("#userId").val(userId);
+        $(".modal-title").html("冻结");
+        $("#myModal").modal("show");
+    }
+
+    function changePackages(actionType,userId,packageId,packageEnd){
+        $("#packageChange").show();
+        $("#dongjie").hide();
+        if(packageId != undefined){
+            $("#packageId").select2().val(packageId).trigger("change");
+        }
+        $("#packageEnd").val(packageEnd);
+        $("#times").val(packageEnd);
         $("#userId").val(userId);
         $("#actionType").val(actionType);
+        $("#oldId").val(packageId);
         if(actionType == 1){ //升级
             $(".modal-title").html("升级");
-            $(".packageLable").val("升级为：");
-            $(".timeLable").val("有效期至：");
+            $(".packageLable").html("升级为：");
+            $(".timeLable").html("有效期至：");
         }else if(actionType == 2){
             $(".modal-title").html("降级");
-            $(".packageLable").val("降级为：");
-            $(".timeLable").val("有效期至：");
+            $(".packageLable").html("降级为：");
+            $(".timeLable").html("有效期至：");
         }else{
+            if(isEmpty(packageId) || packageId == 1){
+                layer.msg("该版本不能修改时间");
+                return false;
+            }
+            $("#packageId").prop("disabled", true);
             $(".modal-title").html("修改时间");
-            $(".packageLable").val("当前为：");
-            $(".timeLable").val("修改时间至：");
+            $(".packageLable").html("当前为：");
+            $(".timeLable").html("修改时间至：");
         }
         $("#myModal").modal("show");
     }
 
     function submitBtn() {
         top.layer.confirm("确认提交吗", function(){
-            $("#updateTimes").val($("#updateTimes").val() + " 23:59:59");
+            top.layer.closeAll('dialog');
+            var actionType = $("#actionType").val();
+            var oldId = $("#oldId").val();
+            var packageId = $("#packageId").val();
+            if(actionType == 1 || actionType == 2) {
+                if(actionType == 1){  // 升级
+                    if (packageId == "" || packageId <= oldId) {
+                        layer.msg("请选择比当前高的套餐后进行升级");
+                        return false;
+                    }
+                }else{
+                    if(packageId >= oldId){
+                        layer.msg("请选择比当前低的套餐后进行降级");
+                        return false;
+                    }
+                    if(packageId == ""){
+                        layer.msg("降级最低版本为标准版");
+                        return false;
+                    }
+                }
+                if(packageId != 1){
+                    if(isEmpty($("#packageEnd").val())){
+                        layer.msg("有效期时间不能为空");
+                        return false;
+                    }
+                }
+            }
+            $("#packageId").prop("disabled", false);
            $("#modalForm").submit();
-           top.layer.closeAll('dialog');
+        });
+    }
+
+    function initDateRangePicker(id){
+        $('#updateTimes').dateRangePicker({
+            singleMonth: true,
+            showShortcuts: false,
+            showTopbar: false,
+            format: 'YYYY-MM-DD 23:59:59',
+            autoClose: false,
+            singleDate:true,
+            time: {
+                enabled: true
+            }
+        }).bind('datepicker-change',function(event,obj){
+            console.log(obj.value)
+            $(this).find("input").val(obj.value);
+            $("#" + id).val(obj.value);
         });
     }
 </script>

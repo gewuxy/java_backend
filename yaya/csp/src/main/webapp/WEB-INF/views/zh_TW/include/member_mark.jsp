@@ -48,9 +48,8 @@
                     flag = initId == 3 ? "pf" : "hg";
                 }
                 //是否需要不能选择
-                for (var k = 1; k < initId; k++) {
-                    $("#disabledItem" + k).addClass("member-buy-disabled-item");
-                }
+                $("#disabledItem1").addClass("member-buy-disabled-item");
+                if(initId == 3) $("#disabledItem2").addClass("member-buy-disabled-item");
             } else {
                 //新用户隐藏取消按钮
                 $("#newUser").attr("position","relative");
@@ -81,15 +80,6 @@
 
             //选购套餐提交
             $('input[name="commitPay"]').click(function () {
-                //低于当前版本不能购买
-                if (initId == 1) {//原始版本是基础版
-                    layer.msg("您已經是標準版用戶，請選購其他版本。");
-                    return false;
-                }
-                if (selectPk + 1 < initId) {
-                    layer.msg("當前套餐版本低於之前版本，不能購買。");
-                    return false;
-                }
                 if (selectPk != 0) {
                     var limitTime = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
                     var payType = $("#" + flag + "View").find('input[name=' + flag + 'PayMode]:checked').val();

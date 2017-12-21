@@ -169,16 +169,17 @@
 
     <update id="updateByUserId">
         UPDATE t_audio_course SET locked = 1 WHERE csp_user_id = #{cspUserId} AND source_type = 1 AND guide != 1
-        and deleted != 1;
+        and deleted != 1 AND published = 1;
     </update>
 
     <update id="updateByUserIdOpen">
-       UPDATE t_audio_course SET locked = 0 WHERE csp_user_id = #{cspUserId} AND source_type = 1
-        and deleted != 1 and id  in (select c.id from (SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND guide != 1 ORDER BY create_time asc limit #{meets}) as c );
+       UPDATE t_audio_course SET locked = 0 WHERE csp_user_id = #{cspUserId} and id  in
+       (select c.id from (SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND source_type = 1 AND published = 1
+        and deleted != 1 AND guide != 1 ORDER BY create_time asc limit #{meets}) as c );
     </update>
 
     <update id="updateByUserIdOpenAll">
         UPDATE t_audio_course SET locked = 0 WHERE csp_user_id = #{cspUserId} AND source_type = 1
-        and deleted != 1 AND guide != 1 ORDER BY create_time asc;
+        and deleted != 1 AND guide != 1 AND published = 1 ORDER BY create_time asc;
     </update>
 </mapper>

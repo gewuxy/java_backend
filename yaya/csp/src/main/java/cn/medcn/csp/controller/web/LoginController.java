@@ -3,14 +3,13 @@ package cn.medcn.csp.controller.web;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.Principal;
 import cn.medcn.oauth.dto.OAuthUser;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.BindInfo;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
@@ -31,7 +30,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
-import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
@@ -99,7 +97,9 @@ public class LoginController extends CspBaseController {
             cspUserInfo = cspUserService.selectByMobile(mobile);
         }
 
-        modifyOldUser(cspUserInfo);
+        if (cspUserInfo != null){
+            modifyOldUser(cspUserInfo);
+        }
 
         return redirectUrl ;
     }
@@ -321,7 +321,7 @@ public class LoginController extends CspBaseController {
     public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes,
                            HttpServletResponse response, Model model) throws SystemException {
 
-        Principal principal =  getWebPrincipal();
+        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
 
         if (StringUtils.isNotEmpty(code)) {
             //获取第三方用户信息
@@ -333,7 +333,6 @@ public class LoginController extends CspBaseController {
 
                     // 根据第三方用户唯一id 查询用户是否存在
                     CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
-
                     if(principal != null){
                         //第三方绑定操作
                         doThirdPartWebBind(oAuthUser,thirdPartyId,redirectAttributes);

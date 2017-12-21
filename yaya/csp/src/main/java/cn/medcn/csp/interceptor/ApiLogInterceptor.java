@@ -1,10 +1,9 @@
 package cn.medcn.csp.interceptor;
 
 import cn.medcn.common.Constants;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.user.model.CspLog;
-import cn.medcn.user.model.OsType;
 import cn.medcn.user.service.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;

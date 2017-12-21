@@ -14,7 +14,7 @@ public class SubjectUtils {
 
     public static String getCurrentUsername(){
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        return principal == null?null:principal.getUsername();
+        return principal == null?null:principal.getUserName();
     }
 
     public static Integer getCurrentUserid(){

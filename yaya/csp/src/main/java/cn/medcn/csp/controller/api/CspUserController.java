@@ -11,12 +11,12 @@ import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.*;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
-import cn.medcn.csp.security.Principal;
+import cn.medcn.sys.service.SysNotifyService;
+import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
-import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
@@ -72,6 +72,9 @@ public class CspUserController extends CspBaseController {
 
     @Autowired
     protected AudioService audioService;
+
+    @Autowired
+    protected SysNotifyService sysNotifyService;
 
     /**
      * 注册csp账号
@@ -314,9 +317,6 @@ public class CspUserController extends CspBaseController {
             //赠送三个月的套餐
             cspUserPackageService.modifyOldUser(cspUserPackage, userId);
         }
-        if (cspUserInfo.getState() == false && cspUserPackage != null) {
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage, cspUserPackage.getPackageId());
-        }
     }
 
 
@@ -464,7 +464,8 @@ public class CspUserController extends CspBaseController {
         if (userInfo == null) {
             // 注册新用户
             userInfo = new CspUserInfo();
-            userInfo.setId(StringUtils.nowStr());
+            String userId = StringUtils.nowStr();
+            userInfo.setId(userId);
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
             userInfo.setActive(true);
@@ -474,6 +475,8 @@ public class CspUserController extends CspBaseController {
             //添加用户的注册设备
             userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             cspUserService.insert(userInfo);
+            //推送注册成功消息
+            sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
             userInfo.setFlux(0); // 用户流量
         }
 

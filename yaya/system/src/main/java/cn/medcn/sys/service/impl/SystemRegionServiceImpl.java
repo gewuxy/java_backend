@@ -106,6 +106,11 @@ public class SystemRegionServiceImpl extends BaseServiceImpl<SystemRegion> imple
         return result;
     }
 
+    @Override
+    public List<SystemRegion> selectByPreId() {
+        return systemRegionDAO.selectByPreId();
+    }
+
 
     /**
      * 递归方法添加省对应的市区

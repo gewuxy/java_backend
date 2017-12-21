@@ -8,14 +8,9 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.csp.security.Principal;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
+import cn.medcn.user.model.*;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
-import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserPackage;
-import cn.medcn.user.service.CspPackageInfoService;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
@@ -24,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
+import java.sql.Driver;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
@@ -55,6 +51,9 @@ public class CspBaseController extends BaseController {
     @Value("${app.is.pro}")
     protected Integer appPro;
 
+    @Autowired
+    protected AudioService audioService;
+
     /**
      * 获取web端用户认证信息
      *
@@ -62,14 +61,19 @@ public class CspBaseController extends BaseController {
      */
     protected Principal getWebPrincipal() {
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        String token = principal.getToken();
-        //从缓存信息里查询最新版
-        Principal principalCache = getPackageCache(token);
-        if (principalCache == null) {
-            //如果缓存过期更新缓存
-            return updatePackagePrincipal(principal.getId());
+        if (principal != null){
+            String token = principal.getToken();
+            //从缓存信息里查询最新版
+            Principal principalCache = getPackageCache(token);
+            if (principalCache == null) {
+                //如果缓存过期更新缓存
+                return updatePackagePrincipal(principal.getId());
+            }
+            return principalCache;
+        }else {
+            return principal;
         }
-        return principalCache;
+
     }
 
     /**
@@ -234,19 +238,59 @@ public class CspBaseController extends BaseController {
         return isMobile;
     }
 
+    protected Principal getCommonPrincipal(CspUserInfo.RegisterDevice drive){
+        Principal principal = null;
+        switch (drive) {
+            case APP:
+                principal = cn.medcn.csp.security.SecurityUtils.get();
+                break;
+            case WEB:
+                principal = getWebPrincipal();
+                break;
+        }
+        return principal;
+    }
+
     /**
-     * 检测用户会议是否已经超出限制
+     * 检测用户会议是否已经达到限制
+     * @param drive
      * @return
      */
-    protected boolean meetCountOut(){
-        Principal principal = getWebPrincipal();
-        //判断是否已经超出限制
-        CspPackage cspPackage = principal.getCspPackage();
-        if(cspPackage == null) return false;
-        int maxUsableCount = cspPackage.getLimitMeets();
-        int usedCount = principal.getCspPackage().getUsedMeetCount();
+    protected boolean meetCountNotEnough(CspUserInfo.RegisterDevice drive){
+        Principal principal = getCommonPrincipal(drive);
+        if(principal != null){
+            //判断是否已经超出限制
+            CspPackage cspPackage = principal.getCspPackage();
+            if(cspPackage == null) return false;
+            int maxUsableCount = cspPackage.getLimitMeets();
+            int usedCount = principal.getCspPackage().getUsedMeetCount();
 
-        return maxUsableCount > 0 && usedCount >= maxUsableCount;
+            return maxUsableCount > 0 && usedCount >= maxUsableCount;
+        } else {
+            return false;
+        }
+
+    }
+
+    /**
+     * 检测用户会议是否已经超出限制
+     * @param drive
+     * @return
+     */
+    protected boolean meetCountOut(CspUserInfo.RegisterDevice drive){
+        Principal principal = getCommonPrincipal(drive);
+        if(principal != null){
+            //判断是否已经超出限制
+            CspPackage cspPackage = principal.getCspPackage();
+            if(cspPackage == null) return false;
+            int maxUsableCount = cspPackage.getLimitMeets();
+            int usedCount = principal.getCspPackage().getUsedMeetCount();
+
+            return maxUsableCount > 0 && usedCount > maxUsableCount;
+        } else {
+            return false;
+        }
+
     }
 
     /**
@@ -263,7 +307,7 @@ public class CspBaseController extends BaseController {
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
-        redisCacheUtils.setCacheObject(token, principal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN +"_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
 
@@ -285,7 +329,7 @@ public class CspBaseController extends BaseController {
         } else {                            // 购买高级或者专业版
             setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{CspPackage.getLocalPackage(packageId)}));
         }
-        redisCacheUtils.setCacheObject(setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
     }
 
     /**
@@ -295,7 +339,7 @@ public class CspBaseController extends BaseController {
      * @return
      */
     protected Principal getPackageCache(String token) {
-        return redisCacheUtils.getCacheObject(token);
+        return redisCacheUtils.getCacheObject(Constants.TOKEN + "_" + token);
     }
 
 
@@ -316,8 +360,6 @@ public class CspBaseController extends BaseController {
             doOldUserSendProfessionalEdition(cspUserInfo);
             cspUserInfo.setState(false);
             cspUserService.updateByPrimaryKey(cspUserInfo);
-        }else {
-            doOldUserSendProfessionalEdition(cspUserInfo);
         }
         updatePackagePrincipal(cspUserInfo.getId());
     }
@@ -332,9 +374,6 @@ public class CspBaseController extends BaseController {
         if ( cspUserInfo != null && cspUserInfo.getState() == true){
             //赠送三个月的套餐
             cspUserPackageService.modifyOldUser(cspUserPackage,userId);
-        }
-        if ( cspUserInfo != null && cspUserInfo.getState() == false ){
-            cspUserPackageService.modifySendPackageTimeOut(cspUserPackage,cspUserPackage.getPackageId());
         }
     }
 

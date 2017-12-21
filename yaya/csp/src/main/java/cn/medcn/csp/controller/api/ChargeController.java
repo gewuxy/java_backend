@@ -12,6 +12,7 @@ import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.IOSPayViewDTO;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.SignatureUtil;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.service.ChargeService;
@@ -50,7 +51,8 @@ import static cn.medcn.common.Constants.LOGIN_COOKIE_MAX_AGE;
 public class ChargeController extends CspBaseController {
 
 
-
+    @Autowired
+    protected AudioService audioService;
 
     @Autowired
     protected ChargeService chargeService;
@@ -169,6 +171,7 @@ public class ChargeController extends CspBaseController {
                        //更新用户套餐缓存信息
                         updatePackagePrincipal(order.getUserId());
                         updatePackageMsg(order.getUserId(),order.getPackageId(),oldPackageId == null ? Constants.NUMBER_THREE:Constants.NUMBER_ONE);
+                        audioService.doModifyAudioCourseByPackageId(order.getUserId(),order.getPackageId());
                         //微信扫码支付，将订单状态存到缓存中，2小时后过期。网页微信充值如果查到支付状态，更改页面显示
                         if ("wx_pub_qr".equals(order.getPlatForm())) {
                             redisCacheUtils.setCacheObject(order.getTradeId(), 1, (int) TimeUnit.HOURS.toSeconds(2));
@@ -260,7 +263,7 @@ public class ChargeController extends CspBaseController {
 
     /**
      * APP端是否显示充值流量的界面
-     * @param request
+     * @param
      * @return
      */
     @RequestMapping(value = "/show")

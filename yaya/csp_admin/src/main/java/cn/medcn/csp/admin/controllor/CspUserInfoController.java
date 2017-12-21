@@ -1,6 +1,11 @@
 package cn.medcn.csp.admin.controllor;
 
 import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.dto.AddressDTO;
+import cn.medcn.common.utils.AddressUtils;
+import cn.medcn.sys.model.SystemRegion;
+import cn.medcn.sys.service.SystemRegionService;
+import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspPackageOrderService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
@@ -8,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import java.util.List;
 
 /**Csp 后台首页
  *
@@ -26,6 +33,9 @@ public class CspUserInfoController extends BaseController {
 
     @Autowired
     private CspUserPackageService cspUserPackageService;
+
+    @Autowired
+    private SystemRegionService systemRegionService;
 
     @RequestMapping(value = "/list")
     public String userInfoList(Model model){
@@ -47,6 +57,36 @@ public class CspUserInfoController extends BaseController {
         model.addAttribute("standardEdition",standardEdition);
         model.addAttribute("premiumEditionCount",premiumEditionCount);
         model.addAttribute("professionalEditionCount",professionalEditionCount);
+        List<SystemRegion> systemRegions = systemRegionService.selectByPreId();
+        List<CspUserInfo> cspUserInfos = cspUserService.selectByIp();
+       /* for ( CspUserInfo cspUserInfo : cspUserInfos ) {
+            Integer count = cspUserInfo.getCount();
+            String lastLoginIp = cspUserInfo.getLastLoginIp();
+            AddressDTO dto = AddressUtils.parseAddress(lastLoginIp);
+            String region = dto.getRegion();
+            if (region == null || region == ""){
+                return error();
+            } else {
+                int i = count / allUserCount ;
+                System.out.println(i);
+            }
+        }*/
+
+       /* List<CspUserInfo> cspUserInfos = cspUserService.select(new CspUserInfo());
+        List<SystemRegion> systemRegions = systemRegionService.selectByPreId();
+        for ( CspUserInfo cspUserInfo : cspUserInfos ) {
+            int count = 0;
+            String lastLoginIp = cspUserInfo.getLastLoginIp();
+            AddressDTO dto = AddressUtils.parseAddress(lastLoginIp);
+            String region = dto.getRegion();
+            for (SystemRegion systemRegion : systemRegions){
+                String province = systemRegion.getName();
+                if (region == province){
+
+                }
+            }
+
+        }*/
 
         return "cspIndex/cspIndexList";
     }
