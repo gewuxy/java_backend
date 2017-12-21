@@ -133,6 +133,7 @@ public class MeetingMgrController extends CspBaseController {
         //高级版和专业版进行时间提醒
         Integer packageId = principal.getPackageId() == null ? CspPackage.TypeId.STANDARD.getId() : principal.getPackageId();
         CspPackage cspPackage = principal.getCspPackage();
+        model.addAttribute("packageId",packageId);
         if (cspPackage != null){
             if(packageId != CspPackage.TypeId.STANDARD.getId()) {
                 try {
@@ -302,7 +303,7 @@ public class MeetingMgrController extends CspBaseController {
         }
 
         if (course.getCategoryId() != null) {
-            model.addAttribute("courseCategory", courseCategoryService.selectByPrimaryKey(course.getId()));
+            model.addAttribute("courseCategory", courseCategoryService.findCategoryHasParent(course.getCategoryId()));
         }
 
         model.addAttribute("rootList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.root.depth));

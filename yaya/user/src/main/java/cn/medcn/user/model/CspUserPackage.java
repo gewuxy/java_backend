@@ -38,7 +38,8 @@ public class CspUserPackage implements Serializable {
         EXPIRE_DOWNGRADE(), // 过期降级
         BUY_UPGRADE(),  // 升级购买
         ADMIN_MODIFY(), // 管理员修改
-        BIND_YAYA(); // 绑定YaYa数字平台
+        BIND_YAYA(), // 绑定YaYa数字平台
+        NEW_USER(); //新用户注册
     }
     public static CspUserPackage build(String userId,Date start,Date end,Integer packageId,Integer sourceType){
         CspUserPackage userPackage = new CspUserPackage();

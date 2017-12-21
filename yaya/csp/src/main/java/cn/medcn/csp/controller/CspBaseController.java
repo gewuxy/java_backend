@@ -360,6 +360,17 @@ public class CspBaseController extends BaseController {
             doOldUserSendProfessionalEdition(cspUserInfo);
             cspUserInfo.setState(false);
             cspUserService.updateByPrimaryKey(cspUserInfo);
+        }else{
+            String userId = cspUserInfo.getId();
+            CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
+            if (cspUserPackage == null){
+                cspUserPackage = new CspUserPackage();
+                cspUserPackage.setUserId(userId);
+                cspUserPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
+                cspUserPackage.setUpdateTime(new Date());
+                cspUserPackage.setSourceType(CspUserPackage.modifyType.NEW_USER.ordinal());
+                cspUserPackageService.insert(cspUserPackage);
+            }
         }
         updatePackagePrincipal(cspUserInfo.getId());
     }

@@ -212,7 +212,6 @@
         });
 
 
-
 //        popupPalyer.play();
 //        popupFullPalyer.play();
 
@@ -250,6 +249,7 @@
             language:(navigator.browserLanguage || navigator.language).toLowerCase()
         }
 
+        var listenerEnd = false;
         //初始化默认竖屏
         var galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 0,
@@ -266,6 +266,11 @@
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
                     }
+                    activeItemIsVideo.get(0).addEventListener('ended', function () {
+                        console.log("video play end ...");
+                        galleryTop.slideNext();
+                    }, {once: true});
+
                 }
             },
             onSlideChangeEnd:function(swiper){

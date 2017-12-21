@@ -16,8 +16,11 @@ import java.util.Map;
  */
 public interface AudioService extends BaseService<AudioCourse>  {
 
-    //用户引导课件ID
+    //国内版用户引导课件ID
     Integer GUIDE_SOURCE_ID = 1;
+    //国外版用户引导课件ID
+    Integer ABROAD_GUIDE_SOURCE_ID = 2;
+
 
     /**
      * 批量生成ppt+语音信息

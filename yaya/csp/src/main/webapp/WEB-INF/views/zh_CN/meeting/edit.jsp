@@ -150,7 +150,7 @@
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议简介</span>
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
+                                    <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? courseCategory.parent.nameCn : rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameCn}">
                                 </div>
@@ -245,7 +245,15 @@
 
                     <div class="metting-classify-popup-tab hidden-box">
                         <ul id="rootList">
-                            <c:set var="rootId" value="${rootList[0].id}"/>
+                            <c:choose>
+                                <c:when test="${not empty courseCategory.parentId}">
+                                    <c:set var="rootId" value="${courseCategory.parentId}"/>
+                                </c:when>
+                                <c:otherwise>
+                                    <c:set var="rootId" value="${rootList[0].id}"/>
+                                </c:otherwise>
+                            </c:choose>
+
                             <c:forEach items="${rootList}" var="c" varStatus="status">
                                 <li cid="${c.id}"
                                     <c:choose>

@@ -223,6 +223,7 @@
             language:(navigator.browserLanguage || navigator.language).toLowerCase()
         }
 
+
         $("#audioPlayer")[0].addEventListener("ended", function(){
 
             console.log("audio ended");
@@ -358,12 +359,27 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            onSlideChangeStart:function(swiper){
+                activeItemIsVideo = $('.swiper-slide-active').find('video');
+
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    //判断是否Iphone 的 Safari 浏览器
+                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                        $('.isIphoneSafari').show();
+                    }
+                    //判断是否已经播放完成
+                    activeItemIsVideo.get(0).addEventListener('ended',function(){
+                        galleryTop.slideNext();
+                    });
+                }
+            },
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
                 nextItemIsVideo = $('.swiper-slide-prev').find('video');
-                clearTimeout(slideTimer);
+                //clearTimeout(slideTimer);
                 //触发切换音频
                 swiperChangeAduio(swiper.wrapper.prevObject);
 
@@ -551,6 +567,7 @@
         $('.info-popup-hook').click(function(){
             layer.open({
                 type: 1,
+                shadeClose : true,
                 area: ['85%','65%'],
                 fix: false, //不固定
                 title:false,
@@ -560,11 +577,24 @@
                     if(isAndroid) {
                         $("#ck-video").attr('style','height:0;');
                     }
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height(0);
+                    }
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','margin-top:9999px');
+                    }
                 },
                 cancel: function (swiper) {
+                    //还原设置
                     if(isAndroid) {
-                        $("#ck-video").attr('style','height:auto;');
+                        $("#ck-video").attr('style','margin-top:0');
                     }
+                    //关闭时还原高度。
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height('auto');
+                    }
+
                 }
 
             })
@@ -715,6 +745,9 @@
             if(browser.isAndroid || activeItemIsVideo.length > 0){
                 activeItemIsVideo.height(0);
             }
+            if(isAndroid) {
+                $("#ck-video").attr('style','margin-top:9999px');
+            }
             weui.actionSheet([
                 {
                     label: 'Pornography',
@@ -744,6 +777,9 @@
                         if(browser.isAndroid || activeItemIsVideo.length > 0){
                             activeItemIsVideo.height('auto');
                         }
+                        if(isAndroid) {
+                            $("#ck-video").attr('style','margin-top:0');
+                        }
                     }
                 }
             ], {
@@ -753,6 +789,9 @@
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.height('auto');
+                    }
+                    if(isAndroid) {
+                        $("#ck-video").attr('style','margin-top:0');
                     }
                 }
             });

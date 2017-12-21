@@ -146,7 +146,7 @@
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Input session introduction</span>
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject">Category&nbsp;&nbsp;|<i id="rootCategory">${rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameEn : course.category}</span>
+                                    <span class="subject">Category&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? courseCategory.parent.nameEn : rootList[0].nameEn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameEn : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
                                     <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameEn}">
                                 </div>

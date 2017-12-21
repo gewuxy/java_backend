@@ -190,7 +190,7 @@ public class CspUserController extends CspBaseController {
                     }
 
                     // 会议上锁
-                    audioService.doModifyAudioCourse(cspPackage.getUserId());
+                    audioService.doModifyAudioCourseByPackageId(cspPackage.getUserId(), cspPackage.getId());
                 }
 
                 if (StringUtils.isNotEmpty(remind)) {
@@ -282,15 +282,8 @@ public class CspUserController extends CspBaseController {
             CspUserInfoDTO dto = buildCspUserInfoDTO(principal, userInfo);
 
             CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(principal.getId());
-            //判断是否是老用户
-            if (cspUserInfo.getState() == true) {
-                oldUserSendProfessionalEdition(cspUserInfo);
-                cspUserInfo.setState(false);
-                cspUserService.updateByPrimaryKey(cspUserInfo);
-            } else {
-                oldUserSendProfessionalEdition(cspUserInfo);
-            }
-            updatePackagePrincipal(cspUserInfo.getId());
+
+            modifyOldUser(cspUserInfo);
 
             //判断用户是否已经存在新手引导会议
             audioService.doCopyGuideCourse(principal.getId());
