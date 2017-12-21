@@ -159,12 +159,12 @@
 
     <select id="findAudioCourseList" resultType="cn.medcn.meet.model.AudioCourse">
         SELECT * from t_audio_course where source_type = 1
-        and deleted != 1 AND locked != 1 AND csp_user_id = #{cspUserId}
+        and deleted != 1 AND locked != 1 AND publish =1 AND guide != 1 AND csp_user_id = #{cspUserId}
         ORDER BY create_time asc
     </select>
     
     <select id="findEarliestCourse" resultType="cn.medcn.meet.model.AudioCourse">
-        select * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND locked = true AND deleted = false ORDER by create_time asc limit 1
+        select * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND locked = true AND deleted = false AND guide != 1 ORDER by create_time asc limit 1
     </select>
 
     <update id="updateByUserId">

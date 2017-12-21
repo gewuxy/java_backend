@@ -15,9 +15,6 @@ import java.util.Date;
 @NoArgsConstructor
 public class CspNewlyStaticDTO {
 
-    //时间粒度
-    private Integer grain;
-
     //微博注册人数
     private Integer weiBoCount;
 
@@ -32,16 +29,17 @@ public class CspNewlyStaticDTO {
 
     private Integer facebookCount;
 
-    private Integer witterCount;
+    private Integer twitterCount;
 
-    private Date startTime;
-
-    private Date endTime;
 
     //x轴数据
-    private String indexDate;
+    private String groupDate;
 
-    //时间粒度，日，周，月
+    //注册时间
+    private Date registerDate;
+
+
+    //时间粒度，日，周，月,季，年
     public enum Grain{
         DAY,
         WEEK,
