@@ -10,6 +10,7 @@ import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspPackageOrderDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.dao.CspUserPackageHistoryDAO;
+import cn.medcn.user.dto.CspPackageOrderDTO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.model.CspUserPackage;
@@ -22,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 套餐操作
@@ -184,5 +187,26 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         sysNotifyService.addNotify(userId, title, content, local("user.notify.sender"));
     }
 
+
+    /**
+     * 美元和人民币的资金总额
+     * @return
+     */
+    @Override
+    public Map<Integer, Float> selectAbroadAndHomeMoney() {
+
+        return  packageOrderDAO.selectAbroadAndHomeMoney();
+    }
+
+    /**
+     * 根据币种查找订单
+     * @param type
+     * @return
+     */
+    @Override
+    public List<CspPackageOrderDTO> findOrderListByCurrencyType(int type) {
+
+        return packageOrderDAO.findOrderListByCurrencyType(type);
+    }
 }
 

@@ -50,21 +50,10 @@ public class CspRegisterStatsController extends BaseController{
             model.addAttribute("startTime",startTime);
             model.addAttribute("home",homeCount);
             model.addAttribute("abroad",abroadCount);
-            return "/registerStatic/homeStatic";
+            return "/statistics/userRegisterStats";
     }
 
 
-    /**
-     * 获取海外数据
-     * @return
-     */
-    @RequestMapping("/abroad")
-    public String getAbroadData(){
-        int homeCount = cspUserService.selectRegisterCount(CspUserInfo.AbroadType.home.ordinal());
-        int abroadCount = cspUserService.selectRegisterCount(CspUserInfo.AbroadType.abroad.ordinal());
-
-        return "/registerStatic/abroadStatic";
-    }
 
 
     /**
