@@ -13,7 +13,6 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
-
     <style>
         html,body { background-color:#F7F9FB;}
     </style>
@@ -33,12 +32,10 @@
                         </div>
                         <div class="message-detail-title">
                             <h1>${notify.title}</h1>
-                            <div class="message-detail-info">
-                                <span class="color-gray"><fmt:formatDate value="${notify.sendTime}" pattern="MM月dd日"></fmt:formatDate> </span>
-                            </div>
                         </div>
                         <div class="message-detail-main">
                             <p>&nbsp;&nbsp;&nbsp;&nbsp;${notify.content}</p>
+                            <p>${notify.senderName}<br /><fmt:formatDate value="${notify.sendTime}" pattern="yyyy年MM月dd日"></fmt:formatDate></p>
                         </div>
                     </div>
                 </div>
@@ -46,13 +43,5 @@
         </div>
         <%@include file="../include/footer.jsp"%>
     </div>
-
-
-    <script>
-        $(function(){
-
-
-        })
-    </script>
 </body>
 </html>
