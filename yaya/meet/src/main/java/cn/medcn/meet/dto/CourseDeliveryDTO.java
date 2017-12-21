@@ -79,10 +79,30 @@ public class CourseDeliveryDTO implements Serializable {
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
-            for(CourseDeliveryDTO dto :list){
-                if(!StringUtils.isEmpty(dto.getCoverUrl())){
-                    dto.setCoverUrl(baseUrl + dto.getCoverUrl());
+            for (CourseDeliveryDTO deliveryDTO : list) {
+                deliveryDTO.setServerTime(new Date());
+                if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
+                    deliveryDTO.setCoverUrl(baseUrl + deliveryDTO.getCoverUrl());
                 }
+
+                // 录播会议
+                if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+                    // 录播 当前播放第几页
+                    if (deliveryDTO.getPlayPage() == null || deliveryDTO.getPlayPage() == 0) {
+                        deliveryDTO.setPlayPage(0);
+                    } else {
+                        deliveryDTO.setPlayPage(deliveryDTO.getPlayPage());
+                    }
+                } else {
+                    // 直播 当前播放第几页
+                    if (deliveryDTO.getLivePage() == null || deliveryDTO.getLivePage() == 0) {
+                        deliveryDTO.setLivePage(0);
+                    } else {
+                        deliveryDTO.setLivePage(deliveryDTO.getLivePage());
+                    }
+
+                }
+
             }
         }
     }

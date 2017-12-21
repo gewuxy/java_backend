@@ -9,7 +9,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>錯誤提示</title>
+    <title>${course.title}</title>
+    <meta id="MetaDescription" name="DESCRIPTION" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
+    <meta id="MetaKeywords" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
 
     <!-- 高清方案 -->
