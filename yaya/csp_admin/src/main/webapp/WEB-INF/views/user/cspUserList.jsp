@@ -256,14 +256,11 @@
     //修改备注
     function remark(obj,userId){
         var remark = $(obj).parent().find("input").val();
-        if(isEmpty(remark)){
-            layer.msg("请输入备注信息后提交");
-            return false;
-        }
         $.ajax({
-            url:'${ctx}/csp/user/remark?id=' + userId + "&remark=" + remark,
-            dataType:'json',
-            async:true,
+            url:'${ctx}/csp/user/remark',
+            data:{"id":userId,"remark":remark},
+            dataType:"json",
+            type:"post",
             success:function (data) {
                 if(data.code == "0"){
                     layer.msg("更新成功");
