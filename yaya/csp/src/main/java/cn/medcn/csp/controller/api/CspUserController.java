@@ -507,7 +507,7 @@ public class CspUserController extends CspBaseController {
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
             //添加注册用户的设备
-            userDTO.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
+            userDTO.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
             userInfo.setFlux(0);
         }

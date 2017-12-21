@@ -321,7 +321,7 @@ public class LoginController extends CspBaseController {
     public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes,
                            HttpServletResponse response, Model model) throws SystemException {
 
-        Principal principal =  getWebPrincipal();
+        Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
 
         if (StringUtils.isNotEmpty(code)) {
             //获取第三方用户信息
