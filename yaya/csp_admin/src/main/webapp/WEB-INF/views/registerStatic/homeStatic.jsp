@@ -76,6 +76,13 @@
 <script>
     $(function(){
 
+        $.get('${ctx}/sys/register/stats/newly/static',{"startTime":"2017/10/01 00:00","endTime":"2017/11/30 23:59","location":1,"grain":0}, function (data) {
+            if (data.code == 0){
+
+            }
+        },'json');
+
+
         //图表加载
         var dom = document.getElementById('echarts-2');
 //        var dom2 = document.getElementById('echarts-3');
@@ -229,6 +236,8 @@
             //	 	value: "2013-06-05 00:00 to 2013-06-07 00:00"
             // }
         });
+
+
 
 
     });

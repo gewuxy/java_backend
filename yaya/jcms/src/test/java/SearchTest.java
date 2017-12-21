@@ -21,9 +21,9 @@ public class SearchTest {
     @Test
     public void testSearch(){
         Searchable searchable = new Searchable();
-        searchable.and("history_id", "123123123");
-        searchable.or("title", "测试");
-        searchable.or("content", "测试");
+//        searchable.and("history_id", "170510121523528");
+        searchable.or("title", "药物");
+        searchable.or("content", "药物");
         SearchResult result = testServiceImpl.search(searchable);
 
         System.out.println(result);
