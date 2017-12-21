@@ -430,10 +430,11 @@
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
                     }
-                    //判断是否已经播放完成
-                    activeItemIsVideo.get(0).addEventListener('ended',function(){
+                    activeItemIsVideo.get(0).addEventListener('ended', function () {
+                        console.log("video play end ...");
                         galleryTop.slideNext();
-                    });
+                    }, {once: true});
+
                 }
             },
             onSlideChangeEnd:function(swiper){
@@ -472,6 +473,18 @@
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    //判断是否Iphone 的 Safari 浏览器
+                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                        $('.isIphoneSafari').show();
+                    }
+                    activeItemIsVideo.get(0).addEventListener('ended', function () {
+                        console.log("video play end ...");
+                        galleryTop.slideNext();
+                    }, {once: true});
+
+                }
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();
 //                }

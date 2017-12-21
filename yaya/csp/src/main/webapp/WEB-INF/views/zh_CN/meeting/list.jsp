@@ -287,6 +287,22 @@
             }
 
             $('.popup-player-hook').on('click',function(){
+                var popupWidth = '1080px';
+                var popupHeight = '816px';
+                var added = 608;
+                var defaultFirstPosition = -160;
+                var editFirstPosition = 175;
+
+                //判断小屏幕修改尺寸
+                if( window.innerHeight <  816) {
+                    popupHeight = '600px';
+                    popupWidth = '789px';
+                    editFirstPosition = 120;
+                    added = 460;
+                    defaultFirstPosition = -118;
+                }
+
+
                 var course = loadCourseInfo($(this).attr("courseId"));
                 if (course == undefined){
                     layer.msg("获取会议信息失败");
@@ -295,15 +311,13 @@
                 initSwiper(course);
                 layer.open({
                     type: 1,
-                    area: ['1080px', '816px'],
+                    area: [popupWidth, popupHeight],
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
                     anim:2,
                     content: $('.player-popup-box'),
                     success:function(){
-//                        var added = 105;
-                        var added = 608;
                         var newOffset;
 
                         //幻灯片轮播
@@ -321,34 +335,42 @@
                             paginationType: 'fraction',
                             onInit: function(swiper){
                                 //设置偏移值
-                                swiper.wrapper.attr('style','-webkit-transform: translate3d(175px, 0, 0);-moz-transform: translate3d(175px, 0, 0);-o-transform: translate3d(175px, 0, 0);-ms-transform: translate3d(175px, 0, 0);transform: translate3d(175px, 0, 0);transition-duration: 0ms;');
-
+                                swiper.wrapper.attr('style','-webkit-transform: translate3d('+editFirstPosition+'px, 0, 0);-moz-transform: translate3d('+editFirstPosition+'px, 0, 0);-o-transform: translate3d('+editFirstPosition+'px, 0, 0);-ms-transform: translate3d('+editFirstPosition+'px, 0, 0);transform: translate3d('+editFirstPosition+'px, 0, 0);transition-duration: 0ms;');
                                 //获取默认偏移值
                                 var defaultOffset = swiper.snapGrid;
-                                defaultOffset[0] = -160;
+                                //新增
+                                defaultOffset[0] = defaultFirstPosition;
                                 for(var i =1; i<defaultOffset.length; i++){
                                     defaultOffset[i] = defaultOffset[i-1] + added ;
                                 }
                                 //更新偏移值
                                 var updateOffset = defaultOffset.slice(1);
-                                newOffset= [-175];
+                                newOffset= [-editFirstPosition];
                                 newOffset = newOffset.concat(updateOffset);
+
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
                                 swiper.slidesGrid = newOffset;
+
                             },
                             onSlideChangeEnd:function(swiper){
                                 var dataSrc = $(".swiper-slide-active").attr('audio-src');
                                 asAllItem[0].load(dataSrc);
-                                asAllItem[0].play();
+                                asAllItem[0].play()
+
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
                                 swiper.slidesGrid = newOffset;
+                                if(dataSrc) {
+                                    $('.audio-metting-box').css('opacity','1');
+                                }
+
                             },
                             onTouchStart:function(swiper) {
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
                                 swiper.slidesGrid = newOffset;
+                                $('.audio-metting-box').css('opacity','0');
                             }
 
                         });

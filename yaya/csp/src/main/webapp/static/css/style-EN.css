@@ -1233,6 +1233,14 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
     /*.member-popup-zIndex { position: absolute !important;}*/
 }
 
+@media screen and (max-height:820px) {
+    .player-popup-box  .swiper-slide { width:398px; height:286px;}
+    .player-popup-box .swiper-slide-active { width:553px; height:381px;}
+    .player-popup-box .layer-hospital-popup { padding:0; }
+
+    /*.member-popup-zIndex { position: absolute !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}*/
+}
+
 /* Safari 6 - 10 hack */
 /* Safari  hack */
 @media only screen and (-webkit-min-device-pixel-ratio: 1) {
