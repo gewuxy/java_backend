@@ -13,6 +13,7 @@ import cn.medcn.common.utils.RegexUtils;
 import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
+import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import com.google.common.collect.Maps;
@@ -38,7 +39,8 @@ public class EmailController extends BaseController{
     @Autowired
     private RedisCacheUtils redisCacheUtils;
 
-
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
     @Autowired
     protected CspUserService cspUserService;
 
@@ -75,6 +77,9 @@ public class EmailController extends BaseController{
                 redisCacheUtils.delete(key);
                 //发送推送消息
                 sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
+                if(userInfo.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
+                    cspUserPackageService.addStanardInfo(userInfo.getId());
+                }
             }
             model.addAttribute("email", email);
             return localeView("/register/activeOk");

@@ -477,6 +477,8 @@ public class CspUserController extends CspBaseController {
             cspUserService.insert(userInfo);
             //推送注册成功消息
             sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
+            //app端用户默认给标准版
+            cspUserPackageService.addStanardInfo(userId);
             userInfo.setFlux(0); // 用户流量
         }
 
@@ -505,7 +507,7 @@ public class CspUserController extends CspBaseController {
         // 用户不存在,则获取第三方用户信息 保存至CSP用户表及绑定用户表
         if (userInfo == null) {
             //添加注册用户的设备
-            userDTO.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
+            userDTO.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
             userInfo.setFlux(0);
         }

@@ -61,14 +61,19 @@ public class CspBaseController extends BaseController {
      */
     protected Principal getWebPrincipal() {
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-        String token = principal.getToken();
-        //从缓存信息里查询最新版
-        Principal principalCache = getPackageCache(token);
-        if (principalCache == null) {
-            //如果缓存过期更新缓存
-            return updatePackagePrincipal(principal.getId());
+        if (principal != null){
+            String token = principal.getToken();
+            //从缓存信息里查询最新版
+            Principal principalCache = getPackageCache(token);
+            if (principalCache == null) {
+                //如果缓存过期更新缓存
+                return updatePackagePrincipal(principal.getId());
+            }
+            return principalCache;
+        }else {
+            return principal;
         }
-        return principalCache;
+
     }
 
     /**

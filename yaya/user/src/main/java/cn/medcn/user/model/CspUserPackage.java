@@ -27,6 +27,7 @@ public class CspUserPackage implements Serializable {
     // 套餐开始时间
     protected Date packageStart;
     // 套餐结束时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     protected Date packageEnd;
     // 当前版本更新时间
     protected Date updateTime;

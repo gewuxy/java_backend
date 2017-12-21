@@ -31,8 +31,21 @@ function isEmpty(value) {
 }
 
 function dateToStrings(str){
+    if(isEmpty(str)){
+        str = new Date();
+    }
     var span = Date.parse(str + ' GMT +8');
-    return datetimeFormat(span);
+    return dateFormat(span);
+}
+
+function dateFormat(longTypeDate){
+    var datetimeType = "";
+    var date = new Date();
+    date.setTime(longTypeDate);
+    datetimeType+= date.getFullYear();  //年
+    datetimeType+= "-" + getMonth(date); //月
+    datetimeType += "-" + getDay(date);  //日
+    return datetimeType;
 }
 
 function datetimeFormat(longTypeDate){
