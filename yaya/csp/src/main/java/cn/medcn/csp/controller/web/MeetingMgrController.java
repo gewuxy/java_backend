@@ -303,7 +303,7 @@ public class MeetingMgrController extends CspBaseController {
         }
 
         if (course.getCategoryId() != null) {
-            model.addAttribute("courseCategory", courseCategoryService.selectByPrimaryKey(course.getId()));
+            model.addAttribute("courseCategory", courseCategoryService.findCategoryHasParent(course.getCategoryId()));
         }
 
         model.addAttribute("rootList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.root.depth));

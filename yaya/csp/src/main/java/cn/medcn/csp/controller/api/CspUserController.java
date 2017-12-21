@@ -190,7 +190,7 @@ public class CspUserController extends CspBaseController {
                     }
 
                     // 会议上锁
-                    audioService.doModifyAudioCourse(cspPackage.getUserId());
+                    audioService.doModifyAudioCourseByPackageId(cspPackage.getUserId(), cspPackage.getId());
                 }
 
                 if (StringUtils.isNotEmpty(remind)) {
@@ -470,6 +470,8 @@ public class CspUserController extends CspBaseController {
             cspUserService.insert(userInfo);
             //推送注册成功消息
             sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
+            //app端用户默认给标准版
+            cspUserPackageService.addStanardInfo(userId);
             userInfo.setFlux(0); // 用户流量
         }
 

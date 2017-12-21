@@ -27,6 +27,7 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.*;
+import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import com.github.abel533.mapper.Mapper;
@@ -114,6 +115,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public Mapper<CspUserInfo> getBaseMapper() {
         return cspUserInfoDAO;
     }
+
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
 
     @Override
     public CspUserInfo findUserInfoById(String userId) {
@@ -219,6 +223,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         // 如果是YaYa医师账号登录 默认用户套餐为专业版
         if (bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
             insertUserPackage(userInfo.getId());
+        }
+        //app端注册默认是基础版
+        if(userDTO.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
+            cspUserPackageService.addStanardInfo(userInfo.getId());
         }
         return userInfo;
     }

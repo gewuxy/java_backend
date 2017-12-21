@@ -225,6 +225,7 @@
                     }
                 }
             }
+            $("#packageEnd").val($("#packageEnd").val() + " 23:59:59");
             $("#packageId").prop("disabled", false);
            $("#modalForm").submit();
         });
@@ -235,14 +236,14 @@
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
-            format: 'YYYY-MM-DD 23:59:59',
+            format: 'YYYY-MM-DD',
             autoClose: false,
             singleDate:true,
             time: {
                 enabled: true
             }
         }).bind('datepicker-change',function(event,obj){
-            console.log(obj.value)
+            //console.log(obj.value)
             $(this).find("input").val(obj.value);
             $("#" + id).val(obj.value);
         });
