@@ -100,6 +100,15 @@
                         //付款弹出层
                         var body = layer.getChildFrame('body', index);
                         body.find(".cancel-hook").on('click',function(){
+                            var packageId = body.find("#packageId").val();
+                            if(packageId == 0){
+                                ajaxPost('${ctx}/mgr/pay/standard', {},function(data){
+                                    if (data.code == "0"){
+                                        window.location.href = '${ctx}/mgr/meet/list';
+                                    }
+                                });
+                                return false;
+                            }
                             layer.open({
                                 type: 1,
                                 area: ['560px', '300px'],

@@ -48,13 +48,13 @@
                     flag = initId == 3 ? "pf" : "hg";
                 }
                 //是否需要不能选择
-                $("#disabledItem1").addClass("member-buy-disabled-item");
                 if(initId == 3) $("#disabledItem2").addClass("member-buy-disabled-item");
             } else {
                 //新用户隐藏取消按钮
-                $("#newUser").attr("position","relative");
+                $("#newUser").css("position"," relative").css("z-index","3");
                 $(".layui-layer-close").remove();
             }
+            $("#disabledItem1").addClass("member-buy-disabled-item");
         }
 
         $(function () {
@@ -80,15 +80,16 @@
 
             //选购套餐提交
             $('input[name="commitPay"]').click(function () {
-                if (selectPk != 0) {
-                    var limitTime = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
-                    var payType = $("#" + flag + "View").find('input[name=' + flag + 'PayMode]:checked').val();
-                    var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
-                    $("#limitTime").val(limitTime);
-                    $("#payType").val(payType);
-                    $("#currency").val(currency);
-                }
                 $("#packageId").val(selectPk);
+                if(selectPk == 0){  //标准版提交
+                    return false;
+                }
+                var limitTime = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
+                var payType = $("#" + flag + "View").find('input[name=' + flag + 'PayMode]:checked').val();
+                var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
+                $("#limitTime").val(limitTime);
+                $("#payType").val(payType);
+                $("#currency").val(currency);
                 $("#rechargeFrom").submit();
             });
 
