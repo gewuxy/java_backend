@@ -8,6 +8,8 @@ import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
+import cn.medcn.meet.dto.CourseDeliveryDTO;
+import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.user.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
@@ -21,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.Driver;
 import java.util.Date;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
