@@ -9,6 +9,7 @@ import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
 import cn.medcn.user.dto.CspUserInfoDTO;
@@ -55,6 +56,9 @@ public class CspUserController extends BaseController {
 
    @Autowired
    protected RedisCacheUtils redisCacheUtils;
+
+   @Autowired
+   protected AudioService audioService;
 
     @RequestMapping(value = "/list")
     @Log(name = "csp用户列表")
@@ -172,7 +176,10 @@ public class CspUserController extends BaseController {
                 cspUserPackageService.updateByPrimaryKey(packageInfo);
                 oldpackageId = oldPackage.getPackageId();
             }
-             cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldpackageId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
+            //更新会议状态
+            audioService.doModifyAudioCourseByPackageId(packageInfo.getUserId(),currentId);
+            //添加版本历史
+            cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldpackageId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
         }
         //更新缓存信息
         adminUpdateUserInfoCache(packageInfo.getUserId());

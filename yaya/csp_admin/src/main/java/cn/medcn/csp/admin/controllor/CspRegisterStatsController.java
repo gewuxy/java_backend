@@ -2,6 +2,8 @@ package cn.medcn.csp.admin.controllor;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.CalendarUtils;
+import cn.medcn.common.utils.StringUtils;
+import cn.medcn.user.dto.CspNewlyEChartsDTO;
 import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspUserService;
@@ -11,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -22,9 +25,9 @@ import java.util.Map;
  * csp用户注册统计
  * Created by LiuLP on 2017/12/18/018.
  */
-@RequestMapping("/sys/register")
+@RequestMapping("/sys/register/stats")
 @Controller
-public class CspRegisterStaticController extends BaseController{
+public class CspRegisterStatsController extends BaseController{
 
 
     @Autowired
@@ -74,35 +77,37 @@ public class CspRegisterStaticController extends BaseController{
      */
     @RequestMapping("/newly/static")
     @ResponseBody
-    public String newlyStatic(Integer location, Date startTime, Date endTime, Integer grain) throws ParseException {
+    public String newlyStatic(Integer location, String startTime, String endTime, Integer grain) throws ParseException {
         if(location == null){
             return error("请指定地区");
         }
         if(grain == null){
             return error("请指定时间粒度");
         }
+        if(StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)){
+            return error("请传递正确的日期");
+        }
+        DateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        Date startDate = format.parse(startTime);
+        Date endDate = format.parse(endTime);
 
-        String format = "%Y-%m-%d";
         //按周统计
         if(grain == CspNewlyStaticDTO.Grain.WEEK.ordinal()){
-            startTime = CalendarUtils.getWeekFirstDay(startTime);
-            endTime = CalendarUtils.getWeekLastDay(endTime);
-            format = "%Y-%u";
+            startDate = CalendarUtils.getWeekFirstDay(startDate);
+            endDate = CalendarUtils.getWeekLastDay(endDate);
             //按月统计
         }else if(grain == CspNewlyStaticDTO.Grain.MONTH.ordinal()){
-            startTime = CalendarUtils.getMonthFirstDay(startTime);
-            endTime = CalendarUtils.getMonthLastDay(endTime);
-            format = "%Y-%m";
+            startDate = CalendarUtils.getMonthFirstDay(startDate);
+            endDate = CalendarUtils.getMonthLastDay(endDate);
             //按季度统计
         }else if(grain == CspNewlyStaticDTO.Grain.QUARTER.ordinal()){
-            startTime = CalendarUtils.getQuarterFirstDate(startTime);
-            endTime = CalendarUtils.getQuarterLastDate(endTime);
-            format = "%Y";
+            startDate = CalendarUtils.getQuarterFirstDate(startDate);
+            endDate = CalendarUtils.getQuarterLastDate(endDate);
 
             //按年统计
         }else if(grain == CspNewlyStaticDTO.Grain.YEAR.ordinal()){
-            startTime = CalendarUtils.getCurrYearFirstDay(startTime);
-            endTime = CalendarUtils.getCurrYearLastDay(endTime);
+            startDate = CalendarUtils.getCurrYearFirstDay(startDate);
+            endDate = CalendarUtils.getCurrYearLastDay(endDate);
 
         }
 
@@ -110,8 +115,9 @@ public class CspRegisterStaticController extends BaseController{
         map.put("location",location);
         map.put("startTime",startTime);
         map.put("endTime",endTime);
-        map.put("format",format);
+        map.put("grain",grain);
         List<CspNewlyStaticDTO> list = cspUserService.findNewlyRegisterList(map);
+        CspNewlyEChartsDTO dto = CspNewlyEChartsDTO.build(list,grain,startDate,endDate);
 
         return success();
     }

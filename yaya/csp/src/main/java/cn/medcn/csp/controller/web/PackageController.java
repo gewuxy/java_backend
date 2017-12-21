@@ -128,7 +128,7 @@ public class PackageController extends CspBaseController {
      * @param limitTime
      * @return
      */
-    @RequestMapping(value = "pay")
+    @RequestMapping(value = "/pay")
     public String allPay(Integer packageId, Integer currency, String payType, Integer limitTime, Model model) throws SystemException {
         String userId = getWebPrincipal().getId();
         packageId++;
@@ -158,6 +158,31 @@ public class PackageController extends CspBaseController {
             return usdPay(packageId, currency, payType, money, num);
         }
     }
+
+
+    /**
+     * 新用户选择标准版
+     *
+     * @param packageId
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping(value = "/standard")
+    @ResponseBody
+    public String standardEdition(Integer packageId){
+        String userId = getWebPrincipal().getId();
+        //标准版不需要支付添加用户套餐信息
+        cspUserPackageService.addStanardInfo(userId);
+        //添加用户历史版本信息
+        cspUserPackageHistoryService.addUserHistoryInfo(userId, getWebPrincipal().getCspPackage() != null ? getWebPrincipal().getPackageId() : null, packageId, Constants.NUMBER_ONE);
+        //更新用户信息缓存
+        updatePackagePrincipal(userId);
+        //添加提示
+        updatePackageMsg(userId,packageId,Constants.NUMBER_TWO);
+        return success();
+    }
+
+
 
     /**
      * 人民币支付

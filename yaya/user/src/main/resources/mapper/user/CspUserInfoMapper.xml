@@ -115,9 +115,25 @@
       SELECT
       count(register_from = 1) AS weiBoCount,count(register_from = 2) AS weiXinCount,count(register_from = 3) AS facebookCount,
       count(register_from = 4) AS witterCount,count(register_from = 5) AS yaYaCount, count(register_from = 6) AS mobileCount,
-      count(register_from = 7) AS emailCount,date_format(register_time,#{format})as indexDate
+      count(register_from = 7) AS emailCount
+          <if test="grain == 0">
+              date_format(register_time,'%Y-%m-%d')as groupDate,
+          </if>
+        <if test="grain == 1">
+            date_format(register_time,'%Y-%u')as groupDate,
+        </if>
+        <if test="grain == 2">
+            date_format(register_time,'%Y-%m')as groupDate,
+        </if>
+        <if test="grain == 3">
+            CONCAT(YEAR(register_time),'_',QUARTER(register_time),'Q') as groupDate,
+        </if>
+        <if test="grain == 4">
+            date_format(register_time,'%Y')as groupDate,
+        </if>
+       date_format(register_time,'%m-%d')as registerDate
         FROM t_csp_user_info WHERE abroad=#{location} AND (register_time BETWEEN #{startTime} AND #{endTime})
-        GROUP BY indexDate
+        GROUP BY groupDate order by registerDate
     </select>
 
     <select id="selectByIp" resultType="cn.medcn.user.model.CspUserInfo">

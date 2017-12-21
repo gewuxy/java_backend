@@ -1,13 +1,14 @@
 package cn.medcn.common.utils;
 
 import cn.medcn.common.Constants;
-import cn.medcn.common.excptions.SystemException;
 
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/1/16.
@@ -586,7 +587,6 @@ public class CalendarUtils {
         int month = cal.get(Calendar.MONTH);//获取月份
         int year = cal.get(Calendar.YEAR); //获取年份
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date firstDate = null;
         if(month <= 3){
             return format.parse(year + "-01-01 00:00");
         } else if (month > 3 && month <= 6) {
@@ -604,7 +604,6 @@ public class CalendarUtils {
         int month = cal.get(Calendar.MONTH);//获取月份
         int year = cal.get(Calendar.YEAR); //获取年份
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        Date firstDate = null;
         if(month <= 3){
             return format.parse(year + "-03-31 23:59");
         } else if (month > 3 && month <= 6) {
@@ -631,8 +630,147 @@ public class CalendarUtils {
     }
 
 
+    //获取某段时间内的所有日期
+    public static List<Date> getAllDateList(Date dBegin, Date dEnd) throws ParseException {
+        List<Date> list = new ArrayList<>();
+        list.add(dBegin);
+        Calendar calBegin = Calendar.getInstance();
+        // 使用给定的 Date 设置此 Calendar 的时间
+        calBegin.setTime(dBegin);
+        Calendar calEnd = Calendar.getInstance();
+        // 使用给定的 Date 设置此 Calendar 的时间
+        calEnd.setTime(dEnd);
+        // 测试此日期是否在指定日期之后
+        while(dEnd.after(calBegin.getTime())){
+            calBegin.add(Calendar.DAY_OF_MONTH, 1);
+            list.add(calBegin.getTime());
+        }
 
-    public static void main(String[] args)  {
+        return list;
+    }
+
+
+    /**
+     * 获取指定时间段的所有星期一的日期
+     * @param dBegin
+     * @param dEnd
+     * @return
+     * @throws ParseException
+     */
+    public static List<Date> getWeekFirstDateList(Date dBegin, Date dEnd) throws ParseException {
+        List<Date> list = getAllDateList(dBegin,dEnd);
+        List<Date> mondayList = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(list.get(i));
+            int dayForWeek = 0;
+            if(cal.get(Calendar.DAY_OF_WEEK) == 1){
+                continue;
+            }else{
+                dayForWeek = cal.get(Calendar.DAY_OF_WEEK) - 1;
+                if(dayForWeek == 1){
+                    mondayList.add(list.get(i));
+                }
+            }
+
+
+
+        }
+        return mondayList;
+    }
+
+
+    /**
+     * 获取时间段内所有月份的第一天
+     * @param dBegin
+     * @param dEnd
+     * @return
+     * @throws ParseException
+     */
+    public static List<Date> getMonthFirstDateList(Date dBegin, Date dEnd) throws ParseException {
+        List<Date> list = getAllDateList(dBegin,dEnd);
+        List<Date> monthList = new ArrayList<>();
+        for(int i=0;i<list.size();i++){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(list.get(i));
+            if(cal.get(Calendar.DAY_OF_MONTH ) == 1 ){
+                monthList.add(list.get(i));
+            }
+        }
+        return monthList;
+    }
+
+    /**
+     * 获取时间段内所有季度的第一天
+     * @param dBegin
+     * @param dEnd
+     * @return
+     * @throws ParseException
+     */
+    public static List<Date> getQuarterFirstDateList(Date dBegin, Date dEnd) throws ParseException {
+        List<Date> list = getAllDateList(dBegin,dEnd);
+        List<Date> quarterList = new ArrayList<>();
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+
+        for(int i=0;i<list.size();i++){
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(list.get(i));
+            Date date = null;
+            int month = cal.get(Calendar.MONTH) + 1;
+            int year = cal.get(Calendar.YEAR);
+            if(month <= 3){
+                date = format.parse(year + "-01-01");
+            }else if(month > 3 && month <= 6){
+                date = format.parse(year + "-04-01");
+            }else if(month > 6 && month <= 9){
+                date = format.parse(year + "-07-01");
+            }else{
+                date = format.parse(year + "-10-01");
+            }
+
+            if(!quarterList.contains(date)){
+                quarterList.add(date);
+            }
+
+        }
+        return quarterList;
+    }
+
+
+    /**
+     * 获取时间段内所有月份的第一天
+     * @param dBegin
+     * @param dEnd
+     * @return
+     * @throws ParseException
+     */
+    public static List<Date> getYearFirstDateList(Date dBegin, Date dEnd) throws ParseException {
+       Calendar cal = Calendar.getInstance();
+       cal.setTime(dBegin);
+       int start = cal.get(Calendar.YEAR);
+       cal.setTime(dEnd);
+       int end = cal.get(Calendar.YEAR);
+       if(end >start){
+           List<Date> list = new ArrayList<>();
+           DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+           Date date =  null;
+           int interval = end - start;
+           for(int i = 0 ; i < interval ; i++){
+                date = format.parse(start + "-01-01");
+               list.add(date);
+               start ++;
+           }
+           return list;
+       }
+
+        return null;
+    }
+
+
+
+
+
+    public static void main(String[] args) throws ParseException {
        /*Date date = calendarMonth(2);
         System.out.println(new SimpleDateFormat("yyyy-MM-dd").format(date));*/
         //sec = (diff / Constants.NUMBER_THOUSAND - TimeUnit.DAYS.toSeconds(day) - TimeUnit.MINUTES.toSeconds(min));
@@ -643,6 +781,13 @@ public class CalendarUtils {
 
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate1 = dateFormat1.parse("2017-01-01");
+        DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
+        Date myDate2 = dateFormat2.parse("2019-12-20");
+        List list = getYearFirstDateList(myDate1,myDate2);
+        System.out.println(list.size());
+
 
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         String st = "2017-10-13 09:49:54";

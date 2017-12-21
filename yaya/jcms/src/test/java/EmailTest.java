@@ -1,8 +1,13 @@
 import cn.medcn.common.email.EmailHelper;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.AppUserService;
+import cn.medcn.user.service.CspUserService;
+import cn.medcn.user.service.EmailTempService;
 import com.google.common.collect.Lists;
 import org.jdom.JDOMException;
 import org.junit.Test;
@@ -27,6 +32,12 @@ public class EmailTest {
 
     @Autowired
     private AppUserService appUserService;
+
+    @Autowired
+    private CspUserService cspUserService;
+
+    @Autowired
+    private EmailTempService tempService;
 
     @Test
     public void testSendVersionUpdateNotification() throws JDOMException, MessagingException, IOException {
@@ -76,6 +87,12 @@ public class EmailTest {
         List<String> emailList = Lists.newArrayList();
         emailList.add(userName);
         emailHelper.sendVersionUpdateNotification(emailTitle, emailList);
+    }
+
+    @Test
+    public void testEmail() throws SystemException {
+        EmailTemplate template = tempService.getTemplate("zh_CN",EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
+        cspUserService.sendMail("1047923274@qq.com",null,template);
     }
 }
 
