@@ -5,6 +5,7 @@
   Time: 9:36
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!Doctype html>
 <html lang="en">
 <head>
     <title>会议管理-会讲</title>
