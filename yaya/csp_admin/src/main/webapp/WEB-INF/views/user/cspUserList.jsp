@@ -155,6 +155,7 @@
         initDateRangePicker("packageEnd");
     })
 
+    //初始化冻结表单
     function active(actionType,userId){
         $("#packageChange").hide();
         $("#dongjie").show();
@@ -164,6 +165,7 @@
         $("#myModal").modal("show");
     }
 
+    //初始化升级降级修改时间列表
     function changePackages(actionType,userId,packageId,packageEnd){
         $("#packageChange").show();
         $("#dongjie").hide();
@@ -231,6 +233,7 @@
         });
     }
 
+    //初始化时间时间空间
     function initDateRangePicker(id){
         $('#updateTimes').dateRangePicker({
             singleMonth: true,
@@ -239,6 +242,7 @@
             format: 'YYYY-MM-DD',
             autoClose: false,
             singleDate:true,
+            startDate: nextDay(),
             time: {
                 enabled: true
             }
@@ -249,6 +253,7 @@
         });
     }
 
+    //修改备注
     function remark(obj,userId){
         var remark = $(obj).parent().find("input").val();
         if(isEmpty(remark)){
@@ -259,7 +264,6 @@
             url:'${ctx}/csp/user/remark?id=' + userId + "&remark=" + remark,
             dataType:'json',
             async:true,
-            type:'get',
             success:function (data) {
                 if(data.code == "0"){
                     layer.msg("更新成功");

@@ -23,6 +23,11 @@ function initLaydate(id){
     });
 }
 
+/**
+ * 判断是否为空
+ * @param value
+ * @returns {boolean}
+ */
 function isEmpty(value) {
     if (value != null && value !== undefined && value!== ''){
         return false;
@@ -30,14 +35,30 @@ function isEmpty(value) {
     return true;
 }
 
+function nextDay(){
+    var day = new Date();
+    day.setTime(day.getTime()+24*60*60*1000);
+    return day.getFullYear()+"-" + (day.getMonth()+1) + "-" + day.getDate();
+}
+
+/**
+ * 根据字符串获取字符串格式时间
+ * @param str
+ * @returns {string}
+ */
 function dateToStrings(str){
     if(isEmpty(str)){
-        str = new Date();
+        str = nextDay();
     }
     var span = Date.parse(str + ' GMT +8');
     return dateFormat(span);
 }
 
+/**
+ * 根据时间戳获取年月日
+ * @param longTypeDate
+ * @returns {string}
+ */
 function dateFormat(longTypeDate){
     var datetimeType = "";
     var date = new Date();
