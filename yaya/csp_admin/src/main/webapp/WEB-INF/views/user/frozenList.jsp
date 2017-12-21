@@ -41,7 +41,7 @@
                 <td>${user.nickName}</td>
                 <td><fmt:formatDate value="${user.updateTime}" pattern="yyyyMMdd"/></td>
                 <td>${user.frozenReason}</td>
-                <td><input type="text" value="${user.remark}"></td></td>
+                <td><input type="text" style="width: 70px;height: auto;" maxlength="10" value="${user.remark}"> &nbsp;<a href="#" onclick="remark(this,'${user.uid}')">备注</a></td>
                 <th>
                     <div class="btn-group">
                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -66,5 +66,24 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
+<script>
+    //修改备注
+    function remark(obj,userId){
+        var remark = $(obj).parent().find("input").val();
+        $.ajax({
+            url:'${ctx}/csp/user/remark',
+            data:{"id":userId,"remark":remark},
+            dataType:"json",
+            type:"post",
+            success:function (data) {
+                if(data.code == "0"){
+                    layer.msg("更新成功");
+                }else{
+                    layer.msg("修改备注失败，请重试");
+                }
+            }
+        });
+    }
+</script>
 </body>
 </html>
