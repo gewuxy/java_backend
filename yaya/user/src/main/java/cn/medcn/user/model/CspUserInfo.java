@@ -77,6 +77,9 @@ public class CspUserInfo implements Serializable{
     @Transient
     protected Integer flux; // 流量
 
+    @Transient
+    protected Integer count;
+
     public static CspUserInfo buildToUserInfo(CspUserInfoDTO dto) {
         CspUserInfo userInfo = new CspUserInfo();
         userInfo.setId(StringUtils.nowStr());

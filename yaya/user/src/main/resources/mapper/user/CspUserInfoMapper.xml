@@ -102,8 +102,9 @@
     </select>
 
     <select id="selectNewUser" resultType="Integer">
-        select count(id) from t_csp_user_info
-        where date(register_time)=curdate()-INTERVAL 1 day
+       select count(id) from t_csp_user_info
+        where register_time
+        between curdate()-INTERVAL 1 day  and CURDATE()
     </select>
 
     <select id="selectAllUserCount" resultType="Integer">
@@ -117,6 +118,10 @@
       count(register_from = 7) AS emailCount,date_format(register_time,#{format})as indexDate
         FROM t_csp_user_info WHERE abroad=#{location} AND (register_time BETWEEN #{startTime} AND #{endTime})
         GROUP BY indexDate
+    </select>
+
+    <select id="selectByIp" resultType="cn.medcn.user.model.CspUserInfo">
+        select *,count(*) as count from t_csp_user_info WHERE last_login_ip is not NULL GROUP BY last_login_ip
     </select>
 
 </mapper>
