@@ -33,12 +33,10 @@
                         </div>
                         <div class="message-detail-title">
                             <h1>${notify.title}</h1>
-                            <div class="message-detail-info">
-                                <span class="color-gray">${notify.sendTimeStr} </span>
-                            </div>
                         </div>
                         <div class="message-detail-main">
                             <p>&nbsp;&nbsp;&nbsp;&nbsp;${notify.content}</p>
+                            <p>${notify.senderName}<br />${notify.sendTimeStr}</p>
                         </div>
                     </div>
                 </div>
@@ -46,13 +44,5 @@
         </div>
         <%@include file="../include/footer.jsp"%>
     </div>
-
-
-    <script>
-        $(function(){
-
-
-        })
-    </script>
 </body>
 </html>

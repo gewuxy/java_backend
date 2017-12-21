@@ -197,7 +197,7 @@ public class PackageController extends CspBaseController {
     public String rnbPay(Integer packageId, Integer currency, String payType, float money, Integer num, Model model) {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
-        String orderNo = CspConstants.PACKAGE_ORDER_FLAG + StringUtils.nowStr();
+        String orderNo = CspConstants.PACKAGE_ORDER_FLAG + packageId + currency + StringUtils.nowStr();
         String ip = "10.0.0.96";
         //String ip = request.getRemoteAddr();
         Pingpp.privateKeyPath = path;
@@ -253,7 +253,7 @@ public class PackageController extends CspBaseController {
         }
         if (url != null) {
             //创建订单
-            String orderNo = CspConstants.PACKAGE_ORDER_FLAG + responsePayment.getId();
+            String orderNo = CspConstants.PACKAGE_ORDER_FLAG + packageId + currency + responsePayment.getId();
             //创建订单
             cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType);
             return "redirect:" + url;

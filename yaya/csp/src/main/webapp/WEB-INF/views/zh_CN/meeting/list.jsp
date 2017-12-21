@@ -5,6 +5,7 @@
   Time: 9:36
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<!Doctype html>
 <html lang="en">
 <head>
     <title>会议管理-会讲</title>
@@ -558,7 +559,7 @@
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">有效期为
                         <strong class="color-blue">
                                 ${expireTimeCount}
-                        </strong> 天到期
+                        </strong> 天
                     </a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
