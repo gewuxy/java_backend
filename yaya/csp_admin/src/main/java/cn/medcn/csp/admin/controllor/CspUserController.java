@@ -216,6 +216,17 @@ public class CspUserController extends BaseController {
         return buffer.toString();
     }
 
+    @RequestMapping(value = "/remark")
+    @ResponseBody
+    @Log(name="修改csp备注")
+    public String remark(CspUserInfo info) {
+        Integer result = cspUserService.updateByPrimaryKeySelective(info);
+        if(result == 0) {
+            return error();
+        }
+        return success();
+    }
+
     /**
      * 根据上级名称获取到子级列表
      * @param name

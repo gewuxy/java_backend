@@ -48,11 +48,11 @@
                         <span style='color: #9c0001'>无</span>
                     </c:if>
                 </td>
-                <td>${not empty user.payTimes ? user.payTimes : 0}</td></td>
+                <td>${not empty user.payTimes ? user.payTimes : 0}</td>
                 <td>${not empty user.payMoneyCn ? user.payMoneyCn : 0}</td>
                 <td>${not empty user.payMoneyUs ? user.payMoneyUs : 0}</td>
                 <td>${user.meets}</td>
-                <td><input type="text" value="${user.remark}"></td></td>
+                <td><input type="text" style="width: 70px;height: auto;" maxlength="10" value="${user.remark}"> &nbsp;<a href="#" onclick="remark(this,'${user.uid}')">备注</a></td>
                 <th>
                     <div class="btn-group">
                         <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
@@ -246,6 +246,27 @@
             //console.log(obj.value)
             $(this).find("input").val(obj.value);
             $("#" + id).val(obj.value);
+        });
+    }
+
+    function remark(obj,userId){
+        var remark = $(obj).parent().find("input").val();
+        if(isEmpty(remark)){
+            layer.msg("请输入备注信息后提交");
+            return false;
+        }
+        $.ajax({
+            url:'${ctx}/csp/user/remark?id=' + userId + "&remark=" + remark,
+            dataType:'json',
+            async:true,
+            type:'get',
+            success:function (data) {
+                if(data.code == "0"){
+                    layer.msg("更新成功");
+                }else{
+                    layer.msg("修改备注失败，请重试");
+                }
+            }
         });
     }
 </script>
