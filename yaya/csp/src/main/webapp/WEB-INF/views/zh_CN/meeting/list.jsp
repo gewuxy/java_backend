@@ -503,6 +503,28 @@
                 $("#meetCountTips").hide();
             }, 'json');
         }
+
+        $(function () {
+            var pkId = ${packageId};
+            var expireTimeCount = ${expireTimeCount};
+            if (expireTimeCount <= 5  && expireTimeCount >0){
+                $("#meetCountTips").hide();
+                $("#standard").hide();
+                $("#pkTime").hide();
+            }else{
+                $("#meetCountTips").hide();
+                $("#standard").hide();
+                $("#pkTime").hide();
+            }
+            if (pkId == 1){
+                $("#pkTime").hide();
+                $("#meetCountTips").hide();
+                $("#note").hide();
+            }else {
+
+            }
+        })
+
     </script>
 </head>
 <body>
@@ -521,12 +543,31 @@
                 <div class="admin-tips" id="note" style="display: none">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
                     <span class="admin-tips-close" onclick="closeclick()"></span>
-                    <script>
-
-                    </script>
                 </div>
             </c:if>
 
+            <c:if test="${expireTimeCount > 5}">
+                <div class="admin-tips" id="pkTime">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">有效期为
+                        <strong class="color-blue">
+                            <c:if test="${expireTimeCount <367}">
+                                ${expireTimeCount}
+                            </c:if>
+                            <c:if test="${expireTimeCount >366}">
+                                ${expireTimeCount}
+                            </c:if>
+                        </strong> 天到期
+                    </a>
+                    </span>
+                    <span class="admin-tips-close" onclick="closeclick()"></span>
+                </div>
+            </c:if>
+            <c:if test="${packageId == 1}">
+                <div class="admin-tips" id="standard">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">已生效 </a> </span>
+                    <span class="admin-tips-close" onclick="closeclick()"></span>
+                </div>
+            </c:if>
             <div class="admin-row clearfix pr">
                 <div class="admin-screen-area">
                     <ul>
