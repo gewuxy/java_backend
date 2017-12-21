@@ -60,9 +60,9 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                                <li><a href="#" onclick="changePackages(1,'${user.uid}',${user.packageId},dateToStrings('${user.packageEnd}'))">升级</a></li>
-                                <li><a href="#" onclick="changePackages(2,'${user.uid}',${user.packageId},dateToStrings('${user.packageEnd}'))">降级</a></li>
-                                <li><a href="#" onclick="changePackages(3,'${user.uid}',${user.packageId},dateToStrings('${user.packageEnd}'))">时间修改</a></li>
+                                <li><a href="#" onclick="changePackages(1,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">升级</a></li>
+                                <li><a href="#" onclick="changePackages(2,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">降级</a></li>
+                                <li><a href="#" onclick="changePackages(3,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">时间修改</a></li>
                             <li><a href="#" onclick="active(4,'${user.uid}')">账号冻结</a></li>
                         </ul>
                     </div>
