@@ -164,7 +164,7 @@
     </select>
     
     <select id="findEarliestCourse" resultType="cn.medcn.meet.model.AudioCourse">
-        select * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND locked = true AND deleted = false ORDER by create_time asc limit 1
+        select * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND locked = true AND deleted = false AND guide != 1 ORDER by create_time asc limit 1
     </select>
 
     <update id="updateByUserId">
