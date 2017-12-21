@@ -48,9 +48,8 @@
                     flag = initId == 3 ? "pf" : "hg";
                 }
                 //是否需要不能选择
-                for (var k = 1; k < initId; k++) {
-                    $("#disabledItem" + k).addClass("member-buy-disabled-item");
-                }
+                $("#disabledItem1").addClass("member-buy-disabled-item");
+                if(initId == 3) $("#disabledItem2").addClass("member-buy-disabled-item");
             } else {
                 //新用户隐藏取消按钮
                 $("#newUser").attr("position","relative");

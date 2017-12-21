@@ -324,7 +324,7 @@ public class CspBaseController extends BaseController {
         } else {                            // 购买高级或者专业版
             setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{CspPackage.getLocalPackage(packageId)}));
         }
-        redisCacheUtils.setCacheObject(setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
     }
 
     /**
@@ -334,7 +334,7 @@ public class CspBaseController extends BaseController {
      * @return
      */
     protected Principal getPackageCache(String token) {
-        return redisCacheUtils.getCacheObject(token);
+        return redisCacheUtils.getCacheObject(Constants.TOKEN + "_" + token);
     }
 
 
