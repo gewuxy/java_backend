@@ -30,7 +30,7 @@
     <!--[if lt IE 9]>
     <script src="${ctxStatic}/js/html5.js"></script>
     <![endif]-->
-
+    <script id="-mob-share" src="//f1.webshare.mob.com/code/mob-share.js"></script>
     <script>
         const shareSdkAppKey = "21454499cef00";
         var courseId;

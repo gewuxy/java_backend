@@ -266,6 +266,11 @@
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
                     }
+                    //判断是否已经播放完成
+                    activeItemIsVideo.get(0).addEventListener('ended', function () {
+                        console.log("video play end ...");
+                        galleryTop.slideNext();
+                    }, {once: true});
                 }
             },
             onSlideChangeEnd:function(swiper){

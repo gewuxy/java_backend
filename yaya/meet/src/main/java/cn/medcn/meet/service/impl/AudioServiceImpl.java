@@ -16,7 +16,9 @@ import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.dao.CspPackageDAO;
+import cn.medcn.user.dao.CspUserInfoDAO;
 import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.CspUserInfo;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -59,6 +61,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Autowired
     protected CourseDeliveryDAO courseDeliveryDAO;
+
+    @Autowired
+    protected CspUserInfoDAO cspUserInfoDAO;
 
 
     @Value("${app.file.upload.base}")
@@ -959,6 +964,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @param packageId
      */
     @Override
+    @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#ac.id")
     public void updateInfo(AudioCourse ac, Live live, MeetWatermark newWatermark,Integer packageId) {
         //查找是否有水印记录
         MeetWatermark watermark = new MeetWatermark();
@@ -1068,14 +1074,23 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public Integer doCopyGuideCourse(String cspUserId) {
         if (!checkGuideExists(cspUserId)) {
-            AudioCourse course = selectByPrimaryKey(GUIDE_SOURCE_ID);
-            Integer courseId = null;
-            if (course != null) {
-                course.setCspUserId(cspUserId);
-                course.setGuide(true);
-                courseId = doCopyCourse(course, null, null);
+            CspUserInfo userInfo = cspUserInfoDAO.selectByPrimaryKey(cspUserId);
+            if (userInfo != null) {
+                if (userInfo.getAbroad() == null) {
+                    userInfo.setAbroad(false);
+                }
+
+                AudioCourse course = selectByPrimaryKey(!userInfo.getAbroad() ? GUIDE_SOURCE_ID : ABROAD_GUIDE_SOURCE_ID);
+                Integer courseId = null;
+                if (course != null) {
+                    course.setCspUserId(cspUserId);
+                    course.setGuide(true);
+                    courseId = doCopyCourse(course, null, null);
+                }
+                return courseId;
             }
-            return courseId;
+
+           return 0;
 
         } else {
             return 0;

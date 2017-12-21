@@ -1,23 +1,18 @@
 import cn.jiguang.common.resp.APIConnectionException;
 import cn.jiguang.common.resp.APIRequestException;
 import cn.jpush.api.device.AliasDeviceListResult;
-import cn.jpush.api.device.TagAliasResult;
 import cn.medcn.common.service.JPushService;
-import cn.medcn.meet.dto.MeetMessageDTO;
+import cn.medcn.common.service.PushService;
 import cn.medcn.meet.model.JpushMessage;
 import cn.medcn.meet.model.MeetNotify;
 import cn.medcn.meet.service.JpushMessageService;
-import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -32,6 +27,9 @@ public class JpushTest {
 
     @Autowired
     protected JpushMessageService jpushMessageService;
+
+    @Autowired
+    private PushService cspPushService;
 
     @Test
     public void testSend(){
@@ -115,5 +113,16 @@ public class JpushTest {
         message.setSender(237746);
         message.setTitle(MeetNotify.NotifyType.meet.title);
         jpushMessageService.appendToQueue(message);
+    }
+
+    @Test
+    public void testCSPSend(){
+        Map<String, String> extraMap = Maps.newHashMap();
+        extraMap.put("sendTime", System.currentTimeMillis() + "");
+        extraMap.put("msgType", "3");
+        extraMap.put("result", "test@qq.com");
+        int result = cspPushService.sendMessageToAlias("13165ffa4e0d71f3d85",extraMap);
+        System.out.println(result);
+
     }
 }

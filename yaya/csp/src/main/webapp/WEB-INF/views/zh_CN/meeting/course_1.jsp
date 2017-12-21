@@ -421,6 +421,21 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            onSlideChangeStart:function(swiper){
+                activeItemIsVideo = $('.swiper-slide-active').find('video');
+
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    //判断是否Iphone 的 Safari 浏览器
+                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                        $('.isIphoneSafari').show();
+                    }
+                    //判断是否已经播放完成
+                    activeItemIsVideo.get(0).addEventListener('ended',function(){
+                        galleryTop.slideNext();
+                    });
+                }
+            },
             onSlideChangeEnd:function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');

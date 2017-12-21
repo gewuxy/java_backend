@@ -57,4 +57,20 @@ public class CourseCategoryServiceImpl extends BaseServiceImpl<CourseCategory> i
     public List<CourseCategory> findByLevel(Integer depth) {
         return courseCategoryDAO.findByLevel(depth);
     }
+
+    /**
+     * 查询包含父级内容的栏目
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public CourseCategory findCategoryHasParent(Integer id) {
+        CourseCategory courseCategory = courseCategoryDAO.selectByPrimaryKey(id);
+        if (courseCategory != null) {
+            CourseCategory parent = courseCategoryDAO.selectByPrimaryKey(courseCategory.getParentId());
+            courseCategory.setParent(parent);
+        }
+        return courseCategory;
+    }
 }

@@ -171,7 +171,7 @@
         }
     }
 </script>
-<script src="./common/wsize.min.js" type="text/javascript"></script>
+<script src="${ctxStatic}/common/wsize.min.js" type="text/javascript"></script>
 
 <script>
     //全局地址，正式调用时可忽略
@@ -179,7 +179,7 @@
 </script>
 
 <!--静态路由 正式调用时可忽略-->
-<script src="./routes/route_public.js"></script>
+<script src="${ctxStatic}/routes/route_public.js"></script>
 
 
 
