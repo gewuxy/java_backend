@@ -2,6 +2,22 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.user.dao.CspPackageOrderDAO" >
 
+    <select id="totalMoney" resultType="java.util.Map">
+        SELECT currency_type,SUM(should_pay) AS money FROM t_csp_package_order GROUP BY currency_type
+    </select>
+
+    <select id="orderCapitalStati" resultType="java.util.Map">
+        SELECT DATE(create_time) as createTime,SUM(should_pay) AS money FROM t_csp_package_order WHERE plat_form IN ('alipay_wap','wx_pub_qr','upacp_wap') GROUP BY DATE(create_time)
+    </select>
+
+    <select id="getCapitalByDay" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
+        SELECT DATE(create_time) as create_time,
+        SUM(CASE WHEN plat_form='alipay_wap' THEN should_pay END) AS alipay_wap,
+        SUM(CASE WHEN plat_form='wx_pub_qr' THEN should_pay END) AS wx_pub_qr,
+        SUM(CASE WHEN plat_form='upacp_wap' THEN should_pay END) AS upacp_wap,
+        SUM(should_pay) AS money
+        FROM t_csp_package_order GROUP BY DATE(create_time)
+    </select>
 
     <select id="selectAbroadAndHomeMoney" resultMap="getAbroadAndHomeMoney">
       SELECT currency_type AS type,sum(pay_money) AS totalSum FROM `t_csp_package_order` GROUP BY currency_type

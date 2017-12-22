@@ -73,6 +73,14 @@ public class CspPackage implements Serializable {
     @Transient
     protected String expireRemind;
 
+    @Transient
+    protected Integer meetTotalCount;
+
+
+    public Integer getMeetTotalCount(){
+        return usedMeetCount + hiddenMeetCount;
+    }
+
     public enum TypeId {
         STANDARD(1, "标准版","標準版","standard"),
         PREMIUM(2, "高级版","高級版","premium"),

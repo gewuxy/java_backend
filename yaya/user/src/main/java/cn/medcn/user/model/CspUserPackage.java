@@ -33,6 +33,8 @@ public class CspUserPackage implements Serializable {
     protected Date updateTime;
     // 套餐更新来源 0:过期自动降级 1:升级购买 2:管理员修改 3：绑定YaYa数字平台
     protected Integer sourceType;
+    //是否是无期限
+    protected Boolean unlimited;
 
     public enum modifyType {
         EXPIRE_DOWNGRADE(), // 过期降级

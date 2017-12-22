@@ -280,6 +280,9 @@
                         $("#mySwiper").append('<div class="swiper-slide" data-num="'+index+'"  ><video src="'+detail.videoUrl+'" width="auto" height="264" controls autobuffer></video>'
                             +'<div class="swiper-slide-metting-audio"></div></div>');
                     } else {
+                        if (detail.audioUrl == undefined){
+                            detail.audioUrl = "";
+                        }
                         $("#mySwiper").append('<div class="swiper-slide swiper-slide-active" data-num="'+index+'"  audio-src="'+detail.audioUrl+'">'
                             +'<img src="'+detail.imgUrl+'" alt=""></div>');
                     }
@@ -501,7 +504,7 @@
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
-                                    window.location.reload();
+                                    window.location.href = "${ctx}/mgr/meet/list?showWarn=false";
                                 } else {
                                     layer.msg(data.err);
                                 }

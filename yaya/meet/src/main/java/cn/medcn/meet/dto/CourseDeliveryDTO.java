@@ -1,5 +1,6 @@
 package cn.medcn.meet.dto;
 
+import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.Live;
@@ -76,11 +77,21 @@ public class CourseDeliveryDTO implements Serializable {
 
     //会议是否被锁定
     protected Boolean locked;
+    //是否是引导会议
+    protected Boolean guide;
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
             for (CourseDeliveryDTO deliveryDTO : list) {
                 deliveryDTO.setServerTime(new Date());
+                if (deliveryDTO.getGuide() == null) {
+                    deliveryDTO.setGuide(false);
+                }
+
+                if (deliveryDTO.getGuide()) {
+                    deliveryDTO.setTitle("【" + SpringUtils.getMessage("course.novice.guidance") + "】" + deliveryDTO.getTitle());
+                }
+
                 if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
                     deliveryDTO.setCoverUrl(baseUrl + deliveryDTO.getCoverUrl());
                 }

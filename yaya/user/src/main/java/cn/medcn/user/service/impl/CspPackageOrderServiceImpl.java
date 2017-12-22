@@ -10,6 +10,7 @@ import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspPackageOrderDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.dao.CspUserPackageHistoryDAO;
+import cn.medcn.user.dto.CspOrderPlatFromDTO;
 import cn.medcn.user.dto.CspPackageOrderDTO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspPackageOrder;
@@ -207,6 +208,21 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     public List<CspPackageOrderDTO> findOrderListByCurrencyType(int type) {
 
         return packageOrderDAO.findOrderListByCurrencyType(type);
+    }
+
+    @Override
+    public List<Map<String,Object>> totalMoney() {
+        return packageOrderDAO.totalMoney();
+    }
+
+    @Override
+    public List<Map<String, Object>> orderCapitalStati() {
+        return packageOrderDAO.orderCapitalStati();
+    }
+
+    @Override
+    public List<CspOrderPlatFromDTO> getCapitalByDay() {
+        return packageOrderDAO.getCapitalByDay();
     }
 }
 

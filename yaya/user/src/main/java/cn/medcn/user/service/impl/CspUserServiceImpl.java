@@ -228,6 +228,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if(userDTO.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
             cspUserPackageService.addStanardInfo(userInfo.getId());
         }
+        if(bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
+
+        }
         return userInfo;
     }
 
@@ -257,10 +260,11 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     public void sendMail(String email, String userId, EmailTemplate template) throws SystemException {
         String code = StringUtils.uniqueStr();
         String url = null;
+        String language = LocalUtils.getLocalStr();
         // 发送注册激活邮箱邮件
         if (template.getTempType() == EmailTemplate.Type.REGISTER.getLabelId()) {
             redisCacheUtils.setCacheObject(Constants.EMAIL_LINK_PREFIX_KEY + code, email, (int) TimeUnit.DAYS.toSeconds(1));
-            url = appBase + "/api/email/active?code=" + code;
+            url = appBase + "/api/email/active?code=" + code + "&language=" + language;
 
             // 发送找回密码邮件
         } else if (template.getTempType() == EmailTemplate.Type.FIND_PWD.getLabelId()) {
