@@ -148,7 +148,12 @@
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
                 var id = info[j].packageId;
-                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptCn + '</li>');
+                if (info[j].state == true) {
+                    if(info[j].iden == "SYB" && id == 3){
+                        break;
+                    }
+                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptCn + '</li>');
+                }
             }
         }
     </script>
@@ -245,10 +250,6 @@
                                         <input type="radio" name="payMode" class="none" value="2" id="id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
-                                    <label for="id31" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="3" id="id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                    </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
                                     <label for="id4" class="item item-radius pay-on">
@@ -313,10 +314,6 @@
                                     <label for="2id21" class="item item-radius">
                                         <input type="radio" name="hgPayMode" class="none" value="wx_pub_qr" id="2id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
-                                    </label>
-                                    <label for="2id31" class="item item-radius">
-                                        <input type="radio" name="hgPayMode" class="none" value="upacp_wap" id="2id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
@@ -394,10 +391,6 @@
                                     <label for="3id21" class="item item-radius">
                                         <input type="radio" name="pfPayMode" class="none" value="wx_pub_qr" id="3id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
-                                    </label>
-                                    <label for="3id31" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="upacp_wap" id="3id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">

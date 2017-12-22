@@ -1,5 +1,6 @@
 package cn.medcn.user.dao;
 
+import cn.medcn.user.dto.CspOrderPlatFromDTO;
 import cn.medcn.user.dto.CspPackageOrderDTO;
 import cn.medcn.user.model.CspPackageOrder;
 import com.github.abel533.mapper.Mapper;
@@ -15,4 +16,10 @@ public interface CspPackageOrderDAO extends Mapper<CspPackageOrder>{
     Map<Integer,Float> selectAbroadAndHomeMoney();
 
     List<CspPackageOrderDTO> findOrderListByCurrencyType(int type);
+
+    List<Map<String,Object>> totalMoney();
+
+    List<Map<String,Object>> orderCapitalStati();
+
+    List<CspOrderPlatFromDTO> getCapitalByDay();
 }

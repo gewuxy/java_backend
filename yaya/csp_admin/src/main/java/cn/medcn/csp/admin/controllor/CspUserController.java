@@ -141,46 +141,31 @@ public class CspUserController extends BaseController {
         return buffer.toString();
     }
 
-
     @RequestMapping(value = "/package")
     @Log(name="更新套餐信息")
-    public String packages(CspUserPackage packageInfo,String frozenReason,Integer actionType, Integer listType, RedirectAttributes redirectAttributes) {
-        if(actionType == 4 || actionType == 5){ // 冻结或者解冻
-            CspUserInfo user = new CspUserInfo();
-            user.setId(packageInfo.getUserId());
-            user.setUpdateTime(new Date());
-            if(actionType == 4){  //冻结
-                user.setFrozenReason(frozenReason);
-                user.setActive(false);
-            }else{  //解冻
-                user.setFrozenReason("");
-                user.setActive(true);
-            }
-            cspUserService.updateByPrimaryKeySelective(user);
-        }else{  //升级降级修改时间
-            Integer currentId = packageInfo.getPackageId();
-            // 更新开始时间
-            packageInfo.setPackageStart(CalendarUtils.nextDateStartTime());
-            if(currentId == Constants.NUMBER_ONE){ //标准版
-                packageInfo.setPackageStart(null);
-                packageInfo.setPackageEnd(null);
-            }
-            packageInfo.setUpdateTime(new Date());
-            packageInfo.setSourceType(Constants.NUMBER_TWO);
-            CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
-            Integer oldpackageId = null;
-            if(oldPackage == null){   // 未有套餐信息
-                cspUserPackageService.insertSelective(packageInfo);
-            }else{
-                //更新套餐版本信息
-                cspUserPackageService.updateByPrimaryKey(packageInfo);
-                oldpackageId = oldPackage.getPackageId();
-            }
-            //更新会议状态
-            audioService.doModifyAudioCourseByPackageId(packageInfo.getUserId(),currentId);
-            //添加版本历史
-            cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldpackageId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
+    public String packages(CspUserPackage packageInfo, Integer listType, RedirectAttributes redirectAttributes) {
+        Integer currentId = packageInfo.getPackageId();
+        // 更新开始时间
+        packageInfo.setPackageStart(CalendarUtils.nextDateStartTime());
+        if(currentId == Constants.NUMBER_ONE){ //标准版
+            packageInfo.setPackageStart(null);
+            packageInfo.setPackageEnd(null);
         }
+        packageInfo.setUpdateTime(new Date());
+        packageInfo.setSourceType(Constants.NUMBER_TWO);
+        CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
+        Integer oldpackageId = null;
+        if(oldPackage == null){   // 未有套餐信息
+            cspUserPackageService.insertSelective(packageInfo);
+        }else{
+            //更新套餐版本信息
+            cspUserPackageService.updateByPrimaryKey(packageInfo);
+            oldpackageId = oldPackage.getPackageId();
+        }
+        //更新会议状态
+        audioService.doModifyAudioCourseByPackageId(packageInfo.getUserId(),currentId);
+        //添加版本历史
+        cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(),oldpackageId,packageInfo.getPackageId(), Constants.NUMBER_TWO);
         //更新缓存信息
         adminUpdateUserInfoCache(packageInfo.getUserId());
         addFlashMessage(redirectAttributes, "更新成功");

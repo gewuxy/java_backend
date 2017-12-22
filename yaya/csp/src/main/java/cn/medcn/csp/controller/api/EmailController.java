@@ -64,7 +64,7 @@ public class EmailController extends BaseController{
      * @throws SystemException
      */
    @RequestMapping("/active")
-    public String certifiedMail(String code, Model model) throws SystemException {
+    public String certifiedMail(String code,String language, Model model) throws SystemException {
         String key = Constants.EMAIL_LINK_PREFIX_KEY + code;
         String email = (String)redisCacheUtils.getCacheObject(key);
         if (StringUtils.isEmpty(email)) {  //链接超时
@@ -76,6 +76,7 @@ public class EmailController extends BaseController{
                 cspUserService.updateByPrimaryKey(userInfo);
                 redisCacheUtils.delete(key);
                 //发送推送消息
+                LocalUtils.setLocalStr(language);
                 sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
                 if(userInfo.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
                     cspUserPackageService.addStanardInfo(userInfo.getId());
