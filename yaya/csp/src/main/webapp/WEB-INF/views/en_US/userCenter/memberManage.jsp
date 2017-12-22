@@ -48,12 +48,12 @@
                                         <c:if test="${cspPackage.packageUs == 'standardEdition' || cspPackage.packageUs == 'premiumEdition'}" >
                                             <span>
 
-                                                    <c:if test="${cspPackage.usedMeetCount > cspPackage.limitMeets}">
+                                                    <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets}">
                                                         <i class="hot" style="color: red">
-                                                                ${cspPackage.usedMeetCount}
+                                                                ${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}
                                                         </i>
                                                     </c:if>
-                                                <c:if test="${cspPackage.usedMeetCount <= cspPackage.limitMeets}">
+                                                <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) <= cspPackage.limitMeets}">
                                                         <i class="hot">
                                                                 ${cspPackage.usedMeetCount}
                                                         </i>
@@ -63,7 +63,7 @@
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
                                         <c:if test="${cspPackage.packageUs == 'professionalEdition'}">
-                                            <span><i class="hot">${cspPackage.usedMeetCount}</i><i class="muted">|</i>∞</span>
+                                            <span><i class="hot">${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}</i><i class="muted">|</i>∞</span>
                                         </c:if>
                                     </div>
                                     <p class="t-center">Number of Meetings</p>
@@ -103,22 +103,11 @@
                                                 <p class="text">${info.descriptUs}</p>
                                             </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
+                                            <c:if test="${info.iden =='ZB'}"><li>
                                                 <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
                                                 <p class="text">${info.limitMeets}Meetings</p>
                                             </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                                <p class="text">${info.limitMeets}Meetings</p>
-                                            </li>
-                                            </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                                <p class="text">Unlimited</p>
-                                            </li>
-                                            </c:if>
-
                                             <c:if test="${info.iden =='GG' && info.state == false}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>

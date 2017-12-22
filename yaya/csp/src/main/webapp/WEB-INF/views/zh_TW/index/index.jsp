@@ -309,20 +309,16 @@
                                 <h3 class="price">免費</h3>
                             </div>
                             <div class="index-buy-main">
-                                <div class="index-buy-info">
-                                    <p>1個月有效</p>
+                                <div class="index-buy-info ">
+                                    <p>不限時長</p>
                                     <p>3個會議</p>
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">啟用投屏錄播</li>
-                                        <li class="icon-li-close">啟用投屏直播</li>
-                                        <li class="icon-li-selected">會講水印</li>
-                                        <li class="icon-li-selected">廣告接入</li>
+                                        <li class="icon-li-selected">投屏錄播</li>
+                                        <li class="icon-li-selected">投屏直播</li>
+                                        <li >&nbsp;</li>
                                     </ul>
-                                </div>
-                                <div class="index-button">
-                                    <a href="javascript:;" class="button ">敬請期待</a>
                                 </div>
                             </div>
                         </div>
@@ -338,14 +334,11 @@
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">啟用投屏錄播</li>
-                                        <li class="icon-li-selected">啟用投屏直播</li>
-                                        <li class="icon-li-selected">會講水印</li>
-                                        <li class="icon-li-close">廣告接入</li>
+                                        <li class="icon-li-selected">投屏錄播</li>
+                                        <li class="icon-li-selected">投屏直播</li>
+                                        <li class="icon-li-selected">水印開關</li>
+                                        <li class="icon-li-selected">無廣告</li>
                                     </ul>
-                                </div>
-                                <div class="index-button">
-                                    <a href="javascript:;" class="button ">敬請期待</a>
                                 </div>
                             </div>
 
@@ -362,18 +355,19 @@
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">啟用投屏錄播</li>
-                                        <li class="icon-li-selected">啟用投屏直播</li>
+                                        <li class="icon-li-selected">投屏錄播</li>
+                                        <li class="icon-li-selected">投屏直播</li>
                                         <li class="icon-li-star">自定義水印</li>
-                                        <li class="icon-li-close">廣告接入</li>
+                                        <li class="icon-li-selected">無廣告</li>
                                     </ul>
-                                </div>
-                                <div class="index-button">
-                                    <a href="javascript:;" class="button ">敬請期待</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="index-buy-button t-center" >
+                        <a href="${ctx}/login" class="button item-radius">立即體驗</a>
+                    </div>
+
                 </div>
             </div>
         </div>

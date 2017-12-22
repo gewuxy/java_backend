@@ -56,9 +56,9 @@
                                         <c:if test="${cspPackage.packageTw == '標準版' || cspPackage.packageTw == '高級版'}" >
                                             <span>
 
-                                                    <c:if test="${cspPackage.usedMeetCount > cspPackage.limitMeets}">
+                                                    <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets}">
                                                         <i class="hot" style="color: red">
-                                                                ${cspPackage.usedMeetCount}
+                                                                ${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}
                                                         </i>
                                                     </c:if>
                                                     <i class="hot">
@@ -68,7 +68,7 @@
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
                                         <c:if test="${cspPackage.packageTw == '專業版'}">
-                                            <span><i class="hot">${cspPackage.usedMeetCount}</i><i class="muted">|</i>∞</span>
+                                            <span><i class="hot">${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}</i><i class="muted">|</i>∞</span>
                                         </c:if>
                                     </div>
                                     <p class="t-center">會議數量</p>
@@ -107,22 +107,11 @@
                                                 <p>${info.descriptTw}</p>
                                             </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
+                                            <c:if test="${info.iden =='ZB'}"><li>
                                                 <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
                                                 <p>${info.limitMeets}個會議</p>
                                             </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                                <p>${info.limitMeets}個會議</p>
-                                            </li>
-                                            </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                                <p>無限會議</p>
-                                            </li>
-                                            </c:if>
-
                                             <c:if test="${info.iden =='GG' && info.state == false}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
