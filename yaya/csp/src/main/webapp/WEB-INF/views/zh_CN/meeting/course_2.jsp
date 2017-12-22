@@ -153,32 +153,32 @@
 
 
         <!--buttonBottom-->
-        <div class="CSPMeeting-bottom">
-            <div class="flex">
-                <div class="flex-item">
-                    <div class="button button-icon-info info-popup-hook">
-                        <i></i>
-                    </div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-report report-popup-button-hook"><i></i></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-onFull changeFull-hook"><i></i></div>
-                </div>
 
+    </div>
+    <div class="CSPMeeting-bottom">
+        <div class="flex">
+            <div class="flex-item">
+                <div class="button button-icon-info info-popup-hook">
+                    <i></i>
+                </div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-report report-popup-button-hook"><i></i></div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-onFull changeFull-hook"><i></i></div>
             </div>
 
-
         </div>
-    </div>
 
+
+    </div>
 
 
     <!--新加载提示-->
@@ -377,7 +377,41 @@
 
         }
         $(".quit-full-hook").click(function(){
-            changeTrack();
+            if(isAndroid) {
+                //解决黑边与遮挡
+                $("#ck-video").attr('style','margin-top:9999px');
+                weui.actionSheet([
+                    {
+                        label: '切换静音',
+                        onClick: function () {
+                            changeTrack();
+                        }
+                    }, {
+                        label: '切换声音',
+                        onClick: function () {
+                            androidChangeScreen();
+                            changeScreen();
+                        }
+                    }
+                ], [
+                    {
+                        label: '取消',
+                        onClick: function () {
+                            console.log('取消');
+                            //还原设置
+                            $("#ck-video").attr('style','margin-top:0');
+                        }
+                    }
+                ], {
+                    className: 'custom-classname',
+                    onClose: function(){
+                        console.log('关闭');
+                        $("#ck-video").attr('style','margin-top:0');
+                    }
+                });
+            } else {
+                changeTrack();
+            }
         });
 
         //初始化
@@ -497,19 +531,19 @@
         //点击切换状态
         var changeScreen = function(){
 
-            $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
-            $(this).addClass('popup-volume').removeClass("popup-min-screen");
+            if(!isAndroid) {
+                $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
+                $(this).addClass('popup-volume').removeClass("popup-min-screen");
+            }
 
             viedoMuted();
 //            viedoMuted();
 
             if($('.popup-volume').find('audio').length > 0){
-                needSync = false;
                 popupPalyer.element.muted = false;
             } else if ($('.popup-volume').find('video').length) {
                 CKobject.getObjectById('ck-video').changeVolume(100);
                 $("#ck-video")[0].muted = false;
-                needSync = true;
             }
 
 
@@ -525,6 +559,11 @@
             CKobject.getObjectById('ck-video').changeVolume(0);
             $("#ck-video")[0].muted = true;
 //            CKobject.getObjectById('ck-video').play();
+        }
+
+        //兼容安卓点击按钮切换状态
+        var androidChangeScreen = function(){
+            $('.popup-volume').removeClass('popup-volume').addClass('popup-min-screen').siblings('div').removeClass('popup-min-screen').addClass('popup-volume');
         }
 
         //切换静音状态

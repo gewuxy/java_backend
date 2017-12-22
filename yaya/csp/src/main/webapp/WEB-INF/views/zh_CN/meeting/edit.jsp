@@ -214,7 +214,7 @@
                                                     </span>
                                         <div class="checkbox-main">
                                             <p>直播码率为500kbps的情况下，直播时长为1小时，观看人数为100人，则消耗的流量约为：22.5GB</p>
-                                            <div class="text">流量剩余<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                            <div class="text">流量剩余<span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
                                         </div>
                                     </div>
                                 </div>
@@ -309,16 +309,14 @@
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-main ">
-            <form action="">
                 <div class="cancel-popup-main">
                     <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
                     <div class="admin-button t-right">
                         <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit" class="button buttonBlue item-radius min-btn" value="我已付款成功">
+                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="我已付款成功">
                     </div>
                 </div>
 
-            </form>
         </div>
     </div>
 </div>
@@ -329,6 +327,7 @@
 <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 
 <script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
+<script src="${ctxStatic}/js/ajaxUtils.js"></script>
 
 <script>
     const file_size_limit = 100*1024*1024;
@@ -339,6 +338,13 @@
         var id = $(this).attr("id");
         uploadFile(document.getElementById(id));
     });
+
+    function freshFlux(){
+        ajaxGet("${ctx}/mgr/meet/flux/fresh", {}, function(data){
+            $("#myFlux").text(data.data);
+            layer.closeAll();
+        });
+    }
 
     function fleshPage(){
         var reloadUrl = window.location.href;

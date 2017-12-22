@@ -656,4 +656,16 @@ public class MeetingMgrController extends CspBaseController {
         CookieUtils.setCookie(response, MEET_COUNT_OUT_TIPS_KEY, "true");
         return success();
     }
+
+    /**
+     * ajax刷新用户流量信息
+     * @return
+     */
+    @RequestMapping(value = "/flux/fresh")
+    @ResponseBody
+    public String freshFlux(){
+        Principal principal = getWebPrincipal();
+        UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
+        return success(flux == null ? 0 : flux.getFlux());
+    }
 }

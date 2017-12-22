@@ -812,12 +812,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             if (!CheckUtils.isEmpty(deliveries)){
                 return false;
             }
-
-            Live live = liveService.findByCourseId(course.getId());
-            if (live != null && live.getLiveState() > Live.LiveState.init.getType()) {
-                return false;
-            }
-
         }
         return true;
     }
