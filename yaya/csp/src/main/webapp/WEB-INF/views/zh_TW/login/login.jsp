@@ -32,10 +32,10 @@
                 <div class="col-lg-5 login-box-item">
                     <!--切换 登录-->
                     <div class="login-box-main position-button-login">
-                        <a href="javascript:;" title="Facebook授權登錄" style="color: #ffffff;" class=" login-button buttonBlue-02" onclick="facebookLogin()">Facebook授權登錄</a>
-                        <a href="javascript:;" id="twitter" title="Twitter授權登錄" style="color: #ffffff;" class=" login-button buttonBlue-03" onclick="twitterLogin()">Twitter授權登錄</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=7" title="郵箱登錄" style="color: #ffffff;" class=" login-button buttonBlue">郵箱登錄</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信數字平臺授權登錄" style="color: #ffffff;" class=" login-button buttonBlue-04 last">敬信數字平臺授權登錄</a>
+                        <a href="javascript:;" title="Facebook授權登錄" class=" login-button login-facebook" onclick="facebookLogin()"><i></i>Facebook授權登錄</a>
+                        <a href="javascript:;" id="twitter" title="Twitter授權登錄" class=" login-button login-twitter" onclick="twitterLogin()"><i></i>Twitter授權登錄</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=7" title="郵箱登錄" class=" login-button login-email"><i></i>郵箱登錄</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信數字平臺授權登錄" class=" login-button login-medcn"><i></i>敬信數字平臺授權登錄</a>
                         <span class="cells-block error ${not empty error ? '':'none'} ">
                             <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;
                             <span id="errorMessage">${error}</span>
