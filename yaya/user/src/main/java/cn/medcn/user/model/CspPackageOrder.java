@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 import java.util.Date;
 
@@ -43,11 +44,16 @@ public class CspPackageOrder implements Serializable {
     // 备注
     protected String remark;
 
+    //购买套餐类型，0表示1个月，1表示1年
+    protected Integer packageType;
+
+    @Transient
+    protected float totalMoney;
+
     public enum CurrencyType{
         RMB,
         USD;
     }
-
 
 
 }

@@ -1,6 +1,8 @@
 package cn.medcn.user.service.impl;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
@@ -10,6 +12,7 @@ import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspPackageOrderDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.dao.CspUserPackageHistoryDAO;
+import cn.medcn.user.dto.CspOrderPlatFromDTO;
 import cn.medcn.user.dto.CspPackageOrderDTO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspPackageOrder;
@@ -18,6 +21,8 @@ import cn.medcn.user.service.CspPackageOrderService;
 import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -193,20 +198,49 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @return
      */
     @Override
-    public Map<Integer, Float> selectAbroadAndHomeMoney() {
+    public List<CspPackageOrder> selectAbroadAndHomeMoney() {
 
         return  packageOrderDAO.selectAbroadAndHomeMoney();
     }
 
     /**
      * 根据币种查找订单
-     * @param type
+     * @param pageable
      * @return
      */
     @Override
-    public List<CspPackageOrderDTO> findOrderListByCurrencyType(int type) {
+    public MyPage<CspPackageOrderDTO> findOrderListByCurrencyType(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
+        return MyPage.page2Mypage((Page)packageOrderDAO.findOrderListByCurrencyType(pageable.getParams()));
+    }
 
-        return packageOrderDAO.findOrderListByCurrencyType(type);
+    /**
+     * 获取对应时间段的交易成功总额
+     * @param type
+     * @param startTime
+     * @param endTime
+     * @return
+     */
+    @Override
+    public Integer findOrderSuccessSum(Integer type, String startTime, String endTime) {
+        return packageOrderDAO.findOrderSuccessSum(type,startTime,endTime);
+    }
+
+
+
+    @Override
+    public List<Map<String,Object>> totalMoney() {
+        return packageOrderDAO.totalMoney();
+    }
+
+    @Override
+    public List<Map<String, Object>> orderCapitalStati() {
+        return packageOrderDAO.orderCapitalStati();
+    }
+
+    @Override
+    public List<CspOrderPlatFromDTO> getCapitalByDay() {
+        return packageOrderDAO.getCapitalByDay();
     }
 }
 

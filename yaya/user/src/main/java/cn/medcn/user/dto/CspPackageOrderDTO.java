@@ -15,20 +15,17 @@ import java.util.Date;
 @NoArgsConstructor
 public class CspPackageOrderDTO {
 
-    //订单id
+    //订单tradeId
     private String id;
 
     private String nickname;
 
     //支付渠道
-    private Integer platForm;
+    private String platForm;
 
-    private Date buyDate;
 
     private Integer packageId;
 
-    //套餐有效时间，只有1个月和1年
-    private Integer packageValidType;
 
     private float money;
 
@@ -36,6 +33,12 @@ public class CspPackageOrderDTO {
     private  Integer status;
 
     private String remark;
+
+    //购买时间
+    private Date createTime;
+
+    //购买套餐类型，0表示1个月，1表示1年
+    private Integer packageType;
 
 
 
