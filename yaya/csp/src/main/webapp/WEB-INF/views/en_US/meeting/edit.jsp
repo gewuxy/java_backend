@@ -207,7 +207,7 @@
                                                     </span>
                                                 <div class="checkbox-main">
                                                     <p>When the live code rate is 500kbps, the live length is 1 hours, and the number of people watching is 100, and the flow rate is about 22.5GB</p>
-                                                    <div class="text">Network Flow Balance<span class="color-blue">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
+                                                    <div class="text">Network Flow Balance<span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
                                         </div>
@@ -299,7 +299,7 @@
                     <p>Please complete the payment in the recharge page, please don't close the window before the completion of the payment</p>
                     <div class="admin-button t-right">
                         <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >Payment problems, try again</a>
-                        <input type="submit" class="button buttonBlue item-radius min-btn" value="I have paid successfully">
+                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="I have paid successfully">
                     </div>
                 </div>
 
@@ -314,6 +314,7 @@
 
 <script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
 <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
+<script src="${ctxStatic}/js/ajaxUtils.js"></script>
 <script>
     const file_size_limit = 100*1024*1024;
 
@@ -323,6 +324,13 @@
         var id = $(this).attr("id");
         uploadFile(document.getElementById(id));
     });
+
+    function freshFlux(){
+        ajaxGet("${ctx}/mgr/meet/flux/fresh", {}, function(data){
+            $("#myFlux").text(data.data);
+            layer.closeAll();
+        });
+    }
 
     function fleshPage(){
         var reloadUrl = window.location.href;

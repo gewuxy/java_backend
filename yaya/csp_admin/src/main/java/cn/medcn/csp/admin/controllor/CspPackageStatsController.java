@@ -1,5 +1,7 @@
 package cn.medcn.csp.admin.controllor;
 
+import cn.medcn.common.ctrl.BaseController;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.StringUtils;
@@ -12,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
 import java.util.Map;
@@ -22,7 +25,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping("/sys/package/stats")
-public class CspPackageStatsController {
+public class CspPackageStatsController extends BaseController {
 
     @Autowired
     private CspPackageOrderService cspPackageOrderService;
@@ -58,6 +61,8 @@ public class CspPackageStatsController {
         if(StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)){
             Integer successSum = cspPackageOrderService.findOrderSuccessSum(type,startTime,endTime);
             model.addAttribute("successSum",successSum == null ? 0:successSum);
+            model.addAttribute("startTime",startTime);
+            model.addAttribute("endTime",endTime);
             pageable.put("startTime",startTime);
             pageable.put("endTime",endTime);
         }
@@ -69,5 +74,36 @@ public class CspPackageStatsController {
         model.addAttribute("type",type);
         return "/statistics/packageOrderStats";
     }
+
+
+    /**
+     * 查找订单
+     * @param tradeId
+     * @param rmb
+     * @param usd
+     * @param model
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/search")
+    public String search(String tradeId,Float rmb,Float usd,Integer type,Model model) throws SystemException {
+        if(StringUtils.isEmpty(tradeId)){
+            throw new SystemException("请输入订单号");
+        }
+        Pageable pageable = new Pageable();
+        pageable.put("tradeId",tradeId);
+        MyPage<CspPackageOrderDTO> myPage = cspPackageOrderService.findOrderListByCurrencyType(pageable);
+        if(myPage.getDataList().size() > 1){
+            throw new SystemException("订单号不正确");
+        }
+        model.addAttribute("rmb",rmb);
+        model.addAttribute("usd",usd);
+        model.addAttribute("page",myPage);
+        model.addAttribute("search",true);
+        model.addAttribute("type",type);
+        return  "/statistics/packageOrderStats";
+    }
+
+
 
 }

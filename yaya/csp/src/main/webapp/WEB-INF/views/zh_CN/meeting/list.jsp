@@ -646,7 +646,7 @@
                                                 <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
                                                     <i></i>
                                                     预览
-                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
+                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" class="resource-icon-qrcode">
                                                 <i></i>
                                                 扫码投屏
                                             </a>

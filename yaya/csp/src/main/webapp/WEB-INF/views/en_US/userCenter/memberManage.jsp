@@ -45,7 +45,7 @@
                             <div class="member-mode-header clearfix">
                                 <div class="fr">
                                     <div class="resource-label">
-                                        <c:if test="${cspPackage.packageUs == 'standardEdition' || cspPackage.packageUs == 'premiumEdition'}" >
+                                        <c:if test="${cspPackage.packageUs == 'Standard Edition' || cspPackage.packageUs == 'Premium Edition'}" >
                                             <span>
 
                                                     <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets}">
@@ -62,7 +62,7 @@
 
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
-                                        <c:if test="${cspPackage.packageUs == 'professionalEdition'}">
+                                        <c:if test="${cspPackage.packageUs == 'Professional Edition'}">
                                             <span><i class="hot">${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}</i><i class="muted">|</i>∞</span>
                                         </c:if>
                                     </div>
@@ -72,19 +72,19 @@
                                     <div class="clearfix">
                                         <div class="fl"></div>
                                         <div class="oh">
-                                            <c:if test="${cspPackage.packageUs == 'standardEdition'}">
+                                            <c:if test="${cspPackage.packageUs == 'Standard Edition'}">
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
                                                     <div class="member-mode-tips">Valid</div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.packageUs == 'premiumEdition' || cspPackage.packageUs == 'professionalEdition' }">
+                                            <c:if test="${cspPackage.packageUs == 'Premium Edition' || cspPackage.packageUs == 'Professional Edition' }">
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
                                                     <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.unlimited == 1 && cspPackage.packageUs == 'professionalEdition' }">
+                                            <c:if test="${cspPackage.unlimited == 1 && cspPackage.packageUs == 'Professional Edition' }">
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
                                                     <div class="member-mode-tips">ProfessionalEdition Valid</div>

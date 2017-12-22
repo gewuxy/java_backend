@@ -534,6 +534,25 @@
                 $("#meetCountTips").hide();
             }, 'json');
         }
+        $(function () {
+            var pkId = ${packageId};
+            if (pkId == 1){
+                $("#pkTime").hide();
+                $("#meetCountTips").hide();
+                $("#note").hide();
+            }else {
+                $("#meetCountTips").hide();
+                $("#standard").hide();
+            }
+        })
+
+        function pkTimeClose(){
+            $("#pkTime").hide();
+        }
+        function standardClose(){
+            $("#standard").hide();
+        }
+
     </script>
 </head>
 <body>
@@ -552,6 +571,23 @@
                 <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">The number of your meetings has exceeded the set limit, please delete part of the meeting or upgrade the set meal to continue to use</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
+                </div>
+            </c:if>
+            <c:if test="${expireTimeCount > 5}">
+                <div class="admin-tips" id="pkTime">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">Expiring in
+                        <strong class="color-blue">
+                                ${expireTimeCount}
+                        </strong> days
+                    </a>
+                    </span>
+                    <span class="admin-tips-close" onclick="pkTimeClose()"></span>
+                </div>
+            </c:if>
+            <c:if test="${packageId == 1}">
+                <div class="admin-tips" id="standard">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">Valid </a> </span>
+                    <span class="admin-tips-close" onclick="standardClose()"></span>
                 </div>
             </c:if>
             <div class="admin-row clearfix pr">
@@ -604,7 +640,7 @@
                                                 <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
                                                     <i></i>
                                                     Preview
-                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
+                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" class="resource-icon-qrcode">
                                                 <i></i>
                                                 Scan-to-Project
                                             </a>

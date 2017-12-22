@@ -29,9 +29,15 @@
         SELECT o.trade_id as id,u.nick_name,o.plat_form,o.create_time,o.pay_money as money,o.state as status,o.remark,o.package_type,
         o.package_id
         FROM t_csp_package_order o LEFT JOIN t_csp_user_info u ON o.user_id=u.id
-        WHERE o.currency_type=#{type}
+        WHERE
+        <if test="type != null">
+            o.currency_type=#{type}
+        </if>
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        <if test="tradeId != null">
+            o.trade_id=#{tradeId}
         </if>
         ORDER BY create_time DESC
     </select>

@@ -109,7 +109,7 @@
         </div>
         <!--初始化视频     http://weblive.hebtv.com/live/hbws_bq/index.m3u8-->
         <script>
-            var hlsUrl = '${live.hlsUrl}';
+            var hlsUrl = 'http://17932.liveplay.myqcloud.com/live/17932_${course.id}.m3u8';
             showPlayer(hlsUrl,'videoWrap')
             function showPlayer(src, id){
                 //player
@@ -125,38 +125,61 @@
                 var params={bgcolor:'#FFF',allowFullScreen:false,allowScriptAccess:'always',wmode:'transparent'};
                 var video=[src];
                 CKobject.embed('${ctxStatic}/phone/js/m3u8/ckplayer.swf',id ,'ck-video','100%','100%',false, flashvars ,video, params);
+
+                CKobject.getObjectById('ck-video').addListener("error", function(){
+                    console.log("加载视频失败");
+                    console.log("hasNone = " + !$(".video-notPlay").hasClass("none"))
+                    if ($(".video-notPlay").hasClass("none")){
+                        $(".video-notPlay-bg").removeClass("none");
+                        $(".video-play-live").addClass("video-notPlay-item");
+                    }
+                });
+
+                CKobject.getObjectById('ck-video').addListener("ended", function(){
+                    console.log("视频播放完成");
+                    $(".video-notPlay-bg").removeClass("none");
+                });
+
+                CKobject.getObjectById('ck-video').addListener("play", function(){
+                    $(".video-notPlay-bg").addClass("none");
+                    $(".video-play-live").addClass("video-notPlay-item");
+                });
+
+                CKobject.getObjectById("ck-video").addListener("sendNetStream", function(){
+                    $(".video-play-live").addClass("video-notPlay-item");
+                });
             }
         </script>
 
 
-        <!--buttonBottom-->
-        <div class="CSPMeeting-bottom">
-            <div class="flex">
-                <div class="flex-item">
-                    <div class="button button-icon-info info-popup-hook">
-                        <i></i>
-                    </div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-report report-popup-button-hook"><i></i></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-onFull changeFull-hook"><i></i></div>
-                </div>
 
+
+    </div>
+    <!--buttonBottom-->
+    <div class="CSPMeeting-bottom">
+        <div class="flex">
+            <div class="flex-item">
+                <div class="button button-icon-info info-popup-hook">
+                    <i></i>
+                </div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-report report-popup-button-hook"><i></i></div>
+            </div>
+            <div class="flex-item">
+                <div class="button button-icon-onFull changeFull-hook"><i></i></div>
             </div>
 
-
         </div>
+
+
     </div>
-
-
 
     <!--新加载提示-->
     <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;1</span><span class="arrows"></span></div>
@@ -347,8 +370,50 @@
         function mutedHanlder(){
 
         }
+
+        //兼容安卓点击按钮切换状态
+        var androidChangeScreen = function(){
+            $('.popup-volume').removeClass('popup-volume').addClass('popup-min-screen').siblings('div').removeClass('popup-min-screen').addClass('popup-volume');
+        }
+
+
+
         $(".quit-full-hook").click(function(){
-            changeTrack();
+            if(isAndroid) {
+                //解决黑边与遮挡
+                $("#ck-video").attr('style','margin-top:9999px');
+                weui.actionSheet([
+                    {
+                        label: '切換靜音',
+                        onClick: function () {
+                            changeTrack();
+                        }
+                    }, {
+                        label: '切換聲音',
+                        onClick: function () {
+                            androidChangeScreen();
+                            changeScreen();
+                        }
+                    }
+                ], [
+                    {
+                        label: '取消',
+                        onClick: function () {
+                            console.log('取消');
+                            //还原设置
+                            $("#ck-video").attr('style','margin-top:0');
+                        }
+                    }
+                ], {
+                    className: 'custom-classname',
+                    onClose: function(){
+                        console.log('关闭');
+                        $("#ck-video").attr('style','margin-top:0');
+                    }
+                });
+            } else {
+                changeTrack();
+            }
         });
 
         //初始化
@@ -468,19 +533,19 @@
         //点击切换状态
         var changeScreen = function(){
 
-            $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
-            $(this).addClass('popup-volume').removeClass("popup-min-screen");
+            if(!isAndroid) {
+                $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
+                $(this).addClass('popup-volume').removeClass("popup-min-screen");
+            }
 
             viedoMuted();
 //            viedoMuted();
 
             if($('.popup-volume').find('audio').length > 0){
-                needSync = false;
                 popupPalyer.element.muted = false;
             } else if ($('.popup-volume').find('video').length) {
                 CKobject.getObjectById('ck-video').changeVolume(100);
                 $("#ck-video")[0].muted = false;
-                needSync = true;
             }
 
 
@@ -711,6 +776,8 @@
                             $(".boxAudio-loading").addClass("none");
                         }
                     }
+                }else if (data.order == 12){//接收到推流
+                    $("#ck-video")[0].play();
                 }
             }
 

@@ -3,6 +3,7 @@ package cn.medcn.meet.dto;
 import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCoursePlay;
 import cn.medcn.meet.model.Live;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -99,21 +100,27 @@ public class CourseDeliveryDTO implements Serializable {
                 // 录播会议
                 if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
                     // 录播 当前播放第几页
-                    if (deliveryDTO.getPlayPage() == null) {
+                    if (deliveryDTO.getPlayState() == null || deliveryDTO.getPlayState() == AudioCoursePlay.PlayState.init.ordinal()) {
                         deliveryDTO.setPlayPage(0);
                     } else {
-                        deliveryDTO.setPlayPage(deliveryDTO.getPlayPage() + 1);
+                        if (deliveryDTO.getPlayPage() == null) {
+                            deliveryDTO.setPlayPage(0);
+                        } else {
+                            deliveryDTO.setPlayPage(deliveryDTO.getPlayPage() + 1);
+                        }
                     }
                 } else {
                     // 直播 当前播放第几页
-                    if (deliveryDTO.getLivePage() == null) {
+                    if (deliveryDTO.getLiveState() == null || deliveryDTO.getLiveState() == AudioCoursePlay.PlayState.init.ordinal()) {
                         deliveryDTO.setLivePage(0);
                     } else {
-                        deliveryDTO.setLivePage(deliveryDTO.getLivePage() + 1);
+                        if (deliveryDTO.getLivePage() == null) {
+                            deliveryDTO.setLivePage(0);
+                        } else {
+                            deliveryDTO.setLivePage(deliveryDTO.getLivePage() + 1);
+                        }
                     }
-
                 }
-
             }
         }
     }
