@@ -76,6 +76,9 @@ public class CspPackage implements Serializable {
     @Transient
     protected Integer meetTotalCount;
 
+    @Transient
+    //是否是无期限
+    protected Boolean unlimited;
 
     public Integer getMeetTotalCount(){
         return usedMeetCount + hiddenMeetCount;
