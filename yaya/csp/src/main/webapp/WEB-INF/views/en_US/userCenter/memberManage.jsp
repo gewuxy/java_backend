@@ -84,6 +84,12 @@
                                                     <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                                 </div>
                                             </c:if>
+                                            <c:if test="${cspPackage.unlimited == 1 && cspPackage.packageUs == 'professionalEdition' }">
+                                                <div class="oh">
+                                                    <h5 class="title">${cspPackage.packageUs}</h5>
+                                                    <div class="member-mode-tips">ProfessionalEdition Valid</div>
+                                                </div>
+                                            </c:if>
                                         </div>
                                     </div>
                                 </div>

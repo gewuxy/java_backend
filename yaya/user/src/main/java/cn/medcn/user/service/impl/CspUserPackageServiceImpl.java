@@ -108,12 +108,11 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
             userPackage.setPackageEnd(null);
             userPackage.setUpdateTime(new Date());
             userPackage.setSourceType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
+            userPackage.setUnlimited(true);
             userPackageDAO.updateByPrimaryKey(userPackage);
 
             // 记录用户套餐变更明细
             doAddUserPackageDetail(userPackage, beforePackageId);
-
-            //todo 锁定或者解锁会议
 
         }
     }

@@ -1,5 +1,8 @@
 package cn.medcn.csp.admin.controllor;
 
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dto.CspPackageOrderDTO;
 import cn.medcn.user.model.CspPackageOrder;
 import cn.medcn.user.service.CspPackageInfoService;
@@ -28,17 +31,42 @@ public class CspPackageStatsController {
     /**
      * 海内订单
      * @param model
+     * @param type 货币类型，0表示人民币，1表示美元
      * @return
      */
     @RequestMapping("/home")
-    public String homeStats(Model model){
-        Map<Integer,Float> map = cspPackageOrderService.selectAbroadAndHomeMoney();
-        float rmbTotal = map.get(CspPackageOrder.CurrencyType.RMB.ordinal());
-        float usdTotal = map.get(CspPackageOrder.CurrencyType.USD.ordinal());
-        List<CspPackageOrderDTO> list = cspPackageOrderService.findOrderListByCurrencyType(CspPackageOrder.CurrencyType.RMB.ordinal());
+    public String homeStats(Model model, Pageable pageable,Integer type,String startTime,String endTime){
+        pageable.setPageSize(10);
+        List<CspPackageOrder> moneyList = cspPackageOrderService.selectAbroadAndHomeMoney();
+        float rmbTotal = 0;
+        float usdTotal = 0;
+        //获取不同货币资金总额
+        for(CspPackageOrder order:moneyList){
+            if(order.getCurrencyType() == CspPackageOrder.CurrencyType.RMB.ordinal()){
+                rmbTotal = order.getTotalMoney();
+            }else{
+                usdTotal = order.getTotalMoney();
+            }
+        }
+
+        if(type == null){
+            type = CspPackageOrder.CurrencyType.RMB.ordinal();
+        }
+        //查找订单信息
+        pageable.put("type",type);
+        //获取对应时间段的交易成功总额
+        if(StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)){
+            Integer successSum = cspPackageOrderService.findOrderSuccessSum(type,startTime,endTime);
+            model.addAttribute("successSum",successSum == null ? 0:successSum);
+            pageable.put("startTime",startTime);
+            pageable.put("endTime",endTime);
+        }
+        MyPage<CspPackageOrderDTO> myPage = cspPackageOrderService.findOrderListByCurrencyType(pageable);
+
         model.addAttribute("rmb",rmbTotal);
         model.addAttribute("usd",usdTotal);
-        model.addAttribute("list",list);
+        model.addAttribute("page",myPage);
+        model.addAttribute("type",type);
         return "/statistics/packageOrderStats";
     }
 
