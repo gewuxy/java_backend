@@ -501,7 +501,7 @@
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
-                                    window.location.reload();
+                                    window.location.href = "${ctx}/mgr/meet/list?showWarn=false";
                                 } else {
                                     layer.msg(data.err);
                                 }
