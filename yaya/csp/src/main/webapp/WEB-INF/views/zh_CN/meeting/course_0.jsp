@@ -416,14 +416,14 @@
                 skin: 'info-popup',
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
-                    popupPalyer.play();
+                    //popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.height(0);
                     }
                 },
                 end:function(){
-                    popupPalyer.play();
+                    //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.height('auto');

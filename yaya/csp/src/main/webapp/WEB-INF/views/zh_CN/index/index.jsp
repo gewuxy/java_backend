@@ -295,26 +295,23 @@
                         </div>
                     </div>
                     <div class="module-section-content index-buy clearfix">
-                        <div class="index-buy-item ">
+                        <div class="index-buy-item  ">
                             <div class="index-buy-header">
                                 <h4>标准版</h4>
                                 <h3 class="price">免费</h3>
                             </div>
                             <div class="index-buy-main">
-                                <div class="index-buy-info">
-                                    <p>1个月有效</p>
+                                <div class="index-buy-info ">
+                                    <p>不限时长</p>
                                     <p>3个会议</p>
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">启用投屏录播</li>
-                                        <li class="icon-li-close">启用投屏直播</li>
-                                        <li class="icon-li-selected">会讲水印</li>
-                                        <li class="icon-li-selected">广告接入</li>
+                                        <li class="icon-li-selected">投屏录播</li>
+                                        <li class="icon-li-selected">投屏直播</li>
+                                        <li >&nbsp;</li>
+                                        <li >&nbsp;</li>
                                     </ul>
-                                </div>
-                                <div class="index-button">
-                                    <a href="javascript:;" class="button ">敬请期待</a>
                                 </div>
                             </div>
                         </div>
@@ -330,14 +327,11 @@
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">启用投屏录播</li>
-                                        <li class="icon-li-selected">启用投屏直播</li>
-                                        <li class="icon-li-selected">会讲水印</li>
-                                        <li class="icon-li-close">广告接入</li>
+                                        <li class="icon-li-selected">投屏录播</li>
+                                        <li class="icon-li-selected">投屏直播</li>
+                                        <li class="icon-li-selected">水印开关 </li>
+                                        <li class="icon-li-selected">无广告</li>
                                     </ul>
-                                </div>
-                                <div class="index-button">
-                                    <a href="javascript:;" class="button ">敬请期待</a>
                                 </div>
                             </div>
 
@@ -354,18 +348,19 @@
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">启用投屏录播</li>
-                                        <li class="icon-li-selected">启用投屏直播</li>
+                                        <li class="icon-li-selected">投屏录播</li>
+                                        <li class="icon-li-selected">投屏直播</li>
                                         <li class="icon-li-star">自定义水印</li>
-                                        <li class="icon-li-close">广告接入</li>
+                                        <li class="icon-li-selected">无广告</li>
                                     </ul>
-                                </div>
-                                <div class="index-button">
-                                    <a href="javascript:;" class="button ">敬请期待</a>
                                 </div>
                             </div>
                         </div>
                     </div>
+                    <div class="index-buy-button t-center" >
+                        <a href="${ctx}/login" class="button item-radius">立即体验</a>
+                    </div>
+
                 </div>
             </div>
         </div>

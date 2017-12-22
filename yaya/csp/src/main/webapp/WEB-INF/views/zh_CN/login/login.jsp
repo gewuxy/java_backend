@@ -30,9 +30,9 @@
                 <div class="col-lg-5 login-box-item">
                     <!--切换 登录-->
                     <div class="login-box-main position-button-login">
-                        <a href="${ctx}/mgr/login?thirdPartyId=1" title="微信授权登录" style="color: #ffffff;" class=" login-button buttonGreen-02">微信授权登录</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=2" title="微博授权登录" style="color: #ffffff;" class=" login-button buttonRed">微博授权登录</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信数字平台授权登录" style="color: #ffffff;" class=" login-button buttonBlue last">敬信数字平台授权登录</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=1" title="微信授权登录" class=" login-button login-wechat"><i></i>微信授权登录</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=2" title="微博授权登录"  class=" login-button login-weibo"><i></i>微博授权登录</a>
+                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信数字平台授权登录" class=" login-button login-medcn last"><i></i>敬信数字平台授权登录</a>
                     </div>
 
                     <!--登录用-->
