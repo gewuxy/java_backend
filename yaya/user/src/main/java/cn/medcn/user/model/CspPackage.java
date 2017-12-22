@@ -44,6 +44,8 @@ public class CspPackage implements Serializable {
     protected Integer limitTime;
     // 限制会议  单位：个
     protected Integer limitMeets;
+    //是否是无期限
+    protected Boolean unlimited;
 
     // 用户id
     @Transient
@@ -76,13 +78,9 @@ public class CspPackage implements Serializable {
     @Transient
     protected Integer meetTotalCount;
 
-    @Transient
-    //是否是无期限
-    protected Boolean unlimited;
-
-    public Integer getMeetTotalCount(){
-        return usedMeetCount + hiddenMeetCount;
-    }
+//    public Integer getMeetTotalCount(){
+//        return usedMeetCount + hiddenMeetCount;
+//    }
 
     public enum TypeId {
         STANDARD(1, "标准版","標準版","standard"),
