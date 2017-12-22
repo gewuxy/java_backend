@@ -65,6 +65,8 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         userPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
         userPackage.setUpdateTime(new Date());
         userPackage.setSourceType(Constants.NUMBER_ONE);
+        //时间为无期限
+        userPackage.setUnlimited(true);
         userPackageDAO.insertSelective(userPackage);
     }
 
