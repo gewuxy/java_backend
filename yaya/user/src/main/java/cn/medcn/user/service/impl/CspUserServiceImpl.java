@@ -494,7 +494,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Override
     public String updateAvatar(MultipartFile file, String userId) throws SystemException {
         //相对路径
-        String relativePath = FilePath.PORTRAIT.path + File.separator;
+        String relativePath = FilePath.PORTRAIT.path + "/";
         //文件保存路径
         String savePath = uploadBase + relativePath;
         File dir = new File(savePath);
