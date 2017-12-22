@@ -103,22 +103,11 @@
                                                 <p class="text">${info.descriptUs}</p>
                                             </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
+                                            <c:if test="${info.iden =='ZB'}"><li>
                                                 <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
                                                 <p class="text">${info.limitMeets}Meetings</p>
                                             </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                                <p class="text">${info.limitMeets}Meetings</p>
-                                            </li>
-                                            </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                                <p class="text">Unlimited</p>
-                                            </li>
-                                            </c:if>
-
                                             <c:if test="${info.iden =='GG' && info.state == false}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>

@@ -108,21 +108,11 @@
                                         <p>${info.descriptCn}</p>
                                         </li>
                                         </c:if>
-                                        <c:if test="${info.iden =='LB' && info.limitMeets == 3}"><li>
+                                        <c:if test="${info.iden =='ZB'}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
                                         <p>${info.limitMeets}个会议</p>
                                         </li>
                                         </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 10}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-06.png" alt=""></p>
-                                                <p>${info.limitMeets}个会议</p>
-                                            </li>
-                                            </c:if>
-                                            <c:if test="${info.iden =='LB' && info.limitMeets == 0}"><li>
-                                                <p><img src="${ctxStatic}/images/member-icon-07.png" alt=""></p>
-                                                <p>无限会议</p>
-                                            </li>
-                                            </c:if>
                                         <c:if test="${info.iden =='GG' && info.state == false}">
                                         <li>
                                         <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
