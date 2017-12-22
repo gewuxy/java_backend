@@ -634,6 +634,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public int addCourseCopy(Integer courseId, String newTitle) {
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        course.setGuide(false);
         Integer newCourseId = doCopyCourse(course, null, newTitle);
 
         course.setPlayType(course.getPlayType() == null ? AudioCourse.PlayType.normal.getType() : course.getPlayType());
@@ -1086,12 +1087,17 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                     course.setCspUserId(cspUserId);
                     course.setGuide(true);
                     courseId = doCopyCourse(course, null, null);
+
+                    AudioCoursePlay copy = findPlayState(course.getId());
+                    copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+                    copy.setPlayState(copy.getPlayState());
+                    copy.setPlayPage(copy.getPlayPage());
+                    copy.setCourseId(courseId);
+                    audioCoursePlayDAO.insert(copy);
                 }
                 return courseId;
             }
-
            return 0;
-
         } else {
             return 0;
         }

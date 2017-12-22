@@ -929,7 +929,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 
 .player-popup-box { display: none; overflow: hidden; }
 .player-popup-box .layer-hospital-popup { padding:30px 0;}
-.player-popup-box  .swiper-slide { text-align: center; font-size: 18px; widtH:546px; height:392px; margin-top:65px;
+.player-popup-box  .swiper-slide { text-align: center; font-size: 18px; widtH:546px; height:392px;  margin-top:65px;
     display: -webkit-box;
     display: -ms-flexbox;
     display: -webkit-flex;
@@ -942,7 +942,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 
 .player-popup-box .swiper-slide img,
 .player-popup-box .swiper-slide video{  height:100%; max-width: 100%; }
-.player-popup-box .swiper-slide-active { width:758px; height:522px;   margin-top:0px;}
+.player-popup-box .swiper-slide-active { width:758px; height:522px; margin-top:0px;}
+/*.player-popup-box .swiper-slide-active { width:758px; height:80%;   margin-top:0px;}*/
 .player-popup-box .swiper-slide-active img { width:100%;}
 .swiper-slide-metting-move { position: absolute; right:16px; top:16px;}
 .audio-metting-box { position: relative;}
@@ -1237,6 +1238,13 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
 
 
 @media screen and (max-height:950px) {
+    /*.member-popup-zIndex { position: absolute !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}*/
+}
+
+@media screen and (max-height:820px) {
+    .player-popup-box  .swiper-slide { width:398px; height:286px;}
+    .player-popup-box .swiper-slide-active { width:553px; height:381px;}
+    .player-popup-box .layer-hospital-popup { padding:0;}
     /*.member-popup-zIndex { position: absolute !important; -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}*/
 }
 

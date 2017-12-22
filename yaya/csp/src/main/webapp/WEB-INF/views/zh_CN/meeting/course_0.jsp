@@ -9,8 +9,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta id="MetaDescription" name="DESCRIPTION" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
-    <meta id="MetaKeywords" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
+    <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
+    <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
@@ -306,6 +306,18 @@
             onInit: function(swiper){
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    //判断是否Iphone 的 Safari 浏览器
+                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                        $('.isIphoneSafari').show();
+                    }
+                    activeItemIsVideo.get(0).addEventListener('ended', function () {
+                        console.log("video play end ...");
+                        galleryTop.slideNext();
+                    }, {once: true});
+
+                }
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();

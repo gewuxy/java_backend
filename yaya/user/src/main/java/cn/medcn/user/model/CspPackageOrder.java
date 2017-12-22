@@ -43,6 +43,11 @@ public class CspPackageOrder implements Serializable {
     // 备注
     protected String remark;
 
+    public enum CurrencyType{
+        RMB,
+        USD;
+    }
+
 
 
 }

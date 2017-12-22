@@ -152,6 +152,9 @@ public class MeetingController extends CspBaseController {
                 return localeView("/meeting/share_error");
             }
 
+            audioService.handleHttpUrl(fileBase, course);
+            model.addAttribute("course", course);
+
             if (course.getDeleted() != null && course.getDeleted() == true) {
                 model.addAttribute("error", local("source.has.deleted"));
                 return localeView("/meeting/share_error");
@@ -165,9 +168,6 @@ public class MeetingController extends CspBaseController {
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
             }
-
-            audioService.handleHttpUrl(fileBase, course);
-            model.addAttribute("course", course);
 
             //设置会议水印
             MeetWatermark watermark = meetWatermarkService.findWatermarkByCourseId(courseId);
@@ -688,27 +688,7 @@ public class MeetingController extends CspBaseController {
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
         if (!CheckUtils.isEmpty(page.getDataList())) {
-            for (CourseDeliveryDTO deliveryDTO : page.getDataList()) {
-                deliveryDTO.setServerTime(new Date());
-                if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
-                    deliveryDTO.setCoverUrl(fileBase + deliveryDTO.getCoverUrl());
-                }
-
-                // 录播会议
-                if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
-                    // 录播 当前播放第几页
-                    if (deliveryDTO.getPlayPage() == null) {
-                        deliveryDTO.setPlayPage(0);
-                    }
-                } else {
-                    // 直播 当前播放第几页
-                    if (deliveryDTO.getLivePage() == null) {
-                        deliveryDTO.setLivePage(0);
-                    }
-
-                }
-
-            }
+            CourseDeliveryDTO.splitCoverUrl(page.getDataList(), fileBase);
         }
         Map<String, Object> result = new HashMap<>();
         result.put("list", page.getDataList());

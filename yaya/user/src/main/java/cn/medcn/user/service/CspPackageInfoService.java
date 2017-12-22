@@ -11,4 +11,6 @@ import java.util.List;
 
 public interface CspPackageInfoService extends BaseService<CspPackageInfo>{
     List<CspPackageInfo> selectByPackageId(Integer id);
+
+
 }
