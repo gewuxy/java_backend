@@ -282,6 +282,9 @@
                         $("#mySwiper").append('<div class="swiper-slide" data-num="'+index+'"  ><video src="'+detail.videoUrl+'" width="auto" height="264" controls autobuffer></video>'
                             +'<div class="swiper-slide-metting-audio"></div></div>');
                     } else {
+                        if (detail.audioUrl == undefined){
+                            detail.audioUrl = "";
+                        }
                         $("#mySwiper").append('<div class="swiper-slide swiper-slide-active" data-num="'+index+'"  audio-src="'+detail.audioUrl+'">'
                             +'<img src="'+detail.imgUrl+'" alt=""></div>');
                     }
