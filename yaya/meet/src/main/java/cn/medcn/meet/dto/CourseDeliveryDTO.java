@@ -88,17 +88,17 @@ public class CourseDeliveryDTO implements Serializable {
                 // 录播会议
                 if (deliveryDTO.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
                     // 录播 当前播放第几页
-                    if (deliveryDTO.getPlayPage() == null || deliveryDTO.getPlayPage() == 0) {
+                    if (deliveryDTO.getPlayPage() == null) {
                         deliveryDTO.setPlayPage(0);
                     } else {
-                        deliveryDTO.setPlayPage(deliveryDTO.getPlayPage());
+                        deliveryDTO.setPlayPage(deliveryDTO.getPlayPage() + 1);
                     }
                 } else {
                     // 直播 当前播放第几页
-                    if (deliveryDTO.getLivePage() == null || deliveryDTO.getLivePage() == 0) {
+                    if (deliveryDTO.getLivePage() == null) {
                         deliveryDTO.setLivePage(0);
                     } else {
-                        deliveryDTO.setLivePage(deliveryDTO.getLivePage());
+                        deliveryDTO.setLivePage(deliveryDTO.getLivePage() + 1);
                     }
 
                 }
