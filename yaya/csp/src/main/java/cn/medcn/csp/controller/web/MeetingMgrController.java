@@ -38,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.*;
 
@@ -666,6 +667,8 @@ public class MeetingMgrController extends CspBaseController {
     public String freshFlux(){
         Principal principal = getWebPrincipal();
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-        return success(flux == null ? 0 : flux.getFlux());
+        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) / 100;
+        DecimalFormat format = new DecimalFormat( "#####0.0");
+        return success(format.format(fluxValue));
     }
 }
