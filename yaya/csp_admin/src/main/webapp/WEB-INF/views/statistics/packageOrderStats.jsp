@@ -25,16 +25,16 @@
 <h3 class="page-title">资金概况</h3>
 <div class="top-info clearfix">
     <div class="row-fluid ">
-        <div class="row-span span6 hot ">
-            <a href="/routes_pages/userList.html">
+        <div <c:if test="${type == 0}"> class="row-span span6 hot "</c:if><c:if test="${type == 1}"> class="row-span span6 "</c:if> >
+            <a href="${ctx}/sys/package/stats/home?type=0" type="0" class="type">
                 <h6 class="title">人民币</h6>
-                <p><strong class="price">${rmb}</strong></p>
+                <p><strong class="price"> <fmt:formatNumber type="number" value="${rmb }" pattern="0.00" maxFractionDigits="2"/></strong></p>
             </a>
         </div>
-        <div class="row-span span6">
-            <a href="/routes_pages/userList.html">
+        <div <c:if test="${type == 0}"> class="row-span span6 "</c:if><c:if test="${type == 1}"> class="row-span span6 hot "</c:if>  >
+            <a href="${ctx}/sys/package/stats/home?type=1" type="1" class="type">
                 <h6 class="title">美元</h6>
-                <p><strong class="price">${usd}</strong></p>
+                <p><strong class="price"> <fmt:formatNumber type="number" value="${usd }" pattern="0.00" maxFractionDigits="2"/></strong></p>
             </a>
         </div>
     </div>
@@ -42,20 +42,27 @@
 
 
 <div class="clearfix breadcrumb">
-    <div class="pull-right ">
+    <div class="pull-right clearfix">
         <form id="searchForm" method="post" class=" form-search" style="margin-bottom:0;">
-            <input placeholder="管理员帐号" value="${account}" size="40"  type="search" name="account" maxlength="50" class="required"/>
+            <input placeholder="订单号" value="${account}" size="40"  type="search" name="account" maxlength="50" class="required"/>
             <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
         </form>
     </div>
 
+
     <div class="clearfix ">
-        <div class="pull-right inputTime-item">
+        <div class="pull-left inputTime-item">
             <input class="btn btn-primary" type="button" value="导出Excel表格" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
         </div>
     </div>
 </div>
 
+
+<span class="time-tj">
+            <label for="timeA" id="timeStart">
+                <input type="text" disabled="" class="timedate-input " placeholder="开始时间~结束时间" id="timeA" >
+            </label>
+</span>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
     <tr>
@@ -71,89 +78,65 @@
     </tr>
     </thead>
     <tbody>
-    <tr >
-        <td>000001</td>
-        <td>123</td>
-        <td>微信支付</td>
-        <td>20170111</td>
-        <td>基础班</td>
-        <td>1个月</td>
-        <td>16.67CNY</td>
-        <td>交易成功</td>
-        <td><input type="text" value="退款中"></td>
-    </tr>
-    <tr>
-        <td colspan="9">没有查询到数据</td>
-    </tr>
+    <c:forEach items="${page.dataList}" var="list">
+        <c:if test="${not empty list}">
+            <tr >
+                <td>${list.id}</td>
+                <td>${list.nickname}</td>
+                <td>
+                    <c:if test="${fn:contains(list.platForm , 'alipay') }">支付宝</c:if>
+                    <c:if test="${fn:contains(list.platForm , 'wx')}">微信</c:if>
+                    <c:if test="${fn:contains(list.platForm , 'upacp')}">银联</c:if>
+                    <c:if test="${fn:contains(list.platForm , 'paypal')}">paypal</c:if>
+                </td>
+                <td><fmt:formatDate value="${list.createTime}" pattern="yyyyMMdd"></fmt:formatDate> </td>
+                <td><c:if test="${list.packageId == 2}">高级版</c:if><c:if test="${list.packageId == 3}">专业版</c:if> </td>
+                <td><c:if test="${list.packageType == 0}">1个月</c:if><c:if test="${list.packageType == 1}">1年</c:if> </td>
+                <td>
+                    <c:if test="${not empty list.money}">
+                        <fmt:formatNumber type="number" value="${list.money }" pattern="0.00" maxFractionDigits="2"/>
+                    </c:if>
+                    <c:if test="${type == 0}">CNY</c:if><c:if test="${type == 1}">USD</c:if>
+                </td>
+                <td><c:if test="${list.status == 1}">交易成功</c:if><c:if test="${list.status == 0}">待付款</c:if> </td>
+                <td><input type="text" value="${list.remark}"></td>
+            </tr>
+        </c:if>
+        <c:if test="${empty list}">
+            <tr>
+                <td colspan="9">没有查询到数据</td>
+            </tr>
+        </c:if>
+    </c:forEach>
     </tbody>
-    <tfoot>
-    <tr >
-        <td>资金总额</td>
-        <td colspan="2">1332</td>
-        <td>交易成功金额</td>
-        <td colspan="2">1332</td>
-        <td>退款金额</td>
-        <td colspan="2">1332</td>
-    </tr>
-    </tfoot>
+    <c:if test="${not empty page.dataList}">
+        <tfoot>
+        <tr >
+            <td>交易成功金额</td>
+            <td colspan="8">
+                <c:if test="${empty successSum}">
+                    <c:if test="${type == 0}"><fmt:formatNumber type="number" value="${rmb }" pattern="0.00" maxFractionDigits="2"/></c:if>
+                    <c:if test="${type == 1}"><fmt:formatNumber type="number" value="${usd }" pattern="0.00" maxFractionDigits="2"/></c:if>
+                </c:if>
+                <c:if test="${not empty successSum}">
+                    <c:if test="${type == 0}"><fmt:formatNumber type="number" value="${successSum }" pattern="0.00" maxFractionDigits="2"/></c:if>
+                </c:if>
+                <c:if test="${type == 0}">CNY</c:if><c:if test="${type == 1}">USD</c:if>
+            </td>
+        </tr>
+        </tfoot>
+    </c:if>
+
 </table>
+<%@include file="/WEB-INF/include/pageable.jsp"%>
+<form id="pageForm" name="pageForm" method="post" action="${ctx}/sys/package/stats/home">
+    <input type="hidden" name="type"value="${type}">
+    <input type="hidden" name="pageNum">
+    <input type="hidden" name="startTime" id="startTime" value="">
+    <input type="hidden" name="endTime" id="endTime" value="">
+</form>
 <script>
     $(function(){
-
-        //图表加载
-        var dom = document.getElementById('echarts-2');
-        var myChart = echarts.init(dom);
-        var app = {};
-        option = null;
-        option = {
-            color: ['#3398DB'],
-            tooltip : {
-                trigger: 'axis',
-                axisPointer : {            // 坐标轴指示器，坐标轴触发有效
-                    type : 'shadow'        // 默认为直线，可选为：'line' | 'shadow'
-                }
-            },
-            legend: {
-                data:['资金入账']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '3%',
-                containLabel: true
-            },
-            xAxis : [
-                {
-                    name: '日期',
-                    type : 'category',
-                    data : ['01-01', '01-02', '01-03', '01-04', '01-05', '01-06', '01-07'],
-                }
-            ],
-            yAxis : [
-                {
-                    name: '总额',
-                    type : 'value'
-                }
-            ],
-            series : [
-                {
-                    name:'资金入账',
-                    type:'bar',
-                    barWidth: '60%',
-                    label: {
-                        normal: {
-                            show: true,
-                            position: 'top'
-                        }
-                    },
-                    data:[10, 52, 200, 334, 390, 330, 220]
-                }
-            ]
-        };
-
-        if (option && typeof option === "object") {
-            myChart.setOption(option, true);
-        }
 
 
         //选择时间空间加载
@@ -178,12 +161,20 @@
             /* This event will be triggered when second date is selected */
             console.log('change',obj);
             $(this).find('input').val(obj.value);
+            var timeArray = obj.value.split(' ~ ');
+            var startTime = timeArray[0];
+            var endTime = timeArray[1];
+            $("#startTime").val(startTime);
+            $("#endTime").val(endTime);
+
+            window.location.href="${ctx}/sys/package/stats/home?startTime=" + startTime + "&endTime=" + endTime + "&type=" + ${type};
             // {
             // 		date1: (开始时间),
             // 		date2: (开始时间),
             //	 	value: "2013-06-05 00:00 to 2013-06-07 00:00"
             // }
         });
+
 
 
     });
