@@ -65,6 +65,8 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         userPackage.setPackageId(CspPackage.TypeId.STANDARD.getId());
         userPackage.setUpdateTime(new Date());
         userPackage.setSourceType(Constants.NUMBER_ONE);
+        //时间为无期限
+        userPackage.setUnlimited(true);
         userPackageDAO.insertSelective(userPackage);
     }
 
@@ -106,12 +108,11 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
             userPackage.setPackageEnd(null);
             userPackage.setUpdateTime(new Date());
             userPackage.setSourceType(CspUserPackageHistory.modifyType.EXPIRE_DOWNGRADE.ordinal());
+            userPackage.setUnlimited(true);
             userPackageDAO.updateByPrimaryKey(userPackage);
 
             // 记录用户套餐变更明细
             doAddUserPackageDetail(userPackage, beforePackageId);
-
-            //todo 锁定或者解锁会议
 
         }
     }

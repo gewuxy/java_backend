@@ -27,6 +27,7 @@ import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.UserRegionDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.*;
+import cn.medcn.user.service.CspUserPackageHistoryService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
@@ -127,6 +128,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Autowired
     protected SysNotifyService sysNotifyService;
 
+    @Autowired
+    protected CspUserPackageHistoryService cspUserPackageHistoryService;
+
     @Override
     public CspUserInfo findBindUserByUniqueId(String uniqueId) {
         return cspUserInfoDAO.findBindUserByUniqueId(uniqueId);
@@ -220,7 +224,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         //发送注册成功推送消息
         sysNotifyService.addNotify(userInfo.getId(), local("user.notify.title"), local("user.notify.content"), local("user.notify.sender"));
 
-        // 如果是YaYa医师账号登录 默认用户套餐为专业版
+        // 如果是YaYa医师账号登录 默认用户套餐为专业版 时间为无期限
         if (bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
             insertUserPackage(userInfo.getId());
         }
@@ -228,24 +232,20 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if(userDTO.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
             cspUserPackageService.addStanardInfo(userInfo.getId());
         }
-        if(bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
-
-        }
         return userInfo;
     }
 
     /**
-     * 给使用YaYa账号绑定或登录的用户  添加专业版套餐
+     * 给使用YaYa账号绑定或登录的用户  添加专业版套餐 时间为无期限
      *
      * @param userId
      */
     private void insertUserPackage(String userId) {
-        Date startTime = CalendarUtils.nextDateStartTime();
-        // 专业版默认为3个月
-        Date endTime = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
-        CspUserPackage userPackage = CspUserPackage.build(userId, startTime, endTime,
-                CspPackage.TypeId.PROFESSIONAL.getId(), CspUserPackage.modifyType.BIND_YAYA.ordinal());
+        CspUserPackage userPackage = CspUserPackage.build(userId, null, null,
+                CspPackage.TypeId.PROFESSIONAL.getId(), CspUserPackage.modifyType.BIND_YAYA.ordinal(),true);
         userPackageDAO.insert(userPackage);
+        //添加历史记录
+        cspUserPackageHistoryService.addUserHistoryInfo(userId,null,CspPackage.TypeId.PROFESSIONAL.getId(),CspUserPackage.modifyType.BIND_YAYA.ordinal());
     }
 
     /**
@@ -415,25 +415,17 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         // 绑定YaYa医师账号前 检查当前csp用户是否已经购买过套餐
         if (info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
             CspUserPackage userPackage = userPackageDAO.selectByPrimaryKey(info.getUserId());
-            if (userPackage != null) {
-                Date startTime = CalendarUtils.nextDateStartTime();
-                // 专业版套餐默认为3个月
-                Date endTime = null;
-
-                // 购买过套餐 重设结束时间 在原有套餐的结束时间累加
-                if (userPackage.getPackageId() >= CspPackage.TypeId.PREMIUM.getId()) {
-                    // 绑定前 购买过高级版 结束时间 需在原有剩余时间上累加
-                   /* int remainDays = CalendarUtils.daysBetween(userPackage.getPackageStart(), userPackage.getPackageEnd());
-                    if (remainDays > 0) {
-                        endTime = CalendarUtils.calendarDay((DEFAULT_MONTH * NUMBER_THREE) + remainDays);
-                    }*/
-                }
+            if (userPackage != null) { //购买过套餐
+                //升级为专业版无期限 修改原来套餐开始时间以供解绑时候继续使用
                 userPackage.setUpdateTime(new Date());
-                userPackage.setPackageStart(startTime);
-                userPackage.setPackageEnd(endTime);
+                userPackage.setPackageStart(CalendarUtils.nextDateStartTime());
                 userPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
                 userPackage.setSourceType(CspUserPackage.modifyType.BIND_YAYA.ordinal());
+                userPackage.setUnlimited(true);
                 userPackageDAO.updateByPrimaryKeySelective(userPackage);
+                //添加版本历史记录，下次解绑的时候获取最后一次的版本继续使用
+                cspUserPackageHistoryService.addUserHistoryInfo(info.getUserId(),userPackage.getPackageId(),
+                        CspPackage.TypeId.PROFESSIONAL.getId(),CspUserPackage.modifyType.BIND_YAYA.ordinal());
             } else {
                 // 设置为专业版套餐
                 insertUserPackage(userId);
@@ -450,7 +442,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public void doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException {
+    public void doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException, ParseException {
         BindInfo condition = new BindInfo();
         condition.setUserId(userId);
         condition.setThirdPartyId(thirdPartId);
@@ -458,7 +450,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if (condition == null) {  //用户没绑定此第三方账号，不能解绑
             throw new SystemException(local("user.notExist.ThirdAccount"));
         }
-
         CspUserInfo user = selectByPrimaryKey(userId);
         String email = user.getEmail();
         String mobile = user.getMobile();
@@ -471,7 +462,33 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 throw new SystemException(local("user.only.one.account"));
             }
         }
-
+        //如果解绑丫丫医师需要还原用户套餐信息
+        if(thirdPartId == BindInfo.Type.YaYa.getTypeId()){
+            CspUserPackage userPackage = cspUserPackageService.selectByPrimaryKey(userId);
+            userPackage.setSourceType(Constants.NUMBER_THREE);
+            userPackage.setUpdateTime(new Date());
+            Integer updatePackageId = CspPackage.TypeId.STANDARD.getId();
+            if(userPackage.getPackageEnd() != null){   //在绑定之前有进行套餐的购买
+                //获取变更之前的套餐版本
+                CspUserPackageHistory lastHistory = cspUserPackageHistoryService.getLastHistoryByUserId(userId);
+                if(lastHistory != null){
+                    updatePackageId = lastHistory.getBeforePackageId();
+                }
+                //计算之前剩余多少天
+                Integer betwwen = CalendarUtils.daysBetween(userPackage.getPackageStart(),userPackage.getPackageEnd());
+                Date start = CalendarUtils.nextDateStartTime();
+                Date end = CalendarUtils.calendarDay(start,betwwen);
+                userPackage.setPackageStart(start);
+                userPackage.setPackageEnd(end);
+                userPackage.setUnlimited(false);
+            }else{// 还原标准版
+                userPackage.setUnlimited(true);
+            }
+            userPackage.setPackageId(updatePackageId);
+            cspUserPackageService.updateByPrimaryKeySelective(userPackage);
+            //添加历史版本信息
+            cspUserPackageHistoryService.addUserHistoryInfo(userId,CspPackage.TypeId.PROFESSIONAL.getId(),updatePackageId,CspUserPackage.modifyType.BIND_YAYA.ordinal());
+        }
         bindInfoDAO.delete(condition);
     }
 

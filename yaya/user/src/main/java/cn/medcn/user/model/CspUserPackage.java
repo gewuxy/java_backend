@@ -43,7 +43,7 @@ public class CspUserPackage implements Serializable {
         BIND_YAYA(), // 绑定YaYa数字平台
         NEW_USER(); //新用户注册
     }
-    public static CspUserPackage build(String userId,Date start,Date end,Integer packageId,Integer sourceType){
+    public static CspUserPackage build(String userId,Date start,Date end,Integer packageId,Integer sourceType,Boolean unlimited){
         CspUserPackage userPackage = new CspUserPackage();
         userPackage.setUserId(userId);
         userPackage.setPackageStart(start);
@@ -51,6 +51,7 @@ public class CspUserPackage implements Serializable {
         userPackage.setPackageId(packageId);
         userPackage.setUpdateTime(new Date());
         userPackage.setSourceType(sourceType);
+        userPackage.setUnlimited(unlimited);
         return userPackage;
     }
 
