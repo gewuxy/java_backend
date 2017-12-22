@@ -115,14 +115,14 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         boolean yearType = yearPay(packageId, order.getShouldPay());
         if (userPk == null) { //添加用户套餐信息
             end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_MONTH);
-            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
+            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,false));
         } else { // 更新用户套餐信息
             oldPackageId = userPk.getPackageId();
             Date endStart = CalendarUtils.nextDateStartTime();
             //结束时间不为空从以前结束时间开始算
             if (userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
             end = yearType ? CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_MONTH);
-            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE));
+            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,false));
         }
         //添加用户套餐历史信息
         cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(), oldPackageId, packageId, Constants.NUMBER_ONE);

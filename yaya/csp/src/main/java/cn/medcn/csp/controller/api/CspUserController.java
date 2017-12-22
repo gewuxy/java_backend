@@ -692,7 +692,7 @@ public class CspUserController extends CspBaseController {
             //解绑操作
             try {
                 cspUserService.doUnbindThirdAccount(info.getThirdPartyId(), userId);
-            } catch (SystemException e) {
+            } catch (Exception e) {
                 return error(e.getMessage());
             }
         }

@@ -320,17 +320,13 @@ public class LoginController extends CspBaseController {
     @RequestMapping(value = "/oauth/callback")
     public String callback(String code, Integer thirdPartyId, RedirectAttributes redirectAttributes,
                            HttpServletResponse response, Model model) throws SystemException {
-
         Principal principal = (Principal) SecurityUtils.getSubject().getPrincipal();
-
         if (StringUtils.isNotEmpty(code)) {
             //获取第三方用户信息
             OAuthUser oAuthUser = oauthService.getOauthUser(code, thirdPartyId);
-
             if (oAuthUser != null) {
                 String uniqueId = oAuthUser.getUid();
                 if (StringUtils.isNotEmpty(uniqueId)) {
-
                     // 根据第三方用户唯一id 查询用户是否存在
                     CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
                     if(principal != null){
@@ -344,9 +340,7 @@ public class LoginController extends CspBaseController {
                 }
             }
         }
-
         return null;
-
     }
 
     /**
@@ -360,9 +354,7 @@ public class LoginController extends CspBaseController {
         if(user == null){
             throw new SystemException("can't get userInfo");
         }
-
         Principal principal =  getWebPrincipal();
-
         //登录回调
         if(principal == null){
             // 根据第三方用户唯一id 查询用户是否存在
@@ -370,7 +362,6 @@ public class LoginController extends CspBaseController {
             return doThirdPartWebLogin(user.getPlatformId(), user, userInfo, response, model);
 
         }else{  //绑定回调
-
             //将OauthUser转为BindInfo对象
             BindInfo info = new BindInfo();
             info.setThirdPartyId(user.getPlatformId());
@@ -402,9 +393,12 @@ public class LoginController extends CspBaseController {
             BindInfo info = OAuthUser.buildToBindInfo(oAuthUser);
             info.setThirdPartyId(thirdPartId);
             info.setId(StringUtils.nowStr());
-
         try {
             cspUserService.doBindThirdAccount(info,userId);
+            //绑定丫丫的需要更新缓存
+            if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
+                updatePackagePrincipal(userId);
+            }
             addFlashMessage(redirectAttributes,local("user.bind.success"));
         } catch (SystemException e) {
            addFlashMessage(redirectAttributes,e.getMessage());
@@ -441,15 +435,13 @@ public class LoginController extends CspBaseController {
         Subject subject = SecurityUtils.getSubject();
         try {
             subject.login(token);
-
             // 将当前用户添加到cookie缓存 保存7天
             Principal principal = getWebPrincipal();
-
+            //新用户老用户处理
             modifyOldUser(userInfo);
             CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
             String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
             CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
-
         } catch (AuthenticationException e) {
             model.addAttribute("error", e.getMessage());
             return localeView("/login/login");

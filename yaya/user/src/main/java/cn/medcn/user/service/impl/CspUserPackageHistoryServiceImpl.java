@@ -44,4 +44,9 @@ public class CspUserPackageHistoryServiceImpl extends BaseServiceImpl<CspUserPac
         detail.setUpdateType(updateType);
         packageHistoryDAO.insert(detail);
     }
+
+    @Override
+    public CspUserPackageHistory getLastHistoryByUserId(String userId) {
+        return packageHistoryDAO.getLastHistoryByUserId(userId);
+    }
 }
