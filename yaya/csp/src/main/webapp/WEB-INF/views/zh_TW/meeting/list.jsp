@@ -602,7 +602,7 @@
                                                 <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
                                                     <i></i>
                                                     預覽
-                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" target="_blank" class="resource-icon-qrcode">
+                                                </a><a href="${ctx}/mgr/meet/screen/${course.id}" class="resource-icon-qrcode">
                                                 <i></i>
                                                 掃碼投屏
                                             </a>

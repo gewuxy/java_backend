@@ -105,11 +105,11 @@
             <!--加载-->
             <div class="video-notPlay-load none"><i></i></div>
             <!--默认-->
-            <div class="video-notPlay none"><i></i>视频直播未开始</div>
+            <div class="video-notPlay ${empty live.hlsUrl ? '' : 'none'}"><i></i>视频直播未开始</div>
         </div>
         <!--初始化视频     http://weblive.hebtv.com/live/hbws_bq/index.m3u8-->
         <script>
-            var hlsUrl = '${live.hlsUrl}';
+            var hlsUrl = 'http://17932.liveplay.myqcloud.com/live/17932_${course.id}.m3u8';
             showPlayer(hlsUrl,'videoWrap')
             function showPlayer(src, id){
                 //player
@@ -125,6 +125,29 @@
                 var params={bgcolor:'#FFF',allowFullScreen:false,allowScriptAccess:'always',wmode:'transparent'};
                 var video=[src];
                 CKobject.embed('${ctxStatic}/phone/js/m3u8/ckplayer.swf',id ,'ck-video','100%','100%',false, flashvars ,video, params);
+
+                CKobject.getObjectById('ck-video').addListener("error", function(){
+                    console.log("加载视频失败");
+                    console.log("hasNone = " + !$(".video-notPlay").hasClass("none"))
+                    if ($(".video-notPlay").hasClass("none")){
+                        $(".video-notPlay-bg").removeClass("none");
+                        $(".video-play-live").addClass("video-notPlay-item");
+                    }
+                });
+
+                CKobject.getObjectById('ck-video').addListener("ended", function(){
+                    console.log("视频播放完成");
+                    $(".video-notPlay-bg").removeClass("none");
+                });
+
+                CKobject.getObjectById('ck-video').addListener("play", function(){
+                    $(".video-notPlay-bg").addClass("none");
+                    $(".video-play-live").addClass("video-notPlay-item");
+                });
+
+                CKobject.getObjectById("ck-video").addListener("sendNetStream", function(){
+                    $(".video-play-live").addClass("video-notPlay-item");
+                });
             }
         </script>
 
@@ -727,6 +750,8 @@
                             $(".boxAudio-loading").addClass("none");
                         }
                     }
+                } else if (data.order == 12){//接收到推流
+                    $("#ck-video")[0].play();
                 }
             }
 
