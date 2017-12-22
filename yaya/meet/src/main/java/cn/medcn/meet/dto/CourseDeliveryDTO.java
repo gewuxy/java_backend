@@ -89,7 +89,7 @@ public class CourseDeliveryDTO implements Serializable {
                 }
 
                 if (deliveryDTO.getGuide()) {
-                    deliveryDTO.setTitle("【" + SpringUtils.getMessage("course.novice.guidance") + "】");
+                    deliveryDTO.setTitle("【" + SpringUtils.getMessage("course.novice.guidance") + "】" + deliveryDTO.getTitle());
                 }
 
                 if (StringUtils.isNotEmpty(deliveryDTO.getCoverUrl())) {
