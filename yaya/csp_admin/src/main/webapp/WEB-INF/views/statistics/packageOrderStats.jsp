@@ -44,8 +44,8 @@
 <div class="clearfix breadcrumb">
     <div class="pull-right clearfix">
         <form id="searchForm" method="post" class=" form-search" style="margin-bottom:0;">
-            <input placeholder="订单号" value="${account}" size="40"  type="search" name="account" maxlength="50" class="required"/>
-            <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
+            <input placeholder="订单号" value="" size="40"  type="search" id="tradeId" name="tradeId" maxlength="50" class="required"/>
+            <input id="search" class="btn btn-primary" type="button" value="查询"/>
         </form>
     </div>
 
@@ -60,7 +60,8 @@
 
 <span class="time-tj">
             <label for="timeA" id="timeStart">
-                <input type="text" disabled="" class="timedate-input " placeholder="开始时间~结束时间" id="timeA" >
+                <input type="text" disabled="" class="timedate-input " <c:if test="${empty startTime}">placeholder="开始时间~结束时间"</c:if>
+                       id="timeA" <c:if test="${not empty startTime}"> value="${startTime}~${endTime}"</c:if>>
             </label>
 </span>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
@@ -102,14 +103,14 @@
                 <td><input type="text" value="${list.remark}"></td>
             </tr>
         </c:if>
-        <c:if test="${empty list}">
-            <tr>
-                <td colspan="9">没有查询到数据</td>
-            </tr>
-        </c:if>
     </c:forEach>
+    <c:if test="${ empty page.dataList}">
+        <tr>
+            <td colspan="9">没有查询到数据</td>
+        </tr>
+    </c:if>
     </tbody>
-    <c:if test="${not empty page.dataList}">
+    <c:if test="${not empty page.dataList && empty search}">
         <tfoot>
         <tr >
             <td>交易成功金额</td>
@@ -119,7 +120,7 @@
                     <c:if test="${type == 1}"><fmt:formatNumber type="number" value="${usd }" pattern="0.00" maxFractionDigits="2"/></c:if>
                 </c:if>
                 <c:if test="${not empty successSum}">
-                    <c:if test="${type == 0}"><fmt:formatNumber type="number" value="${successSum }" pattern="0.00" maxFractionDigits="2"/></c:if>
+                    <fmt:formatNumber type="number" value="${successSum }" pattern="0.00" maxFractionDigits="2"/>
                 </c:if>
                 <c:if test="${type == 0}">CNY</c:if><c:if test="${type == 1}">USD</c:if>
             </td>
@@ -137,6 +138,10 @@
 </form>
 <script>
     $(function(){
+
+        $("#startTime").val('${startTime}');
+        $("#endTime").val('${endTime}');
+
 
 
         //选择时间空间加载
@@ -176,6 +181,14 @@
         });
 
 
+        $("#search").click(function () {
+            var tradeId = $("#tradeId").val();
+            if(tradeId == '' || tradeId == undefined){
+                layer.msg("请输入订单号");
+            }else{
+                window.location.href="${ctx}/sys/package/stats/search?tradeId=" + tradeId + "&rmb=" + '${rmb}' + "&usd=" + '${usd}' + "&type=" + ${type};
+            }
+        });
 
     });
 </script>
