@@ -319,7 +319,7 @@ public class UserCenterController extends CspBaseController {
         //解绑第三方账号
         try {
             cspUserService.doUnbindThirdAccount(type, userId);
-        } catch (SystemException e) {
+        } catch (Exception e) {
             return error(e.getMessage());
         }
 

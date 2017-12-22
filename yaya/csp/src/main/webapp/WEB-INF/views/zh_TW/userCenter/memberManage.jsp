@@ -89,6 +89,13 @@
                                                 <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                             </div>
                                         </c:if>
+                                        <c:if test="${ cspPackage.unlimited == 1 && cspPackage.packageTw == '專業版' }">
+                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
+                                            <div class="oh">
+                                                <h5 class="title">${cspPackage.packageTw}</h5>
+                                                <div class="member-mode-tips">專業版已生效</div>
+                                            </div>
+                                        </c:if>
                                     </div>
                                 </div>
                             </div>
