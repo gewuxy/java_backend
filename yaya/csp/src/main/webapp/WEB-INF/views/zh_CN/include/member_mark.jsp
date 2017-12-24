@@ -252,9 +252,9 @@
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
-                                    <label for="id4" class="item item-radius pay-on">
-                                        <input type="radio" name="payMode" class="none" value="4" id="id4">
-                                        <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
+                                    <label for="3id5" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
@@ -317,9 +317,9 @@
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
-                                    <label for="2id4" class="item item-radius pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" value="4" id="2id4">
-                                        <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
+                                    <label for="3id5" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
@@ -394,9 +394,9 @@
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
-                                    <label for="3id4" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="4" id="3id4">
-                                        <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
+                                    <label for="3id5" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
