@@ -80,7 +80,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @param payType
      */
     @Override
-    public void createOrder(String userId, String orderNo, Integer currency, Integer packageId, Integer num, Float money, String payType) {
+    public void createOrder(String userId, String orderNo, Integer currency, Integer packageId, Integer num, Float money, String payType,Integer packageType) {
         CspPackageOrder order = new CspPackageOrder();
         order.setNum(num);
         order.setUserId(userId);
@@ -92,6 +92,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         order.setPackageId(packageId);
         order.setCreateTime(new Date());
         order.setState(Constants.NUMBER_ZERO);
+        order.setPackageType(packageType);
         packageOrderDAO.insertSelective(order);
     }
 

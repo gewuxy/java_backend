@@ -54,9 +54,11 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
     @Override
     public Map<String, Object> getOrderParams(Integer packageId, Integer limitTime, Integer currency) {
         CspPackage pk = cspPackageDAO.selectByPrimaryKey(packageId);
-        float money = 0.00f;
-        Integer num = 1;
+        float money = 0.00f;  //金额
+        Integer num = 1;     //数量
+        Integer packageType = 0;    //是否年费  0：月费  1：年费
         if (limitTime % 12 == 0) {
+            packageType = 1;
             money = currency == 0 ? pk.getYearRmb() * (limitTime / 12) : pk.getYearUsd() * (limitTime / 12);
             num = limitTime / 12;
         } else {
@@ -66,6 +68,7 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("money", (float) Math.round(money * 10000) / 10000);
         map.put("num", num);
+        map.put("packageType", packageType);
         return map;
     }
 
