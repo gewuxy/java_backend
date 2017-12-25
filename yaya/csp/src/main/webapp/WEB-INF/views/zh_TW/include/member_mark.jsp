@@ -126,6 +126,7 @@
                 var index = $(this).index();
                 selectPk = index;
                 flag = selectPk == 1 ? "hg" : "pf";
+                limitTimes = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
                 tabsMainNum.eq(index).removeClass('none').siblings().addClass('none');
                 $(this).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
                 sumMoney();
