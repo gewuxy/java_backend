@@ -45,6 +45,7 @@ public class CspPackage implements Serializable {
     // 限制会议  单位：个
     protected Integer limitMeets;
     //是否是无期限
+    @Transient
     protected Boolean unlimited;
 
     // 用户id
