@@ -159,6 +159,10 @@
 
                 CKobject.getObjectById("ck-video").addListener("sendNetStream", function(){
                     $(".video-play-live").addClass("video-notPlay-item");
+                    if(isAndroid){
+                        //还原
+                        $("#ck-video").attr('style','margin-top:0px');
+                    }
                 });
             }
         </script>
@@ -246,7 +250,7 @@
 
     $(function(){
         var fullState = true;
-        var ismuted = false;
+        var ismuted = true;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
@@ -287,9 +291,7 @@
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio ended");
             console.log("audio play over ...");
-            if (playing){
-                galleryTop.slideNext();
-            }
+            galleryTop.slideNext();
             $(".boxAudio-loading").addClass("none");
         });
 
@@ -306,9 +308,10 @@
             $(this).hide();
             //播放音频
             popupPalyer.play();
-            $("#ck-video")[0].play();
             //音频文件静音
             popupPalyer.element.muted = true;
+
+            $("#ck-video")[0].play();
         });
 
 
