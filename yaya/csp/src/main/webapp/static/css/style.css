@@ -774,7 +774,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .contribute-popup-box { display: none;}
 .layer-hospital-popup .layui-layer-ico{ display: none;}
 .layer-hospital-popup { padding:30px 40px;}
-.layer-hospital-popup .layui-layer-close { padding:10px; right:25px;cursor:pointer;}
+.layer-hospital-popup .layui-layer-close { padding:10px; right:25px; top:20px; cursor:pointer;}
 .layer-hospital-popup .close-button { padding:12px; }
 .layer-hospital-popup .layer-hospital-popup-title strong{ font-size: 22px; color: #333; font-weight: normal;}
 .layer-hospital-popup .layer-hospital-popup-subName { font-size:16px; color:#7A8B9F;}
@@ -1237,6 +1237,7 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
     body {  min-width: 1200px; overflow: hidden;   }
     .index-login { right:70px;}
     .page-width  { width:1100px; padding:0 50px;}
+    .resource-list-item .resource-img { width:334px; height:229px;}
 }
 
 

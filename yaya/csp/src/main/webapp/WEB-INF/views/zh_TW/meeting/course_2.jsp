@@ -146,10 +146,15 @@
                 CKobject.getObjectById('ck-video').addListener("play", function(){
                     //$(".video-notPlay-bg").addClass("none");
                     $(".video-play-live").addClass("video-notPlay-item");
+
                 });
 
                 CKobject.getObjectById("ck-video").addListener("sendNetStream", function(){
                     $(".video-play-live").addClass("video-notPlay-item");
+                    if(isAndroid){
+                        //还原
+                        $("#ck-video").attr('style','margin-top:0px');
+                    }
                 });
             }
         </script>
@@ -235,7 +240,7 @@
 
     $(function(){
         var fullState = true;
-        var ismuted = false;
+        var ismuted = true;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
