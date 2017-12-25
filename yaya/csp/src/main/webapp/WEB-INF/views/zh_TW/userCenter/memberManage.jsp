@@ -82,19 +82,30 @@
                                                 <div class="member-mode-tips">已生效</div>
                                             </div>
                                         </c:if>
-                                        <c:if test="${cspPackage.packageTw == '高級版' || cspPackage.packageTw == '專業版' }">
+                                        <c:if test="${cspPackage.packageTw == '高級版'}">
                                             <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
                                             <div class="oh">
                                                 <h5 class="title">${cspPackage.packageTw}</h5>
                                                 <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                             </div>
                                         </c:if>
-                                        <c:if test="${ cspPackage.unlimited == 1 && cspPackage.packageTw == '專業版' }">
-                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
+                                        <c:if test="${cspPackage.packageTw == '專業版' }">
+                                            <c:if test="${cspUserPackage.unlimited == true}">
+                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
                                             <div class="oh">
                                                 <h5 class="title">${cspPackage.packageTw}</h5>
                                                 <div class="member-mode-tips">專業版已生效</div>
                                             </div>
+                                        </c:if>
+                                        </c:if>
+                                        <c:if test="${cspPackage.packageCn == '專業版'}">
+                                            <c:if test="${cspUserPackage.unlimited == false}">
+                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                            <div class="oh">
+                                                <h5 class="title">${cspPackage.packageTw}</h5>
+                                                <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                            </div>
+                                        </c:if>
                                         </c:if>
                                     </div>
                                 </div>

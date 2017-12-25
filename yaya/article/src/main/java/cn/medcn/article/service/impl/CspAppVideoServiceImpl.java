@@ -22,7 +22,7 @@ public class CspAppVideoServiceImpl extends BaseServiceImpl<AppVideo> implements
         return appVideoDAO;
     }
 
-    @Autowired
+    @Override
     public AppVideo findCspAppVideo(){
         return appVideoDAO.findCspAppVideo();
     }

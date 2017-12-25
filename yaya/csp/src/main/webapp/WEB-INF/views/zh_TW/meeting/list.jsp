@@ -544,6 +544,7 @@
                 $("#pkTime").hide();
                 $("#meetCountTips").hide();
                 $("#note").hide();
+                $("#unlimited").hide();
             }else {
                 $("#meetCountTips").hide();
                 $("#standard").hide();
@@ -555,6 +556,10 @@
         }
         function standardClose(){
             $("#standard").hide();
+        }
+
+        function unlimitedClose(){
+            $("#unlimited").hide();
         }
     </script>
 </head>
@@ -569,7 +574,6 @@
                     <span class="admin-tips-close" onclick="closeclick()"></span>
                 </div>
             </c:if>
-        <div class="page-width clearfix pr">
             <c:if test="${showTips != null && showTips}">
                 <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">您的會議數量已超過套餐許可權，請删除部分會議或陞級套餐後繼續使用</a> </span>
@@ -591,6 +595,12 @@
                 <div class="admin-tips" id="standard">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">已生效 </a> </span>
                     <span class="admin-tips-close" onclick="standardClose()"></span>
+                </div>
+            </c:if>
+            <c:if test="${cspUserPackage.unlimited == true}">
+                <div class="admin-tips" id="unlimited">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">專業版已生效 </a> </span>
+                    <span class="admin-tips-close" onclick="unlimitedClose()"></span>
                 </div>
             </c:if>
             <div class="admin-row clearfix pr">

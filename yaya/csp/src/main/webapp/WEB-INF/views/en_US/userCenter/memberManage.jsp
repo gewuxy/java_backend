@@ -78,17 +78,29 @@
                                                     <div class="member-mode-tips">Valid</div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.packageUs == 'Premium Edition' || cspPackage.packageUs == 'Professional Edition' }">
+                                            <c:if test="${cspPackage.packageUs == 'Premium Edition'}">
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
                                                     <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.unlimited == 1 && cspPackage.packageUs == 'Professional Edition' }">
-                                                <div class="oh">
-                                                    <h5 class="title">${cspPackage.packageUs}</h5>
-                                                    <div class="member-mode-tips">ProfessionalEdition Valid</div>
-                                                </div>
+                                            <c:if test="${cspPackage.packageUs == 'Professional Edition'}">
+                                                <c:if test="${cspUserPackage.unlimited == true}">
+                                                    <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                                    <div class="oh">
+                                                        <h5 class="title">${cspPackage.packageUs}</h5>
+                                                        <div class="member-mode-tips">Professional Edition Valid</div>
+                                                    </div>
+                                                </c:if>
+                                            </c:if>
+                                            <c:if test="${ cspPackage.packageUs == 'Professional Edition'}">
+                                                <c:if test="${cspUserPackage.unlimited == false}">
+                                                    <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                                    <div class="oh">
+                                                        <h5 class="title">${cspPackage.packageUs}</h5>
+                                                        <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>~<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                    </div>
+                                                </c:if>
                                             </c:if>
                                         </div>
                                     </div>
