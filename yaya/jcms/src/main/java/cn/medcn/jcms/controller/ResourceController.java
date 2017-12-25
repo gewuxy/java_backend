@@ -70,14 +70,14 @@ public class ResourceController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/share/list")
-    public String list(Pageable pageable, String category, String keyword, Model model){
+    public String list(Pageable pageable, String category, String keyword, Model model) {
         Principal principal = SubjectUtils.getCurrentUser();
 
-        if(!StringUtils.isEmpty(category)){
+        if (!StringUtils.isEmpty(category)) {
             pageable.put("category", category);
             model.addAttribute("category", category);
         }
-        if(!StringUtils.isEmpty(keyword)){
+        if (!StringUtils.isEmpty(keyword)) {
             pageable.put("keyword", keyword);
             model.addAttribute("keyword", keyword);
         }
@@ -104,7 +104,7 @@ public class ResourceController extends BaseController {
 
         // 查询出我的象数
         Credits credits = creditsService.doFindMyCredits(principal.getId());
-        model.addAttribute("credit", credits == null?0:credits.getCredit());
+        model.addAttribute("credit", credits == null ? 0 : credits.getCredit());
 
         return "/res/shareResource";
     }
@@ -113,14 +113,14 @@ public class ResourceController extends BaseController {
      * 已获取资源列表
      *
      * @param pageable
-     * @param jump 跳转页面 0 跳转资源共享页面 1 跳转至发布会议时转载资源的弹框页
-     * @param meetId 引用转载资源时传该参数
+     * @param jump     跳转页面 0 跳转资源共享页面 1 跳转至发布会议时转载资源的弹框页
+     * @param meetId   引用转载资源时传该参数
      * @param moduleId 引用转载资源时传该参数
      * @param model
      * @return
      */
     @RequestMapping(value = "/acquired/list")
-    public String acquiredList(Pageable pageable, Integer jump, String meetId, Integer moduleId, Model model){
+    public String acquiredList(Pageable pageable, Integer jump, String meetId, Integer moduleId, Model model) {
         Integer userId = SubjectUtils.getCurrentUserid();
         pageable.put("userId", userId);
         pageable.setPageSize(SHARE_PAGE_SIZE);
@@ -155,16 +155,17 @@ public class ResourceController extends BaseController {
 
     /**
      * 我的转载记录
+     *
      * @param pageable
      * @param keyword
      * @param model
      * @return
      */
     @RequestMapping(value = "/reprints")
-    public String reprints(Pageable pageable,String keyword, Model model){
+    public String reprints(Pageable pageable, String keyword, Model model) {
         Principal principal = SubjectUtils.getCurrentUser();
         pageable.getParams().put("userId", principal.getId());
-        if(!StringUtils.isEmpty(keyword)){
+        if (!StringUtils.isEmpty(keyword)) {
             pageable.getParams().put("keyword", keyword);
             model.addAttribute("keyword", keyword);
         }
@@ -175,14 +176,15 @@ public class ResourceController extends BaseController {
 
     /**
      * 资源被转载记录
+     *
      * @param pageable
      * @param keyword
      * @param model
      * @return
      */
     @RequestMapping(value = "/reprinted")
-    public String reprinted(Pageable pageable, String keyword, Model model){
-        if(!StringUtils.isEmpty(keyword)){
+    public String reprinted(Pageable pageable, String keyword, Model model) {
+        if (!StringUtils.isEmpty(keyword)) {
             pageable.getParams().put("keyword", keyword);
             model.addAttribute("keyword", keyword);
         }
@@ -195,16 +197,17 @@ public class ResourceController extends BaseController {
 
     /**
      * 我的共享记录
+     *
      * @param pageable
      * @param keyword
      * @param model
      * @return
      */
     @RequestMapping(value = "/shared")
-    public String shared(Pageable pageable, String keyword, Model model){
+    public String shared(Pageable pageable, String keyword, Model model) {
         Principal principal = SubjectUtils.getCurrentUser();
         pageable.getParams().put("userId", principal.getId());
-        if(!StringUtils.isEmpty(keyword)){
+        if (!StringUtils.isEmpty(keyword)) {
             pageable.getParams().put("keyword", keyword);
             model.addAttribute("keyword", keyword);
         }
@@ -215,7 +218,7 @@ public class ResourceController extends BaseController {
 
 
     @RequestMapping(value = "/reprint")
-    public String reprint(Integer id, RedirectAttributes redirectAttributes){
+    public String reprint(Integer id, RedirectAttributes redirectAttributes) {
         Principal principal = SubjectUtils.getCurrentUser();
         try {
             audioService.doReprint(id, principal.getId());
@@ -232,53 +235,55 @@ public class ResourceController extends BaseController {
 
     /**
      * 关闭或者打开共享
+     *
      * @param id
-     * @param credit 转载所需象数
+     * @param credit             转载所需象数
      * @param redirectAttributes
      * @return
      */
     @RequestMapping(value = "/modifyShared")
-    public String modifyShared(Integer id, Integer shareType, Integer credit, RedirectAttributes redirectAttributes){
+    public String modifyShared(Integer id, Integer shareType, Integer credit, RedirectAttributes redirectAttributes) {
         Principal principal = SubjectUtils.getCurrentUser();
         AudioCourse course = audioService.selectByPrimaryKey(id);
-        if(course == null){
-            addFlashMessage(redirectAttributes, "资源[ID="+id+"]不存在");
+        if (course == null) {
+            addFlashMessage(redirectAttributes, "资源[ID=" + id + "]不存在");
             return "redirect:/func/res/shared";
         }
-        if(course.getOwner().intValue() != principal.getId().intValue()){
+        if (course.getOwner().intValue() != principal.getId().intValue()) {
             addFlashMessage(redirectAttributes, "您无法操作不属于您的资源");
             return "redirect:/func/res/shared";
         }
         boolean isClose = course.getShared();
-        course.setShared(course.getShared() == null || !course.getShared()?true:false);
-        if(!isClose){
+        course.setShared(course.getShared() == null || !course.getShared() ? true : false);
+        if (!isClose) {
             if (shareType == null)
                 shareType = 0;//免费
-            if(shareType == 1 || shareType == 2) {//收费
+            if (shareType == 1 || shareType == 2) {//收费
                 course.setCredits(credit);
-            }else{
+            } else {
                 course.setCredits(0);
             }
             course.setShareType(shareType);
         }
         audioService.updateByPrimaryKeySelective(course);
-        addFlashMessage(redirectAttributes, (isClose?"关闭":"打开")+"共享成功！");
+        addFlashMessage(redirectAttributes, (isClose ? "关闭" : "打开") + "共享成功！");
         return "redirect:/func/res/shared";
     }
 
     /**
      * 查询我的转载记录 用以引用
+     *
      * @param model
      * @return
      */
     @RequestMapping(value = "/forQuote")
-    public String forQuote(Pageable pageable,String meetId, Integer moduleId, String keyword, Model model){
+    public String forQuote(Pageable pageable, String meetId, Integer moduleId, String keyword, Model model) {
         pageable.setPageSize(6);
         Principal principal = SubjectUtils.getCurrentUser();
         model.addAttribute("meetId", meetId);
         model.addAttribute("moduleId", moduleId);
         pageable.getParams().put("userId", principal.getId());
-        if(!StringUtils.isEmpty(keyword)){
+        if (!StringUtils.isEmpty(keyword)) {
             pageable.getParams().put("keyword", keyword);
             model.addAttribute("keyword", keyword);
         }
@@ -291,31 +296,32 @@ public class ResourceController extends BaseController {
     /**
      * 预览ppt+语音
      * 未转载只能查看查看前5页
+     *
      * @param courseId
      * @param model
      * @return
      */
     @RequestMapping(value = "/view")
-    public String view(Integer courseId, Model model){
+    public String view(Integer courseId, Model model) {
         AudioCourse course = audioService.findAudioCourse(courseId);
         model.addAttribute("course", course);
         model.addAttribute("appFileBase", appFileBase);
         Principal principal = SubjectUtils.getCurrentUser();
         //判断用户是否已经转载了此资源
-        if(course.getOwner() == principal.getId()){
-            model.addAttribute("reprinted",false);
-        }else{
+        if (course.getOwner() == principal.getId()) {
+            model.addAttribute("reprinted", false);
+        } else {
             boolean reprinted = audioService.checkReprinted(courseId, principal.getId());
             model.addAttribute("reprinted", reprinted);
         }
         //如果是来自csp的资源，需要更改查阅状态
-        if(!StringUtils.isEmpty(course.getCspUserId())){
+        if (!StringUtils.isEmpty(course.getCspUserId())) {
             CourseDelivery delivery = new CourseDelivery();
             delivery.setSourceId(courseId);
             delivery.setAcceptId(SubjectUtils.getCurrentUserid());
             delivery.setAuthorId(course.getCspUserId());
             delivery = courseDeliveryService.selectOne(delivery);
-            if(delivery != null){
+            if (delivery != null) {
                 delivery.setViewState(true);
                 courseDeliveryService.updateByPrimaryKeySelective(delivery);
             }
@@ -327,51 +333,52 @@ public class ResourceController extends BaseController {
 
     /**
      * 关闭或开启投稿功能,页面重新加载
+     *
      * @return
      */
     @RequestMapping("/change")
     @ResponseBody
-    public String close(Integer flag){
+    public String close(Integer flag) {
         Integer userId = SubjectUtils.getCurrentUserid();
-        appUserService.doChangeDelivery(userId,flag);
+        appUserService.doChangeDelivery(userId, flag);
         return success();
     }
 
     /**
-     *    csp投稿列表
-     * @param isOpen  翻页时带此参数，说明已经开启投稿
+     * csp投稿列表
+     *
+     * @param isOpen   翻页时带此参数，说明已经开启投稿
      * @param pageable
      * @param model
      * @return
      */
     @RequestMapping(value = "/list")
-    public String users(Integer isOpen,Pageable pageable, Model model){
+    public String users(Integer isOpen, Pageable pageable, Model model) {
 
         Integer userId = SubjectUtils.getCurrentUserid();
-        if(isOpen == null){  //点击资源平台动作
+        if (isOpen == null) {  //点击资源平台动作
             //查询用户是否开启投稿功能
 
             int flag = appUserService.findDeliveryFlag(userId);
-            if(flag == 0){  //没有开启投稿功能
+            if (flag == 0) {  //没有开启投稿功能
                 return "/res/deliveryList";
             }
         }
-    pageable.setPageSize(12);
-        pageable.put("userId",userId);
+        pageable.setPageSize(12);
+        pageable.put("userId", userId);
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
-        for(CourseDeliveryDTO dto:myPage.getDataList()){
-            if(dto.getAvatar() != null){
+        for (CourseDeliveryDTO dto : myPage.getDataList()) {
+            if (dto.getAvatar() != null && !dto.getAvatar().startsWith("http")) {
                 dto.setAvatar(appFileBase + dto.getAvatar());
             }
-            if(dto.getCoverUrl() != null){
+            if (dto.getCoverUrl() != null) {
                 dto.setCoverUrl(appFileBase + dto.getCoverUrl());
             }
         }
-        model.addAttribute("page",myPage);
-        model.addAttribute("flag",1);
+        model.addAttribute("page", myPage);
+        model.addAttribute("flag", 1);
         return "/res/deliveryList";
     }
-
 
 
 }
