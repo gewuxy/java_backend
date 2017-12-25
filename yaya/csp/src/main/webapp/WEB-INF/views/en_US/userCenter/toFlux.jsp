@@ -70,7 +70,7 @@
                         <div class="user-content item-radius pay-mode">
                             <form action="${ctx}/mgr/charge/toCharge" name="submitForm" id="submitForm" method="post" target="_blank">
                                 <div class="formrow flow">
-                                    <div class="formTitle color-black">Recharge Amount</div>
+                                    <div class="formTitle color-black" style="line-height:1.3;">Recharge Amount</div>
                                     <div class="formControls">
                                         <div class="pay-mode-list flow-mode-list" >
                                             <label for="tid1" class="item item-radius" >

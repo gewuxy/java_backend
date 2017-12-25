@@ -131,10 +131,10 @@
                     if ($(".video-notPlay").hasClass("none")){
                         $(".video-notPlay-bg").removeClass("none");
                         $(".video-play-live").addClass("video-notPlay-item");
-                    }
-                    if(isAndroid){
-                        //解决黑边与遮挡
-                        $("#ck-video").attr('style','margin-top:9999px');
+                        if(isAndroid){
+                            //解决黑边与遮挡
+                            $("#ck-video").attr('style','margin-top:9999px');
+                        }
                     }
                 });
 
@@ -144,7 +144,7 @@
                 });
 
                 CKobject.getObjectById('ck-video').addListener("play", function(){
-                    $(".video-notPlay-bg").addClass("none");
+                    //$(".video-notPlay-bg").addClass("none");
                     $(".video-play-live").addClass("video-notPlay-item");
                 });
 
@@ -533,13 +533,14 @@
             viedoMuted();
 //            viedoMuted();
 
-            if($('.popup-volume').find('audio').length > 0){
-                popupPalyer.element.muted = false;
-            } else if ($('.popup-volume').find('video').length) {
-                CKobject.getObjectById('ck-video').changeVolume(100);
-                $("#ck-video")[0].muted = false;
+            if(ismuted){
+                if($('.popup-volume').find('audio').length > 0){
+                    popupPalyer.element.muted = false;
+                } else if ($('.popup-volume').find('video').length) {
+                    CKobject.getObjectById('ck-video').changeVolume(100);
+                    $("#ck-video")[0].muted = false;
+                }
             }
-
 
             //重新渲染插件
             galleryTop.update(true);
