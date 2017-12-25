@@ -11,6 +11,7 @@ import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.dto.DeliveryAccepterDTO;
 import cn.medcn.meet.dto.DeliveryHistoryDTO;
 import cn.medcn.meet.model.AudioCourse;
+import cn.medcn.meet.model.AudioCoursePlay;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.model.Live;
 import cn.medcn.meet.service.AudioService;
@@ -100,7 +101,8 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
                 courseId = audioService.doCopyCourse(course, null, null);
             }else{  //直播，检查会议是否已结束，如果会议已结束，将直播复制成录播会议
                 Live live = liveService.findByCourseId(courseId);
-                if(live != null && live.getEndTime() != null && new Date().getTime() > live.getEndTime().getTime()){  //会议已结束
+                if(live != null && live.getEndTime() != null && new Date().getTime() > live.getEndTime().getTime()
+                        || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()){  //会议已结束
                     courseId = audioService.doCopyLiveToRecord(courseId);
                 }
             }
