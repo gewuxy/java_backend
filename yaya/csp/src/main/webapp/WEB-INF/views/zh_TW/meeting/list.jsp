@@ -500,7 +500,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : ['确定', '取消'],
+                        btn : ['確定', '取消'],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
@@ -941,7 +941,7 @@
                     <p id="backMsg"></p>
                 </div>
                 <div class="admin-button t-right " >
-                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="确定"/>
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="確定"/>
                 </div>
             </form>
         </div>

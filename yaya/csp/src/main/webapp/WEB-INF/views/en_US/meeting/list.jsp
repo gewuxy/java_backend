@@ -501,7 +501,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : ['确定', '取消'],
+                        btn : ['Sure', 'Cancel'],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
