@@ -298,11 +298,9 @@
             $(this).hide();
             //播放音频
             popupPalyer.play();
-            if("${not empty live.hlsUrl}" == true){
-                $("#ck-video")[0].play();
-                //音频文件静音
-                popupPalyer.element.muted = true;
-            }
+            $("#ck-video")[0].play();
+            //音频文件静音
+            popupPalyer.element.muted = true;
         });
 
 
