@@ -258,7 +258,7 @@
                     body.find(".cancel-hook").on('click',function(){
                         layer.open({
                             type: 1,
-                            area: ['500px', '250px'],
+                            area: ['557px', '294px'],
                             fix: false, //不固定
                             title:false,
                             closeBtn:0,
