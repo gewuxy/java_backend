@@ -1,5 +1,6 @@
 package cn.medcn.user.model;
 
+import cn.medcn.common.utils.StringUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -55,5 +56,21 @@ public class CspPackageOrder implements Serializable {
         USD;
     }
 
+    public static String getPlatFormName(String platForm){
+        if(StringUtils.isEmpty(platForm)){
+            return "";
+        }
+        if(platForm.contains("alipay")){
+            return "支付宝";
+        }else if(platForm.contains("wx")){
+            return "微信";
+        }else if(platForm.contains("upacp")){
+            return "银联";
+        }else if(platForm.contains("paypal")){
+            return "paypal";
+        }else{
+            return "";
+        }
+    }
 
 }

@@ -43,7 +43,11 @@
     </select>
 
     <select id="findOrderSuccessSum" resultType="Integer">
-        SELECT sum(pay_money) FROM t_csp_package_order WHERE create_time BETWEEN #{startTime} AND #{endTime} and currency_type = #{type}
+        SELECT sum(pay_money) FROM t_csp_package_order WHERE
+        currency_type = #{type}
+        <if test="startTime != null and endTime != null and startTime !='' and endTime != ''">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
         GROUP BY currency_type
     </select>
 </mapper>
