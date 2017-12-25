@@ -134,10 +134,10 @@ public class MeetingMgrController extends CspBaseController {
         //高级版和专业版进行时间提醒
         Integer packageId = principal.getPackageId() == null ? CspPackage.TypeId.STANDARD.getId() : principal.getPackageId();
         CspPackage cspPackage = principal.getCspPackage();
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(cspPackage.getUserId());
         model.addAttribute("packageId",packageId);
-        model.addAttribute("cspUserPackage",cspUserPackage);
         if (cspPackage != null){
+            CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(cspPackage.getUserId());
+            model.addAttribute("cspUserPackage",cspUserPackage);
             if(packageId != CspPackage.TypeId.STANDARD.getId() && cspUserPackage.getUnlimited() != null && cspUserPackage.getUnlimited() == false) {
                 try {
                     int expireTimeCount = CalendarUtils.daysBetween(cspPackage.getPackageStart(), cspPackage.getPackageEnd());
