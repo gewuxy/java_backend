@@ -83,20 +83,28 @@
                                                 <div class="member-mode-tips">已生效</div>
                                         </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.packageCn == '高级版' || cspPackage.packageCn == '专业版' }">
+                                        <c:if test="${cspPackage.packageCn == '专业版'&& cspPackage.unlimited == 1}">
+                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                            <div class="oh">
+                                                <h5 class="title">${cspPackage.packageCn}</h5>
+                                                <div class="member-mode-tips">专业版已生效</div>
+                                            </div>
+                                        </c:if>
+                                        <c:if test="${ cspPackage.packageCn == '专业版'&& cspPackage.unlimited != 1 }">
+                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                            <div class="oh">
+                                                <h5 class="title">${cspPackage.packageCn}</h5>
+                                                <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                            </div>
+                                        </c:if>
+
+                                            <c:if test="${cspPackage.packageCn == '高级版' }">
                                                 <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
                                                     <div class="oh">
                                                         <h5 class="title">${cspPackage.packageCn}</h5>
                                                         <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                                     </div>
                                             </c:if>
-                                        <c:if test="${cspPackage.packageCn == '专业版'&& cspPackage.unlimited == 1}">
-                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
-                                            <div class="oh">
-                                                <h5 class="title">${cspPackage.packageCn}</h5>
-                                                <div class="member-mode-tips">专业版已生效</div>
-                                            </div>
-                                        </c:if>
                                     </div>
                                 </div>
                             </div>
@@ -115,10 +123,15 @@
                                         <p>${info.descriptCn}</p>
                                         </li>
                                         </c:if>
-                                        <c:if test="${info.iden =='ZB'}"><li>
+                                        <c:if test="${info.iden =='ZB' && info.packageId != 3}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                        <p>${info.limitMeets}个会议</p>
+                                        <p>${info.limitMeets}会议</p>
                                         </li>
+                                        </c:if>
+                                        <c:if test="${info.iden =='ZB' && info.packageId == 3}"><li>
+                                            <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
+                                            <p>无限会议</p>
+                                          </li>
                                         </c:if>
                                         <c:if test="${info.iden =='GG' && info.state == false}">
                                         <li>

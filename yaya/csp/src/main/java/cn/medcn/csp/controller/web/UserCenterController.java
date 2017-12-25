@@ -68,6 +68,9 @@ public class UserCenterController extends CspBaseController {
     @Autowired
     protected CspPackageInfoService cspPackageInfoService;
 
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
+
     @Value("${app.file.upload.base}")
     protected String uploadBase;
 
@@ -437,11 +440,13 @@ public class UserCenterController extends CspBaseController {
         String userId = principal.getId();
         addBaseUserInfo(model);
         CspPackage cspPackage = packageService.findUserPackageById(userId);
+        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
         if (cspPackage == null){
             return localeView("/meeting/list");
         }
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
         model.addAttribute("cspPackageInfos", cspPackageInfos);
+        model.addAttribute("cspUserPackage",cspUserPackage);
         model.addAttribute("cspPackage", cspPackage);
         model.addAttribute("successMsg",principal.getPkChangeMsg());
         return localeView("/userCenter/memberManage");
