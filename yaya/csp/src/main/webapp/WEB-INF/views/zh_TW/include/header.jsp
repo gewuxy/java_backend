@@ -41,7 +41,7 @@
             </script>
         </div>
         <div class="fl">
-            <a class="logo" href="/"></a>
+            <a class="logo" href="${ctx}"></a>
             <div class="nav clearfix">
                 <ul>
                     <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span>會議管理</a></li>

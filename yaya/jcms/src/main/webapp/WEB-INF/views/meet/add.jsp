@@ -530,7 +530,7 @@
                             <li>
                                 <span class="checkboxIcon">
                                     <input type="checkbox" id="popup_checkbox_all" class="chk_1 chk-hook">
-                                    <label for="popup_checkbox_all" class="popup_checkbox_all_hook"><i class="ico"></i>&nbsp;全部关注医生</label>
+                                    <label for="popup_checkbox_all" class="popup_checkbox_all_hook"><i class="ico"></i>&nbsp;所有分组</label>
                                 </span>
                             </li>
                             <c:forEach items="${groups}" var="grp" varStatus="status">

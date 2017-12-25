@@ -138,14 +138,14 @@
             for (var i = 0; i < package.length; i++) {
                 var packageId = package[i].id;
                 if (packageId == 2) {
-                    $("#price" + packageId).html(package[i].monthRmb + "元");
-                    $("#hgTotal").html(package[i].monthRmb);
+                    $("#price" + packageId).html(package[i].monthUsd + "USD");
+                    $("#hgTotal").html(package[i].monthUsd);
                 }
                 if (packageId == 3) {
-                    $("#price" + packageId).html(package[i].monthRmb + "元/" + package[i].yearRmb + "元");
-                    $("#pfTotal").html(package[i].monthRmb);
+                    $("#price" + packageId).html(package[i].monthUsd + "/" + package[i].yearUsd + "USD");
+                    $("#pfTotal").html(package[i].monthUsd);
                 }
-                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "不限会议" : package[i].limitMeets + "个会议");
+                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "不限會議" : package[i].limitMeets + "個會議");
             }
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
@@ -154,7 +154,7 @@
                     if(info[j].iden == "SYB" && id == 3){
                         break;
                     }
-                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptCn + '</li>');
+                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptTw + '</li>');
                 }
             }
         }
@@ -222,7 +222,7 @@
                 <div class="member-buy-content">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买時長</div>
+                            <div class="formTitle color-black">購買時長</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="tid1" class="item item-radius pay-on">
@@ -241,9 +241,9 @@
                             </div>
                         </div>
                         <div class="formrow" >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">支付方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook none">
                                     <label for="id11" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -253,33 +253,33 @@
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
-                                    <label for="id31" class="item item-radius  pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="id31">
+                                <div class="pay-mode-list EN-hook">
+                                    <label for="id41" class="item item-radius pay-on">
+                                        <input type="radio" name="payMode" class="none" checked="checked" value="paypal" id="id41">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金額</div>
+                            <div class="formTitle color-black">支付總額</div>
                             <div class="formControls">
                                 <span class="payNum">0.00</span>
                                 <span class="money-state">
-                                        <label for="currency-cn" class="cn on">
-                                            <input type="radio" name="currency" id="currency-cn" checked="checked" class="none" value="0">
+                                        <label for="currency-cn" class="cn ">
+                                            <input type="radio" name="currency" id="currency-cn" class="none" value="0">
                                             CNY
                                         </label>
-                                        <label for="currency-en" class="en">
-                                            <input type="radio" name="currency" id="currency-en" class="none" value="1">
+                                        <label for="currency-en" class="en on">
+                                            <input type="radio" name="currency" id="currency-en" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last" id="newUser">
-                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免費體驗">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;">取消</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免費體驗"/>
                         </div>
                         <div id="disabledItem1"></div>
                     </div>
@@ -287,7 +287,7 @@
                 <div class="member-buy-content none" id="hgView">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买時長</div>
+                            <div class="formTitle color-black">購買時長</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="2tid1" class="item item-radius pay-on">
@@ -305,12 +305,12 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                        <div class="formrow" >
+                            <div class="formTitle color-black">支付方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
-                                    <label for="2id11" class="item item-radius  pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" checked="checked" value="alipay_wap" id="2id11">
+                                <div class="pay-mode-list CN-hook none">
+                                    <label for="2id11" class="item item-radius pay-on">
+                                        <input type="radio" name="hgPayMode" class="none" value="alipay_wap" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="2id21" class="item item-radius">
@@ -318,33 +318,33 @@
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
-                                    <label for="2id31" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="2id31">
+                                <div class="pay-mode-list EN-hook">
+                                    <label for="2id41" class="item item-radius pay-on">
+                                        <input type="radio" name="hgPayMode" class="none" checked="checked" value="paypal" id="2id41">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金額</div>
+                            <div class="formTitle color-black">支付總額</div>
                             <div class="formControls">
                                 <span class="payNum" id="hgTotal"></span>
                                 <span class="money-state">
-                                        <label for="currency-cn2" class="cn on">
-                                            <input type="radio" name="hgCurrency" id="currency-cn2" checked="checked" class="none" value="0">
+                                        <label for="currency-cn2" class="cn">
+                                            <input type="radio" name="hgCurrency" id="currency-cn2"  class="none" value="0">
                                             CNY
                                         </label>
-                                        <label for="currency-en2" class="en">
-                                            <input type="radio" name="hgCurrency" id="currency-en2" class="none" value="1">
+                                        <label for="currency-en2" class="en on">
+                                            <input type="radio" name="hgCurrency" id="currency-en2" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;">取消</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付"/>
                         </div>
                         <div id="disabledItem2"></div>
                     </div>
@@ -357,7 +357,7 @@
                                 <div class="time-mode-list">
                                     <label for="3tid1" class="item item-radius pay-on">
                                         <input type="radio" name="pfTimeMode" class="none"  checked="checked"  value="1" id="3tid1" >
-                                        1 個月
+                                        1個月
                                     </label>
                                     <label for="3tid2" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="3" id="3tid2">
@@ -383,11 +383,11 @@
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black">支付方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
-                                    <label for="3id11" class="item item-radius  pay-on">
-                                        <input type="radio" name="pfPayMode" class="none"  checked="checked" value="alipay_wap" id="3id11">
+                                <div class="pay-mode-list CN-hook none">
+                                    <label for="3id11" class="item item-radius pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="alipay_wap" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="3id21" class="item item-radius">
@@ -395,25 +395,25 @@
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
-                                    <label for="3id31" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="3id31">
+                                <div class="pay-mode-list EN-hook">
+                                    <label for="3id41" class="item item-radius pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" checked="checked" value="paypal" id="3id41">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金額</div>
+                            <div class="formTitle color-black">支付總額</div>
                             <div class="formControls">
                                 <span class="payNum" id="pfTotal"></span>
                                 <span class="money-state">
-                                        <label for="currency-cn3" class="cn on">
-                                            <input type="radio" name="pfCurrency" id="currency-cn3" checked="checked" class="none" value="0">
+                                        <label for="currency-cn3" class="cn">
+                                            <input type="radio" name="pfCurrency" id="currency-cn3"  class="none" value="0">
                                             CNY
                                         </label>
-                                        <label for="currency-en3" class="en">
-                                            <input type="radio" name="pfCurrency" id="currency-en3" class="none" value="1">
+                                        <label for="currency-en3" class="en on">
+                                            <input type="radio" name="pfCurrency" id="currency-en3" checked="checked" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
