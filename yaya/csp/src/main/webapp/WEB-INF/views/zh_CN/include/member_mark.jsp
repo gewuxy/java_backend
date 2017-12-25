@@ -111,9 +111,11 @@
             $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
                 var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
-                if (currencyValue == 0) {
+                if (currencyValue == 0) { //rnb
+                    $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=paypal]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if (currencyValue == 1) {
+                } else if (currencyValue == 1) {  //usd
+                    $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=alipay_wap]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
@@ -252,8 +254,8 @@
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                    <label for="id31" class="item item-radius  pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -307,7 +309,7 @@
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook">
-                                    <label for="2id11" class="item item-radius pay-on">
+                                    <label for="2id11" class="item item-radius  pay-on">
                                         <input type="radio" name="hgPayMode" class="none" checked="checked" value="alipay_wap" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
@@ -317,8 +319,8 @@
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                    <label for="2id31" class="item item-radius pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="2id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -384,7 +386,7 @@
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook">
-                                    <label for="3id11" class="item item-radius pay-on">
+                                    <label for="3id11" class="item item-radius  pay-on">
                                         <input type="radio" name="pfPayMode" class="none"  checked="checked" value="alipay_wap" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
@@ -394,8 +396,8 @@
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook none">
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                    <label for="3id31" class="item item-radius pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="3id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>

@@ -52,7 +52,7 @@
 
     <div class="clearfix ">
         <div class="pull-left inputTime-item">
-            <input class="btn btn-primary" type="button" value="导出Excel表格" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
+            <input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/>
         </div>
     </div>
 </div>
@@ -188,6 +188,10 @@
             }else{
                 window.location.href="${ctx}/sys/package/stats/search?tradeId=" + tradeId + "&rmb=" + '${rmb}' + "&usd=" + '${usd}' + "&type=" + ${type};
             }
+        });
+
+        $("#export").click(function () {
+            window.location.href = "${ctr}/sys/package/stats/export?type=" + '${type}' + "&startTime=" + '${startTime}' + "&endTime=" + '${endTime}';
         });
 
     });

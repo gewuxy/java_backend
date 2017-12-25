@@ -31,6 +31,7 @@ public class MemberController extends CspBaseController{
     public String userPackage () {
         String userId = SecurityUtils.get().getId();
         CspPackage cspPackage = packageService.findUserPackageById(userId);
+        cspPackage.setMeetTotalCount(cspPackage.getHiddenMeetCount() + cspPackage.getUsedMeetCount());
         return success(cspPackage);
     }
 
