@@ -152,10 +152,11 @@ public class PackageController extends CspBaseController {
         Float money = (Float) results.get("money");
         money = appPro == 0 ? 0.01f : money;
         Integer num = (Integer) results.get("num");
+        Integer packageType = (Integer) results.get("packageType");
         if (currency == 0) {  //人民币P++支付
-            return rnbPay(packageId, currency, payType, money, num, model);
+            return rnbPay(packageId, currency, payType, money, num,packageType, model);
         } else {  //美元（目前只是paypal支付）
-            return usdPay(packageId, currency, payType, money, num);
+            return usdPay(packageId, currency, payType, money, num,packageType);
         }
     }
 
@@ -194,7 +195,7 @@ public class PackageController extends CspBaseController {
      * @param num
      * @return
      */
-    public String rnbPay(Integer packageId, Integer currency, String payType, float money, Integer num, Model model) {
+    public String rnbPay(Integer packageId, Integer currency, String payType, float money, Integer num,Integer packageType, Model model) {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
         String orderNo = CspConstants.PACKAGE_ORDER_FLAG + packageId + currency + StringUtils.nowStr();
@@ -210,7 +211,7 @@ public class PackageController extends CspBaseController {
             return error(local("package.charge.fail"));
         }
         //创建订单
-        cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType);
+        cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType,packageType);
         model.addAttribute("charge", charge.toString());
         //微信扫码支付
         if ("wx_pub_qr".equals(payType)) {
@@ -230,7 +231,7 @@ public class PackageController extends CspBaseController {
      * @return
      * @throws SystemException
      */
-    public String usdPay(Integer packageId, Integer currency, String payType, float money, Integer num) throws SystemException {
+    public String usdPay(Integer packageId, Integer currency, String payType, float money, Integer num,Integer packageType) throws SystemException {
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         Payment payment = chargeService.generatePayment(money);
@@ -255,7 +256,7 @@ public class PackageController extends CspBaseController {
             //创建订单
             String orderNo = CspConstants.PACKAGE_ORDER_FLAG + packageId + currency + responsePayment.getId();
             //创建订单
-            cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType);
+            cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType,packageType);
             return "redirect:" + url;
         }
         return error();

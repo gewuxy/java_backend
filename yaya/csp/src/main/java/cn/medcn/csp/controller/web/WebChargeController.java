@@ -89,6 +89,7 @@ public class WebChargeController extends CspBaseController {
         Charge charge = null;
 
         Float money = FluxOrder.getInternalPrice(flux);
+
         try {
             //生成Charge对象
             charge = chargeService.createCharge(orderNo, money, channel, ip, "流量充值", appId);

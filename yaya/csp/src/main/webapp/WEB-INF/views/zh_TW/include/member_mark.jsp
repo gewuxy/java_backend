@@ -50,8 +50,8 @@
                 //是否需要不能选择
                 if(initId == 3) $("#disabledItem2").addClass("member-buy-disabled-item");
             } else {
-                //新用户隐藏取消按钮
                 $("#newUser").css("position"," relative").css("z-index","3");
+                //新用户隐藏取消按钮
                 $(".layui-layer-close").remove();
             }
             $("#disabledItem1").addClass("member-buy-disabled-item");
@@ -64,7 +64,7 @@
             ajaxSyncGet('${ctx}/mgr/pay/package', {}, function (data) {
                 var course = data.data;
                 if (course == undefined) {
-                    layer.msg("獲取套餐信息失敗，請刷新重試!");
+                    layer.msg("获取套餐信息失败，请刷新重试");
                     return false;
                 }
                 //初始化套餐选择
@@ -84,12 +84,14 @@
                 if(selectPk == 0){  //标准版提交
                     return false;
                 }
+                //高级版跟专业版
                 var limitTime = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
                 var payType = $("#" + flag + "View").find('input[name=' + flag + 'PayMode]:checked').val();
                 var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
                 $("#limitTime").val(limitTime);
                 $("#payType").val(payType);
                 $("#currency").val(currency);
+                $("#packageId").val(selectPk);
                 $("#rechargeFrom").submit();
             });
 
@@ -134,19 +136,24 @@
             for (var i = 0; i < package.length; i++) {
                 var packageId = package[i].id;
                 if (packageId == 2) {
-                    $("#price" + packageId).html(package[i].monthUsd + "USD");
+                    $("#price" + packageId).html(package[i].monthUsd + "元");
                     $("#hgTotal").html(package[i].monthUsd);
                 }
                 if (packageId == 3) {
-                    $("#price" + packageId).html(package[i].monthUsd + "USD/" + package[i].yearUsd + "USD");
+                    $("#price" + packageId).html(package[i].monthUsd + "元/" + package[i].yearUsd + "元");
                     $("#pfTotal").html(package[i].monthUsd);
                 }
-                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "Unlimited Number of Meetings" : package[i].limitMeets + "Meetings");
+                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "不限会议" : package[i].limitMeets + "个会议");
             }
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
                 var id = info[j].packageId;
-                if (info[j].state == true) $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptTw + '</li>');
+                if (info[j].state == true) {
+                    if(info[j].iden == "SYB" && id == 3){
+                        break;
+                    }
+                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptTw + '</li>');
+                }
             }
         }
     </script>
@@ -234,7 +241,7 @@
                         <div class="formrow" >
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook none">
                                     <label for="id11" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -248,10 +255,10 @@
                                         <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
-                                    <label for="id4" class="item item-radius pay-on">
-                                        <input type="radio" name="payMode" class="none" value="4" id="id4">
-                                        <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
+                                <div class="pay-mode-list EN-hook">
+                                    <label for="3id5" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
@@ -303,7 +310,7 @@
                         <div class="formrow " >
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook none">
                                     <label for="2id11" class="item item-radius pay-on">
                                         <input type="radio" name="hgPayMode" class="none" checked="checked" value="alipay_wap" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -317,10 +324,10 @@
                                         <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
-                                    <label for="2id4" class="item item-radius pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" value="4" id="2id4">
-                                        <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
+                                <div class="pay-mode-list EN-hook">
+                                    <label for="3id5" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>
@@ -384,7 +391,7 @@
                         <div class="formrow " >
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook none" >
                                     <label for="3id11" class="item item-radius pay-on">
                                         <input type="radio" name="pfPayMode" class="none"  checked="checked" value="alipay_wap" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -398,10 +405,10 @@
                                         <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
-                                    <label for="3id4" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="4" id="3id4">
-                                        <img src="${ctxStatic}/images/img/user-icon-visa.png" alt="">
+                                <div class="pay-mode-list EN-hook">
+                                    <label for="3id5" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                        <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
                             </div>

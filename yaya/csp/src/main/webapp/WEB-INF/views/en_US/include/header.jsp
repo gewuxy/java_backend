@@ -30,7 +30,7 @@
                     </li>
                 </ul>
             </div>
-            <div class="message"><a href="${ctx}/mgr/message/list" class="icon-message"><span id="msg"></span></a></div>
+            <div class="message"><a href="${ctx}/mgr/message/list" class="icon-message"><span id="msg" class="none"></span></a></div>
             <div class="addMetting"><a style="cursor: pointer;" onclick="addMeetingClick()" class="icon-addMetting ${meetCountOut ? 'meeting-lock-item':''}" ></a></div>
             <script>
                 function addMeetingClick(){
@@ -58,8 +58,8 @@
         $.get('${ctx}/mgr/message/status', function (data) {
             if (data.code == 0){
                 var unreadCount = data.data;
-                if(unreadCount == 0){
-                    $("#msg").attr("class","none");
+                if(unreadCount != 0){
+                    $("#msg").removeClass("none");
                 }
             }
         },'json');
