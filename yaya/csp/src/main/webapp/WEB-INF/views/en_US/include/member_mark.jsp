@@ -4,15 +4,15 @@
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
     <style>
         html { background: #fff; }
         body { min-width: auto;}
         .member-popup-box { display: block;}
-        .user-content .time-mode-list .item{display: inline-block; padding:5px 10px; margin: 0 25px 5px 5px; width:100px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
+        .user-content .time-mode-list .item{display: inline-block; padding:5px 5px; margin: 0 25px 5px 5px; width:100px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
         .user-content .time-mode-list .pay-on {  border:2px solid #167AFE; }
         .user-content .time-mode-list { padding:0;}
-        .member-buy-content .user-content .time-mode-list .item {  padding:5px 10px ; margin:0 10px;}
+        .member-buy-content .user-content .time-mode-list .item {  padding:5px 5px ; margin:0 10px;}
     </style>
     <script>
         var selectPk = 1;  //当前选中的套餐
@@ -278,7 +278,7 @@
                             </div>
                         </div>
                         <div class="formrow t-center last" id="newUser">
-                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;">Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now"/>
                         </div>
                         <div id="disabledItem1"></div>
@@ -343,7 +343,7 @@
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;">Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment"/>
                         </div>
                         <div id="disabledItem2"></div>
@@ -419,8 +419,8 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                        <div class="formrow t-center last" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close" >Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment">
                         </div>
                         <div id="disabledItem3"></div>
