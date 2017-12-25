@@ -141,7 +141,9 @@ public class UserCenterController extends CspBaseController {
         }
         Principal principal = getWebPrincipal();
         principal.setAvatar(url);
-        SecurityUtils.set(principal);
+        org.apache.shiro.SecurityUtils.getSubject().getSession().setAttribute("principal", principal);
+        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + principal.getToken(), principal);
+
         return success(url);
     }
 
