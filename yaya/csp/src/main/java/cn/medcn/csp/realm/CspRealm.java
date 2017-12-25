@@ -9,6 +9,7 @@ import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserService;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -118,7 +119,7 @@ public class CspRealm extends AuthorizingRealm {
         }
         SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(principal,
                 CheckUtils.isEmpty(password) ? MD5Utils.md5(AUTH_DEFAULT_PASSWORD) : cspUser.getPassword(), getName());
-
+        SecurityUtils.getSubject().getSession().setAttribute("principal", principal);
         return info;
     }
 }
