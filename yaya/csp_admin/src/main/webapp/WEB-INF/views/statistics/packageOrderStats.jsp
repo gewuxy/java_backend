@@ -49,12 +49,14 @@
         </form>
     </div>
 
-
-    <div class="clearfix ">
-        <div class="pull-left inputTime-item">
-            <input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/>
+    <c:if test="${not empty page.dataList}">
+        <div class="clearfix ">
+            <div class="pull-left inputTime-item">
+                <input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/>
+            </div>
         </div>
-    </div>
+    </c:if>
+
 </div>
 
 
