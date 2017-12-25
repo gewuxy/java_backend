@@ -105,6 +105,12 @@ html,body { overflow-x:hidden; background-color:#fff;}
 
 .video-play-live { margin-top: 11%; width:100%; position: relative;  }
 .video-play-live .video-play-wrapper { background:#101010; width:100%  }
+.CSPMeeting-gallery-live .video-play-live .viedoItem { height:100% !important; background-color:transparent !important;}
+.popup-fullStatus .video-play-live.popup-volume .viedoItem { background-color:#000 !important;}
+.popup-fullStatus .popup-min-screen .video-notPlay-bg,
+.popup-fullStatus .popup-min-screen .video-notPlay-load,
+.popup-fullStatus .popup-min-screen .video-notPlay{
+    display: none;}
 .popup-fullStatus .popup-min-screen .popup-volume-icon,
 .popup-fullStatus .popup-volume .popup-volume-icon,
 .popup-min-screen .popup-volume-icon{ display: none; }
@@ -249,7 +255,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
 .CSPmeeting-ad-item .logo-title { font-size:.3rem; line-height: 1.2; margin-top:.05rem;}
 .CSPmeeting-ad-item { font-size:.22rem;}
 
-    /*双屏切换*/
+/*双屏切换*/
 .popup-fullStatus {}
 .popup-volume {}
 .warp .popup-fullStatus .popup-min-screen .viedoItem,
@@ -262,7 +268,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
 .warp .popup-fullStatus .popup-min-screen .boxAudio{ display: none;}
 .warp .popup-fullStatus .popup-min-screen .logo-watermark { display: none;}
 
-    /*水印*/
+/*水印*/
 .logo-watermark { position: absolute; z-index: 100;}
 .logo-watermark-item {
     display: inline-block;
@@ -402,7 +408,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
     transform-origin: 0 100%;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
- }
+}
 .weui-actionsheet__title-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -430,7 +436,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
     -webkit-user-drag: none;
 }
 
-.pinch-zoom-container { height:100%;}
+.pinch-zoom-container { height:100% !important;}
 .popup-fullStatus .pinch-zoom-container { height:100% !important; }
 
 .hidden-box {position:relative; }
@@ -460,7 +466,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
     /*竖屏*/
     .popup-fullStatus .popup-volume .boxAudio { right: auto; left: .2rem; bottom: 1.8rem;}
 
-    .video-play-live { min-height:40%; background-color:#000; }
+    .video-play-live { min-height:40%;/* background-color:#000;*/ }
     .warp .popup-fullStatus .video-play-live { min-height: 0;}
 
 
