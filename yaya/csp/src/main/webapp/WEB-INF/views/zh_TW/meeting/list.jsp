@@ -115,7 +115,7 @@
                                 closeBtn:0,
                                 content: $('#pkBuyMsg')
                             });
-                        })
+                        });
                     }
                 })
             }
@@ -288,6 +288,11 @@
                     }
                 }
             }
+
+            //清除提示信息
+            $(".clearMsg").on('click',function(){
+                ajaxGet('${ctx}/mgr/pay/update/msg', {}, function(data){});
+            });
 
             $('.popup-player-hook').on('click',function(){
                 var popupWidth = '1080px';

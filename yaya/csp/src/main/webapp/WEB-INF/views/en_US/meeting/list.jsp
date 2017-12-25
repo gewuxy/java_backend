@@ -71,7 +71,7 @@
             if(cookieget('closeclick')=='closeclick'){
                 document.getElementById('note').style.display='none';
             }else{
-                document.getElementById('note').style.display='block';
+               // document.getElementById('note').style.display='block';
             }
         }
         window.onload=clickclose;
@@ -94,7 +94,7 @@
                     offset: '70px',
                     closeBtn: 0, //不显示关闭按钮
                     shade: 0.1,
-                    area: ['1116px', '930px'],
+                    area: ['1250px', '930px'],
                     content: '${ctx}/mgr/pay/mark',
                     success:function(layero,index){
                         //付款弹出层
@@ -117,7 +117,7 @@
                                 closeBtn:0,
                                 content: $('#pkBuyMsg')
                             });
-                        })
+                        });
                     }
                 })
             }
@@ -128,7 +128,7 @@
                 //弹出提示
                 layer.open({
                     type: 1,
-                    area: ['440px', '240px'],
+                    area: ['535px', '250px'],
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
@@ -264,6 +264,10 @@
                 });
             });
 
+            //清除提示信息
+            $(".clearMsg").on('click',function(){
+                ajaxGet('${ctx}/mgr/pay/update/msg', {}, function(data){});
+            });
 
             function loadCourseInfo(courseId){
                 var course ;

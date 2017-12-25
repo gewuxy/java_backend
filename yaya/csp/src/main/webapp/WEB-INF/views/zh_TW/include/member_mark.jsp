@@ -111,9 +111,11 @@
             $(".money-state label").click(function () {
                 $(this).addClass('on').siblings().removeClass('on');
                 var currencyValue = $(this).parents('.pay-mode').find('input[name=' + flag + 'Currency]:checked').val();
-                if (currencyValue == 0) {
+                if (currencyValue == 0) { //rnb
+                    $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=paypal]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
-                } else if (currencyValue == 1) {
+                } else if (currencyValue == 1) {  //usd
+                    $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=alipay_wap]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
@@ -136,12 +138,12 @@
             for (var i = 0; i < package.length; i++) {
                 var packageId = package[i].id;
                 if (packageId == 2) {
-                    $("#price" + packageId).html(package[i].monthUsd + "元");
-                    $("#hgTotal").html(package[i].monthUsd);
+                    $("#price" + packageId).html(package[i].monthRmb + "元");
+                    $("#hgTotal").html(package[i].monthRmb);
                 }
                 if (packageId == 3) {
-                    $("#price" + packageId).html(package[i].monthUsd + "元/" + package[i].yearUsd + "元");
-                    $("#pfTotal").html(package[i].monthUsd);
+                    $("#price" + packageId).html(package[i].monthRmb + "元/" + package[i].yearRmb + "元");
+                    $("#pfTotal").html(package[i].monthRmb);
                 }
                 $("#meets" + packageId).html(package[i].limitMeets == 0 ? "不限会议" : package[i].limitMeets + "个会议");
             }
@@ -152,7 +154,7 @@
                     if(info[j].iden == "SYB" && id == 3){
                         break;
                     }
-                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptTw + '</li>');
+                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptCn + '</li>');
                 }
             }
         }
@@ -220,7 +222,7 @@
                 <div class="member-buy-content">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">購買時長</div>
+                            <div class="formTitle color-black">购买時長</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="tid1" class="item item-radius pay-on">
@@ -241,7 +243,7 @@
                         <div class="formrow" >
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook none">
+                                <div class="pay-mode-list CN-hook">
                                     <label for="id11" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -250,14 +252,10 @@
                                         <input type="radio" name="payMode" class="none" value="2" id="id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
-                                    <label for="id31" class="item item-radius">
-                                        <input type="radio" name="payMode" class="none" value="3" id="id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                    </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook">
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                <div class="pay-mode-list EN-hook none">
+                                    <label for="id31" class="item item-radius  pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="5" id="id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -269,19 +267,19 @@
                                 <span class="payNum">0.00</span>
                                 <span class="money-state">
                                         <label for="currency-cn" class="cn on">
-                                            <input type="radio" name="currency" id="currency-cn"  class="none" value="0">
+                                            <input type="radio" name="currency" id="currency-cn" checked="checked" class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en" class="en">
-                                            <input type="radio" name="currency" id="currency-en" checked="checked" class="none" value="1">
+                                            <input type="radio" name="currency" id="currency-en" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last" id="newUser">
-                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免費體驗">
                         </div>
                         <div id="disabledItem1"></div>
                     </div>
@@ -289,7 +287,7 @@
                 <div class="member-buy-content none" id="hgView">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">購買時長</div>
+                            <div class="formTitle color-black">购买時長</div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="2tid1" class="item item-radius pay-on">
@@ -310,8 +308,8 @@
                         <div class="formrow " >
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook none">
-                                    <label for="2id11" class="item item-radius pay-on">
+                                <div class="pay-mode-list CN-hook">
+                                    <label for="2id11" class="item item-radius  pay-on">
                                         <input type="radio" name="hgPayMode" class="none" checked="checked" value="alipay_wap" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
@@ -319,14 +317,10 @@
                                         <input type="radio" name="hgPayMode" class="none" value="wx_pub_qr" id="2id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
-                                    <label for="2id31" class="item item-radius">
-                                        <input type="radio" name="hgPayMode" class="none" value="upacp_wap" id="2id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                    </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook">
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                <div class="pay-mode-list EN-hook none">
+                                    <label for="2id31" class="item item-radius pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="2id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -338,19 +332,19 @@
                                 <span class="payNum" id="hgTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn2" class="cn on">
-                                            <input type="radio" name="hgCurrency" id="currency-cn2"  class="none" value="0">
+                                            <input type="radio" name="hgCurrency" id="currency-cn2" checked="checked" class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en2" class="en">
-                                            <input type="radio" name="hgCurrency" id="currency-en2" checked="checked" class="none" value="1">
+                                            <input type="radio" name="hgCurrency" id="currency-en2" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" >Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付">
                         </div>
                         <div id="disabledItem2"></div>
                     </div>
@@ -363,7 +357,7 @@
                                 <div class="time-mode-list">
                                     <label for="3tid1" class="item item-radius pay-on">
                                         <input type="radio" name="pfTimeMode" class="none"  checked="checked"  value="1" id="3tid1" >
-                                        1個月
+                                        1 個月
                                     </label>
                                     <label for="3tid2" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="3" id="3tid2">
@@ -375,15 +369,15 @@
                                     </label>
                                     <label for="3tid4" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="12" id="3tid4">
-                                        1 年
+                                        1年
                                     </label>
                                     <label for="3tid5" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="24" id="3tid5">
-                                        2 年
+                                        2年
                                     </label>
                                     <label for="3tid6" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="36" id="3tid6">
-                                        3 年
+                                        3年
                                     </label>
                                 </div>
                             </div>
@@ -391,8 +385,8 @@
                         <div class="formrow " >
                             <div class="formTitle color-black">充值方式</div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook none" >
-                                    <label for="3id11" class="item item-radius pay-on">
+                                <div class="pay-mode-list CN-hook">
+                                    <label for="3id11" class="item item-radius  pay-on">
                                         <input type="radio" name="pfPayMode" class="none"  checked="checked" value="alipay_wap" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
@@ -400,14 +394,10 @@
                                         <input type="radio" name="pfPayMode" class="none" value="wx_pub_qr" id="3id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
-                                    <label for="3id31" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="upacp_wap" id="3id31">
-                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                    </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook">
-                                    <label for="3id5" class="item item-radius">
-                                        <input type="radio" name="pfPayMode" class="none" value="5" id="3id5">
+                                <div class="pay-mode-list EN-hook none">
+                                    <label for="3id31" class="item item-radius pay-on">
+                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="3id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -419,18 +409,18 @@
                                 <span class="payNum" id="pfTotal"></span>
                                 <span class="money-state">
                                         <label for="currency-cn3" class="cn on">
-                                            <input type="radio" name="pfCurrency" id="currency-cn3"  class="none" value="0">
+                                            <input type="radio" name="pfCurrency" id="currency-cn3" checked="checked" class="none" value="0">
                                             CNY
                                         </label>
                                         <label for="currency-en3" class="en">
-                                            <input type="radio" name="pfCurrency" id="currency-en3" checked="checked" class="none" value="1">
+                                            <input type="radio" name="pfCurrency" id="currency-en3" class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close">Cancel</a>
+                        <div class="formrow t-center last" style="position: relative; z-index:3;">
+                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付">
                         </div>
                         <div id="disabledItem3"></div>
@@ -440,7 +430,7 @@
         </div>
     </div>
 </div>
-<form id="rechargeFrom" type="hidden" name="rechargeForm" method="post" action="${ctx}/mgr/pay/toPay" target="_blank">
+<form id="rechargeFrom" type="hidden" name="rechargeForm" method="post" action="${ctx}/mgr/pay/pay" target="_blank">
     <input type="hidden" name="limitTime" id="limitTime" value="">
     <input type="hidden" name="payType" id="payType" value="">
     <input type="hidden" name="currency" id="currency" value="">

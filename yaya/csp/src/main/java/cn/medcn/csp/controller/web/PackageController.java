@@ -130,19 +130,7 @@ public class PackageController extends CspBaseController {
      */
     @RequestMapping(value = "/pay")
     public String allPay(Integer packageId, Integer currency, String payType, Integer limitTime, Model model) throws SystemException {
-        String userId = getWebPrincipal().getId();
         packageId++;
-        if (packageId == CspPackage.TypeId.STANDARD.getId()) {
-            //标准版不需要支付添加用户套餐信息
-            cspUserPackageService.addStanardInfo(userId);
-            //添加用户历史版本信息
-            cspUserPackageHistoryService.addUserHistoryInfo(userId, getWebPrincipal().getCspPackage() != null ? getWebPrincipal().getPackageId() : null, packageId, Constants.NUMBER_ONE);
-            //更新用户信息缓存
-            updatePackagePrincipal(userId);
-            //添加提示
-            updatePackageMsg(userId,packageId,Constants.NUMBER_TWO);
-            return "redirect:/mgr/meet/list";
-        }
         //校验参数信息
         String validata = checkParams(packageId, currency, payType, limitTime);
         if (validata != null) {
@@ -182,8 +170,6 @@ public class PackageController extends CspBaseController {
         updatePackageMsg(userId,packageId,Constants.NUMBER_TWO);
         return success();
     }
-
-
 
     /**
      * 人民币支付
