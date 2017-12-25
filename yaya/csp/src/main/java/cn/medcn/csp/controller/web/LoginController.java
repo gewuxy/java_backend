@@ -428,7 +428,10 @@ public class LoginController extends CspBaseController {
             //去添加绑定账号
             userInfo = cspUserService.saveThirdPartyUserInfo(dto);
         }
-
+        //yaya登录
+        if (thirdPartyId == BindInfo.Type.YaYa.getTypeId()) {
+            cspUserService.yayaBindUpdate(userInfo.getId());
+        }
         UsernamePasswordToken token = new UsernamePasswordToken();
         token.setHost("thirdParty");
         token.setUsername(userInfo.getId());

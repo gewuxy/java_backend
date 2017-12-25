@@ -78,17 +78,30 @@
                                                     <div class="member-mode-tips">Valid</div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.packageUs == 'Premium Edition' || cspPackage.packageUs == 'Professional Edition' }">
+                                            <c:if test="${cspPackage.packageUs == 'Premium Edition'}">
+                                                <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
                                                     <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
                                                 </div>
                                             </c:if>
-                                            <c:if test="${cspPackage.unlimited == 1 && cspPackage.packageUs == 'Professional Edition' }">
-                                                <div class="oh">
-                                                    <h5 class="title">${cspPackage.packageUs}</h5>
-                                                    <div class="member-mode-tips">ProfessionalEdition Valid</div>
-                                                </div>
+                                            <c:if test="${cspPackage.packageUs == 'Professional Edition'}">
+                                                <c:if test="${cspUserPackage.unlimited == true}">
+                                                    <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                                    <div class="oh">
+                                                        <h5 class="title">${cspPackage.packageUs}</h5>
+                                                        <div class="member-mode-tips">Professional Edition Valid</div>
+                                                    </div>
+                                                </c:if>
+                                            </c:if>
+                                            <c:if test="${ cspPackage.packageUs == 'Professional Edition'}">
+                                                <c:if test="${cspUserPackage.unlimited == false}">
+                                                    <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                                    <div class="oh">
+                                                        <h5 class="title">${cspPackage.packageUs}</h5>
+                                                        <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>~<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                    </div>
+                                                </c:if>
                                             </c:if>
                                         </div>
                                     </div>
@@ -204,6 +217,28 @@
 </div>
 <script>
     $(function(){
+        var pkSuccessMsg = '${successMsg}';
+        //购买提示不为空显示
+        if(isNotEmpty(pkSuccessMsg)){
+            //弹出提示
+            layer.open({
+                type: 1,
+                area: ['450px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('#pkSuccessMsg'),
+                success:function(){
+                    $("#backMsg").html(pkSuccessMsg);
+                },
+            });
+        }
+
+        //清除提示信息
+        $(".clearMsg").on('click',function(){
+            ajaxGet('${ctx}/mgr/pay/update/msg', {}, function(data){});
+        });
+
         $("#config_6").parent().attr("class","cur");
         $("#btn").click(function () {
             layer.open({
@@ -216,9 +251,23 @@
                 closeBtn: 0, //不显示关闭按钮
                 shade: 0.1,
                 area: ['1116px', '930px'],
-                content: '${ctx}/mgr/pay/mark'
+                content: '${ctx}/mgr/pay/mark',
+                success:function(layero,index){
+                    //付款弹出层
+                    var body = layer.getChildFrame('body', index);
+                    body.find(".cancel-hook").on('click',function(){
+                        layer.open({
+                            type: 1,
+                            area: ['500px', '250px'],
+                            fix: false, //不固定
+                            title:false,
+                            closeBtn:0,
+                            content: $('#pkBuyMsg')
+                        });
+                    })
+                }
             })
-        })
+        });
     })
 </script>
 </body>

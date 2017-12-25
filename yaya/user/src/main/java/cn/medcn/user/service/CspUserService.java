@@ -90,6 +90,8 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      */
     void doBindThirdAccount(BindInfo info, String userId) throws SystemException;
 
+    void yayaBindUpdate(String userId);
+
     /**
      * 解绑第三方账号
      * @param thirdPartId

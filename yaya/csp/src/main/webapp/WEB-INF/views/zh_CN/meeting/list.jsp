@@ -543,6 +543,7 @@
                 $("#pkTime").hide();
                 $("#meetCountTips").hide();
                 $("#note").hide();
+                $("#unlimited").hide();
             }else {
                 $("#meetCountTips").hide();
                 $("#standard").hide();
@@ -554,6 +555,10 @@
         }
         function standardClose(){
             $("#standard").hide();
+        }
+
+        function unlimitedClose(){
+            $("#unlimited").hide();
         }
 
 
@@ -594,6 +599,12 @@
                 <div class="admin-tips" id="standard">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">已生效 </a> </span>
                     <span class="admin-tips-close" onclick="standardClose()"></span>
+                </div>
+            </c:if>
+            <c:if test="${cspUserPackage.unlimited == true}">
+                <div class="admin-tips" id="unlimited">
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">专业版已生效 </a> </span>
+                    <span class="admin-tips-close" onclick="unlimitedClose()"></span>
                 </div>
             </c:if>
             <div class="admin-row clearfix pr">

@@ -911,7 +911,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public Integer doCopyLiveToRecord(Integer courseId) {
 
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
-        List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
+        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
 
         AudioCourse copyCourse = new AudioCourse();
         BeanUtils.copyProperties(course, copyCourse);

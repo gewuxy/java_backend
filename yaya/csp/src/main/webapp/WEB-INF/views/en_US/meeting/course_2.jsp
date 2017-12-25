@@ -131,9 +131,11 @@
                     if ($(".video-notPlay").hasClass("none")){
                         $(".video-notPlay-bg").removeClass("none");
                         $(".video-play-live").addClass("video-notPlay-item");
+
                         if(isAndroid){
                             //解决黑边与遮挡
-                            $("#ck-video").attr('style','margin-top:9999px');
+//                            $("#ck-video").attr('style','margin-top:9999px');
+                            $("#ck-video").attr('style','height:0');
                         }
                     }
                 });
@@ -145,11 +147,12 @@
 
                 CKobject.getObjectById('ck-video').addListener("play", function(){
                     //$(".video-notPlay-bg").addClass("none");
-                    $(".video-play-live").addClass("video-notPlay-item");
+                    //$(".video-play-live").addClass("video-notPlay-item");
+
                 });
 
                 CKobject.getObjectById("ck-video").addListener("sendNetStream", function(){
-                    $(".video-play-live").addClass("video-notPlay-item");
+
                 });
             }
         </script>
@@ -214,7 +217,7 @@
 
     $(function(){
         var fullState = true;
-        var ismuted = false;
+        var ismuted = true;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
@@ -785,6 +788,11 @@
                     }
                 } else if (data.order == 12){//接收到推流
                     $("#ck-video")[0].play();
+                    $(".video-play-live").removeClass("video-notPlay-item");
+                    if(isAndroid){
+                        //还原
+                        $("#ck-video").attr('style','height:auto');
+                    }
                 }
             }
 
