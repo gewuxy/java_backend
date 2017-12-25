@@ -666,7 +666,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map) {
+    public List<ReportRegister> findNewlyRegisterList(Map<String, Object> map) {
 
         return cspUserInfoDAO.findNewlyRegisterList(map);
     }

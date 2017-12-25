@@ -3,10 +3,11 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.user.dto.CspNewlyEChartsDTO;
 import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.ReportRegister;
 import cn.medcn.user.service.CspUserService;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -38,10 +39,11 @@ public class CspRegisterStatsController extends BaseController{
      * @return
      */
     @RequestMapping("/home")
-    public String getData(Model model){
+    public String getData(Integer location,Model model){
+            //昨日新增的用户数量
             int homeCount = cspUserService.selectRegisterCount(CspUserInfo.AbroadType.home.ordinal());
             int abroadCount = cspUserService.selectRegisterCount(CspUserInfo.AbroadType.abroad.ordinal());
-            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd ");
             Date endDate = CalendarUtils.calendarDay(-1);
             String endTime = format.format(endDate);
             model.addAttribute("endTime",endTime);
@@ -50,6 +52,7 @@ public class CspRegisterStatsController extends BaseController{
             model.addAttribute("startTime",startTime);
             model.addAttribute("home",homeCount);
             model.addAttribute("abroad",abroadCount);
+            model.addAttribute("location",location == null ? 0 :location);
             return "/statistics/userRegisterStats";
     }
 
@@ -76,7 +79,7 @@ public class CspRegisterStatsController extends BaseController{
         if(StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)){
             return error("请传递正确的日期");
         }
-        DateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         Date startDate = format.parse(startTime);
         Date endDate = format.parse(endTime);
 
@@ -102,13 +105,21 @@ public class CspRegisterStatsController extends BaseController{
 
         Map<String,Object> map = new HashMap<>();
         map.put("location",location);
-        map.put("startTime",startTime);
-        map.put("endTime",endTime);
+        map.put("startTime",startDate);
+        map.put("endTime",endDate);
         map.put("grain",grain);
-        List<CspNewlyStaticDTO> list = cspUserService.findNewlyRegisterList(map);
-        CspNewlyEChartsDTO dto = CspNewlyEChartsDTO.build(list,grain,startDate,endDate);
+        List<ReportRegister> list = cspUserService.findNewlyRegisterList(map);
 
-        return success();
+        CspNewlyStaticDTO dto = new CspNewlyStaticDTO();
+        dto.setList(list);
+
+        List<Date> dataList = CspNewlyStaticDTO.buildDate(grain,startDate,endDate);
+        dto.setDateCount(CspNewlyStaticDTO.getDateCount(dataList));
+
+        return success(dto);
     }
+
+
+
 
 }

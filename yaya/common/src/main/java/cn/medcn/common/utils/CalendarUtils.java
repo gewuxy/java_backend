@@ -590,11 +590,11 @@ public class CalendarUtils {
         if(month <= 3){
             return format.parse(year + "-01-01 00:00");
         } else if (month > 3 && month <= 6) {
-            return format.parse(year + "04-01 00:00");
+            return format.parse(year + "-04-01 00:00");
         }else if(month > 6 && month <=9){
-            return format.parse(year + "07-01 00:00");
+            return format.parse(year + "-07-01 00:00");
         }else{
-            return format.parse(year + "10-01 00:00");
+            return format.parse(year + "-10-01 00:00");
         }
     }
 
@@ -607,11 +607,11 @@ public class CalendarUtils {
         if(month <= 3){
             return format.parse(year + "-03-31 23:59");
         } else if (month > 3 && month <= 6) {
-            return format.parse(year + "06-30 23:59");
+            return format.parse(year + "-06-30 23:59");
         }else if(month > 6 && month <=9){
-            return format.parse(year + "09-30 23:59");
+            return format.parse(year + "-09-30 23:59");
         }else{
-            return format.parse(year + "12-31 23:59");
+            return format.parse(year + "-12-31 23:59");
         }
     }
 
@@ -750,10 +750,15 @@ public class CalendarUtils {
        int start = cal.get(Calendar.YEAR);
        cal.setTime(dEnd);
        int end = cal.get(Calendar.YEAR);
-       if(end >start){
+       if(end >= start){
            List<Date> list = new ArrayList<>();
            DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
            Date date =  null;
+           if(end == start){
+               date = format.parse(start + "-01-01");
+               list.add(date);
+               return list;
+           }
            int interval = end - start;
            for(int i = 0 ; i < interval ; i++){
                 date = format.parse(start + "-01-01");
@@ -781,11 +786,11 @@ public class CalendarUtils {
 
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
-        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd");
-        Date myDate1 = dateFormat1.parse("2017-01-01");
-        DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd");
-        Date myDate2 = dateFormat2.parse("2019-12-20");
-        List list = getYearFirstDateList(myDate1,myDate2);
+        DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd ");
+        Date myDate1 = dateFormat1.parse("2017-12-01 ");
+        DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd ");
+        Date myDate2 = dateFormat2.parse("2017-12-20 ");
+        List list = getAllDateList(myDate1,myDate2);
         System.out.println(list.size());
 
 
