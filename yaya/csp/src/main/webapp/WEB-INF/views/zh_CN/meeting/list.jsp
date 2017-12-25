@@ -547,7 +547,6 @@
             }else {
                 $("#meetCountTips").hide();
                 $("#standard").hide();
-                $("#unlimited").hide();
             }
         })
 
