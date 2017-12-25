@@ -76,7 +76,7 @@ public class EmailController extends BaseController{
                 cspUserService.updateByPrimaryKey(userInfo);
                 redisCacheUtils.delete(key);
                 //发送推送消息
-                LocalUtils.setLocalStr(language);
+                LocalUtils.set(LocalUtils.getByKey(language));
                 sysNotifyService.addNotify(userInfo.getId(),local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
                 if(userInfo.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
                     cspUserPackageService.addStanardInfo(userInfo.getId());

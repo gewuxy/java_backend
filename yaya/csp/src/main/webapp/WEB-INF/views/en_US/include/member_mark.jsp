@@ -145,7 +145,7 @@
                     $("#price" + packageId).html(package[i].monthUsd + "/" + package[i].yearUsd + "USD");
                     $("#pfTotal").html(package[i].monthUsd);
                 }
-                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "Unlimited Number of Meetings" : package[i].limitMeets + "Meetings");
+                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "Unlimited Number of Meetings" : package[i].limitMeets + " Meetings");
             }
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
