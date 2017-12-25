@@ -33,7 +33,7 @@
             <div class="addMetting"><a href="${ctx}/mgr/meet/edit"  class="icon-addMetting"></a></div>
         </div>
         <div class="fl">
-            <a class="logo" href="/"></a>
+            <a class="logo" href="${ctx}"></a>
             <div class="nav clearfix">
                 <ul>
                     <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span>会议管理</a></li>
