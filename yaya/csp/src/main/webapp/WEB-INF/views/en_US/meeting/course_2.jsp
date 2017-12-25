@@ -128,10 +128,13 @@
 
                 CKobject.getObjectById('ck-video').addListener("error", function(){
                     console.log("加载视频失败");
-                    console.log("hasNone = " + !$(".video-notPlay").hasClass("none"))
                     if ($(".video-notPlay").hasClass("none")){
                         $(".video-notPlay-bg").removeClass("none");
                         $(".video-play-live").addClass("video-notPlay-item");
+                    }
+                    if(isAndroid){
+                        //解决黑边与遮挡
+                        $("#ck-video").attr('style','margin-top:9999px');
                     }
                 });
 
@@ -289,19 +292,11 @@
             $(this).hide();
             //播放音频
             popupPalyer.play();
-
-
-            $("#ck-video")[0].play();
-            //播放器控制条
-            //$("#ck-video")[0].allowFull(false);
-            //播放开始/暂停
-//            CKobject.getObjectById('ck-video').play();
-
-            //音频文件静音
-            popupPalyer.element.muted = true;
-
-            //跳转到最后一页
-            //galleryTop.slideTo(galleryTop.slides.length, 1000, false);
+            if("${not empty live.hlsUrl}" == true){
+                $("#ck-video")[0].play();
+                //音频文件静音
+                popupPalyer.element.muted = true;
+            }
         });
 
 
