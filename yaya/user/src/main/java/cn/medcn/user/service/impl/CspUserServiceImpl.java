@@ -424,7 +424,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         if(userPackage == null){
             // 设置为专业版套餐
             insertUserPackage(userId);
-        }else if(userPackage != null && userPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){ //购买过套餐
+        }else if(userPackage != null && userPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId() && userPackage.getUnlimited() != true){ //购买过套餐
             //升级为专业版无期限 修改原来套餐开始时间以供解绑时候继续使用
             Integer oldId = userPackage.getPackageId();
             userPackage.setUpdateTime(new Date());

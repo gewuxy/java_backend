@@ -222,6 +222,28 @@
 </div>
 <script>
     $(function(){
+        var pkSuccessMsg = '${successMsg}';
+        //购买提示不为空显示
+        if(isNotEmpty(pkSuccessMsg)){
+            //弹出提示
+            layer.open({
+                type: 1,
+                area: ['450px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                content: $('#pkSuccessMsg'),
+                success:function(){
+                    $("#backMsg").html(pkSuccessMsg);
+                },
+            });
+        }
+
+        //清除提示信息
+        $(".clearMsg").on('click',function(){
+            ajaxGet('${ctx}/mgr/pay/update/msg', {}, function(data){});
+        });
+
         $("#config_6").parent().attr("class","cur");
         $("#btn").click(function () {
             layer.open({
@@ -234,9 +256,23 @@
                 closeBtn: 0, //不显示关闭按钮
                 shade: 0.1,
                 area: ['1116px', '930px'],
-                content: '${ctx}/mgr/pay/mark'
+                content: '${ctx}/mgr/pay/mark',
+                success:function(layero,index){
+                    //付款弹出层
+                    var body = layer.getChildFrame('body', index);
+                    body.find(".cancel-hook").on('click',function(){
+                        layer.open({
+                            type: 1,
+                            area: ['500px', '250px'],
+                            fix: false, //不固定
+                            title:false,
+                            closeBtn:0,
+                            content: $('#pkBuyMsg')
+                        });
+                    })
+                }
             })
-        })
+        });
     })
 </script>
 </body>
