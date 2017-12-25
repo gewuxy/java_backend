@@ -136,7 +136,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
         -webkit-transform: rotate(360deg) scale(1);
         transform: rotate(360deg) scale(1); }
 }
-.video-notPlay-item { background-color:#fff !important;}
+.video-notPlay-item { background-color:#000 !important;}
 .video-notPlay { position: absolute; left:50%; top:50%; margin-left:-.84rem; margin-top:-.94rem; z-index: 12; color:#888888;; text-align: center; font-size:.24rem;}
 .video-notPlay i{ display: block; width:1.28rem; height:1.28rem;  background:url(../images/icon-video-notPlay.png) no-repeat center; margin:0 auto; margin-bottom:.2rem;}
 
@@ -466,7 +466,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
     /*竖屏*/
     .popup-fullStatus .popup-volume .boxAudio { right: auto; left: .2rem; bottom: 1.8rem;}
 
-    .video-play-live { min-height:40%;/* background-color:#000;*/ }
+    .video-play-live { min-height:40%; /*background-color:#000;*/ }
     .warp .popup-fullStatus .video-play-live { min-height: 0;}
 
 
