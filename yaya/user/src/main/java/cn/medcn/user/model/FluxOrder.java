@@ -67,7 +67,7 @@ public class FluxOrder implements Serializable{
     @Transient
     protected String meetName;
 
-    protected float money;
+    protected Float money;
 
     public static Float getOverseasPrice(Integer flux){
         Map<Integer,Float> map = new HashMap<>();
