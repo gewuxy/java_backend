@@ -224,10 +224,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         //发送注册成功推送消息
         sysNotifyService.addNotify(userInfo.getId(), local("user.notify.title"), local("user.notify.content"), local("user.notify.sender"));
 
-        // 如果是YaYa医师账号登录 默认用户套餐为专业版 时间为无期限
-        if (bindUser != null && bindUser.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
-            insertUserPackage(userInfo.getId());
-        }
         //app端注册默认是基础版
         if(userDTO.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
             cspUserPackageService.addStanardInfo(userInfo.getId());

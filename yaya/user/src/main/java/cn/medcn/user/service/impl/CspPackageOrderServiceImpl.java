@@ -110,20 +110,25 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         Integer packageId = order.getPackageId();
         Integer oldPackageId = null;
         Date end = null;
+        Boolean unLimited = false;
         //开始时间
         Date start = CalendarUtils.nextDateStartTime();
         //是否是年费套餐
         boolean yearType = yearPay(packageId, order.getShouldPay());
         if (userPk == null) { //添加用户套餐信息
             end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_MONTH);
-            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,false));
+            cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,unLimited));
         } else { // 更新用户套餐信息
             oldPackageId = userPk.getPackageId();
             Date endStart = CalendarUtils.nextDateStartTime();
             //结束时间不为空从以前结束时间开始算
             if (userPk.getPackageEnd() != null) endStart = userPk.getPackageEnd();
+            //判断是否是专业版无期限进行的购买行为
+            if(oldPackageId == CspPackage.TypeId.PROFESSIONAL.getId() && userPk.getUnlimited() == true){
+                unLimited = true;
+            }
             end = yearType ? CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_MONTH);
-            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,false));
+            cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,unLimited));
         }
         //添加用户套餐历史信息
         cspUserPackageHistoryService.addUserHistoryInfo(order.getUserId(), oldPackageId, packageId, Constants.NUMBER_ONE);
