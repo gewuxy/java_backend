@@ -209,13 +209,11 @@ public interface CspUserService extends BaseService<CspUserInfo>{
 
     CspUserInfo selectByEmail(String username);
 
-    int selectNewUser();
+    int selectNewUser(Integer location);
 
-    int selectAllUserCount();
+    int selectAllUserCount(Integer location);
 
     int selectByProvince(String name);
 
-    int selectNewUserByUs();
-
-    int selectAllUserCountByUs();
+    MyPage<CspUserInfoDTO> findNewDayMoney(Pageable pageable);
 }

@@ -180,6 +180,55 @@
         $('#MapColor').show();
     });
 </script>--%>
+<h3 class="page-title">海外用户新增列表</h3>
+<table id="contentTable" class="table table-striped table-bordered table-condensed">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>昵称</th>
+        <th>注册日期</th>
+        <th>套餐等级</th>
+        <th>套餐日期</th>
+        <th>付费次数</th>
+        <th>付费总额</th>
+    </tr>
+    </thead>
+    <tbody>
+    <c:if test="${not empty page.dataList}">
+    <c:forEach var="user" items="${page.dataList}">
+    <tr>
+                <td>${user.uid}</td>
+                <td>${user.nickName}</td>
+                <td><fmt:formatDate value="${user.registerTime}" pattern="yyyyMMdd"/></td>
+                <td>${user.packageId eq 1 ? "标准版": user.packageId eq 2 ? "高级版": user.packageId eq 3 ? "专业版":"<span style='color: #9c0001'>未登录</span>"}</td>
+                <td>
+                    <c:if test="${not empty user.packageStart}">
+                    <fmt:formatDate value="${user.packageStart}" pattern="yyyyMMdd"/>至<fmt:formatDate value="${user.packageEnd}" pattern="yyyyMMdd"/>
+                    </c:if>
+                    <c:if test="${empty user.packageStart && user.packageId eq 1}">
+                        无期限
+                    </c:if>
+                    <c:if test="${empty user.packageStart && empty user.packageId}">
+                        <span style='color: #9c0001'>无</span>
+                    </c:if>
+                </td>
+                <td>${not empty user.payTimes ? user.payTimes : 0}</td>
+                <td>${not empty user.payMoneyUs ? user.payMoneyUs : 0}</td>
+    </tr>
+    </c:forEach>
+    </c:if>
+    <tr>
+        <c:if test="${empty page.dataList}">
+    <tr>
+        <td colspan="7">没有查询到数据</td>
+    </tr>
+    </c:if>
+    </tr>
+    </tbody>
+</table>
+<%@include file="/WEB-INF/include/pageable.jsp"%>
+
+
 <script>
     $(function(){
 

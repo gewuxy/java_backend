@@ -6,6 +6,10 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.sys.model.SystemRegion;
 import cn.medcn.sys.service.SystemRegionService;
+import cn.medcn.user.dto.CspUserInfoDTO;
+import cn.medcn.user.model.CspPackage;
+import cn.medcn.user.model.CspPackageOrder;
+import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspPackageOrderService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
@@ -48,23 +52,24 @@ public class CspUserInfoController extends BaseController {
     public String userInfoList(Model model, Pageable pageable){
         pageable.setPageSize(10);
         //昨日新增用户
-        int newUserCount = cspUserService.selectNewUser();
+        int newUserCount = cspUserService.selectNewUser(CspUserInfo.AbroadType.home.ordinal());
         model.addAttribute("newUserCount",newUserCount);
          //昨日进账
-        Double newMoney = cspPackageOrderService.selectNewMoney();
+        Double newMoney = cspPackageOrderService.selectNewMoney(CspPackageOrder.CurrencyType.RMB.ordinal());
         model.addAttribute("newMoney",newMoney);
         //总用户
-        int allUserCount = cspUserService.selectAllUserCount();
+        int allUserCount = cspUserService.selectAllUserCount(CspUserInfo.AbroadType.home.ordinal());
         model.addAttribute("allUserCount",allUserCount);
 
         //标准版、高级版和专业版用户
-        int standardEditionCount = cspUserPackageService.selectStandardEdition();
-        int premiumEditionCount = cspUserPackageService.selectPremiumEdition();
-        int professionalEditionCount = cspUserPackageService.selectProfessionalEdition();
+        int standardEditionCount = cspUserPackageService.selectEdition(CspPackage.TypeId.STANDARD.getId(), CspUserInfo.AbroadType.home.ordinal());
+        int premiumEditionCount = cspUserPackageService.selectEdition(CspPackage.TypeId.PREMIUM.getId(), CspUserInfo.AbroadType.home.ordinal());
+        int professionalEditionCount = cspUserPackageService.selectEdition(CspPackage.TypeId.PROFESSIONAL.getId(), CspUserInfo.AbroadType.home.ordinal());
         model.addAttribute("standardEditionCount",standardEditionCount);
         model.addAttribute("premiumEditionCount",premiumEditionCount);
         model.addAttribute("professionalEditionCount",professionalEditionCount);
 
+        //地图数据
         MyPage<SystemRegion> page = systemRegionService.selectByPreIds(pageable);
         List<SystemRegion> systemRegions = page.getDataList();
         int provinceCount = 0;
@@ -77,33 +82,40 @@ public class CspUserInfoController extends BaseController {
         }
         model.addAttribute("map",map);
         model.addAttribute("page",page);
-        // 前端根据pages 分页 固定页数
-        Integer pages = (systemRegions.size()-1)/15 + 1;;
-        model.addAttribute("pages", pages);
         return "cspIndex/cspIndexList";
     }
 
-
+    /**
+     * 海外版首页数据
+     * @param model
+     * @param pageable
+     * @return
+     */
     @RequestMapping(value = "/list_us")
     @Log(name = "海外版首页数据")
-    public String userInfoListUs(Model model){
+    public String userInfoListUs(Model model,Pageable pageable){
         //昨日新增用户
-        int newUserCount = cspUserService.selectNewUserByUs();
+        int newUserCount = cspUserService.selectNewUser(CspUserInfo.AbroadType.abroad.ordinal());
         model.addAttribute("newUserCount",newUserCount);
         //昨日进账
-        Double newMoney = cspPackageOrderService.selectNewMoneyByUs();
+        Double newMoney = cspPackageOrderService.selectNewMoney(CspPackageOrder.CurrencyType.USD.ordinal());
         model.addAttribute("newMoney",newMoney);
         //总用户
-        int allUserCount = cspUserService.selectAllUserCountByUs();
+        int allUserCount = cspUserService.selectAllUserCount(CspUserInfo.AbroadType.abroad.ordinal());
         model.addAttribute("allUserCount",allUserCount);
 
         //标准版、高级版和专业版用户
-        int standardEditionCount = cspUserPackageService.selectStandardEditionByUs();
-        int premiumEditionCount = cspUserPackageService.selectPremiumEditionByUs();
-        int professionalEditionCount = cspUserPackageService.selectProfessionalEditionByUs();
+        int standardEditionCount = cspUserPackageService.selectEdition(CspPackage.TypeId.STANDARD.getId(),CspUserInfo.AbroadType.abroad.ordinal());
+        int premiumEditionCount = cspUserPackageService.selectEdition(CspPackage.TypeId.PREMIUM.getId(), CspUserInfo.AbroadType.abroad.ordinal());
+        int professionalEditionCount = cspUserPackageService.selectEdition(CspPackage.TypeId.PROFESSIONAL.getId(), CspUserInfo.AbroadType.abroad.ordinal());
         model.addAttribute("standardEditionCount",standardEditionCount);
         model.addAttribute("premiumEditionCount",premiumEditionCount);
         model.addAttribute("professionalEditionCount",professionalEditionCount);
+
+        //新增进账信息
+        MyPage<CspUserInfoDTO> page = cspUserService.findNewDayMoney(pageable);
+
+        model.addAttribute("page",page);
         return "cspIndex/cspIndexListUs";
     }
 }

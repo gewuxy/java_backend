@@ -52,10 +52,6 @@
     </select>
 
     <select id="selectNewMoney" resultType="Double">
-        SELECT IFNULL(sum(should_pay),0) FROM t_csp_package_order where date(create_time)=curdate()-INTERVAL 1 day AND  currency_type = 0
-    </select>
-
-    <select id="selectNewMoneyByUs" resultType="Double">
-        SELECT IFNULL(sum(should_pay),0) FROM t_csp_package_order where date(create_time)=curdate()-INTERVAL 1 day AND  currency_type = 1
+        SELECT IFNULL(sum(pay_money),0) FROM t_csp_package_order where date(create_time)=curdate()-INTERVAL 1 day AND  currency_type = #{currencyType} AND state = 1
     </select>
 </mapper>

@@ -21,7 +21,7 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
 
     Boolean yearPay(Integer packageId,float money);
 
-    Double selectNewMoney();
+    Double selectNewMoney(Integer currencyType);
 
     /**
      * 美元和人民币的资金总额
@@ -67,5 +67,4 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
      */
     List<CspOrderPlatFromDTO> getCapitalByDay();
 
-    Double selectNewMoneyByUs();
 }
