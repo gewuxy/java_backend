@@ -354,4 +354,10 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     boolean checkGuideExists(String cspUserId);
+
+    /**
+     * 解锁用户最好的会议
+     * @param cspUserId
+     */
+    void doUnlockEarliestCourse(String cspUserId);
 }

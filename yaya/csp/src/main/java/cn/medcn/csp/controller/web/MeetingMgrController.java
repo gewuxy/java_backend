@@ -486,11 +486,7 @@ public class MeetingMgrController extends CspBaseController {
         if (course.getLocked() != null && course.getLocked() != true && course.getGuide() != true) {
             //判断是否有锁定的会议
             if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()){
-                AudioCourse earliestActiveCourse = audioService.findEarliestCourse(principal.getId());
-                if (earliestActiveCourse != null) {
-                    earliestActiveCourse.setLocked(false);
-                }
-                audioService.updateByPrimaryKey(earliestActiveCourse);
+                audioService.doUnlockEarliestCourse(principal.getId());
             }
         }
 

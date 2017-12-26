@@ -1125,4 +1125,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
         return selectCount(cond) > 0;
     }
+
+    /**
+     * 解锁用户最好的会议
+     *
+     * @param cspUserId
+     */
+    @Override
+    public void doUnlockEarliestCourse(String cspUserId) {
+        AudioCourse earliestActiveCourse = findEarliestCourse(cspUserId);
+        if (earliestActiveCourse != null) {
+            earliestActiveCourse.setLocked(false);
+        }
+        updateByPrimaryKey(earliestActiveCourse);
+    }
 }
