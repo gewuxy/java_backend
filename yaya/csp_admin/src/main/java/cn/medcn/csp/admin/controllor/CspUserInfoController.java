@@ -69,6 +69,7 @@ public class CspUserInfoController extends BaseController {
         model.addAttribute("premiumEditionCount",premiumEditionCount);
         model.addAttribute("professionalEditionCount",professionalEditionCount);
 
+        //地图数据
         MyPage<SystemRegion> page = systemRegionService.selectByPreIds(pageable);
         List<SystemRegion> systemRegions = page.getDataList();
         int provinceCount = 0;
@@ -81,13 +82,15 @@ public class CspUserInfoController extends BaseController {
         }
         model.addAttribute("map",map);
         model.addAttribute("page",page);
-        // 前端根据pages 分页 固定页数
-        Integer pages = (systemRegions.size()-1)/15 + 1;;
-        model.addAttribute("pages", pages);
         return "cspIndex/cspIndexList";
     }
 
-
+    /**
+     * 海外版首页数据
+     * @param model
+     * @param pageable
+     * @return
+     */
     @RequestMapping(value = "/list_us")
     @Log(name = "海外版首页数据")
     public String userInfoListUs(Model model,Pageable pageable){
