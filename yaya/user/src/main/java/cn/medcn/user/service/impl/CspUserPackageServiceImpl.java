@@ -80,37 +80,10 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         doModifyOldUserVersion(cspUserPackage,userId);
     }
 
-
     @Override
-    public int selectPremiumEdition() {
-        return userPackageDAO.selectPremiumEdition();
+    public int selectEdition(Integer packageId,Integer location) {
+        return userPackageDAO.selectEdition(packageId,location);
     }
-
-    @Override
-    public int selectProfessionalEdition() {
-        return userPackageDAO.selectProfessionalEdition();
-    }
-
-    @Override
-    public int selectStandardEdition() {
-        return userPackageDAO.selectStandardEdition();
-    }
-
-    @Override
-    public int selectStandardEditionByUs() {
-        return userPackageDAO.selectStandardEditionByUs();
-    }
-
-    @Override
-    public int selectPremiumEditionByUs() {
-        return userPackageDAO.selectPremiumEditionByUs();
-    }
-
-    @Override
-    public int selectProfessionalEditionByUs() {
-        return userPackageDAO.selectProfessionalEditionByUs();
-    }
-
 
     /**
      * 定时获取套餐过期的用户

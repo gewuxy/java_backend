@@ -2,6 +2,7 @@ package cn.medcn.user.dao;
 
 import cn.medcn.user.model.CspUserPackage;
 import com.github.abel533.mapper.Mapper;
+import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
 
@@ -13,15 +14,6 @@ public interface CspUserPackageDAO extends Mapper<CspUserPackage>{
 
     List<CspUserPackage> findUserPackages();
 
-    int selectPremiumEdition();
+    int selectEdition(@Param("packageId") Integer packageId, @Param("location")Integer location);
 
-    int selectProfessionalEdition();
-
-    int selectStandardEdition();
-
-    int selectStandardEditionByUs();
-
-    int selectPremiumEditionByUs();
-
-    int selectProfessionalEditionByUs();
 }

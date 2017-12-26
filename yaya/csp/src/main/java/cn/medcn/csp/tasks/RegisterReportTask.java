@@ -1,5 +1,6 @@
 package cn.medcn.csp.tasks;
 
+import cn.medcn.user.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
@@ -8,9 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class RegisterReportTask {
 
     @Autowired
-//    protected
+    protected ReportService reportService;
 
     public void execute(){
-        System.out.println("execute task ....");
+        reportService.executeReportRegister();
     }
 }

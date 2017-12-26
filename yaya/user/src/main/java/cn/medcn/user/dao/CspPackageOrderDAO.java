@@ -29,8 +29,6 @@ public interface CspPackageOrderDAO extends Mapper<CspPackageOrder>{
 
     List<CspOrderPlatFromDTO> getCapitalByDay();
 
-    Double selectNewMoney();
-
-    Double selectNewMoneyByUs();
+    Double selectNewMoney(@Param("currencyType") Integer currencyType);
 
 }

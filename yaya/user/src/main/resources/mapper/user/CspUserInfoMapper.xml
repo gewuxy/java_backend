@@ -104,21 +104,11 @@
     <select id="selectNewUser" resultType="Integer">
        select count(id) from t_csp_user_info
         where register_time
-        between curdate()-INTERVAL 1 day  and CURDATE() and abroad = 0
-    </select>
-
-    <select id="selectNewUserByUs" resultType="Integer">
-        select count(id) from t_csp_user_info
-        where register_time
-        between curdate()-INTERVAL 1 day  and CURDATE() and abroad = 1
+        between curdate()-INTERVAL 1 day  and CURDATE() and abroad = #{location}
     </select>
 
     <select id="selectAllUserCount" resultType="Integer">
-        select count(id) from t_csp_user_info WHERE abroad = 0
-    </select>
-
-    <select id="selectAllUserCountByUs" resultType="Integer">
-        select count(id) from t_csp_user_info WHERE abroad = 1
+        select count(id) from t_csp_user_info WHERE abroad = #{location}
     </select>
 
     <select id="findNewlyRegisterList" resultType="cn.medcn.user.model.ReportRegister">
@@ -147,6 +137,27 @@
 
     <select id="selectByProvince" resultType="Integer">
         SELECT count(*) FROM t_csp_user_info WHERE province = #{name}
+    </select>
+
+    <select id="findNewDayMoney" resultType="cn.medcn.user.dto.CspUserInfoDTO">
+        SELECT
+	      i.id AS uid,i.nick_name, p.package_id,i.register_time,
+	      p.package_start,
+          p.package_end,
+          p.source_type,
+          temp.payMoneyUs,
+          temp.create_time
+        FROM
+	      t_csp_user_package p
+        LEFT JOIN t_csp_user_info i ON i.id = p.user_id
+        LEFT JOIN (
+	      SELECT
+		user_id,COUNT(user_id) AS payTimes,create_time,
+		SUM(CASE WHEN currency_type = 1 THEN should_pay END) AS payMoneyUs
+	      FROM `t_csp_package_order` WHERE state = 1
+            GROUP BY user_id) temp ON i.id = temp.user_id
+        WHERE i.abroad = 1
+          AND temp.create_time BETWEEN curdate() - INTERVAL 1 DAY AND CURDATE()
     </select>
 
 </mapper>

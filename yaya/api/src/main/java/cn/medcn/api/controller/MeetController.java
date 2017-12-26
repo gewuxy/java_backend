@@ -413,10 +413,13 @@ public class MeetController extends BaseController {
 //                //添加视频直播
                 Live live = liveService.findByCourseId(course.getId());
                 if (live != null) {
+                    if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()
+                            || live.getEndTime().before(new Date())) {
+                        return error("直播已经结束");
+                    }
                     audioDTO.setLiveState(live.getLiveState());
                     audioDTO.setPullUrl(live.getRtmpUrl());
                 }
-//                audioDTO.setVideoLive(live);
             }
         }
 

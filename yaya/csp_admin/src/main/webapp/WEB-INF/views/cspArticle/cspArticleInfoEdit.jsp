@@ -138,7 +138,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-                <textarea class="layui-textarea layui-hide" name="contentTw" lay-verify="content" id="contentTw">${article.contentCn}</textarea>
+                <textarea class="layui-textarea layui-hide" name="contentTw" lay-verify="content" id="contentTw">${article.contentTw}</textarea>
                 <script type="text/javascript">
                     layui.use(['form', 'layedit', 'laydate'], function() {
                         var form = layui.form
@@ -165,7 +165,7 @@
         <div class="layui-form-item layui-form-text">
             <label class="layui-form-label">内容</label>
             <div class="layui-input-block">
-                <textarea class="layui-textarea layui-hide" name="contentUs" lay-verify="content" id="contentUs">${article.contentCn}</textarea>
+                <textarea class="layui-textarea layui-hide" name="contentUs" lay-verify="content" id="contentUs">${article.contentUs}</textarea>
                 <script type="text/javascript">
                     layui.use(['form', 'layedit', 'laydate'], function() {
                         var form = layui.form
@@ -179,7 +179,7 @@
                             }
                         });
                         //创建一个编辑器
-                        var editIndex = layedit.build('contentTw',{
+                        var editIndex = layedit.build('contentUs',{
                                 height:400
                             }
                         );
