@@ -261,17 +261,18 @@
 
 
 
-        $("#audioPlayer")[0].addEventListener("ended", function(){
-
-            console.log("audio ended");
-            isVideo = $('.swiper-slide-active').find('video')
-            if (!needSync){
-                if (isVideo.length == 0){
-                    galleryTop.slideNext();
-                }
-            }
-            playOver = true;
-        });
+//        $("#audioPlayer")[0].addEventListener("ended", function(){
+//
+//            console.log("audio ended");
+//            isVideo = $('.swiper-slide-active').find('video')
+//            if (!needSync){
+//                alert("skip to next page...");
+//                if (isVideo.length == 0){
+//                    galleryTop.slideNext();
+//                }
+//            }
+//            playOver = true;
+//        });
 
         CSPMeetingGallery.height(cH);
         $(window).resize(function(){
@@ -290,6 +291,10 @@
             console.log("audio play over ...");
             galleryTop.slideNext();
             $(".boxAudio-loading").addClass("none");
+        });
+
+        $("#audioPlayer")[0].addEventListener("error", function(){
+            $(".boxAudio-loading").removeClass("none");
         });
 
         $("#audioPlayer")[0].addEventListener("loadedmetadata", function(){
@@ -749,9 +754,7 @@
                     $(".num").text(data.onLines);
                 }
                 if (data.order == 0){//直播指令
-                    $(".icon-added").show();
                     var currentPageNo = parseInt(data.pageNum) + 1;
-                    $("#newLivePage").text("P " + currentPageNo);
                     console.log("data.audioUrl = " + data.audioUrl);
                     if(data.audioUrl != undefined) {
                         $(".swiper-slide[data-num='"+currentPageNo+"']").attr("audio-src", data.audioUrl);
@@ -780,6 +783,9 @@
                         }
                         lastPage.attr("istemp", "0");
                     } else {
+                        $(".icon-added").show();
+                        var currentPageNo = galleryTop.slides.length + 1;
+                        $("#newLivePage").text("P " + currentPageNo);
                         totalPages ++;
                         var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-zoom-container pinch-zoom" style="height:100%;"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div></div>';
                         if (data.videoUrl != undefined && data.videoUrl != ''){
@@ -798,7 +804,6 @@
                         }
                     }
                 } else if (data.order == 12){//接收到推流
-                    alert("接收到推流");
                     $("#ck-video")[0].play();
                     $(".video-play-live").removeClass("video-notPlay-item");
                     if(isAndroid){
