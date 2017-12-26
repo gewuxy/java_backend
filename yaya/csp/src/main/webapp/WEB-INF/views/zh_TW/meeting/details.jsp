@@ -182,23 +182,26 @@
         });
 
         $('.delFile').on('click',function(){
-            var detailId = $(this).attr("detailId");
-            layer.open({
-                type: 1,
-                area: ['300px', '250px'],
-                fix: false, //不固定
-                title:false,
-                closeBtn:0,
-                anim: 5,
-                content: $('#del-popup-box'),
-                btn : ['確定', '取消'],
-                yes :function(){
-                    window.location.href = '${ctx}/mgr/meet/detail/del/${course.id}/'+detailId;
-                },
+            if("${fn:length(course.details) <= 1}" == "false"){
+                var detailId = $(this).attr("detailId");
+                layer.open({
+                    type: 1,
+                    area: ['300px', '250px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    anim: 5,
+                    content: $('#del-popup-box'),
+                    btn : ['確定', '取消'],
+                    yes :function(){
+                        window.location.href = '${ctx}/mgr/meet/detail/del/${course.id}/'+detailId;
+                    },
 
-                cancel :function(){
-                }
-            });
+                    cancel :function(){
+                    }
+                });
+            }
+
         });
 
         const file_size_limit = 50*1024*1024;

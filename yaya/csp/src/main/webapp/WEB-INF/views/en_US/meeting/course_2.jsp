@@ -801,6 +801,8 @@
                 } else if (data.order == 12){//接收到推流
                     $("#ck-video")[0].play();
                     $(".video-play-live").removeClass("video-notPlay-item");
+                    $(".video-notPlay-bg").addClass("none");
+                    $(".video-notPlay").addClass("none");
                     if(isAndroid){
                         //还原
                         $("#ck-video").attr('style','height:auto');
