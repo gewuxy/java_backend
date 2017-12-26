@@ -553,18 +553,8 @@
             }, 'json');
         }
 
-        $(function () {
-            var pkId = ${packageId};
-            if (pkId == 1){
-                $("#pkTime").hide();
-                $("#meetCountTips").hide();
-                $("#note").hide();
-                $("#unlimited").hide();
-            }else {
-                $("#meetCountTips").hide();
-                $("#standard").hide();
-            }
-        })
+
+
 
         function pkTimeClose(){
             $("#pkTime").hide();
@@ -577,6 +567,19 @@
             $("#unlimited").hide();
         }
 
+
+        $(function () {
+            var pkId = ${packageId};
+            if (pkId == 1){
+                $("#pkTime").hide();
+                $("#meetCountTips").hide();
+                $("#note").hide();
+                $("#unlimited").hide();
+            }else {
+                $("#meetCountTips").hide();
+                $("#standard").hide();
+            }
+        })
 
 
     </script>

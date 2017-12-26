@@ -554,6 +554,19 @@
             }, 'json');
         }
 
+
+
+        function pkTimeClose(){
+            $("#pkTime").hide();
+        }
+        function standardClose(){
+            $("#standard").hide();
+        }
+
+        function unlimitedClose(){
+            $("#unlimited").hide();
+        }
+
         $(function () {
             var pkId = ${packageId};
             if (pkId == 1){
@@ -566,17 +579,6 @@
                 $("#standard").hide();
             }
         })
-
-        function pkTimeClose(){
-            $("#pkTime").hide();
-        }
-        function standardClose(){
-            $("#standard").hide();
-        }
-
-        function unlimitedClose(){
-            $("#unlimited").hide();
-        }
     </script>
 </head>
 <body>
