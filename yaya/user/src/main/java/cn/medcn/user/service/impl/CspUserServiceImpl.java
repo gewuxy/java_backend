@@ -223,7 +223,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
         //发送注册成功推送消息
         sysNotifyService.addNotify(userInfo.getId(), local("user.notify.title"), local("user.notify.content"), local("user.notify.sender"));
-
+        if (userDTO.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
+            //发送绑定成功消息
+            sysNotifyService.addNotify(userDTO.getUid(),local("user.bind.success"),local("user.notify.bind.yaya"),local("user.notify.sender"));
+        }
         //app端注册默认是基础版
         if(userDTO.getRegisterDevice() == CspUserInfo.RegisterDevice.APP.ordinal()){
             cspUserPackageService.addStanardInfo(userInfo.getId());

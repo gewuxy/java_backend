@@ -431,8 +431,6 @@ public class LoginController extends CspBaseController {
         //yaya登录
         if (thirdPartyId == BindInfo.Type.YaYa.getTypeId()) {
             cspUserService.yayaBindUpdate(userInfo.getId());
-            //发送绑定成功消息
-            sysNotifyService.addNotify(userInfo.getId(),local("user.bind.success"),local("user.notify.bind.yaya"),local("user.notify.sender"));
         }
         UsernamePasswordToken token = new UsernamePasswordToken();
         token.setHost("thirdParty");
