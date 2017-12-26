@@ -911,26 +911,38 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public Integer doCopyLiveToRecord(Integer courseId) {
 
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
-        List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+        if (course != null) {
+            List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
 
-        AudioCourse copyCourse = new AudioCourse();
-        BeanUtils.copyProperties(course, copyCourse);
-        copyCourse.setId(null);
-        copyCourse.setCspUserId(null);//不属于任何人的
-        copyCourse.setPrimitiveId(courseId);
-        copyCourse.setCreateTime(new Date());
-        copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
-        copyCourse.setLocked(false);
-        audioCourseDAO.insert(copyCourse);
+            AudioCourse copyCourse = new AudioCourse();
+            BeanUtils.copyProperties(course, copyCourse);
+            copyCourse.setId(null);
+            copyCourse.setCspUserId(course.getCspUserId());
+            copyCourse.setPrimitiveId(courseId);
+            copyCourse.setCreateTime(new Date());
+            copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
 
-        //生成明细
-        Integer copyCourseId = copyCourse.getId();
-        doCopyDetails(details, copyCourseId);
+            audioCourseDAO.insert(copyCourse);
 
-        //复制水印
-        doCopyWatermark(courseId,copyCourseId);
+            //生成明细
+            Integer copyCourseId = copyCourse.getId();
+            doCopyDetails(details, copyCourseId);
 
-        return copyCourseId;
+            //复制水印
+            doCopyWatermark(courseId,copyCourseId);
+
+            //生成录播信息
+            AudioCoursePlay play = new AudioCoursePlay();
+            play.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
+            play.setCourseId(copyCourseId);
+            play.setId(StringUtils.nowStr());
+            play.setPlayPage(0);
+            audioCoursePlayDAO.insert(play);
+
+            return copyCourseId;
+        }
+
+        return null;
     }
 
 
