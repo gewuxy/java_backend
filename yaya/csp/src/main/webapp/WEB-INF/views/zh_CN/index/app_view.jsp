@@ -61,6 +61,8 @@
     </style>
 </head>
 <body >
+<div class="news-details-main" style="padding:0 10px;">
 ${article.contentCn}
+</div>
 </body>
 </html>
