@@ -114,6 +114,7 @@ public class AuthorizeController extends BaseController {
     @RequestMapping(value = "/authorize", method = RequestMethod.POST)
     public String authorize(String username, String password, String redirect_uri, Model model) {
         String loginPage = "/oauth/login";
+        model.addAttribute("redirect_uri",redirect_uri);
         if (CheckUtils.isEmpty(username) || CheckUtils.isEmpty(password)) {
             model.addAttribute(messageKey, "Username or Password can not be null");
             return loginPage;
@@ -129,6 +130,7 @@ public class AuthorizeController extends BaseController {
             model.addAttribute(messageKey, "illegal password ");
             return loginPage;
         }
+
 
         StringBuffer buffer = new StringBuffer("redirect:");
         buffer.append(redirect_uri).append("&code=").append(createCode(String.valueOf(appUser.getId())));

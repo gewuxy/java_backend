@@ -4,6 +4,8 @@ import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.Live;
 
+import java.util.List;
+
 /**
  * Created by lixuan on 2017/9/26.
  */
@@ -19,5 +21,22 @@ public interface LiveService extends BaseService<Live> {
     Live findByCourseId(Integer courseId);
 
     LiveOrderDTO findCachedOrder(Integer courseId);
+
+    /**
+     * 修改直播状态
+     */
+    void doModifyLiveState();
+
+    /**
+     * 查询出所有超时的直播
+     * @return
+     */
+    List<Live> findTimeOutLives();
+
+    /**
+     * 修改直播状态
+     * @param live
+     */
+    void doModifyLiveState(Live live);
 
 }

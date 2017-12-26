@@ -160,6 +160,8 @@ public class ChargeController extends CspBaseController {
                 JSONObject data = JSON.parseObject(event.get("data").toString());
                 JSONObject object = JSON.parseObject(data.get("object").toString());
                 String orderNo = (String) object.get("order_no");
+                String language = (String) object.get("description");
+                if(!StringUtils.isEmpty(language))  LocalUtils.set(LocalUtils.getByKey(language));  //设置语言
                 //查找订单
                 if(orderNo.contains(CspConstants.PACKAGE_ORDER_FLAG)){
                     CspPackageOrder condition = new CspPackageOrder();

@@ -200,9 +200,9 @@
 
                                                 </div>
                                             </div>
-                                            <div class="cells-block clearfix checkbox-box" style="display: none;">
+                                            <div class="cells-block clearfix checkbox-box" style="display: block;">
                                                     <span class="checkboxIcon">
-                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} disabled>
+                                                        <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} >
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;Video Live Stream</label>
                                                     </span>
                                                 <div class="checkbox-main">

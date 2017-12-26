@@ -3,9 +3,11 @@ package cn.medcn.csp.listener;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.tasks.FlowMonitorTask;
+import cn.medcn.csp.tasks.LiveStateChangeTask;
 import cn.medcn.csp.tasks.UserPackageTask;
 import cn.medcn.csp.tasks.UserRegionUpdateTask;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.UserFluxService;
@@ -46,6 +48,11 @@ public class StartUpListener extends ContextLoaderListener {
         notifyService.scheduleWithFixedDelay(fluxMonitorTask, 5, CspConstants.FLUX_MONITOR_SPACE, TimeUnit.SECONDS);
         LogUtils.info(log, "init context successed ! ");
 
+        LiveService liveService = ctx.getBean(LiveService.class);
+        //更改直播会议状态线程
+        Runnable liveStateChangeTask = new LiveStateChangeTask(liveService);
+        //每十分钟执行一次直播状态监测
+        notifyService.scheduleWithFixedDelay(liveStateChangeTask, 20, 300, TimeUnit.SECONDS);
 
         // 启动更新CSP用户套餐版本定时任务
         CspUserPackageService userPackageService = ctx.getBean(CspUserPackageService.class);

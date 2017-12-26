@@ -519,7 +519,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : ['Sure', 'Cancel'],
+                        btn : ['Confirm', 'Cancel'],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
@@ -842,7 +842,7 @@
                     <li>
                         <a href="javascript:;" onclick="delCourse()">
                             <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>Delete</p>
+                            <p>Delete?</p>
                         </a>
                     </li>
 
@@ -910,10 +910,8 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Confirm delete?</p>
-
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Delete?</p>
                 </div>
-
             </form>
         </div>
     </div>
