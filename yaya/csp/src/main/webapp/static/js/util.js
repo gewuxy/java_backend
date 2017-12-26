@@ -281,7 +281,7 @@ function upload(fileId,fileType,limitSize,callback){
             if(data.code == 0){
                 callback(data);
             }else{
-                layer.msg(data.msg);
+                layer.msg(data.err);
             }
         },
         error:function(data, status, e){
