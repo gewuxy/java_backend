@@ -910,10 +910,8 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Confirm delete?</p>
-
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">Delete?</p>
                 </div>
-
             </form>
         </div>
     </div>
