@@ -383,16 +383,16 @@
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
                                 swiper.slidesGrid = newOffset;
-                                if(dataSrc) {
-                                    $('.audio-metting-box').css('opacity','1');
-                                }
+//                                if(dataSrc) {
+//                                    $('.audio-metting-box').css('opacity','1');
+//                                }
 
                             },
                             onTouchStart:function(swiper) {
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
                                 swiper.slidesGrid = newOffset;
-                                $('.audio-metting-box').css('opacity','0');
+//                                $('.audio-metting-box').css('opacity','0');
                             }
 
                         });
