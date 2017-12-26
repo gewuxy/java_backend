@@ -744,8 +744,18 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public List<CspUserInfo> selectByIp() {
-        return cspUserInfoDAO.selectByIp();
+    public int selectByProvince(String name) {
+        return cspUserInfoDAO.selectByProvince(name);
+    }
+
+    @Override
+    public int selectNewUserByUs() {
+        return cspUserInfoDAO.selectNewUserByUs();
+    }
+
+    @Override
+    public int selectAllUserCountByUs() {
+        return cspUserInfoDAO.selectAllUserCountByUs();
     }
 
 }

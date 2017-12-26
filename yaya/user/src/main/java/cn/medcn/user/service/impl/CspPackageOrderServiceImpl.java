@@ -157,7 +157,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
 
     @Override
     public Double selectNewMoney() {
-        return cspPackageDAO.selectNewMoney();
+        return packageOrderDAO.selectNewMoney();
     }
 
     /**
@@ -247,6 +247,11 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     @Override
     public List<CspOrderPlatFromDTO> getCapitalByDay() {
         return packageOrderDAO.getCapitalByDay();
+    }
+
+    @Override
+    public Double selectNewMoneyByUs() {
+        return packageOrderDAO.selectNewMoneyByUs();
     }
 }
 

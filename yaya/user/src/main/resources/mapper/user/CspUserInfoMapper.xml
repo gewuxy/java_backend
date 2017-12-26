@@ -104,11 +104,21 @@
     <select id="selectNewUser" resultType="Integer">
        select count(id) from t_csp_user_info
         where register_time
-        between curdate()-INTERVAL 1 day  and CURDATE()
+        between curdate()-INTERVAL 1 day  and CURDATE() and abroad = 0
+    </select>
+
+    <select id="selectNewUserByUs" resultType="Integer">
+        select count(id) from t_csp_user_info
+        where register_time
+        between curdate()-INTERVAL 1 day  and CURDATE() and abroad = 1
     </select>
 
     <select id="selectAllUserCount" resultType="Integer">
-        select count(id) from t_csp_user_info
+        select count(id) from t_csp_user_info WHERE abroad = 0
+    </select>
+
+    <select id="selectAllUserCountByUs" resultType="Integer">
+        select count(id) from t_csp_user_info WHERE abroad = 1
     </select>
 
     <select id="findNewlyRegisterList" resultType="cn.medcn.user.dto.CspNewlyStaticDTO">
@@ -136,8 +146,8 @@
         GROUP BY groupDate order by registerDate
     </select>
 
-    <select id="selectByIp" resultType="cn.medcn.user.model.CspUserInfo">
-        select *,count(*) as count from t_csp_user_info WHERE last_login_ip is not NULL GROUP BY last_login_ip
+    <select id="selectByProvince" resultType="Integer">
+        SELECT count(*) FROM t_csp_user_info WHERE province = #{name}
     </select>
 
 </mapper>
