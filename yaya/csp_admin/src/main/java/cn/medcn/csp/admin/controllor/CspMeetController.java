@@ -100,7 +100,6 @@ public class CspMeetController extends BaseController{
         audioCourse.setId(id);
         audioCourse.setDeleted(true);
         audioService.updateByPrimaryKeySelective(audioCourse);
-        audioService.deleteAllDetails(id);
         addFlashMessage(redirectAttributes, "关闭成功");
         return "redirect:/csp/meet/list";
     }
