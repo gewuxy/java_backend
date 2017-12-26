@@ -42,6 +42,5 @@ public interface SystemRegionService extends BaseService<SystemRegion> {
      */
     List<SystemRegion> getPCZRelationList();
 
-    List<SystemRegion> selectByPreId();
-
+    MyPage<SystemRegion> selectByPreIds(Pageable pageable);
 }

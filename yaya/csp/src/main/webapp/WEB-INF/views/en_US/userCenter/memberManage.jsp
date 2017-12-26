@@ -79,6 +79,7 @@
                                                 </div>
                                             </c:if>
                                             <c:if test="${cspPackage.packageUs == 'Premium Edition'}">
+                                                <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
                                                     <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
@@ -257,7 +258,7 @@
                     body.find(".cancel-hook").on('click',function(){
                         layer.open({
                             type: 1,
-                            area: ['500px', '250px'],
+                            area: ['557px', '294px'],
                             fix: false, //不固定
                             title:false,
                             closeBtn:0,

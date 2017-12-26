@@ -91,6 +91,26 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         return userPackageDAO.selectProfessionalEdition();
     }
 
+    @Override
+    public int selectStandardEdition() {
+        return userPackageDAO.selectStandardEdition();
+    }
+
+    @Override
+    public int selectStandardEditionByUs() {
+        return userPackageDAO.selectStandardEditionByUs();
+    }
+
+    @Override
+    public int selectPremiumEditionByUs() {
+        return userPackageDAO.selectPremiumEditionByUs();
+    }
+
+    @Override
+    public int selectProfessionalEditionByUs() {
+        return userPackageDAO.selectProfessionalEditionByUs();
+    }
+
 
     /**
      * 定时获取套餐过期的用户
@@ -145,13 +165,15 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         cspUserPackage.setUserId(userId);
         cspUserPackage.setSourceType(CspUserPackage.modifyType.ADMIN_MODIFY.ordinal());
         cspUserPackage.setUpdateTime(new Date());
-        if (cspUserPackage.getPackageId() == CspPackage.TypeId.STANDARD.getId()){
+       /* if (cspUserPackage.getPackageId() == CspPackage.TypeId.STANDARD.getId()){
             cspUserPackage.setPackageStart(startTime);
             cspUserPackage.setPackageEnd(endTime);
         } else {
             //高级和专业版 在原有的基础上加上三个月
             cspUserPackage.setPackageEnd(CalendarUtils.dateAddMonth(cspUserPackage.getPackageEnd(),NUMBER_THREE));
-        }
+        }*/
+       cspUserPackage.setPackageStart(new Date());
+       cspUserPackage.setPackageEnd(endTime);
         cspUserPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
         userPackageDAO.updateByPrimaryKey(cspUserPackage);
         //添加到套餐详情中

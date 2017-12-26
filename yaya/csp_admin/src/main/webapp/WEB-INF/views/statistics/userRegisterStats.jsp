@@ -27,14 +27,14 @@
 <h3 class="page-title">昨天新增</h3>
 <div class="top-info clearfix">
     <div class="row-fluid ">
-        <div class="row-span span6 hot ">
-            <a href="/routes_pages/userList.html">
+        <div <c:if test="${location == 0}">class="row-span span6 hot "</c:if> <c:if test="${location == 1}">class="row-span span6  "</c:if>>
+            <a href="${ctx}/sys/register/stats/home?location=0">
                 <h4 class="title">海内</h4>
                 <p><strong class="price">${home}</strong></p>
             </a>
         </div>
-        <div class="row-span span6">
-            <a href="/routes_pages/userList.html">
+        <div <c:if test="${location == 1}">class="row-span span6 hot "</c:if> <c:if test="${location == 0}">class="row-span span6  "</c:if>>
+            <a href="${ctx}/sys/register/stats/home?location=1">
                 <h4 class="title">海外</h4>
                 <p><strong class="price">${abroad}</strong></p>
             </a>
@@ -48,15 +48,17 @@
 <form  method="post" class="breadcrumb ">
     <div class="pull-left inputTime-item">
         <ul class="nav nav-pills">
-            <li class="active"><a href="javascript:;">日</a></li>
-            <li><a href="javascript:;">周</a></li>
-            <li><a href="javascript:;">月</a></li>
-            <li><a href="javascript:;">季</a></li>
-            <li><a href="javascript:;">年</a></li>
+            <li class="active"><a href="javascript:;" grain="0">日</a></li>
+            <li><a href="javascript:;" grain="1" >周</a></li>
+            <li><a href="javascript:;" grain="2">月</a></li>
+            <li><a href="javascript:;" grain="3">季</a></li>
+            <li><a href="javascript:;" grain="4">年</a></li>
         </ul>
         <span class="time-tj">
             <label for="timeA" id="timeStart">
                 <input type="text" disabled="" class="timedate-input " placeholder="" id="timeA" value="${startTime} ~ ${endTime}">
+                <input type="hidden" id="startTime" value="${startTime}">
+                <input type="hidden" id="endTime" value="${endTime}">
             </label>
         </span>
     </div>
@@ -64,148 +66,46 @@
 <div class="clearfix inputButton-item">
     <div class="pull-left inputTime-item">
         <input class="btn btn-primary" type="button" value="导出新增用户" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
-        <input class="btn btn-primary" type="button" value="导出新增渠道" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
-        <input class="btn btn-primary" type="button" value="导出注册转化率" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
     </div>
 </div>
 <div class="clearfix item-margin-bottom">
     <div id="echarts-2" class="echarts echarts-3"></div>
-    <%--<div id="echarts-3" class="echarts echarts-3"></div>--%>
-    <div id="echarts-4" class="echarts echarts-3"></div>
+
 </div>
 <script>
+
+    //图表加载
+    var dom = document.getElementById('echarts-2');
+    var myChart = echarts.init(dom);
+    var app = {};
+    option = null;
+
     $(function(){
 
-        $.get('${ctx}/sys/register/stats/newly/static',{"startTime":"2017/10/01 00:00","endTime":"2017/11/30 23:59","location":1,"grain":0}, function (data) {
+        $.get('${ctx}/sys/register/stats/newly/static',{"startTime":"${startTime}","endTime":"${endTime}","location":"${location}","grain":0}, function (data) {
             if (data.code == 0){
-
+                fillData(data.data);
+            }else{
+                layer.msg("获取数据失败");
             }
         },'json');
 
 
-        //图表加载
-        var dom = document.getElementById('echarts-2');
-//        var dom2 = document.getElementById('echarts-3');
-        var dom3 = document.getElementById('echarts-4');
-        var myChart = echarts.init(dom);
-//        var myChart2 = echarts.init(dom2);
-        var myChart3 = echarts.init(dom3);
-        var app = {};
-        option = null;
-        option = {
-            title: {
-                text: ''
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['微博','微信','手机','邮箱','数字平台']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '20%',
-                containLabel: true
-            },
-            toolbox: {
-                feature: {
-                    saveAsImage: {}
+        $(".nav-pills li a").click(function () {
+            var grain = $(this).attr("grain");
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+            var location = '${location}';
+            $(".nav-pills li").removeAttr("class","active");
+            $(this).parent().attr("class","active");
+            $.get('${ctx}/sys/register/stats/newly/static',{"startTime":startTime,"endTime":endTime,"location":location,"grain":grain}, function (data) {
+                if (data.code == 0){
+                    fillData(data.data);
+                }else{
+                    layer.msg("获取数据失败");
                 }
-            },
-            xAxis: {
-                name: '日期',
-                type: 'category',
-                data: ['01-11','01-12','01-13','01-14','01-15','01-16','01-17']
-            },
-            yAxis: {
-                name: '单位',
-                type: 'value',
-                max : 200,
-                min:0
-            },
-            series: [
-                {
-                    name:'微博',
-                    type: 'bar',
-                    stack: '单位',
-                    data:[10, 30, 10, 13, 90, 23, 95]
-                },
-                {
-                    name:'微信',
-                    type:'bar',
-                    stack: '单位',
-                    data:[10, 20, 19, 23, 29, 33, 60]
-                },
-                {
-                    name:'手机',
-                    type:'bar',
-                    stack: '单位',
-                    data:[10, 20, 19, 23, 29, 33, 60]
-                },
-                {
-                    name:'邮箱',
-                    type:'bar',
-                    stack: '单位',
-                    data:[0, 20, 20, 15, 19, 33, 40]
-                },
-                {
-                    name:'数字平台',
-                    type:'bar',
-                    stack: '单位',
-                    data:[10, 20, 19, 23, 29, 33, 60]
-                }
-            ]
-        };
-
-
-
-        option3 = {
-            title: {
-                text: ''
-            },
-            tooltip: {
-                trigger: 'axis'
-            },
-            legend: {
-                data:['注册转化率']
-            },
-            grid: {
-                left: '3%',
-                right: '4%',
-                bottom: '20%',
-                containLabel: true
-            },
-            xAxis: {
-                name: '日期',
-                type: 'category',
-                data: ['01-11','01-12','01-13','01-14','01-15','01-16','01-17']
-            },
-            yAxis: {
-                name: '百分比',
-                type: 'value',
-                max : 100,
-                min:0
-            },
-            series: [
-                {
-                    name:'注册转化率',
-                    type:'line',
-                    data:[0, 30, 10, 13, 90, 23, 95]
-                }
-            ]
-        };
-
-
-
-
-
-
-        if (option && typeof option === "object") {
-            myChart.setOption(option, true);
-//            myChart2.setOption(option2, true);
-            myChart3.setOption(option3, true);
-        }
+            },'json');
+        });
 
 
         //选择时间空间加载
@@ -218,7 +118,7 @@
             showTopbar: false,
             startOfWeek: 'monday',
             separator : ' ~ ',
-            format: 'YYYY/MM/DD HH:mm',
+            format: 'YYYY/MM/DD ',
             autoClose: false,
             time: {
                 enabled: true
@@ -230,17 +130,194 @@
             /* This event will be triggered when second date is selected */
             console.log('change',obj);
             $(this).find('input').val(obj.value);
-            // {
-            // 		date1: (开始时间),
-            // 		date2: (开始时间),
-            //	 	value: "2013-06-05 00:00 to 2013-06-07 00:00"
-            // }
+            var timeArray = obj.value.split(' ~ ');
+            var startTime = timeArray[0];
+            var endTime = timeArray[1];
+            $("#startTime").val(startTime);
+            $("#endTime").val(endTime);
+            var grain = $(".nav-pills .active").children().attr("grain");
+            var location = '${location}';
+            $.get('${ctx}/sys/register/stats/newly/static',{"startTime":startTime,"endTime":endTime,"location":location,"grain":grain}, function (data) {
+                if (data.code == 0){
+                    fillData(data.data);
+                }else{
+                    layer.msg("获取数据失败");
+                }
+            },'json');
         });
 
-
-
-
     });
+
+
+    function fillData(data) {
+        var weiXinArray = new Array();
+        var weiBoArray = new Array();
+        var facebookArray = new Array();
+        var twitterArray = new Array();
+        var mobileArray = new Array();
+        var emailArray = new Array();
+        var yaYaArray = new Array();
+        var list = data.list;
+        $.each(list,function(i) {
+            weiXinArray.push(list[i].weiXinCount);
+            weiXinArray.join(",");
+            weiBoArray.push(list[i].weiBoCount);
+            weiBoArray.join(",");
+            facebookArray.push(list[i].facebookCount);
+            facebookArray.join(",");
+            twitterArray.push(list[i].twitterCount);
+            twitterArray.join(",");
+            mobileArray.push(list[i].mobileCount);
+            mobileArray.join(",");
+            emailArray.push(list[i].emailCount);
+            emailArray.join(",");
+            yaYaArray.push(list[i].yaYaCount);
+            yaYaArray.join(",");
+        });
+
+        var location = '${location}';
+        if(location == 0){
+            option = {
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['微博','微信','手机','邮箱','数字平台']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '20%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    name: '日期',
+                    type: 'category',
+                    data: data.dateCount
+                },
+                yAxis: {
+                    name: '单位',
+                    type: 'value',
+                    max : 200,
+                    min:0
+                },
+                series: [
+                    {
+                        name:'微博',
+                        type: 'bar',
+                        stack: '单位',
+                        data:weiBoArray
+                    },
+                    {
+                        name:'微信',
+                        type:'bar',
+                        stack: '单位',
+                        data:weiXinArray
+                    },
+                    {
+                        name:'手机',
+                        type:'bar',
+                        stack: '单位',
+                        data:mobileArray
+                    },
+                    {
+                        name:'邮箱',
+                        type:'bar',
+                        stack: '单位',
+                        data:emailArray
+                    },
+                    {
+                        name:'数字平台',
+                        type:'bar',
+                        stack: '单位',
+                        data:yaYaArray
+                    }
+                ]
+            };
+        }else{
+            option = {
+                title: {
+                    text: ''
+                },
+                tooltip: {
+                    trigger: 'axis'
+                },
+                legend: {
+                    data:['facebook','twitter','手机','邮箱','数字平台']
+                },
+                grid: {
+                    left: '3%',
+                    right: '4%',
+                    bottom: '20%',
+                    containLabel: true
+                },
+                toolbox: {
+                    feature: {
+                        saveAsImage: {}
+                    }
+                },
+                xAxis: {
+                    name: '日期',
+                    type: 'category',
+                    data: data.dateCount
+                },
+                yAxis: {
+                    name: '单位',
+                    type: 'value',
+                    max : 200,
+                    min:0
+                },
+                series: [
+                    {
+                        name:'facebook',
+                        type: 'bar',
+                        stack: '单位',
+                        data:facebookArray
+                    },
+                    {
+                        name:'twitter',
+                        type:'bar',
+                        stack: '单位',
+                        data:twitterArray
+                    },
+                    {
+                        name:'手机',
+                        type:'bar',
+                        stack: '单位',
+                        data:mobileArray
+                    },
+                    {
+                        name:'邮箱',
+                        type:'bar',
+                        stack: '单位',
+                        data:emailArray
+                    },
+                    {
+                        name:'数字平台',
+                        type:'bar',
+                        stack: '单位',
+                        data:yaYaArray
+                    }
+                ]
+            };
+        }
+
+
+        if (option && typeof option === "object") {
+            myChart.setOption(option, true);
+        }
+
+    }
+
+
 </script>
 
 </body>

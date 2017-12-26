@@ -15,6 +15,6 @@ public interface CspPackageDAO extends Mapper<CspPackage> {
 
     List<CspPackage> findCspPackage();
 
-    Double selectNewMoney();
+
 
 }

@@ -24,4 +24,13 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
     int selectPremiumEdition();
 
     int selectProfessionalEdition();
+
+    int selectStandardEdition();
+
+    int selectStandardEditionByUs();
+
+    int selectPremiumEditionByUs();
+
+    int selectProfessionalEditionByUs();
+
 }

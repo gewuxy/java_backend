@@ -28,4 +28,9 @@ public interface CspPackageOrderDAO extends Mapper<CspPackageOrder>{
     List<Map<String,Object>> orderCapitalStati();
 
     List<CspOrderPlatFromDTO> getCapitalByDay();
+
+    Double selectNewMoney();
+
+    Double selectNewMoneyByUs();
+
 }

@@ -4,6 +4,7 @@ import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.dto.VideoLiveRecordDTO;
 import cn.medcn.user.model.CspUserInfo;
+import cn.medcn.user.model.ReportRegister;
 import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -64,7 +65,11 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
 
     int selectAllUserCount();
 
-    List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map);
+    List<ReportRegister> findNewlyRegisterList(Map<String, Object> map);
 
-    List<CspUserInfo> selectByIp();
+    int selectByProvince(@Param("name") String name);
+
+    int selectNewUserByUs();
+
+    int selectAllUserCountByUs();
 }

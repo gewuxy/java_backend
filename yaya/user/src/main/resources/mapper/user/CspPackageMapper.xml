@@ -17,7 +17,5 @@
         SELECT * FROM t_csp_package ORDER BY id DESC
     </select>
 
-    <select id="selectNewMoney" resultType="Double">
-        SELECT IFNULL(sum(should_pay),0) FROM t_csp_package_order where date(create_time)=curdate()-INTERVAL 1 day
-    </select>
+
 </mapper>

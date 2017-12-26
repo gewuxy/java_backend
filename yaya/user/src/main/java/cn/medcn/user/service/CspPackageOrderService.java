@@ -66,4 +66,6 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
      * @return
      */
     List<CspOrderPlatFromDTO> getCapitalByDay();
+
+    Double selectNewMoneyByUs();
 }
