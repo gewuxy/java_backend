@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -29,6 +30,7 @@ public class CspAppVersionControllor extends CspUserController {
     protected String appFileBase;
 
     @RequestMapping(value = "/newly")
+    @ResponseBody
     public String newly(HttpServletRequest request) {
         //从header中获取版本以及系统信息
         String versionStr = request.getHeader(Constants.APP_VERSION_KEY);
