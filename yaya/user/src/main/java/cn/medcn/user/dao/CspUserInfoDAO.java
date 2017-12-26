@@ -67,5 +67,9 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
 
     List<ReportRegister> findNewlyRegisterList(Map<String, Object> map);
 
-    List<CspUserInfo> selectByIp();
+    int selectByProvince(@Param("name") String name);
+
+    int selectNewUserByUs();
+
+    int selectAllUserCountByUs();
 }

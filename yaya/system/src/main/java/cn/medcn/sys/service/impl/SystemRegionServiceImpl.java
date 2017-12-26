@@ -107,8 +107,10 @@ public class SystemRegionServiceImpl extends BaseServiceImpl<SystemRegion> imple
     }
 
     @Override
-    public List<SystemRegion> selectByPreId() {
-        return systemRegionDAO.selectByPreId();
+    public MyPage<SystemRegion> selectByPreIds(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<SystemRegion> page = MyPage.page2Mypage((Page) systemRegionDAO.selectByPreIds(pageable.getParams()));
+        return page;
     }
 
 

@@ -16,4 +16,12 @@ public interface CspUserPackageDAO extends Mapper<CspUserPackage>{
     int selectPremiumEdition();
 
     int selectProfessionalEdition();
+
+    int selectStandardEdition();
+
+    int selectStandardEditionByUs();
+
+    int selectPremiumEditionByUs();
+
+    int selectProfessionalEditionByUs();
 }

@@ -29,8 +29,8 @@
 </head>
 <body>
 <ul class="nav nav-pills">
-    <li class="active"><a href="${ctx}/csp/userInfo/list">海内</a></li>
-    <li ><a href="${ctx}/csp/userInfo/list_us">海外</a></li>
+    <li><a href="${ctx}/csp/userInfo/list">海内</a></li>
+    <li class="active"><a href="${ctx}/csp/userInfo/list_us">海外</a></li>
 </ul>
 <h3 class="page-title">用户概况</h3>
 <div class="top-info clearfix">
@@ -69,7 +69,7 @@
     </div>
 
 </div>
-<div class=" clearfix">
+<%--<div class=" clearfix">
 
     <div class="data-tj-box">
         <h4 class="text-center">用户地区分布图</h4>
@@ -93,12 +93,13 @@
         </div>
 
     </div>
-</div>
+</div>--%>
 <script src="${ctxStatic}/bootstrap/added/map/raphael-min.js"></script>
 <script src="${ctxStatic}/bootstrap/added/map/chinaMapConfig.js"></script>
 <script src="${ctxStatic}/bootstrap/added/map/map.js"></script>
 <script src="${ctxStatic}/js/util.js"></script>
-<script>
+
+<%--<script>
 
     function getProKey(province){
         var proKey = "";
@@ -178,7 +179,7 @@
 
         $('#MapColor').show();
     });
-</script>
+</script>--%>
 <script>
     $(function(){
 

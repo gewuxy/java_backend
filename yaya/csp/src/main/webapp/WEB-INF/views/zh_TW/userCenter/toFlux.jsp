@@ -104,10 +104,10 @@
                                                 <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id21">
                                                 <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                             </label>
-                                            <label for="id31" class="item item-radius">
-                                                <input type="radio" name="channel" class="none" value="upacp_pc" id="id31">
-                                                <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
-                                            </label>
+                                            <%--<label for="id31" class="item item-radius">--%>
+                                                <%--<input type="radio" name="channel" class="none" value="upacp_pc" id="id31">--%>
+                                                <%--<img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">--%>
+                                            <%--</label>--%>
                                         </div>
                                         <div class="pay-mode-list EN-hook">
                                             <label for="id5" class="item item-radius pay-on">
@@ -122,11 +122,11 @@
                                     <div class="formControls">
                                         <span class="color-black"><span class="payNum">200</span> <span id="yuan">美元</span></span> <span class="color-green">(100G流量)</span>
                                         <span class="money-state">
-                                        <label for="currency-cn" class="cn on">
+                                        <label for="currency-cn" class="cn">
                                             <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
                                             CNY
                                         </label>
-                                        <label for="currency-en" class="en">
+                                        <label for="currency-en" class="en on">
                                             <input type="radio" name="currency" id="currency-en" class="none" value="EN">
                                             USD
                                         </label>
