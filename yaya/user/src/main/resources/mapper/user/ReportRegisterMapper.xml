@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.user.dao.ReportRegisterDAO" >
+
+    <select id="findTodayRegisterUsers" resultType="cn.medcn.user.dto.ReportRegisterDetailDTO">
+        SELECT register_from, count(register_from) as report_count, abroad FROM t_csp_user_info
+        WHERE abroad = false AND (register_time between #{startTime} and #{endTime}) group by register_from
+        UNION
+        SELECT register_from, count(register_from) as report_count, abroad FROM t_csp_user_info
+        WHERE abroad = true AND (register_time between #{startTime} and #{endTime}) group by register_from
+    </select>
+</mapper>

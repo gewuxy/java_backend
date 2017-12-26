@@ -9,5 +9,5 @@ import cn.medcn.user.model.ReportRegister;
  */
 public interface ReportService extends BaseService<ReportRegister> {
 
-
+    void executeReportRegister();
 }

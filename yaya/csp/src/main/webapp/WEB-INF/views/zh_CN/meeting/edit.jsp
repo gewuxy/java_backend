@@ -490,6 +490,10 @@
                 layer.msg("上传大小不能超过100M.");
                 return false;
             }
+
+            var index = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             //上传
 
             xhr = new XMLHttpRequest();
