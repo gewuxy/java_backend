@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.Id;
 import javax.persistence.Table;
 import java.util.Date;
 
@@ -18,6 +19,7 @@ import java.util.Date;
 @Table(name = "t_csp_bind_info")
 public class BindInfo {
 
+    @Id
     protected String id;
     // 用户id
     protected String userId;

@@ -156,19 +156,36 @@
             //触发弹出窗
             //投稿
             $('.contribute-hook').on('click',function(){
+
+                var popupHeight = '748px'
+                var popupListHeight = '450px';
+
+                //判断小屏幕修改尺寸
+                if( window.innerHeight <  748) {
+                    popupHeight = '90%';
+                }
+
                 var courseId = $(this).attr("courseId");
                 $("#courseId").val(courseId);
                 layer.open({
                     type: 1,
-                    area: ['1080px', '748px'],
+                    area: ['1080px', popupHeight],
                     anim:5,
                     fix: false, //不固定
                     isOutAnim: true,
                     title:false,
+                    shadeClose:true,
                     closeBtn:0,
                     content: $('.contribute-popup-box'),
-                    success:function(){
-
+                    success:function(layero,index){
+                        var popupHeight = layero[0].clientHeight;
+                        popupHeight = popupHeight * 0.5;
+                        //判断小屏幕修改尺寸
+                        if( window.innerHeight <  748) {
+                            $('.contribute-popup-box').find(".hidden-box").height(popupHeight);
+                        } else {
+                            $('.contribute-popup-box').find(".hidden-box").height(popupListHeight);
+                        }
                     },
                     cancel :function(){
 
@@ -323,6 +340,7 @@
                     title:false,
                     closeBtn:0,
                     anim:2,
+                    shadeClose:true,
                     content: $('.player-popup-box'),
                     success:function(){
                         var newOffset;
