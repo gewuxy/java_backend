@@ -191,7 +191,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param map
      * @return
      */
-    List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map);
+    List<ReportRegister> findNewlyRegisterList(Map<String, Object> map);
 
     /**
      * 将用户地理位置信息放入队列中

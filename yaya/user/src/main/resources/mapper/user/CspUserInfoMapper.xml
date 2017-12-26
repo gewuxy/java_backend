@@ -121,29 +121,28 @@
         select count(id) from t_csp_user_info WHERE abroad = 1
     </select>
 
-    <select id="findNewlyRegisterList" resultType="cn.medcn.user.dto.CspNewlyStaticDTO">
+    <select id="findNewlyRegisterList" resultType="cn.medcn.user.model.ReportRegister">
       SELECT
-      count(register_from = 1) AS weiBoCount,count(register_from = 2) AS weiXinCount,count(register_from = 3) AS facebookCount,
-      count(register_from = 4) AS witterCount,count(register_from = 5) AS yaYaCount, count(register_from = 6) AS mobileCount,
-      count(register_from = 7) AS emailCount
+      sum(weixin_count) AS weiXinCount,sum(weibo_count) AS weiBoCount,sum(facebook_count) AS facebookCount,
+        sum(twitter_count) AS twitterCount,sum(yaya_count) AS yaYaCount, sum(mobile_count) AS mobileCount,
+        sum(email_count) AS emailCount,
           <if test="grain == 0">
-              date_format(register_time,'%Y-%m-%d')as groupDate,
+              date_format(register_time,'%Y-%m-%d')as groupDate
           </if>
         <if test="grain == 1">
-            date_format(register_time,'%Y-%u')as groupDate,
+            date_format(register_time,'%Y-%u')as groupDate
         </if>
         <if test="grain == 2">
-            date_format(register_time,'%Y-%m')as groupDate,
+            date_format(register_time,'%Y-%m')as groupDate
         </if>
         <if test="grain == 3">
-            CONCAT(YEAR(register_time),'_',QUARTER(register_time),'Q') as groupDate,
+            CONCAT(YEAR(register_time),'_',QUARTER(register_time),'Q') as groupDate
         </if>
         <if test="grain == 4">
-            date_format(register_time,'%Y')as groupDate,
+            date_format(register_time,'%Y')as groupDate
         </if>
-       date_format(register_time,'%m-%d')as registerDate
-        FROM t_csp_user_info WHERE abroad=#{location} AND (register_time BETWEEN #{startTime} AND #{endTime})
-        GROUP BY groupDate order by registerDate
+        FROM t_report_register WHERE abroad=#{location} AND (register_time BETWEEN #{startTime} AND #{endTime})
+        GROUP BY groupDate order by register_time
     </select>
 
     <select id="selectByProvince" resultType="Integer">

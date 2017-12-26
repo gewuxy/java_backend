@@ -436,7 +436,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             //添加版本历史记录，下次解绑的时候获取最后一次的版本继续使用
             cspUserPackageHistoryService.addUserHistoryInfo(userId,oldId,
                     CspPackage.TypeId.PROFESSIONAL.getId(),CspUserPackage.modifyType.BIND_YAYA.ordinal());
-        }else if(userPackage != null && userPackage.getPackageId() != CspPackage.TypeId.STANDARD.getId()){
+        }else if(userPackage != null && userPackage.getPackageId() == CspPackage.TypeId.STANDARD.getId()){
             userPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
             userPackage.setUpdateTime(new Date());
             userPackage.setSourceType(CspUserPackage.modifyType.BIND_YAYA.ordinal());
@@ -678,7 +678,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public List<CspNewlyStaticDTO> findNewlyRegisterList(Map<String, Object> map) {
+    public List<ReportRegister> findNewlyRegisterList(Map<String, Object> map) {
 
         return cspUserInfoDAO.findNewlyRegisterList(map);
     }
