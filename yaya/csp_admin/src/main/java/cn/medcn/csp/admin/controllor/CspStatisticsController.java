@@ -37,8 +37,8 @@ public class CspStatisticsController extends BaseController {
     public String statistic(Model model){
         //获取资金总额
         List<Map<String,Object>> total = cspPackageOrderService.totalMoney();
-        model.addAttribute("totalCn",total.get(0).get("money"));
-        model.addAttribute("totalUs",total.get(1).get("money"));
+        model.addAttribute("rmb",total.get(0).get("money"));
+        model.addAttribute("usd",total.get(1).get("money"));
         //获取每日总额订单（人民币、美元）
         List<Map<String,Object>> capital = cspPackageOrderService.orderCapitalStati();
         //获取每日各渠道资金总额
