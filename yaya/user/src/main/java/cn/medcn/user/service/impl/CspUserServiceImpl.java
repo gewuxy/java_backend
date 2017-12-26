@@ -411,6 +411,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         // 绑定YaYa医师账号前 检查当前csp用户是否已经购买过套餐
         if (info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
             yayaBindUpdate(userId);
+            //发送绑定成功消息
+            sysNotifyService.addNotify(info.getUserId(),local("user.bind.success"),local("user.notify.bind.yaya"),local("user.notify.sender"));
         }
     }
 
@@ -501,7 +503,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             //添加历史版本信息
             cspUserPackageHistoryService.addUserHistoryInfo(userId,CspPackage.TypeId.PROFESSIONAL.getId(),updatePackageId,CspUserPackage.modifyType.BIND_YAYA.ordinal());
         }
-        bindInfoDAO.delete(condition);
+        bindInfoDAO.deleteByPrimaryKey(condition.getId());
     }
 
     @Override
