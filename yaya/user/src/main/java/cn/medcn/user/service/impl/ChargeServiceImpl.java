@@ -5,6 +5,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.FluxOrderDAO;
 import cn.medcn.user.dao.UserFluxDAO;
@@ -76,6 +77,7 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         chargeParams.put("client_ip", ip);
         chargeParams.put("subject", subject);
         chargeParams.put("body", subject);
+        chargeParams.put("description", LocalUtils.getLocalStr()); //附加字段，当前语言
 
         Map<String, String> extraMap = null;
         //支付宝手机网页支付,支付宝电脑网站支付
