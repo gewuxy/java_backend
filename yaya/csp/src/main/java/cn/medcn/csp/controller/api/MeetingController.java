@@ -903,8 +903,7 @@ public class MeetingController extends CspBaseController {
 
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
-            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
-            liveService.updateByPrimaryKey(live);
+            liveService.doModifyLiveState(live);
         }
 
         return success();
