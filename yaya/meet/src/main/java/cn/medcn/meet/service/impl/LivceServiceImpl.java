@@ -86,13 +86,15 @@ public class LivceServiceImpl extends BaseServiceImpl<Live> implements LiveServi
      */
     @Override
     public void doModifyLiveState(Live live) {
-        live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
-        liveDAO.updateByPrimaryKey(live);
+        if (live.getLiveState() != AudioCoursePlay.PlayState.over.ordinal()) {
+            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+            liveDAO.updateByPrimaryKey(live);
 
-        //将直播课件复制成录播课件
-        audioService.doCopyLiveToRecord(live.getCourseId());
+            //将直播课件复制成录播课件
+            audioService.doCopyLiveToRecord(live.getCourseId());
 
-        //将当前课件设置为删除状态
-        audioService.deleteCspCourse(live.getCourseId());
+            //将当前课件设置为删除状态
+            audioService.deleteCspCourse(live.getCourseId());
+        }
     }
 }
