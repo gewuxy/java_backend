@@ -444,7 +444,7 @@
                     //判断是否已经播放完成
                     activeItemIsVideo.get(0).addEventListener('ended',function(){
                         galleryTop.slideNext();
-                    });
+                    }, {once: true});
                 }
             },
             onSlideChangeEnd:function(swiper){
