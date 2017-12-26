@@ -308,10 +308,12 @@
             //音频文件静音
             popupPalyer.element.muted = false;
 
-            $("#ck-video")[0].play();
+            if("${live.hlsUrl}"){
+                $("#ck-video")[0].play();
 
-            CKobject.getObjectById('ck-video').changeVolume(0);
-            $("#ck-video")[0].muted = true;
+                CKobject.getObjectById('ck-video').changeVolume(0);
+                $("#ck-video")[0].muted = true;
+            }
         });
 
 
@@ -363,7 +365,7 @@
 
         $('.icon-added').on('click',function(){
             //点击跳转到最后一页
-            slideToPage(galleryTop.slides.length);
+            galleryTop.slideTo(galleryTop.slides.length);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
@@ -796,6 +798,7 @@
                         }
                     }
                 } else if (data.order == 12){//接收到推流
+                    alert("接收到推流");
                     $("#ck-video")[0].play();
                     $(".video-play-live").removeClass("video-notPlay-item");
                     if(isAndroid){
