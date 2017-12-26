@@ -61,15 +61,13 @@ public interface CspUserInfoDAO extends Mapper<CspUserInfo> {
 
     CspUserInfo selectByEmail(String username);
 
-    int selectNewUser();
+    int selectNewUser(@Param("location") Integer location);
 
-    int selectAllUserCount();
+    int selectAllUserCount(@Param("location") Integer location);
 
     List<ReportRegister> findNewlyRegisterList(Map<String, Object> map);
 
     int selectByProvince(@Param("name") String name);
 
-    int selectNewUserByUs();
-
-    int selectAllUserCountByUs();
+    List<CspUserInfo> findNewDayMoney(Map<String, Object> params);
 }

@@ -21,16 +21,6 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
 
     void modifyOldUser(CspUserPackage cspUserPackage, String userId);
 
-    int selectPremiumEdition();
-
-    int selectProfessionalEdition();
-
-    int selectStandardEdition();
-
-    int selectStandardEditionByUs();
-
-    int selectPremiumEditionByUs();
-
-    int selectProfessionalEditionByUs();
+    int selectEdition(Integer packageId,Integer location);
 
 }

@@ -739,13 +739,13 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
 
 
     @Override
-    public int selectNewUser() {
-        return cspUserInfoDAO.selectNewUser();
+    public int selectNewUser(Integer location) {
+        return cspUserInfoDAO.selectNewUser(location);
     }
 
     @Override
-    public int selectAllUserCount() {
-        return cspUserInfoDAO.selectAllUserCount();
+    public int selectAllUserCount(Integer location) {
+        return cspUserInfoDAO.selectAllUserCount(location);
     }
 
     @Override
@@ -754,13 +754,10 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     }
 
     @Override
-    public int selectNewUserByUs() {
-        return cspUserInfoDAO.selectNewUserByUs();
-    }
-
-    @Override
-    public int selectAllUserCountByUs() {
-        return cspUserInfoDAO.selectAllUserCountByUs();
+    public MyPage<CspUserInfoDTO> findNewDayMoney(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<CspUserInfoDTO> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findNewDayMoney(pageable.getParams()));
+        return page;
     }
 
 }

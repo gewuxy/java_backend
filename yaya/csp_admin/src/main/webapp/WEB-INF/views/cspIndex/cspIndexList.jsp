@@ -81,7 +81,7 @@
                 <ul class="list4"  style="display: none"></ul>
             </div>
             <div class="pagination text-right clearfix">
-                <form id="pageForm" name="pageForm" action="${ctx}/csp/userInfo/mapData" method="post">
+                <form id="pageForm" name="pageForm" action="${ctx}/csp/userInfo/list" method="post">
                         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
                         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
                 </form>
