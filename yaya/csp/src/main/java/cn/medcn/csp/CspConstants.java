@@ -23,7 +23,7 @@ public class CspConstants {
     //直播流量报警阈值 单位M
     public static final int FLUX_WARN_THRESHOLD = 2048;
 
-    public static final float FLUX_USAGE_PER_SECOND = 0.48f / 8;//直播单人流量消耗 单位 mbps 兆每秒
+    public static final float FLUX_USAGE_PER_SECOND = 0.48f / 8 ;//直播单人流量消耗 单位 mbps 兆每秒
 
     //腾讯视频直播api超时时间 单位分钟
     public static final int TX_LIVE_API_TIME_OUT = 10;
