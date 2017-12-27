@@ -68,4 +68,5 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
     List<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable);
 
     CspOrderPlatFromDTO getTotalCapital(Pageable pageable);
+    String getLocalPackage(Integer packageId);
 }
