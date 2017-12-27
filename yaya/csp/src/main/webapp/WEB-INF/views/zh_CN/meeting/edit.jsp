@@ -519,7 +519,6 @@
         });
 
         $("input[name='course.playType']").click(function(){
-            alert(123);
             var playType = $(this).val();
             $("input[name='course.playType']").removeAttr("checked");
             $(this).prop("checked", "true");
