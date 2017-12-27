@@ -65,7 +65,7 @@
 </form>
 <div class="clearfix inputButton-item">
     <div class="pull-left inputTime-item">
-        <input class="btn btn-primary" type="button" value="导出新增用户" onclick="window.location.href = '${ctr}/csp/sys/user/addAdmin'"/>
+        <input class="btn btn-primary" type="button" value="导出新增用户" id="export"/>
     </div>
 </div>
 <div class="clearfix item-margin-bottom">
@@ -77,19 +77,29 @@
     //图表加载
     var dom = document.getElementById('echarts-2');
     var myChart = echarts.init(dom);
-    var app = {};
     option = null;
+
 
     $(function(){
 
         $.get('${ctx}/sys/register/stats/newly/static',{"startTime":"${startTime}","endTime":"${endTime}","location":"${location}","grain":0}, function (data) {
             if (data.code == 0){
                 fillData(data.data);
+                dateArray = data.data.dateCount;
             }else{
                 layer.msg("获取数据失败");
             }
         },'json');
 
+
+        $("#export").click(function () {
+            var startTime = $("#startTime").val();
+            var endTime = $("#endTime").val();
+            var grain = $(".nav-pills .active").children().attr("grain");
+            var location = '${location}';
+            window.location.href = "${ctr}/sys/register/stats/export?location=" + location + "&startTime=" + startTime + "&endTime=" + endTime + "&grain=" + grain;
+
+        });
 
         $(".nav-pills li a").click(function () {
             var grain = $(this).attr("grain");
@@ -101,6 +111,7 @@
             $.get('${ctx}/sys/register/stats/newly/static',{"startTime":startTime,"endTime":endTime,"location":location,"grain":grain}, function (data) {
                 if (data.code == 0){
                     fillData(data.data);
+                    dateArray = data.data.dateCount;
                 }else{
                     layer.msg("获取数据失败");
                 }
@@ -140,6 +151,7 @@
             $.get('${ctx}/sys/register/stats/newly/static',{"startTime":startTime,"endTime":endTime,"location":location,"grain":grain}, function (data) {
                 if (data.code == 0){
                     fillData(data.data);
+                    dateArray = data.data.dateCount;
                 }else{
                     layer.msg("获取数据失败");
                 }
@@ -150,6 +162,7 @@
 
 
     function fillData(data) {
+        var dateArray = new Array();
         var weiXinArray = new Array();
         var weiBoArray = new Array();
         var facebookArray = new Array();
