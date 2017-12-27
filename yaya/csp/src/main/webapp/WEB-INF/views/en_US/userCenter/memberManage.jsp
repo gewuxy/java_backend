@@ -82,7 +82,7 @@
                                                 <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
                                                 <div class="oh">
                                                     <h5 class="title">${cspPackage.packageUs}</h5>
-                                                    <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>~<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                    <div class="member-mode-tips">${startTime}~${endTime}</div>
                                                 </div>
                                             </c:if>
                                             <c:if test="${cspPackage.packageUs == 'Professional Edition'}">
@@ -124,7 +124,7 @@
                                             </c:if>
                                             <c:if test="${info.iden =='ZB'}"><li>
                                                 <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                                <p class="text">${info.limitMeets}Meetings</p>
+                                                <p class="text">${info.limitMeets} Meetings</p>
                                             </li>
                                             </c:if>
                                             <c:if test="${info.iden =='GG' && info.state == false}">
