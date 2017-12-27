@@ -287,6 +287,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
 .logo-watermark-position-top-right .logo-watermark{  top:0.15rem; right:3%; }
 .logo-watermark-position-bottom-left .logo-watermark{  bottom:0.15rem; left:3%; }
 .logo-watermark-position-bottom-right .logo-watermark{ bottom: 0.15rem; right:3%;}
+.logo-watermark-position-bottom-right .boxAudio-loading,
 .logo-watermark-position-bottom-right .boxAudio { left: .2rem; bottom: 0.3rem; right:auto;  }
 
 .popup-fullStatus .logo-watermark-position-bottom-right .logo-watermark ,
@@ -297,6 +298,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
 .CSPMeeting-popup-fullsize.logo-watermark-position-top-right .logo-watermark{ top:.9rem;}
 .CSPMeeting-popup-fullsize.logo-watermark-position-bottom-left .logo-watermark{ bottom:.9rem;}
 .CSPMeeting-popup-fullsize.logo-watermark-position-bottom-right .logo-watermark{ bottom:.9rem;}
+.CSPMeeting-popup-fullsize.logo-watermark-position-bottom-right .boxAudio-loading,
 .CSPMeeting-popup-fullsize.logo-watermark-position-bottom-right .boxAudio { left: .2rem; bottom: 1rem; right:auto;  }
 
 
@@ -464,10 +466,12 @@ html,body { overflow-x:hidden; background-color:#fff;}
     .details-gallery  .swiper-btn-item { padding:20% 0 0; }
     .layer-hospital-popup .meetingSwiperBox  .swiper-picture { }
     /*竖屏*/
+    .popup-fullStatus .popup-volume .boxAudio-loading,
     .popup-fullStatus .popup-volume .boxAudio { right: auto; left: .2rem; bottom: 1.8rem;}
 
     .video-play-live { min-height:40%; /*background-color:#000;*/ }
     .warp .popup-fullStatus .video-play-live { min-height: 0;}
+    .popup-fullStatus .popup-min-screen .boxAudio-loading{ display: none;  }
 
 
     /*竖屏全屏录播*/
@@ -481,8 +485,11 @@ html,body { overflow-x:hidden; background-color:#fff;}
 
     /*横屏CSS*/
     .details-gallery .gallery-top { height:100%; }
+    .gallery-top .boxAudio-loading,
     .gallery-top .boxAudio { bottom:1.2rem; }
+    .popup-volume .boxAudio-loading,
     .popup-volume .boxAudio { display: none;}
+    .popup-min-screen .boxAudio-loading,
     .popup-min-screen .boxAudio { bottom:.1rem;}
 
 
@@ -490,6 +497,7 @@ html,body { overflow-x:hidden; background-color:#fff;}
     .logo-watermark-position-top-right .logo-watermark{  top:0.9rem; right:3%; }
     .logo-watermark-position-bottom-left .logo-watermark{  bottom:0.9rem; left:3%; }
     .logo-watermark-position-bottom-right .logo-watermark{ bottom: 0.9rem; right:3%;}
+    .logo-watermark-position-bottom-right .boxAudio-loading,
     .logo-watermark-position-bottom-right .boxAudio { left: .2rem; bottom: 0.3rem; right:auto;  }
 
     .CSPMeeting-gallery-live .logo-watermark-position-top-left .logo-watermark,

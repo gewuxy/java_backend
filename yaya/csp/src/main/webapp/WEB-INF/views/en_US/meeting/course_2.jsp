@@ -131,12 +131,14 @@
                     if ($(".video-notPlay").hasClass("none")){
                         $(".video-notPlay-bg").removeClass("none");
                         $(".video-play-live").addClass("video-notPlay-item");
-
-                        if(isAndroid){
-                            //解决黑边与遮挡
+                    } else {
+                        $(".video-notPlay-bg").addClass("none");
+                        $(".video-play-live").addClass("video-notPlay-item");
+                    }
+                    if(isAndroid){
+                        //解决黑边与遮挡
 //                            $("#ck-video").attr('style','margin-top:9999px');
-                            $("#ck-video").attr('style','height:0');
-                        }
+                        $("#ck-video").attr('style','height:0');
                     }
                 });
 
@@ -285,9 +287,11 @@
 
         $("#audioPlayer")[0].addEventListener("error", function(){
             $(".boxAudio-loading").removeClass("none");
+            $(".boxAudio").addClass("none");
         });
 
         $("#audioPlayer")[0].addEventListener("loadedmetadata", function(){
+            $(".boxAudio").removeClass("none");
             $(".boxAudio-loading").addClass("none");
         });
 
@@ -450,20 +454,20 @@
 //                CKobject.getObjectById('ck-video').play();
             },
             onSlideNextEnd:function(){
-                nextItemIsVideo = $('.swiper-slide-next').find('video');
-                //判断后一个是否有视频
-                if(nextItemIsVideo.length > 0){
-                    //重新加载视频
-                    nextItemIsVideo.get(0).load();
-                }
 
-            },
-            onSlidePrevEnd:function(){
                 prevItemIsVideo = $('.swiper-slide-prev').find('video');
                 //判断前一个是否有视频
                 if(prevItemIsVideo.length > 0){
                     //重新加载视频
                     prevItemIsVideo.get(0).load();
+                }
+            },
+            onSlidePrevEnd:function(){
+                nextItemIsVideo = $('.swiper-slide-next').find('video');
+                //判断后一个是否有视频
+                if(nextItemIsVideo.length > 0){
+                    //重新加载视频
+                    nextItemIsVideo.get(0).load();
                 }
             },
             onInit: function(swiper){
