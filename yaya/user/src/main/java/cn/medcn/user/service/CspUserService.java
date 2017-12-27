@@ -98,7 +98,7 @@ public interface CspUserService extends BaseService<CspUserInfo>{
      * @param userId
      * @return
      */
-    void doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException, ParseException;
+    Integer doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException, ParseException;
 
     /**
      * 绑定邮箱

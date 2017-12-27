@@ -113,9 +113,9 @@
 
     <select id="findNewlyRegisterList" resultType="cn.medcn.user.model.ReportRegister">
       SELECT
-      sum(weixin_count) AS weiXinCount,sum(weibo_count) AS weiBoCount,sum(facebook_count) AS facebookCount,
-        sum(twitter_count) AS twitterCount,sum(yaya_count) AS yaYaCount, sum(mobile_count) AS mobileCount,
-        sum(email_count) AS emailCount,
+      sum(wei_xin_count) AS weiXinCount,sum(wei_bo_count) AS weiBoCount,sum(facebook_count) AS facebookCount,
+        sum(twitter_count) AS twitterCount,sum(ya_ya_count) AS yaYaCount, sum(mobile_count) AS mobileCount,
+        sum(email_count) AS emailCount,register_time,
           <if test="grain == 0">
               date_format(register_time,'%Y-%m-%d')as groupDate
           </if>

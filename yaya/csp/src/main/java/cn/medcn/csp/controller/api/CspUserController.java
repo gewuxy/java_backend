@@ -691,7 +691,12 @@ public class CspUserController extends CspBaseController {
         } else {
             //解绑操作
             try {
-                cspUserService.doUnbindThirdAccount(info.getThirdPartyId(), userId);
+                Integer thirdType = info.getThirdPartyId();
+                Integer updatePackageId = cspUserService.doUnbindThirdAccount(thirdType, userId);
+                if(thirdType == BindInfo.Type.YaYa.getTypeId()){
+                    audioService.doModifyAudioCourseByPackageId(userId,updatePackageId);
+                    updatePackagePrincipal(userId);
+                }
             } catch (Exception e) {
                 return error(e.getMessage());
             }
