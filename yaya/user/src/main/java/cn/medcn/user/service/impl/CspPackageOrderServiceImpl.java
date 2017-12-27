@@ -5,6 +5,7 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CalendarUtils;
+import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.sys.dao.SystemNotifyDAO;
 import cn.medcn.sys.service.SysNotifyService;
@@ -170,7 +171,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @param orderId
      */
     public void addNotify(Integer oldPackageId, String userId, Date start, Date end, Integer packageId, String orderId) {
-        String packageDesc = CspPackage.getLocalPackage(packageId);
+        String packageDesc = CspPackage.getLocalPackage(packageId,LocalUtils.getLocalStr());
         String content = "";
         String title = local("package.notify.pay.success");
         try {
@@ -246,11 +247,13 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
 
     @Override
     public List<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
         return packageOrderDAO.getCapitalByDay(pageable.getParams());
     }
 
     @Override
     public CspOrderPlatFromDTO getTotalCapital(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
         return packageOrderDAO.getTotalCapital(pageable.getParams());
     }
 
