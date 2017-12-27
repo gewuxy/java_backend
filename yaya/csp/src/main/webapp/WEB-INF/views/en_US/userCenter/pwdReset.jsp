@@ -226,7 +226,7 @@
                     if (result.code == 0){//成功
                         $("#pwd").val("");
                         $("#rePwd").val("");
-                        layer.msg("update success");
+                        layer.msg("Updated successfully");
                     }else{//失败
                         layer.msg(result.err);
                     }
