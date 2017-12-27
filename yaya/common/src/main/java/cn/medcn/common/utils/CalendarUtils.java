@@ -578,22 +578,6 @@ public class CalendarUtils {
         return days;
     }
 
-    /**
-     * 计算两时间相差的天数
-     *
-     * @param startDate
-     * @param endDate
-     * @return
-     */
-    public static int timeBetween(Date startDate, Date endDate) throws ParseException {
-        int days = 0;
-         days = (int)(endDate.getTime() + 1000 - startDate.getTime()) / (1000*3600*24);
-        return days;
-    }
-
-
-
-
     public static Date getQuarterFirstDate(Date date) throws ParseException {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
@@ -814,12 +798,11 @@ public class CalendarUtils {
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date myDate1 = dateFormat1.parse("2017-12-01 00:00:00 ");
+        Date myDate1 = dateFormat1.parse("2018-01-28 00:00:00");
         DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date myDate2 = dateFormat2.parse("2017-12-02 23:59:59");
+        Date myDate2 = dateFormat2.parse("2018-02-25 23:59:58");
         List list = getAllDateList(myDate1,myDate2);
         System.out.println(daysBetween(myDate1,myDate2));
-        System.out.println(timeBetween(myDate1,myDate2));
         System.out.println(dateFormat1.format(calendarDay(myDate1,2)));
         System.out.println(dateFormat1.format(calendarTime(myDate2,2)));
 
