@@ -468,20 +468,20 @@
 //                CKobject.getObjectById('ck-video').play();
             },
             onSlideNextEnd:function(){
-                nextItemIsVideo = $('.swiper-slide-next').find('video');
-                //判断后一个是否有视频
-                if(nextItemIsVideo.length > 0){
-                    //重新加载视频
-                    nextItemIsVideo.get(0).load();
-                }
 
-            },
-            onSlidePrevEnd:function(){
                 prevItemIsVideo = $('.swiper-slide-prev').find('video');
                 //判断前一个是否有视频
                 if(prevItemIsVideo.length > 0){
                     //重新加载视频
                     prevItemIsVideo.get(0).load();
+                }
+            },
+            onSlidePrevEnd:function(){
+                nextItemIsVideo = $('.swiper-slide-next').find('video');
+                //判断后一个是否有视频
+                if(nextItemIsVideo.length > 0){
+                    //重新加载视频
+                    nextItemIsVideo.get(0).load();
                 }
             },
             onInit: function(swiper){
