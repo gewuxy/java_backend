@@ -485,12 +485,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             CspUserPackage userPackage = cspUserPackageService.selectByPrimaryKey(userId);
             userPackage.setSourceType(Constants.NUMBER_THREE);
             userPackage.setUpdateTime(new Date());
-            if(userPackage.getPackageEnd() != null){   //在绑定之前有进行套餐的购买
-                //获取变更之前的套餐版本
-                CspUserPackageHistory lastHistory = cspUserPackageHistoryService.getLastHistoryByUserId(userId);
-                if(lastHistory != null){
-                    updatePackageId = lastHistory.getBeforePackageId();
-                }
+            if(userPackage.getPackageEnd() != null){   //在绑定之前有进行套餐的购买,则依旧是专业版
+                updatePackageId = CspPackage.TypeId.PROFESSIONAL.getId();
                 //计算之前剩余多少天
                 Integer betwwen = CalendarUtils.daysBetween(userPackage.getPackageStart(),userPackage.getPackageEnd());
                 Date start = CalendarUtils.nextDateStartTime();
