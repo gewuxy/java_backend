@@ -117,9 +117,9 @@ public class CspPackage implements Serializable {
      * @param packageId
      * @return
      */
-    public static String getLocalPackage(Integer packageId) {
+    public static String getLocalPackage(Integer packageId,String language) {
         String localStr = "";
-        if (LocalUtils.Local.zh_CN.name().equals(LocalUtils.getLocalStr())) {
+        if (LocalUtils.Local.zh_CN.name().equals(language)) {
             if (packageId == 1) {
                 localStr = TypeId.STANDARD.getLabel();
             } else if (packageId == 2) {
@@ -128,7 +128,7 @@ public class CspPackage implements Serializable {
                 localStr = TypeId.PROFESSIONAL.getLabel();
             }
         }
-        if (LocalUtils.Local.zh_TW.name().equals(LocalUtils.getLocalStr())) {
+        if (LocalUtils.Local.zh_TW.name().equals(language)) {
             if (packageId == 1) {
                 localStr = TypeId.STANDARD.getLabelTw();
             } else if (packageId == 2) {
@@ -137,7 +137,7 @@ public class CspPackage implements Serializable {
                 localStr = TypeId.PROFESSIONAL.getLabelTw();
             }
         }
-        if (LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())) {
+        if (LocalUtils.Local.en_US.name().equals(language)) {
             if (packageId == 1) {
                 localStr = TypeId.STANDARD.getLabelUs();
             } else if (packageId == 2) {
