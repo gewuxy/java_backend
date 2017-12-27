@@ -104,10 +104,10 @@
                                                 <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id21">
                                                 <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                             </label>
-                                            <%--<label for="id31" class="item item-radius">--%>
-                                                <%--<input type="radio" name="channel" class="none" value="upacp_pc" id="id31">--%>
-                                                <%--<img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">--%>
-                                            <%--</label>--%>
+                                            <label for="id31" class="item item-radius">
+                                                <input type="radio" name="channel" class="none" value="upacp_pc" id="id31">
+                                                <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                            </label>
                                         </div>
                                         <div class="pay-mode-list EN-hook ">
                                             <label for="id5" class="item item-radius pay-on">
@@ -120,7 +120,7 @@
                                 <div class="formrow money">
                                     <div class="formTitle color-black">Payment</div>
                                     <div class="formControls">
-                                        <span class="color-black"><span class="payNum">35</span> <span id="yuan">USD</span></span> <span class="color-green">(100G)</span>
+                                        <span class="color-black"><span class="payNum">35</span> <span id="yuan">USD</span></span> <span class="color-green">(100G))</span>
                                         <span class="money-state">
                                         <label for="currency-cn" class="cn">
                                             <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
@@ -171,7 +171,7 @@
 </div>
 
 <!--弹出 邮件获取-->
-<div class="videoListEmail-popup-box">
+<div class="videoListEmail-popup-box" style="display: none;">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
@@ -341,7 +341,7 @@
     $('.videoListEmail-hook').on('click',function(){
         layer.open({
             type: 1,
-            area: ['560px', '320px'],
+            area: ['560px', '360px'],
             fix: false, //不固定
             title:false,
             closeBtn:0,
