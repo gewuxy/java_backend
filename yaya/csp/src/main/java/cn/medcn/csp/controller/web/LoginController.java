@@ -336,6 +336,8 @@ public class LoginController extends CspBaseController {
                     }
                 }
             }
+        }else{
+            return "redirect:/mgr/login";
         }
         return null;
     }

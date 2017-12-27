@@ -74,7 +74,7 @@
             ajaxPost('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info},function (data) {
                 if (data.code == 0){
                     $("#name", window.parent.document).html(nickName);
-                    layer.msg("update success");
+                    layer.msg("Updated successfully");
                 }else{
                     layer.msg("update fail");
                 }
