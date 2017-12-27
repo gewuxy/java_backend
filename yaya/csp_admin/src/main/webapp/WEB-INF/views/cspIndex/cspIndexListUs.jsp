@@ -69,117 +69,11 @@
     </div>
 
 </div>
-<%--<div class=" clearfix">
-
-    <div class="data-tj-box">
-        <h4 class="text-center">用户地区分布图</h4>
-        <div class="regionList" id="MapControl">
-            <div class="regionListItem clearfix">
-                <ul class="list1"></ul>
-                <ul class="list2"  style="display: none"></ul>
-                <ul class="list3"  style="display: none"></ul>
-                <ul class="list4"  style="display: none"></ul>
-            </div>
-            <div class="pagination text-right clearfix">
-                <form id="pageForm" name="pageForm" action="${ctx}/csp/userInfo/mapData" method="post">
-                        <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
-                        <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
-                </form>
-            </div>
-            <%@include file="/WEB-INF/include/pageable.jsp"%>
-        </div>
-        <div id="Region" style="position:relative; height:360px; margin-top:10px;">
-            <div class="regionMap" id="RegionMap"></div>
-        </div>
-
-    </div>
-</div>--%>
 <script src="${ctxStatic}/bootstrap/added/map/raphael-min.js"></script>
 <script src="${ctxStatic}/bootstrap/added/map/chinaMapConfig.js"></script>
 <script src="${ctxStatic}/bootstrap/added/map/map.js"></script>
 <script src="${ctxStatic}/js/util.js"></script>
 
-<%--<script>
-
-    function getProKey(province){
-        var proKey = "";
-        for(var key in chinaMapConfig.names){
-            if (province.startWith(chinaMapConfig.names[key])){
-                proKey = key;
-                break;
-            }
-        }
-        if(proKey == ''){
-            proKey = "NoExist";
-        }
-        return proKey;
-    }
-
-    // 地图分页
-    function gettopage(pageNum) {
-        $('#MapControl ul').hide();
-        $('#MapControl .list'+pageNum).show();
-    }
-    $(function(){
-        var data = {};
-        <c:forEach items="${map}" var="m" varStatus="status">
-        var pkey = getProKey("${m.key}");
-        var perct = '<fmt:formatNumber type="number" value="${m.value}" pattern="0.00" maxFractionDigits="2"/>';
-        data[pkey] = {"value":perct+"%","index":"${status.index+1}","stateInitColor":"${status.index+1}"};
-        </c:forEach>
-
-        var i = 1;
-        for(k in data){
-            $('#MapControl .list1').append('<li name="'+k+'"><div class="mapInfo"><span class="mapInfoName">'+chinaMapConfig.names[k]+'</span><span class="progreesBar"><b style=width:'+data[k].value+'></b></span><span class="mapInfoNum">'+data[k].value+'</span></div></li>');
-        }
-        var mapObj_1 = {};
-        var stateColorList = ['2770b5', '0058B0', '0071E1', '1C8DFF', '51A8FF', '82C0FF', 'AAD5ee', 'AAD5FF'];
-
-        $('#RegionMap').SVGMap({
-            external: mapObj_1,
-            mapName: 'china',
-            stateData: data,
-            // stateTipWidth: 118,
-            // stateTipHeight: 47,
-            // stateTipX: 2,
-            // stateTipY: 0,
-            stateTipHtml: function (mapData, obj) {
-               // console.log($(".svggroup svg").width());
-                var _value = mapData[obj.id].value;
-                var _idx = mapData[obj.id].index;
-                var active = '';
-                _idx < 4 ? active = 'active' : active = '';
-                var tipStr = '<div class="mapInfo"><i class="' + active + '">' + _idx + '</i><span>' + obj.name + '</span><b>' + _value + '</b></div>';
-                return tipStr;
-            }
-        });
-        $('#MapControl li').hover(function () {
-            var thisName = $(this).attr('name');
-
-            var thisHtml = $(this).html();
-            $('#MapControl li').removeClass('select');
-            $(this).addClass('select');
-            $(document.body).append('<div id="StateTip"></div>');
-            $('#StateTip').css({
-                left: $(mapObj_1[thisName].node).offset().left - 50,
-                top: $(mapObj_1[thisName].node).offset().top - 40
-            }).html(thisHtml).show();
-            mapObj_1[thisName].attr({
-                fill: '#E99A4D'
-            });
-        }, function () {
-            var thisName = $(this).attr('name');
-
-            $('#StateTip').remove();
-            $('#MapControl li').removeClass('select');
-            mapObj_1[$(this).attr('name')].attr({
-                fill: "#" + stateColorList[data[$(this).attr('name')].stateInitColor]
-            });
-        });
-
-        $('#MapColor').show();
-    });
-</script>--%>
 <h3 class="page-title">海外用户新增列表</h3>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
@@ -199,11 +93,11 @@
     <tr>
                 <td>${user.uid}</td>
                 <td>${user.nickName}</td>
-                <td><fmt:formatDate value="${user.registerTime}" pattern="yyyyMMdd"/></td>
+                <td><fmt:formatDate value="${user.registerTime}" type="both" dateStyle="full"/></td>
                 <td>${user.packageId eq 1 ? "标准版": user.packageId eq 2 ? "高级版": user.packageId eq 3 ? "专业版":"<span style='color: #9c0001'>未登录</span>"}</td>
                 <td>
                     <c:if test="${not empty user.packageStart}">
-                    <fmt:formatDate value="${user.packageStart}" pattern="yyyyMMdd"/>至<fmt:formatDate value="${user.packageEnd}" pattern="yyyyMMdd"/>
+                    <fmt:formatDate value="${user.packageStart}" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${user.packageEnd}" pattern="yyyy-MM-dd"/>
                     </c:if>
                     <c:if test="${empty user.packageStart && user.packageId eq 1}">
                         无期限

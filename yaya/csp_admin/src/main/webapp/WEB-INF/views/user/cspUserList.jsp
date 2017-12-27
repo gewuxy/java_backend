@@ -61,9 +61,9 @@
                         </a>
                         <ul class="dropdown-menu">
                             <shiro:hasPermission name="csp:user:edit">
-                                <li><a href="#" onclick="changePackages(1,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">升级</a></li>
-                                <li><a href="#" onclick="changePackages(2,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">降级</a></li>
-                                <li><a href="#" onclick="changePackages(3,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'))">时间修改</a></li>
+                                <li><a href="#" onclick="changePackages(1,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'),'${user.unlimited}')">升级</a></li>
+                                <li><a href="#" onclick="changePackages(2,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'),'${user.unlimited}')">降级</a></li>
+                                <li><a href="#" onclick="changePackages(3,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'),'${user.unlimited}')">时间修改</a></li>
                             </shiro:hasPermission>
                             <shiro:hasPermission name="csp:user:active">
                                 <li><a href="#" onclick="active(4,'${user.uid}')">账号冻结</a></li>
@@ -139,6 +139,7 @@
                     <input type="hidden" name="packageEnd" id="packageEnd" value=""/>
                     <input type="hidden" name="actionType" id="actionType" value=""/>
                     <input type="hidden" name="oldId" id="oldId" value=""/>
+                    <input type="hidden" name="unlimited" id="unlimited" value=""/>
                     <input type="hidden" name="listType"  value="${listType}"/>
                     <button type="button" class="btn green">返回</button>
                     <button type="button" class="btn btn-primary" onclick="submitBtn()">提交</button>
@@ -166,7 +167,7 @@
     }
 
     //初始化升级降级修改时间列表
-    function changePackages(actionType,userId,packageId,packageEnd){
+    function changePackages(actionType,userId,packageId,packageEnd,unlimited){
         $("#packageChange").show();
         $("#dongjie").hide();
         if(packageId != undefined){
@@ -177,6 +178,7 @@
         $("#userId").val(userId);
         $("#actionType").val(actionType);
         $("#oldId").val(packageId);
+        $("#unlimited").val(unlimited);
         if(actionType == 1){ //升级
             $(".modal-title").html("升级");
             $(".packageLable").html("升级为：");
@@ -204,6 +206,7 @@
             var actionType = $("#actionType").val();
             var oldId = $("#oldId").val();
             var packageId = $("#packageId").val();
+            var unlimited = $("#unlimited").val();
             if(actionType == 1 || actionType == 2) {
                 if(actionType == 1){  // 升级
                     if (packageId == "" || packageId <= oldId) {
@@ -219,6 +222,10 @@
                         layer.msg("降级最低版本为标准版");
                         return false;
                     }
+                    if (packageId <= oldId && unlimited == "true"){
+                        layer.msg("不能对敬信数字平台用户进行操作");
+                        return false;
+                    }
                 }
                 if(packageId != 1){
                     if(isEmpty($("#packageEnd").val())){
@@ -226,6 +233,7 @@
                         return false;
                     }
                 }
+
             }
             $("#packageEnd").val($("#packageEnd").val() + " 23:59:59");
             $("#packageId").prop("disabled", false);

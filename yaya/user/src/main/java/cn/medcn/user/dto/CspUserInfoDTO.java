@@ -85,6 +85,8 @@ public class CspUserInfoDTO  {
     protected String payMoneyUs;
     //会议数量
     protected int meets;
+    //会议限制
+    protected Boolean unlimited;
 
 
     public static CspUserInfoDTO buildToCspUserInfoDTO(CspUserInfo userInfo) {
