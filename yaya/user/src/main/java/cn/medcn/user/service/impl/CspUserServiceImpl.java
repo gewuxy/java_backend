@@ -496,6 +496,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 userPackage.setUnlimited(false);
             }else{// 还原标准版
                 userPackage.setUnlimited(true);
+                userPackage.setPackageStart(null);
+                userPackage.setPackageEnd(null);
             }
             userPackage.setPackageId(updatePackageId);
             cspUserPackageService.updateByPrimaryKeySelective(userPackage);
