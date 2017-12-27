@@ -311,6 +311,7 @@
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).muted = false;
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
@@ -689,7 +690,7 @@
                 if($('.swiper-slide-active').attr("audio-src") != ''){
                     popupPalyer.element.muted = false;
                 } else if ($('.swiper-slide-active').find('video').length) {
-                    activeItemIsVideo.get(0).muted = true;
+                    activeItemIsVideo.get(0).muted = false;
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
                 ismuted = true
