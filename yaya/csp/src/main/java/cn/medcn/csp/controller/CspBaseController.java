@@ -13,6 +13,7 @@ import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.user.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.user.dto.Captcha;
+import cn.medcn.user.service.CspPackageOrderService;
 import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
@@ -47,6 +48,9 @@ public class CspBaseController extends BaseController {
 
     @Autowired
     protected CspUserPackageService cspUserPackageService;
+
+    @Autowired
+    protected CspPackageOrderService cspPackageOrderService;
 
     @Value("${web.socket.url}")
     protected String webSocketUrl;
@@ -330,7 +334,7 @@ public class CspBaseController extends BaseController {
         } else if (type == Constants.NUMBER_TWO) {  // 选择标准版
             setPrincipal.setPkChangeMsg(local("package.standran.success.msg"));
         } else {                            // 购买高级或者专业版
-            setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{CspPackage.getLocalPackage(packageId)}));
+            setPrincipal.setPkChangeMsg(local("package.buy.pf.success", new Object[]{cspPackageOrderService.getLocalPackage(packageId)}));
         }
         redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + setPrincipal.getToken(), setPrincipal, Constants.TOKEN_EXPIRE_TIME);
     }
