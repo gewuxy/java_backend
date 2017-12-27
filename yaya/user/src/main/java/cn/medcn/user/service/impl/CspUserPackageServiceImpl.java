@@ -133,11 +133,11 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     private void doModifyOldUserVersion(String userId){
         CspUserPackage cspUserPackage = new CspUserPackage();
         Date startTime = CalendarUtils.nextDateStartTime();
-        Date endTime = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
+        Date endTime = CalendarUtils.calendarTime(startTime,DEFAULT_MONTH * NUMBER_THREE);
         cspUserPackage.setUserId(userId);
         cspUserPackage.setSourceType(CspUserPackage.modifyType.ADMIN_MODIFY.ordinal());
         cspUserPackage.setUpdateTime(new Date());
-        cspUserPackage.setPackageStart(new Date());
+        cspUserPackage.setPackageStart(startTime);
         cspUserPackage.setPackageEnd(endTime);
         cspUserPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
         cspUserPackage.setUnlimited(false);

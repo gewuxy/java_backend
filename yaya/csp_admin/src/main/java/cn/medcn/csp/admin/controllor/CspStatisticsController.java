@@ -34,21 +34,32 @@ public class CspStatisticsController extends BaseController {
     protected CspPackageOrderService cspPackageOrderService;
 
     @RequestMapping(value = "/statistics")
-    public String statistic(Model model){
+    public String statistic(Pageable pageable,Integer abroad,String startTime,String endTime,Model model){
+        pageable.setPageSize(10);
+        pageable.put("abroad",abroad);
         //获取资金总额
         List<Map<String,Object>> total = cspPackageOrderService.totalMoney();
         model.addAttribute("rmb",total.get(0).get("money"));
         model.addAttribute("usd",total.get(1).get("money"));
         //获取每日总额订单（人民币、美元）
-        List<Map<String,Object>> capital = cspPackageOrderService.orderCapitalStati();
         //获取每日各渠道资金总额
-        List<CspOrderPlatFromDTO> list = cspPackageOrderService.getCapitalByDay();
+        List<CspOrderPlatFromDTO> list = cspPackageOrderService.getCapitalByDay(pageable);
+        model.addAttribute("list",list);
+        CspOrderPlatFromDTO totalMomey = cspPackageOrderService.getTotalCapital(pageable);
+        model.addAttribute("total",totalMomey.getTotalMoney());
         return "/statistics/moneyStati";
+    }
+
+    @RequestMapping(value = "/echarts/data")
+    @ResponseBody
+    public String echartsData(Integer abroad,String startTime,String endTime){
+        //获取每日各渠道资金总额
+        List<Map<String,Object>> capital = cspPackageOrderService.orderCapitalStati(abroad,startTime,endTime);
+        return success(capital);
     }
 
     @RequestMapping(value = "/money")
     public String money(){
         return "/statistics/moneyStati";
     }
-
 }

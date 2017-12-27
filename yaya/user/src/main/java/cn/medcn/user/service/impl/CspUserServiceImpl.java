@@ -488,9 +488,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             if(userPackage.getPackageEnd() != null){   //在绑定之前有进行套餐的购买,则依旧是专业版
                 updatePackageId = CspPackage.TypeId.PROFESSIONAL.getId();
                 //计算之前剩余多少天
-                Integer betwwen = CalendarUtils.daysBetween(userPackage.getPackageStart(),userPackage.getPackageEnd());
+                Integer betwwen = CalendarUtils.daysBetween(userPackage.getPackageStart(),userPackage.getPackageEnd()) + 1;
                 Date start = CalendarUtils.nextDateStartTime();
-                Date end = CalendarUtils.calendarDay(start,betwwen);
+                Date end = CalendarUtils.calendarTime(start,betwwen);
                 userPackage.setPackageStart(start);
                 userPackage.setPackageEnd(end);
                 userPackage.setUnlimited(false);

@@ -31,10 +31,10 @@
                         <%@include file="user_include.jsp" %>
                         <div class="user-content user-content-levelHeight item-radius" >
                             <div class="formrow login-form-item">
-                                <div class="formTitle">nickName</div>
+                                <div class="formTitle">Name</div>
                                 <div class="formControls">
                                     <input type="text" id="nickName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
-                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;nickName can't empty</span>
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Empty field cannot be saved</span>
                                 </div>
                             </div>
                             <div class="formrow">
@@ -74,7 +74,7 @@
             ajaxPost('${ctx}/mgr/user/updateInfo',{"nickName":nickName,"info":info},function (data) {
                 if (data.code == 0){
                     $("#name", window.parent.document).html(nickName);
-                    layer.msg("update success");
+                    layer.msg("Updated successfully");
                 }else{
                     layer.msg("update fail");
                 }
