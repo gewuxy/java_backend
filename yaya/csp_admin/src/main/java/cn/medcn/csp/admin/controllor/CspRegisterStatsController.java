@@ -73,7 +73,7 @@ public class CspRegisterStatsController extends BaseController{
      */
     @RequestMapping("/newly/static")
     @ResponseBody
-    public String newlyStatic(Integer location, String startTime, String endTime, Integer grain) throws ParseException {
+    public String newlyStatic(Integer location, String startTime, String endTime, Integer grain) throws ParseException, SystemException {
         if(location == null){
             return error("请指定地区");
         }
@@ -94,8 +94,8 @@ public class CspRegisterStatsController extends BaseController{
         CspNewlyStaticDTO dto = new CspNewlyStaticDTO();
         dto.setList(list);
         //格式化日期
-        List<Date> dateList = CspNewlyStaticDTO.buildDate(grain,startDate,endDate);
-        dto.setDateCount(CspNewlyStaticDTO.getDateCount(dateList));
+        String[] dateCount = CspNewlyStaticDTO.buildDate(grain,list);
+        dto.setDateCount(dateCount);
 
         return success(dto);
     }
@@ -121,9 +121,8 @@ public class CspRegisterStatsController extends BaseController{
         Date endDate = getLastDayByGrain(endTime,grain);
         List<ReportRegister> list = getNewlyRegisterList(startDate,endDate,location,grain);
         String fileName = "新增用户.xls";
-        List<Date> dateList = CspNewlyStaticDTO.buildDate(grain,startDate,endDate);
         //转换成excel需要的日期格式
-        List<String> stringList =  buildExcelDateFormatByGrain(dateList,grain);
+        List<String> stringList =  buildExcelDateFormatByGrain(list,grain);
         List<Object> dataList = Lists.newArrayList();
         //生成excel元素
         addExcelDataList(list, dataList, stringList);
@@ -196,12 +195,13 @@ public class CspRegisterStatsController extends BaseController{
      * @param grain
      * @return
      */
-    private List<String> buildExcelDateFormatByGrain(List<Date> list,Integer grain){
+    private List<String> buildExcelDateFormatByGrain(List<ReportRegister> list,Integer grain){
         List<String> stringList = new ArrayList<>();
         DateFormat format = new SimpleDateFormat("yyyy/MM/dd");
         DateFormat monthFormat = new SimpleDateFormat("yyyy年MM月");
         DateFormat yearFormat = new SimpleDateFormat("yyyy年");
-        for(Date date : list){
+        for(ReportRegister user : list){
+            Date date = user.getRegisterTime();
             //按周统计
             if(grain == CspNewlyStaticDTO.Grain.WEEK.ordinal()){
                 Date endDate = CalendarUtils.getWeekLastDay(date);
@@ -215,7 +215,7 @@ public class CspRegisterStatsController extends BaseController{
             }else if(grain == CspNewlyStaticDTO.Grain.QUARTER.ordinal()){
                 Calendar cal = Calendar.getInstance();
                 cal.setTime(date);
-                int month = cal.get(Calendar.MONTH);//获取月份
+                int month = cal.get(Calendar.MONTH) + 1;//获取月份
                 int year = cal.get(Calendar.YEAR); //获取年份
                 month = month < 4 ? 1 : month < 7 ? 2 : month < 10 ? 3 : 4;
                 stringList.add(year + "年Q" + month);
