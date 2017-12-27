@@ -34,7 +34,7 @@
                                 <div class="formTitle">Name</div>
                                 <div class="formControls">
                                     <input type="text" id="nickName" class="textInput" placeholder="" maxlength="18" value="${dto.nickName}">
-                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;nickName can't empty</span>
+                                    <span class="cells-block error none" id="nameSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;Empty field cannot be saved</span>
                                 </div>
                             </div>
                             <div class="formrow">
