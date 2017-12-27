@@ -150,16 +150,18 @@ public class CspUserController extends BaseController {
         if(currentId == Constants.NUMBER_ONE){ //标准版
             packageInfo.setPackageStart(null);
             packageInfo.setPackageEnd(null);
+            packageInfo.setUnlimited(true);
         }
         packageInfo.setUpdateTime(new Date());
         packageInfo.setSourceType(Constants.NUMBER_TWO);
+        packageInfo.setUnlimited(false);
         CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
         Integer oldpackageId = null;
         if(oldPackage == null){   // 未有套餐信息
             cspUserPackageService.insertSelective(packageInfo);
         }else{
             //更新套餐版本信息
-            cspUserPackageService.updateByPrimaryKey(packageInfo);
+            cspUserPackageService.updateByPrimaryKeySelective(packageInfo);
             oldpackageId = oldPackage.getPackageId();
         }
         //更新会议状态
