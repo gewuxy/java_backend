@@ -72,12 +72,11 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
     /**
      * 老用户赠送三个月的专业版
-     * @param cspUserPackage
      * @param userId
      */
     @Override
-    public void modifyOldUser(CspUserPackage cspUserPackage, String userId) {
-        doModifyOldUserVersion(cspUserPackage,userId);
+    public void modifySendOldUser(String userId) {
+        doModifyOldUserVersion(userId);
     }
 
     @Override
@@ -129,25 +128,19 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
     /**
      * 老用户赠送三个月的专业版
-     * @param cspUserPackage
      * @param userId
      */
-    private void doModifyOldUserVersion(CspUserPackage cspUserPackage,String userId){
+    private void doModifyOldUserVersion(String userId){
+        CspUserPackage cspUserPackage = new CspUserPackage();
         Date startTime = CalendarUtils.nextDateStartTime();
         Date endTime = CalendarUtils.calendarDay(DEFAULT_MONTH * NUMBER_THREE);
         cspUserPackage.setUserId(userId);
         cspUserPackage.setSourceType(CspUserPackage.modifyType.ADMIN_MODIFY.ordinal());
         cspUserPackage.setUpdateTime(new Date());
-       /* if (cspUserPackage.getPackageId() == CspPackage.TypeId.STANDARD.getId()){
-            cspUserPackage.setPackageStart(startTime);
-            cspUserPackage.setPackageEnd(endTime);
-        } else {
-            //高级和专业版 在原有的基础上加上三个月
-            cspUserPackage.setPackageEnd(CalendarUtils.dateAddMonth(cspUserPackage.getPackageEnd(),NUMBER_THREE));
-        }*/
-       cspUserPackage.setPackageStart(new Date());
-       cspUserPackage.setPackageEnd(endTime);
+        cspUserPackage.setPackageStart(new Date());
+        cspUserPackage.setPackageEnd(endTime);
         cspUserPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
+        cspUserPackage.setUnlimited(false);
         userPackageDAO.updateByPrimaryKey(cspUserPackage);
         //添加到套餐详情中
         doAddUserPackageDetail(cspUserPackage,cspUserPackage.getPackageId());
