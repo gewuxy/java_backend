@@ -3,8 +3,8 @@
  * 必须在此文件之前引入jquery
  */
 
-const postMethod = "POST";
-const getMethod = "GET";
+var postMethod = "POST";
+var getMethod = "GET";
 /**
  * 异步POST
  * @param url

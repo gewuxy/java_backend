@@ -175,17 +175,15 @@
                                 </c:if>
 
 
-                                <c:if test="${course != null && course.published}">
                                         <input type="hidden" name="course.playType" id="coursePlayType" value="${course.playType}">
-                                    </c:if>
                                     <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}" >
-                                        <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
+                                        <input id="recorded" type="radio" class="course_play" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏录播</div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
-                                        <input id="live" type="radio" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
+                                        <input id="live" type="radio" class="course_play" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏直播</div>
 
                                     </label>
@@ -194,8 +192,8 @@
                                         <div class="formrow">
                                             <div class="formControls">
                                                             <span class="time-tj">
-                                                                <label for="" id="timeStart">
-                                                                    时间<input type="text"  readonly class="timedate-input " name="liveTime" placeholder="开始时间 - 结束时间"
+                                                                <label for="liveTimeSelector" id="timeStart">
+                                                                    时间<input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="开始时间 - 结束时间"
                                                                              <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
@@ -518,18 +516,20 @@
             showInfoLeftCount();
         });
 
-        $("input[name='course.playType']").click(function(){
+        $("input[name='course.playType'][type='radio']").click(function(){
             var playType = $(this).val();
             $("input[name='course.playType']").removeAttr("checked");
-            $(this).prop("checked", "true");
+            $(this).attr("checked", "true");
+            $("#coursePlayType").val(playType);
             if (playType == 0){
+                $("#coursePlayType").val();
                 $("#liveStartTime").attr("disabled", "true");
                 $("#liveEndTime").attr("disabled", "true");
-                $(this).parents('.meeting-tab').find(".meeting-tab-main").addClass("none");
+                $(".meeting-tab-main").addClass("none");
             } else {
                 $("#liveStartTime").removeAttr("disabled");
                 $("#liveEndTime").removeAttr("disabled");
-                $(this).parents('.meeting-tab').find(".meeting-tab-main").removeClass("none");
+                $(".meeting-tab-main").removeClass("none");
             }
             $(this).parent().siblings().removeClass("cur");
             $(this).parent().addClass("cur");
@@ -583,8 +583,9 @@
                 $courseInfo.parent().next(".error").addClass("none");
             }
 
-            var playType = $("input[name='course.playType']:checked").val();
-            if (playType == 1){
+            var playType =  $("#coursePlayType").val();
+
+            if (playType >= 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
                 var dateBeforeNow = new Date(Date.parse(startTime)).getDate() <= new Date().getDate();
@@ -598,7 +599,6 @@
             } else {
                 $timedate.parent().parent().next(".error").addClass("none");
             }
-
             //设置水印的位置,状态
             if(${packageId == 1}){  //标准版
                 if(${not empty watermark}){
@@ -626,7 +626,6 @@
                     $("#name").val($("#waterName").val() == '' ? "会讲":$("#waterName").val());
                 }
             }
-
             $("#courseForm").submit();
         });
 
@@ -701,9 +700,13 @@
             $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);
         });
+        if("${course != null && course.published && course.playType > 0}" == "true") {
+            showLiveMessage();
+        }
 
-        showLiveMessage();
-
+        if("${course.playType == 2}" == "true"){
+            $(".checkbox-main").show();
+        }
         function showLiveMessage(){
             if($(".chk-hook").is(":checked")) {
                 $("#coursePlayType").val("2");
@@ -713,6 +716,7 @@
                 $(".chk-hook").removeAttr("checked");
                 $(".checkbox-main").hide();
             }
+
         }
 
         $(".chk-hook").change(function(){

@@ -157,19 +157,8 @@
     var health_timeout = 3000;
     var myWs;
     $(function(){
-
         //ws = ws_conn( "ws://211.100.41.186:9999" );
         myWs = ws_conn("${wsUrl}");
-
-        //默认屏幕高度
-        var resizeHeight = $(window).height();
-        //监控键盘ESC 返回按钮
-        $(document).keyup(function(event){
-            switch(event.keyCode) {
-                case 27:
-                    $('.swiper-container-metting-full').height(resizeHeight);
-            }
-        });
 
     });
 
