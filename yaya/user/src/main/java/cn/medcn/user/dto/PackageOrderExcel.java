@@ -8,7 +8,7 @@ import lombok.Data;
  * Created by LiuLP on 2017/12/22/022.
  */
 @Data
-public class PackageExcelData {
+public class PackageOrderExcel {
 
     @ExcelField(columnIndex = 0,title = "订单号")
     private String tradeId;
