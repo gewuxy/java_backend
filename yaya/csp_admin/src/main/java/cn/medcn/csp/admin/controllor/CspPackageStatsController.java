@@ -6,21 +6,17 @@ import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.ExcelUtils;
 import cn.medcn.common.utils.StringUtils;
-import cn.medcn.meet.dto.ExamHistoryExcelData;
 import cn.medcn.user.dto.CspPackageOrderDTO;
-import cn.medcn.user.dto.PackageExcelData;
+import cn.medcn.user.dto.PackageOrderExcel;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspPackageOrder;
-import cn.medcn.user.service.CspPackageInfoService;
 import cn.medcn.user.service.CspPackageOrderService;
-import cn.medcn.user.service.CspUserService;
 import com.google.common.collect.Lists;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -28,7 +24,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 /**
  * csp套餐订单
@@ -121,6 +116,12 @@ public class CspPackageStatsController extends BaseController {
         if(type == null){
             throw new SystemException("请提供货币类型");
         }
+        if(StringUtils.isEmpty(startTime)){
+            throw new SystemException("请选择开始时间");
+        }
+        if(StringUtils.isEmpty(endTime)){
+            throw new SystemException("请选择结束时间");
+        }
         Pageable pageable = new Pageable();
         pageable.put("type",type);
         //导出所有符合的数据,不分页
@@ -138,7 +139,7 @@ public class CspPackageStatsController extends BaseController {
         Date date = null;
         DateFormat format = new SimpleDateFormat("yyyyMMdd");
         for(CspPackageOrderDTO dto :myPage.getDataList()){
-            PackageExcelData data = new PackageExcelData();
+            PackageOrderExcel data = new PackageOrderExcel();
             data.setTradeId(dto.getId());
             data.setMoney(dto.getMoney() + "");
             data.setNickname(dto.getNickname());
@@ -152,11 +153,11 @@ public class CspPackageStatsController extends BaseController {
             dataList.add(data);
         }
         //添加统计交易成功总额记录
-        PackageExcelData data = new PackageExcelData();
+        PackageOrderExcel data = new PackageOrderExcel();
         data.setTradeId("交易成功金额");
         data.setNickname(successSum + "");
         dataList.add(data);
-        Workbook workbook = ExcelUtils.writeExcel(fileName,dataList,PackageExcelData.class);
+        Workbook workbook = ExcelUtils.writeExcel(fileName,dataList,PackageOrderExcel.class);
         try {
 
             ExcelUtils.outputWorkBook(fileName,workbook,response);

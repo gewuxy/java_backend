@@ -300,7 +300,6 @@ public class UserCenterController extends CspBaseController {
 
     }
 
-
     /**
      * 解绑账号
      *
@@ -320,10 +319,13 @@ public class UserCenterController extends CspBaseController {
             }
             return success();
         }
-
         //解绑第三方账号
         try {
-            cspUserService.doUnbindThirdAccount(type, userId);
+            Integer updatePackageId = cspUserService.doUnbindThirdAccount(type, userId);
+            if(type == BindInfo.Type.YaYa.getTypeId()){
+                audioService.doModifyAudioCourseByPackageId(userId,updatePackageId);
+                updatePackagePrincipal(userId);
+            }
         } catch (Exception e) {
             return error(e.getMessage());
         }

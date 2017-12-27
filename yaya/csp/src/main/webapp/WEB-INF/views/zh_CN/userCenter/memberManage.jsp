@@ -129,7 +129,7 @@
                                         </c:if>
                                         <c:if test="${info.iden =='ZB' && info.packageId != 3}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                        <p>${info.limitMeets}会议</p>
+                                        <p>${info.limitMeets}个会议</p>
                                         </li>
                                         </c:if>
                                         <c:if test="${info.iden =='ZB' && info.packageId == 3}"><li>

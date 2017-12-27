@@ -3,14 +3,11 @@ package cn.medcn.csp.controller.web;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
-import cn.medcn.user.model.Principal;
+import cn.medcn.user.model.*;
 import cn.medcn.oauth.dto.OAuthUser;
 import cn.medcn.oauth.service.OauthService;
 import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.CspUserInfoDTO;
-import cn.medcn.user.model.BindInfo;
-import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import org.apache.shiro.SecurityUtils;
@@ -397,13 +394,13 @@ public class LoginController extends CspBaseController {
             cspUserService.doBindThirdAccount(info,userId);
             //绑定丫丫的需要更新缓存
             if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
+                audioService.doModifyAudioCourseByPackageId(userId, CspPackage.TypeId.PROFESSIONAL.getId());
                 updatePackagePrincipal(userId);
             }
             addFlashMessage(redirectAttributes,local("user.bind.success"));
         } catch (SystemException e) {
            addFlashMessage(redirectAttributes,e.getMessage());
         }
-
     }
 
 
