@@ -96,7 +96,6 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Autowired
     protected RedisCacheUtils redisCacheUtils;
 
-
     @Autowired
     protected CSPEmailHelper emailHelper;
 
@@ -449,6 +448,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             cspUserPackageHistoryService.addUserHistoryInfo(userId,CspPackage.TypeId.STANDARD.getId(),
                     CspPackage.TypeId.PROFESSIONAL.getId(),CspUserPackage.modifyType.BIND_YAYA.ordinal());
         }
+
     }
 
     /**
@@ -459,7 +459,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
      * @return
      */
     @Override
-    public void doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException, ParseException {
+    public Integer doUnbindThirdAccount(Integer thirdPartId, String userId) throws SystemException, ParseException {
         BindInfo condition = new BindInfo();
         condition.setUserId(userId);
         condition.setThirdPartyId(thirdPartId);
@@ -479,18 +479,14 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 throw new SystemException(local("user.only.one.account"));
             }
         }
+        Integer updatePackageId = CspPackage.TypeId.STANDARD.getId();
         //如果解绑丫丫医师需要还原用户套餐信息
         if(thirdPartId == BindInfo.Type.YaYa.getTypeId()){
             CspUserPackage userPackage = cspUserPackageService.selectByPrimaryKey(userId);
             userPackage.setSourceType(Constants.NUMBER_THREE);
             userPackage.setUpdateTime(new Date());
-            Integer updatePackageId = CspPackage.TypeId.STANDARD.getId();
-            if(userPackage.getPackageEnd() != null){   //在绑定之前有进行套餐的购买
-                //获取变更之前的套餐版本
-                CspUserPackageHistory lastHistory = cspUserPackageHistoryService.getLastHistoryByUserId(userId);
-                if(lastHistory != null){
-                    updatePackageId = lastHistory.getBeforePackageId();
-                }
+            if(userPackage.getPackageEnd() != null){   //在绑定之前有进行套餐的购买,则依旧是专业版
+                updatePackageId = CspPackage.TypeId.PROFESSIONAL.getId();
                 //计算之前剩余多少天
                 Integer betwwen = CalendarUtils.daysBetween(userPackage.getPackageStart(),userPackage.getPackageEnd());
                 Date start = CalendarUtils.nextDateStartTime();
@@ -500,6 +496,8 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
                 userPackage.setUnlimited(false);
             }else{// 还原标准版
                 userPackage.setUnlimited(true);
+                userPackage.setPackageStart(null);
+                userPackage.setPackageEnd(null);
             }
             userPackage.setPackageId(updatePackageId);
             cspUserPackageService.updateByPrimaryKeySelective(userPackage);
@@ -507,6 +505,7 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
             cspUserPackageHistoryService.addUserHistoryInfo(userId,CspPackage.TypeId.PROFESSIONAL.getId(),updatePackageId,CspUserPackage.modifyType.BIND_YAYA.ordinal());
         }
         bindInfoDAO.deleteByPrimaryKey(condition.getId());
+        return updatePackageId;
     }
 
     @Override
