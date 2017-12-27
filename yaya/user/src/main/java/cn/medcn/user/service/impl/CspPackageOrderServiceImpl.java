@@ -116,7 +116,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         //是否是年费套餐
         boolean yearType = yearPay(packageId, order.getShouldPay());
         if (userPk == null) { //添加用户套餐信息
-            end = yearType ? CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(start, order.getNum() * CalendarUtils.DEFAULT_MONTH);
+            end = yearType ? CalendarUtils.calendarTime(start, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarTime(start, order.getNum() * CalendarUtils.DEFAULT_MONTH);
             cspUserPackageDAO.insertSelective(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,unLimited));
         } else { // 更新用户套餐信息
             oldPackageId = userPk.getPackageId();
@@ -127,7 +127,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             if(oldPackageId == CspPackage.TypeId.PROFESSIONAL.getId() && userPk.getUnlimited() == true){
                 unLimited = true;
             }
-            end = yearType ? CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarDay(endStart, order.getNum() * CalendarUtils.DEFAULT_MONTH);
+            end = yearType ? CalendarUtils.calendarTime(endStart, order.getNum() * CalendarUtils.DEFAULT_YEAR) : CalendarUtils.calendarTime(endStart, order.getNum() * CalendarUtils.DEFAULT_MONTH);
             cspUserPackageDAO.updateByPrimaryKey(CspUserPackage.build(order.getUserId(), start, end, packageId, Constants.NUMBER_ONE,unLimited));
         }
         //添加用户套餐历史信息
@@ -174,7 +174,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         String content = "";
         String title = local("package.notify.pay.success");
         try {
-            Integer betweenDay = CalendarUtils.daysBetween(start, end);
+            Integer betweenDay = CalendarUtils.timeBetween(start, end);
             if (betweenDay > CalendarUtils.DEFAULT_YEAR) {
                 Integer yearNum = betweenDay / CalendarUtils.DEFAULT_YEAR;
                 Integer extra = betweenDay - CalendarUtils.DEFAULT_YEAR * yearNum;
@@ -240,13 +240,18 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     }
 
     @Override
-    public List<Map<String, Object>> orderCapitalStati() {
-        return packageOrderDAO.orderCapitalStati();
+    public List<Map<String, Object>> orderCapitalStati(Integer abroad,String startTime,String endTime) {
+        return packageOrderDAO.orderCapitalStati(abroad,startTime,endTime);
     }
 
     @Override
-    public List<CspOrderPlatFromDTO> getCapitalByDay() {
-        return packageOrderDAO.getCapitalByDay();
+    public List<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable) {
+        return packageOrderDAO.getCapitalByDay(pageable.getParams());
+    }
+
+    @Override
+    public CspOrderPlatFromDTO getTotalCapital(Pageable pageable) {
+        return packageOrderDAO.getTotalCapital(pageable.getParams());
     }
 
 }

@@ -29,6 +29,12 @@ public class CspOrderPlatFromDTO {
     //web端银联支付
     private float upacpWap;
 
-    //总额
+    //paypal端银联支付
+    private float paypal;
+
+    //单日总额
     private float money;
+
+    //总额
+    private float totalMoney;
 }

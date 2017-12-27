@@ -12,11 +12,30 @@
 
     <select id="getCapitalByDay" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
         SELECT DATE(create_time) as create_time,
-        SUM(CASE WHEN plat_form='alipay_wap' THEN should_pay END) AS alipay_wap,
+        SUM(CASE WHEN plat_form='alipay_wap' or plat_form = 'alipay_pc_direct' THEN should_pay END) AS alipay_wap,
         SUM(CASE WHEN plat_form='wx_pub_qr' THEN should_pay END) AS wx_pub_qr,
-        SUM(CASE WHEN plat_form='upacp_wap' THEN should_pay END) AS upacp_wap,
+        SUM(CASE WHEN plat_form='upacp_wap' or plat_form = 'upacp_pc' THEN should_pay END) AS upacp_wap,
+        SUM(CASE WHEN plat_form='paypal' THEN should_pay END) AS paypal,
         SUM(should_pay) AS money
-        FROM t_csp_package_order GROUP BY DATE(create_time)
+        FROM t_csp_package_order
+        <if test="abroad != null">
+            o.currency_type=#{abroad}
+        </if>
+        <if test="startTime != null and endTime != null">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
+        GROUP BY DATE(create_time)
+    </select>
+
+    <select id="getTotalCapital" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
+        SELECT sum(should_pay) as totalMoney
+        FROM t_csp_package_order
+        <if test="abroad != null">
+            o.currency_type=#{abroad}
+        </if>
+        <if test="startTime != null and endTime != null">
+            AND create_time BETWEEN #{startTime} AND #{endTime}
+        </if>
     </select>
 
     <select id="selectAbroadAndHomeMoney" resultType="cn.medcn.user.model.CspPackageOrder">
