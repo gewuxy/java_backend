@@ -603,7 +603,7 @@
             </c:if>
             <c:if test="${expireTimeCount > 5}">
                 <div class="admin-tips" id="pkTime">
-                    <span class="admin-tips-main" id="yearTime">
+                    <span class="admin-tips-main" id="yearTime"><a href="${ctx}/mgr/user/memberManage">Expiring in <strong class="color-blue">${expireTimeCount} </strong> days</a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
                 </div>

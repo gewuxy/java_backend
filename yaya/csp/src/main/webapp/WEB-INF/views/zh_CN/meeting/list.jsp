@@ -607,6 +607,7 @@
             <c:if test="${expireTimeCount > 5}">
                 <div class="admin-tips" id="pkTime">
                     <span class="admin-tips-main"  id="yearTime">
+                        <a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">${expireTimeCount}</strong> 天</a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
                 </div>
