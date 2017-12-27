@@ -618,7 +618,7 @@
                     <span class="admin-tips-close" onclick="standardClose()"></span>
                 </div>
             </c:if>
-            <c:if test="${cspUserPackage.unlimited == true}">
+            <c:if test="${cspUserPackage.unlimited == true && packageId != 1}">
                 <div class="admin-tips" id="unlimited">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">Professional Edition Valid</a> </span>
                     <span class="admin-tips-close" onclick="unlimitedClose()"></span>
@@ -647,7 +647,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-01.png" alt=""></p>
-                            <p> -No Record -</p>
+                            <p> - No Record -</p>
                         </div>
                     </div>
 

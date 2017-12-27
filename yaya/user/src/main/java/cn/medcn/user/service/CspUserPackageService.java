@@ -19,7 +19,7 @@ public interface CspUserPackageService extends BaseService<CspUserPackage> {
 
     void addStanardInfo(String userId);
 
-    void modifyOldUser(CspUserPackage cspUserPackage, String userId);
+    void modifySendOldUser(String userId);
 
     int selectEdition(Integer packageId,Integer location);
 

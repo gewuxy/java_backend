@@ -43,7 +43,7 @@
                                 <div class="login-message-text login-message-text-2">
                                     <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
                                     <p class="t-center color-blue">Payment completed！</p>
-                                    <p >Recharge amount：&nbsp;<span class="color-blue">${money}</span>&nbsp;USD</p>
+                                    <p >Recharge amount：&nbsp;<span class="color-blue">${money}</span>&nbsp;CNY</p>
                                 </div>
                                 <input  type="button" class="button login-button buttonBlue last" id="time" value="Return in 5s...">
                             </div>

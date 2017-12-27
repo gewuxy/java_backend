@@ -373,11 +373,9 @@ public class CspBaseController extends BaseController {
     private void doOldUserSendProfessionalEdition(CspUserInfo cspUserInfo){
         String userId = cspUserInfo.getId();
         //根据id查出版本信息
-        CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
-        if ( cspUserInfo != null && cspUserInfo.getState() == true){
-            //赠送三个月的套餐
-            cspUserPackageService.modifyOldUser(cspUserPackage,userId);
+        if ( cspUserInfo != null && cspUserInfo.getState() == true ){
+                cspUserPackageService.modifySendOldUser(userId);
+            }
         }
-    }
 
 }
