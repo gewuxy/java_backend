@@ -30,7 +30,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * Created by LiuLP on 2017/10/11/011.
@@ -443,9 +447,16 @@ public class UserCenterController extends CspBaseController {
         addBaseUserInfo(model);
         CspPackage cspPackage = packageService.findUserPackageById(userId);
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
+
         System.out.println(cspUserPackage);
         if (cspPackage == null){
             return localeView("/meeting/list");
+        }
+        //英文版，格式化日期
+        if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
+            DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.ENGLISH);
+            model.addAttribute("startTime",format.format(cspUserPackage.getPackageStart()));
+            model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
         }
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
         model.addAttribute("cspPackageInfos", cspPackageInfos);
