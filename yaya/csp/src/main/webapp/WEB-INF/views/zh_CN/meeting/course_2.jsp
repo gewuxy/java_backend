@@ -87,7 +87,7 @@
             <div class="boxAudio-loading none">
                 <div class="time">
                     <span><img src="${ctxStatic}/phone/images/viedo-icon.gif" alt=""></span>
-                    <span class="text">录播中</span>
+                    <span class="text">录音中</span>
                 </div>
             </div>
             <!--切换菜单-->
