@@ -206,7 +206,7 @@
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;Video Live Stream</label>
                                                     </span>
                                                 <div class="checkbox-main">
-                                                    <p>When the live code rate is 500kbps, the live length is 1 hours, and the number of people watching is 100, and the flow rate is about 22.5GB</p>
+                                                    <p>Generally 1 audience takes 0.5G network flow per hour. Your live stream is set to 30 minutes. It is estimated to take 25G network flow given 100 audience(s) online.</p>
                                                     <div class="text">Network Flow Balance<span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">Recharge Now</a></div>
                                                 </div>
                                             </div>
