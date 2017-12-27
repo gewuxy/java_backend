@@ -25,10 +25,11 @@ public interface CspPackageOrderDAO extends Mapper<CspPackageOrder>{
 
     List<Map<String,Object>> totalMoney();
 
-    List<Map<String,Object>> orderCapitalStati();
+    List<Map<String,Object>> orderCapitalStati(@Param("abroad")Integer abroad,@Param("startTime")String startTime,@Param("endTime")String endTime);
 
-    List<CspOrderPlatFromDTO> getCapitalByDay();
+    List<CspOrderPlatFromDTO> getCapitalByDay(Map<String,Object> map);
 
     Double selectNewMoney(@Param("currencyType") Integer currencyType);
 
+    CspOrderPlatFromDTO getTotalCapital(Map<String,Object> map);
 }
