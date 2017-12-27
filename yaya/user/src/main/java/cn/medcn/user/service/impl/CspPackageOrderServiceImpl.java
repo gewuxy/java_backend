@@ -259,37 +259,16 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
 
 
     @Override
-    public  String getLocalPackage(Integer packageId) {
+    public String getLocalPackage(Integer packageId) {
         String localStr = "";
-        if (LocalUtils.Local.zh_CN.name().equals(LocalUtils.getLocalStr())) {
-            if (packageId == 1) {
-                localStr = CspPackage.TypeId.STANDARD.getLabel();
-            } else if (packageId == 2) {
-                localStr = CspPackage.TypeId.PREMIUM.getLabel();
-            } else {
-                localStr = CspPackage.TypeId.PROFESSIONAL.getLabel();
-            }
-        }
-        if (LocalUtils.Local.zh_TW.name().equals(LocalUtils.getLocalStr())) {
-            if (packageId == 1) {
-                localStr = CspPackage.TypeId.STANDARD.getLabelTw();
-            } else if (packageId == 2) {
-                localStr = CspPackage.TypeId.PREMIUM.getLabelTw();
-            } else {
-                localStr = CspPackage.TypeId.PROFESSIONAL.getLabelTw();
-            }
-        }
-        if (LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())) {
-            if (packageId == 1) {
-                localStr = CspPackage.TypeId.STANDARD.getLabelUs();
-            } else if (packageId == 2) {
-                localStr = CspPackage.TypeId.PREMIUM.getLabelUs();
-            } else {
-                localStr = CspPackage.TypeId.PROFESSIONAL.getLabelUs();
-            }
+        if (packageId == CspPackage.TypeId.STANDARD.getId()) {
+            localStr = local("package.standard");
+        } else if (packageId == CspPackage.TypeId.PREMIUM.getId()) {
+            localStr = local("package.premium");
+        } else {
+            localStr = local("package.professional");
         }
         return localStr;
     }
-
 }
 
