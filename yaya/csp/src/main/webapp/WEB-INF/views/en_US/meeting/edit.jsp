@@ -171,7 +171,7 @@
                                 </c:if>
                                 <div class="meeting-tab clearfix">
                                     <c:if test="${course != null && course.published}">
-                                        <input type="hidden" name="course.playType" value="${course.playType}">
+                                        <input type="hidden" name="course.playType" id="coursePlayType" value="${course.playType}">
                                     </c:if>
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
                                         <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''}  ${course != null && course.published ? 'disabled':''}>
@@ -194,8 +194,8 @@
                                                                 </label>
                                                             </span>
                                                         <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;The start time is at least 0 o'clock on the day after today, and the longest time is 24 hours.</span>
-                                                        <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.startTime" id="liveStartTime" value="${live.startTime}">
-                                                        <input type="hidden" ${course.playType == 0 ? 'disabled':''} name="live.endTime" id="liveEndTime" value="${live.endTime}">
+                                                        <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
+                                                        <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
                                                     </div>
 
                                                 </div>
@@ -697,8 +697,11 @@
 
         function showLiveMessage(){
             if($(".chk-hook").is(":checked")) {
+                $("#coursePlayType").val("2");
                 $(".checkbox-main").show();
             } else {
+                $("#coursePlayType").val("1");
+                $(".chk-hook").removeAttr("checked");
                 $(".checkbox-main").hide();
             }
         }

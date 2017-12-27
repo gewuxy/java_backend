@@ -176,7 +176,7 @@
 
 
                                 <c:if test="${course != null && course.published}">
-                                        <input type="hidden" name="course.playType" value="${course.playType}">
+                                        <input type="hidden" name="course.playType" id="coursePlayType" value="${course.playType}">
                                     </c:if>
                                     <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}" >
@@ -201,8 +201,8 @@
                                                                 </label>
                                                             </span>
                                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;开始时间至少为发布当天后一天的0点，时长最长24小时</span>
-                                                <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="${live.startTime}">
-                                                <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="${live.endTime}">
+                                                <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
+                                                <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
                                             </div>
 
                                         </div>
@@ -519,6 +519,7 @@
         });
 
         $("input[name='course.playType']").click(function(){
+            alert(123);
             var playType = $(this).val();
             $("input[name='course.playType']").removeAttr("checked");
             $(this).prop("checked", "true");
@@ -706,8 +707,11 @@
 
         function showLiveMessage(){
             if($(".chk-hook").is(":checked")) {
+                $("#coursePlayType").val("2");
                 $(".checkbox-main").show();
             } else {
+                $("#coursePlayType").val("1");
+                $(".chk-hook").removeAttr("checked");
                 $(".checkbox-main").hide();
             }
         }
