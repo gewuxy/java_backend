@@ -674,11 +674,9 @@
             popupPalyer.element.muted = true;
 
             //直播静音
-            if(isVideo.length > 0){
-                CKobject.getObjectById('ck-video').changeVolume(0);
-                $("#ck-video")[0].muted = true;
+            if(activeItemIsVideo.length > 0){
+                activeItemIsVideo.get(0).muted = true;
             }
-//            CKobject.getObjectById('ck-video').play();
         }
 
         //切换静音状态
@@ -691,8 +689,7 @@
                 if($('.swiper-slide-active').attr("audio-src") != ''){
                     popupPalyer.element.muted = false;
                 } else if ($('.swiper-slide-active').find('video').length) {
-                    CKobject.getObjectById('ck-video').changeVolume(100);
-                    $("#ck-video")[0].muted = false;
+                    activeItemIsVideo.get(0).muted = true;
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
                 ismuted = true
