@@ -427,10 +427,7 @@ public class LoginController extends CspBaseController {
             //去添加绑定账号
             userInfo = cspUserService.saveThirdPartyUserInfo(dto);
         }
-        //yaya登录
-        if (thirdPartyId == BindInfo.Type.YaYa.getTypeId()) {
-            cspUserService.yayaBindUpdate(userInfo.getId());
-        }
+
         UsernamePasswordToken token = new UsernamePasswordToken();
         token.setHost("thirdParty");
         token.setUsername(userInfo.getId());
@@ -439,8 +436,13 @@ public class LoginController extends CspBaseController {
             subject.login(token);
             // 将当前用户添加到cookie缓存 保存7天
             Principal principal = getWebPrincipal();
-            //新用户老用户处理
-            modifyOldUser(userInfo);
+            //yaya登录
+            if (thirdPartyId == BindInfo.Type.YaYa.getTypeId()) {
+                cspUserService.yayaBindUpdate(userInfo.getId());
+            }else {
+                //新用户老用户处理
+                modifyOldUser(userInfo);
+            }
             CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
             String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
             CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
