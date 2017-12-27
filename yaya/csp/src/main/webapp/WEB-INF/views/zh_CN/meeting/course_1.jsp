@@ -307,13 +307,15 @@
 
         var changePlayerStete = function(state){
             if(playerState || state == true){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).muted = false;
+                    activeItemIsVideo.get(0).muted = ismuted;
                     activeItemIsVideo.get(0).play();
                 } else {
+                    popupPalyer.volume = 100;
+                    popupPalyer.muted = ismuted;
+                    console.log("popupPalyer.muted = " + popupPalyer.muted);
                     popupPalyer.play();
                 }
             } else {
@@ -393,23 +395,25 @@
             }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
                 swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             }
-            dataSrc = swiperCurrent.attr('audio-src');
-            //如果有音频，才进行播放
-            if(dataSrc.length > 0){
-                $('.boxAudio').removeClass('none');
-                popupPalyer.load(dataSrc);
-                changePlayerStete(true);
-            } else {
-                popupPalyer.load('isNotSrc');
-                console.log('没加载音频');
-                $('.boxAudio').addClass('none');
-                changePlayerStete(false);
-            }
 
             playOver = false;
             //如果有视频
             if(activeItemIsVideo.length > 0){
+                $('.boxAudio').addClass('none');
                 changePlayerStete(true);
+            } else {
+                dataSrc = swiperCurrent.attr('audio-src');
+                //如果有音频，才进行播放
+                if(dataSrc.length > 0){
+                    $('.boxAudio').removeClass('none');
+                    popupPalyer.load(dataSrc);
+                    changePlayerStete(true);
+                } else {
+                    popupPalyer.load('isNotSrc');
+                    console.log('没加载音频');
+                    $('.boxAudio').addClass('none');
+                    changePlayerStete(false);
+                }
             }
 
 
@@ -664,28 +668,27 @@
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
-        var ismuted = true;
+        var ismuted = false;
         var isVideo = $('.swiper-slide-active').find('video');
 
 
         //静音
         var viedoMuted = function(){
-            //音频文件静音
-            popupPalyer.element.muted = true;
-
             //直播静音
             if(activeItemIsVideo.length > 0){
                 activeItemIsVideo.get(0).muted = true;
+            } else {
+                //音频文件静音
+                popupPalyer.element.muted = true;
             }
-//            CKobject.getObjectById('ck-video').play();
         }
 
         //切换静音状态
         var changeTrack = function(){
-            if(ismuted == true){
+            if(ismuted == false){
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
-                ismuted = false
+                ismuted = true
             } else {
                 if($('.swiper-slide-active').attr("audio-src") != ''){
                     popupPalyer.element.muted = false;
@@ -693,7 +696,7 @@
                     activeItemIsVideo.get(0).muted = false;
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
-                ismuted = true
+                ismuted = false
             }
         }
 
