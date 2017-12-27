@@ -174,7 +174,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         String content = "";
         String title = local("package.notify.pay.success");
         try {
-            Integer betweenDay = CalendarUtils.timeBetween(start, end);
+            Integer betweenDay = CalendarUtils.daysBetween(start, end) + 1;
             if (betweenDay > CalendarUtils.DEFAULT_YEAR) {
                 Integer yearNum = betweenDay / CalendarUtils.DEFAULT_YEAR;
                 Integer extra = betweenDay - CalendarUtils.DEFAULT_YEAR * yearNum;
