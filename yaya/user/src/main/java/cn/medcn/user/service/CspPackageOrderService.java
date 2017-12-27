@@ -58,13 +58,14 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
      *
      * @return
      */
-    List<Map<String,Object>> orderCapitalStati();
+    List<Map<String,Object>> orderCapitalStati(Integer abroad,String startTime,String endTime);
 
     /**
      * 获取各渠道资金
      *
      * @return
      */
-    List<CspOrderPlatFromDTO> getCapitalByDay();
+    List<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable);
 
+    CspOrderPlatFromDTO getTotalCapital(Pageable pageable);
 }
