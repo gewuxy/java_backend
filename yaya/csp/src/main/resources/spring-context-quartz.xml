@@ -25,8 +25,8 @@
           class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
         <property name="jobDetail" ref="registerReportTaskDetail"/>
         <property name="cronExpression">
-            <!-- 每天晚上23点50分做用户注册统计 -->
-            <value>0 50 23 * * ?</value>
+            <!-- 每天晚上23点55分做用户注册统计 -->
+            <value>0 55 23 * * ?</value>
         </property>
     </bean>
 
