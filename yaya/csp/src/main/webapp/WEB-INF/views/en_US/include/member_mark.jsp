@@ -279,7 +279,7 @@
                             </div>
                         </div>
                         <div class="formrow t-center last" id="newUser">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;">Cancel</a>
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Try Now"/>
                         </div>
                         <div id="disabledItem1"></div>
@@ -344,7 +344,7 @@
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;">Cancel</a>
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">Cancel</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment"/>
                         </div>
                         <div id="disabledItem2"></div>

@@ -8,6 +8,7 @@ import cn.medcn.weixin.dto.OAuthDTO;
 import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -25,7 +26,7 @@ public interface CspPackageOrderDAO extends Mapper<CspPackageOrder>{
 
     List<Map<String,Object>> totalMoney();
 
-    List<Map<String,Object>> orderCapitalStati(@Param("abroad")Integer abroad,@Param("startTime")String startTime,@Param("endTime")String endTime);
+    List<Map<String,Object>> orderCapitalStati(@Param("abroad")Integer abroad,@Param("startTime")Date startTime,@Param("endTime")Date endTime);
 
     List<CspOrderPlatFromDTO> getCapitalByDay(Map<String,Object> map);
 

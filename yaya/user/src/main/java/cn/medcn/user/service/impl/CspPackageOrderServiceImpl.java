@@ -241,34 +241,31 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     }
 
     @Override
-    public List<Map<String, Object>> orderCapitalStati(Integer abroad,String startTime,String endTime) {
+    public List<Map<String, Object>> orderCapitalStati(Integer abroad,Date startTime,Date endTime) {
         return packageOrderDAO.orderCapitalStati(abroad,startTime,endTime);
     }
 
     @Override
-    public List<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable) {
+    public MyPage<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
-        return packageOrderDAO.getCapitalByDay(pageable.getParams());
+        return MyPage.page2Mypage((Page)packageOrderDAO.getCapitalByDay(pageable.getParams()));
     }
 
     @Override
     public CspOrderPlatFromDTO getTotalCapital(Pageable pageable) {
-        PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
         return packageOrderDAO.getTotalCapital(pageable.getParams());
     }
 
 
     @Override
     public String getLocalPackage(Integer packageId) {
-        String localStr = "";
         if (packageId == CspPackage.TypeId.STANDARD.getId()) {
-            localStr = local("package.standard");
+            return local("package.standard");
         } else if (packageId == CspPackage.TypeId.PREMIUM.getId()) {
-            localStr = local("package.premium");
+            return local("package.premium");
         } else {
-            localStr = local("package.professional");
+            return local("package.professional");
         }
-        return localStr;
     }
 }
 

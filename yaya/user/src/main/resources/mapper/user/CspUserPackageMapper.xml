@@ -3,7 +3,7 @@
 <mapper namespace="cn.medcn.user.dao.CspUserPackageDAO" >
     <select id="findUserPackages" resultType="cn.medcn.user.model.CspUserPackage">
         SELECT * from t_csp_user_package where package_id >1
-        and DATE_FORMAT(package_end, '%Y-%m-%d') &lt;=  CURDATE();
+        and DATE_FORMAT(package_end, '%Y-%m-%d') &lt;  CURDATE();
     </select>
 
     <select id="selectEdition" resultType="Integer">
