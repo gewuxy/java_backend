@@ -336,13 +336,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         Integer startSort = detail.getSort();
         audioCourseDetailDAO.deleteByPrimaryKey(detailId);
         audioCourseDetailDAO.updateBatchDecreaseSort(detail.getCourseId(), startSort);
-        //同时删除文件
-        if(!StringUtils.isEmpty(detail.getAudioUrl())){
-            FileUtils.deleteTargetFile(appFileUploadBase+detail.getAudioUrl());
-        }
-        if(!StringUtils.isEmpty(detail.getImgUrl())){
-            FileUtils.deleteTargetFile(appFileUploadBase+detail.getImgUrl());
-        }
+//        //同时删除文件
+//        if(!StringUtils.isEmpty(detail.getAudioUrl())){
+//            FileUtils.deleteTargetFile(appFileUploadBase+detail.getAudioUrl());
+//        }
+//        if(!StringUtils.isEmpty(detail.getImgUrl())){
+//            FileUtils.deleteTargetFile(appFileUploadBase+detail.getImgUrl());
+//        }
         return detail;
     }
 
