@@ -83,6 +83,14 @@
         //默认屏幕高度
         var resizeHeight = $(window).height();
 
+        //监控键盘ESC 返回按钮
+        $(document).keyup(function(event){
+            switch(event.keyCode) {
+                case 27:
+                    $('.swiper-container-metting-full').height(resizeHeight);
+            }
+        });
+
         //初始化高度
         $('.swiper-fullPage').find('.swiper-container-metting-full').height(resizeHeight);
 
@@ -119,7 +127,6 @@
                 sendOrder(swiper.activeIndex);
             },
         });
-
     });
 
 

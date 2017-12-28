@@ -172,9 +172,8 @@
                                 </c:if>
 
                                 <div class="meeting-tab clearfix">
-                                    <c:if test="${course != null && course.published}">
                                         <input type="hidden" name="course.playType" id="coursePlayType" value="${course.playType}">
-                                    </c:if>
+
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}">
                                         <input id="recorded" type="radio" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ?'checked':''}>
                                         <div class="meeting-tab-btn"><i></i>投屏錄播</div>
@@ -499,29 +498,27 @@
         });
 
         var contributed = '${empty contributed ? "false" : contributed}';
-        if (contributed == 'true'){
-            $("input[name='course.playType']").unbind("click");
-        } else {
-            $("input[name='course.playType']").bind("click",function(){
-                var playType = $(this).val();
-                $("input[name='course.playType']").removeAttr("checked");
-                $(this).prop("checked", "true");
-                if (playType == 0){
-                    $("#liveStartTime").attr("disabled", "true");
-                    $("#liveEndTime").attr("disabled", "true");
-                    $(this).parents('.meeting-tab').find(".meeting-tab-main").addClass("none");
-                } else {
-                    $("#liveStartTime").removeAttr("disabled");
-                    $("#liveEndTime").removeAttr("disabled");
-                    $(this).parents('.meeting-tab').find(".meeting-tab-main").removeClass("none");
-                }
-                $(this).parent().siblings().removeClass("cur");
-                $(this).parent().addClass("cur");
+        $("input[name='course.playType'][type='radio']").click(function(){
+            var playType = $(this).val();
+            $("input[name='course.playType']").removeAttr("checked");
+            $(this).attr("checked", "true");
+            $("#coursePlayType").val(playType);
+            if (playType == 0){
+                $("#coursePlayType").val();
+                $("#liveStartTime").attr("disabled", "true");
+                $("#liveEndTime").attr("disabled", "true");
+                $(".meeting-tab-main").addClass("none");
+            } else {
+                $("#liveStartTime").removeAttr("disabled");
+                $("#liveEndTime").removeAttr("disabled");
+                $(".meeting-tab-main").removeClass("none");
+            }
+            $(this).parent().siblings().removeClass("cur");
+            $(this).parent().addClass("cur");
 
 
 
-            });
-        }
+        });
 
         $('.cancel-hook').on('click',function(){
             layer.open({
@@ -569,7 +566,7 @@
                 $courseInfo.parent().next(".error").addClass("none");
             }
 
-            var playType = $("input[name='course.playType']:checked").val();
+            var playType =  $("#coursePlayType").val();
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
@@ -688,7 +685,13 @@
             $(this).find('input').val(obj.value);
         });
 
-        showLiveMessage();
+        if("${course != null && course.published && course.playType > 0}" == "true") {
+            showLiveMessage();
+        }
+
+        if("${course.playType == 2}" == "true"){
+            $(".checkbox-main").show();
+        }
 
         function showLiveMessage(){
             if($(".chk-hook").is(":checked")) {

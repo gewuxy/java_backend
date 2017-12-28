@@ -581,18 +581,6 @@
             }
         })
 
-        $(function () {
-            var expireTimeCount = ${expireTimeCount}
-            if(expireTimeCount>365){
-               var yearCount =  Math.floor(expireTimeCount / 365);
-               var mounthCount =  Math.floor(((expireTimeCount / 365) - yearCount)*365/31);
-               if(mounthCount<=0){
-                   $("#yearTime").html('<a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">'+yearCount+"年"+'</strong></a>')
-               }else {
-                   $("#yearTime").html('<a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">'+yearCount+'</strong> 年 <strong class="color-blue">'+mounthCount+'</strong> 个月</a>')
-               }
-            }
-        })
 
 
     </script>
@@ -619,9 +607,25 @@
             <c:if test="${expireTimeCount > 5}">
                 <div class="admin-tips" id="pkTime">
                     <span class="admin-tips-main"  id="yearTime">
+                        <a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">${expireTimeCount}</strong> 天</a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
                 </div>
+                <script>
+                    $(function () {
+                        var expireTimeCount = ${expireTimeCount}
+                        if(expireTimeCount>365){
+                            var yearCount =  Math.floor(expireTimeCount / 365);
+                            var mounthCount =  Math.floor(((expireTimeCount / 365) - yearCount)*365/31);
+                            if(mounthCount<=0){
+                                $("#yearTime").html('<a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">'+yearCount+"年"+'</strong></a>')
+                            }else {
+                                $("#yearTime").html('<a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">'+yearCount+'</strong> 年 <strong class="color-blue">'+mounthCount+'</strong> 个月</a>')
+                            }
+                        }
+                    })
+
+                </script>
             </c:if>
             <c:if test="${packageId == 1}">
                 <div class="admin-tips" id="standard">

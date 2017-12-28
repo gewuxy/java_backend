@@ -20,6 +20,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -129,7 +131,7 @@ public class PackageController extends CspBaseController {
      * @return
      */
     @RequestMapping(value = "/pay")
-    public String allPay(Integer packageId, Integer currency, String payType, Integer limitTime, Model model) throws SystemException {
+    public String allPay(Integer packageId, Integer currency, String payType, Integer limitTime,  HttpServletRequest request,Model model) throws SystemException {
         packageId++;
         //校验参数信息
         String validata = checkParams(packageId, currency, payType, limitTime);
@@ -141,8 +143,9 @@ public class PackageController extends CspBaseController {
         //money = appPro == 0 ? 0.01f : money;
         Integer num = (Integer) results.get("num");
         Integer packageType = (Integer) results.get("packageType");
+        String ip = request.getRemoteAddr();
         if (currency == 0) {  //人民币P++支付
-            return rnbPay(packageId, currency, payType, money, num,packageType, model);
+            return rnbPay(ip,packageId, currency, payType, money, num,packageType, model);
         } else {  //美元（目前只是paypal支付）
             return usdPay(packageId, currency, payType, money, num,packageType);
         }
@@ -174,6 +177,7 @@ public class PackageController extends CspBaseController {
     /**
      * 人民币支付
      *
+     * @param ip
      * @param packageId
      * @param currency
      * @param payType
@@ -181,12 +185,10 @@ public class PackageController extends CspBaseController {
      * @param num
      * @return
      */
-    public String rnbPay(Integer packageId, Integer currency, String payType, float money, Integer num,Integer packageType, Model model) {
+    public String rnbPay(String ip,Integer packageId, Integer currency, String payType, float money, Integer num, Integer packageType,Model model) {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
         String orderNo = CspConstants.PACKAGE_ORDER_FLAG + packageId + currency + StringUtils.nowStr();
-        String ip = "10.0.0.96";
-        //String ip = request.getRemoteAddr();
         Pingpp.privateKeyPath = path;
         Charge charge = null;
         try {
