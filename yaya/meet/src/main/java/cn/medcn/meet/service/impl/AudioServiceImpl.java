@@ -252,6 +252,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setPrimitiveId(course.getId());
         reprintCourse.setOwner(userId == null ? course.getOwner() : userId);
         reprintCourse.setCategory(course.getCategory());
+        reprintCourse.setCategoryId(course.getCategoryId());
         reprintCourse.setPublished(course.getPublished());
         reprintCourse.setShared(false);
         reprintCourse.setDeleted(false);
@@ -697,10 +698,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
             liveService.updateByPrimaryKeySelective(oldLive);
         }
-        audioCourse.setDeleted(false);
-        audioCourse.setPublished(true);
-        audioCourse.setLocked(false);
-        audioCourse.setGuide(false);
+
         updateByPrimaryKeySelective(audioCourse);
     }
 
@@ -725,11 +723,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
             audioCoursePlayDAO.insert(oldPlay);
         }
-        audioCourse.setDeleted(false);
-        audioCourse.setPlayType(AudioCourse.PlayType.normal.getType());
-        audioCourse.setPublished(true);
-        audioCourse.setLocked(false);
-        audioCourse.setGuide(false);
         updateByPrimaryKeySelective(audioCourse);
     }
 
