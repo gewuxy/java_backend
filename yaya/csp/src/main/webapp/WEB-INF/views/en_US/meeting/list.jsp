@@ -601,7 +601,7 @@
                     </div>
                 </c:if>
 
-            <c:if test="${showTips != null && showTips}">
+            <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets && packageId !=3}">
                 <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">The number of your meetings has exceeded the set limit, please delete part of the meeting or upgrade the set meal to continue to use</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
