@@ -591,7 +591,7 @@
                     remainFlux = data.data;
                 });
                 if(remainFlux < 10){
-                    layer.msg("剩餘流量需在10G以上才能開啟視頻直播");
+                    layer.msg("剩余流量需在10G以上才能开启视频直播");
                     return ;
                 }
             }

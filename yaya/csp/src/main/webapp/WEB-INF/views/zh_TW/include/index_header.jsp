@@ -18,7 +18,7 @@
             </div>
         </div>
         <div class="fl">
-            <a class="logo" href="/"></a>
+            <a class="logo" href="${ctx}"></a>
         </div>
     </div>
 </div>
