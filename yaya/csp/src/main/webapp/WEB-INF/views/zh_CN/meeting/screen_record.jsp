@@ -84,12 +84,21 @@
         var resizeHeight = $(window).height();
 
         //监控键盘ESC 返回按钮
-        $(document).keyup(function(event){
-            switch(event.keyCode) {
-                case 27:
-                    $('.swiper-container-metting-full').height(resizeHeight);
+        window.onresize = function(){
+            if(!checkFull()){
+                //要执行的动作
+                $('.swiper-container-metting-full').height(resizeHeight);
+                $(".fullPage-button-on").removeClass('none').siblings().addClass("none");
+
             }
-        });
+        }
+
+        function checkFull(){
+            var isFull =  document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+            //to fix : false || undefined == undefined
+            if(isFull === undefined) isFull = false;
+            return isFull;
+        }
 
         //初始化高度
         $('.swiper-fullPage').find('.swiper-container-metting-full').height(resizeHeight);
