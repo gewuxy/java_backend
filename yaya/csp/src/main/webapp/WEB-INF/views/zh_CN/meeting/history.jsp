@@ -277,70 +277,65 @@
                 anim:2,
                 shadeClose:true,
                 content: $('.player-popup-box'),
-                    success:function(){
-                        var newOffset;
+                success:function(){
+                    var newOffset;
 
-                        //幻灯片轮播
-                        var swiper = new Swiper('.swiper-container-metting', {
-                            //分页
-                            pagination: '.swiper-pagination',
+                    //幻灯片轮播
+                    var swiper = new Swiper('.swiper-container-metting', {
+                        //分页
+                        pagination: '.swiper-pagination',
 
-                            // 按钮
-                            nextButton: '.swiper-popup-button-next-hook',
-                            prevButton: '.swiper-popup-button-prev-hook',
-                            slidesPerView: 'auto',
-                            centeredSlides: true,
-                            spaceBetween: 62,
-                            paginationClickable: true,
-                            paginationType: 'fraction',
-                            onInit: function(swiper){
-                                swiper.attachEvents();
+                        // 按钮
+                        nextButton: '.swiper-popup-button-next-hook',
+                        prevButton: '.swiper-popup-button-prev-hook',
+                        slidesPerView: 'auto',
+                        centeredSlides: true,
+                        spaceBetween: 62,
+                        paginationClickable: true,
+                        paginationType: 'fraction',
+                        onInit: function(swiper){
+                            //设置偏移值
+                            swiper.wrapper.attr('style','-webkit-transform: translate3d('+editFirstPosition+'px, 0, 0);-moz-transform: translate3d('+editFirstPosition+'px, 0, 0);-o-transform: translate3d('+editFirstPosition+'px, 0, 0);-ms-transform: translate3d('+editFirstPosition+'px, 0, 0);transform: translate3d('+editFirstPosition+'px, 0, 0);transition-duration: 0ms;');
+                            //获取默认偏移值
+                            var defaultOffset = swiper.snapGrid;
+                            //新增
+                            defaultOffset[0] = defaultFirstPosition;
+                            for(var i =1; i<defaultOffset.length; i++){
+                                defaultOffset[i] = defaultOffset[i-1] + added ;
+                            }
+                            //更新偏移值
+                            var updateOffset = defaultOffset.slice(1);
+                            newOffset= [-editFirstPosition];
+                            newOffset = newOffset.concat(updateOffset);
 
-                                //设置偏移值
-                                swiper.wrapper.attr('style','-webkit-transform: translate3d('+editFirstPosition+'px, 0, 0);-moz-transform: translate3d('+editFirstPosition+'px, 0, 0);-o-transform: translate3d('+editFirstPosition+'px, 0, 0);-ms-transform: translate3d('+editFirstPosition+'px, 0, 0);transform: translate3d('+editFirstPosition+'px, 0, 0);transition-duration: 0ms;');
-                                //获取默认偏移值
-                                var defaultOffset = swiper.snapGrid;
-                                //新增
-                                defaultOffset[0] = defaultFirstPosition;
-                                for(var i =1; i<defaultOffset.length; i++){
-                                    defaultOffset[i] = defaultOffset[i-1] + added ;
-                                }
-                                //更新偏移值
-                                var updateOffset = defaultOffset.slice(1);
-                                newOffset= [-editFirstPosition];
-                                newOffset = newOffset.concat(updateOffset);
+                            //赋值给插件
+                            swiper.snapGrid = newOffset;
+                            swiper.slidesGrid = newOffset;
 
-                                //赋值给插件
-                                swiper.snapGrid = newOffset;
-                                swiper.slidesGrid = newOffset;
+                        },
+                        onSlideChangeEnd:function(swiper){
+                            var dataSrc = $(".swiper-slide-active").attr('audio-src');
+                            asAllItem[0].load(dataSrc);
+                            asAllItem[0].play()
 
-                            },
-                            onSlideChangeEnd:function(swiper){
-                                var dataSrc = $(".swiper-slide-active").attr('audio-src');
-                                asAllItem[0].load(dataSrc);
-                                asAllItem[0].play();
-
-                                //赋值给插件
-                                swiper.snapGrid = newOffset;
-                                swiper.slidesGrid = newOffset;
-                                if(dataSrc) {
-                                    $('.audio-metting-box').css('opacity','1');
-                                }
-                                console.log(swiper.activeIndex);
-
-
-                            },
-                            onTouchStart:function(swiper) {
-                                //赋值给插件
-                                swiper.snapGrid = newOffset;
-                                swiper.slidesGrid = newOffset;
-                                $('.audio-metting-box').css('opacity','0');
-
+                            //赋值给插件
+                            swiper.snapGrid = newOffset;
+                            swiper.slidesGrid = newOffset;
+                            if(dataSrc) {
+                                $('.audio-metting-box').css('opacity','1');
                             }
 
-                        });
+                        },
+                        onTouchStart:function(swiper) {
+                            //赋值给插件
+                            swiper.snapGrid = newOffset;
+                            swiper.slidesGrid = newOffset;
+                            $('.audio-metting-box').css('opacity','0');
+                        }
 
-                    },
+                    });
+
+                },
                 cancel :function(){
 
                     $("#mySwiper").html("");
