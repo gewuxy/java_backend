@@ -160,6 +160,7 @@ public class ChargeController extends CspBaseController {
                 JSONObject data = JSON.parseObject(event.get("data").toString());
                 JSONObject object = JSON.parseObject(data.get("object").toString());
                 String orderNo = (String) object.get("order_no");
+                Integer amount = (Integer) object.get("amount");
                 String language = (String) object.get("description");
                 if(!StringUtils.isEmpty(language))  LocalUtils.set(LocalUtils.getByKey(language));  //设置语言
                 //查找订单
@@ -169,6 +170,7 @@ public class ChargeController extends CspBaseController {
                     CspPackageOrder order = cspPackageOrderService.selectOne(condition);
                     if (order != null) {
                         //更新订单状态，修改用户流量值
+                        order.setPayMoney((float)amount / 100);
                        Integer oldPackageId =  cspPackageOrderService.updateOrderAndUserPackageInfo(order);
                        //更新用户套餐缓存信息
                         updatePackagePrincipal(order.getUserId());

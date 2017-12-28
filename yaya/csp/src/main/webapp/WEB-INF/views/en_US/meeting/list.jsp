@@ -462,7 +462,7 @@
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
-                    btn: ["pgrade"],
+                    btn: ["Upgrade"],
                     content: $('#meetCountOut'),
                     success:function(){
 
@@ -852,7 +852,7 @@
                     <li>
                         <a href="javascript:;" onclick="delCourse()">
                             <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>Delete?</p>
+                            <p>Delete</p>
                         </a>
                     </li>
 
