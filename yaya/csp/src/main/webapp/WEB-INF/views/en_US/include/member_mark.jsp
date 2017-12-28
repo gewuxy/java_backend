@@ -420,9 +420,9 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last" style="position: relative; z-index:3;">
-                            <a href="javascript:;" class="button login-button layui-layer-close" >Cancel</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment">
+                        <div class="formrow t-center last">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">Cancel</a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="Confirm Payment"/>
                         </div>
                         <div id="disabledItem3"></div>
                     </div>
