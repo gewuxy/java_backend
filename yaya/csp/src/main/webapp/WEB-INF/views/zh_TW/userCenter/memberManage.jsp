@@ -99,7 +99,7 @@
                                             </div>
                                         </c:if>
                                         </c:if>
-                                        <c:if test="${cspPackage.packageCn == '專業版'}">
+                                        <c:if test="${cspPackage.packageTw == '專業版'}">
                                             <c:if test="${cspUserPackage.unlimited == false}">
                                             <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
                                             <div class="oh">

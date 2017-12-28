@@ -251,8 +251,7 @@
                     appkey: shareSdkAppKey, // appkey
                     params: {
                         url: shareUrl, // 分享链接
-                        title: courseTitle, // 分享标题
-                        description: $("#cover_"+courseId).attr("alt"), // 分享内容
+                        title: '${nickname}' + " 在用会讲讲 " + courseTitle, // 分享标题
                         pic: coverUrl, // 分享图片，使用逗号,隔开
                         reason:'',//自定义评论内容，只应用与QQ,QZone与朋友网
                     },
@@ -574,13 +573,14 @@
             if (pkId == 1 && 3 >= meetCount ){
                 $("#pkTime").hide();
                 $("#note").hide();
-                $("#unlimited").hide();;
+                $("#unlimited").hide();
                 $("#meetCountTips").hide();
             }else if(pkId == 1 && 3 < meetCount){
                 $("#pkTime").hide();
                 $("#note").hide();
-                $("#unlimited").hide();;
+                $("#unlimited").hide();
                 $("#standard").hide();
+                $("#meetCountTips").show();
             }else{
                 $("#meetCountTips").hide();
                 $("#standard").hide();
@@ -596,7 +596,7 @@
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix pr">
-            <c:if test="${showTips != null && showTips}">
+            <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets && packageId !=3}">
                 <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
