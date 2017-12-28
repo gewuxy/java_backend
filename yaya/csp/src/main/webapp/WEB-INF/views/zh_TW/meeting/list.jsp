@@ -251,8 +251,8 @@
                     appkey: shareSdkAppKey, // appkey
                     params: {
                         url: shareUrl, // 分享链接
-                        title: courseTitle, // 分享标题
-                        description: $("#cover_"+courseId).attr("alt"), // 分享内容
+
+                        title: '${nickname}' + " 正在使用【會講】講解 " + courseTitle, // 分享标题
                         pic: coverUrl, // 分享图片，使用逗号,隔开
                         reason:'',//自定义评论内容，只应用与QQ,QZone与朋友网
                     },
