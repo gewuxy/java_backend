@@ -61,10 +61,11 @@
                                                                 ${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}
                                                         </i>
                                                     </c:if>
-                                                    <i class="hot">
-                                                            ${cspPackage.usedMeetCount}
-                                                    </i>
-
+                                                   <c:if test="${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount <= cspPackage.limitMeets}">
+                                                        <i class="hot">
+                                                                ${cspPackage.usedMeetCount}
+                                                        </i>
+                                                   </c:if>
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
                                         <c:if test="${cspPackage.packageTw == '專業版'}">
