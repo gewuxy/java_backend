@@ -147,6 +147,7 @@ public class CspUserController extends BaseController {
         Integer currentId = packageInfo.getPackageId();
         // 更新开始时间
         packageInfo.setPackageStart(CalendarUtils.nextDateStartTime());
+        packageInfo.setUnlimited(false);
         if(currentId == Constants.NUMBER_ONE){ //标准版
             packageInfo.setPackageStart(null);
             packageInfo.setPackageEnd(null);
@@ -154,7 +155,6 @@ public class CspUserController extends BaseController {
         }
         packageInfo.setUpdateTime(new Date());
         packageInfo.setSourceType(Constants.NUMBER_TWO);
-        packageInfo.setUnlimited(false);
         CspUserPackage oldPackage = cspUserPackageService.selectByPrimaryKey(packageInfo.getUserId());
         Integer oldpackageId = null;
         if(oldPackage == null){   // 未有套餐信息
