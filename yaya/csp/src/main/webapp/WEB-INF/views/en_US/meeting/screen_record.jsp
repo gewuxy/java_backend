@@ -102,7 +102,11 @@
                 //要执行的动作
                 $('.swiper-container-metting-full').height(resizeHeight);
                 $(".fullPage-button-on").removeClass('none').siblings().addClass("none");
-
+                $('.metting-btn-item').show();
+                swiper.enableTouchControl();
+            } else {
+                $('.metting-btn-item').hide();
+                swiper.disableTouchControl();
             }
         }
 
