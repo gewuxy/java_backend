@@ -439,6 +439,7 @@ public class LoginController extends CspBaseController {
             //yaya登录
             if (thirdPartyId == BindInfo.Type.YaYa.getTypeId()) {
                 cspUserService.yayaBindUpdate(userInfo.getId());
+                updatePackagePrincipal(userInfo.getId());
             }else {
                 //新用户老用户处理
                 modifyOldUser(userInfo);
