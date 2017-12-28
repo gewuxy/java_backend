@@ -327,8 +327,9 @@ public class MeetingMgrController extends CspBaseController {
             model.addAttribute("play", audioService.findPlayState(course.getId()));
         }
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) / 100;
-        model.addAttribute("flux", fluxValue);
+        float fluxValue = flux == null ? 0f : flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K;
+        DecimalFormat format = new DecimalFormat( "#####0.0");
+        model.addAttribute("flux", format.format(fluxValue));
         model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
     }
@@ -668,7 +669,7 @@ public class MeetingMgrController extends CspBaseController {
     public String freshFlux(){
         Principal principal = getWebPrincipal();
         UserFlux flux = userFluxService.selectByPrimaryKey(principal.getId());
-        float fluxValue = flux == null ? 0f : Math.round(flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K * 100) / 100;
+        float fluxValue = flux == null ? 0f : flux.getFlux() * 1.0f / Constants.BYTE_UNIT_K;
         DecimalFormat format = new DecimalFormat( "#####0.0");
         return success(format.format(fluxValue));
     }
