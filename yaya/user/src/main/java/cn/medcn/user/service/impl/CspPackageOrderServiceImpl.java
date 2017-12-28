@@ -86,6 +86,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         order.setNum(num);
         order.setUserId(userId);
         order.setShouldPay(money);
+        order.setPayMoney(money);
         order.setCurrencyType(currency);
         order.setId(StringUtils.nowStr());
         order.setTradeId(orderNo);
@@ -184,6 +185,9 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
                     if(oldPackageId == packageId){ //续费
                         title = local("package.notify.keep.success");
                         content = local("package.keep,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
+                    }else{ //升級
+                        title = local("package.notify.up.success");
+                        content = local("package.up,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
                     }
                 }
             } else {
@@ -192,6 +196,9 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
                     if(oldPackageId == packageId){
                         title = local("package.notify.keep.success");
                         content = local("package.keep,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
+                    }else{    //升級
+                        title = local("package.notify.up.success");
+                        content = local("package.keep,success.up.day", new Object[]{packageDesc, betweenDay, orderId});
                     }
                 }
             }
