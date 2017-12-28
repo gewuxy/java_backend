@@ -4,10 +4,7 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.service.OfficeConvertProgress;
 import cn.medcn.common.service.OpenOfficeService;
 import cn.medcn.common.supports.FileTypeSuffix;
-import cn.medcn.common.utils.CommandUtils;
-import cn.medcn.common.utils.FileUtils;
-import cn.medcn.common.utils.LogUtils;
-import cn.medcn.common.utils.UUIDUtil;
+import cn.medcn.common.utils.*;
 import com.google.common.collect.Lists;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -53,11 +50,20 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
         String pdfFilePath = appFileUploadBase + "temp/";
         convert2PDF(sourceFilePath, pdfFilePath);
         List<String> imageList = null;
+        String pdfFileName = null;
         try {
-            String pdfFileName = pdfFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf("/") + 1, sourceFilePath.lastIndexOf(".")) + "." + FileTypeSuffix.PDF_SUFFIX.suffix;
+            pdfFileName = pdfFilePath + sourceFilePath.substring(sourceFilePath.lastIndexOf("/") + 1, sourceFilePath.lastIndexOf(".")) + "." + FileTypeSuffix.PDF_SUFFIX.suffix;
             imageList = pdf2Images(pdfFileName, targetDir, courseId, request);
         } catch (Exception e) {
             e.printStackTrace();
+        } finally {
+            //删除临时文件
+            if (CheckUtils.isNotEmpty(pdfFileName)) {
+                File tempFile = new File(pdfFileName);
+                if (tempFile.exists()) {
+                    tempFile.delete();
+                }
+            }
         }
         return imageList;
     }

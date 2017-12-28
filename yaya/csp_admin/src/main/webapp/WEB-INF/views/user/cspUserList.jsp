@@ -161,6 +161,7 @@
         $("#packageChange").hide();
         $("#dongjie").show();
         $("#actionType").val(actionType);
+        $("#packageEnd").val(dateToStrings(""));
         $("#userId").val(userId);
         $(".modal-title").html("冻结");
         $("#myModal").modal("show");
