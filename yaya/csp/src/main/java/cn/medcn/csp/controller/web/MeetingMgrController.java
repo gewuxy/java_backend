@@ -168,6 +168,7 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("page", page);
         model.addAttribute("newUser",principal.getNewUser());
         model.addAttribute("successMsg",principal.getPkChangeMsg());
+        model.addAttribute("nickname",principal.getNickName());
         return localeView("/meeting/list");
     }
 

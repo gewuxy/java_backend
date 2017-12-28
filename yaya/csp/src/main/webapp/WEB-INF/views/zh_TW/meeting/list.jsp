@@ -573,12 +573,12 @@
             if (pkId == 1 && 3 >= meetCount ){
                 $("#pkTime").hide();
                 $("#note").hide();
-                $("#unlimited").hide();;
+                $("#unlimited").hide();
                 $("#meetCountTips").hide();
             }else if(pkId == 1 && 3 < meetCount){
                 $("#pkTime").hide();
                 $("#note").hide();
-                $("#unlimited").hide();;
+                $("#unlimited").hide();
                 $("#standard").hide();
             }else{
                 $("#meetCountTips").hide();
@@ -600,7 +600,7 @@
                     <span class="admin-tips-close" onclick="closeclick()"></span>
                 </div>
             </c:if>
-            <c:if test="${showTips != null && showTips}">
+            <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets && packageId !=3}">
                 <div class="admin-tips" id="meetCountTips">
                     <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">您的會議數量已超過套餐許可權，請删除部分會議或陞級套餐後繼續使用</a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
