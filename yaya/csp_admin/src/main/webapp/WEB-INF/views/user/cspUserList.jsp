@@ -38,15 +38,16 @@
                 <td><fmt:formatDate value="${user.registerTime}" pattern="yyyyMMdd"/></td>
                 <td>${user.packageId eq 1 ? "标准版": user.packageId eq 2 ? "高级版": user.packageId eq 3 ? "专业版":"<span style='color: #9c0001'>未登录</span>"}</td>
                 <td>
-                    <c:if test="${not empty user.packageStart}">
-                        <fmt:formatDate value="${user.packageStart}" pattern="yyyyMMdd"/>至<fmt:formatDate value="${user.packageEnd}" pattern="yyyyMMdd"/>
-                    </c:if>
-                    <c:if test="${empty user.packageStart && user.packageId eq 1}">
-                        无期限
-                    </c:if>
-                    <c:if test="${empty user.packageStart && empty user.packageId}">
-                        <span style='color: #9c0001'>无</span>
-                    </c:if>
+                    <c:choose>
+                        <c:when test="${user.unlimited eq true}">
+                            无期限
+                        </c:when>
+                        <c:otherwise>
+                            <c:if test="${not empty user.packageStart}">
+                                <fmt:formatDate value="${user.packageStart}" pattern="yyyyMMdd"/>至<fmt:formatDate value="${user.packageEnd}" pattern="yyyyMMdd"/>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
                 </td>
                 <td>${not empty user.payTimes ? user.payTimes : 0}</td>
                 <td>${not empty user.payMoneyCn ? user.payMoneyCn : 0}</td>
@@ -141,7 +142,7 @@
                     <input type="hidden" name="oldId" id="oldId" value=""/>
                     <input type="hidden" name="unlimited" id="unlimited" value=""/>
                     <input type="hidden" name="listType"  value="${listType}"/>
-                    <button type="button" class="btn green">返回</button>
+                    <button type="button" class="btn green" data-dismiss="modal">返回</button>
                     <button type="button" class="btn btn-primary" onclick="submitBtn()">提交</button>
                 </div>
             </form>
@@ -223,10 +224,6 @@
                         layer.msg("降级最低版本为标准版");
                         return false;
                     }
-                    if (packageId <= oldId && unlimited == "true"){
-                        layer.msg("不能对敬信数字平台用户进行操作");
-                        return false;
-                    }
                 }
                 if(packageId != 1){
                     if(isEmpty($("#packageEnd").val())){
@@ -234,7 +231,11 @@
                         return false;
                     }
                 }
-
+            }
+            //數字平臺不能操作
+            if (oldId == 3 && unlimited == "true"){
+                layer.msg("不能对敬信数字平台用户进行操作");
+                return false;
             }
             $("#packageEnd").val($("#packageEnd").val() + " 23:59:59");
             $("#packageId").prop("disabled", false);
