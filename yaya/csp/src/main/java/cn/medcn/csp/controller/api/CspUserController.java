@@ -275,6 +275,12 @@ public class CspUserController extends CspBaseController {
             userInfo.setLastLoginTime(new Date());
             cspUserService.updateByPrimaryKey(userInfo);
 
+            CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
+            if (cspUserPackage == null){
+                //app端用户默认给标准版
+                cspUserPackageService.addStanardInfo(userInfo.getId());
+            }
+
             // 缓存用户信息
             Principal principal = cachePrincipal(userInfo);
 
