@@ -462,7 +462,7 @@
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
-                    btn: ["upgrade"],
+                    btn: ["pgrade"],
                     content: $('#meetCountOut'),
                     success:function(){
 
@@ -939,7 +939,6 @@
                 <div class="cancel-popup-main">
                     <p>You have created too many meetings according to the limit of edition. Please upgrade to higher edition and try again.</p>
                 </div>
-
             </form>
         </div>
     </div>
