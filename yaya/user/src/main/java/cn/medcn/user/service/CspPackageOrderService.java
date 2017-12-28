@@ -7,6 +7,7 @@ import cn.medcn.user.dto.CspOrderPlatFromDTO;
 import cn.medcn.user.dto.CspPackageOrderDTO;
 import cn.medcn.user.model.CspPackageOrder;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -58,14 +59,14 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
      *
      * @return
      */
-    List<Map<String,Object>> orderCapitalStati(Integer abroad,String startTime,String endTime);
+    List<Map<String,Object>> orderCapitalStati(Integer abroad,Date startTime,Date endTime);
 
     /**
      * 获取各渠道资金
      *
      * @return
      */
-    List<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable);
+    MyPage<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable);
 
     CspOrderPlatFromDTO getTotalCapital(Pageable pageable);
     String getLocalPackage(Integer packageId);

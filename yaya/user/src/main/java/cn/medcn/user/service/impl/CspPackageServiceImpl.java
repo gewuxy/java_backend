@@ -3,21 +3,17 @@ package cn.medcn.user.service.impl;
 import cn.medcn.common.Constants;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.RedisCacheUtils;
-import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.model.CspPackage;
-import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.service.CspPackageService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.net.SocketPermission;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Liuchangling on 2017/12/8.
@@ -64,6 +60,13 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
         } else {
             money = currency == 0 ? pk.getMonthRmb() * limitTime : pk.getMonthUsd() * limitTime;
             num = limitTime;
+        }
+        //高级版三个月6个月分别价格是50，100
+        if(packageId == CspPackage.TypeId.PREMIUM.getId() && num == Constants.NUMBER_THREE && currency == Constants.NUMBER_ZERO){
+            money = 50;
+        }
+        if(packageId == CspPackage.TypeId.PREMIUM.getId() && num == 6 && currency == Constants.NUMBER_ZERO){
+            money = 100;
         }
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("money", (float) Math.round(money * 10000) / 10000);
