@@ -96,6 +96,23 @@
             $(this).addClass('none').siblings().removeClass('none');
         });
 
+        //监控键盘ESC 返回按钮
+        window.onresize = function(){
+            if(!checkFull()){
+                //要执行的动作
+                $('.swiper-container-metting-full').height(resizeHeight);
+                $(".fullPage-button-on").removeClass('none').siblings().addClass("none");
+
+            }
+        }
+
+        function checkFull(){
+            var isFull =  document.fullscreenEnabled || window.fullScreen || document.webkitIsFullScreen || document.msFullscreenEnabled;
+            //to fix : false || undefined == undefined
+            if(isFull === undefined) isFull = false;
+            return isFull;
+        }
+
         //幻灯片轮播
         swiper = new Swiper('.swiper-container-metting-full', {
             //分页
