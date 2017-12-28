@@ -849,20 +849,19 @@ public class MeetingController extends CspBaseController {
             liveType = LiveOrderDTO.LIVE_TYPE_PPT;
         }
 
+        if (liveType.equals(LiveOrderDTO.LIVE_TYPE_VIDEO)) {
+            //返回视频推流地址
+            String pushUrl = getPushUrl(courseId);
+            result.put("pushUrl", pushUrl);
+        }
+
         String wsUrl = genWsUrl(request, courseId);
         wsUrl += "&liveType=" + liveType;
-
+        result.put("wsUrl", wsUrl);
         if (hasDuplicate) {
-            result.put("wsUrl", wsUrl);
             result.put("duplicate", "1");
         } else {
             result.put("duplicate", "0");
-            if (liveType.equals(LiveOrderDTO.LIVE_TYPE_VIDEO)) {
-                result.put("wsUrl", wsUrl);
-                //返回视频推流地址
-                String pushUrl = getPushUrl(courseId);
-                result.put("pushUrl", pushUrl);
-            }
         }
 
         //加入服务器当前时间
