@@ -37,8 +37,13 @@ public class CspPackageOrderDTO {
     //购买时间
     private Date createTime;
 
-    //购买套餐类型，0表示1个月，1表示1年
+    //购买套餐类型，0表示月，1表示年
     private Integer packageType;
+
+    private Integer abroad;
+
+    //购买的数值,购买num个月或者num年
+    private Integer num;
 
 
 
