@@ -71,6 +71,7 @@
     <tr>
         <th>订单号</th>
         <th>用户昵称</th>
+        <th>国内/海外</th>
         <th>付款渠道</th>
         <th>购买日期</th>
         <th>购买套餐</th>
@@ -86,6 +87,7 @@
             <tr >
                 <td>${list.id}</td>
                 <td>${list.nickname}</td>
+                <td>${list.abroad == 1 ? "海外":"国内"}</td>
                 <td>
                     <c:if test="${fn:contains(list.platForm , 'alipay') }">支付宝</c:if>
                     <c:if test="${fn:contains(list.platForm , 'wx')}">微信</c:if>
@@ -94,7 +96,7 @@
                 </td>
                 <td><fmt:formatDate value="${list.createTime}" pattern="yyyyMMdd"></fmt:formatDate> </td>
                 <td><c:if test="${list.packageId == 2}">高级版</c:if><c:if test="${list.packageId == 3}">专业版</c:if> </td>
-                <td><c:if test="${list.packageType == 0}">1个月</c:if><c:if test="${list.packageType == 1}">1年</c:if> </td>
+                <td><c:if test="${list.packageType == 0}">${list.num}个月</c:if><c:if test="${list.packageType == 1}">${list.num}年</c:if> </td>
                 <td>
                     <c:if test="${not empty list.money}">
                         <fmt:formatNumber type="number" value="${list.money }" pattern="0.00" maxFractionDigits="2"/>
