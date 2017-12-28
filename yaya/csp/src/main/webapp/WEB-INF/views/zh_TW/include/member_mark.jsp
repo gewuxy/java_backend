@@ -420,8 +420,8 @@
                                     </span>
                             </div>
                         </div>
-                        <div class="formrow t-center last" style="position: relative; z-index:3;">
-                            <a href="javascript:;" class="button login-button layui-layer-close">取消</a>
+                        <div class="formrow t-center last" >
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">取消</a>
                             <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="確認支付">
                         </div>
                         <div id="disabledItem3"></div>

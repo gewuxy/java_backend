@@ -462,7 +462,7 @@
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
-                    btn: ["upgrade"],
+                    btn: ["pgrade"],
                     content: $('#meetCountOut'),
                     success:function(){
 
@@ -937,9 +937,8 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p>Beyond the number of set meals, please try to upgrade the set meal and try again</p>
+                    <p>You have created too many meetings according to the limit of edition. Please upgrade to higher edition and try again.</p>
                 </div>
-
             </form>
         </div>
     </div>
