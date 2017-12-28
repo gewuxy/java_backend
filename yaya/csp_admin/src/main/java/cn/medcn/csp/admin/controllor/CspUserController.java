@@ -161,7 +161,7 @@ public class CspUserController extends BaseController {
             cspUserPackageService.insertSelective(packageInfo);
         }else{
             //更新套餐版本信息
-            cspUserPackageService.updateByPrimaryKeySelective(packageInfo);
+            cspUserPackageService.updateByPrimaryKey(packageInfo);
             oldpackageId = oldPackage.getPackageId();
         }
         //更新会议状态
