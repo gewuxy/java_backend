@@ -233,7 +233,7 @@
         var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
         var isVideo = $('.swiper-slide-active').find('video');
 
-        //判断访问终端
+        //判断手机终端类型
         var browser={
             versions:function(){
                 var u = navigator.userAgent, app = navigator.appVersion;
@@ -247,8 +247,10 @@
                     android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
                     iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
                     iPad: u.indexOf('iPad') > -1, //是否iPad
+                    iPod: u.indexOf('iPod') > -1, //是否iPad
                     webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
-                    iphoneSafari: u.indexOf('MicroMessenger') > -1
+                    iphoneSafari: u.indexOf('MicroMessenger') > -1,
+                    isOs69: u.match(/OS [4-9]_\d[_\d]* like Mac OS X/i)
                 };
             }(),
             language:(navigator.browserLanguage || navigator.language).toLowerCase()
@@ -416,7 +418,14 @@
                     }
                 });
             } else {
-                changeTrack();
+                if (browser.versions.iPhone || browser.versions.iPad || browser.versions.iPod) {
+                    // 判断系统版本号是否大于 9
+                    if(browser.versions.isOs69){
+                        alert('Fail to proceed the function due to system limitation. Please press the volume button on the right side of your mobile to change volume.');
+                    } else {
+                        changeTrack();
+                    }
+                }
             }
         });
 
@@ -544,13 +553,28 @@
 
             viedoMuted();
 //            viedoMuted();
-
+            if (browser.versions.iPhone || browser.versions.iPad || browser.versions.iPod) {
+                // 判断系统版本号是否大于 9
+                if(browser.versions.isOs69){
+                    if($('.popup-volume').find('audio').length > 0){
+                        popupPalyer.element.play();
+                        $("#ck-video")[0].load();
+                        needSync = false;
+                    } else if ($('.popup-volume').find('video').length) {
+                        $("#ck-video")[0].play();
+                        popupPalyer.element.pause();
+                        needSync = true;
+                    }
+                }
+            }
             if(ismuted){
                 if($('.popup-volume').find('audio').length > 0){
                     popupPalyer.element.muted = false;
+                    needSync = false;
                 } else if ($('.popup-volume').find('video').length) {
                     CKobject.getObjectById('ck-video').changeVolume(100);
                     $("#ck-video")[0].muted = false;
+                    needSync = true;
                 }
 
             }
