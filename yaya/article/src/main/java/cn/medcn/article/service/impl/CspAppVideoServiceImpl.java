@@ -24,6 +24,6 @@ public class CspAppVideoServiceImpl extends BaseServiceImpl<AppVideo> implements
 
     @Override
     public AppVideo findCspAppVideo(){
-        return null;
+        return appVideoDAO.findCspAppVideo();
     }
 }
