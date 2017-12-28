@@ -183,10 +183,14 @@
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var dataSrc ;
 
+        var prevAudioSrc;
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio play over ...");
             if (playing){
-                galleryTop.slideNext();
+                if($("#audioPlayer")[0].src != prevAudioSrc){
+                    galleryTop.slideNext();
+                }
+                prevAudioSrc = $("#audioPlayer")[0].src;
             }
         });
 //

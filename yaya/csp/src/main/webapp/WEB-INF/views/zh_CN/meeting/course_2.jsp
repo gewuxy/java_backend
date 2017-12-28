@@ -289,11 +289,16 @@
             setTimeout(function(){galleryTop.slideNext();}, 3000);
         }
 
+        var prevAudioSrc;
         $("#audioPlayer")[0].addEventListener("ended", function(){
-            console.log("audio ended");
-            console.log("audio play over ...");
-            galleryTop.slideNext();
-            $(".boxAudio-loading").addClass("none");
+            if($("#audioPlayer")[0].src != prevAudioSrc){
+                console.log("audio ended");
+                console.log("audio play over ...");
+                galleryTop.slideNext();
+                $(".boxAudio-loading").addClass("none");
+            }
+            prevAudioSrc = $("#audioPlayer")[0].src;
+
         });
 
         $("#audioPlayer")[0].addEventListener("error", function(){

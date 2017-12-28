@@ -715,7 +715,7 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}">Contribute</a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}"><i></i>More</a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i>More</a>
                                             </div>
                                         </div>
                                         <div class="meeting-lock-item"></div>

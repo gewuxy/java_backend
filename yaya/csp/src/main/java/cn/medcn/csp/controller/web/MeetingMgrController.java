@@ -286,6 +286,10 @@ public class MeetingMgrController extends CspBaseController {
         if (courseId != null) {
             course = audioService.findAudioCourse(courseId);
 
+            if(course.getLocked() != null && course.getLocked()){
+                throw new SystemException(local("course.error.locked"));
+            }
+
             boolean editAble = audioService.editAble(courseId);
             if (!editAble) {
                 throw new SystemException(courseNonEditAbleError());
