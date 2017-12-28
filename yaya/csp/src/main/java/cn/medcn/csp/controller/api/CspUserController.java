@@ -277,17 +277,19 @@ public class CspUserController extends CspBaseController {
 
             CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
             if (cspUserPackage == null){
-                //app端用户默认给标准版
-                cspUserPackageService.addStanardInfo(userInfo.getId());
+                if(userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
+                    cspUserService.yayaBindUpdate(userInfo.getId());
+                }else{
+                    //app端用户默认给标准版
+                    cspUserPackageService.addStanardInfo(userInfo.getId());
+                }
             }
-
+            modifyOldUser(userInfo);
             // 缓存用户信息
             Principal principal = cachePrincipal(userInfo);
 
             // 返回给前端的用户数据
             CspUserInfoDTO dto = buildCspUserInfoDTO(principal, userInfo);
-
-            modifyOldUser(userInfo);
 
             //判断用户是否已经存在新手引导会议
             audioService.doCopyGuideCourse(principal.getId());
@@ -460,8 +462,6 @@ public class CspUserController extends CspBaseController {
             cspUserService.insert(userInfo);
             //推送注册成功消息
             sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
-            //app端用户默认给标准版
-            cspUserPackageService.addStanardInfo(userId);
             userInfo.setFlux(0); // 用户流量
         }
 

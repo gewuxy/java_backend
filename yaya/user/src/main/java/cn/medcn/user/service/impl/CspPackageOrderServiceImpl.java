@@ -179,18 +179,20 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
             if (betweenDay > CalendarUtils.DEFAULT_YEAR) {
                 Integer yearNum = betweenDay / CalendarUtils.DEFAULT_YEAR;
                 Integer extra = betweenDay - CalendarUtils.DEFAULT_YEAR * yearNum;
-                if (oldPackageId != null) { //续费
-                    title = local("package.notify.keep.success");
-                    content = local("package.keep,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
-                } else {//购买
-                    content = local("package.buy,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
+                content = local("package.buy,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
+                if (oldPackageId != null) {
+                    if(oldPackageId == packageId){ //续费
+                        title = local("package.notify.keep.success");
+                        content = local("package.keep,success.notify.year", new Object[]{packageDesc, yearNum, extra, orderId});
+                    }
                 }
             } else {
+                content = local("package.buy,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
                 if (oldPackageId != null) { //续费
-                    title = local("package.notify.keep.success");
-                    content = local("package.keep,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
-                } else {     // 购买
-                    content = local("package.buy,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
+                    if(oldPackageId == packageId){
+                        title = local("package.notify.keep.success");
+                        content = local("package.keep,success.notify.day", new Object[]{packageDesc, betweenDay, orderId});
+                    }
                 }
             }
         } catch (ParseException e) {
