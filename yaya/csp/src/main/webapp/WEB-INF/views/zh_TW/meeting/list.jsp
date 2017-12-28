@@ -569,12 +569,18 @@
 
         $(function () {
             var pkId = ${packageId};
-            if (pkId == 1){
+            var meetCount = ${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}
+            if (pkId == 1 && 3 >= meetCount ){
                 $("#pkTime").hide();
-                $("#meetCountTips").hide();
                 $("#note").hide();
-                $("#unlimited").hide();
-            }else {
+                $("#unlimited").hide();;
+                $("#meetCountTips").hide();
+            }else if(pkId == 1 && 3 < meetCount){
+                $("#pkTime").hide();
+                $("#note").hide();
+                $("#unlimited").hide();;
+                $("#standard").hide();
+            }else{
                 $("#meetCountTips").hide();
                 $("#standard").hide();
             }
@@ -621,13 +627,13 @@
                     })
                 </script>
             </c:if>
-            <c:if test="${packageId == 1}">
+            <c:if test="${packageId == 1 && (cspPackage.usedMeetCount + cspPackage.hiddenMeetCount <= 3)}">
                 <div class="admin-tips" id="standard">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">已生效 </a> </span>
                     <span class="admin-tips-close" onclick="standardClose()"></span>
                 </div>
             </c:if>
-            <c:if test="${cspUserPackage.unlimited == true && packageId != 1}">
+            <c:if test="${cspPackage.unlimited == true && packageId != 1}">
                 <div class="admin-tips" id="unlimited">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">專業版已生效 </a> </span>
                     <span class="admin-tips-close" onclick="unlimitedClose()"></span>
