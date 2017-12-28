@@ -212,10 +212,10 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p id="backMsg">已成功购买，请前往使用</p>
+                    <p id="backMsg"></p>
                 </div>
-                <div class="admin-button t-right " >
-                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="确定"/>
+                <div class="admin-button t-right">
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="知道了"/>
                 </div>
             </form>
         </div>
