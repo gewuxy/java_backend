@@ -335,12 +335,15 @@
 
             }
         }
-
+        var prevAudioSrc;
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio ended");
             if (playing){
                 if (isVideo.length == 0){
-                    galleryTop.slideNext();
+                    if($("#audioPlayer")[0].src != prevAudioSrc) {
+                        galleryTop.slideNext();
+                    }
+                    prevAudioSrc = $("#audioPlayer")[0].src;
                 }
             }
             playOver = true;
