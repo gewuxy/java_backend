@@ -275,6 +275,12 @@ public class CspUserController extends CspBaseController {
             userInfo.setLastLoginTime(new Date());
             cspUserService.updateByPrimaryKey(userInfo);
 
+            CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
+            if (cspUserPackage == null){
+                //app端用户默认给标准版
+                cspUserPackageService.addStanardInfo(userInfo.getId());
+            }
+
             // 缓存用户信息
             Principal principal = cachePrincipal(userInfo);
 
@@ -457,12 +463,6 @@ public class CspUserController extends CspBaseController {
             //app端用户默认给标准版
             cspUserPackageService.addStanardInfo(userId);
             userInfo.setFlux(0); // 用户流量
-        }else {
-            CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
-            if (cspUserPackage == null){
-                //app端用户默认给标准版
-                cspUserPackageService.addStanardInfo(userInfo.getId());
-            }
         }
 
         return userInfo;
@@ -493,12 +493,6 @@ public class CspUserController extends CspBaseController {
             userDTO.setRegisterDevice(CspUserInfo.RegisterDevice.APP.ordinal());
             userInfo = cspUserService.saveThirdPartyUserInfo(userDTO);
             userInfo.setFlux(0);
-        }else {
-            CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
-            if (cspUserPackage == null){
-                //app端用户默认给标准版
-                cspUserPackageService.addStanardInfo(userInfo.getId());
-            }
         }
 
         return userInfo;
