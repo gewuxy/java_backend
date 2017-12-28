@@ -453,11 +453,14 @@ public class UserCenterController extends CspBaseController {
             return localeView("/meeting/list");
         }
         //英文版，格式化日期
-        if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
-            DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.ENGLISH);
-            model.addAttribute("startTime",format.format(cspUserPackage.getPackageStart()));
-            model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
+        if (cspUserPackage.getPackageStart() != null && cspUserPackage.getPackageEnd()!= null){
+            if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
+                DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.ENGLISH);
+                model.addAttribute("startTime",format.format(cspUserPackage.getPackageStart()));
+                model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
+            }
         }
+
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
         model.addAttribute("cspPackageInfos", cspPackageInfos);
         model.addAttribute("cspUserPackage",cspUserPackage);
