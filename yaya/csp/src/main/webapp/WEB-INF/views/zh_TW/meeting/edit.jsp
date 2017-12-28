@@ -567,6 +567,17 @@
             }
 
             var playType =  $("#coursePlayType").val();
+
+            if(playType == 2){//视频直播需检测流量
+                var remainFlux = 0;
+                ajaxSyncGet("${ctx}/mgr/meet/flux/fresh", {}, function(data){
+                    remainFlux = data.data;
+                });
+                if(remainFlux < 10){
+                    layer.msg("剩餘流量需在10G以上才能開啟視頻直播");
+                    return ;
+                }
+            }
             if (playType == 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
