@@ -82,29 +82,29 @@
     </tr>
     </thead>
     <tbody>
-    <c:forEach items="${page.dataList}" var="list">
-        <c:if test="${not empty list}">
+    <c:forEach items="${page.dataList}" var="order">
+        <c:if test="${not empty order}">
             <tr >
-                <td>${list.id}</td>
-                <td>${list.nickname}</td>
-                <td>${list.abroad == 1 ? "海外":"国内"}</td>
+                <td>${order.id}</td>
+                <td>${order.nickname}</td>
+                <td>${order.abroad == 1 ? "海外":"国内"}</td>
                 <td>
-                    <c:if test="${fn:contains(list.platForm , 'alipay') }">支付宝</c:if>
-                    <c:if test="${fn:contains(list.platForm , 'wx')}">微信</c:if>
-                    <c:if test="${fn:contains(list.platForm , 'upacp')}">银联</c:if>
-                    <c:if test="${fn:contains(list.platForm , 'paypal')}">paypal</c:if>
+                    <c:if test="${fn:contains(order.platForm , 'alipay') }">支付宝</c:if>
+                    <c:if test="${fn:contains(order.platForm , 'wx')}">微信</c:if>
+                    <c:if test="${fn:contains(order.platForm , 'upacp')}">银联</c:if>
+                    <c:if test="${fn:contains(order.platForm , 'paypal')}">paypal</c:if>
                 </td>
-                <td><fmt:formatDate value="${list.createTime}" pattern="yyyyMMdd"></fmt:formatDate> </td>
-                <td><c:if test="${list.packageId == 2}">高级版</c:if><c:if test="${list.packageId == 3}">专业版</c:if> </td>
-                <td><c:if test="${list.packageType == 0}">${list.num}个月</c:if><c:if test="${list.packageType == 1}">${list.num}年</c:if> </td>
+                <td><fmt:formatDate value="${order.createTime}" pattern="yyyyMMdd"></fmt:formatDate> </td>
+                <td><c:if test="${order.packageId == 2}">高级版</c:if><c:if test="${order.packageId == 3}">专业版</c:if> </td>
+                <td><c:if test="${order.packageType == 0}">${order.num}个月</c:if><c:if test="${order.packageType == 1}">${order.num}年</c:if> </td>
                 <td>
-                    <c:if test="${not empty list.money}">
-                        <fmt:formatNumber type="number" value="${list.money }" pattern="0.00" maxFractionDigits="2"/>
+                    <c:if test="${not empty order.money}">
+                        <fmt:formatNumber type="number" value="${order.money }" pattern="0.00" maxFractionDigits="2"/>
                     </c:if>
                     <c:if test="${type == 0}">CNY</c:if><c:if test="${type == 1}">USD</c:if>
                 </td>
-                <td><c:if test="${list.status == 1}">交易成功</c:if><c:if test="${list.status == 0}">待付款</c:if> </td>
-                <td><input type="text" value="${list.remark}"></td>
+                <td><c:if test="${order.status == 1}">交易成功</c:if><c:if test="${order.status == 0}">待付款</c:if> </td>
+                <td><input type="text" value="${order.remark}">&nbsp;<a href="#" onclick="remark(this,'${order.id}')">备注</a></td>
             </tr>
         </c:if>
     </c:forEach>
@@ -199,6 +199,24 @@
         });
 
     });
+
+    //修改备注
+    function remark(obj,tradeId){
+        var remark = $(obj).parent().find("input").val();
+        $.ajax({
+            url:'${ctx}/sys/package/stats/remark',
+            data:{"tradeId":tradeId,"remark":remark},
+            dataType:"json",
+            type:"post",
+            success:function (data) {
+                if(data.code == "0"){
+                    layer.msg("更新成功");
+                }else{
+                    layer.msg(data.err);
+                }
+            }
+        });
+    }
 </script>
 
 </body>

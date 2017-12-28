@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -81,6 +82,29 @@ public class CspPackageStatsController extends BaseController {
         return "/statistics/packageOrderStats";
     }
 
+    /**
+     * 修改订单备注
+     * @return
+     */
+    @RequestMapping("/remark")
+    @ResponseBody
+    public String remark(String tradeId,String remark){
+        if(StringUtils.isEmpty(tradeId)){
+            return error("请提供订单id");
+        }
+        CspPackageOrder order = new CspPackageOrder();
+        order.setTradeId(tradeId);
+        order = cspPackageOrderService.selectOne(order);
+        if(order == null){
+            return error("没有找到该订单");
+        }
+        order.setRemark(remark);
+        int count = cspPackageOrderService.updateByPrimaryKey(order);
+        if(count != 1){
+            return error("备注失败");
+        }
+        return success();
+    }
 
     /**
      * 查找订单
