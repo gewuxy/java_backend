@@ -44,7 +44,7 @@
 <div class="clearfix breadcrumb">
     <div class="pull-right clearfix">
         <form id="searchForm" method="post" class=" form-search" style="margin-bottom:0;">
-            <input placeholder="订单号" value="" size="40"  type="search" id="tradeId" name="tradeId" maxlength="50" class="required"/>
+            <input placeholder="订单号" value="" size="40"  type="search" id="id" name="id" maxlength="50" class="required"/>
             <input id="search" class="btn btn-primary" type="button" value="查询"/>
         </form>
     </div>
@@ -70,6 +70,7 @@
     <thead>
     <tr>
         <th>订单号</th>
+        <th>第三方订单号</th>
         <th>用户昵称</th>
         <th>国内/海外</th>
         <th>付款渠道</th>
@@ -86,6 +87,7 @@
         <c:if test="${not empty order}">
             <tr >
                 <td>${order.id}</td>
+                <td>${order.tradeId}</td>
                 <td>${order.nickname}</td>
                 <td>${order.abroad == 1 ? "海外":"国内"}</td>
                 <td>
@@ -186,11 +188,11 @@
 
 
         $("#search").click(function () {
-            var tradeId = $("#tradeId").val();
-            if(tradeId == '' || tradeId == undefined){
+            var id = $("#id").val();
+            if(id == '' || id == undefined){
                 layer.msg("请输入订单号");
             }else{
-                window.location.href="${ctx}/sys/package/stats/search?tradeId=" + tradeId + "&rmb=" + '${rmb}' + "&usd=" + '${usd}' + "&type=" + ${type};
+                window.location.href="${ctx}/sys/package/stats/search?id=" + id + "&rmb=" + '${rmb}' + "&usd=" + '${usd}' + "&type=" + ${type};
             }
         });
 
@@ -201,11 +203,11 @@
     });
 
     //修改备注
-    function remark(obj,tradeId){
+    function remark(obj,id){
         var remark = $(obj).parent().find("input").val();
         $.ajax({
             url:'${ctx}/sys/package/stats/remark',
-            data:{"tradeId":tradeId,"remark":remark},
+            data:{"id":id,"remark":remark},
             dataType:"json",
             type:"post",
             success:function (data) {

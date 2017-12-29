@@ -136,7 +136,7 @@ public class UserFluxServiceImpl extends BaseServiceImpl<UserFlux> implements Us
             LogUtils.error(log,"获取下载次数失败");
             throw new SystemException(local("download.fail"));
         }
-        usage.setDownloadCount(usage.getDownloadCount() + 1);
+        usage.setDownloadCount(usage.getDownloadCount() == null ? 1: usage.getDownloadCount() + 1);
         int count = userFluxUsageDAO.updateByPrimaryKeySelective(usage);
         if(count != 1){
             LogUtils.error(log,"更新下载次数失败");
