@@ -78,8 +78,8 @@
 
     <select id="findUserList" resultType="cn.medcn.user.model.CspUserInfo">
         SELECT * FROM t_csp_user_info WHERE 1=1
-        <if test="userName != null">
-            AND user_name LIKE  CONCAT('%',#{userName},'%')
+        <if test="nickName != null">
+            AND nick_name LIKE  CONCAT('%',#{nickName},'%')
         </if>
     </select>
 
@@ -140,24 +140,16 @@
     </select>
 
     <select id="findNewDayMoney" resultType="cn.medcn.user.dto.CspUserInfoDTO">
-        SELECT
+       SELECT
 	      i.id AS uid,i.nick_name, p.package_id,i.register_time,
 	      p.package_start,
           p.package_end,
-          p.source_type,
-          temp.payMoneyUs,
-          temp.create_time
+          p.source_type
         FROM
 	      t_csp_user_package p
         LEFT JOIN t_csp_user_info i ON i.id = p.user_id
-        LEFT JOIN (
-	      SELECT
-		user_id,COUNT(user_id) AS payTimes,create_time,
-		SUM(CASE WHEN currency_type = 1 THEN should_pay END) AS payMoneyUs
-	      FROM `t_csp_package_order` WHERE state = 1
-            GROUP BY user_id) temp ON i.id = temp.user_id
         WHERE i.abroad = 1
-          AND temp.create_time BETWEEN curdate() - INTERVAL 1 DAY AND CURDATE()
+          AND i.register_time BETWEEN curdate() - INTERVAL 1 DAY AND CURDATE()
     </select>
 
 </mapper>

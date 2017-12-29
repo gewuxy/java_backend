@@ -114,10 +114,10 @@
     <div class="control-group">
         <label class="control-label">应用类型:</label>
         <div class="controls">
-            <select name="appType">
+            <select name="appType" style="width: 150px">
                 <option value="">-- 请选择 --</option>
-                <option value="cspmeeting_cn">CSP中文版</option>
-                <option value="cspmeeting_us">CSP英文版</option>
+                <option value="cspmeeting_cn">国内版</option>
+                <option value="cspmeeting_us">海外版</option>
             </select>
         </div>
     </div>

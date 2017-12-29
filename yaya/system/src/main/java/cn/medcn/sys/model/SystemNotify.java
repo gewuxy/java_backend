@@ -29,7 +29,7 @@ public class SystemNotify implements Serializable {
     /**通知内容*/
     private String content;
 
-    /**通知类型0表示针对所有人 1表示针对个人*/
+    /**通知类型0表示针对国内用户  2表示针对海外用户 1表示针对个人*/
     private Integer notifyType;
 
     /**接收者id**/
@@ -51,7 +51,7 @@ public class SystemNotify implements Serializable {
     private String sendTimeStr;
 
     @Transient
-    private String userName;
+    private String nickName;
 
     public static void tranEnglishTime(List<SystemNotify> list){
         DateFormat format = new SimpleDateFormat("MMM d", Locale.ENGLISH);

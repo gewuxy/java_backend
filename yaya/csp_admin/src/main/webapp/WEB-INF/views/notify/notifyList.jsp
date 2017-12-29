@@ -32,7 +32,7 @@
                 <td>${mes.content}</td>
                 <td> ${mes.notifyType eq 0 ? "对所有人发布": mes.notifyType eq 1 ? "对个人发布": ""}</td>
                 <td><fmt:formatDate value="${mes.sendTime}" type="both" dateStyle="full"/></td>
-                <td>${mes.userName}</td>
+                <td>${mes.nickName}</td>
                 <td>${mes.senderName}</td>
                 <td>
                     <shiro:hasPermission name="csp:notify:view">

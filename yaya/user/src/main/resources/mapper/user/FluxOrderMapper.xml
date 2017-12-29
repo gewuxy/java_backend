@@ -4,9 +4,9 @@
     <select id="findFluxOrderList" resultType="cn.medcn.user.model.FluxOrder">
         SELECT
         p.*,
-        f.user_name
+        f.nick_name
         FROM t_csp_user_flux_purchase p
-        LEFT JOIN t_csp_user_info f
+        INNER JOIN t_csp_user_info f
         ON p.user_id = f.id
         WHERE 1=1
         <if test="tradeId != null">

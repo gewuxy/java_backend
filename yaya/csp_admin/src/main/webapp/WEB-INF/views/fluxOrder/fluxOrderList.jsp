@@ -31,7 +31,7 @@
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="data">
             <tr>
-                <td>${data.username}</td>
+                <td>${data.nickName}</td>
                 <td><fmt:formatDate value="${data.buyTime}" type="both" dateStyle="full"/></td>
                 <td>${data.state eq 0? "未到账": data.state eq 1?"已到账":data.state eq 2?"已关闭":""}</td>
                 <td><fmt:formatDate value="${data.effectTime}" type="both" dateStyle="full"/></td>
