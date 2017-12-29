@@ -140,12 +140,7 @@ public class CspPackageStatsController extends BaseController {
         if(type == null){
             throw new SystemException("请提供货币类型");
         }
-        if(StringUtils.isEmpty(startTime)){
-            throw new SystemException("请选择开始时间");
-        }
-        if(StringUtils.isEmpty(endTime)){
-            throw new SystemException("请选择结束时间");
-        }
+
         Pageable pageable = new Pageable();
         pageable.put("type",type);
         //导出所有符合的数据,不分页
