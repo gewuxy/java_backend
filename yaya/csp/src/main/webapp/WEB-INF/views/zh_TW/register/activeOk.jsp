@@ -23,8 +23,7 @@
 <div id="wrapper">
     <div class="login login-banner" style="height:900px;">
         <div class="page-width pr">
-           <%@include file="/WEB-INF/include/switch_language.jsp"%>
-           
+
             <div class="login-box clearfix">
                 <%@include file="../include/login_left.jsp"%>
                 
