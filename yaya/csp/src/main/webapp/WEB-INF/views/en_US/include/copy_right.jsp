@@ -9,3 +9,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <jsp:useBean id="now" class="java.util.Date" scope="page"/>
 <a href="http://www.beian.gov.cn/" target="_blank"><img src="${ctxStatic}/images/icp.png" align="absmiddle"/>粤公网安备 44010602003231号</a> <a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备12087993号</a>  Copyright © <fmt:formatDate value="${now}" pattern="yyyy"/> Jingxin Tech. All Rights Reserved.
+<%-- 友盟站点统计--%>
+<script type="text/javascript">
+    var cnzz_protocol =
+        (("https:" == document.location.protocol) ? " https://" : " http://");
+    document.write(unescape("%3Cspan id='cnzz_stat_icon_1271437132'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s22.cnzz.com/z_stat.php%3Fid%3D1271437132%26show%3Dpic' type='text/javascript'%3E%3C/script%3E"));
+</script>
