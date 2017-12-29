@@ -279,6 +279,10 @@ public class CspUserController extends CspBaseController {
             if (cspUserPackage == null){
                 if(userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
                     cspUserService.yayaBindUpdate(userInfo.getId());
+                    if(userInfo.getState() == true){
+                        userInfo.setState(true);
+                        cspUserService.updateByPrimaryKey(userInfo);
+                    }
                 }else if(userInfo.getState() == true && !userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
                     modifyOldUser(userInfo);
                 }else{
