@@ -276,15 +276,17 @@ public class CspUserController extends CspBaseController {
             cspUserService.updateByPrimaryKey(userInfo);
 
             CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
+            modifyOldUser(userInfo);
             if (cspUserPackage == null){
                 if(userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
                     cspUserService.yayaBindUpdate(userInfo.getId());
+                }else if(userInfo.getState() == true && !userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
+                    modifyOldUser(userInfo);
                 }else{
                     //app端用户默认给标准版
                     cspUserPackageService.addStanardInfo(userInfo.getId());
                 }
             }
-            modifyOldUser(userInfo);
             // 缓存用户信息
             Principal principal = cachePrincipal(userInfo);
 
