@@ -4,7 +4,7 @@
 
     <select id="findNewly" resultType="cn.medcn.user.model.AppVersion">
         SELECT id, version, version_str,drive_tag, app_type, file_size, update_time, details, down_load_url, forced
-        FROM t_app_version WHERE app_type = #{appType} AND drive_tag = #{driveTag} ORDER BY version DESC
+        FROM t_app_version WHERE app_type = #{appType} AND drive_tag = #{driveTag} ORDER BY version DESC limit 1
     </select>
 
     <select id="findappManageListByPage" resultType="cn.medcn.user.model.AppVersion">
