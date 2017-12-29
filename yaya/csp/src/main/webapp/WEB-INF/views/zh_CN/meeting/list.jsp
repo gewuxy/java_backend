@@ -34,46 +34,6 @@
         var shareUrl = "";
         var coverUrl = "";
 
-        /*-------- 将关闭提示放入cookie 只提示一次 ---------*/
-        function cookiesave(n, v, mins, dn, path)
-        {
-            if(n)
-            {
-                if(!mins) mins = 365 * 24 * 60;
-                if(!path) path = "/";
-                var date = new Date();
-                date.setTime(date.getTime() + (mins * 60 * 1000));
-                var expires = "; expires=" + date.toGMTString();
-                if(dn) dn = "domain=" + dn + "; ";
-                document.cookie = n + "=" + v + expires + "; " + dn + "path=" + path;
-            }
-        }
-        function cookieget(n)
-        {
-            var name = n + "=";
-            var ca = document.cookie.split(';');
-            for(var i=0;i<ca.length;i++) {
-                var c = ca[i];
-                while (c.charAt(0)==' ') c = c.substring(1,c.length);
-                if (c.indexOf(name) == 0) return c.substring(name.length,c.length);
-            }
-            return "";
-        }
-        function closeclick(){
-            document.getElementById('note').style.display='none';
-            cookiesave('closeclick','closeclick','','','');
-        }
-        function clickclose(){
-            if(cookieget('closeclick')=='closeclick'){
-                document.getElementById('note').style.display='none';
-            }else{
-               document.getElementById('note').style.display='block';
-            }
-        }
-        window.onload=clickclose;
-
-        /*------end -------*/
-
         $(function(){
             if("${err}"){
                 layer.msg("${err}");
@@ -566,6 +526,11 @@
             $("#unlimited").hide();
         }
 
+        function closeClick(){
+            $("#note").hide();
+        }
+
+
 
         $(function () {
             var pkId = ${packageId};
@@ -604,9 +569,9 @@
             </c:if>
 
             <c:if test="${expireTimeCount <= 5  && expireTimeCount >=0}">
-                <div class="admin-tips" id="note" style="display: none">
+                <div class="admin-tips" id="note">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
-                    <span class="admin-tips-close" onclick="closeclick()"></span>
+                    <span class="admin-tips-close" onclick="closeClick()"></span>
                 </div>
             </c:if>
 
