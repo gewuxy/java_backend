@@ -141,7 +141,7 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
         cspUserPackage.setPackageEnd(endTime);
         cspUserPackage.setPackageId(CspPackage.TypeId.PROFESSIONAL.getId());
         cspUserPackage.setUnlimited(false);
-        userPackageDAO.updateByPrimaryKey(cspUserPackage);
+        userPackageDAO.insert(cspUserPackage);
         //添加到套餐详情中
         doAddUserPackageDetail(cspUserPackage,cspUserPackage.getPackageId());
 
