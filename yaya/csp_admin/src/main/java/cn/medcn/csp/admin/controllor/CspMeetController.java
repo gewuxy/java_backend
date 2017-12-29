@@ -18,8 +18,11 @@ import cn.medcn.meet.model.Meet;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.meet.service.MeetService;
+import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.FluxOrder;
 import cn.medcn.user.model.UserFluxUsage;
+import cn.medcn.user.service.CspUserPackageService;
+import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.UserFluxService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -54,9 +57,14 @@ public class CspMeetController extends BaseController{
     @Autowired
     private LiveService liveService;
 
-
     @Autowired
     protected UserFluxService userFluxService;
+
+    @Autowired
+    protected CspUserPackageService cspUserPackageService;
+
+    @Autowired
+    protected CspUserService cspUserService;
 
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
@@ -96,10 +104,11 @@ public class CspMeetController extends BaseController{
     @RequestMapping(value="/delete")
     @Log(name = "关闭会议")
     public String delete(Integer id,RedirectAttributes redirectAttributes){
-        AudioCourse audioCourse = new AudioCourse();
-        audioCourse.setId(id);
-        audioCourse.setDeleted(true);
-        audioService.updateByPrimaryKeySelective(audioCourse);
+        AudioCourse course = audioService.selectByPrimaryKey(id);
+        course.setDeleted(true);
+        audioService.updateByPrimaryKeySelective(course);
+        //更新缓存
+        cspUserService.updatePackagePrincipal(course.getCspUserId());
         addFlashMessage(redirectAttributes, "关闭成功");
         return "redirect:/csp/meet/list";
     }

@@ -111,6 +111,9 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
     @Autowired
     protected CspUserPackageDAO userPackageDAO;
 
+    @Autowired
+    protected CspPackageDAO cspPackageDAO;
+
     @Override
     public Mapper<CspUserInfo> getBaseMapper() {
         return cspUserInfoDAO;
@@ -753,6 +756,28 @@ public class CspUserServiceImpl extends BaseServiceImpl<CspUserInfo> implements 
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
         MyPage<CspUserInfoDTO> page = MyPage.page2Mypage((Page) cspUserInfoDAO.findNewDayMoney(pageable.getParams()));
         return page;
+    }
+
+    /**
+     * 缓存更新用户套餐信息(用户套餐更改，会议数量更改，套餐基础信息变更 使用)
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public Principal updatePackagePrincipal(String userId) {
+        CspUserInfo userInfo = cspUserInfoDAO.selectByPrimaryKey(userId);
+        String token = userInfo.getToken();
+        if(StringUtils.isEmpty(token)){  //没有token无需更新
+            return null;
+        }
+        Principal principal = Principal.build(userInfo);
+        CspPackage cspPackage = cspPackageDAO.findUserPackageById(userId);
+        principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
+        principal.setCspPackage(cspPackage);
+        principal.setNewUser(cspPackage == null);
+        redisCacheUtils.setCacheObject(Constants.TOKEN +"_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
+        return principal;
     }
 
 }

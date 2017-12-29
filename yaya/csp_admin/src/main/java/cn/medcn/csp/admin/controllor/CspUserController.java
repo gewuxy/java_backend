@@ -5,7 +5,6 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.CalendarUtils;
-import cn.medcn.common.utils.MD5Utils;
 import cn.medcn.common.utils.RedisCacheUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
@@ -104,7 +103,7 @@ public class CspUserController extends BaseController {
             if(!StringUtils.isEmpty(province)){
                 List<SystemRegion> citys = systemRegionService.findRegionByPreName(province);
                 model.addAttribute("city", citys);
-                if(!province.equals("北京") || !province.equals("天津")){   //此此省份没有2级
+                if(userInfo.getCity() != null){
                     List<SystemRegion> districts = systemRegionService.findRegionByPreName(userInfo.getCity());
                     model.addAttribute("district", districts);
                 }
@@ -113,33 +112,33 @@ public class CspUserController extends BaseController {
         return "/user/userInfo";
     }
 
-    /**
-     * 删除、禁用、更新、注册用户
-     * @param actionType
-     * @param redirectAttributes
-     * @return
-     */
-    @RequestMapping(value = "/update")
-    @Log(name="更新csp用户信息")
-    public String stopOrActive(CspUserInfo user,Integer actionType,Integer listType,Integer isReset, RedirectAttributes redirectAttributes) {
-        if(actionType == Constants.NUMBER_ONE){ //停用
-            user.setActive(false);
-            cspUsersService.updateByPrimaryKeySelective(user);
-        }else if(actionType == Constants.NUMBER_TWO){   //删除
-            cspUsersService.deleteByPrimaryKey(user);
-        }else{   //修改用户信息
-            if(isReset == Constants.NUMBER_ONE){   //密码重置
-                user.setPassword(MD5Utils.MD5Encode(Constants.RESET_PASSWORD));
-            }
-            cspUsersService.updateByPrimaryKeySelective(user);
-        }
-        addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
-        StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
-        if (listType != null) {
-            buffer.append("?listType=").append(listType);
-        }
-        return buffer.toString();
-    }
+//    /**
+//     * 删除、禁用、更新、注册用户
+//     * @param actionType
+//     * @param redirectAttributes
+//     * @return
+//     */
+//    @RequestMapping(value = "/update")
+//    @Log(name="更新csp用户信息")
+//    public String stopOrActive(CspUserInfo user,Integer actionType,Integer listType,Integer isReset, RedirectAttributes redirectAttributes) {
+//        if(actionType == Constants.NUMBER_ONE){ //停用
+//            user.setActive(false);
+//            cspUsersService.updateByPrimaryKeySelective(user);
+//        }else if(actionType == Constants.NUMBER_TWO){   //删除
+//            cspUsersService.deleteByPrimaryKey(user);
+//        }else{   //修改用户信息
+//            if(isReset == Constants.NUMBER_ONE){   //密码重置
+//                user.setPassword(MD5Utils.MD5Encode(Constants.RESET_PASSWORD));
+//            }
+//            cspUsersService.updateByPrimaryKeySelective(user);
+//        }
+//        addFlashMessage(redirectAttributes, actionType == 1 || actionType == 3?"更新成功": "删除成功");
+//        StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
+//        if (listType != null) {
+//            buffer.append("?listType=").append(listType);
+//        }
+//        return buffer.toString();
+//    }
 
     @RequestMapping(value = "/package")
     @Log(name="更新套餐信息")
@@ -183,7 +182,7 @@ public class CspUserController extends BaseController {
             cspUserPackageHistoryService.addUserHistoryInfo(packageInfo.getUserId(), oldpackageId, packageInfo.getPackageId(), Constants.NUMBER_TWO);
         }
         //更新缓存信息
-        adminUpdateUserInfoCache(packageInfo.getUserId());
+        cspUserService.updatePackagePrincipal(packageInfo.getUserId());
         addFlashMessage(redirectAttributes, "更新成功");
         StringBuffer buffer = new StringBuffer("redirect:/csp/user/list");
         if (listType != null) {
@@ -217,24 +216,4 @@ public class CspUserController extends BaseController {
         List<SystemRegion> options = systemRegionService.findRegionByPreName(name);
         return success(options);
     }
-
-    /**
-     * 更新用户缓存
-     *
-     * @param userId
-     */
-    public void adminUpdateUserInfoCache(String userId){
-        CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
-        String token = userInfo.getToken();
-        if(StringUtils.isEmpty(token)){  //没有token无需更新
-            return ;
-        }
-        Principal principal = Principal.build(userInfo);
-        CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
-        principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
-        principal.setCspPackage(cspPackage);
-        principal.setNewUser(cspPackage == null);
-        redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
-    }
-
 }
