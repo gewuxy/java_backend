@@ -139,7 +139,7 @@ public class MeetingMgrController extends CspBaseController {
             model.addAttribute("cspPackage",cspPackage);
             if(packageId != CspPackage.TypeId.STANDARD.getId() && cspPackage.getUnlimited() != null && cspPackage.getUnlimited() == false) {
                 try {
-                    int expireTimeCount = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd()) + 1;
+                    int expireTimeCount = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
                     model.addAttribute("expireTimeCount",expireTimeCount);
                 } catch (ParseException e) {
                     e.printStackTrace();

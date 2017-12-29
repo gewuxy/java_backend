@@ -593,7 +593,7 @@
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray">
         <div class="page-width clearfix pr">
-                <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
+                <c:if test="${expireTimeCount <= 5  && expireTimeCount >=0}">
                     <div class="admin-tips" id="note">
                         <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">Expiring in <strong class="color-blue">${expireTimeCount}</strong> days</a> </span>
                         <span class="admin-tips-close" onclick="closeclick()"></span>

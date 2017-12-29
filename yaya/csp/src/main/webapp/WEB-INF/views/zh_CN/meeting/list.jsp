@@ -603,7 +603,7 @@
                 </div>
             </c:if>
 
-            <c:if test="${expireTimeCount <= 5  && expireTimeCount >0}">
+            <c:if test="${expireTimeCount <= 5  && expireTimeCount >=0}">
                 <div class="admin-tips" id="note" style="display: none">
                     <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
                     <span class="admin-tips-close" onclick="closeclick()"></span>
