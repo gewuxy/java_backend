@@ -107,16 +107,16 @@ public class SysNotifyController extends BaseController {
 
     /**
      * 弹窗页面
-     * @param userName
+     * @param nickName
      * @param pageable
      * @param model
      * @return
      */
     @RequestMapping(value = "/userList")
-    public String searchUserInfo(String userName,Pageable pageable,Model model){
-        if (!StringUtils.isEmpty(userName)) {
-            pageable.getParams().put("userName", userName);
-            model.addAttribute("userName",userName);
+    public String searchUserInfo(String nickName,Pageable pageable,Model model){
+        if (!StringUtils.isEmpty(nickName)) {
+            pageable.getParams().put("nickName", nickName);
+            model.addAttribute("nickName",nickName);
         }
         MyPage<CspUserInfo> myPage = cspUserService.findUserList(pageable);
         model.addAttribute("page",myPage);
@@ -157,7 +157,7 @@ public class SysNotifyController extends BaseController {
             sysNotifyService.updateByPrimaryKey(notify);
             CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(notify.getAcceptId());
             if (notify.getNotifyType() ==1){
-                model.addAttribute("userName",cspUserInfo.getUserName());
+                model.addAttribute("nickName",cspUserInfo.getNickName());
             }
             model.addAttribute("notify", notify);
             return "/notify/notifyInfoEdit";

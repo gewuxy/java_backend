@@ -14,7 +14,20 @@
             initFormValidate();
         });
 
-        function checkedAllPeo() {
+      /*  $("#checkedCn").click(function () {
+            $("#userName").attr("disabled", "disabled")
+        })
+        $("#checkedUs").click(function () {
+            $("#userName").attr("disabled", "disabled")
+        })
+        $("#checked").click(function () {
+            $("#userName").removeAttr("disabled", "disabled")
+        })*/
+
+        function checkedCnUser() {
+            $("#userName").attr("disabled", "disabled")
+        }
+        function checkedUsUser() {
             $("#userName").attr("disabled", "disabled")
         }
         function checkedPer() {
@@ -47,15 +60,15 @@
     <div class="control-group">
         <label class="control-label">消息类型:</label>
         <div class="controls">
-            <input readonly id="checkedAll" type="radio" value="0" name="notifyType" onclick="checkedAllPeo()">对所有人
-            <input readonly id="checked" type="radio" value="1" name="notifyType" onclick="checkedPer()">对个人
+            <input  id="checkedCn" type="radio" value="0" name="notifyType" onclick="checkedCnUser()">对国内用户
+            <input  id="checked" type="radio" value="1" name="notifyType" onclick="checkedPer()">对个人
+            <input  id="checkedUs" type="radio" value="2" name="notifyType" onclick="checkedUsUser()">对国外用户
         </div>
 
     </div>
     <div class="control-group">
         <label class="control-label">接收消息者:</label>
         <div class="controls">
-            <%--<input type="text" name="userName" id="name" onblur="checkName()"/>--%>
                 <input id="userName" class="btn btn-primary" type="button" value="查询" onclick="selectName()" disabled="disabled"/>
                 <input id="acceptId" name="acceptId" type="hidden" value="">
                 <input readonly id="name" name="userName" type="search" value="">
@@ -75,7 +88,7 @@
                             var data = body.html()//得到iframe页的body内容
                             console.log(data);
                             var name = JSON.parse(data);
-                            var val =  name.userName;
+                            var val =  name.nickName;
                             console.log(val);
                             var id =  name.id;
                             console.log(id);
