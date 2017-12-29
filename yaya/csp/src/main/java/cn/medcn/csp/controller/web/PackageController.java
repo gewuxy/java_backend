@@ -242,7 +242,7 @@ public class PackageController extends CspBaseController {
         }
         if (url != null) {
             //创建订单
-            String orderNo = responsePayment.getId();
+            String orderNo = CspConstants.PACKAGE_ORDER_FLAG + currency + packageId + responsePayment.getId();
             //创建订单
             cspPackageOrderService.createOrder(orderId,getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType,packageType);
             return "redirect:" + url;
