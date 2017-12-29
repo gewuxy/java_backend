@@ -448,7 +448,6 @@ public class UserCenterController extends CspBaseController {
         CspPackage cspPackage = packageService.findUserPackageById(userId);
         CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userId);
 
-        System.out.println(cspUserPackage);
         if (cspPackage == null){
             return localeView("/meeting/list");
         }
