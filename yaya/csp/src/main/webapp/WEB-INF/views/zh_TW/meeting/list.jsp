@@ -986,7 +986,7 @@
                     <p id="backMsg"></p>
                 </div>
                 <div class="admin-button t-right " >
-                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="確定"/>
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="知道了"/>
                 </div>
             </form>
         </div>

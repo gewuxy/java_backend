@@ -209,7 +209,7 @@
                     <p id="backMsg"></p>
                 </div>
                 <div class="admin-button t-right " >
-                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="Done"/>
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="OK"/>
                 </div>
             </form>
         </div>
