@@ -216,4 +216,12 @@ public interface CspUserService extends BaseService<CspUserInfo>{
     int selectByProvince(String name);
 
     MyPage<CspUserInfoDTO> findNewDayMoney(Pageable pageable);
+
+    /**
+     * 缓存更新用户套餐信息(用户套餐更改，会议数量更改，套餐基础信息变更 使用)
+     *
+     * @param userId
+     * @return
+     */
+    Principal updatePackagePrincipal(String userId);
 }

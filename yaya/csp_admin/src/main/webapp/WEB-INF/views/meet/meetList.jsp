@@ -46,7 +46,7 @@
                     </shiro:hasPermission>
                     <shiro:hasPermission name="csp:meet:close">
                         <c:if test="${meet.deleted == false}">
-                            <a data-href="/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要关闭该会议吗？', this)">关闭</a>
+                            <a data-href="${ctx}/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要关闭该会议吗？', this)">关闭</a>
                         </c:if>
                         <c:if test="${meet.deleted != false}">
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
