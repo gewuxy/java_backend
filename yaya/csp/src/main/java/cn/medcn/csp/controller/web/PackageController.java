@@ -143,11 +143,12 @@ public class PackageController extends CspBaseController {
         //money = appPro == 0 ? 0.01f : money;
         Integer num = (Integer) results.get("num");
         Integer packageType = (Integer) results.get("packageType");
+        String orderId = CspConstants.PACKAGE_ORDER_FLAG + currency + packageId + StringUtils.nowStr();
         String ip = request.getRemoteAddr();
         if (currency == 0) {  //人民币P++支付
-            return rnbPay(ip,packageId, currency, payType, money, num,packageType, model);
+            return rnbPay(orderId,ip,packageId, currency, payType, money, num,packageType, model);
         } else {  //美元（目前只是paypal支付）
-            return usdPay(packageId, currency, payType, money, num,packageType);
+            return usdPay(orderId,packageId, currency, payType, money, num,packageType);
         }
     }
 
@@ -185,21 +186,20 @@ public class PackageController extends CspBaseController {
      * @param num
      * @return
      */
-    public String rnbPay(String ip,Integer packageId, Integer currency, String payType, float money, Integer num, Integer packageType,Model model) {
+    public String rnbPay(String orderId,String ip,Integer packageId, Integer currency, String payType, float money, Integer num, Integer packageType,Model model) {
         String path = this.getClass().getClassLoader().getResource("privateKey.pem").getPath();
         Pingpp.apiKey = apiKey;
-        String orderNo = CspConstants.PACKAGE_ORDER_FLAG + currency + packageId + StringUtils.nowStr();
         Pingpp.privateKeyPath = path;
         Charge charge = null;
         try {
             //生成Charge对象
-            charge = chargeService.createCharge(orderNo, money, payType, ip, local("package.charge.buy"), appId);
+            charge = chargeService.createCharge(orderId, money, payType, ip, local("package.charge.buy"), appId);
         } catch (Exception e) {
             e.printStackTrace();
             return error(local("package.charge.fail"));
         }
         //创建订单
-        cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType,packageType);
+        cspPackageOrderService.createOrder(orderId,getWebPrincipal().getId(), orderId, currency, packageId, num, money, payType,packageType);
         model.addAttribute("charge", charge.toString());
         //微信扫码支付
         if ("wx_pub_qr".equals(payType)) {
@@ -219,7 +219,7 @@ public class PackageController extends CspBaseController {
      * @return
      * @throws SystemException
      */
-    public String usdPay(Integer packageId, Integer currency, String payType, float money, Integer num,Integer packageType) throws SystemException {
+    public String usdPay(String orderId,Integer packageId, Integer currency, String payType, float money, Integer num,Integer packageType) throws SystemException {
         //正式线mode为live，测试线mode为sandbox
         APIContext apiContext = new APIContext(clientId, clientSecret, mode);
         Payment payment = chargeService.generatePayment(money);
@@ -242,9 +242,9 @@ public class PackageController extends CspBaseController {
         }
         if (url != null) {
             //创建订单
-            String orderNo = CspConstants.PACKAGE_ORDER_FLAG + currency + packageId + responsePayment.getId();
+            String orderNo = responsePayment.getId();
             //创建订单
-            cspPackageOrderService.createOrder(getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType,packageType);
+            cspPackageOrderService.createOrder(orderId,getWebPrincipal().getId(), orderNo, currency, packageId, num, money, payType,packageType);
             return "redirect:" + url;
         }
         return error();

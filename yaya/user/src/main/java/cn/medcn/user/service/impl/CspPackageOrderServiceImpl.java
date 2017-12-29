@@ -81,14 +81,14 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
      * @param payType
      */
     @Override
-    public void createOrder(String userId, String orderNo, Integer currency, Integer packageId, Integer num, Float money, String payType,Integer packageType) {
+    public void createOrder(String orderId,String userId, String orderNo, Integer currency, Integer packageId, Integer num, Float money, String payType,Integer packageType) {
         CspPackageOrder order = new CspPackageOrder();
         order.setNum(num);
         order.setUserId(userId);
         order.setShouldPay(money);
         order.setPayMoney(money);
         order.setCurrencyType(currency);
-        order.setId(StringUtils.nowStr());
+        order.setId(orderId);
         order.setTradeId(orderNo);
         order.setPlatForm(payType);
         order.setPackageId(packageId);

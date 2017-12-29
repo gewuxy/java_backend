@@ -18,7 +18,7 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
 
     Integer updateOrderAndUserPackageInfo(CspPackageOrder order);
 
-    void createOrder(String userId, String orderNo,Integer currency, Integer packageId, Integer num, Float money, String payType,Integer packageType);
+    void createOrder(String orderId,String userId, String orderNo,Integer currency, Integer packageId, Integer num, Float money, String payType,Integer packageType);
 
     Boolean yearPay(Integer packageId,float money);
 
