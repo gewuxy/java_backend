@@ -954,7 +954,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/meeting/list"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/meet/list"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <form >

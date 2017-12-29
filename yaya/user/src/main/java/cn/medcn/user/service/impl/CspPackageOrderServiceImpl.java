@@ -250,8 +250,8 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     }
 
     @Override
-    public List<Map<String, Object>> orderCapitalStati(Integer abroad,Date startTime,Date endTime) {
-        return packageOrderDAO.orderCapitalStati(abroad,startTime,endTime);
+    public List<Map<String, Object>> orderCapitalStati(Integer grain,Integer abroad,Date startTime,Date endTime) {
+        return packageOrderDAO.orderCapitalStati(grain,abroad,startTime,endTime);
     }
 
     @Override

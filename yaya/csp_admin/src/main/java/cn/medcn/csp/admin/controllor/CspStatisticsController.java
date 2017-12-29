@@ -1,26 +1,18 @@
 package cn.medcn.csp.admin.controllor;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
-import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CalendarUtils;
-import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.csp.admin.log.Log;
-import cn.medcn.sys.model.SystemRegion;
-import cn.medcn.sys.service.SystemRegionService;
+import cn.medcn.user.dto.CspNewlyStaticDTO;
 import cn.medcn.user.dto.CspOrderPlatFromDTO;
-import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.service.CspPackageOrderService;
-import cn.medcn.user.service.CspUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -70,10 +62,9 @@ public class CspStatisticsController extends BaseController {
      */
     @RequestMapping(value = "/echarts/data")
     @ResponseBody
-    public String echartsData(Integer abroad,String startTime,String endTime){
-
+    public String echartsData(Integer abroad,String startTime,String endTime,Integer grain){
         //获取每日总额订单（人民币、美元）
-        List<Map<String,Object>> capital = cspPackageOrderService.orderCapitalStati(abroad,getDate(startTime),getDate(endTime));
+        List<Map<String,Object>> capital = cspPackageOrderService.orderCapitalStati(grain,abroad,getDate(startTime,grain,Constants.NUMBER_ZERO),getDate(endTime,grain,Constants.NUMBER_ONE));
         return success(capital);
     }
 
@@ -87,23 +78,44 @@ public class CspStatisticsController extends BaseController {
      */
     @RequestMapping(value = "/table")
     @ResponseBody
-    public String tableData(Pageable pageable,Integer abroad,String startTime,String endTime){
+    public String tableData(Pageable pageable,Integer abroad,String startTime,String endTime,Integer grain){
         pageable.setPageSize(3);
         pageable.put("abroad",abroad);
-        pageable.put("startTime",getDate(startTime));
-        pageable.put("endTime",getDate(endTime));
+        pageable.put("grain",grain);
+        pageable.put("startTime",getDate(startTime,grain,Constants.NUMBER_ZERO));
+        pageable.put("endTime",getDate(endTime,grain,Constants.NUMBER_ONE));
         MyPage<CspOrderPlatFromDTO> list = cspPackageOrderService.getCapitalByDay(pageable);
         return success(list);
     }
 
-    public Date getDate(String date){
+    /**
+     *
+     * @param time
+     * @param grain  时间粒度
+     * @param type   粒度的开始或者截止时间 0：开始 1：截止
+     * @return
+     * @throws ParseException
+     */
+    public Date getDate(String time,Integer grain,Integer type){
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date startDate = null;
+        Date date = null;
         try {
-            startDate = format.parse(date);
+            date = format.parse(time);
+            if(grain == CspNewlyStaticDTO.Grain.WEEK.ordinal()){
+                date =  type == Constants.NUMBER_ZERO ? CalendarUtils.getWeekFirstDay(date) : CalendarUtils.getWeekLastDay(date);
+            }else if(grain == CspNewlyStaticDTO.Grain.MONTH.ordinal()){
+                date =  type == Constants.NUMBER_ZERO ? CalendarUtils.getMonthFirstDay(date) : CalendarUtils.getMonthLastDay(date);
+            }else if(grain == CspNewlyStaticDTO.Grain.QUARTER.ordinal()){
+                date =  type == Constants.NUMBER_ZERO ? CalendarUtils.getQuarterFirstDate(date) : CalendarUtils.getQuarterLastDate(date);
+            }else if(grain == CspNewlyStaticDTO.Grain.YEAR.ordinal()){
+                date =  type == Constants.NUMBER_ZERO ?  CalendarUtils.getCurrYearFirstDay(date) : CalendarUtils.getCurrYearLastDay(date);
+            }else{
+                //按天为粒度
+                return date;
+            }
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        return startDate;
+       return date;
     }
 }

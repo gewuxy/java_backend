@@ -7,7 +7,17 @@
     </select>
 
     <select id="orderCapitalStati" resultType="java.util.Map">
-        SELECT DATE(create_time) as createTime,SUM(should_pay) AS money
+        SELECT
+        <if test="grain != 0">
+            DATE(create_time) as createTime,
+        </if>
+        <if test="grain != 2">
+            MONTH(create_time) as createTime,
+        </if>
+        <if test="grain != 4">
+            YEAR(create_time) as createTime,
+        </if>
+        SUM(should_pay) AS money
         FROM t_csp_package_order where 1=1
         <if test="abroad != null">
             and currency_type=#{abroad}
@@ -15,11 +25,28 @@
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
-        GROUP BY DATE(create_time)
+        <if test="grain != 0">
+            GROUP BY DATE(create_time)
+        </if>
+        <if test="grain != 2">
+            GROUP BY MONTH(create_time)
+        </if>
+        <if test="grain != 4">
+            GROUP BY YEAR(create_time)
+        </if>
     </select>
 
     <select id="getCapitalByDay" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
-        SELECT DATE(create_time) as create_time,
+        SELECT
+        <if test="grain != 0">
+            DATE(create_time) as create_time,
+        </if>
+        <if test="grain != 2">
+            MONTH(create_time) as create_time,
+        </if>
+        <if test="grain != 4">
+            YEAR(create_time) as create_time,
+        </if>
         SUM(CASE WHEN plat_form='alipay_wap' or plat_form = 'alipay_pc_direct' THEN should_pay END) AS alipay_wap,
         SUM(CASE WHEN plat_form='wx_pub_qr' THEN should_pay END) AS wx_pub_qr,
         SUM(CASE WHEN plat_form='upacp_wap' or plat_form = 'upacp_pc' THEN should_pay END) AS upacp_wap,
@@ -32,7 +59,15 @@
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
-        GROUP BY DATE(create_time)
+        <if test="grain != 0">
+            GROUP BY DATE(create_time)
+        </if>
+        <if test="grain != 2">
+            GROUP BY MONTH(create_time)
+        </if>
+        <if test="grain != 4">
+            GROUP BY YEAR(create_time)
+        </if>
     </select>
 
     <select id="getTotalCapital" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">

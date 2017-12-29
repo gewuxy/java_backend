@@ -59,7 +59,7 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
      *
      * @return
      */
-    List<Map<String,Object>> orderCapitalStati(Integer abroad,Date startTime,Date endTime);
+    List<Map<String,Object>> orderCapitalStati(Integer grain,Integer abroad,Date startTime,Date endTime);
 
     /**
      * 获取各渠道资金
