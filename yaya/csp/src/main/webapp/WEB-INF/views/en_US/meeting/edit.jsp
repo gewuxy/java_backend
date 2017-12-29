@@ -228,7 +228,7 @@
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>Select</strong>
-            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+            <div class="layui-layer-close" onclick="layer.closeAll()"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <div class="metting-classify-popup-main">
