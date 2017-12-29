@@ -276,7 +276,6 @@ public class CspUserController extends CspBaseController {
             cspUserService.updateByPrimaryKey(userInfo);
 
             CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
-            modifyOldUser(userInfo);
             if (cspUserPackage == null){
                 if(userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
                     cspUserService.yayaBindUpdate(userInfo.getId());
