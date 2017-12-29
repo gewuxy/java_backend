@@ -1091,11 +1091,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                     courseId = doCopyCourse(course, null, null);
 
                     AudioCoursePlay copy = findPlayState(course.getId());
-                    copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
-                    copy.setPlayState(copy.getPlayState());
-                    copy.setPlayPage(copy.getPlayPage());
-                    copy.setCourseId(courseId);
-                    audioCoursePlayDAO.insert(copy);
+                    if (copy != null) {
+                        copy.setId(cn.medcn.common.utils.StringUtils.nowStr());
+                        copy.setPlayState(copy.getPlayState());
+                        copy.setPlayPage(copy.getPlayPage());
+                        copy.setCourseId(courseId);
+                        audioCoursePlayDAO.insert(copy);
+                    }
                 }
                 return courseId;
             }
