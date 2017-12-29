@@ -74,7 +74,9 @@ public class CspPackageStatsController extends BaseController {
             pageable.put("endTime",endTime);
         }
         MyPage<CspPackageOrderDTO> myPage = cspPackageOrderService.findOrderListByCurrencyType(pageable);
-
+        for(CspPackageOrderDTO dto : myPage.getDataList()){
+            CspPackageOrderDTO.buildTradeId(dto);
+        }
         model.addAttribute("rmb",rmbTotal);
         model.addAttribute("usd",usdTotal);
         model.addAttribute("page",myPage);
@@ -88,13 +90,12 @@ public class CspPackageStatsController extends BaseController {
      */
     @RequestMapping("/remark")
     @ResponseBody
-    public String remark(String tradeId,String remark){
-        if(StringUtils.isEmpty(tradeId)){
+    public String remark(String id,String remark){
+        if(StringUtils.isEmpty(id)){
             return error("请提供订单id");
         }
-        CspPackageOrder order = new CspPackageOrder();
-        order.setTradeId(tradeId);
-        order = cspPackageOrderService.selectOne(order);
+
+        CspPackageOrder order = cspPackageOrderService.selectByPrimaryKey(id);
         if(order == null){
             return error("没有找到该订单");
         }
@@ -108,7 +109,7 @@ public class CspPackageStatsController extends BaseController {
 
     /**
      * 查找订单
-     * @param tradeId
+     * @param id
      * @param rmb
      * @param usd
      * @param model
@@ -116,15 +117,15 @@ public class CspPackageStatsController extends BaseController {
      * @throws SystemException
      */
     @RequestMapping("/search")
-    public String search(String tradeId,Float rmb,Float usd,Integer type,Model model) throws SystemException {
-        if(StringUtils.isEmpty(tradeId)){
+    public String search(String id,Float rmb,Float usd,Integer type,Model model) throws SystemException {
+        if(StringUtils.isEmpty(id)){
             throw new SystemException("请输入订单号");
         }
         Pageable pageable = new Pageable();
-        pageable.put("tradeId",tradeId);
+        pageable.put("id",id);
         MyPage<CspPackageOrderDTO> myPage = cspPackageOrderService.findOrderListByCurrencyType(pageable);
-        if(myPage.getDataList().size() > 1){
-            throw new SystemException("订单号不正确");
+        if(myPage.getDataList().size() != 1){
+            throw new SystemException("没有相关订单");
         }
         model.addAttribute("rmb",rmb);
         model.addAttribute("usd",usd);
@@ -158,9 +159,11 @@ public class CspPackageStatsController extends BaseController {
         Date date = null;
         DateFormat format = new SimpleDateFormat("yyyyMMdd");
         for(CspPackageOrderDTO dto :myPage.getDataList()){
+            CspPackageOrderDTO.buildTradeId(dto);
             PackageOrderExcel data = new PackageOrderExcel();
-            data.setTradeId(dto.getId());
+            data.setId(dto.getId());
             data.setMoney(dto.getMoney() + "");
+            data.setTradeId(dto.getTradeId());
             data.setNickname(dto.getNickname());
             data.setPackageId(dto.getPackageId() == CspPackage.TypeId.PREMIUM.getId() ? "高级版" : "专业版");
             data.setPackageType(dto.getPackageType() == 0 ? "1个月" : "1年");
@@ -186,6 +189,7 @@ public class CspPackageStatsController extends BaseController {
         }
 
     }
+
 
 
 }

@@ -11,30 +11,33 @@ import lombok.Data;
 public class PackageOrderExcel {
 
     @ExcelField(columnIndex = 0,title = "订单号")
+    private String id;
+
+    @ExcelField(columnIndex = 1,title = "第三方订单号")
     private String tradeId;
 
-    @ExcelField(columnIndex = 1,title = "用户昵称")
+    @ExcelField(columnIndex = 2,title = "用户昵称")
     private String nickname;
 
-    @ExcelField(columnIndex = 2,title = "付款渠道")
+    @ExcelField(columnIndex = 3,title = "付款渠道")
     private String platForm;
 
-    @ExcelField(columnIndex = 3,title = "购买日期")
+    @ExcelField(columnIndex = 4,title = "购买日期")
     private String createTime;
 
-    @ExcelField(columnIndex = 4,title = "购买套餐")
+    @ExcelField(columnIndex = 5,title = "购买套餐")
     private String packageId;
 
-    @ExcelField(columnIndex = 5,title = "购买天数")
+    @ExcelField(columnIndex = 6,title = "购买天数")
     private String packageType;
 
-    @ExcelField(columnIndex = 6,title = "付款金额")
+    @ExcelField(columnIndex = 7,title = "付款金额")
     private String money;
 
-    @ExcelField(columnIndex = 7,title = "状态")
+    @ExcelField(columnIndex = 8,title = "状态")
     private String status;
 
-    @ExcelField(columnIndex = 8,title = "备注")
+    @ExcelField(columnIndex = 9,title = "备注")
     private String remark;
 
 
