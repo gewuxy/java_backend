@@ -15,8 +15,11 @@ import java.util.Date;
 @NoArgsConstructor
 public class CspPackageOrderDTO {
 
-    //订单tradeId
+    //订单Id
     private String id;
+
+    //真实订单号
+    private String tradeId;
 
     private String nickname;
 
@@ -46,7 +49,19 @@ public class CspPackageOrderDTO {
     private Integer num;
 
 
-
+    /**
+     * 处理paypal的订单号
+     * @param dto
+     */
+    public static void buildTradeId(CspPackageOrderDTO dto){
+        if(dto == null){
+            return;
+        }
+        if(dto.getTradeId().contains("PAY")){
+            int start = dto.getTradeId().indexOf("P");
+            dto.setTradeId(dto.getTradeId().substring(start));
+        }
+    }
 
 
 
