@@ -195,7 +195,7 @@
         });
 
         $("#export").click(function () {
-            window.location.href = "${ctr}/sys/package/stats/export?type=" + '${type}' + "&startTime=" + '${startTime}' + "&endTime=" + '${endTime}';
+            window.location.href = "${ctx}/sys/package/stats/export?type=" + '${type}' + "&startTime=" + '${startTime}' + "&endTime=" + '${endTime}';
         });
 
     });
