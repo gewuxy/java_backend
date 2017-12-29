@@ -581,11 +581,11 @@
                     return ;
                 }
             }
-            if (playType == 1){
+            if (playType >= 1){
                 var startTime = $("#liveStartTime").val();
                 var endTime = $("#liveEndTime").val();
-                var dateBeforeNow = new Date(Date.parse(startTime)).getDate() <= new Date().getDate();
-                if(startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||dateBeforeNow){
+                var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
+                if(startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 || dateBeforeNow){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;

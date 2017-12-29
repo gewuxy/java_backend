@@ -116,7 +116,7 @@
                                 <div class="formrow money">
                                     <div class="formTitle color-black">Payment</div>
                                     <div class="formControls">
-                                        <span class="color-black"><span class="payNum">35</span> <span id="yuan">USD</span></span> <span class="color-green">(100G))</span>
+                                        <span class="color-black"><span class="payNum">35</span> <span id="yuan">USD</span></span> <span class="color-green">(100G)</span>
                                         <span class="money-state">
                                         <label for="currency-cn" class="cn">
                                             <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
