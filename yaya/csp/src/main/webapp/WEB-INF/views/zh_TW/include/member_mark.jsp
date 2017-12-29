@@ -311,7 +311,7 @@
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook none">
                                     <label for="2id11" class="item item-radius pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" value="alipay_wap" id="2id11">
+                                        <input type="radio" name="hgPayMode" class="none" value="alipay_pc_direct" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="2id21" class="item item-radius">
@@ -388,7 +388,7 @@
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook none">
                                     <label for="3id11" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="alipay_wap" id="3id11">
+                                        <input type="radio" name="pfPayMode" class="none" value="alipay_pc_direct" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="3id21" class="item item-radius">
