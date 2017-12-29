@@ -115,7 +115,7 @@
                     $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=paypal]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.CN-hook').removeClass('none').siblings().addClass('none');
                 } else if (currencyValue == 1) {  //usd
-                    $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=alipay_wap]').attr("checked",true);
+                    $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=alipay_pc_direct]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
                 sumMoney();
