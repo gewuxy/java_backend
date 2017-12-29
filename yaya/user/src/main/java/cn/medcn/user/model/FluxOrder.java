@@ -47,7 +47,7 @@ public class FluxOrder implements Serializable{
 
     //用户名
     @Transient
-    protected String username;
+    protected String nickName;
 
     @Transient
     protected Integer expense;

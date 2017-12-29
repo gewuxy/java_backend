@@ -69,7 +69,7 @@ public class FluxOrderController extends BaseController{
             UserFlux userFlux = userFluxService.selectByPrimaryKey(userId);
             CspUserInfo cspUserInfo = cspUserService.selectByPrimaryKey(userId);
             Integer flux = userFlux.getFlux();
-            model.addAttribute("username",cspUserInfo.getUserName());
+            model.addAttribute("nickName",cspUserInfo.getNickName());
             model.addAttribute("flux",flux);
             model.addAttribute("fluxOrder",fluxOrder);
             return "/fluxOrder/fluxOrderInfo";

@@ -11,7 +11,7 @@
 
    SELECT
       n.*,
-      i.user_name
+      i.nick_name
     FROM t_csp_system_notify n
     LEFT JOIN t_csp_user_info i
     ON n.accept_id = i.id

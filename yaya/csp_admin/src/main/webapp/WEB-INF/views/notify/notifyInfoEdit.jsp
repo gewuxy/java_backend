@@ -30,8 +30,11 @@
             var type =
             ${notify.notifyType}
             if (type == 0) {
-                $("#checkedAll").attr("checked", "checked")
-            } else {
+                $("#checkedCn").attr("checked", "checked")
+
+            } else if (type == 2){
+                $("#checkedUs").attr("checked", "checked")
+            }else {
                 $("#checked").attr("checked", "checked")
             }
         })
@@ -56,15 +59,15 @@
     <div class="control-group">
         <label class="control-label">消息内容:</label>
         <div class="controls">
-            <textarea id="content" name="content" rows="3" maxlength="2000" class="input-xxlarge"
-                      onblur="checkContent()">${notify.content}</textarea>
+            <textarea id="content" name="content" rows="3" maxlength="2000" class="input-xxlarge">${notify.content}</textarea>
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">消息类型:</label>
         <div class="controls">
-            <input readonly id="checkedAll" type="radio" value="0" name="notifyType" onclick="checkedAllPeo()">对所有人
-            <input readonly id="checked" type="radio" value="1" name="notifyType" onclick="checkedPer()">对个人
+            <input  id="checkedCn" type="radio" value="0" name="notifyType" onclick="checkedCnUser()">对国内用户
+            <input  id="checked" type="radio" value="1" name="notifyType" onclick="checkedPer()">对个人
+            <input  id="checkedUs" type="radio" value="2" name="notifyType" onclick="checkedUsUser()">对国外用户
         </div>
     </div>
     <div class="control-group">
@@ -72,7 +75,7 @@
         <div class="controls">
             <input id="userName" class="btn btn-primary" type="button" value="查询" onclick="selectName()"/>
             <input id="acceptId" name="acceptId" type="hidden" value="${notify.acceptId}">
-            <input readonly id="name" name="userName" type="search" value="${userName}">
+            <input readonly id="name" name="nickName" type="search" value="${nickName}">
             <script>
                 function selectName() {
                     layer.open({
@@ -88,7 +91,7 @@
                             var data = body.html()//得到iframe页的body内容
                             console.log(data);
                             var name = JSON.parse(data);
-                            var val =  name.userName;
+                            var val =  name.nickName;
                             console.log(val);
                             var id =  name.id;
                             console.log(id);

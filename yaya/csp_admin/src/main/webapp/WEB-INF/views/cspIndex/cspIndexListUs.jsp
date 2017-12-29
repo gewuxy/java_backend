@@ -82,9 +82,8 @@
         <th>昵称</th>
         <th>注册日期</th>
         <th>套餐等级</th>
-        <th>套餐日期</th>
-        <th>付费次数</th>
-        <th>付费总额</th>
+        <th>套餐开始日期</th>
+        <th>套餐结束日期</th>
     </tr>
     </thead>
     <tbody>
@@ -97,7 +96,7 @@
                 <td>${user.packageId eq 1 ? "标准版": user.packageId eq 2 ? "高级版": user.packageId eq 3 ? "专业版":"<span style='color: #9c0001'>未登录</span>"}</td>
                 <td>
                     <c:if test="${not empty user.packageStart}">
-                    <fmt:formatDate value="${user.packageStart}" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${user.packageEnd}" pattern="yyyy-MM-dd"/>
+                    <fmt:formatDate value="${user.packageStart}" pattern="yyyy-MM-dd"/>
                     </c:if>
                     <c:if test="${empty user.packageStart && user.packageId eq 1}">
                         无期限
@@ -106,8 +105,17 @@
                         <span style='color: #9c0001'>无</span>
                     </c:if>
                 </td>
-                <td>${not empty user.payTimes ? user.payTimes : 0}</td>
-                <td>${not empty user.payMoneyUs ? user.payMoneyUs : 0}</td>
+        <td>
+            <c:if test="${not empty user.packageEnd}">
+                <fmt:formatDate value="${user.packageEnd}" pattern="yyyy-MM-dd"/>
+            </c:if>
+            <c:if test="${empty user.packageEnd && user.packageId eq 1}">
+                无期限
+            </c:if>
+            <c:if test="${empty user.packageEnd && empty user.packageId}">
+                <span style='color: #9c0001'>无</span>
+            </c:if>
+        </td>
     </tr>
     </c:forEach>
     </c:if>
