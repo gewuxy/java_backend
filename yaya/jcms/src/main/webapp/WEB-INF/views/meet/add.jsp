@@ -576,7 +576,7 @@
     var isEmpty = '${empty liveStartTime}';
     $(function(){
         var popupCheckbox = $('label.popup_checkbox_hook');
-        var popupCheckboxNum = popupCheckbox.length - 1;
+        var popupCheckboxNum = popupCheckbox.length ;
 
         //弹出窗 - 点击全选触发
         $('.popup_checkbox_all_hook').on('click',function(){
@@ -592,9 +592,7 @@
         //弹出窗 - 点击每个选项触发
         popupCheckbox.each(function() {
             $(this).off('.click').on('click', function () {
-
                 if (!($(this).find('.ico').hasClass('checkboxCurrent')) && $(".popup_checkbox_hook .checkboxCurrent").length == popupCheckboxNum) {
-
                     $('.popup_checkbox_all_hook').addClass('checkboxAllCurrent').find('.ico').addClass('checkboxCurrent');
                     $('.popup_checkbox_all_hook').prev().prop("checked","true");
                 } else {
