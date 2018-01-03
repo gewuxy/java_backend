@@ -6,6 +6,14 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
-<div class="login-box-info t-center ">
-    <p>登录即表示您已同意 <a href="${ctx}/index/17103116062545591360" class="color-blue">《会讲服务协议》</a> </p>
+<div class="login-box-info t-center "
+<c:choose>
+    <c:when test="${csp_locale eq 'en_US'}">
+        <div class="login-box-info t-center " style="width:279px;">
+        <p><fmt:message key="page.login.service.start"/> <br/>
+    </c:when>
+    <c:otherwise><div class="login-box-info t-center " ><p><fmt:message key="page.login.service.start"/></c:otherwise>
+</c:choose>
+    <a href="${ctx}/index/17103116062545591360" class="color-blue"><fmt:message key="page.login.service.end"/></a>
+</p>
 </div>

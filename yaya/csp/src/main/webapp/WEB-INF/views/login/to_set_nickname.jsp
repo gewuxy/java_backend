@@ -10,12 +10,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>手机登录-会讲</title>
+    <title>
+        <c:choose>
+            <c:when test="${csp_locale eq 'en_US'}">first login with mobile - CSPmeeting</c:when>
+            <c:when test="${csp_locale eq 'zh_TW'}">第壹次手機登錄 - 需要輸入昵稱-會講</c:when>
+            <c:otherwise>第一次手机登录 - 需要输入昵称-会讲</c:otherwise>
+        </c:choose>
+    </title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 
 <body>
