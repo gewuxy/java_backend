@@ -8,77 +8,85 @@
 
     <select id="orderCapitalStati" resultType="java.util.Map">
         SELECT
-        <if test="grain != 0">
-            DATE(create_time) as createTime,
+        <if test="grain == 0">
+            date_format(temp.create_time,'%Y-%m-%d') createTime,
         </if>
-        <if test="grain != 2">
-            MONTH(create_time) as createTime,
+        <if test="grain == 2">
+            date_format(temp.create_time,'%Y-%m')as createTime,
         </if>
-        <if test="grain != 4">
-            YEAR(create_time) as createTime,
+        <if test="grain == 4">
+            date_format(temp.create_time,'%Y')as createTime,
         </if>
-        SUM(should_pay) AS money
-        FROM t_csp_package_order where 1=1
+        SUM(temp.should_pay) AS money
+        FROM ( <include refid="unionOrderAndFlux"/>) as temp  where 1=1
+        <if test="grain == 0">
+            GROUP BY DATE(temp.create_time)
+        </if>
+        <if test="grain == 2">
+            GROUP BY MONTH(temp.create_time)
+        </if>
+        <if test="grain == 4">
+            GROUP BY YEAR(temp.create_time)
+        </if>
+        order by temp.create_time desc
+    </select>
+
+    <select id="getCapitalByDay"  resultType="java.util.Map">
+        SELECT
+        <if test="grain == 0">
+            date_format(temp.create_time,'%Y-%m-%d') createTime,
+        </if>
+        <if test="grain == 2">
+            date_format(temp.create_time,'%Y-%m')as createTime,
+        </if>
+        <if test="grain == 4">
+            date_format(temp.create_time,'%Y')as createTime,
+        </if>
+        SUM(CASE WHEN temp.plat_form='alipay_wap' or temp.plat_form = 'alipay_pc_direct' THEN temp.should_pay END) AS alipayWap,
+        SUM(CASE WHEN temp.plat_form='wx_pub_qr' THEN temp.should_pay END) AS wxPubQr,
+        SUM(CASE WHEN temp.plat_form='upacp_wap' or temp.plat_form = 'upacp_pc' THEN temp.should_pay END) AS upacpWap,
+        SUM(CASE WHEN temp.plat_form='paypal' THEN temp.should_pay END) AS paypal,
+        SUM(temp.should_pay) AS money
+        FROM ( <include refid="unionOrderAndFlux"/>) as temp where 1=1
+        <if test="grain == 0">
+            GROUP BY DATE(temp.create_time)
+        </if>
+        <if test="grain == 2">
+            GROUP BY MONTH(temp.create_time)
+        </if>
+        <if test="grain == 4">
+            GROUP BY YEAR(temp.create_time)
+        </if>
+        order by temp.create_time desc
+    </select>
+
+
+    <!-- 套餐跟流量联合查询-->
+    <sql id="unionOrderAndFlux">
+        SELECT should_pay,create_time,plat_form FROM `t_csp_package_order` WHERE state = 1
         <if test="abroad != null">
             and currency_type=#{abroad}
         </if>
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
-        <if test="grain != 0">
-            GROUP BY DATE(create_time)
-        </if>
-        <if test="grain != 2">
-            GROUP BY MONTH(create_time)
-        </if>
-        <if test="grain != 4">
-            GROUP BY YEAR(create_time)
-        </if>
-    </select>
-
-    <select id="getCapitalByDay" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
-        SELECT
-        <if test="grain != 0">
-            DATE(create_time) as create_time,
-        </if>
-        <if test="grain != 2">
-            MONTH(create_time) as create_time,
-        </if>
-        <if test="grain != 4">
-            YEAR(create_time) as create_time,
-        </if>
-        SUM(CASE WHEN plat_form='alipay_wap' or plat_form = 'alipay_pc_direct' THEN should_pay END) AS alipay_wap,
-        SUM(CASE WHEN plat_form='wx_pub_qr' THEN should_pay END) AS wx_pub_qr,
-        SUM(CASE WHEN plat_form='upacp_wap' or plat_form = 'upacp_pc' THEN should_pay END) AS upacp_wap,
-        SUM(CASE WHEN plat_form='paypal' THEN should_pay END) AS paypal,
-        SUM(should_pay) AS money
-        FROM t_csp_package_order where 1=1
-        <if test="abroad != null">
-            currency_type=#{abroad}
-        </if>
+        UNION
+        SELECT money AS should_pay,buy_time AS create_time,platform AS plat_form  FROM `t_csp_user_flux_purchase` WHERE state = 1
         <if test="startTime != null and endTime != null">
-            AND create_time BETWEEN #{startTime} AND #{endTime}
+            AND buy_time BETWEEN #{startTime} AND #{endTime}
         </if>
-        <if test="grain != 0">
-            GROUP BY DATE(create_time)
+        <if test="abroad ==  0"><!-- rnb-->
+            AND platform in ('alipay_pc_direct','upacp_pc','wx','alipay','wx_pub_qr')
         </if>
-        <if test="grain != 2">
-            GROUP BY MONTH(create_time)
+        <if test="abroad ==  1"><!-- rnb-->
+            AND platform in ('paypal')
         </if>
-        <if test="grain != 4">
-            GROUP BY YEAR(create_time)
-        </if>
-    </select>
+    </sql>
+
+
 
     <select id="getTotalCapital" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
-        SELECT sum(should_pay) as totalMoney
-        FROM t_csp_package_order where 1=1
-        <if test="abroad != null">
-            AND currency_type=#{abroad}
-        </if>
-        <if test="startTime != null and endTime != null">
-            AND create_time BETWEEN DATE(#{startTime}) AND DATE(#{endTime})
-        </if>
+        SELECT sum(should_pay) as totalMoney FROM ( <include refid="unionOrderAndFlux"/>) as temp
     </select>
 
     <select id="selectAbroadAndHomeMoney" resultType="cn.medcn.user.model.CspPackageOrder">

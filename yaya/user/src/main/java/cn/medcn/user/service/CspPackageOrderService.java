@@ -66,8 +66,10 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
      *
      * @return
      */
-    MyPage<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable);
+    MyPage<Map<String,Object>> getCapitalByDay(Pageable pageable);
 
     CspOrderPlatFromDTO getTotalCapital(Pageable pageable);
     String getLocalPackage(Integer packageId);
+
+    CspOrderPlatFromDTO getTotalCapital(Integer grain, Integer abroad, Date date, Date date1);
 }

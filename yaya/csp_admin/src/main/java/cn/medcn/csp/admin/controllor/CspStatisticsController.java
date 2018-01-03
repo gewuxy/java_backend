@@ -47,9 +47,10 @@ public class CspStatisticsController extends BaseController {
         List<Map<String,Object>> total = cspPackageOrderService.totalMoney();
         model.addAttribute("rmb",total.get(0).get("money"));
         model.addAttribute("usd",total.get(1).get("money"));
-        //获取查询区间的总额
-        CspOrderPlatFromDTO totalMomey = cspPackageOrderService.getTotalCapital(pageable);
-        model.addAttribute("total",totalMomey.getTotalMoney());
+        model.addAttribute("abroad",0);
+//        //获取查询区间的总额
+//        CspOrderPlatFromDTO totalMomey = cspPackageOrderService.getTotalCapital(pageable);
+//        model.addAttribute("total",totalMomey.getTotalMoney());
         return "/statistics/moneyStati";
     }
 
@@ -63,9 +64,18 @@ public class CspStatisticsController extends BaseController {
     @RequestMapping(value = "/echarts/data")
     @ResponseBody
     public String echartsData(Integer abroad,String startTime,String endTime,Integer grain){
+        Map<String,Object> map = new HashMap<>();
         //获取每日总额订单（人民币、美元）
         List<Map<String,Object>> capital = cspPackageOrderService.orderCapitalStati(grain,abroad,getDate(startTime,grain,Constants.NUMBER_ZERO),getDate(endTime,grain,Constants.NUMBER_ONE));
-        return success(capital);
+        map.put("capital",capital);
+        //当前区间总额
+        CspOrderPlatFromDTO totalMomey = cspPackageOrderService.getTotalCapital(grain,abroad,getDate(startTime,grain,Constants.NUMBER_ZERO),getDate(endTime,grain,Constants.NUMBER_ONE));
+        if(totalMomey != null){
+            map.put("total",totalMomey.getTotalMoney());
+        }else{
+            map.put("total",0);
+        }
+        return success(map);
     }
 
     /**
@@ -79,12 +89,12 @@ public class CspStatisticsController extends BaseController {
     @RequestMapping(value = "/table")
     @ResponseBody
     public String tableData(Pageable pageable,Integer abroad,String startTime,String endTime,Integer grain){
-        pageable.setPageSize(3);
+        pageable.setPageSize(12);
         pageable.put("abroad",abroad);
         pageable.put("grain",grain);
         pageable.put("startTime",getDate(startTime,grain,Constants.NUMBER_ZERO));
         pageable.put("endTime",getDate(endTime,grain,Constants.NUMBER_ONE));
-        MyPage<CspOrderPlatFromDTO> list = cspPackageOrderService.getCapitalByDay(pageable);
+        MyPage<Map<String,Object>> list = cspPackageOrderService.getCapitalByDay(pageable);
         return success(list);
     }
 

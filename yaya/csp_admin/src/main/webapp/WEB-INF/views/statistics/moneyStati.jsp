@@ -67,28 +67,11 @@
         <th>付款总额</th>
     </tr>
     </thead>
-    <tbody id="tableView">
-    <%--<c:if test="${not empty list}">--%>
-        <%--<c:forEach items="${list}" var="list">--%>
-            <%--<tr>--%>
-                <%--<td><fmt:formatDate value="${list.createTime}" pattern="yyyy-MM-dd"/></td>--%>
-                <%--<td>${list.alipayWap}</td>--%>
-                <%--<td>${list.wxPubQr}</td>--%>
-                <%--<td>${list.upacpWap}</td>--%>
-                <%--<td>${list.money}</td>--%>
-            <%--</tr>--%>
-        <%--</c:forEach>--%>
-    <%--</c:if>--%>
-    <%--<c:if test="${empty list}">--%>
-        <%--<tr>--%>
-            <%--<td colspan="5">没有查询到数据</td>--%>
-        <%--</tr>--%>
-    <%--</c:if>--%>
-    </tbody>
+    <tbody id="tableView"></tbody>
     <tfoot>
     <tr>
         <td>合计</td>
-        <td colspan="4">${total}</td>
+        <td colspan="4" id="totals"></td>
     </tr>
     </tfoot>
 </table>
@@ -100,44 +83,41 @@
     var myChart = echarts.init(dom);
     var abroad = '${abroad}';
 
-    $(function(){
+    $(function () {
         $("#startTime").val('${startTime}');
         $("#endTime").val('${endTime}');
-
         initEcharts(0);
-        initTable(0);
-
+        initTable(1, 0);
         //点击刷新页面
         $(".nav-pills li a").click(function () {
             var grain = $(this).attr("grain");
-            $(".nav-pills li").removeAttr("class","active");
-            $(this).parent().attr("class","active");
+            $(".nav-pills li").removeAttr("class", "active");
+            $(this).parent().attr("class", "active");
             initEcharts(grain);
-            initTable(grain);
+            initTable(1, grain);
         });
 
-
         //选择时间空间加载
-        $(".callTimedate").on('click',function(){
+        $(".callTimedate").on('click', function () {
             $('#timeStart').trigger('focus');
         });
         $('#timeStart').dateRangePicker({
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
+            endDate: '${endTime}',
             startOfWeek: 'monday',
-            separator : ' ~ ',
+            separator: ' ~ ',
             format: 'YYYY-MM-DD ',
             autoClose: false,
             time: {
                 enabled: false
             }
-        }).bind('datepicker-first-date-selected', function(event, obj){
+        }).bind('datepicker-first-date-selected', function (event, obj) {
             /*首次点击的时间*/
-            console.log('first-date-selected',obj);
-        }).bind('datepicker-change',function(event,obj){
+            console.log('first-date-selected', obj);
+        }).bind('datepicker-change', function (event, obj) {
             /* This event will be triggered when second date is selected */
-            console.log('change',obj);
             $(this).find('input').val(obj.value);
             var timeArray = obj.value.split(' ~ ');
             var startTime = timeArray[0];
@@ -146,7 +126,7 @@
             $("#endTime").val(endTime);
             var grain = $(".nav-pills .active").children().attr("grain");
             initEcharts(grain);
-            initTable(grain);
+            initTable(1, grain);
         });
     });
 
@@ -154,39 +134,60 @@
     function initEcharts(grain) {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
-        $.get('${ctx}/csp/stati/echarts/data',{"startTime":startTime,"endTime":endTime,"abroad":abroad,"grain":grain}, function (data) {
-            if (data.code == 0){
+        $.get('${ctx}/csp/stati/echarts/data', {
+            "startTime": startTime,
+            "endTime": endTime,
+            "abroad": abroad,
+            "grain": grain
+        }, function (data) {
+            if (data.code == 0) {
                 console.log(data);
-                fillEcharts(data.data);  //加载图表
-            }else{
+                fillEcharts(data.data.capital);  //加载图表
+                initTotal(data.data.total);
+            } else {
                 layer.msg("获取数据失败");
             }
-        },'json');
+        }, 'json');
     }
 
     //初始化table
-    function initTable(grain) {
+    function initTable(pageNum, grain) {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
-        $.get('${ctx}/csp/stati/table',{"startTime":startTime,"endTime":endTime,"abroad":abroad,"grain":grain}, function (data) {
-            if (data.code == 0){
+        $.get('${ctx}/csp/stati/table', {
+            "pageNum": pageNum,
+            "startTime": startTime,
+            "endTime": endTime,
+            "abroad": abroad,
+            "grain": grain
+        }, function (data) {
+            if (data.code == 0) {
                 console.log(data);
                 fillTable(data.data);  //加载图表
-            }else{
+            } else {
                 layer.msg("获取数据失败");
             }
-        },'json');
+        }, 'json');
     }
 
+    //翻页
+    function pageSet(pageNum) {
+        var grain = $(".nav-pills .active").children().attr("grain");
+        initTable(pageNum, grain);
+    }
+
+    function initTotal(total) {
+        $("#totals").html(total);
+    }
 
     //加载数据生成图表
     function fillEcharts(list) {
         var dataArray = new Array();
         var moneyArray = new Array();
-        $.each(list,function(i) {
-            dataArray.push(dateFormat(list[i].createTime));
+        $.each(list, function (i) {
+            dataArray.push(list[i].createTime);
             dataArray.join(",");
-            moneyArray.push(list[i].money);
+            moneyArray.push(getValue(list[i].money));
             moneyArray.join(",");
         });
         option = null;
@@ -209,7 +210,7 @@
             },
             xAxis: [
                 {
-                    name: '日期',
+                    name: initCompany(),
                     type: 'category',
                     data: dataArray
                 }
@@ -246,11 +247,11 @@
         if (data.dataList.length > 0) {
             $.each(data.dataList, function (n, info) {
                 html += '<tr>'
-                    + '<td>' + dateFormat(info.createTime) + '</td>'
-                    + '<td>' + info.alipayWap + '</td>'
-                    + '<td>' + info.wxPubQr + '</td>'
-                    + '<td>' + info.upacpWap + '</td>'
-                    + '<td>' + info.money + '</td>'
+                    + '<td>' + info.createTime + '</td>'
+                    + '<td>' + getValue(info.alipayWap) + '</td>'
+                    + '<td>' + getValue(info.wxPubQr) + '</td>'
+                    + '<td>' + getValue(info.upacpWap) + '</td>'
+                    + '<td>' + getValue(info.money) + '</td>'
                     + '</tr>';
             });
             initPageable(data);
@@ -261,26 +262,50 @@
     }
 
     //加载分页
-    function initPageable(page){
+    function initPageable(page) {
         var html = "";
-        if(page.pages > 1){
+        if (page.pages > 1) {
             html += "<div class='pagination'><ul class='pagination'>";
             html += " <li><a ";
-            if(page.pageNum > 1)  html += "href ='javascript:page(1);'";
+            if (page.pageNum > 1) html += "href ='javascript:pageSet(1);'";
             html += ">首 页</a></li>";
             html += " <li><a ";
-            if(page.pageNum > 1)  html += "href ='javascript:page(" + page.pageNum-1 + ");'";
+            if (page.pageNum > 1) {
+                var bdfore = page.pageNum - 1;
+                html += "href ='javascript:pageSet(" + bdfore + ");'";
+            }
             html += "class='disabled'>上一页</a></li>"
             html += " <li><a ";
-            if(page.pageNum < page.pages)  html += "href ='javascript:page(" + page.pageNum + 1 + ");'";
+            if (page.pageNum < page.pages) {
+                var next = page.pageNum + 1;
+                html += "href ='javascript:pageSet(" + next + ");'";
+            }
             html += ">下一页</a></li>";
             html += " <li><a ";
-            if(page.pageNum < page.pages)  html += "href ='javascript:page(" + page.pageNum + 1 + ");'";
+            if (page.pageNum < page.pages) html += "href ='javascript:pageSet(" + page.pageNum + 1 + ");'";
             html += "class='disabled'>尾 页</a></li>"
-            html += "<li><a>共" + page.total + "条数据 - " + page.pageNum + "/"+ page.pages + "</a></li>";
+            html += "<li><a>共" + page.total + "条数据 - " + page.pageNum + "/" + page.pages + "</a></li>";
             html += "</ul><br></div>";
         }
         $("#tablePage").html(html);
+    }
+
+    function initCompany() {
+        var grain = $(".nav-pills .active").children().attr("grain");
+        if (grain == 0) {
+            return "日期";
+        } else if (grain == 2) {
+            return "月";
+        } else {
+            return "年";
+        }
+    }
+
+    function getValue(data) {
+        if (isEmpty(data)) {
+            return 0;
+        }
+        return Math.floor(data * 100) / 100;
     }
 </script>
 </body>

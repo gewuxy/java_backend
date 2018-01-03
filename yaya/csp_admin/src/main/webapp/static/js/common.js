@@ -13,6 +13,7 @@ function initFormValidate(){
     });
 }
 
+
 /**
  * 初始化日期控件
  * @param id
@@ -22,6 +23,8 @@ function initLaydate(id){
         elem: '#' + id
     });
 }
+
+
 
 /**
  * 判断是否为空
