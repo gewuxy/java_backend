@@ -24,4 +24,13 @@
 <!--[if lt IE 9]>
 <script src="${ctxStatic}js/html5.js"></script>
 <![endif]-->
+<link rel="stylesheet" href="${ctxStatic}/css/global.css">
+<c:choose>
+    <c:when test="${csp_locale eq 'en_US'}">
+        <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
+    </c:when>
+    <c:otherwise>
+        <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    </c:otherwise>
+</c:choose>
 
