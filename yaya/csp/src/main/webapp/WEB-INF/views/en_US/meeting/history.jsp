@@ -67,7 +67,7 @@
                                                         </a>
                                                     </div>
                                                 </div>
-                                                <h3 class="resource-title overflowText popup-player-hook">${meet.title}</h3>
+                                                <h3 class="resource-title overflowText popup-player-hook" courseId="${meet.id}">${meet.title}</h3>
                                                 <div class="resource-label">
                                                     <c:if test="${meet.publishState == true}">
                                                         <span class="issue">Released</span>
