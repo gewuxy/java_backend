@@ -854,7 +854,7 @@
         <div class="layer-hospital-popup-main ">
                 <div class="copy-popup-main">
                     <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" value=""></label>
-                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="确认复制">
+                    <input type="button" class="button login-button buttonBlue last" id="copyBtn" value="<fmt:message key='page.meeting.copy.confirm'/>">
                 </div>
         </div>
     </div>
