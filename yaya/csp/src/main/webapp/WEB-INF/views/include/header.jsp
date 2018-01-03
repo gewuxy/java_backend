@@ -1,3 +1,4 @@
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%--
   Created by IntelliJ IDEA.
   User: lixuan
@@ -15,13 +16,13 @@
                         <img id="head_img" src="${principal.avatar}" alt=""></a>
                         <div class="tb-popupBox-bg clearfix">
                             <ul class="item-radius">
-                                <li class="first"><a href="${ctx}/mgr/user/info">我的信息</a></li>
-                                <li><a href="${ctx}/mgr/user/toAvatar">头像设置</a></li>
-                                <li><a href="${ctx}/mgr/user/toAccount">账号管理</a></li>
-                                <li><a href="${ctx}/mgr/user/toFlux">流量管理</a></li>
-                                <li><a href="${ctx}/mgr/user/memberManage">会员管理</a></li>
-                                <li><a href="${ctx}/index/17103116063862386794">帮助中心</a></li>
-                                <li class="last"><a href="${ctx}/mgr/user/logout">退出账号</a></li>
+                                <li class="first"><a href="${ctx}/mgr/user/info"><fmt:message key="page.header.me"/> </a></li>
+                                <li><a href="${ctx}/mgr/user/toAvatar"><fmt:message key="page.header.avatar"/> </a></li>
+                                <li><a href="${ctx}/mgr/user/toAccount"><fmt:message key="page.header.account"/></a></li>
+                                <li><a href="${ctx}/mgr/user/toFlux"><fmt:message key="page.header.flux"/> </a></li>
+                                <li><a href="${ctx}/mgr/user/memberManage"><fmt:message key="page.header.member"/> </a></li>
+                                <li><a href="${ctx}/index/17103116063862386794"><fmt:message key="page.header.support"/> </a></li>
+                                <li class="last"><a href="${ctx}/mgr/user/logout"><fmt:message key="page.header.logout"/> </a></li>
                             </ul>
                             <div class="tb-popupBox-border"></div>
                             <div class="tb-popupBox-outerBorder"></div>
@@ -36,8 +37,8 @@
             <a class="logo" href="${ctx}"></a>
             <div class="nav clearfix">
                 <ul>
-                    <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span>会议管理</a></li>
-                    <li><a href="${ctx}/mgr/delivery/history" ><span class="icon-contribute"></span>投稿历史</a></li>
+                    <li><a href="${ctx}/mgr/meet/list" class=" current"><span class="icon-folder"></span><fmt:message key="page.header.meet"/> </a></li>
+                    <li><a href="${ctx}/mgr/delivery/history" ><span class="icon-contribute"></span><fmt:message key="page.header.delivery.history"/> </a></li>
                 </ul>
             </div>
         </div>

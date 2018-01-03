@@ -97,7 +97,9 @@ public class BaseController {
      * @return
      */
     protected String localeView(String view){
-        return LocalUtils.getLocalStr() + view;
+        //return LocalUtils.getLocalStr() + view;
+        //这里统一做修改 跳转到原视图 国际化在页面处理
+        return view;
     }
 
 }

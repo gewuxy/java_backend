@@ -77,7 +77,7 @@ public class SkipController extends CspBaseController {
         // 获取缓存是否存在用户数据
         getCookieUser(request, model);
 
-        return localeView("/index/index");
+        return "/index/index";
     }
 
 

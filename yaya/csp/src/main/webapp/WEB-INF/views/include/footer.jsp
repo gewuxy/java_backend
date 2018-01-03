@@ -7,7 +7,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="admin-bottom">
     <div class="page-width clearfix">
-        <p class="t-center"><%@include file="../include/copy_right.jsp"%></p>
+        <p class="t-center"><%@include file="copy_right.jsp"%></p>
     </div>
 
 </div>

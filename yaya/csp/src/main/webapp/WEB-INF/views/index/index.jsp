@@ -9,11 +9,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
-    <title>会讲-全球领先的云同步回放演讲系统</title>
+    <title><fmt:message key="page.common.appName"/> - <fmt:message key="page.title.index"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
+
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
@@ -27,8 +28,15 @@
             <div class=" index-login">
                 <div class="fr clearfix">
                     <%@include file="/WEB-INF/include/switch_language.jsp"%>
-                    <a href="${ctx}/login" class="user-login-button"><strong>${not empty username ? username : "登录"}</strong>&nbsp;&nbsp;<i></i> </a>
-                    <a href="javascript:;" class="index-download index-qrcode">下载App<span class="qrcode-01 qrcode-top"><img id="qrCode" src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
+                    <a href="${ctx}/login" class="user-login-button"><strong>
+                        <c:if test="${empty username}">
+                            <fmt:message key="page.button.login"/>
+                        </c:if>
+                        <c:if test="${not empty username}">
+                            ${username}
+                        </c:if>
+                    </strong>&nbsp;&nbsp;<i></i> </a>
+                    <a href="javascript:;" class="index-download index-qrcode"><fmt:message key="page.button.download"/>App<span class="qrcode-01 qrcode-top"><img id="qrCode" src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 </div>
             </div>
         </div>
@@ -39,7 +47,7 @@
                 <h4 class="not-animated" data-animate="fadeInDown" data-delay="300">用手机讲PPT，随讲随录随分享！</h4>
                 <h2 class="not-animated" data-animate="fadeIn" data-delay="500">你的智慧，将被更多人看见</h2>
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
-                    <a href="${ctx}/login" class="button item-radius">免费体验</a>
+                    <a href="${ctx}/login" class="button item-radius"><fmt:message key="page.button.taste" /></a>
                 </div>
             </div>
         </div>
