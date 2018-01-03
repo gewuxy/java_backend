@@ -105,7 +105,7 @@
                                                 <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                             </label>
                                         </div>
-                                        <div class="pay-mode-list EN-hook ">
+                                        <div class="pay-mode-list EN-hook " id="abroad">
                                             <label for="id5" class="item item-radius pay-on">
                                                 <input type="radio" name="channel" class="none" value="paypal" id="id5">
                                                 <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
