@@ -28,7 +28,7 @@
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
-        <c:set var="appName" value="<fmt:message key='page.common.appName'/>"/>
+
         <div class="page-width clearfix">
             <div class="admin-module clearfix item-radius">
                 <div class="row clearfix">
@@ -135,7 +135,7 @@
                             <input type="hidden" name="course.id" value="${course.id}">
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
-                            <input type="hidden" name="watermark.name" id="name" value="<fmt:message key='page.common.appName'/>">
+                            <input type="hidden" name="watermark.name" id="name" value="${appName}">
                             <div class="meeting-form-item login-form-item">
                                 <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"></label>
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.update.warn.notitle"/></span>

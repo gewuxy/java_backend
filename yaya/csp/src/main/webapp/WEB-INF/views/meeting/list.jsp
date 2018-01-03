@@ -794,18 +794,6 @@
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="-mob-share-twitter">
-                                <a href="javascript:;">
-                                    <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
-                                    <p>Twitter</p>
-                                </a>
-                            </li>
-                            <li  class="-mob-share-facebook">
-                                <a href="javascript:;">
-                                    <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
-                                    <p>Facebook</p>
-                                </a>
-                            </li>
                             <li class="-mob-share-linkedin" >
                                 <a href="javascript:;">
                                     <img src="${ctxStatic}/images/icon-user-linkedin.png" alt="">
@@ -814,7 +802,18 @@
                             </li>
                         </c:otherwise>
                     </c:choose>
-
+                    <li class="-mob-share-twitter">
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
+                            <p>Twitter</p>
+                        </a>
+                    </li>
+                    <li  class="-mob-share-facebook">
+                        <a href="javascript:;">
+                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
+                            <p>Facebook</p>
+                        </a>
+                    </li>
                     <li>
                         <a style="cursor: pointer;" id="copyShareUrlBtn">
                             <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
