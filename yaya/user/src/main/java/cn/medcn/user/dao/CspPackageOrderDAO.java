@@ -35,4 +35,6 @@ public interface CspPackageOrderDAO extends Mapper<CspPackageOrder>{
     CspOrderPlatFromDTO getTotalCapital(Map<String,Object> map);
 
     CspOrderPlatFromDTO getTotalCapital(@Param("grain")Integer grain, @Param("abroad")Integer abroad, @Param("startTime")Date startTime, @Param("endTime")Date endTime);
+
+    List<Map<String,Object>> transfStats(@Param("startTime")Date startTime, @Param("endTime")Date endTime);
 }

@@ -6,4 +6,15 @@
         SELECT * FROM `t_csp_user_package_history` WHERE user_id = #{userId} ORDER BY update_time DESC LIMIT 1
     </select>
 
+    <!-- 转化率 -->
+    <select id="renewStats" resultType="java.util.Map">
+        SELECT temp.preNum / rp.pre_count * 100 AS pre,temp.proNum / rp.pro_count * 100 AS pro,
+        date_format(temp.create_time,'%Y-%m-%d') as create_time FROM (SELECT DATE(update_time) AS create_time,
+        COUNT(CASE WHEN before_package_id=2 THEN before_package_id END) AS preNum,
+        COUNT(CASE WHEN before_package_id=3 THEN before_package_id END) AS proNum
+        FROM `t_csp_user_package_history`
+        WHERE before_package_id = after_package_id AND update_type = 1 and update_time BETWEEN #{startTime} AND #{endTime}
+        GROUP BY DATE(update_time)) AS temp INNER JOIN `t_report_package` rp ON temp.create_time = rp.register_time
+    </select>
+
 </mapper>

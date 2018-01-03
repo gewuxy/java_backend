@@ -7,20 +7,20 @@
 </head>
 <body>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="${ctx}/csp/user/statistics/register">资金统计</a></li>
+    <li class="active"><a href="${ctx}/csp/stats/money">资金统计</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <h3 class="page-title">总进账</h3>
 <div class="top-info clearfix">
     <div class="row-fluid ">
-        <div class="row-span span6 hot ">
-            <a href="/routes_pages/userList.html">
+        <div class="row-span span6 hot">
+            <a href="#" onclick="changeAbroad(this);">
                 <h4 class="title">人民币</h4>
                 <p><strong class="price">${rmb}</strong></p>
             </a>
         </div>
         <div class="row-span span6">
-            <a href="/routes_pages/userList.html">
+            <a href="#" onclick="changeAbroad(this);">
                 <h4 class="title">海外</h4>
                 <p><strong class="price">${usd}</strong></p>
             </a>
@@ -28,8 +28,10 @@
     </div>
 </div>
 <ul class="nav nav-tabs">
-    <li class="active"><a href="/routes_pages/moneyStats.html">资金入账</a></li>
-    <li><a href="/routes_pages/moneyStats-02.html">率比统计</a></li>
+    <li class="active"><a href="${ctx}/csp/stats/money?type=0">资金入账</a></li>
+    <li><a href="${ctx}/csp/stats/money?type=1">转化率</a></li>
+    <li><a href="${ctx}/csp/stats/money?type=2">套餐分布</a></li>
+    <li><a href="${ctx}/csp/stats/money?type=3">续费率</a></li>
 </ul>
 <form method="post" class="breadcrumb ">
     <div class="pull-left inputTime-item">
@@ -83,6 +85,8 @@
     var myChart = echarts.init(dom);
     var abroad = '${abroad}';
 
+
+
     $(function () {
         $("#startTime").val('${startTime}');
         $("#endTime").val('${endTime}');
@@ -134,7 +138,7 @@
     function initEcharts(grain) {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
-        $.get('${ctx}/csp/stati/echarts/data', {
+        $.get('${ctx}/csp/stats/echarts/money', {
             "startTime": startTime,
             "endTime": endTime,
             "abroad": abroad,
@@ -154,7 +158,7 @@
     function initTable(pageNum, grain) {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
-        $.get('${ctx}/csp/stati/table', {
+        $.get('${ctx}/csp/stats/table', {
             "pageNum": pageNum,
             "startTime": startTime,
             "endTime": endTime,
@@ -217,7 +221,7 @@
             ],
             yAxis: [
                 {
-                    name: '总额',
+                    name: abroad == 0 ? '单位/人民币':"单位/美元",
                     type: 'value'
                 }
             ],
@@ -306,6 +310,19 @@
             return 0;
         }
         return Math.floor(data * 100) / 100;
+    }
+
+    //海内海外切换
+    function changeAbroad(obj){
+        $(obj).parent().addClass('hot').siblings().removeClass("hot");
+        if(abroad == 0){
+            abroad = 1;
+        }else {
+            abroad = 0;
+        }
+        var grain = $(".nav-pills .active").children().attr("grain");
+        initEcharts(grain);
+        initTable(1, grain);
     }
 </script>
 </body>

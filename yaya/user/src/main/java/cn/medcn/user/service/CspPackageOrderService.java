@@ -72,4 +72,20 @@ public interface CspPackageOrderService extends BaseService<CspPackageOrder> {
     String getLocalPackage(Integer packageId);
 
     CspOrderPlatFromDTO getTotalCapital(Integer grain, Integer abroad, Date date, Date date1);
+
+    /**
+     * 获取转化率
+     * @param date
+     * @param date1
+     * @return
+     */
+    List<Map<String,Object>> transfStats( Date date, Date date1);
+
+    /**
+     * 获取续费率
+     * @param date
+     * @param date1
+     * @return
+     */
+    List<Map<String,Object>> renewStats(Date date, Date date1);
 }
