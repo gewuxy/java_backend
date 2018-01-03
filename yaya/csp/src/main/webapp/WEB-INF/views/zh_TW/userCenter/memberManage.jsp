@@ -149,7 +149,7 @@
                                                     <p class="color-gray-03">${info.descriptTw}</p>
                                                 </li>
                                             </c:if>
-                                            <c:if test="${info.iden =='SYB' && info.state == true}">
+                                            <c:if test="${info.iden =='SY' && info.state == true || (info.iden =='SY' && info.packageId == 3)}}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
                                                     <p>${info.descriptTw}</p>
