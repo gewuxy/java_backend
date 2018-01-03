@@ -49,11 +49,11 @@
                                             <c:if test="${not empty v.replayUrl}">
                                                 <c:if test="${v.downloadCount < 5}">
                                                     <input type="hidden" id="count_${v.courseId}" value="${v.downloadCount}">
-                                                    <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook">下载视频</a></td>
+                                                    <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook">Video Download</a></td>
 
                                                 </c:if>
                                                 <c:if test="${v.downloadCount >= 5}">
-                                                    <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook">邮件获取</a></td>
+                                                    <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook">Expired</a></td>
                                                 </c:if>
                                             </c:if>
                                         </tr>
