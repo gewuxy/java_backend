@@ -8,7 +8,18 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="col-lg-5">
     <div class="login-box-logo">
-        <img src="${ctxStatic}/images/login-logo.png" alt="">
+        <c:choose>
+            <c:when test="${csp_locale eq 'en_US'}">
+                <img src="${ctxStatic}/images/login-logo-en.png" alt="">
+            </c:when>
+            <c:when test="${csp_locale eq 'zh_TW'}">
+                <img src="${ctxStatic}/images/login-logo-tw.png" alt="">
+            </c:when>
+            <c:otherwise>
+                <img src="${ctxStatic}/images/login-logo.png" alt="">
+            </c:otherwise>
+        </c:choose>
+
     </div>
 </div>
 <div class="col-lg-2">&nbsp;</div>
