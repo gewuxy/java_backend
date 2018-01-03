@@ -691,7 +691,7 @@
             showShortcuts: false,
             showTopbar: false,
             startOfWeek: 'monday',
-            separator : ' 至 ',
+            separator : ' - ',
             format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
             startDate:new Date(),
