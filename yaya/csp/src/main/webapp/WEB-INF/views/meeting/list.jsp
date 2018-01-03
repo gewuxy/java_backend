@@ -778,58 +778,65 @@
         <div class="layer-hospital-popup-main ">
             <div class="more-popup-list clearfix">
                 <ul id="more_popup_ul" class="-mob-share-list">
-                    <li  class="-mob-share-weixin">
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
-                            <p>微信好友</p>
-                        </a>
-                    </li>
-                    <%--<li class="-mob-share-qq">--%>
-                        <%--<a href="javascript:;">--%>
-                            <%--<img src="${ctxStatic}/images/_friends-icon.png" alt="">--%>
-                            <%--<p>朋友圈</p>--%>
-                        <%--</a>--%>
-                    <%--</li>--%>
-                    <li class="-mob-share-weibo">
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
-                            <p>微博</p>
-                        </a>
-                    </li>
-                    <li class="-mob-share-twitter">
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
-                            <p>Twitter</p>
-                        </a>
-                    </li>
-                    <li  class="-mob-share-facebook">
-                        <a href="javascript:;">
-                            <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
-                            <p>Facebook</p>
-                        </a>
-                    </li>
+                    <c:choose>
+                        <c:when test="${csp_locale eq 'zh_CN'}">
+                            <li  class="-mob-share-weixin">
+                                <a href="javascript:;">
+                                    <img src="${ctxStatic}/images/_wechat-icon.png" alt="">
+                                    <p>微信好友</p>
+                                </a>
+                            </li>
+                            <li class="-mob-share-weibo">
+                                <a href="javascript:;">
+                                    <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
+                                    <p>微博</p>
+                                </a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="-mob-share-twitter">
+                                <a href="javascript:;">
+                                    <img src="${ctxStatic}/images/_twitter-icon.png" alt="">
+                                    <p>Twitter</p>
+                                </a>
+                            </li>
+                            <li  class="-mob-share-facebook">
+                                <a href="javascript:;">
+                                    <img src="${ctxStatic}/images/_facebook-icon.png" alt="">
+                                    <p>Facebook</p>
+                                </a>
+                            </li>
+                            <li class="-mob-share-linkedin" >
+                                <a href="javascript:;">
+                                    <img src="${ctxStatic}/images/icon-user-linkedin.png" alt="">
+                                    <p>LinkedIn</p>
+                                </a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+
                     <li>
                         <a style="cursor: pointer;" id="copyShareUrlBtn">
                             <img src="${ctxStatic}/images/_copyLink-icon.png" alt="">
-                            <p>复制链接</p>
+                            <p><fmt:message key="page.meeting.button.copy_link"/></p>
                         </a>
                     </li>
                     <li id="copyLi">
                         <a href="javascript:;" class="copy-hook">
                             <img src="${ctxStatic}/images/_copy-icon.png" alt="">
-                            <p>复制副本</p>
+                            <p><fmt:message key="page.meeting.button.duplicate"/></p>
                         </a>
                     </li>
                     <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
-                            <p>编辑</p>
+                            <p><fmt:message key="page.meeting.button.edit"/></p>
                         </a>
                     </li>
                     <li>
                         <a href="javascript:;" onclick="delCourse()">
                             <img src="${ctxStatic}/images/_delete-icon.png" alt="">
-                            <p>删除</p>
+                            <p><fmt:message key="page.meeting.button.del"/></p>
                         </a>
                     </li>
                 </ul>
