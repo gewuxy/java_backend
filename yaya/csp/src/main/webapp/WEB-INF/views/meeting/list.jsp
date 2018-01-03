@@ -152,7 +152,7 @@
             $("#submitBtn").click(function () {
                 var selectNum = $("input[name='accepts']:checked").length;
                 if(selectNum < 1){
-                    layer.msg(<fmt:message key="page.delivery.tips.chose_users"/>);
+                    layer.msg('<fmt:message key="page.delivery.tips.chose_users"/>');
                     $("#contribute").submit(function (e) {
                         e.preventDefault();
                     });
@@ -162,7 +162,7 @@
                     });
                     ajaxPost($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
                         if (result.code == 0){//成功
-                            layer.msg(<fmt:message key="page.delivery.tips.success"/>,{time:300},function () {
+                            layer.msg('<fmt:message key="page.delivery.tips.success"/>',{time:300},function () {
                                 layer.closeAll();
                             });
                         }else{//失败
@@ -182,7 +182,7 @@
                     closeBtn:0,
                     content: $('.copy-popup-box'),
                     success:function(){
-                        $("#courseTitle").val(courseTitle + "_" + <fmt:message key="page.meeting.button.copy_suffix"/>);
+                        $("#courseTitle").val(courseTitle + "_" + '<fmt:message key="page.meeting.button.copy_suffix"/>');
                     },
                     cancel :function(){
 
@@ -281,7 +281,7 @@
 
                 var course = loadCourseInfo($(this).attr("courseId"));
                 if (course == undefined){
-                    layer.msg(<fmt:message key="page.meeting.tips.error"/>);
+                    layer.msg('<fmt:message key="page.meeting.tips.error"/>');
                     return false;
                 }
                 initSwiper(course);
@@ -366,7 +366,7 @@
                 $("#copyShareUrl")[0].select();
                 var tag = document.execCommand("Copy");
                 if (tag){
-                    layer.msg(<fmt:message key="page.meeting.tips.copy_success"/>);
+                    layer.msg('<fmt:message key="page.meeting.tips.copy_success"/>');
                 }
                 $("#copyShareUrl").hide();
             });
@@ -474,7 +474,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : [<fmt:message key="page.button.sure"/>, <fmt:message key="page.button.cancel"],
+                        btn : ['<fmt:message key="page.button.sure"/>', '<fmt:message key="page.button.cancel"/>'],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
@@ -895,7 +895,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否确定删除？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt=""><fmt:message key="page.common.delete.confirm"/></p>
 
                 </div>
 
