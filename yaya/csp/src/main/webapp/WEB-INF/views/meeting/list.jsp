@@ -152,7 +152,7 @@
             $("#submitBtn").click(function () {
                 var selectNum = $("input[name='accepts']:checked").length;
                 if(selectNum < 1){
-                    layer.msg("请选择要投稿的单位号");
+                    layer.msg(<fmt:message key="page.delivery.tips.chose_users"/>);
                     $("#contribute").submit(function (e) {
                         e.preventDefault();
                     });
@@ -162,7 +162,7 @@
                     });
                     ajaxPost($("#contribute").attr('action'),$("#contribute").serialize(),function(result){
                         if (result.code == 0){//成功
-                            layer.msg("投稿成功",{time:300},function () {
+                            layer.msg(<fmt:message key="page.delivery.tips.success"/>,{time:300},function () {
                                 layer.closeAll();
                             });
                         }else{//失败
@@ -182,7 +182,7 @@
                     closeBtn:0,
                     content: $('.copy-popup-box'),
                     success:function(){
-                        $("#courseTitle").val(courseTitle + "_副本");
+                        $("#courseTitle").val(courseTitle + "_" + <fmt:message key="page.meeting.button.copy_suffix"/>);
                     },
                     cancel :function(){
 
@@ -281,7 +281,7 @@
 
                 var course = loadCourseInfo($(this).attr("courseId"));
                 if (course == undefined){
-                    layer.msg("获取会议信息失败");
+                    layer.msg(<fmt:message key="page.meeting.tips.error"/>);
                     return false;
                 }
                 initSwiper(course);
@@ -366,7 +366,7 @@
                 $("#copyShareUrl")[0].select();
                 var tag = document.execCommand("Copy");
                 if (tag){
-                    layer.msg("已经成功复制到剪切板");
+                    layer.msg(<fmt:message key="page.meeting.tips.copy_success"/>);
                 }
                 $("#copyShareUrl").hide();
             });
@@ -474,7 +474,7 @@
                         closeBtn:0,
                         anim: 5,
                         content: $('#del-popup-box'),
-                        btn : ['确定', '取消'],
+                        btn : [<fmt:message key="page.button.sure"/>, <fmt:message key="page.button.cancel"],
                         yes :function(){
                             $.get('${ctx}/mgr/meet/del/'+courseId, {}, function (data) {
                                 if (data.code == 0){
@@ -612,16 +612,16 @@
             <div class="admin-row clearfix pr">
                 <div class="admin-screen-area">
                     <ul>
-                        <li class="first ${empty playType ? 'cur' : ''}"><a href="javascript:;" class="screen-all " onclick="changePlayType()">全部</a></li>
-                        <li ${playType == 0? "class='cur'" : ''}><a href="javascript:;" class="screen-viedo " onclick="changePlayType(0)"><i></i>投屏录播</a></li>
-                        <li ${playType > 0? "class='cur'" : ''}><a href="javascript:;" class="screen-live " onclick="changePlayType(1)"><i></i>投屏直播</a></li>
-                        <li class="last ${sortType == 'desc' ? 'cur' : ''}"><a href="javascript:;" class="screen-time" onclick="sortList()"><i></i>创建时间排序</a></li>
+                        <li class="first ${empty playType ? 'cur' : ''}"><a href="javascript:;" class="screen-all " onclick="changePlayType()"><fmt:message key="page.meeting.tab.all"/></a></li>
+                        <li ${playType == 0? "class='cur'" : ''}><a href="javascript:;" class="screen-viedo " onclick="changePlayType(0)"><i></i><fmt:message key="page.meeting.tab.screen_record"/></a></li>
+                        <li ${playType > 0? "class='cur'" : ''}><a href="javascript:;" class="screen-live " onclick="changePlayType(1)"><i></i><fmt:message key="page.meeting.tab.screen_live"/></a></li>
+                        <li class="last ${sortType == 'desc' ? 'cur' : ''}"><a href="javascript:;" class="screen-time" onclick="sortList()"><i></i><fmt:message key="page.meeting.tab.orderby"/></a></li>
                     </ul>
                 </div>
                 <div class="admin-search">
                     <form action="${ctx}/mgr/meet/list" method="post" id="yPsearchForm" name="yPsearchForm">
                         <div class="search-form search-form-responsive item-radius clearfix">
-                            <input type="text" placeholder="搜索会议名字" name="keyword" id="keyword" value="${keyword}" class="form-text">
+                            <input type="text" placeholder="<fmt:message key='page.meeting.tab.search'/>" name="keyword" id="keyword" value="${keyword}" class="form-text">
                             <button type="submit" class="form-btn"><span></span></button>
                         </div>
                     </form>
@@ -632,7 +632,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-01.png" alt=""></p>
-                            <p> - 无会议内容 -</p>
+                            <p> - <fmt:message key="page.meeting.tips.no_content"/> -</p>
                         </div>
                     </div>
 
@@ -658,10 +658,10 @@
                                             <div class="resource-link">
                                                 <a style="cursor: pointer;" courseId="${course.id}" class="resource-icon-play popup-player-hook">
                                                     <i></i>
-                                                    预览
+                                                    <fmt:message key="page.meeting.button.view"/>
                                                 </a><a href="${ctx}/mgr/meet/screen/${course.id}" class="resource-icon-qrcode">
                                                 <i></i>
-                                                扫码投屏
+                                                <fmt:message key="page.meeting.button.scan_screen"/>
                                             </a>
                                             </div>
                                         </div>
@@ -680,17 +680,17 @@
                                             <span>${course.playTime}</span>
                                             <span>
                                         <c:choose>
-                                            <c:when test="${course.playType == 0}">录播</c:when>
-                                            <c:otherwise>直播</c:otherwise>
+                                            <c:when test="${course.playType == 0}"><fmt:message key="page.meeting.tab.record"/></c:when>
+                                            <c:otherwise><fmt:message key="page.meeting.tab.live"/> </c:otherwise>
                                         </c:choose>
                                     </span>
                                         </div>
                                         <div class="resource-menu">
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="contribute-hook" courseId="${course.id}">投稿</a>
+                                                <a href="javascript:;" class="contribute-hook" courseId="${course.id}"><fmt:message key="page.meeting.button.delivery"/></a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i>更多 </a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i><fmt:message key="page.meeting.button.more"/> </a>
                                             </div>
                                         </div>
                                         <c:if test="${course.locked}">
