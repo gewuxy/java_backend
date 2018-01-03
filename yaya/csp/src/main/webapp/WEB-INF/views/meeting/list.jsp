@@ -386,11 +386,11 @@
                 //弹出提示
                 layer.open({
                     type: 1,
-                    area: ['440px', '240px'],
+                    area: ['440px', '340px'],
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
-                    btn: ["升级"],
+                    btn: ["<fmt:message key='page.common.upgrade'/>"],
                     content: $('#meetCountOut'),
                     success:function(){
 
@@ -410,11 +410,11 @@
             if ("${meetCountOut}" && "${param.keyword}" == '' && "${param.playType}" == "" && "${param.sortType}" == '' && "${param.pageNum}" == ''){
                 layer.open({
                     type: 1,
-                    area: ['440px', '240px'],
+                    area: ['440px', '320px'],
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
-                    btn: ["升级"],
+                    btn: ["<fmt:message key='page.common.upgrade'/>"],
                     content: $('#meetCountOut'),
                     success:function(){
 
@@ -921,7 +921,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p>超出套餐会议数量，请升级套餐后再试</p>
+                    <p><fmt:message key="meet.error.count.out"/></p>
                 </div>
             </form>
         </div>

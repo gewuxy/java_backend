@@ -305,10 +305,10 @@
         </div>
         <div class="layer-hospital-popup-main ">
                 <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <p><fmt:message key="page.words.charge.tips"/></p>
                     <div class="admin-button t-right">
-                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="我已付款成功">
+                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.words.charge.problem"/></a>
+                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="<fmt:message key='page.words.charge.success'/>">
                     </div>
                 </div>
 
@@ -357,12 +357,12 @@
     function uploadFile(f){
         var fSize = fileSize(f);
         if (fSize > file_size_limit){
-            layer.msg("请上传小于100M的文件");
+            layer.msg("<fmt:message key='page.meeting.upload.limit100'/>");
             return false;
         }
         var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
-            layer.msg("请选择ppt|pptx|pdf格式文件");
+            layer.msg("<fmt:message key='page.meeting.warn.format'/>");
             return false;
         }
         var index = layer.load(1, {
@@ -416,7 +416,7 @@
     function showConvertProgress(){
         $.get('${ctx}/mgr/meet/convert/progress', {}, function (data) {
             console.log("convert progress = "+data.data.progress);
-            $("#uploadAlt").text("转换进度");
+            $("#uploadAlt").text("<fmt:message key='page.meeting.convert.progress'/>");
             $("#progressS").text(data.data.progress);
             $("#progressI").css("width", data.data.progress);
             if (data.data.progress.indexOf("100") != -1){
@@ -476,13 +476,13 @@
         function uploadByDrag(f){
 
             if (!f.name.endWith(".ppt") && !f.name.endWith(".pptx") && !f.name.endWith(".pdf")){
-                layer.msg("请选择ppt|pptx|pdf格式文件");
+                layer.msg("<fmt:message key='page.meeting.warn.format'/>");
                 return false;
             }
 
             var filesize = Math.floor((f.size)/1024);
             if(filesize>file_size_limit){
-                layer.msg("上传大小不能超过100M.");
+                layer.msg("<fmt:message key='page.meeting.upload.limit100'/>");
                 return false;
             }
 
@@ -588,7 +588,7 @@
                     remainFlux = data.data;
                 });
                 if(remainFlux < 10){
-                    layer.msg("剩余流量需在10G以上才能开启视频直播");
+                    layer.msg("<fmt:message key='page.meeting.flux.minlimit'/>");
                     return ;
                 }
             }
@@ -616,7 +616,7 @@
                     $("#state").val(watermark.state);
                 }else{
                     $("#direction").val(2);
-                    $("#name").val("会讲");
+                    $("#name").val("${appName}");
                     $("#state").val(1);
                 }
             }else{
@@ -628,10 +628,10 @@
                     if(${not empty watermark}){
                         $("#name").val('${watermark.name}');
                     }else{
-                        $("#name").val("会讲");
+                        $("#name").val("${appName}");
                     }
                 }else{
-                    $("#name").val($("#waterName").val() == '' ? "会讲":$("#waterName").val());
+                    $("#name").val($("#waterName").val() == '' ? "${appName}":$("#waterName").val());
                 }
             }
             $("#courseForm").submit();
@@ -703,7 +703,7 @@
             console.log('first-date-selected',obj);
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
-            var timeArray = obj.value.split(" 至 ");
+            var timeArray = obj.value.split(" - ");
             $("#liveStartTime").val(timeArray[0]);
             $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);
@@ -736,7 +736,7 @@
         var watermarkItemEditBr = watermarkItem.find('.watermark-edit-hook');
         var watermarkRadio = watermarkItem.find('.watermark-radio');
         var watermarkIsShow = false;
-        var defaultTitle = "会讲"
+        var defaultTitle = "${appName}"
 
         $('.logo-watermark-tips-hook').hover(function(){
             $('.watermark-tips-hook').show();
