@@ -9,15 +9,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
-    <title>忘记密码-会讲</title>
+    <title><fmt:message key="page.reset.password.title"/><fmt:message key="page.common.appName"/></title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 
 <body>
@@ -38,10 +37,10 @@
                         <form id="resetForm" name="resetForm">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="<fmt:message key="page.email.login.address"/>">
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
-                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="重置密码">
+                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="<fmt:message key="page.reset.password.button"/>">
                             </div>
                         </form>
                     </div>
@@ -51,9 +50,13 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text">
-                                    <p>重置密码链接已发送至您的邮箱，请设置密码后再重新登录</p>
+                                    <c:choose>
+                                        <c:when test="${csp_locale eq 'en_US'}"><p style="font-size:16px;"></c:when>
+                                        <c:otherwise><p></c:otherwise>
+                                    </c:choose>
+                                    <fmt:message key="page.reset.password.tips"/></p>
                                 </div>
-                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="前往邮箱">
+                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="<fmt:message key="page.email.register.toEmail"/>">
                             </div>
                         </form>
                     </div>
@@ -76,7 +79,7 @@
         $("#submitBtn").click(function () {
             var email = $("#email").val();
             if (!isEmail(email)) {
-                $("#errorMessage").text("请输入正确的邮箱地址");
+                $("#errorMessage").text("<fmt:message key="page.email.login.userNameError"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#email").focus();
                 return false;
@@ -97,7 +100,7 @@
                     }
                 },
                 error: function (a, n, e) {
-                    alert("获取数据异常："+a + " - "+n+" - "+e);
+                    alert("<fmt:message key="page.common.exception"/>"+"："+a + " - "+n+" - "+e);
                 }
             })
         });
@@ -109,7 +112,7 @@
                 layer.closeAll();
                 window.open(url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("<fmt:message key="page.email.url.notfount"/>");
             }
         });
     })

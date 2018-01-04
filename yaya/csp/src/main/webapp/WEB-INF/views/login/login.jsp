@@ -8,13 +8,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>登录-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+
+    <meta charset="UTF-8">
+    <title><fmt:message key="page.login.title"/><fmt:message key="page.common.appName"/></title>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
 <div id="wrapper">
@@ -29,26 +28,79 @@
 
                 <div class="col-lg-5 login-box-item">
                     <!--切换 登录-->
-                    <div class="login-box-main position-button-login">
-                        <a href="${ctx}/mgr/login?thirdPartyId=1" title="微信授权登录" class=" login-button login-wechat"><i></i>微信授权登录</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=2" title="微博授权登录"  class=" login-button login-weibo"><i></i>微博授权登录</a>
-                        <a href="${ctx}/mgr/login?thirdPartyId=5" title="敬信数字平台授权登录" class=" login-button login-medcn last"><i></i>敬信数字平台授权登录</a>
-                    </div>
+                        <c:choose>
+                            <%-- 英文页面 --%>
+                            <c:when test="${csp_locale eq 'en_US'}">
+                                <div class="login-box-main position-button-login">
+                                    <a href="javascript:;" title="<fmt:message key="page.login.facebook"/>"
+                                       class=" login-button login-facebook" onclick="facebookLogin()">
+                                        <i></i><fmt:message key="page.login.facebook"/></a>
+                                    <a href="javascript:;" id="twitter" title="<fmt:message key="page.login.twitter"/>"
+                                       class=" login-button login-twitter" onclick="twitterLogin()">
+                                        <i></i><fmt:message key="page.login.twitter"/></a>
+                                    <a href="${ctx}/mgr/login?thirdPartyId=7" title="<fmt:message key="page.login.email"/>"
+                                       class=" login-button login-email">
+                                        <i></i><fmt:message key="page.login.email"/></a>
+                                    <a href="${ctx}/mgr/login?thirdPartyId=5" title="<fmt:message key="page.login.Jingxin"/>"
+                                       class=" login-button login-medcn last">
+                                        <i></i><fmt:message key="page.login.Jingxin"/></a>
+                                    <span class="cells-block error ${not empty error ? '':'none'} ">
+                                        <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;
+                                        <span id="errorMessage">${error}</span>
+                                    </span>
+                                </div>
+                            </c:when>
+                            <%-- 繁体页面 --%>
+                            <c:when test="${csp_locale eq 'zh_TW'}">
+                                <div class="login-box-main position-button-login">
+                                    <a href="javascript:;" title="<fmt:message key="page.login.facebook"/>"
+                                       class=" login-button login-facebook" onclick="facebookLogin()">
+                                        <i></i><fmt:message key="page.login.facebook"/></a>
+                                    <a href="javascript:;" id="twitter" title="<fmt:message key="page.login.twitter"/>"
+                                       class=" login-button login-twitter" onclick="twitterLogin()"><i></i>
+                                        <fmt:message key="page.login.twitter"/></a>
+                                    <a href="${ctx}/mgr/login?thirdPartyId=7" title="<fmt:message key="page.login.email"/>"
+                                       class=" login-button login-email"><i></i><fmt:message key="page.login.email"/></a>
+                                    <a href="${ctx}/mgr/login?thirdPartyId=5" title="Login with Jingxin Platform"
+                                       class=" login-button login-medcn last"><i></i><fmt:message key="page.login.Jingxin"/></a>
+                                    <span class="cells-block error ${not empty error ? '':'none'} ">
+                                        <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;
+                                        <span id="errorMessage">${error}</span>
+                                    </span>
+                                </div>
+                            </c:when>
 
-                    <!--登录用-->
-                    <div class="login-box-other">
-                        <div class="login-box-other-title t-center ">
-                            <span class="login-box-other-line-l"></span>
-                            <span>其他方式</span>
-                            <span class="login-box-other-line-r"></span>
-                        </div>
-                        <div class="login-box-other-main t-center ">
-                            <a href="${ctx}/mgr/login?thirdPartyId=6" title="手机登录"><img src="${ctxStatic}/images/login-phone-icon.png" alt="手机登录"></a>
-                            <a href="${ctx}/mgr/login?thirdPartyId=7" title="邮箱登录"><img src="${ctxStatic}/images/login-email-icon.png" alt="邮箱登录"></a>
-                        </div>
-                    </div>
+                            <%-- 中文页面 --%>
+                            <c:otherwise>
+                                <div class="login-box-main position-button-login">
+                                    <a href="${ctx}/mgr/login?thirdPartyId=1" title="<fmt:message key="page.login.weChat"/>"
+                                       class=" login-button login-wechat"><i></i><fmt:message key="page.login.weChat"/></a>
+                                    <a href="${ctx}/mgr/login?thirdPartyId=2" title="<fmt:message key="page.login.weiBo"/>"
+                                       class=" login-button login-weibo"><i></i><fmt:message key="page.login.weiBo"/></a>
+                                    <a href="${ctx}/mgr/login?thirdPartyId=5" title="<fmt:message key="page.login.Jingxin"/>"
+                                       class=" login-button login-medcn last"><i></i><fmt:message key="page.login.Jingxin"/></a>
+                                </div>
+                                <!--登录用-->
+                                <div class="login-box-other">
+                                    <div class="login-box-other-title t-center ">
+                                        <span class="login-box-other-line-l"></span>
+                                        <span>其他方式</span>
+                                        <span class="login-box-other-line-r"></span>
+                                    </div>
+                                    <div class="login-box-other-main t-center ">
+                                        <a href="${ctx}/mgr/login?thirdPartyId=6" title="<fmt:message key="page.login.mobile"/>">
+                                            <img src="${ctxStatic}/images/login-phone-icon.png"
+                                                 alt="<fmt:message key="page.login.mobile"/>"></a>
+                                        <a href="${ctx}/mgr/login?thirdPartyId=7" title="<fmt:message key="page.login.email"/>">
+                                            <img src="${ctxStatic}/images/login-email-icon.png"
+                                                 alt="<fmt:message key="page.login.email"/>"></a>
+                                    </div>
+                                </div>
+                            </c:otherwise>
+                        </c:choose>
 
                     <%@include file="../include/login_service.jsp"%>
+
                 </div>
             </div>
 

@@ -11,7 +11,7 @@
     <meta charset="UTF-8">
     <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
     <meta id="keywords" name="keywords" content="医学会议,独立直播间,医生互动" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
@@ -87,7 +87,7 @@
             <div class="boxAudio-loading none">
                 <div class="time">
                     <span><img src="${ctxStatic}/phone/images/viedo-icon.gif" alt=""></span>
-                    <span class="text">录音中</span>
+                    <span class="text"><fmt:message key="page.meeting.tips.recoding"/></span>
                 </div>
             </div>
             <!--切换菜单-->
@@ -107,11 +107,11 @@
         <div  class="video-play-live popup-min-screen ">
             <div id="videoWrap" class="viedoItem"></div>
             <!--断开-->
-            <div class="video-notPlay-bg none"><i></i>视频直播设备已断开</div>
+            <div class="video-notPlay-bg none"><i></i><fmt:message key="page.meeting.live.broken"/></div>
             <!--加载-->
             <div class="video-notPlay-load none"><i></i></div>
             <!--默认-->
-            <div class="video-notPlay ${empty live.hlsUrl ? '' : 'none'}"><i></i>视频直播未开始</div>
+            <div class="video-notPlay ${empty live.hlsUrl ? '' : 'none'}"><i></i><fmt:message key="page.meeting.live.not.start"/></div>
         </div>
         <!--初始化视频     http://weblive.hebtv.com/live/hbws_bq/index.m3u8-->
         <script>
@@ -206,7 +206,7 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>简介</h3></div>
+        <div class="title"><h3><fmt:message key="page.common.info"/></h3></div>
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
@@ -404,12 +404,12 @@
                 $("#ck-video").attr('style','margin-top:9999px');
                 weui.actionSheet([
                     {
-                        label: '切换静音',
+                        label: '<fmt:message key="page.meeting.tab.change.mute"/>',
                         onClick: function () {
                             changeTrack();
                         }
                     }, {
-                        label: '切换声音',
+                        label: '<fmt:message key="page.meeting.tab.change.voice"/>',
                         onClick: function () {
                             androidChangeScreen();
                             changeScreen();
@@ -417,7 +417,7 @@
                     }
                 ], [
                     {
-                        label: '取消',
+                        label: '<fmt:message key="page.button.cancel"/>',
                         onClick: function () {
                             console.log('取消');
                             //还原设置
@@ -435,7 +435,7 @@
                 if (browser.versions.iPhone || browser.versions.iPad || browser.versions.iPod) {
                     // 判断系统版本号是否大于 9
                     if(browser.versions.isOs69){
-                        alert('由于系统原因，无法正常使用功能。如需调节音量请按手机右侧音量按钮');
+                        alert('<fmt:message key="page.meeting.warn.voice.unusable"/>');
                     } else {
                         changeTrack();
                     }
@@ -856,7 +856,7 @@
 
         function report(type){
             $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
-                layer.msg('举报成功');
+                layer.msg('<fmt:message key="page.meeting.report.success"/>');
             },'json');
         }
 

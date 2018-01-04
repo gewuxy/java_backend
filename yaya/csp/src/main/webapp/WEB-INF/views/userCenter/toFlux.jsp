@@ -2,15 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>流量管理-个人中心-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.title.flux"/></title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.24.1/js/client.min.js"></script>
     <script src="https://js.braintreegateway.com/web/3.24.1/js/paypal-checkout.min.js"></script>
@@ -32,7 +30,7 @@
                     <div class="col-lg-8">
                         <%@include file="user_include.jsp" %>
                         <div class="user-content item-radius">
-                            <h4>视频直播记录 <span>剩余流量 <i><fmt:formatNumber type="number" value="${flux/1024}" maxFractionDigits="2"/></i>G</span></h4>
+                            <h4><fmt:message key="page.words.video.record"/> <span><fmt:message key="page.words.remaining.flux"/> <i><fmt:formatNumber type="number" value="${flux/1024}" maxFractionDigits="2"/></i>G</span></h4>
                             <table class="table-box-1">
                                 <colgroup>
                                     <col class="col-w-4">
@@ -45,15 +43,21 @@
                                     <c:forEach items="${page.dataList}" var="v">
                                         <tr>
                                             <td class="col-w-4 color-black">${v.meetName}</td>
-                                            <td class="col-w-3">消耗${v.expense}M</td>
+                                            <c:if test="${csp_locale =='zh_CN'}">
+                                                <td class="col-w-3"><fmt:message key="page.words.flux.usage"/>${v.expense}M</td>
+                                            </c:if>
+                                            <c:if test="${csp_locale !='zh_CN'}">
+                                                <td class="col-w-3">${v.expense}M<fmt:message key="page.words.flux.usage"/></td>
+                                            </c:if>
+
                                             <c:if test="${not empty v.replayUrl}">
                                                 <c:if test="${v.downloadCount < 5}">
                                                     <input type="hidden" id="count_${v.courseId}" value="${v.downloadCount}">
-                                                    <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook">下载视频</a></td>
+                                                    <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook"><fmt:message key="page.words.video.download"/></a></td>
 
                                                 </c:if>
                                                 <c:if test="${v.downloadCount >= 5}">
-                                                    <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook">邮件获取</a></td>
+                                                    <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook"><fmt:message key="page.words.get.videoUrl"/></a></td>
                                                 </c:if>
                                             </c:if>
                                         </tr>
@@ -72,7 +76,13 @@
                         <div class="user-content item-radius pay-mode">
                             <form action="${ctx}/mgr/charge/toCharge" name="submitForm" id="submitForm" method="post" target="_blank">
                             <div class="formrow flow">
-                                <div class="formTitle color-black">充值流量</div>
+
+                                <div class="formTitle color-black" <c:if test="${csp_locale == 'en_US'}">style="line-height:1.3;"</c:if>>
+                                    <c:if test="${csp_locale == 'en_US'}">Recharge<br />Channel</c:if>
+                                    <c:if test="${csp_locale != 'en_US'}"><fmt:message key="page.words.charge.method"/> </c:if>
+                                </div>
+
+
                                 <div class="formControls">
                                     <div class="pay-mode-list flow-mode-list" >
                                         <label for="tid1" class="item item-radius" >
@@ -95,7 +105,7 @@
                                 </div>
                             </div>
                             <div class="formrow " >
-                                <div class="formTitle color-black">充值方式</div>
+                                <div class="formTitle color-black"><fmt:message key="page.words.charge.method"/></div>
                                 <div class="formControls" >
                                     <div class="pay-mode-list CN-hook" id="chinese">
                                         <label for="id11" class="item item-radius pay-on">
@@ -120,9 +130,9 @@
                                 </div>
                             </div>
                             <div class="formrow money">
-                                <div class="formTitle color-black">支付金额</div>
+                                <div class="formTitle color-black"><fmt:message key="page.words.charge.amount"/></div>
                                 <div class="formControls">
-                                    <span class="color-black"><span class="payNum">200</span> <span id="yuan">元</span></span> <span class="color-green">(100G流量)</span>
+                                    <span class="color-black"><span class="payNum">200</span> <span id="yuan"><fmt:message key="page.words.charge.currency"/></span></span> <span class="color-green">(100G<fmt:message key="page.words.flux"/>)</span>
                                     <span class="money-state">
                                         <label for="currency-cn" class="cn on">
                                             <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
@@ -136,7 +146,7 @@
                                 </div>
                             </div>
                             <div class="formrow last">
-                                <input  type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="确认支付">
+                                <input  type="button" class="button login-button buttonBlue cancel-hook last" id="submitBtn" value="<fmt:message key="page.words.charge.confirm"/>">
                             </div>
                             </form>
                         </div>
@@ -161,11 +171,11 @@
         <div class="layer-hospital-popup-main ">
             <form >
                 <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <p><fmt:message key="page.words.charge.tips"/></p>
                     <div class="admin-button t-right">
-                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
+                        <a href="${ctx}/mgr/user/toFlux"  class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.words.charge.problem"/></a>
                         <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"
-                               value="我已付款成功">
+                               value="<fmt:message key="page.words.charge.success"/>">
                     </div>
                 </div>
             </form>
@@ -183,14 +193,10 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p class="color-black" style="font-size:20px; margin-bottom:10px;">已超出下载权限，如需下载可通过邮件申请。</p>
-                    <p>发送邮件 “用户名+会议名称+直播日期” 至邮箱</p>
+                    <p class="color-black" style="font-size:20px; margin-bottom:10px;"><fmt:message key="page.words.get.videoUrl.tips1"/></p>
+                    <p><fmt:message key="page.words.get.videoUrl.tips2"/></p>
                     <p><a href="mailto:service@CSPmeeting.com">service@CSPmeeting.com</a></p>
-                    <p>我们会尽快审核并返回下载链接到您的发件邮箱。</p>
-                    <!--<div class="admin-button t-right">-->
-                    <!--<a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>-->
-                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" value="我已付款成功">-->
-                    <!--</div>-->
+                    <p><fmt:message key="page.words.get.videoUrl.tips3"/></p>
                 </div>
 
             </form>
@@ -202,7 +208,20 @@
 
 <script>
 
-    var currency = 1;
+    var local = '${csp_locale}';
+    var currency;
+    if(local == "zh_CN"){
+        currency = 1;
+        $("#chinese").attr("class","pay-mode-list CN-hook");
+        $("#abroad").attr("class","pay-mode-list EN-hook none");
+        $(".payNum").val(200);
+    }else{
+        currency = 2;
+        $("#chinese").attr("class","pay-mode-list CN-hook none");
+        $("#abroad").attr("class","pay-mode-list EN-hook");
+        $(".payNum").val(35);
+    }
+
 
     $(function(){
         $.ajaxSetup({
@@ -272,7 +291,7 @@
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
-                    btn: ["我知道了"],
+                    btn: ["<fmt:message key="page.words.layer.btn"/>"],
                     content: $('.videoListEmail-popup-box'),
                     success:function(){
 
@@ -283,9 +302,9 @@
                 });
 
                 $(this).attr("class","color-gray videoListEmail-hook");
-                $(this).html("邮件获取");
+                $(this).html("<fmt:message key="page.words.get.videoUrl"/>");
             }else{
-                layer.msg("会议视频提供5次有效下载，已下载"+ count+"次",{time:1000},function () {
+                layer.msg("<fmt:message key="page.words.video.download.tips1"/>"+ count+"<fmt:message key="page.words.video.download.tips2"/>",{time:1000},function () {
                     $("#count_"+courseId).val(parseInt(count) + 1);
                     window.location.href="${ctx}/mgr/user/download?courseId="+courseId+"&meetName="+meetName;
                 });
@@ -301,8 +320,13 @@
         if(currency == 1){  //中文
             var channel = $('input[name="channel"]:checked').val();
             $(".payNum").html(flux*2);
-            $("#yuan").html("元");
-            $(".color-green").html("("+flux+"G流量)");
+            if(local == "zh_CN"){
+                $("#yuan").html("元");
+                $(".color-green").html("("+flux+"G流量)");
+            }else{
+                $("#yuan").html("CNY");
+                $(".color-green").html("("+flux+"G)");
+            }
         }else{
             if(flux == 5){
                 $(".payNum").html(1.75);
@@ -313,8 +337,14 @@
             }else{
                 $(".payNum").html(175);
             }
-            $("#yuan").html("美元");
-            $(".color-green").html("("+flux+"G流量)");
+            if(local == "zh_CN"){
+                $("#yuan").html("美元");
+                $(".color-green").html("("+flux+"G流量)");
+            }else{
+                $("#yuan").html("USD");
+                $(".color-green").html("("+flux+"G)");
+            }
+
         }
     }
 
@@ -350,7 +380,7 @@
             fix: false, //不固定
             title:false,
             closeBtn:0,
-            btn: ["我知道了"],
+            btn: ["<fmt:message key="page.words.layer.btn"/>"],
             content: $('.videoListEmail-popup-box'),
             success:function(){
 

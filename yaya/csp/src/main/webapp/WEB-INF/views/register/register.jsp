@@ -9,15 +9,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
-    <title>邮箱注册-会讲</title>
+    <title><fmt:message key="page.email.register.title"/><fmt:message key="page.common.appName"/></title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 
 <body>
@@ -38,19 +36,19 @@
                         <form action="" method="post" id="registerForm" name="registerForm">
                             <div class="login-form-item">
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="email" type="text" class="login-formInput" placeholder="<fmt:message key="page.email.login.address"/>">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
-                                    <input type="text" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" type="password" name="password" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input type="text" required placeholder="<fmt:message key="page.email.login.password"/>" class="login-formInput icon-register-hot last none" maxlength="24">
+                                    <input id="pwd" type="password" name="password" required placeholder="<fmt:message key="page.email.login.password"/>" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
                                 <label for="nickname" class="cells-block pr">
-                                    <input id="nickname" name="nickName" type="text" class="login-formInput" placeholder="昵称" maxlength="18" >
+                                    <input id="nickname" name="nickName" type="text" class="login-formInput" placeholder="<fmt:message key="page.email.register.nickname"/>" maxlength="18" >
                                 </label>
                                 <span class="cells-block error ${not empty error ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
 
-                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="注册">
+                                <input type="button" id="submitBtn" class="button login-button buttonBlue last" value="<fmt:message key="page.email.register.button"/>">
                             </div>
                         </form>
                     </div>
@@ -60,9 +58,13 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text">
-                                    <p>激活账号邮件已发送至您的邮箱，请前往激活完成注册。</p>
+                                    <c:choose>
+                                        <c:when test="${csp_locale eq 'en_US'}"><p style="font-size:16px;"></c:when>
+                                        <c:otherwise><p></c:otherwise>
+                                    </c:choose>
+                                        <fmt:message key="page.email.register.active.tips"/></p>
                                 </div>
-                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="前往邮箱">
+                                <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="<fmt:message key="page.email.register.toEmail"/>">
                             </div>
                         </form>
                     </div>
@@ -93,46 +95,46 @@
             var $nickname = $("#nickname");
 
             if (!isEmail($username.val())){
-                $("#errorMessage").text("请输入正确的邮箱地址");
+                $("#errorMessage").text("<fmt:message key="page.email.login.userNameError"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $username.focus();
                 return false;
             }
 
             if($.trim($password.val()) == ''){
-                $("#errorMessage").text("密码不能为空");
+                $("#errorMessage").text("<fmt:message key="user.password.notnull"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             } else if(isChinesePassword($.trim($password.val()))){
-                $("#errorMessage").text("密码不能包含中文");
+                $("#errorMessage").text("<fmt:message key="page.password.errorTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }else if($password.val() != $.trim($password.val())){
-                $("#errorMessage").text("密码不能包含空格");
+                $("#errorMessage").text("<fmt:message key="page.password.trimTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }else if($.trim($password.val()).length < 6){
-                $("#errorMessage").text("请输入6~24位密码");
+                $("#errorMessage").text("<fmt:message key="page.password.lengthTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }
 
             if (isEmpty($nickname.val())) {
-                $("#errorMessage").text("请输入昵称");
+                $("#errorMessage").text("<fmt:message key="page.nickname.tips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
             } else if ($nickname.val().indexOf(" ")!=-1) {
-                $("#errorMessage").text("昵称不能输入空格");
+                $("#errorMessage").text("<fmt:message key="page.nickname.trimTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
             } else if ($.trim($nickname.val()).length > 18) {
-                $("#errorMessage").text("昵称长度不能超过18位");
+                $("#errorMessage").text("<fmt:message key="page.nickname.lengthTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
@@ -156,7 +158,7 @@
                     }
                 },
                 error: function (a, n, e) {
-                    layer.msg("获取数据异常："+a + " - "+n+" - "+e);
+                    layer.msg("<fmt:message key="page.common.exception"/> ："+a + " - "+n+" - "+e);
                 }
             })
 
@@ -169,7 +171,7 @@
                 layer.closeAll();
                 window.open(url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("<fmt:message key="page.email.url.notfount"/>");
             }
         });
 

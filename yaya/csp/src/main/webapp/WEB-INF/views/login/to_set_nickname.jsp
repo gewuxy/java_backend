@@ -9,13 +9,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>手机登录-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <meta charset="UTF-8">
+    <title><fmt:message key="page.nickname.setting.title"/><fmt:message key="page.common.appName"/></title>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 
 <body>
@@ -35,17 +33,22 @@
                 <div class="col-lg-5 login-box-item">
 
                     <!--切换 输入昵称 -->
-                    <div class="login-box-main position-resetEmail-login" >
+                    <div class="login-box-main position-resetEmail-login">
                         <form action="${ctx}/mgr/login/addNickName" method="post" id="loginForm" name="loginForm">
-                        <input type="hidden" name="id" value="${id}">
-                        <div class="login-form-item">
+                            <input type="hidden" name="id" value="${id}">
+                            <div class="login-form-item">
                                 <label for="nickname" class="cells-block pr">
-                                    <input id="nickname" name="nickName" value="${nickName}" type="text" class="login-formInput" placeholder="昵称" maxlength="18">
+                                    <input id="nickname" name="nickName" value="${nickName}" type="text"
+                                           class="login-formInput"
+                                           placeholder="<fmt:message key="page.email.register.nickname"/>"
+                                           maxlength="18">
                                 </label>
-                                <span class="cells-block error ${not empty error ? '':'none'}" >
-                                    <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span>
+                                <span class="cells-block error ${not empty error ? '':'none'}">
+                                    <img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span
+                                        id="errorMessage">${error}</span>
                                 </span>
-                                <input id="submitBtn" type="button" class="button login-button buttonBlue last" value="确认提交">
+                                <input id="submitBtn" type="button" class="button login-button buttonBlue last"
+                                       value="<fmt:message key="page.common.submit.confirm"/>">
                             </div>
                         </form>
                     </div>
@@ -74,17 +77,17 @@
             var nick = $("#nickname").val();
 
             if (isEmpty(nick)) {
-                $("#errorMessage").text("请输入昵称");
+                $("#errorMessage").text("<fmt:message key="page.nickname.tips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#nickname").focus();
                 return false;
             } else if (nick.indexOf(" ") != -1) {
-                $("#errorMessage").text("昵称不能输入空格");
+                $("#errorMessage").text("<fmt:message key="page.nickname.trimTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#nickname").focus();
                 return false;
             } else if ($.trim(nick).length > 18) {
-                $("#errorMessage").text("昵称长度不能超过18位");
+                $("#errorMessage").text("<fmt:message key="page.nickname.lengthTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#nickname").focus();
                 return false;

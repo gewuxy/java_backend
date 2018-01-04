@@ -9,13 +9,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>邮箱登录-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+    <meta charset="UTF-8">
+    <title><fmt:message key="page.email.login.title"/><fmt:message key="page.common.appName"/></title>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 </head>
 <body>
 <div id="wrapper">
@@ -37,16 +35,26 @@
                         <form action="${ctx}/mgr/login" method="post" id="loginForm" name="loginForm">
                             <input type="hidden" name="thirdPartyId" value="7">
                             <div class="login-form-item">
+                                <%-- 英文 --%>
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="username" type="text" value="${email}" class="login-formInput" placeholder="邮箱地址">
+                                    <input id="email" name="username" type="text" value="${email}"
+                                           class="login-formInput"
+                                           placeholder="<fmt:message key="page.email.login.address"/>">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
-                                    <input type="text" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" name="password" type="password" required placeholder="输入6~24位密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input type="text" required
+                                           placeholder="<fmt:message key="page.email.login.password"/>"
+                                           class="login-formInput icon-register-hot last none" maxlength="24">
+                                    <input id="pwd" name="password" type="password" required
+                                           placeholder="<fmt:message key="page.email.login.password"/>"
+                                           class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
-                                <span class="cells-block error ${not empty error ? '':'none'}" ><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
-                                <input type="button" class="button login-button buttonBlue last" id="submitBtn" value="确认登录">
+                                <span class="cells-block error ${not empty error ? '':'none'} "><img
+                                        src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span
+                                        id="errorMessage">${error}</span></span>
+                                <input type="button" class="button login-button buttonBlue last" id="submitBtn"
+                                       value="<fmt:message key="page.email.login"/>">
                             </div>
                         </form>
                     </div>
@@ -55,7 +63,10 @@
                     <!--登录用-->
                     <div class="login-box-other">
                         <div class="login-box-other-info t-center">
-                            <a href="${ctx}/mgr/to/register" class="color-wathet-blue">我要注册</a><span class="muted">|</span><a href="${ctx}/mgr/to/reset/password" class="color-wathet-blue">忘记密码</a>
+                            <a href="${ctx}/mgr/to/register" class="color-wathet-blue"><fmt:message
+                                    key="page.email.login.register"/></a><span class="muted">|</span><a
+                                href="${ctx}/mgr/to/reset/password" class="color-wathet-blue"><fmt:message
+                                key="page.email.forget.password"/></a>
                         </div>
                     </div>
 
@@ -75,8 +86,8 @@
         const classPwdOn = "pwdChange-on";
         const classPwdOff = "pwdChange-off";
 
-        const userNameError = "请输入正确的邮箱地址";
-        const passWordError = "请输入正确的密码";
+        const userNameError = "<fmt:message key="page.email.login.userNameError"/>";
+        const passWordError = "<fmt:message key="page.email.login.passWordError"/>";
 
         //让背景撑满屏幕
         $('.login-banner').height($(window).height());

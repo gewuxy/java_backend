@@ -9,10 +9,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>发布会议-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-
+    <title><fmt:message key="page.meeting.title.publish"/> - <fmt:message key="page.common.appName"/></title>
 
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
@@ -21,7 +19,6 @@
     <link rel="stylesheet" href="${ctxStatic}/css/daterangepicker.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
 
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <style>
         html,body { background-color:#F7F9FB;}
     </style>
@@ -31,7 +28,7 @@
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
-
+        <c:set var="isZh" value="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}"/>
         <div class="page-width clearfix">
             <div class="admin-module clearfix item-radius">
                 <div class="row clearfix">
@@ -48,23 +45,23 @@
                                         >
                                             <div class="logo-watermark-main">
                                                 <c:if test="${packageId == 1}">
-                                                    <span class="logo-watermark-main-text logo-watermark-tips-hook" default-title='会讲'>${empty watermark?"会讲":empty watermark.name?"会讲":watermark.name}</span>
-                                                    <div class="logo-watermark-tips watermark-tips-hook">升级版本，可关闭/自定义水印</div>
+                                                    <span class="logo-watermark-main-text logo-watermark-tips-hook" default-title='${appName}'>${empty watermark? appName:empty watermark.name?appName:watermark.name}</span>
+                                                    <div class="logo-watermark-tips watermark-tips-hook"><fmt:message key="page.meeting.watermark.tips.upgrade"/></div>
                                                     <div class="logo-watermark-tips-border watermark-tips-hook"></div>
                                                 </c:if>
                                                 <c:if test="${packageId != 1}">
-                                                    <span class="logo-watermark-main-text" default-title='会讲'>${empty watermark?"会讲":empty watermark.name?"会讲":watermark.name}</span>
+                                                    <span class="logo-watermark-main-text" default-title='${appName}'>${empty watermark?appName:empty watermark.name?appName:watermark.name}</span>
                                                     <div class="logo-watermark-edit watermark-edit-hook">
                                                         <c:if test="${packageId == 3 || packageId == 4}">
                                                             <div class="logo-watermark-input">
                                                                 <label for="watermark-input">
-                                                                    <input type="text" name="" id="watermark-input" placeholder="输入水印" maxlength="18">
+                                                                    <input type="text" name="" id="watermark-input" placeholder="<fmt:message key='page.meeting.watermark.input.holder'/>" maxlength="18">
                                                                 </label>
                                                             </div>
                                                         </c:if>
                                                             <div class="logo-watermark-edit-position">
                                                                 <div class="logo-watermark-edit-position-title">
-                                                                    选择水印显示位置
+                                                                    <fmt:message key="page.meeting.watermark.position"/>
                                                                 </div>
                                                                 <div class="logo-watermark-edit-position-item">
                                                                     <label for="positionTopLeft" class="watermark-radio watermark-radio-topLeft ">
@@ -101,7 +98,7 @@
                                         <label for="uploadFile">
                                             <input type="file" name="file" class="none" id="uploadFile">
                                             <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
-                                            <p>或拖动PDF／PPT到此区域上传</p>
+                                            <p><fmt:message key="page.meeting.drag.upload"/></p>
                                         </label>
                                     </div>
                                 </c:otherwise>
@@ -109,27 +106,27 @@
 
                             <div class="upload-main">
                                 <div class="metting-progreesItem clearfix t-left none">
-                                    <span id="uploadAlt">上传进度</span> <span class="color-blue" id="progressS">0%</span>
+                                    <span id="uploadAlt"><fmt:message key="page.meeting.upload.progress"/></span> <span class="color-blue" id="progressS">0%</span>
                                     <p><span class="metting-progreesBar"><i style="width:0%" id="progressI"></i></span></p>
 
                                 </div>
                                 <div class="admin-button t-center">
                                 <c:choose>
                                     <c:when test="${not empty course.details}">
-                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span  class="button min-btn" >重新上传</span>&nbsp;&nbsp;&nbsp;</label>
-                                            <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn">编辑</a>
+                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span  class="button min-btn" ><fmt:message key="page.meeting.button.reload"/></span>&nbsp;&nbsp;&nbsp;</label>
+                                            <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn"><fmt:message key="page.meeting.button.edit"/></a>
                                     </c:when>
                                     <c:otherwise>
-                                        <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span  class="button color-blue min-btn">上传演讲文档</span></label>
+                                        <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span  class="button color-blue min-btn"><fmt:message key="page.meeting.upload.doc"/></span></label>
 
                                     </c:otherwise>
                                 </c:choose>
                                 </div>
                                 <c:if test="${empty course.details}">
-                                    <p class="color-gray-02">选择小于100M的文件</p>
+                                    <p class="color-gray-02"><fmt:message key="page.meeting.upload.limit100"/></p>
                                 </c:if>
 
-                                <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请上传演讲文档</span>
+                                <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.upload.warn.nofile"/></span>
                             </div>
                         </div>
                     </div>
@@ -138,30 +135,30 @@
                             <input type="hidden" name="course.id" value="${course.id}">
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
-                            <input type="hidden" name="watermark.name" id="name" value="会讲">
+                            <input type="hidden" name="watermark.name" id="name" value="${appName}">
                             <div class="meeting-form-item login-form-item">
-                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="会议名称" value="${course.title}"></label>
-                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议名称</span>
+                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"></label>
+                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.update.warn.notitle"/></span>
 
                                 <div class="textarea">
                                     <textarea name="course.info" id="courseInfo" cols="30" maxlength="600" rows="10">${course.info}</textarea>
                                     <p class="t-right" id="leftInfoCount">600</p>
                                 </div>
-                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入会议简介</span>
+                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.update.warn.noinfo"/></span>
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject">分类&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? courseCategory.parent.nameCn : rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
+                                    <span class="subject"><fmt:message key="page.meeting.tab.category"/>&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? (isZh ? courseCategory.parent.nameCn:courseCategory.parent.nameEn) : (isZh ? rootList[0].nameCn:rootList[0].nameEn)}</i></span><span class="office" id="subCategory">${empty course.category ? (isZh ? subList[0].nameCn : subList[0].nameEn) : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
-                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameCn}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZH ? subList[0].nameCn : subList[0].nameEn)}">
                                 </div>
                                 <c:if test="${ not empty course.details && packageId > 1}">
                                     <div class="cells-block meeting-watermark">
-                                        <span class="subject">水印&nbsp;&nbsp;<em class="muted">|</em>
+                                        <span class="subject"><fmt:message key="page.meeting.watermark"/>&nbsp;&nbsp;<em class="muted">|</em>
                                             <c:if test="${packageId == 2}">
-                                                <input type="text" class="classify-inputText expert-text"  placeholder="会讲" id="waterName" value="${empty watermark ? "会讲":empty watermark.name ?"会讲":watermark.name}" disabled >
+                                                <input type="text" class="classify-inputText expert-text"  placeholder="${appName}" id="waterName" value="${empty watermark ? appName:empty watermark.name ?appName:watermark.name}" disabled >
                                             </c:if>
                                             <c:if test="${packageId > 2}">
-                                                <input type="text" class="classify-inputText" placeholder="输入水印" id="waterName"  value="${empty watermark ? "会讲":watermark.name}" maxlength="18">
+                                                <input type="text" class="classify-inputText" placeholder="<fmt:message key='page.meeting.watermark.input.holder'/>" id="waterName"  value="${empty watermark ? appName:watermark.name}" maxlength="18">
                                             </c:if>
                                             <div class="weui-cell__ft">
                                                 <label for="switchCP" class="mui-switch-box">
@@ -179,12 +176,12 @@
                                     <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}" >
                                         <input id="recorded" type="radio" class="course_play" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
-                                        <div class="meeting-tab-btn"><i></i>投屏录播</div>
+                                        <div class="meeting-tab-btn"><i></i><fmt:message key="page.meeting.tab.screen_record"/></div>
 
                                     </label>
                                     <label for="live" class="live-btn ${course.playType > 0 ? 'cur' : ''}" >
                                         <input id="live" type="radio" class="course_play" name="course.playType" value="1" ${course.playType > 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
-                                        <div class="meeting-tab-btn"><i></i>投屏直播</div>
+                                        <div class="meeting-tab-btn"><i></i><fmt:message key="page.meeting.tab.screen_live"/></div>
 
                                     </label>
                                     <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
@@ -193,12 +190,12 @@
                                             <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="liveTimeSelector" id="timeStart">
-                                                                    时间<input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="开始时间 - 结束时间"
-                                                                             <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> 至 <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
+                                                                    <fmt:message key="page.common.time"/><input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="<fmt:message key='page.common.time.start'/> - <fmt:message key='page.common.time.start'/>"
+                                                                             <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> - <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
-                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;开始时间至少为发布当天后一天的0点，时长最长24小时</span>
+                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.tips.time_limit"/></span>
                                                 <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
                                                 <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
                                             </div>
@@ -208,18 +205,18 @@
                                     <div class="cells-block clearfix checkbox-box" style="display: block;">
                                                     <span class="checkboxIcon">
                                                         <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} >
-                                                        <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;开启视频直播</label>
+                                                        <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;<fmt:message key="page.meeting.live.flag"/></label>
                                                     </span>
                                         <div class="checkbox-main">
-                                            <p>直播码率为500kbps的情况下，直播时长为1小时，观看人数为100人，则消耗的流量约为：22.5GB</p>
-                                            <div class="text">流量剩余<span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook">立即充值</a></div>
+                                            <p><fmt:message key="page.meeting.live.flux_tips"/></p>
+                                            <div class="text"><fmt:message key="page.meeting.live.flux_balance"/><span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook"><fmt:message key="page.charge.recharge"/></a></div>
                                         </div>
                                     </div>
                                 </div>
                                 </div>
 
                                 <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
-                                <input type="button" class="button login-button buttonBlue last" value="确认提交">
+                                <input type="button" class="button login-button buttonBlue last" value="<fmt:message key='page.common.submit.confirm'/>">
                             </div>
                         </form>
                     </div>
@@ -234,7 +231,7 @@
 <div class="meeting-classify-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
-            <strong>选择分类</strong>
+            <strong><fmt:message key="page.meeting.category.choose"/></strong>
             <div class="layui-layer-close" onclick="layer.closeAll()"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-main ">
@@ -264,7 +261,7 @@
                                             <c:if test="${status.index == 0}">class="cur"</c:if>
                                         </c:otherwise>
                                     </c:choose>
-                                ><a href="javascript:void (0);">${c.nameCn}</a></li>
+                                ><a href="javascript:void (0);">${isZh ? c.nameCn : c.nameEn}</a></li>
                             </c:forEach>
                         </ul>
                     </div>
@@ -288,7 +285,7 @@
                                 </c:choose>
 
                                 <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if>
-                            ><a href="javascript:void (0);">${cc.nameCn}</a></li>
+                            ><a href="javascript:void (0);">${isZh ? cc.nameCn : cc.nameEn}</a></li>
                             </c:forEach>
 
                         </ul>
@@ -308,10 +305,10 @@
         </div>
         <div class="layer-hospital-popup-main ">
                 <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <p><fmt:message key="page.words.charge.tips"/></p>
                     <div class="admin-button t-right">
-                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="我已付款成功">
+                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.words.charge.problem"/></a>
+                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="<fmt:message key='page.words.charge.success'/>">
                     </div>
                 </div>
 
@@ -360,12 +357,12 @@
     function uploadFile(f){
         var fSize = fileSize(f);
         if (fSize > file_size_limit){
-            layer.msg("请上传小于100M的文件");
+            layer.msg("<fmt:message key='page.meeting.upload.limit100'/>");
             return false;
         }
         var fileName = $(f).val().toLowerCase();
         if (!fileName.endWith(".ppt") && !fileName.endWith(".pptx") && !fileName.endWith(".pdf")){
-            layer.msg("请选择ppt|pptx|pdf格式文件");
+            layer.msg("<fmt:message key='page.meeting.warn.format'/>");
             return false;
         }
         var index = layer.load(1, {
@@ -419,7 +416,7 @@
     function showConvertProgress(){
         $.get('${ctx}/mgr/meet/convert/progress', {}, function (data) {
             console.log("convert progress = "+data.data.progress);
-            $("#uploadAlt").text("转换进度");
+            $("#uploadAlt").text("<fmt:message key='page.meeting.convert.progress'/>");
             $("#progressS").text(data.data.progress);
             $("#progressI").css("width", data.data.progress);
             if (data.data.progress.indexOf("100") != -1){
@@ -479,13 +476,13 @@
         function uploadByDrag(f){
 
             if (!f.name.endWith(".ppt") && !f.name.endWith(".pptx") && !f.name.endWith(".pdf")){
-                layer.msg("请选择ppt|pptx|pdf格式文件");
+                layer.msg("<fmt:message key='page.meeting.warn.format'/>");
                 return false;
             }
 
             var filesize = Math.floor((f.size)/1024);
             if(filesize>file_size_limit){
-                layer.msg("上传大小不能超过100M.");
+                layer.msg("<fmt:message key='page.meeting.upload.limit100'/>");
                 return false;
             }
 
@@ -591,7 +588,7 @@
                     remainFlux = data.data;
                 });
                 if(remainFlux < 10){
-                    layer.msg("剩余流量需在10G以上才能开启视频直播");
+                    layer.msg("<fmt:message key='page.meeting.flux.minlimit'/>");
                     return ;
                 }
             }
@@ -619,7 +616,7 @@
                     $("#state").val(watermark.state);
                 }else{
                     $("#direction").val(2);
-                    $("#name").val("会讲");
+                    $("#name").val("${appName}");
                     $("#state").val(1);
                 }
             }else{
@@ -631,10 +628,10 @@
                     if(${not empty watermark}){
                         $("#name").val('${watermark.name}');
                     }else{
-                        $("#name").val("会讲");
+                        $("#name").val("${appName}");
                     }
                 }else{
-                    $("#name").val($("#waterName").val() == '' ? "会讲":$("#waterName").val());
+                    $("#name").val($("#waterName").val() == '' ? "${appName}":$("#waterName").val());
                 }
             }
             $("#courseForm").submit();
@@ -694,7 +691,7 @@
             showShortcuts: false,
             showTopbar: false,
             startOfWeek: 'monday',
-            separator : ' 至 ',
+            separator : ' - ',
             format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
             startDate:new Date(),
@@ -706,7 +703,7 @@
             console.log('first-date-selected',obj);
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
-            var timeArray = obj.value.split(" 至 ");
+            var timeArray = obj.value.split(" - ");
             $("#liveStartTime").val(timeArray[0]);
             $("#liveEndTime").val(timeArray[1]);
             $(this).find('input').val(obj.value);
@@ -739,7 +736,7 @@
         var watermarkItemEditBr = watermarkItem.find('.watermark-edit-hook');
         var watermarkRadio = watermarkItem.find('.watermark-radio');
         var watermarkIsShow = false;
-        var defaultTitle = "会讲"
+        var defaultTitle = "${appName}"
 
         $('.logo-watermark-tips-hook').hover(function(){
             $('.watermark-tips-hook').show();
