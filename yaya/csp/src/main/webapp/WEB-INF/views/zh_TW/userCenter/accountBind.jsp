@@ -82,7 +82,7 @@
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty YaYa ?"未綁定":"Login with Jingxin Digital Platform"}</span>
+                                        <span class="main">${empty YaYa ?"未綁定":"敬信數字平臺"}</span>
                                     </li>
                                 </ul>
                                 <span class="line-bg"></span>
