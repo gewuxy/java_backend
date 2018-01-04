@@ -397,7 +397,7 @@ public class UserCenterController extends CspBaseController {
             throw new SystemException(local("download.fail"));
         }
         //打开下载框
-        DownloadUtils.openDownloadBox(meetName, response, live.getReplayUrl());
+        DownloadUtils.openDownloadBox(meetName, response, fileBase + live.getReplayUrl());
 
     }
 
@@ -459,11 +459,9 @@ public class UserCenterController extends CspBaseController {
                 model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
             }
         }
-        String local = "";
+        String local = local("page.remind.limit.meet", new Object[]{cspPackage.getLimitMeets()});
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
-        for (CspPackageInfo cspPackageInfo: cspPackageInfos) {
-            local = local("page.remind.limit.meet", new Object[]{cspPackageInfo.getLimitMeets()});
-        }
+
         model.addAttribute("limitMeets",local);
         model.addAttribute("cspPackageInfos", cspPackageInfos);
         model.addAttribute("cspUserPackage",cspUserPackage);

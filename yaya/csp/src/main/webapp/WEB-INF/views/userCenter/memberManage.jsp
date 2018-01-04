@@ -171,7 +171,7 @@
                                         <p class="color-gray-03"><fmt:message key="page.remind.member.descript.watermark.switch"/></p>
                                         </li>
                                         </c:if>
-                                            <c:if test="${info.iden =='SYB' && info.state == true}">
+                                            <c:if test="${info.iden =='SYB' && info.state == true && info.packageId != 3}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
                                                     <p><fmt:message key="page.remind.member.descript.watermark.switch"/></p>
