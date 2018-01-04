@@ -107,34 +107,34 @@
                 $password.focus();
                 return false;
             } else if(isChinesePassword($.trim($password.val()))){
-                $("#errorMessage").text("<fmt:message key="page.password.errorTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.password.errorTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }else if($password.val() != $.trim($password.val())){
-                $("#errorMessage").text("<fmt:message key="page.password.trimTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.password.trimTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }else if($.trim($password.val()).length < 6){
-                $("#errorMessage").text("<fmt:message key="page.password.lengthTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.password.lengthTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $password.focus();
                 return false;
             }
 
             if (isEmpty($nickname.val())) {
-                $("#errorMessage").text("<fmt:message key="page.nickname.tip"/>");
+                $("#errorMessage").text("<fmt:message key="page.nickname.tips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
             } else if ($nickname.val().indexOf(" ")!=-1) {
-                $("#errorMessage").text("<fmt:message key="page.nickname.trimTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.nickname.trimTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;
             } else if ($.trim($nickname.val()).length > 18) {
-                $("#errorMessage").text("<fmt:message key="page.nickname.lengthTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.nickname.lengthTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $nickname.focus();
                 return false;

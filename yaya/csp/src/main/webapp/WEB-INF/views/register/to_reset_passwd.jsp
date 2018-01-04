@@ -54,7 +54,7 @@
                                         <c:when test="${csp_locale eq 'en_US'}"><p style="font-size:16px;"></c:when>
                                         <c:otherwise><p></c:otherwise>
                                     </c:choose>
-                                    <fmt:message key="page.reset.password.tip"/></p>
+                                    <fmt:message key="page.reset.password.tips"/></p>
                                 </div>
                                 <input id="toEmailUrl" type="button" class="button login-button buttonBlue last" value="<fmt:message key="page.email.register.toEmail"/>">
                             </div>
@@ -100,7 +100,7 @@
                     }
                 },
                 error: function (a, n, e) {
-                    alert("<fmt:message key="page.common.exception">："+a + " - "+n+" - "+e);
+                    alert("<fmt:message key="page.common.exception"/>"+"："+a + " - "+n+" - "+e);
                 }
             })
         });

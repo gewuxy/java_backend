@@ -10,8 +10,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>个人中心 - 会员权限</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.title.user.title"/> - <fmt:message key="page.title.authority"/></title>
     <%--<link rel="SHORTCUT ICON" href="./images/v2/icon.ico" />--%>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -19,7 +19,6 @@
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
@@ -54,7 +53,7 @@
                             <div class="member-mode-header clearfix">
                                 <div class="fr">
                                     <div class="resource-label">
-                                        <c:if test="${cspPackage.packageCn == '标准版' || cspPackage.packageCn == '高级版'}" >
+                                        <c:if test="${cspPackage.id == 1 || cspPackage.id == 2}" >
                                             <span>
                                                     <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets}">
                                                         <i class="hot" style="color: red">
@@ -68,45 +67,59 @@
                                                 </c:if>
                                                 <i class="muted">|</i>${cspPackage.limitMeets}</span>
                                         </c:if>
-                                        <c:if test="${cspPackage.packageCn == '专业版'}">
+                                        <c:if test="${cspPackage.id == 3}">
                                             <span><i class="hot">${cspPackage.usedMeetCount + cspPackage.hiddenMeetCount}</i><i class="muted">|</i>∞</span>
                                         </c:if>
                                     </div>
-                                    <p class="t-center">会议数量</p>
+                                    <p class="t-center"><fmt:message key="page.remind.meet.count"/></p>
                                 </div>
                                 <div class="fl">
                                     <div class="clearfix">
                                         <div class="fl"></div>
-                                            <c:if test="${cspPackage.packageCn == '标准版'}">
+                                            <c:if test="${cspPackage.id == 1}">
                                         <div class="oh">
-                                                <h5 class="title">${cspPackage.packageCn}</h5>
-                                                <div class="member-mode-tips">已生效</div>
+                                                <h5 class="title"><fmt:message key="package.standard"/></h5>
+                                                <div class="member-mode-tips"><fmt:message key="page.remind.standard.time"/></div>
                                         </div>
                                             </c:if>
-                                        <c:if test="${cspPackage.packageCn == '专业版'}">
+                                        <c:if test="${cspPackage.id == 3}">
                                             <c:if test="${cspUserPackage.unlimited == true}">
                                             <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
                                             <div class="oh">
-                                                <h5 class="title">${cspPackage.packageCn}</h5>
-                                                <div class="member-mode-tips">专业版已生效</div>
+                                                <h5 class="title"><fmt:message key="package.professional"/></h5>
+                                                <div class="member-mode-tips"><fmt:message key="page.remind.professional.time"/></div>
                                             </div>
                                             </c:if>
                                         </c:if>
-                                        <c:if test="${ cspPackage.packageCn == '专业版'}">
+                                        <c:if test="${ cspPackage.id == 3}">
                                         <c:if test="${cspUserPackage.unlimited == false}">
                                             <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
                                             <div class="oh">
-                                                <h5 class="title">${cspPackage.packageCn}</h5>
-                                                <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                <h5 class="title"><fmt:message key="package.professional"/></h5>
+                                                <c:choose>
+                                                    <c:when test="${ cspPackage.packageCn == '专业版' || cspPackage.packageTw == '專業版'}">
+                                                        <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="member-mode-tips">${startTime}~${endTime}</div>
+                                                    </c:otherwise>
+                                                </c:choose>
                                             </div>
                                             </c:if>
                                         </c:if>
 
-                                            <c:if test="${cspPackage.packageCn == '高级版' }">
+                                            <c:if test="${cspPackage.id == 2 }">
                                                 <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
                                                     <div class="oh">
-                                                        <h5 class="title">${cspPackage.packageCn}</h5>
-                                                        <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                        <h5 class="title"><fmt:message key="package.premium"/></h5>
+                                                        <c:choose>
+                                                            <c:when test="${ cspPackage.packageCn == '高级版' || cspPackage.packageTw == '高級版'}">
+                                                                <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                            </c:when>
+                                                            <c:otherwise>
+                                                                <div class="member-mode-tips">${startTime}~${endTime}</div>
+                                                            </c:otherwise>
+                                                        </c:choose>
                                                     </div>
                                             </c:if>
                                     </div>
@@ -119,46 +132,46 @@
                                         <c:if test="${info.iden =='LB'}">
                                         <li>
                                             <p><img src="${ctxStatic}/images/member-icon-01.png" alt=""></p>
-                                            <p>${info.descriptCn}</p>
+                                            <p><fmt:message key="page.remind.member.descript.record"/></p>
                                         </li>
                                         </c:if>
                                         <c:if test="${info.iden =='ZB'}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-02.png" alt=""></p>
-                                        <p>${info.descriptCn}</p>
+                                        <p><fmt:message key="page.remind.member.descript.live"/></p>
                                         </li>
                                         </c:if>
                                         <c:if test="${info.iden =='ZB' && info.packageId != 3}"><li>
                                         <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                        <p>${info.limitMeets}个会议</p>
+                                        <p>${limitMeets}</p>
                                         </li>
                                         </c:if>
                                         <c:if test="${info.iden =='ZB' && info.packageId == 3}"><li>
                                             <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                            <p>无限会议</p>
+                                            <p><fmt:message key="page.remind.professional.ads"/></p>
                                           </li>
                                         </c:if>
                                         <c:if test="${info.iden =='GG' && info.state == false}">
                                         <li>
                                         <p><img src="${ctxStatic}/images/member-icon-03-not.png" alt=""></p>
-                                        <p class="color-gray-03">${info.descriptCn}</p>
+                                        <p class="color-gray-03"><fmt:message key="page.remind.member.descript.ads"/></p>
                                         </li>
                                         </c:if>
                                             <c:if test="${info.iden =='GG' && info.state == true}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-03.png" alt=""></p>
-                                                    <p>${info.descriptCn}</p>
+                                                    <p><fmt:message key="page.remind.member.descript.ads"/></p>
                                                 </li>
                                             </c:if>
                                         <c:if test="${info.iden =='SYB' && info.state == false}">
                                         <li>
                                         <p><img src="${ctxStatic}/images/member-icon-04-not.png" alt=""></p>
-                                        <p class="color-gray-03">${info.descriptCn}</p>
+                                        <p class="color-gray-03"><fmt:message key="page.remind.member.descript.watermark.switch"/></p>
                                         </li>
                                         </c:if>
                                             <c:if test="${(info.iden =='SY' && info.state == true) || (info.iden =='SY' && info.packageId == 3)}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
-                                                    <p>${info.descriptCn}</p>
+                                                    <p><fmt:message key="page.remind.member.descript.watermark"/></p>
                                                 </li>
                                             </c:if>
                                         </c:forEach>
@@ -166,8 +179,8 @@
                                 </div>
                             </div>
                             <div class="member-mode-footer member-footer-position t-center">
-                                <a href="javascript:;" type="button" class="button login-button buttonBlue member-buy-hook" id="btn">升级续费</a>
-                                <p><a href="${ctx}/index/17103116063862386794" target="_blank">有疑问，帮助中心</a></p>
+                                <a href="javascript:;" type="button" class="button login-button buttonBlue member-buy-hook" id="btn"><fmt:message key="page.button.up.package"/></a>
+                                <p><a href="${ctx}/index/17103116063862386794" target="_blank"><fmt:message key="page.question.help"/></a></p>
                             </div>
                         </div>
                     </div>
@@ -177,7 +190,7 @@
     </div>
     <div class="admin-bottom">
         <div class="page-width clearfix">
-            <p class="t-center">粤ICP备12087993号 © 2012-2017 敬信科技 版权所有 </p>
+            <p class="t-center"><fmt:message key="page.foot.company.message"/></p>
         </div>
     </div>
 </div>
@@ -191,10 +204,10 @@
         <div class="layer-hospital-popup-main ">
             <form >
                 <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
+                    <p><fmt:message key="page.remind.pay"/></p>
                     <div class="admin-button t-right">
-                        <a href="${ctx}/mgr/user/memberManage"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已付款成功">
+                        <a href="${ctx}/mgr/user/memberManage"  class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.remind.pay.question"/></a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="<fmt:message key='page.remind.pay.success'/>">
                     </div>
                 </div>
             </form>
@@ -215,7 +228,7 @@
                     <p id="backMsg"></p>
                 </div>
                 <div class="admin-button t-right">
-                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="知道了"/>
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="<fmt:message key='page.button.pay.tips'/>"/>
                 </div>
             </form>
         </div>
