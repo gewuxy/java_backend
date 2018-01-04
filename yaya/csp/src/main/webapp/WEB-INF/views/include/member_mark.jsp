@@ -3,16 +3,28 @@
 <html lang="en" >
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
+    <c:set var="isCN" value="${csp_locale eq 'zh_CN'}"/>
     <style>
         html { background: #fff; }
         body { min-width: auto;}
+
+        <c:choose>
+            <c:when test="${csp_locale eq 'en_US'}">
+        .member-popup-box { display: block;}
+        .user-content .time-mode-list .item{display: inline-block; padding:5px 5px; margin: 0 25px 5px 5px; width:100px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
+        .user-content .time-mode-list .pay-on {  border:2px solid #167AFE; }
+        .user-content .time-mode-list { padding:0;}
+        .member-buy-content .user-content .time-mode-list .item {  padding:5px 5px ; margin:0 10px;}
+            </c:when>
+            <c:otherwise>
         .member-popup-box { display: block;}
         .user-content .time-mode-list .item{display: inline-block; padding:5px 10px; margin: 0 25px 5px 5px; width:100px; text-align: center; border:2px solid #fff;   vertical-align: top; cursor: pointer;}
         .user-content .time-mode-list .pay-on {  border:2px solid #167AFE; }
         .user-content .time-mode-list { padding:0;}
         .member-buy-content .user-content .time-mode-list .item {  padding:5px 10px ; margin:0 10px;}
+        </c:otherwise>
+        </c:choose>
+
     </style>
     <script>
         var selectPk = 1;  //当前选中的套餐
@@ -64,7 +76,7 @@
             ajaxSyncGet('${ctx}/mgr/pay/package', {}, function (data) {
                 var course = data.data;
                 if (course == undefined) {
-                    layer.msg("获取套餐信息失败，请刷新重试");
+                    layer.msg("<fmt:message key='page.package.warn.load'/>");
                     return false;
                 }
                 //初始化套餐选择
@@ -133,29 +145,42 @@
             })
         })
 
+        var danwei = '<fmt:message key="page.words.charge.currency"/>';
         //加载选购套餐信息
         function initSwiper(course) {
             var package = course.packages;
             for (var i = 0; i < package.length; i++) {
                 var packageId = package[i].id;
+                var money = package[i].monthRmb;
+                var money_year = package[i].yearRmb;
+                if("${isCN}" == "false"){
+                    money = package[i].monthUsd;
+                    money_year = package[i].yearUsd;
+                }
                 if (packageId == 2) {
-                    $("#price" + packageId).html(package[i].monthRmb + "元");
-                    $("#hgTotal").html(package[i].monthRmb);
+                    $("#price" + packageId).html(money + danwei);
+                    $("#hgTotal").html(money);
                 }
                 if (packageId == 3) {
-                    $("#price" + packageId).html(package[i].monthRmb + "元/" + package[i].yearRmb + "元");
-                    $("#pfTotal").html(package[i].monthRmb);
+                    $("#price" + packageId).html(money + "/" + money_year + danwei);
+                    $("#pfTotal").html(money);
                 }
-                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "不限会议" : package[i].limitMeets + "个会议");
+                $("#meets" + packageId).html(package[i].limitMeets == 0 ? "<fmt:message key='page.package.unlimit.meets'/>" : package[i].limitMeets + "<fmt:message key='page.package.meet.unit'/>");
             }
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
                 var id = info[j].packageId;
+                var description = info[j].descriptCn;
+                if ("${csp_locale eq 'zh_TW'}" == "true"){
+                    description = info[j].descriptTw;
+                } else if ("${csp_locale eq 'en_US'}" == "true"){
+                    description = info[j].descriptUs;
+                }
                 if (info[j].state == true) {
                     if(info[j].iden == "SYB" && id == 3){
                         break;
                     }
-                    $("#info" + id).append('<li class="icon-li-selected">' + info[j].descriptCn + '</li>');
+                    $("#info" + id).append('<li class="icon-li-selected">' + description + '</li>');
                 }
             }
         }
@@ -164,19 +189,20 @@
 <body>
 <!--弹出购买会员项-->
 <div class="member-popup-box">
+
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-main member-buy-popup-main">
             <div class="member-buy-header">
-                <h6 class="title">请选择您购买的套餐</h6>
+                <h6 class="title"><fmt:message key="page.package.tips.title"/></h6>
                 <div class="member-buy-tabs-menu clearfix" >
                     <div class="index-buy-item ">
                         <div class="index-buy-header">
-                            <h4>标准版</h4>
-                            <h3 class="price">免费</h3>
+                            <h4><fmt:message key="page.package.edition.standard"/></h4>
+                            <h3 class="price"><fmt:message key="page.package.free"/></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>不限时长</p>
+                                <p><fmt:message key="page.package.unlimit.time"/></p>
                                 <p id="meets1"></p>
                             </div>
                             <div class="index-buy-text">
@@ -187,12 +213,12 @@
                     </div>
                     <div class="index-buy-item  index-buy-item-current">
                         <div class="index-buy-header">
-                            <h4>高级版</h4>
+                            <h4><fmt:message key="page.package.edition.premium"/></h4>
                             <h3 class="price" id="price2"></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>1个月有效</p>
+                                <p><fmt:message key="page.package.eidtion.premium.validity"/></p>
                                 <p id="meets2"></p>
                             </div>
                             <div class="index-buy-text">
@@ -203,13 +229,13 @@
                     </div>
                     <div class="index-buy-item last">
                         <div class="index-buy-header">
-                            <h4>专业版</h4>
+                            <h4><fmt:message key="page.package.edition.professional"/></h4>
                             <h3 class="price" id="price3"></h3>
                         </div>
                         <div class="index-buy-main">
                             <div class="index-buy-info">
-                                <p>1个月/1年有效</p>
-                                <p id="meets3">不限会议</p>
+                                <p><fmt:message key="page.package.edition.professional.validity"/> </p>
+                                <p id="meets3"><fmt:message key="page.package.unlimit.meets"/></p>
                             </div>
                             <div class="index-buy-text">
                                 <ul id="info3">
@@ -223,28 +249,28 @@
                 <div class="member-buy-content">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买时长</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.buy.time"/></div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="tid1" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="tid1">
-                                        1个月
+                                        1<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="tid2" class="item item-radius">
                                         <input type="radio" name="payMode" class="none" value="3" id="tid2">
-                                        3个月
+                                        3<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="tid3" class="item item-radius">
                                         <input type="radio" name="payMode" class="none" value="6" id="tid3">
-                                        6个月
+                                        6<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow" >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.charge.type"/></div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook ${!isCN ? 'none' : ''}">
                                     <label for="id11" class="item item-radius pay-on">
                                         <input type="radio" name="payMode" class="none" value="1" id="id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -254,7 +280,7 @@
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
+                                <div class="pay-mode-list EN-hook ${isCN ? 'none' : ''}">
                                     <label for="id31" class="item item-radius  pay-on">
                                         <input type="radio" name="pfPayMode" class="none" value="5" id="id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
@@ -263,24 +289,24 @@
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.pay.money"/></div>
                             <div class="formControls">
                                 <span class="payNum">0.00</span>
                                 <span class="money-state">
-                                        <label for="currency-cn" class="cn on">
-                                            <input type="radio" name="currency" id="currency-cn" checked="checked" class="none" value="0">
+                                        <label for="currency-cn" class="cn ${isCN ? 'on':''}">
+                                            <input type="radio" name="currency" id="currency-cn" ${isCN ? 'checked':''} class="none" value="0">
                                             CNY
                                         </label>
-                                        <label for="currency-en" class="en">
-                                            <input type="radio" name="currency" id="currency-en" class="none" value="1">
+                                        <label for="currency-en" class="en ${!isCN ? 'on':''}">
+                                            <input type="radio" name="currency" id="currency-en" ${!isCN ? 'checked':''} class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last" id="newUser">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="免费体验">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;"><fmt:message key="page.button.cancel"/></a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="<fmt:message key='page.button.taste'/>">
                         </div>
                         <div id="disabledItem1"></div>
                     </div>
@@ -288,28 +314,28 @@
                 <div class="member-buy-content none" id="hgView">
                     <div class="user-content item-radius pay-mode member-buy-disabled">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买时长</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.buy.time"/></div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="2tid1" class="item item-radius pay-on">
                                         <input type="radio" name="hgTimeMode" class="none" checked="checked" value="1" id="2tid1">
-                                        1个月
+                                        1<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="2tid2" class="item item-radius">
                                         <input type="radio" name="hgTimeMode" class="none" value="3" id="2tid2">
-                                        3个月
+                                        3<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="2tid3" class="item item-radius">
                                         <input type="radio" name="hgTimeMode" class="none" value="6" id="2tid3">
-                                        6个月
+                                        6<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.charge.type"/></div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook ${!isCN ? 'none' : ''}">
                                     <label for="2id11" class="item item-radius  pay-on">
                                         <input type="radio" name="hgPayMode" class="none" checked="checked" value="alipay_pc_direct" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -319,7 +345,7 @@
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
+                                <div class="pay-mode-list EN-hook ${isCN ? 'none' : ''}">
                                     <label for="2id31" class="item item-radius pay-on">
                                         <input type="radio" name="pfPayMode" class="none" value="paypal" id="2id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
@@ -328,24 +354,24 @@
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.pay.money"/></div>
                             <div class="formControls">
                                 <span class="payNum" id="hgTotal"></span>
                                 <span class="money-state">
-                                        <label for="currency-cn2" class="cn on">
-                                            <input type="radio" name="hgCurrency" id="currency-cn2" checked="checked" class="none" value="0">
+                                        <label for="currency-cn2" class="cn ${isCN ? 'on':''}">
+                                            <input type="radio" name="hgCurrency" id="currency-cn2" ${isCN ? 'checked':''} class="none" value="0">
                                             CNY
                                         </label>
-                                        <label for="currency-en2" class="en">
-                                            <input type="radio" name="hgCurrency" id="currency-en2" class="none" value="1">
+                                        <label for="currency-en2" class="en ${!isCN ? 'on':''}">
+                                            <input type="radio" name="hgCurrency" id="currency-en2" ${!isCN ? 'checked':''} class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;"><fmt:message key="page.button.cancel"/></a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="<fmt:message key='page.package.pay.confirm'/>">
                         </div>
                         <div id="disabledItem2"></div>
                     </div>
@@ -353,40 +379,40 @@
                 <div class="member-buy-content none" id="pfView">
                     <div class="user-content item-radius pay-mode">
                         <div class="formrow">
-                            <div class="formTitle color-black">购买时长</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.buy.time"/> </div>
                             <div class="formControls">
                                 <div class="time-mode-list">
                                     <label for="3tid1" class="item item-radius pay-on">
                                         <input type="radio" name="pfTimeMode" class="none"  checked="checked"  value="1" id="3tid1" >
-                                        1个月
+                                        1<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="3tid2" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="3" id="3tid2">
-                                        3个月
+                                        3<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="3tid3" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="6" id="3tid3">
-                                        6个月
+                                        6<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
                                     <label for="3tid4" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="12" id="3tid4">
-                                        1年
+                                        1<fmt:message key="page.package.validity.unit.year"/>
                                     </label>
                                     <label for="3tid5" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="24" id="3tid5">
-                                        2年
+                                        2<fmt:message key="page.package.validity.unit.year"/>
                                     </label>
                                     <label for="3tid6" class="item item-radius">
                                         <input type="radio" name="pfTimeMode" class="none" value="36" id="3tid6">
-                                        3年
+                                        3<fmt:message key="page.package.validity.unit.year"/>
                                     </label>
                                 </div>
                             </div>
                         </div>
                         <div class="formrow " >
-                            <div class="formTitle color-black">充值方式</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.charge.type"/></div>
                             <div class="formControls">
-                                <div class="pay-mode-list CN-hook">
+                                <div class="pay-mode-list CN-hook  ${!isCN ? 'none' : ''}">
                                     <label for="3id11" class="item item-radius  pay-on">
                                         <input type="radio" name="pfPayMode" class="none"  checked="checked" value="alipay_pc_direct" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -396,7 +422,7 @@
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
                                 </div>
-                                <div class="pay-mode-list EN-hook none">
+                                <div class="pay-mode-list EN-hook  ${isCN ? 'none' : ''}">
                                     <label for="3id31" class="item item-radius pay-on">
                                         <input type="radio" name="pfPayMode" class="none" value="paypal" id="3id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
@@ -405,24 +431,24 @@
                             </div>
                         </div>
                         <div class="formrow money">
-                            <div class="formTitle color-black">支付金额</div>
+                            <div class="formTitle color-black"><fmt:message key="page.package.pay.money"/></div>
                             <div class="formControls">
                                 <span class="payNum" id="pfTotal"></span>
                                 <span class="money-state">
-                                        <label for="currency-cn3" class="cn on">
-                                            <input type="radio" name="pfCurrency" id="currency-cn3" checked="checked" class="none" value="0">
+                                        <label for="currency-cn3" class="cn ${isCN ? 'on':''}">
+                                            <input type="radio" name="pfCurrency" id="currency-cn3" ${isCN ? 'checked':''} class="none" value="0">
                                             CNY
                                         </label>
-                                        <label for="currency-en3" class="en">
-                                            <input type="radio" name="pfCurrency" id="currency-en3" class="none" value="1">
+                                        <label for="currency-en3" class="en ${!isCN ? 'on':''}">
+                                            <input type="radio" name="pfCurrency" id="currency-en3" ${!isCN ? 'checked':''} class="none" value="1">
                                             USD
                                         </label>
                                     </span>
                             </div>
                         </div>
                         <div class="formrow t-center last">
-                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;">取消</a>
-                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="确认支付">
+                            <a href="javascript:;" class="button login-button layui-layer-close" style="position: relative; z-index:3;top:0;"><fmt:message key="page.button.cancel"/></a>
+                            <input href="#" type="button" class="button login-button buttonBlue cancel-hook last" name="commitPay" value="<fmt:message key='page.package.pay.confirm'/>">
                         </div>
                         <div id="disabledItem3"></div>
                     </div>
