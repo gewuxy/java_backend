@@ -18,6 +18,7 @@
 
 
 <body>
+<c:set var="isCN" value="${csp_locale eq 'zh_CN'}"/>
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
@@ -78,8 +79,7 @@
                             <div class="formrow flow">
 
                                 <div class="formTitle color-black" <c:if test="${csp_locale == 'en_US'}">style="line-height:1.3;"</c:if>>
-                                    <c:if test="${csp_locale == 'en_US'}">Recharge<br />Channel</c:if>
-                                    <c:if test="${csp_locale != 'en_US'}"><fmt:message key="page.words.charge.method"/> </c:if>
+                                    <fmt:message key="page.words.flux.charge"/>
                                 </div>
 
 
@@ -104,10 +104,13 @@
                                     </div>
                                 </div>
                             </div>
+
                             <div class="formrow " >
-                                <div class="formTitle color-black"><fmt:message key="page.words.charge.method"/></div>
+                                <div class="formTitle color-black" <c:if test="${csp_locale == 'en_US'}">style="line-height:1.3;"</c:if>>
+                                    <fmt:message key="page.words.charge.method"/>
+                                </div>
                                 <div class="formControls" >
-                                    <div class="pay-mode-list CN-hook" id="chinese">
+                                    <div class="pay-mode-list CN-hook ${isCN ? '':'none'}" id="chinese">
                                         <label for="id11" class="item item-radius pay-on">
                                             <input type="radio" name="channel" class="none" value="alipay_pc_direct" id="id11" checked>
                                             <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
@@ -121,7 +124,7 @@
                                             <%--<img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">--%>
                                         <%--</label>--%>
                                     </div>
-                                    <div class="pay-mode-list EN-hook none">
+                                    <div class="pay-mode-list EN-hook ${!isCN ? '':'none'}">
                                         <label for="id5" class="item item-radius pay-on">
                                             <input type="radio" name="channel" class="none" value="paypal" id="id5">
                                             <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
@@ -134,11 +137,11 @@
                                 <div class="formControls">
                                     <span class="color-black"><span class="payNum">200</span> <span id="yuan"><fmt:message key="page.words.charge.currency"/></span></span> <span class="color-green">(100G<fmt:message key="page.words.flux"/>)</span>
                                     <span class="money-state">
-                                        <label for="currency-cn" class="cn on">
+                                        <label for="currency-cn" class="cn ${isCN ? 'on':''}">
                                             <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
                                             CNY
                                         </label>
-                                        <label for="currency-en" class="en">
+                                        <label for="currency-en" class="en ${!isCN ? 'on':''}">
                                             <input type="radio" name="currency" id="currency-en" class="none" value="EN">
                                             USD
                                         </label>
@@ -162,7 +165,7 @@
 
 
 <!--弹出 充值-->
-<div class="cancel-popup-box">
+<div class="cancel-popup-box" style="display: none;">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
@@ -184,7 +187,7 @@
 </div>
 
 <!--弹出 邮件获取-->
-<div class="videoListEmail-popup-box">
+<div class="videoListEmail-popup-box" style="display: none;">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
