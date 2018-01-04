@@ -8,9 +8,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><fmt:message key="page.meeting.button.scan_screen"/> - <fmt:message key="page.common.appName"/></title>
-
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <title><fmt:message key="page.meeting.button.scan_screen"/> - <fmt:message key="page.common.appName"/></title>
     <link rel="stylesheet" href="${ctxStatic}/css/global.css">
 
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />

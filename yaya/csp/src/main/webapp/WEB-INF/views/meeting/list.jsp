@@ -397,7 +397,7 @@
                     },
                     yes:function(){
                         //成功跳去会员页面，让用户升级
-                        window.location.href='user-06.html';
+                        window.location.href='${ctx}/mgr/user/memberManage';
                     },
                     cancel :function(){
 
@@ -719,11 +719,11 @@
 <div class="contribute-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
-            <strong>投稿平台</strong>
+            <strong><fmt:message key="page.delivery.tips.flat"/></strong>
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-subName">
-            <p>单位号需在“资源平台”打开“投稿箱”功能才能接受投稿。</p>
+            <p><fmt:message key="page.delivery.tips.required"/></p>
         </div>
         <form id="contribute" name="contribute" action="${ctx}/mgr/delivery/contribute" method="post">
             <input type="hidden" id="courseId" name="courseId" value="">
@@ -760,7 +760,7 @@
             </div>
             <div class="layer-hospital-popup-bottom">
                 <div class="fr">
-                    <input type="submit" class="button buttonBlue min-btn" id="submitBtn" value="确认投稿">
+                    <input type="submit" class="button buttonBlue min-btn" id="submitBtn" value="<fmt:message key='page.delivery.button.confirm'/>">
                 </div>
             </div>
         </form>
