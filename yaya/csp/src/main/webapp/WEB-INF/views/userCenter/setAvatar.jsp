@@ -2,15 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>头像设置-个人中心-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.header.avatar"/> -<fmt:message key="page.title.user.title"/> -<fmt:message key="page.common.appName"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 
 </head>
 
@@ -31,19 +29,19 @@
                             <div class="user-portrait-upload">
                                 <c:if test="${empty dto.avatar}">
                                     <div class="user-portrait-area item-radius">
-                                        <p>上传头像</p>
+                                        <p><fmt:message key="page.words.upload.avatar"/> </p>
                                     </div>
-                                    <p>选择JPG、PNG格式，小于1M的图片</p>
+                                    <p><fmt:message key="page.words.upload.limit"/> </p>
                                     <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
-                                    <input href="#" type="button"  class="button login-button buttonBlue last" onclick="headimg.click()" value="上传头像">
+                                    <input href="#" type="button"  class="button login-button buttonBlue last" onclick="headimg.click()" value="<fmt:message key="page.words.upload.avatar"/>">
                                 </c:if>
                                 <c:if test="${not empty dto.avatar}">
                                     <div class="user-portrait-area item-radius user-portrait-finish">
                                         <img src="${dto.avatar}" alt="" id="show">
                                     </div>
-                                    <p>选择JPG、PNG格式，小于1M的图片</p>
+                                    <p><fmt:message key="page.words.upload.limit"/></p>
                                     <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
-                                    <input href="#" type="button" class="button login-button buttonBlue last" onclick="headimg.click()" value="更换头像">
+                                    <input href="#" type="button" class="button login-button buttonBlue last" onclick="headimg.click()" value="<fmt:message key="page.words.update.avatar"/>">
                                 </c:if>
                             </div>
                         </div>
@@ -69,7 +67,7 @@
         var extStart = filename.lastIndexOf(".");
         var ext = filename.substring(extStart,filename.length).toUpperCase();
         if(ext != ".BMP" && ext != ".PNG" && ext != ".JPG" && ext != ".JPEG"&&ext != ".TIFF"){
-            layer.msg("文件格式不支持，请上传图片类型的文件");
+            layer.msg("<fmt:message key="page.words.format.error"/>");
         }else{
             //ajaxFileUpload的回调要改为data.code，之前是data.status，会报错
             upload("headimg","headimg",1*1024*1024,uploadHandler);
