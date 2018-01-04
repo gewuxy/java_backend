@@ -32,8 +32,8 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;"><fmt:message key="page.email.active.success.tip1"/> &nbsp;&nbsp;<span class="color-blue">${email}</span></p>
-                                    <p style="font-size:16px;"><fmt:message key="page.email.active.success.tip2"/></p>
+                                    <p style="font-size:16px;"><fmt:message key="page.email.active.success.tips1"/> &nbsp;&nbsp;<span class="color-blue">${email}</span></p>
+                                    <p style="font-size:16px;"><fmt:message key="page.email.active.success.tips2"/></p>
                                 </div>
                                 <input id="loginBtn" type="button" class="button login-button buttonBlue last" value="<fmt:message key="page.email.active.button"/>">
                             </div>
