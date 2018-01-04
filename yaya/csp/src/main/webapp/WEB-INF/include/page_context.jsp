@@ -25,6 +25,7 @@
 <script src="${ctxStatic}js/html5.js"></script>
 <![endif]-->
 <link rel="stylesheet" href="${ctxStatic}/css/global.css">
+<link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
 <c:choose>
     <c:when test="${csp_locale eq 'en_US'}">
         <link rel="stylesheet" href="${ctxStatic}/css/style-EN.css">
