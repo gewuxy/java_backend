@@ -10,13 +10,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>邮箱绑定成功-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.title.email.bind.success"/> -<fmt:message key="page.common.appName"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 
     <script src="${ctxStatic}/js/commonH5.js"></script>
 
@@ -35,10 +33,17 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">尊敬的&nbsp;&nbsp;<span class="color-blue">${user}</span></p>
-                                    <p style="font-size:16px;">感谢您成为CSPmeeting的注册会员</p>
+                                    <c:if test="${csp_locale == 'en_US'}">
+                                        <p style="font-size:16px;">Dear&nbsp;&nbsp;<span class="color-blue">${user}</span>,<br /> Welcome aboard! <a href="${ctx}/mgr/login" class="color-blue">Please click here to login CSPmeeting.</a> </p>
+                                    </c:if>
+                                    <c:if test="${csp_locale != 'en_US'}">
+                                        <p style="font-size:16px;"><fmt:message key="page.words.email.bind.tips1"/> &nbsp;&nbsp;<span class="color-blue">${user}</span></p>
+                                        <p style="font-size:16px;"><fmt:message key="page.words.email.bind.tips2"/> </p>
+                                        <input  type="button" id="login" class="button login-button buttonBlue last" value="<fmt:message key="page.button.email.bind.tips3"/>">
+                                    </c:if>
+
                                 </div>
-                                <input  type="button" id="login" class="button login-button buttonBlue last" value="请点击此处登录">
+
                             </div>
                         </form>
                     </div>

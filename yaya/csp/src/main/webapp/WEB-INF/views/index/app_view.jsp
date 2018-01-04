@@ -6,14 +6,31 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <fmt:setLocale value="${csp_locale}" scope="session"/>
     <meta charset="UTF-8">
     <meta id="MetaDescription" name="DESCRIPTION" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
     <meta id="MetaKeywords" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1">
-    <title>${article.titleCn}</title>
+    <title>
+        <c:choose>
+            <c:when test="${csp_locale eq 'en_US'}">
+                ${article.titleUs}
+            </c:when>
+            <c:when test="${csp_locale eq 'en_TW'}">
+                ${article.titleTw}
+            </c:when>
+            <c:otherwise>
+                ${article.titleCn}
+            </c:otherwise>
+        </c:choose>
+    </title>
     <style>
 
         html, body, div, span, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote, pre, a, abbr, address, cite, code, del, dfn, em, img, ins, kbd, q, samp, small, strong, sub, sup, var, b, i, dl, dt, dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot, thead, tr, th, td {
@@ -62,7 +79,17 @@
 </head>
 <body >
 <div class="news-details-main" style="padding:0 10px;">
-${article.contentCn}
+    <c:choose>
+        <c:when test="${csp_locale eq 'en_US'}">
+            ${article.contentUs}
+        </c:when>
+        <c:when test="${csp_locale eq 'zh_TW'}">
+            ${article.contentTw}
+        </c:when>
+        <c:otherwise>
+            ${article.contentCn}
+        </c:otherwise>
+    </c:choose>
 </div>
 </body>
 </html>
