@@ -140,9 +140,7 @@ public class MeetingMgrController extends CspBaseController {
             if(packageId != CspPackage.TypeId.STANDARD.getId() && cspPackage.getUnlimited() != null && cspPackage.getUnlimited() == false) {
                 try {
                     int expireTimeCount = CalendarUtils.daysBetween(new Date(), cspPackage.getPackageEnd());
-                    String local  = local("days.expire.remind",new Object[]{expireTimeCount});
                     model.addAttribute("expireTimeCount",expireTimeCount);
-                    model.addAttribute("local",local);
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }

@@ -15,10 +15,8 @@
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/animate.min.js"></script>
 </head>
 <body>
@@ -36,16 +34,34 @@
                             ${username}
                         </c:if>
                     </strong>&nbsp;&nbsp;<i></i> </a>
-                    <a href="javascript:;" class="index-download index-qrcode"><fmt:message key="page.button.download"/>App<span class="qrcode-01 qrcode-top"><img id="qrCode" src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
+                    <a href="javascript:;" class="index-download index-qrcode"><fmt:message key="page.button.download"/> App<span class="qrcode-01 qrcode-top"><img id="qrCode" src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 </div>
             </div>
         </div>
         <div class="banner index-banner-img">
             <div class="index-banner-content not-animated" data-animate="fadeIn" data-delay="200">
-                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300"><div class="img">
-                    <img src="${ctxStatic}/images/index-logo.png" alt=""></div></h3>
-                <h4 class="not-animated" data-animate="fadeInDown" data-delay="300">用手机讲PPT，随讲随录随分享！</h4>
-                <h2 class="not-animated" data-animate="fadeIn" data-delay="500">你的智慧，将被更多人看见</h2>
+                <h3 class="fontStyleSubHead not-animated" data-animate="fadeInDown" data-delay="300">
+                    <c:choose>
+                        <c:when test="${csp_locale eq 'en_US'}">
+                            <img src="${ctxStatic}/images/index-logo-en.png" alt="">
+                        </c:when>
+                        <c:otherwise>
+                            <div class="img"><img src="${ctxStatic}/images/index-logo.png" alt=""></div>
+                        </c:otherwise>
+                    </c:choose>
+                </h3>
+
+                <c:choose>
+                    <c:when test="${csp_locale eq 'en_US'}">
+                        <h2 class="not-animated" data-animate="fadeInDown" data-delay="300"><fmt:message key="page.index.content.line1"/></h2>
+                        <h4 class="not-animated" data-animate="fadeIn" data-delay="500"><fmt:message key="page.index.content.line2"/></h4>
+                    </c:when>
+                    <c:otherwise>
+                        <h4 class="not-animated" data-animate="fadeInDown" data-delay="300"><fmt:message key="page.index.content.line1"/></h4>
+                        <h2 class="not-animated" data-animate="fadeIn" data-delay="500"><fmt:message key="page.index.content.line2"/></h2>
+                    </c:otherwise>
+                </c:choose>
+
                 <div class="index-buy-button not-animated" data-animate="fadeInUp" data-delay="400">
                     <a href="${ctx}/login" class="button item-radius"><fmt:message key="page.button.taste" /></a>
                 </div>
@@ -59,8 +75,16 @@
                 <div class="page-width">
                     <div class="module-section-title-wrapper clearfix">
                         <div class="module-section-title  clearfix">
-                            <h2>功能特性</h2>
-                            <h3>Features</h3>
+                            <c:choose>
+                                <c:when test="${csp_locale eq 'en_US'}">
+                                    <h2><fmt:message key="page.index.content.line3-1"/></h2>
+                                </c:when>
+                                <c:otherwise>
+                                    <h2><fmt:message key="page.index.content.line3"/></h2>
+                                    <h3><fmt:message key="page.index.content.line3-1"/></h3>
+                                </c:otherwise>
+                            </c:choose>
+
                         </div>
                     </div>
                     <div class="module-section-content ">
@@ -76,9 +100,9 @@
                                                     <span class="functional-icon functional-icon-01"></span>
                                                 </div>
                                             </div>
-                                            <h3 class="title">轻设备</h3>
+                                            <h3 class="title"><fmt:message key="page.index.content.line4"/></h3>
                                             <div class="main">
-                                                <p>同步完成会议主持、录制、发布，只要一部手机+会讲 App</p>
+                                                <p><fmt:message key="page.index.content.line5"/></p>
                                             </div>
                                         </div>
                                     </div>
@@ -91,9 +115,9 @@
                                                     <span class="functional-icon functional-icon-02"></span>
                                                 </div>
                                             </div>
-                                            <h3 class="title">多场景智能会议模式</h3>
+                                            <h3 class="title"><fmt:message key="page.index.content.line6"/></h3>
                                             <div class="main">
-                                                <p>多种开会场景，录播/直播、语音/视频，任意切换</p>
+                                                <p><fmt:message key="page.index.content.line7"/></p>
                                             </div>
                                         </div>
                                     </div>
@@ -106,9 +130,9 @@
                                                     <span class="functional-icon functional-icon-03"></span>
                                                 </div>
                                             </div>
-                                            <h3 class="title">实时云同步</h3>
+                                            <h3 class="title"><fmt:message key="page.index.content.line8"/></h3>
                                             <div class="main">
-                                                <p>会议现场投屏直播，云端实时传输，即录即存即播</p>
+                                                <p><fmt:message key="page.index.content.line9"/></p>
                                             </div>
                                         </div>
                                     </div>
@@ -122,9 +146,9 @@
                                                     <span class="functional-icon functional-icon-04"></span>
                                                 </div>
                                             </div>
-                                            <h3 class="title">直播同步回放</h3>
+                                            <h3 class="title"><fmt:message key="page.index.content.line10"/></h3>
                                             <div class="main">
-                                                <p>不用等到结束，会讲支持在直播时对刚刚错过的内容进行立即回看</p>
+                                                <p><fmt:message key="page.index.content.line11"/></p>
                                             </div>
                                         </div>
                                     </div>
@@ -137,9 +161,9 @@
                                                     <span class="functional-icon functional-icon-05"></span>
                                                 </div>
                                             </div>
-                                            <h3 class="title">音视频优化</h3>
+                                            <h3 class="title"><fmt:message key="page.index.content.line12"/></h3>
                                             <div class="main">
-                                                <p>高品质编解码算法，智能回声消除、自动增益控制、自动舒适噪声……确保会议高质量</p>
+                                                <p><fmt:message key="page.index.content.line13"/></p>
                                             </div>
                                         </div>
                                     </div>
@@ -151,9 +175,9 @@
                                                     <span class="functional-icon functional-icon-06"></span>
                                                 </div>
                                             </div>
-                                            <h3 class="title">一键分享</h3>
+                                            <h3 class="title"><fmt:message key="page.index.content.line14"/></h3>
                                             <div class="main">
-                                                <p>链接全球主流社交平台Wechat / Facebook / Twitter，一键轻松分享，扩大影响，打造个人品牌</p>
+                                                <p><fmt:message key="page.index.content.line15"/></p>
                                             </div>
                                         </div>
                                     </div>
@@ -172,8 +196,15 @@
                 <div class="page-width">
                     <div class="module-section-title-wrapper clearfix">
                         <div class="module-section-title clearfix">
-                            <h2>应用场景</h2>
-                            <h3>Application Scenarios</h3>
+                            <c:choose>
+                                <c:when test="${csp_locale eq 'en_US'}">
+                                    <h2><fmt:message key="page.index.content.line16-1"/></h2>
+                                </c:when>
+                                <c:otherwise>
+                                    <h2><fmt:message key="page.index.content.line16"/></h2>
+                                    <h3><fmt:message key="page.index.content.line16-1"/></h3>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <div class="module-section-content">
@@ -186,11 +217,11 @@
                                                 <img src="${ctxStatic}/images/img/apply-img-01.png" alt="">
                                             </div>
                                             <div class="application-hover-text">
-                                                <h4><span>个人学术交流</span></h4>
-                                                <p><span>轻轻松松录制、分享，多场景会议模式任你选择，</span></p>
-                                                <p><span>传播学术见解，树立个人品牌。</span></p>
+                                                <h4><span><fmt:message key="page.index.content.line17"/></span></h4>
+                                                <p><span><fmt:message key="page.index.content.line18"/></span></p>
+                                                <p><span><fmt:message key="page.index.content.line19"/></span></p>
                                             </div>
-                                            <h3>个人学术交流</h3>
+                                            <h3><fmt:message key="page.index.content.line20"/></h3>
                                         </div>
                                         <div class="area-shade"></div>
                                     </div>
@@ -202,11 +233,17 @@
                                                 <img src="${ctxStatic}/images/img/apply-img-02.png" alt="">
                                             </div>
                                             <div class="application-hover-text">
-                                                <h4><span>教学培训</span></h4>
-                                                <p><span>用手机讲PPT，教学内容随堂录制，一键转发，</span></p>
-                                                <p><span>学生随时查看，满足教学单位高质量授课需求。</span></p>
+                                                <h4><span><fmt:message key="page.index.content.line21"/></span></h4>
+                                                <p><span><fmt:message key="page.index.content.line22"/></span></p>
+                                                <p><span><fmt:message key="page.index.content.line23"/></span></p>
+                                                <c:choose>
+                                                    <c:when test="${csp_locale eq 'en_US'}">
+                                                        <p><span><fmt:message key="page.index.content.line23-1"/></span></p>
+                                                        <p><span><fmt:message key="page.index.content.line23-2"/></span></p>
+                                                    </c:when>
+                                                </c:choose>
                                             </div>
-                                            <h3>教学培训</h3>
+                                            <h3><fmt:message key="page.index.content.line24"/></h3>
                                         </div>
                                         <div class="area-shade"></div>
                                     </div>
@@ -218,11 +255,18 @@
                                                 <img src="${ctxStatic}/images/img/apply-img-03.png" alt="">
                                             </div>
                                             <div class="application-hover-text">
-                                                <h4><span>企业会议</span></h4>
-                                                <p><span>内部培训、多方会议，不限人次，实时传达，</span></p>
-                                                <p><span>支持直播+互动，让沟通立体、高效。</span></p>
+                                                <h4><span><fmt:message key="page.index.content.line25"/></span></h4>
+                                                <p><span><fmt:message key="page.index.content.line26"/></span></p>
+                                                <p><span><fmt:message key="page.index.content.line27"/></span></p>
+                                                <c:choose>
+                                                    <c:when test="${csp_locale eq 'en_US'}">
+                                                        <p><span><fmt:message key="page.index.content.line27-1"/></span></p>
+                                                        <p><span><fmt:message key="page.index.content.line27-2"/></span></p>
+                                                        <p><span><fmt:message key="page.index.content.line27-3"/></span></p>
+                                                    </c:when>
+                                                </c:choose>
                                             </div>
-                                            <h3>企业会议</h3>
+                                            <h3><fmt:message key="page.index.content.line28"/></h3>
                                         </div>
                                         <div class="area-shade"></div>
                                     </div>
@@ -234,11 +278,16 @@
                                                 <img src="${ctxStatic}/images/img/apply-img-04.png" alt="">
                                             </div>
                                             <div class="application-hover-text">
-                                                <h4><span>大型直播</span></h4>
-                                                <p><span>以更少的流量成本支撑更加流畅的播出体验，</span></p>
-                                                <p><span>大型直播更加身临其境，更受用户欢迎。</span></p>
+                                                <h4><span><fmt:message key="page.index.content.line29"/></span></h4>
+                                                <p><span><fmt:message key="page.index.content.line30"/></span></p>
+                                                <p><span><fmt:message key="page.index.content.line31"/></span></p>
+                                                <c:choose>
+                                                    <c:when test="${csp_locale eq 'en_US'}">
+                                                        <p><span><fmt:message key="page.index.content.line31-1"/></span></p>
+                                                    </c:when>
+                                                </c:choose>
                                             </div>
-                                            <h3>大型直播</h3>
+                                            <h3><fmt:message key="page.index.content.line32"/></h3>
                                         </div>
                                         <div class="area-shade"></div>
                                     </div>
@@ -256,33 +305,32 @@
                 <div class="page-width">
                     <div class="module-section-title-wrapper clearfix">
                         <div class="module-section-title  clearfix">
-                            <h2>产品优势</h2>
-                            <h3>Our Advantages</h3>
+                            <c:choose>
+                                <c:when test="${csp_locale eq 'en_US'}">
+                                    <h2><fmt:message key="page.index.content.line33-1"/></h2>
+                                </c:when>
+                                <c:otherwise>
+                                    <h2><fmt:message key="page.index.content.line33"/></h2>
+                                    <h3><fmt:message key="page.index.content.line33-1"/></h3>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <div class="module-section-content">
                         <div class="row">
                             <div class="col-lg-4" >
-                                <h3 style="line-height: 1.4; margin-bottom:20px; font-size: 26px; font-weight: normal;" class="color-blue">更实时</h3>
-                                <p style="font-size:16px; padding-right:50px;">会讲通过App与Web云技术的创新结合，
-                                    突破传统直播在设备、带宽、进程方面的限制，
-                                    真正实现实时云端同步，
-                                    可在直播当时进行内容回看。
+                                <h3 style="line-height: 1.4; margin-bottom:20px; font-size: 26px; font-weight: normal;" class="color-blue"><fmt:message key="page.index.content.line34"/></h3>
+                                <p style="font-size:16px; padding-right:50px;"><fmt:message key="page.index.content.line35"/>
                                 </p>
                             </div>
                             <div class="col-lg-4" >
-                                <h3 style="line-height: 1.4; margin-bottom:20px; font-size: 26px; font-weight: normal;" class="color-blue">更节省</h3>
-                                <p style="font-size:16px;  padding-right:50px;">领先的流媒体处理技术及“PPT+音频”的呈现形式，
-                                    在保持会议高画质、
-                                    低噪音的同时，
-                                    比同类视频直播节省至少80%的流量。
+                                <h3 style="line-height: 1.4; margin-bottom:20px; font-size: 26px; font-weight: normal;" class="color-blue"><fmt:message key="page.index.content.line36"/></h3>
+                                <p style="font-size:16px;  padding-right:50px;"><fmt:message key="page.index.content.line37"/>
                                 </p>
                             </div>
                             <div class="col-lg-4" >
-                                <h3 style="line-height: 1.4; margin-bottom:20px;font-size: 26px; font-weight: normal;" class="color-blue">更便捷</h3>
-                                <p style="font-size:16px;  padding-right:30px;">多场景会议模式，
-                                    多终端支持分享， 一键传播，
-                                    快速提升影响力。
+                                <h3 style="line-height: 1.4; margin-bottom:20px;font-size: 26px; font-weight: normal;" class="color-blue"><fmt:message key="page.index.content.line38"/></h3>
+                                <p style="font-size:16px;  padding-right:30px;"><fmt:message key="page.index.content.line39"/>
                                 </p>
                             </div>
                         </div>
@@ -298,47 +346,61 @@
                 <div class="page-width">
                     <div class="module-section-title-wrapper clearfix">
                         <div class="module-section-title  clearfix">
-                            <h2>产品售价</h2>
-                            <h3>Price</h3>
+                            <c:choose>
+                                <c:when test="${csp_locale eq 'en_US'}">
+                                    <h2><fmt:message key="page.index.content.line40-1"/></h2>
+                                </c:when>
+                                <c:otherwise>
+                                    <h2><fmt:message key="page.index.content.line40"/></h2>
+                                    <h3><fmt:message key="page.index.content.line40-1"/></h3>
+                                </c:otherwise>
+                            </c:choose>
                         </div>
                     </div>
                     <div class="module-section-content index-buy clearfix">
                         <div class="index-buy-item  ">
                             <div class="index-buy-header">
-                                <h4>标准版</h4>
-                                <h3 class="price">免费</h3>
+                                <h4><fmt:message key="page.index.content.line41"/></h4>
+                                <h3 class="price"><fmt:message key="page.index.content.line42"/></h3>
                             </div>
                             <div class="index-buy-main">
                                 <div class="index-buy-info ">
-                                    <p>不限时长</p>
-                                    <p>3个会议</p>
+                                    <p><fmt:message key="page.index.content.line43"/></p>
+                                    <p><fmt:message key="page.index.content.line44"/></p>
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">投屏录播</li>
-                                        <li class="icon-li-selected">投屏直播</li>
-                                        <li >&nbsp;</li>
-                                        <li >&nbsp;</li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line45"/></li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line46"/></li>
+                                        <c:choose>
+                                            <c:when test="${csp_locale eq 'zh_CN'}">
+                                                <li >&nbsp;</li>
+                                                <li >&nbsp;</li>
+                                            </c:when>
+                                            <c:when test="${csp_locale eq 'zh_TW'}">
+                                                <li >&nbsp;</li>
+                                            </c:when>
+                                        </c:choose>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                         <div class="index-buy-item  ">
                             <div class="index-buy-header">
-                                <h4>高级版</h4>
-                                <h3 class="price">16.67元</h3>
+                                <h4><fmt:message key="page.index.content.line47"/></h4>
+                                <h3 class="price"><fmt:message key="page.index.content.line48"/></h3>
                             </div>
                             <div class="index-buy-main">
                                 <div class="index-buy-info">
-                                    <p>1个月有效</p>
-                                    <p>10个会议</p>
+                                    <p><fmt:message key="page.index.content.line49"/></p>
+                                    <p><fmt:message key="page.index.content.line50"/></p>
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">投屏录播</li>
-                                        <li class="icon-li-selected">投屏直播</li>
-                                        <li class="icon-li-selected">水印开关 </li>
-                                        <li class="icon-li-selected">无广告</li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line51"/></li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line52"/></li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line53"/></li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line54"/></li>
                                     </ul>
                                 </div>
                             </div>
@@ -346,27 +408,27 @@
                         </div>
                         <div class="index-buy-item last">
                             <div class="index-buy-header">
-                                <h4>专业版</h4>
-                                <h3 class="price">66元/660元</h3>
+                                <h4><fmt:message key="page.index.content.line55"/></h4>
+                                <h3 class="price"><fmt:message key="page.index.content.line56"/></h3>
                             </div>
                             <div class="index-buy-main">
                                 <div class="index-buy-info">
-                                    <p>1个月/1年有效</p>
-                                    <p>不限会议</p>
+                                    <p><fmt:message key="page.index.content.line57"/></p>
+                                    <p><fmt:message key="page.index.content.line58"/></p>
                                 </div>
                                 <div class="index-buy-text">
                                     <ul>
-                                        <li class="icon-li-selected">投屏录播</li>
-                                        <li class="icon-li-selected">投屏直播</li>
-                                        <li class="icon-li-star">自定义水印</li>
-                                        <li class="icon-li-selected">无广告</li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line59"/></li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line60"/></li>
+                                        <li class="icon-li-star"><fmt:message key="page.index.content.line61"/></li>
+                                        <li class="icon-li-selected"><fmt:message key="page.index.content.line62"/></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="index-buy-button t-center" >
-                        <a href="${ctx}/login" class="button item-radius">立即体验</a>
+                        <a href="${ctx}/login" class="button item-radius"><fmt:message key="page.index.content.line63"/></a>
                     </div>
 
                 </div>
@@ -380,11 +442,31 @@
                     <div class="module-section-content index-info">
                         <div class="row">
                             <div class="col-lg-7">
-                                <h3 class="color-black">全球领先的<br />云同步回放演讲系统</h3>
-                                <p  >Global Leading Meeting System with <br />Cloud Synchronization Playback</p>
+                                <c:choose>
+                                    <c:when test="${csp_locale eq 'en_US'}">
+                                        <h3 class="color-black"><fmt:message key="page.index.content.line64-1"/></h3>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <h3 class="color-black"><fmt:message key="page.index.content.line64"/></h3>
+                                        <p  ><fmt:message key="page.index.content.line64-1"/></p>
+                                    </c:otherwise>
+                                </c:choose>
+
                             </div>
                             <div class="col-lg-5 pr">
-                                <div class="index-playback-img"><img src="${ctxStatic}/images/img/Shadow.png" alt=""></div>
+                                <div class="index-playback-img">
+                                <c:choose>
+                                    <c:when test="${csp_locale eq 'en_US'}">
+                                        <img src="${ctxStatic}/images/img/Shadow-en.png" alt="">
+                                    </c:when>
+                                    <c:when test="${csp_locale eq 'zh_TW'}">
+                                        <img src="${ctxStatic}/images/img/Shadow-tw.png" alt="">
+                                    </c:when>
+                                    <c:otherwise>
+                                        <img src="${ctxStatic}/images/img/Shadow.png" alt="">
+                                    </c:otherwise>
+                                </c:choose>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -395,7 +477,11 @@
     </div>
     <div class="footer" >
         <div class="page-width">
-            <p class="t-center"><a href="${ctx}/index/17103116215880292674" class="color-black">关于我们</a><span class="muted">|</span><a href="${ctx}/index/17103116063862386794" class="color-black">帮助中心</a></p>
+            <p class="t-center">
+                <a href="${ctx}/index/17103116215880292674" class="color-black"><fmt:message key="page.index.content.line65"/></a>
+                <span class="muted">|</span>
+                <a href="${ctx}/index/17103116063862386794" class="color-black"><fmt:message key="page.index.content.line66"/></a>
+            </p>
             <p class="t-center icon-row">
                 <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-wechat.png" alt=""></a>
                 <a href="javascript:;"><img src="${ctxStatic}/images/index-icon-weibo.png" alt=""></a>

@@ -12,7 +12,9 @@
         <div class="fr">
             <!--登录前-->
             <div class="login-header">
-                <a href="${ctx}/login" class="login-header-button" title="Login">${not empty username ? username : "Login"}&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
+                <a href="${ctx}/login" class="login-header-button" title="Login">
+                ${not empty username ? username : "Login"}&nbsp;&nbsp;
+                    <span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
                 <a href="javascript:;" class="index-download index-qrcode">Download App<span class="qrcode-01 qrcode-top"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>

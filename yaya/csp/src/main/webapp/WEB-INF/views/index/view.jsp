@@ -9,16 +9,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
-    <title>${article.titleCn}-会讲</title>
+    <title>
+        <c:choose>
+            <c:when test="${csp_locale eq 'en_US'}">
+                ${article.titleUs}
+            </c:when>
+            <c:when test="${csp_locale eq 'zh_TW'}">
+                ${article.titleTw}
+            </c:when>
+            <c:otherwise>
+                ${article.titleCn}
+            </c:otherwise>
+        </c:choose>
+        - <fmt:message key="page.common.appName"/></title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <style>
         html,body { background-color:#F7F9FB;}
@@ -33,13 +43,23 @@
         <div class="page-width clearfix">
             <div class="subPage-head item-shadow item-radius clearfix">
                 <ul id="menu">
-                    <li ><a href="${ctx}/index/17103116063862386794">常见问题</a></li>
-                    <li ><a href="${ctx}/index/17103116065640899342">使用指南</a></li>
-                    <li ><a href="${ctx}/index/17103116070973422540">服务与收费</a></li>
+                    <li ><a href="${ctx}/index/17103116063862386794"><fmt:message key="page.index.faq"/></a></li>
+                    <li ><a href="${ctx}/index/17103116065640899342"><fmt:message key="page.index.guide"/></a></li>
+                    <li ><a href="${ctx}/index/17103116070973422540"><fmt:message key="page.index.service"/></a></li>
                 </ul>
             </div>
             <div class="subPage-main item-shadow item-radius" >
-                ${article.contentCn}
+                <c:choose>
+                    <c:when test="${csp_locale eq 'en_US'}">
+                        ${article.contentUs}
+                    </c:when>
+                    <c:when test="${csp_locale eq 'zh_TW'}">
+                        ${article.contentTw}
+                    </c:when>
+                    <c:otherwise>
+                        ${article.contentCn}
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </div>
