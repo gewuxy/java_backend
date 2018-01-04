@@ -135,7 +135,15 @@
                             <div class="formrow money">
                                 <div class="formTitle color-black"><fmt:message key="page.words.charge.amount"/></div>
                                 <div class="formControls">
-                                    <span class="color-black"><span class="payNum">200</span> <span id="yuan"><fmt:message key="page.words.charge.currency"/></span></span> <span class="color-green">(100G<fmt:message key="page.words.flux"/>)</span>
+                                    <span class="color-black">
+                                        <c:if test="${csp_locale == 'zh_CN'}">
+                                        <span class="payNum">200</span> <span id="yuan"><fmt:message key="page.words.charge.currency"/></span></span> <span class="color-green">(100G<fmt:message key="page.words.flux"/>)
+                                        </c:if>
+                                        <c:if test="${csp_locale != 'zh_CN'}">
+                                            <span class="payNum">35</span> <span id="yuan"><fmt:message key="page.words.charge.currency"/></span></span> <span class="color-green">(100G)
+                                        </c:if>
+
+                                    </span>
                                     <span class="money-state">
                                         <label for="currency-cn" class="cn ${isCN ? 'on':''}">
                                             <input type="radio" name="currency" id="currency-cn" class="none" value="CN">
@@ -196,10 +204,17 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p class="color-black" style="font-size:20px; margin-bottom:10px;"><fmt:message key="page.words.get.videoUrl.tips1"/></p>
-                    <p><fmt:message key="page.words.get.videoUrl.tips2"/></p>
-                    <p><a href="mailto:service@CSPmeeting.com">service@CSPmeeting.com</a></p>
-                    <p><fmt:message key="page.words.get.videoUrl.tips3"/></p>
+                    <c:if test="${csp_locale == 'en_US'}">
+                        <p class="color-black" style="font-size:20px; margin-bottom:10px;"><fmt:message key="page.words.get.videoUrl.tips1"/></p>
+                        <p><fmt:message key="page.words.get.videoUrl.tips2"/> service@CSPmeeting.com. <fmt:message key="page.words.get.videoUrl.tips3"/></p>
+                    </c:if>
+                    <c:if test="${csp_locale != 'en_US'}">
+                        <p class="color-black" style="font-size:20px; margin-bottom:10px;"><fmt:message key="page.words.get.videoUrl.tips1"/></p>
+                        <p><fmt:message key="page.words.get.videoUrl.tips2"/></p>
+                        <p><a href="mailto:service@CSPmeeting.com">service@CSPmeeting.com</a></p>
+                        <p><fmt:message key="page.words.get.videoUrl.tips3"/></p>
+                    </c:if>
+
                 </div>
 
             </form>
@@ -217,12 +232,10 @@
         currency = 1;
         $("#chinese").attr("class","pay-mode-list CN-hook");
         $("#abroad").attr("class","pay-mode-list EN-hook none");
-        $(".payNum").val(200);
     }else{
         currency = 2;
         $("#chinese").attr("class","pay-mode-list CN-hook none");
         $("#abroad").attr("class","pay-mode-list EN-hook");
-        $(".payNum").val(35);
     }
 
 
@@ -379,7 +392,7 @@
     $('.videoListEmail-hook').on('click',function(){
         layer.open({
             type: 1,
-            area: ['560px', '320px'],
+            area: ['600px', '400px'],
             fix: false, //不固定
             title:false,
             closeBtn:0,

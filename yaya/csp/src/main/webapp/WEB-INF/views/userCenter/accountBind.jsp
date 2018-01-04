@@ -292,7 +292,7 @@
             var type = $(this).attr("type");
             layer.open({
                 type: 1,
-                area: ['440px', '250px'],
+                area: ['650px', '250px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
