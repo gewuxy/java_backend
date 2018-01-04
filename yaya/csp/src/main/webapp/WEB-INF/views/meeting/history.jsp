@@ -2,17 +2,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>投稿历史-会讲</title>
+    <title><fmt:message key="page.title.delivery"/> </title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
 
     <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
@@ -68,26 +66,26 @@
                                                     <div class="resource-link">
                                                         <a href="#" class="resource-icon-play popup-player-hook" courseId="${meet.id}">
                                                             <i></i>
-                                                            预览
+                                                            <fmt:message key="page.meeting.button.view"/>
                                                         </a>
                                                     </div>
                                                 </div>
                                                 <h3 class="resource-title overflowText popup-player-hook" courseId="${meet.id}">${meet.title}</h3>
                                                 <div class="resource-label">
                                                     <c:if test="${meet.publishState == true}">
-                                                        <span class="issue">已发布</span>
+                                                        <span class="issue"><fmt:message key="page.words.has.publish"/> </span>
                                                     </c:if>
                                                     <c:if test="${ meet.publishState == false && meet.viewState == true}">
-                                                        <span class="look">已查阅</span>
+                                                        <span class="look"><fmt:message key="page.words.has.read"/> </span>
                                                     </c:if>
                                                     <c:if test="${ meet.publishState == false && meet.viewState == false}">
-                                                        <span>未查阅</span>
+                                                        <span><fmt:message key="page.words.no.read"/> </span>
                                                     </c:if>
                                                     <c:if test="${meet.playType == 0}">
-                                                        <span>录播</span>
+                                                        <span><fmt:message key="page.meeting.tab.record"/> </span>
                                                     </c:if>
                                                     <c:if test="${meet.playType != 0}">
-                                                        <span>直播</span>
+                                                        <span><fmt:message key="page.meeting.tab.live"/></span>
                                                     </c:if>
                                                 </div>
                                             </div>
@@ -119,7 +117,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                            <p> - 无投稿记录 -</p>
+                            <p> <fmt:message key="page.words.no.delivery"/> </p>
                         </div>
                     </div>
                 </div>
@@ -264,7 +262,7 @@
             }
             var course = loadCourseInfo($(this).attr("courseId"));
             if (course == undefined){
-                layer.msg("获取会议信息失败");
+                layer.msg('<fmt:message key="page.meeting.tips.error"/>');
                 return false;
             }
             initSwiper(course);
