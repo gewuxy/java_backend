@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="cn.medcn.user.dao.CspPackageOrderDAO" >
+<mapper namespace="cn.medcn.user.dao.CspPackageOrderDAO">
 
     <select id="totalMoney" resultType="java.util.Map">
         SELECT currency_type,SUM(should_pay) AS money FROM t_csp_package_order GROUP BY currency_type
@@ -18,7 +18,7 @@
             date_format(temp.create_time,'%Y')as createTime,
         </if>
         SUM(temp.should_pay) AS money
-        FROM ( <include refid="unionOrderAndFlux"/>) as temp  where 1=1
+        FROM (<include refid="unionOrderAndFlux"/>) as temp where 1=1
         <if test="grain == 0">
             GROUP BY DATE(temp.create_time)
         </if>
@@ -28,10 +28,10 @@
         <if test="grain == 4">
             GROUP BY YEAR(temp.create_time)
         </if>
-        order by temp.create_time desc
+        order by temp.create_time asc
     </select>
 
-    <select id="getCapitalByDay"  resultType="java.util.Map">
+    <select id="getCapitalByDay" resultType="java.util.Map">
         SELECT
         <if test="grain == 0">
             date_format(temp.create_time,'%Y-%m-%d') createTime,
@@ -42,12 +42,13 @@
         <if test="grain == 4">
             date_format(temp.create_time,'%Y')as createTime,
         </if>
-        SUM(CASE WHEN temp.plat_form='alipay_wap' or temp.plat_form = 'alipay_pc_direct' THEN temp.should_pay END) AS alipayWap,
+        SUM(CASE WHEN temp.plat_form='alipay_wap' or temp.plat_form = 'alipay_pc_direct' THEN temp.should_pay END) AS
+        alipayWap,
         SUM(CASE WHEN temp.plat_form='wx_pub_qr' THEN temp.should_pay END) AS wxPubQr,
         SUM(CASE WHEN temp.plat_form='upacp_wap' or temp.plat_form = 'upacp_pc' THEN temp.should_pay END) AS upacpWap,
         SUM(CASE WHEN temp.plat_form='paypal' THEN temp.should_pay END) AS paypal,
         SUM(temp.should_pay) AS money
-        FROM ( <include refid="unionOrderAndFlux"/>) as temp where 1=1
+        FROM (<include refid="unionOrderAndFlux"/>) as temp where 1=1
         <if test="grain == 0">
             GROUP BY DATE(temp.create_time)
         </if>
@@ -57,7 +58,7 @@
         <if test="grain == 4">
             GROUP BY YEAR(temp.create_time)
         </if>
-        order by temp.create_time desc
+        order by temp.create_time asc
     </select>
 
 
@@ -71,7 +72,8 @@
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
         UNION
-        SELECT money AS should_pay,buy_time AS create_time,platform AS plat_form  FROM `t_csp_user_flux_purchase` WHERE state = 1
+        SELECT money AS should_pay,buy_time AS create_time,platform AS plat_form FROM `t_csp_user_flux_purchase` WHERE
+        state = 1
         <if test="startTime != null and endTime != null">
             AND buy_time BETWEEN #{startTime} AND #{endTime}
         </if>
@@ -83,20 +85,34 @@
         </if>
     </sql>
 
-
+    <!-- 转化率 -->
+    <select id="transfStats" resultType="java.util.Map">
+        SELECT temp.createTime,temp.orderNum / temp.pvNum * 100  AS trans FROM
+        (SELECT orderTemp.createTime,pvTemp.pvNum,orderTemp.orderNum FROM
+        (SELECT date_format(log_time,'%Y-%m-%d') createTime,
+        COUNT(`action`) AS pvNum  FROM `t_csp_log`
+        WHERE `action` = '/mgr/pay/mark' AND log_time BETWEEN #{startTime} AND #{endTime} GROUP BY DATE(log_time)
+        ) AS pvTemp
+        INNER JOIN
+        (SELECT date_format(create_time,'%Y-%m-%d') createTime,
+        COUNT(user_id) AS orderNum  FROM `t_csp_package_order`
+        WHERE state=1 GROUP BY DATE(create_time)
+        ) AS orderTemp
+        ON pvTemp.createTime = orderTemp.createTime) AS temp
+        order by temp.createTime asc
+    </select>
 
     <select id="getTotalCapital" resultType="cn.medcn.user.dto.CspOrderPlatFromDTO">
-        SELECT sum(should_pay) as totalMoney FROM ( <include refid="unionOrderAndFlux"/>) as temp
+        SELECT sum(should_pay) as totalMoney FROM (<include refid="unionOrderAndFlux"/>) as temp
     </select>
 
     <select id="selectAbroadAndHomeMoney" resultType="cn.medcn.user.model.CspPackageOrder">
       SELECT currency_type as currencyType,sum(pay_money) AS totalMoney FROM `t_csp_package_order` GROUP BY currency_type
     </select>
 
-
-
     <select id="findOrderListByCurrencyType" resultType="cn.medcn.user.dto.CspPackageOrderDTO">
-        SELECT o.id ,o.trade_id,u.nick_name,o.plat_form,o.create_time,o.pay_money as money,o.state as status,o.remark,o.package_type,
+        SELECT o.id ,o.trade_id,u.nick_name,o.plat_form,o.create_time,o.pay_money as money,o.state as
+        status,o.remark,o.package_type,
         o.package_id,u.abroad,o.num
         FROM t_csp_package_order o LEFT JOIN t_csp_user_info u ON o.user_id=u.id
         WHERE

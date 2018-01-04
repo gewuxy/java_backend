@@ -281,5 +281,15 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     public CspOrderPlatFromDTO getTotalCapital(Integer grain, Integer abroad, Date startTime, Date endTime) {
         return packageOrderDAO.getTotalCapital(grain,abroad,startTime,endTime);
     }
+
+    @Override
+    public List<Map<String, Object>> transfStats(Date startTime, Date endTime) {
+        return packageOrderDAO.transfStats(startTime,endTime);
+    }
+
+    @Override
+    public List<Map<String, Object>> renewStats(Date startTime, Date endTime) {
+        return cspUserPackageHistoryDAO.renewStats(startTime,endTime);
+    }
 }
 

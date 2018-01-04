@@ -5,6 +5,7 @@ import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Liuchangling on 2017/12/8.
@@ -16,4 +17,5 @@ public interface CspUserPackageDAO extends Mapper<CspUserPackage>{
 
     int selectEdition(@Param("packageId") Integer packageId, @Param("location")Integer location);
 
+    List<Map<String,Object>> getTodayPackageInfo();
 }

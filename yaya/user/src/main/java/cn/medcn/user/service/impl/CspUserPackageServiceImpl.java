@@ -7,9 +7,11 @@ import cn.medcn.common.utils.StringUtils;
 import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspUserPackageDAO;
 import cn.medcn.user.dao.CspUserPackageHistoryDAO;
+import cn.medcn.user.dao.ReportPackageDAO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.CspUserPackageHistory;
+import cn.medcn.user.model.ReportPackage;
 import cn.medcn.user.service.CspUserPackageService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static cn.medcn.common.Constants.NUMBER_THREE;
 import static cn.medcn.common.utils.CalendarUtils.DEFAULT_MONTH;
@@ -34,6 +37,9 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
 
     @Autowired
     protected CspPackageDAO cspPackageDAO;
+
+    @Autowired
+    protected ReportPackageDAO reportPackageDAO;
 
     @Autowired
 
@@ -82,6 +88,16 @@ public class CspUserPackageServiceImpl extends BaseServiceImpl<CspUserPackage> i
     @Override
     public int selectEdition(Integer packageId,Integer location) {
         return userPackageDAO.selectEdition(packageId,location);
+    }
+
+    @Override
+    public List<Map<String, Object>> getTodayPackageInfo() {
+        return userPackageDAO.getTodayPackageInfo();
+    }
+
+    @Override
+    public void insertReportPackage(ReportPackage packages) {
+        reportPackageDAO.insertSelective(packages);
     }
 
     /**
