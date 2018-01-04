@@ -451,14 +451,14 @@ public class UserCenterController extends CspBaseController {
         if (cspPackage == null){
             return localeView("/meeting/list");
         }
-        //英文版，格式化日期
-        if (cspUserPackage.getPackageStart() != null && cspUserPackage.getPackageEnd()!= null){
-            if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
-                DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.ENGLISH);
-                model.addAttribute("startTime",format.format(cspUserPackage.getPackageStart()));
-                model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
-            }
+        //日期格式化
+        if (cspPackage.getPackageStart() != null && cspPackage.getPackageEnd() != null) {
+            String dateFormat = local("page.date.format");
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, LocalUtils.get());
+            String expireDateFormat = sdf.format(cspUserPackage.getPackageStart()) + local("page.date.separator") + sdf.format(cspUserPackage.getPackageEnd());
+            model.addAttribute("dateFormat", expireDateFormat);
         }
+
         String local = local("page.remind.limit.meet", new Object[]{cspPackage.getLimitMeets()});
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
 

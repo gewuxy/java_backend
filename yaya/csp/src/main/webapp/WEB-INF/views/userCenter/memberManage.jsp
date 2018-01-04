@@ -75,56 +75,40 @@
                                 <div class="fl">
                                     <div class="clearfix">
                                         <div class="fl"></div>
-                                            <c:if test="${cspPackage.id == 1}">
-                                        <div class="oh">
-                                                <h5 class="title"><fmt:message key="package.standard"/></h5>
-                                                <div class="member-mode-tips"><fmt:message key="page.remind.standard.time"/></div>
-                                        </div>
-                                            </c:if>
-                                        <c:if test="${cspPackage.id == 3}">
-                                            <c:if test="${cspUserPackage.unlimited == true}">
-                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
-                                            <div class="oh">
-                                                <h5 class="title"><fmt:message key="package.professional"/></h5>
-                                                <div class="member-mode-tips"><fmt:message key="page.remind.professional.time"/></div>
-                                            </div>
-                                            </c:if>
-                                        </c:if>
-                                        <c:if test="${ cspPackage.id == 3}">
-                                        <c:if test="${cspUserPackage.unlimited == false}">
-                                            <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
-                                            <div class="oh" id="time">
-                                                <h5 class="title" id="title"><fmt:message key="package.professional"/></h5>
-                                                <div id="CnTime" class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
-                                                <div id="UsTime" class="member-mode-tips">${startTime}~${endTime}</div>
-                                                <script>
-                                                    $(document).ready(function(){
-                                                        var titleName = $("#title").text();
-                                                        if (titleName.startWith('专业版')||titleName.startWith('專業版')){
-                                                            $("#UsTime").hide()
-                                                       }else{
-                                                           $("#CnTime").hide()
-                                                       }
-                                                    })
-                                                </script>
-                                            </div>
-                                            </c:if>
-                                        </c:if>
-
-                                            <c:if test="${cspPackage.id == 2 }">
+                                        <c:choose>
+                                            <c:when test="${cspPackage.id == 1}">
+                                                <div class="oh">
+                                                    <h5 class="title"><fmt:message key="package.standard"/></h5>
+                                                    <div class="member-mode-tips"><fmt:message key="page.remind.standard.time"/></div>
+                                                </div>
+                                            </c:when>
+                                            <c:when test="${cspPackage.id == 3}">
+                                                <c:choose>
+                                                    <c:when test="${cspUserPackage.unlimited == true}">
+                                                        <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                                        <div class="oh">
+                                                            <h5 class="title"><fmt:message key="package.professional"/></h5>
+                                                            <div class="member-mode-tips"><fmt:message key="page.remind.professional.time"/></div>
+                                                        </div>
+                                                    </c:when>
+                                                    <c:otherwise>
+                                                        <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
+                                                        <div class="oh" id="time">
+                                                            <h5 class="title" ><fmt:message key="package.professional"/></h5>
+                                                            <div class="member-mode-tips">${dateFormat}</div>
+                                                        </div>
+                                                    </c:otherwise>
+                                                </c:choose>
+                                            </c:when>
+                                            <c:otherwise>
                                                 <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-01.png" alt=""></div>
-                                                    <div class="oh">
-                                                        <h5 class="title"><fmt:message key="package.premium"/></h5>
-                                                        <c:choose>
-                                                            <c:when test="${ cspPackage.packageCn == '高级版' || cspPackage.packageTw == '高級版'}">
-                                                                <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
-                                                            </c:when>
-                                                            <c:otherwise>
-                                                                <div class="member-mode-tips">${startTime}~${endTime}</div>
-                                                            </c:otherwise>
-                                                        </c:choose>
-                                                    </div>
-                                            </c:if>
+                                                <div class="oh">
+                                                    <h5 class="title"><fmt:message key="package.premium"/></h5>
+                                                    <div class="member-mode-tips">${dateFormat}</div>
+                                                </div>
+                                            </c:otherwise>
+                                        </c:choose>
+
                                     </div>
                                 </div>
                             </div>
