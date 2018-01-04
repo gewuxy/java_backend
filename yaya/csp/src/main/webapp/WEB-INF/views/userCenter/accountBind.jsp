@@ -115,34 +115,49 @@
                                                 <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
                                                 <span class="status status-off"></span>
                                             </c:if>
-                                            <span class="main">${empty twitter ?"未綁定":twitter }</span>
+                                            <c:if test="${empty twitter}">
+                                                <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                            </c:if>
+                                            <c:if test="${not empty twitter}">
+                                                <span class="main">${twitter} </span>
+                                            </c:if>
                                         </li>
                                     </c:if>
                                     <li class="email">
                                         <c:if test="${not empty dto.email}">
-                                            <a href="#" class="fr binding-btn " type="7" id="unbind_7" action_type="unbind">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="7" id="unbind_7" action_type="unbind"><fmt:message key="page.words.unbind"/></a>
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty dto.email}">
-                                            <a href="#" class="fr binding-btn color-blue" type="7" id="bindEmail" >绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="7" id="bindEmail" ><fmt:message key="page.words.bind"/></a>
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty dto.email ?"未绑定":dto.email}</span>
+                                        <c:if test="${empty dto.email}">
+                                            <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                        </c:if>
+                                        <c:if test="${not empty dto.email}">
+                                            <span class="main">${dto.email} </span>
+                                        </c:if>
                                     </li>
                                     <li class="medcn">
                                         <c:if test="${not empty YaYa}">
-                                            <a href="#" class="fr binding-btn " type="5" id="unbind_5" action_type="unbind">解绑</a>
+                                            <a href="#" class="fr binding-btn " type="5" id="unbind_5" action_type="unbind"><fmt:message key="page.words.unbind"/></a>
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-on"></span>
                                         </c:if>
                                         <c:if test="${empty YaYa}">
-                                            <a href="#" class="fr binding-btn color-blue" type="5" action_type="bind">绑定</a>
+                                            <a href="#" class="fr binding-btn color-blue" type="5" action_type="bind"><fmt:message key="page.words.bind"/></a>
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty YaYa ?"未绑定":"敬信数字平台"}</span>
+                                        <c:if test="${empty YaYa}">
+                                            <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                        </c:if>
+                                        <c:if test="${not empty YaYa}">
+                                            <span class="main"><fmt:message key="page.words.jingXin"/> </span>
+                                        </c:if>
                                     </li>
                                 </ul>
                                 <span class="line-bg"></span>
@@ -169,14 +184,14 @@
             <form action="">
                 <div class="login-form-item">
                     <label for="phone" class="cells-block pr">
-                        <input id="phone" type="tel" class="login-formInput" placeholder="手机号"></label>
+                        <input id="phone" type="tel" class="login-formInput" placeholder="<fmt:message key="page.words.mobile"/>"></label>
                     <span id="phoneSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;</span>
                     <label for="captcha" class="cells-block pr">
-                        <input id="captcha" type="text" class="login-formInput codeInput" placeholder="输入验证码">
-                        <span href="javascript:;" class="code" id="btnSendCode"  onclick="sendMessage()">获取</span>
+                        <input id="captcha" type="text" class="login-formInput codeInput" placeholder="<fmt:message key="page.words.input.captcha"/>">
+                        <span href="javascript:;" class="code" id="btnSendCode"  onclick="sendMessage()"><fmt:message key="page.words.get.captcha"/></span>
                     </label>
-                    <span id="captchaSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;验证码错误</span>
-                    <input href="#" type="button" id="phoneBtn" class="button login-button buttonBlue last" value="绑定手机">
+                    <span id="captchaSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.words.captcha.error"/> </span>
+                    <input href="#" type="button" id="phoneBtn" class="button login-button buttonBlue last" value="<fmt:message key="page.words.bind.mobile"/>">
                 </div>
             </form>
         </div>
@@ -192,16 +207,16 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <label for="email" class="cells-block pr">
-                    <input id="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                    <input id="email" type="text" class="login-formInput" placeholder="<fmt:message key="page.email.login.address"/>">
                 </label>
                 <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
                 <label for="password" class="cells-block pr">
-                    <input type="text" required="" placeholder="密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                    <input id="password" type="password" required="" placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                    <input type="text" required="" placeholder="<fmt:message key="page.label.password"/>" class="login-formInput icon-register-hot last none" maxlength="24">
+                    <input id="password" type="password" required="" placeholder="<fmt:message key="page.label.password"/>" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                 </label>
                 <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>
-                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="绑定邮箱">
+                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="<fmt:message key="page.button.bind.email"/>">
             </div>
         </div>
     </div>
@@ -216,9 +231,9 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <div class="login-message-text">
-                    <p>激活账号邮件已发送至您的邮箱，<br />请前往激活完成注册。</p>
+                    <p><fmt:message key="page.words.email.tips1"/> <br /><fmt:message key="page.words.email.tips2"/></p>
                 </div>
-                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
+                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="<fmt:message key="page.words.to.email"/>">
             </div>
         </div>
     </div>
@@ -234,7 +249,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否确定解绑此账号？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt=""><fmt:message key="page.words.unbind.account"/> </p>
                 </div>
 
             </form>
@@ -281,12 +296,12 @@
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
-                btn: ["确认","取消"],
+                btn: ['<fmt:message key="page.common.confirm"/>','<fmt:message key="page.common.cancel"/>'],
                 content: $('.cancel-popup-box'),
                 yes:function () {
                     ajaxGet('${ctx}/mgr/user/unbind',{"type":type}, function (data) {
                         if (data.code == 0){
-                            layer.msg('解绑成功',{
+                            layer.msg('<fmt:message key="page.words.unbind.success"/>',{
                                 time: 300
                             },function(){
                                 window.location.href = "${ctx}/mgr/user/toAccount";
@@ -348,7 +363,7 @@
                     ajaxGet('${ctx}/mgr/user/bindMobile',{"mobile":mobile,"captcha":captcha}, function (data) {
                         if (data.code == 0){
                             layer.closeAll();
-                            layer.msg("绑定成功",{ time: 800},function () {
+                            layer.msg('<fmt:message key="page.words.bind.success"/>',{ time: 800},function () {
                                 window.location.href="${ctx}/mgr/user/toAccount";
                             });
                         }else{
@@ -417,7 +432,7 @@
                 layer.closeAll();
                 window.open( url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg('<fmt:message key="page.words.email.address.error"/>');
             }
         });
 
@@ -428,13 +443,13 @@
         var phone = $("#phone").val();
         if($.trim(phone) == ''){
             $("#phoneSpan").attr("class","cells-block error");
-            $("#phoneSpan").html("手机号不能为空");
+            $("#phoneSpan").html("<fmt:message key="page.words.mobile.none"/>");
             return false;
         }
         var reg = /^(((13[0-9]{1})|(15[0-9]{1})|(18[0-9]{1}))+\d{8})$/;
         if(!reg.test(phone)){
             $("#phoneSpan").attr("class","cells-block error");
-            $("#phoneSpan").html("请输入正确的手机格式");
+            $("#phoneSpan").html("<fmt:message key="page.words.mobile.format.error"/>");
             return false;
         }
         $("#phoneSpan").attr("class","cells-block error none");
@@ -445,12 +460,12 @@
         var email = $("#email").val();
         if($.trim(email) == ''){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").html("邮箱不能为空");
+            $("#emailSpan").html("<fmt:message key="page.words.email.none"/>");
             return false;
         }
         if(!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").html("邮箱格式不正确");
+            $("#emailSpan").html("<fmt:message key="page.words.email.format.error"/>");
             return false;
         }
         $("#emailSpan").attr("class","cells-block error none");
@@ -461,14 +476,14 @@
         var captcha = $("#captcha").val();
         if($.trim(captcha) == '' ){
             $("#captchaSpan").attr("class","cells-block error");
-            $("#captchaSpan").html("验证码不能为空");
+            $("#captchaSpan").html("<fmt:message key="page.words.captcha.none"/>");
             return false;
         }
 
         var re = /^[0-9]+.?[0-9]*$/;
         if(!re.test(captcha)){
             $("#captchaSpan").attr("class","cells-block error");
-            $("#captchaSpan").html("验证码格式不正确");
+            $("#captchaSpan").html("<fmt:message key="page.words.captcha.format.error"/>");
             return false;
         }
 
@@ -479,19 +494,19 @@
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password)==''){
-            $("#passwordSpan").html("密码不能为空");
+            $("#passwordSpan").html("<fmt:message key="page.words.password.none"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#passwordSpan").html("密码不能包含空格");
+            $("#passwordSpan").html("<fmt:message key="page.words.password.blank"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#passwordSpan").html("请输入6~24位密码");
+            $("#passwordSpan").html("<fmt:message key="page.words.password.length"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if(isChinesePassword($.trim(password))){
-            $("#passwordSpan").html("密码不能包含中文");
+            $("#passwordSpan").html("<fmt:message key="page.words.password.chinese"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else{
@@ -513,7 +528,7 @@
             var mobile =  $("#phone").val();
             ajaxGet('${ctx}/api/user/sendCaptcha',{"mobile":mobile,"type":1}, function (data) {
                 if (data.code == 0){
-                    layer.msg("验证码已经发送到您的手机,请注意查收");
+                    layer.msg("<fmt:message key="page.words.captcha.send"/>");
                     $("#btnSendCode").removeAttr("onclick");
                 }else{
                     layer.msg(data.err);
@@ -529,7 +544,7 @@
             window.clearInterval(InterValObj);//停止计时器
             $("#btnSendCode").removeClass("getCodeButton-current");
             $("#btnSendCode").removeAttr("disabled");//启用按钮
-            $("#btnSendCode").text("重新发送");
+            $("#btnSendCode").text("<fmt:message key="page.words.resend"/>");
         }
         else {
             curCount--;
