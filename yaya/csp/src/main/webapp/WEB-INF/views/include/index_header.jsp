@@ -12,8 +12,15 @@
         <div class="fr">
             <!--登录前-->
             <div class="login-header">
-                <a href="${ctx}/login" class="login-header-button" title="登录">${not empty username ? username : "登录"}&nbsp;&nbsp;<span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
-                <a href="javascript:;" class="index-download index-qrcode">下载App<span class="qrcode-01 qrcode-top"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
+                <a href="${ctx}/login" class="login-header-button" title="登录">
+                        <c:if test="${empty username}">
+                            <fmt:message key="page.button.login"/>
+                        </c:if>
+                        <c:if test="${not empty username}">
+                            ${username}
+                        </c:if>&nbsp;&nbsp;
+                <span><img src="${ctxStatic}/images/admin-user-icon.png" alt=""></span></a>
+                <a href="javascript:;" class="index-download index-qrcode"><fmt:message key="page.button.download"/> App<span class="qrcode-01 qrcode-top"><img src="${ctxStatic}/upload/img/qrcode.png" alt=""></span></a>
                 <%@include file="/WEB-INF/include/switch_language.jsp"%>
             </div>
         </div>
