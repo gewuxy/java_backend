@@ -14,7 +14,7 @@
         COUNT(CASE WHEN before_package_id=3 THEN before_package_id END) AS proNum
         FROM `t_csp_user_package_history`
         WHERE before_package_id = after_package_id AND update_type = 1 and update_time BETWEEN #{startTime} AND #{endTime}
-        GROUP BY DATE(update_time)) AS temp INNER JOIN `t_report_package` rp ON temp.create_time = rp.register_time
+        GROUP BY DATE(update_time)) AS temp INNER JOIN `t_report_package` rp ON temp.create_time = rp.register_time where rp.task_type = 0
     </select>
 
 </mapper>

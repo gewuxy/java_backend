@@ -49,25 +49,12 @@
         </span>
     </div>
 </form>
-<c:if test="${not empty page.dataList}">
-    <div class="clearfix ">
-        <div class="pull-left inputTime-item">
-            <input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/>
-        </div>
-    </div>
-</c:if>
 <div class="clearfix item-margin-bottom">
     <div id="echarts-2" class="echarts echarts-3"></div>
 </div>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
-    <tr>
-        <th>日期</th>
-        <th>支付宝</th>
-        <th>微信支付</th>
-        <th>银联</th>
-        <th>付款总额</th>
-    </tr>
+    <tr id="trView"></tr>
     </thead>
     <tbody id="tableView"></tbody>
     <tfoot>
@@ -84,12 +71,14 @@
     var dom = document.getElementById('echarts-2');
     var myChart = echarts.init(dom);
     var abroad = '${abroad}';
-
-
+    var htmlRND = "<th>日期</th><th>支付宝</th><th>微信支付</th><th>银联</th><th>付款总额</th>";
+    var htmlUSD = "<th>日期</th><th>paypal</th><th>付款总额</th>";
 
     $(function () {
         $("#startTime").val('${startTime}');
         $("#endTime").val('${endTime}');
+        $("#trView").html(htmlRND);
+
         initEcharts(0);
         initTable(1, 0);
         //点击刷新页面
@@ -117,9 +106,6 @@
             time: {
                 enabled: false
             }
-        }).bind('datepicker-first-date-selected', function (event, obj) {
-            /*首次点击的时间*/
-            console.log('first-date-selected', obj);
         }).bind('datepicker-change', function (event, obj) {
             /* This event will be triggered when second date is selected */
             $(this).find('input').val(obj.value);
@@ -132,6 +118,8 @@
             initEcharts(grain);
             initTable(1, grain);
         });
+
+
     });
 
     //初始化图表
@@ -145,7 +133,6 @@
             "grain": grain
         }, function (data) {
             if (data.code == 0) {
-                console.log(data);
                 fillEcharts(data.data.capital);  //加载图表
                 initTotal(data.data.total);
             } else {
@@ -166,8 +153,8 @@
             "grain": grain
         }, function (data) {
             if (data.code == 0) {
-                console.log(data);
                 fillTable(data.data);  //加载图表
+                initExport(data.data.dataList);
             } else {
                 layer.msg("获取数据失败");
             }
@@ -205,6 +192,11 @@
             },
             legend: {
                 data: ['资金入账']
+            },
+            toolbox: {
+                feature: {
+                    saveAsImage: {}
+                }
             },
             grid: {
                 left: '3%',
@@ -250,13 +242,15 @@
         var html = '';
         if (data.dataList.length > 0) {
             $.each(data.dataList, function (n, info) {
-                html += '<tr>'
-                    + '<td>' + info.createTime + '</td>'
-                    + '<td>' + getValue(info.alipayWap) + '</td>'
+                html += '<tr>'+ '<td>' + info.createTime + '</td>';
+                if(abroad == 0){
+                    html +=  '<td>' + getValue(info.alipayWap) + '</td>'
                     + '<td>' + getValue(info.wxPubQr) + '</td>'
-                    + '<td>' + getValue(info.upacpWap) + '</td>'
-                    + '<td>' + getValue(info.money) + '</td>'
-                    + '</tr>';
+                    + '<td>' + getValue(info.upacpWap) + '</td>';
+                }else{
+                    html +=  '<td>' + getValue(info.paypal) + '</td>'
+                }
+                html +=  '<td>' + getValue(info.money) + '</td></tr>';
             });
             initPageable(data);
         } else {
@@ -317,13 +311,31 @@
         $(obj).parent().addClass('hot').siblings().removeClass("hot");
         if(abroad == 0){
             abroad = 1;
+            $('#trView').html(htmlUSD);
         }else {
             abroad = 0;
+            $('#trView').html(htmlRND);
         }
         var grain = $(".nav-pills .active").children().attr("grain");
         initEcharts(grain);
         initTable(1, grain);
     }
+
+    function initExport(data) {
+        $("#exportView").remove();
+        if (data.length > 0) {
+            html = '<div class="clearfix inputButton-item" id="exportView"><div class="pull-left inputTime-item"><input class="btn btn-primary" type="button" value="导出入账数据" onclick="exports()"/></div></div>';
+            $(".breadcrumb").after(html);
+        }
+    }
+
+    function exports() {
+        var startTime = $("#startTime").val();
+        var endTime = $("#endTime").val();
+        var grain = $(".nav-pills .active").children().attr("grain");
+        window.location.href = "${ctr}/csp/stats/export/money?abroad=" + abroad + "&startTime=" + startTime + "&endTime=" + endTime + "&grain=" + grain;
+    }
+
 </script>
 </body>
 </html>

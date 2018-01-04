@@ -36,9 +36,11 @@
 <form method="post" class="breadcrumb ">
     <div class="pull-left inputTime-item">
         <ul class="nav nav-pills">
-            <li class="active"><a href="javascript:;" grain="0">日度</a></li>
-            <li><a href="javascript:;" grain="2">月度</a></li>
-            <li><a href="javascript:;" grain="4">年度</a></li>
+            <li class="active"><a href="javascript:;" grain="0">日</a></li>
+            <li><a href="javascript:;" grain="1" >周</a></li>
+            <li><a href="javascript:;" grain="2">月</a></li>
+            <li><a href="javascript:;" grain="3">季</a></li>
+            <li><a href="javascript:;" grain="4">年</a></li>
         </ul>
         <span class="time-tj">
             <label for="timeA" id="timeStart">
@@ -49,13 +51,7 @@
         </span>
     </div>
 </form>
-<c:if test="${not empty page.dataList}">
-    <div class="clearfix ">
-        <div class="pull-left inputTime-item">
-            <input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/>
-        </div>
-    </div>
-</c:if>
+<div id="exportView"></div>
 <div class="clearfix item-margin-bottom">
     <div id="echarts-2" class="echarts echarts-3"></div>
 </div>
@@ -69,6 +65,7 @@
         $("#startTime").val('${startTime}');
         $("#endTime").val('${endTime}');
         initEcharts(0);
+
         //点击刷新页面
         $(".nav-pills li a").click(function () {
             var grain = $(this).attr("grain");
@@ -93,11 +90,7 @@
             time: {
                 enabled: false
             }
-        }).bind('datepicker-first-date-selected', function (event, obj) {
-            /*首次点击的时间*/
-            console.log('first-date-selected', obj);
         }).bind('datepicker-change', function (event, obj) {
-            /* This event will be triggered when second date is selected */
             $(this).find('input').val(obj.value);
             var timeArray = obj.value.split(' ~ ');
             var startTime = timeArray[0];
@@ -106,7 +99,6 @@
             $("#endTime").val(endTime);
             var grain = $(".nav-pills .active").children().attr("grain");
             initEcharts(grain);
-            initTable(1, grain);
         });
     });
 
@@ -114,14 +106,14 @@
     function initEcharts(grain) {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
-        $.get('${ctx}/csp/stati/renew/data', {
+        $.get('${ctx}/csp/stats/echarts/dist', {
             "startTime": startTime,
             "endTime": endTime,
             "grain": grain
         }, function (data) {
             if (data.code == 0) {
-                console.log(data);
-                fillEcharts(data.data.capital);  //加载图表
+                fillEcharts(data.data);  //加载图表
+                initExport(data.data);
             } else {
                 layer.msg("获取数据失败");
             }
@@ -131,23 +123,26 @@
     //加载数据生成图表
     function fillEcharts(list) {
         var dataArray = new Array();
-        var moneyArray = new Array();
+        var staArray = new Array();
+        var preArray = new Array();
+        var proArray = new Array();
         $.each(list, function (i) {
-            dataArray.push(list[i].createTime);
+            dataArray.push(list[i].register_time);
             dataArray.join(",");
-            moneyArray.push(getValue(list[i].money));
-            moneyArray.join(",");
+            staArray.push(getValue(list[i].sta));
+            staArray.join(",");
+            preArray.push(getValue(list[i].pre));
+            preArray.join(",");
+            proArray.push(getValue(list[i].pro));
+            proArray.join(",");
         });
         option = null;
         option = {
-            title: {
-                text: ''
-            },
             tooltip: {
                 trigger: 'axis'
             },
             legend: {
-                data:['购买转化率']
+                data:['标准版','高级版','专业版']
             },
             grid: {
                 left: '3%',
@@ -163,21 +158,32 @@
             xAxis: {
                 name: '日期',
                 type: 'category',
-                data: ['01-11','01-12','01-13','01-14','01-15','01-16','01-17']
+                data: dataArray
             },
             yAxis: {
-                name: '购买转化率',
+                name: '分布百分比',
                 type: 'value',
                 max : 100,
                 min:0
             },
             series: [
                 {
-                    name:'购买转化率',
+                    name:'标准版',
                     type:'line',
-                    data:[0, 30, 10, 13, 90, 23, 95]
+                    data:staArray
+                },
+                {
+                    name:'高级版',
+                    type:'line',
+                    data:preArray
+                },
+                {
+                    name:'专业版',
+                    type:'line',
+                    data:proArray
                 }
             ]
+
         };
         if (option && typeof option === "object") {
             myChart.setOption(option, true);
@@ -189,6 +195,13 @@
             return 0;
         }
         return Math.floor(data * 100) / 100;
+    }
+
+    function initExport(data){
+        if(data.length > 0){
+            html = '<div class="clearfix "><div class="pull-left inputTime-item"><input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/></div></div>'
+            $("#exportView").html(html);
+        }
     }
 </script>
 </body>
