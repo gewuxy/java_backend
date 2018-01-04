@@ -469,6 +469,6 @@ public class UserCenterController extends CspBaseController {
         model.addAttribute("cspUserPackage",cspUserPackage);
         model.addAttribute("cspPackage", cspPackage);
         model.addAttribute("successMsg",principal.getPkChangeMsg());
-        return localeView("/userCenter/memberManage");
+        return "/userCenter/memberManage";
     }
 }

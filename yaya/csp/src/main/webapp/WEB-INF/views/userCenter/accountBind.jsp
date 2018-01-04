@@ -2,15 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>账号管理-个人中心-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.header.account"/> -<fmt:message key="page.title.user.title"/> -<fmt:message key="page.common.appName"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 
 </head>
@@ -31,45 +29,95 @@
                         <div class="user-content user-content-levelHeight item-radius">
                             <div class="binding-list">
                                 <ul>
-                                    <li class="phone">
-                                        <c:if test="${not empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn " type="6"  action_type="unbind">解绑</a>
-                                            <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
-                                            <span class="status status-on"></span>
-                                        </c:if>
-                                        <c:if test="${empty dto.mobile}">
-                                            <a href="#" class="fr binding-btn color-blue" id="bindPhone" type="6" >绑定</a>
-                                            <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
-                                            <span class="status status-off"></span>
-                                        </c:if>
-                                        <span class="main">${empty dto.mobile?"未绑定":dto.mobile}</span>
-                                    </li>
-                                    <li class="wechat">
-                                        <c:if test="${not empty weChat}">
-                                            <a href="#" class="fr binding-btn " type="1" id="unbind_1" action_type="unbind">解绑</a>
-                                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
-                                            <span class="status status-on"></span>
-                                        </c:if>
-                                        <c:if test="${empty weChat}">
-                                            <a href="#" class="fr binding-btn color-blue" type="1" action_type="bind">绑定</a>
-                                            <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
-                                            <span class="status status-off"></span>
-                                        </c:if>
-                                        <span class="main">${empty weChat ?"未绑定":weChat}</span>
-                                    </li>
-                                    <li class="weibo">
-                                        <c:if test="${not empty weiBo}">
-                                            <a href="#" class="fr binding-btn " type="2" id="unbind_2" action_type="unbind">解绑</a>
-                                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
-                                            <span class="status status-on"></span>
-                                        </c:if>
-                                        <c:if test="${empty weiBo}">
-                                            <a href="#" class="fr binding-btn color-blue" type="2" action_type="bind">绑定</a>
-                                            <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
-                                            <span class="status status-off"></span>
-                                        </c:if>
-                                        <span class="main">${empty weiBo ?"未绑定":weiBo}</span>
-                                    </li>
+                                    <c:if test="${csp_locale == 'zh_CN'}">
+                                        <li class="phone">
+                                            <c:if test="${not empty dto.mobile}">
+                                                <a href="#" class="fr binding-btn " type="6"  action_type="unbind"><fmt:message key="page.words.unbind"/> </a>
+                                                <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
+                                                <span class="status status-on"></span>
+                                            </c:if>
+                                            <c:if test="${empty dto.mobile}">
+                                                <a href="#" class="fr binding-btn color-blue" id="bindPhone" type="6" ><fmt:message key="page.words.bind"/> </a>
+                                                <img src="${ctxStatic}/images/icon-user-phone.png" alt="">
+                                                <span class="status status-off"></span>
+                                            </c:if>
+                                            <c:if test="${empty dto.mobile}">
+                                                <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                            </c:if>
+                                            <c:if test="${not empty dto.mobile}">
+                                                <span class="main">${dto.mobile} </span>
+                                            </c:if>
+                                        </li>
+                                        <li class="wechat">
+                                            <c:if test="${not empty weChat}">
+                                                <a href="#" class="fr binding-btn " type="1" id="unbind_1" action_type="unbind"><fmt:message key="page.words.unbind"/> </a>
+                                                <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                                                <span class="status status-on"></span>
+                                            </c:if>
+                                            <c:if test="${empty weChat}">
+                                                <a href="#" class="fr binding-btn color-blue" type="1" action_type="bind"><fmt:message key="page.words.bind"/> </a>
+                                                <img src="${ctxStatic}/images/icon-user-wechat.png" alt="">
+                                                <span class="status status-off"></span>
+                                            </c:if>
+                                            <c:if test="${empty weChat}">
+                                                <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                            </c:if>
+                                            <c:if test="${not empty weChat}">
+                                                <span class="main">${weChat} </span>
+                                            </c:if>
+                                        </li>
+                                        <li class="weibo">
+                                            <c:if test="${not empty weiBo}">
+                                                <a href="#" class="fr binding-btn " type="2" id="unbind_2" action_type="unbind"><fmt:message key="page.words.unbind"/></a>
+                                                <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
+                                                <span class="status status-on"></span>
+                                            </c:if>
+                                            <c:if test="${empty weiBo}">
+                                                <a href="#" class="fr binding-btn color-blue" type="2" action_type="bind"><fmt:message key="page.words.bind"/></a>
+                                                <img src="${ctxStatic}/images/icon-user-weibo.png" alt="">
+                                                <span class="status status-off"></span>
+                                            </c:if>
+                                            <c:if test="${empty weiBo}">
+                                                <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                            </c:if>
+                                            <c:if test="${not empty weiBo}">
+                                                <span class="main">${weiBo} </span>
+                                            </c:if>
+                                        </li>
+                                    </c:if>
+                                    <c:if test="${csp_locale != 'zh_CN'}">
+                                        <li class="facebook">
+                                            <c:if test="${not empty facebook}">
+                                                <a href="#" class="fr binding-btn " type="3"  action_type="unbind"><fmt:message key="page.words.unbind"/></a>
+                                                <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
+                                                <span class="status status-on"></span>
+                                            </c:if>
+                                            <c:if test="${empty facebook}">
+                                                <a href="#" class="fr binding-btn color-blue"  type="3" onclick="facebookLogin()"><fmt:message key="page.words.bind"/></a>
+                                                <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
+                                                <span class="status status-off"></span>
+                                            </c:if>
+                                            <c:if test="${empty facebook}">
+                                                <span class="main"><fmt:message key="page.words.not.bind"/> </span>
+                                            </c:if>
+                                            <c:if test="${not empty facebook}">
+                                                <span class="main">${facebook} </span>
+                                            </c:if>
+                                        </li>
+                                        <li class="twitter">
+                                            <c:if test="${not empty twitter}">
+                                                <a href="#" class="fr binding-btn " type="4" id="unbind_4" action_type="unbind"><fmt:message key="page.words.unbind"/></a>
+                                                <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
+                                                <span class="status status-on"></span>
+                                            </c:if>
+                                            <c:if test="${empty twitter}">
+                                                <a href="#" class="fr binding-btn color-blue" id="twitter"  onclick="twitterLogin()"><fmt:message key="page.words.bind"/></a>
+                                                <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
+                                                <span class="status status-off"></span>
+                                            </c:if>
+                                            <span class="main">${empty twitter ?"未綁定":twitter }</span>
+                                        </li>
+                                    </c:if>
                                     <li class="email">
                                         <c:if test="${not empty dto.email}">
                                             <a href="#" class="fr binding-btn " type="7" id="unbind_7" action_type="unbind">解绑</a>
@@ -107,6 +155,7 @@
         </div>
     </div>
     <%@include file="../include/footer.jsp"%>
+    <%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
 </div>
 
 <!--弹出绑定手机-->

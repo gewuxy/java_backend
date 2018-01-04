@@ -43,7 +43,7 @@
                                             <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty facebook?"Not Bound":facebook}</span>
+                                        <span class="main">${empty facebook?"未綁定":facebook}</span>
                                     </li>
                                     <li class="twitter">
                                         <c:if test="${not empty twitter}">
@@ -56,7 +56,7 @@
                                             <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty twitter ?"Not Bound":twitter }</span>
+                                        <span class="main">${empty twitter ?"未綁定":twitter }</span>
                                     </li>
                                     <li class="email">
                                         <c:if test="${not empty dto.email}">
@@ -69,7 +69,7 @@
                                             <img src="${ctxStatic}/images/icon-user-email.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty dto.email ?"Not Bound":dto.email}</span>
+                                        <span class="main">${empty dto.email ?"未綁定":dto.email}</span>
                                     </li>
                                     <li class="medcn">
                                         <c:if test="${not empty YaYa}">
@@ -82,7 +82,7 @@
                                             <img src="${ctxStatic}/images/icon-user-medcn.png" alt="">
                                             <span class="status status-off"></span>
                                         </c:if>
-                                        <span class="main">${empty YaYa ?"Not Bound":"Login with Jingxin Digital Platform"}</span>
+                                        <span class="main">${empty YaYa ?"未綁定":"Login with Jingxin Digital Platform"}</span>
                                     </li>
                                 </ul>
                                 <span class="line-bg"></span>
