@@ -2,16 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>修改密码-个人中心-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.rest.password"/> - <fmt:message key="page.title.user.title"/> - <fmt:message key="page.common.appName"/></title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
-
 </head>
 
 
@@ -30,8 +27,8 @@
                         <c:if test="${empty email}">
                             <div class="user-content user-content-levelHeight item-radius">
                                 <div class="formrow">
-                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" >绑定邮箱</a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
-                                        src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;修改密码需绑定邮箱后才能继续操作。
+                                    <a href="#" type="button" id="bindEmail" class="button login-button buttonBlue last" ><fmt:message key="page.bind.email"/></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img
+                                        src="${ctxStatic}/images/user-email-binding.png" alt="">&nbsp;&nbsp;<fmt:message key="page.bind.email.change"/>
                                 </div>
 
                             </div>
@@ -41,23 +38,23 @@
                                 <div class="user-resetPassword clearfix">
                                     <form id="submitForm" action="" method="post">
                                         <div class="login-form-item">
-                                            <h3>修改密码</h3>
+                                            <h3><fmt:message key="page.rest.password"/></h3>
                                             <label for="pwd" class="cells-block pr">
                                                 <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text" placeholder="旧密码" class="login-formInput icon-register-hot last none"  maxlength="24">
-                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder="旧密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                                <input type="text" placeholder='<fmt:message key="page.old.password"/>' class="login-formInput icon-register-hot last none"  maxlength="24">
+                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder='<fmt:message key="page.old.password"/>' class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                             </label>
-                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
+                                            <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span><fmt:message key="page.email.login.userNameError"/></span></span>
 
                                             <label for="rePwd" class="cells-block pr">
                                                     <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text"  placeholder="新密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder="新密码" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
+                                                <input type="text"  placeholder='<fmt:message key="page.new.password"/>' class="login-formInput icon-register-hot last none" maxlength="24">
+                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder='<fmt:message key="page.new.password"/>' class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook1 "></a>
                                             </label>
-                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>请输入正确的邮箱地址</span></span>
-                                            <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value="修改">
+                                            <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span><fmt:message key="page.email.login.userNameError"/></span></span>
+                                            <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value='<fmt:message key="page.new.password.update"/>'>
                                         </div>
                                     </form>
                                 </div>

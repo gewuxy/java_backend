@@ -569,7 +569,7 @@
 
             <c:if test="${expireTimeCount <= 5  && expireTimeCount >=0}">
                 <div class="admin-tips" id="note">
-                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">${local}</a> </span>
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">${expireTimeCount}</strong> 天</a> </span>
                     <span class="admin-tips-close" onclick="closeClick()"></span>
                 </div>
             </c:if>
@@ -577,7 +577,7 @@
             <c:if test="${expireTimeCount > 5}">
                 <div class="admin-tips" id="pkTime">
                     <span class="admin-tips-main"  id="yearTime">
-                        <a href="${ctx}/mgr/user/memberManage">${local}</a>
+                        <a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">${expireTimeCount}</strong> 天</a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
                 </div>
@@ -599,13 +599,13 @@
             </c:if>
             <c:if test="${packageId == 1 && (cspPackage.usedMeetCount + cspPackage.hiddenMeetCount <= 3)}">
                 <div class="admin-tips" id="standard">
-                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">已生效 </a> </span>
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage"><fmt:message key="page.remind.standard.time"/> </a> </span>
                     <span class="admin-tips-close" onclick="standardClose()"></span>
                 </div>
             </c:if>
             <c:if test="${cspPackage.unlimited == true && packageId != 1}">
                 <div class="admin-tips" id="unlimited">
-                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">专业版已生效 </a> </span>
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage"><fmt:message key="page.remind.professional.time"/> </a> </span>
                     <span class="admin-tips-close" onclick="unlimitedClose()"></span>
                 </div>
             </c:if>
