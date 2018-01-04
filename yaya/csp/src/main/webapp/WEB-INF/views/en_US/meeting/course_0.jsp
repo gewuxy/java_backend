@@ -127,24 +127,6 @@
     <div class="html5ShadePlay"></div>
 
     <!--引导下载-->
-    <div class="CSPmeeting-ad-item">
-        <a href="https://www.cspmeeting.com/scan/qrcode?local=en_US">
-            <div class="flex">
-                <div class="flex-item">
-                    <div class="fl">
-                        <img src="${ctxStatic}/images/meeting-ad-logo.png" alt="">
-                    </div>
-                    <div class="oh">
-                        <div class="logo-title">CSPmeeting</div>
-                        <p>全球公测中</p>
-                    </div>
-                </div>
-                <div class="flex-item">
-                    <span class="ad-button">J</span>
-                </div>
-            </div>
-        </a>
-    </div>
 
 </div>
 

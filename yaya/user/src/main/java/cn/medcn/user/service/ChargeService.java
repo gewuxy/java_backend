@@ -51,4 +51,13 @@ public interface ChargeService extends BaseService<FluxOrder> {
      */
     MyPage<FluxOrder> findFluxOrderList(Pageable pageable);
 
+    float selectAllMoney();
+
+    float selectAllMoneyByPapal();
+
+    MyPage<FluxOrder> findFluxOrderListByUs(Pageable pageable);
+
+    Float findOrderListByTime(String startTime, String endTime);
+
+    Float findOrderListByTimeUs(String startTime, String endTime);
 }

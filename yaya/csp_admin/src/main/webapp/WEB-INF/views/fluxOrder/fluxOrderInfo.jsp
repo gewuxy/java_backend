@@ -42,7 +42,7 @@
         <div class="controls">
             <%--<input readonly name="platform" type="search" value="${fluxOrderList.get(0).platform}" maxlength="50" class="required input-xlarge"/>--%>
 
-            <select readonly id="platform" name="platform" style="width: 200px;">
+            <select readonly id="platform" name="platform" style="width: 200px; background-color: #EEEEEE;" disabled="disabled">
                 <option value=""/>-- 请选择 --
                 <option value="wx_pub_qr "/>微信公众扫码支付
                 <option value="alipay_pc_direct"/>支付宝即时到账PC端
@@ -63,7 +63,7 @@
     <div class="control-group">
         <label class="control-label">流量充值:</label>
         <div class="controls">
-            <input id="flux"   type="search" value="${fluxOrder.flux}" maxlength="50" name="flux" class="required input-xlarge">
+            <input id="flux" readonly  type="search" value="${fluxOrder.flux}" maxlength="50" name="flux" class="required input-xlarge">
         </div>
     </div>
     <div class="control-group">

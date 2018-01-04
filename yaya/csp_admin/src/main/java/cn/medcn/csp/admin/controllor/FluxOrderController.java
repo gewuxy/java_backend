@@ -44,12 +44,43 @@ public class FluxOrderController extends BaseController{
      */
     @RequestMapping(value = "/list")
     @Log(name = "获取流量订单表")
-    public String OrderList(Pageable pageable,Model model,String tradeId){
+    public String OrderList(Pageable pageable,Model model,String tradeId,Integer type,String startTime,String endTime){
+         float allMoney= chargeService.selectAllMoney();
+         //美元
+        float UsMoney= chargeService.selectAllMoneyByPapal();
+        model.addAttribute("rmb",allMoney-UsMoney);
+        model.addAttribute("usd",UsMoney);
+        if (type == null){
+            type = 0;
+        }
+        model.addAttribute("type",type);
         if (!StringUtils.isEmpty(tradeId)){
             pageable.getParams().put("tradeId",tradeId);
             model.addAttribute("tradeId",tradeId);
         }
-        MyPage<FluxOrder> page= chargeService.findFluxOrderList(pageable);
+        pageable.put("type",type);
+        MyPage<FluxOrder> page = null;
+        Float queryMoney = null;
+        if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)){
+            pageable.getParams().put("startTime",startTime);
+            pageable.getParams().put("endTime",endTime);
+            if (type == 0){
+                queryMoney = chargeService.findOrderListByTime(startTime,endTime);
+            }else {
+                queryMoney = chargeService.findOrderListByTimeUs(startTime,endTime);
+            }
+            model.addAttribute("startTime",startTime);
+            model.addAttribute("endTime",endTime);
+
+        }
+
+        if (type == 0){
+            page= chargeService.findFluxOrderList(pageable);
+        }else {
+            page= chargeService.findFluxOrderListByUs(pageable);
+        }
+        model.addAttribute("queryMoney",queryMoney == null ? 0:queryMoney);
+        model.addAttribute("search",true);
         model.addAttribute("page",page);
         return "/fluxOrder/fluxOrderList";
     }

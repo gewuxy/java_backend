@@ -8,12 +8,51 @@
         FROM t_csp_user_flux_purchase p
         INNER JOIN t_csp_user_info f
         ON p.user_id = f.id
-        WHERE 1=1
+        WHERE  p.platform NOT IN ('paypal')
         <if test="tradeId != null">
             AND p.trade_id = #{tradeId}
         </if>
+        <if test="startTime != null and endTime != null">
+            AND p.buy_time BETWEEN DATE(#{startTime}) AND DATE(#{endTime})
+        </if>
         ORDER BY p.buy_time DESC
 
+    </select>
+
+    <select id="selectAllMoney" resultType="Float">
+        SELECT sum(money) FROM `t_csp_user_flux_purchase`  WHERE state = '1'
+    </select>
+
+    <select id="selectAllMoneyByPapal" resultType="Float">
+       SELECT IFNULL(sum(money),0) FROM `t_csp_user_flux_purchase` WHERE platform = 'paypal' AND state = '1'
+    </select>
+
+    <select id="findFluxOrderListByUs" resultType="cn.medcn.user.model.FluxOrder">
+        SELECT
+        p.*,
+        f.nick_name
+        FROM t_csp_user_flux_purchase p
+        INNER JOIN t_csp_user_info f
+        ON p.user_id = f.id
+        WHERE p.platform = 'paypal'
+        <if test="tradeId != null">
+            AND p.trade_id = #{tradeId}
+        </if>
+        <if test="startTime != null and endTime != null">
+            AND p.buy_time BETWEEN  DATE(#{startTime}) AND DATE(#{endTime})
+        </if>
+        ORDER BY p.buy_time DESC
+
+    </select>
+
+    <select id="findOrderListByTime" resultType="Float">
+        SELECT sum(money) FROM t_csp_user_flux_purchase WHERE
+        state = '1' AND buy_time BETWEEN #{startTime} AND #{endTime}
+    </select>
+
+    <select id="findOrderListByTimeUs" resultType="Float">
+        SELECT sum(money) FROM t_csp_user_flux_purchase WHERE
+        state = '1' AND platform = 'paypal' AND buy_time BETWEEN #{startTime} AND #{endTime}
     </select>
 
 </mapper>

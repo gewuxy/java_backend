@@ -238,4 +238,31 @@ public class ChargeServiceImpl extends BaseServiceImpl<FluxOrder> implements Cha
         MyPage<FluxOrder> myPage = MyPage.page2Mypage((Page) fluxOrderDAO.findFluxOrderList(pageable.getParams()));
         return myPage;
     }
+
+    @Override
+    public float selectAllMoney() {
+        return fluxOrderDAO.selectAllMoney();
+    }
+
+    @Override
+    public float selectAllMoneyByPapal() {
+        return fluxOrderDAO.selectAllMoneyByPapal();
+    }
+
+    @Override
+    public MyPage<FluxOrder> findFluxOrderListByUs(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), Pageable.countPage);
+        MyPage<FluxOrder> myPage = MyPage.page2Mypage((Page) fluxOrderDAO.findFluxOrderListByUs(pageable.getParams()));
+        return myPage;
+    }
+
+    @Override
+    public Float findOrderListByTime(String startTime, String endTime) {
+        return fluxOrderDAO.findOrderListByTime(startTime,endTime);
+    }
+
+    @Override
+    public Float findOrderListByTimeUs(String startTime, String endTime) {
+        return fluxOrderDAO.findOrderListByTimeUs(startTime,endTime);
+    }
 }
