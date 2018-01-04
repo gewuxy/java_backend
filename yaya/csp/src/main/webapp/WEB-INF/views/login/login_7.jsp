@@ -9,9 +9,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
     <title><fmt:message key="page.email.login.title"/></title>
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
 </head>
