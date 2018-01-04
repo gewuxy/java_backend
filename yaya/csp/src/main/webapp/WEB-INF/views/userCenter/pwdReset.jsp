@@ -41,20 +41,20 @@
                                             <h3><fmt:message key="page.rest.password"/></h3>
                                             <label for="pwd" class="cells-block pr">
                                                 <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text" placeholder='<fmt:message key="page.old.password"/>' class="login-formInput icon-register-hot last none"  maxlength="24">
-                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder='<fmt:message key="page.old.password"/>' class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                                <input type="text" placeholder="<fmt:message key="page.old.password"/>" class="login-formInput icon-register-hot last none"  maxlength="24">
+                                                <input id="pwd" type="password" name="oldPwd" required="" placeholder="<fmt:message key="page.old.password"/>" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                             </label>
                                             <span id="oldSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span><fmt:message key="page.email.login.userNameError"/></span></span>
 
                                             <label for="rePwd" class="cells-block pr">
                                                     <%--class 为隐藏状态不能添加required属性--%>
-                                                <input type="text"  placeholder='<fmt:message key="page.new.password"/>' class="login-formInput icon-register-hot last none" maxlength="24">
-                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder='<fmt:message key="page.new.password"/>' class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
+                                                <input type="text"  placeholder="<fmt:message key="page.new.password"/>" class="login-formInput icon-register-hot last none" maxlength="24">
+                                                <input id="rePwd" type="password" name="newPwd" required="" placeholder="<fmt:message key="page.new.password"/>" class="login-formInput icon-register-hot hidePassword1 last" maxlength="24">
                                                 <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook1 "></a>
                                             </label>
                                             <span id="newSpan" class="cells-block error none "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span><fmt:message key="page.email.login.userNameError"/></span></span>
-                                            <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value='<fmt:message key="page.new.password.update"/>'>
+                                            <input href="#" type="button" id="submitBtn" class="button login-button buttonBlue last" value="<fmt:message key="page.new.password.update"/>">
                                         </div>
                                     </form>
                                 </div>
@@ -82,16 +82,16 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <label for="email" class="cells-block pr">
-                    <input id="email" type="text" class="login-formInput" placeholder="邮箱地址">
+                    <input id="email" type="text" class="login-formInput" placeholder="<fmt:message key="page.email.login.address"/>">
                 </label>
-                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
+                <span class="cells-block error none" id="emailSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span><fmt:message key="page.write.right.password"/></span></span>
                 <label for="password" class="cells-block pr">
-                    <input type="text" required="" placeholder="密码" class="login-formInput icon-register-hot last none" maxlength="24">
-                    <input id="password" type="password" required="" placeholder="密码" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                    <input type="text" required="" placeholder="<fmt:message key="page.password"/>" class="login-formInput icon-register-hot last none" maxlength="24">
+                    <input id="password" type="password" required="" placeholder="<fmt:message key="page.password"/>" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                 </label>
-                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span>输入正确密码</span></span>
-                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="绑定邮箱">
+                <span class="cells-block error none" id="passwordSpan"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span><fmt:message key="page.write.right.password"/></span></span>
+                <input href="#" type="button" id="emailBtn" class="button login-button buttonBlue email-hook-02 last" value="<fmt:message key="page.bind.email"/>">
             </div>
         </div>
     </div>
@@ -106,9 +106,9 @@
         <div class="layer-hospital-popup-main ">
             <div class="login-form-item">
                 <div class="login-message-text">
-                    <p>激活账号邮件已发送至您的邮箱，<br />请前往激活完成注册。</p>
+                    <p><fmt:message key="page.email.register.active.tips"/></p>
                 </div>
-                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="前往邮箱">
+                <input href="#" type="button" id="goToEmail" class="button login-button buttonBlue close-button layui-layer-close last" value="<fmt:message key="page.email.register.toEmail"/>">
             </div>
         </div>
     </div>
@@ -184,7 +184,7 @@
                 layer.closeAll();
                 window.open( url);
             }else{
-                layer.msg("抱歉!未找到对应的邮箱登录地址");
+                layer.msg("<fmt:message key="page.email.url.notfount"/>");
             }
         });
 
@@ -223,7 +223,7 @@
                     if (result.code == 0){//成功
                         $("#pwd").val("");
                         $("#rePwd").val("");
-                        layer.msg("修改成功");
+                        layer.msg('<fmt:message key="page.password.update.success"/>');
                     }else{//失败
                         layer.msg(result.err);
                     }
@@ -249,20 +249,20 @@
         var password = $("#pwd").val();
         var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
         if(reg.test($.trim(password))){
-            $("#oldSpan").find('span').html("密码不能包含中文");
+            $("#oldSpan").find('span').html("<fmt:message key="page.not.password.chinese"/>");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }
         if ($.trim(password)==''){
-            $("#oldSpan").find('span').html("旧密码不能为空");
+            $("#oldSpan").find('span').html("<fmt:message key="page.old.password.not.null"/>");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#oldSpan").find('span').html("旧密码不能包含空格");
+            $("#oldSpan").find('span').html("<fmt:message key="page.old.password.not.space"/>");
             $("#oldSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6){
-            $("#oldSpan").find('span').html("请输入6~24位密码");
+            $("#oldSpan").find('span').html("<fmt:message key="page.password.length.tips"/>");
             $("#oldSpan").attr("class","cells-block error");
 
         }else{
@@ -276,23 +276,23 @@
         var password = $("#pwd").val();
         var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
         if(reg.test($.trim(newPwd))){
-            $("#newSpan").find('span').html("新密码不能包含中文");
+            $("#newSpan").find('span').html("<fmt:message key="page.new.password.errorTips"/>");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }
         if ($.trim(newPwd)==''){
-            $("#newSpan").find('span').html("新密码不能为空");
+            $("#newSpan").find('span').html("<fmt:message key="page.user.newpassword.notnull"/>");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd)!= newPwd){
-            $("#newSpan").find('span').html("新密码不能包含空格");
+            $("#newSpan").find('span').html("<fmt:message key="page.new.password.not.space"/>");
             $("#newSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(newPwd).length < 6){
-            $("#newSpan").find('span').html("请输入6~24位密码");
+            $("#newSpan").find('span').html("<fmt:message key="page.password.length.tips"/>");
             $("#newSpan").attr("class","cells-block error");
         }else if(password == newPwd){
-            $("#newSpan").find('span').html("新密码和旧密码相同");
+            $("#newSpan").find('span').html("<fmt:message key="page.new.old.password.same"/>");
             $("#newSpan").attr("class","cells-block error");
         }else{
             $("#newSpan").attr("class","cells-block error none");
@@ -304,20 +304,20 @@
         var password = $("#password").val();
         var reg = new RegExp("[\\u4E00-\\u9FFF]+","g");
         if(reg.test($.trim(password))){
-            $("#passwordSpan").find('span').html("密码不能包含中文");
+            $("#passwordSpan").find('span').html("<fmt:message key="page.not.password.chinese"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }
         if ($.trim(password)==''){
-            $("#passwordSpan").find('span').html("密码不能为空");
+            $("#passwordSpan").find('span').html("<fmt:message key="page.password.not.null"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password)!= password){
-            $("#passwordSpan").find('span').html("密码不能包含空格");
+            $("#passwordSpan").find('span').html("<fmt:message key="page.password.trimTips"/>");
             $("#passwordSpan").attr("class","cells-block error");
             return false;
         }else if($.trim(password).length < 6) {
-            $("#passwordSpan").find('span').html("请输入6~24位密码");
+            $("#passwordSpan").find('span').html("<fmt:message key="page.password.length.tips"/>");
             $("#passwordSpan").attr("class", "cells-block error");
         }else{
             $("#passwordSpan").attr("class","cells-block error none");
@@ -329,12 +329,12 @@
         var email = $("#email").val();
         if($.trim(email) == ''){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").find('span').html("邮箱不能为空");
+            $("#emailSpan").find('span').html("<fmt:message key="page.email.notnull"/>");
             return false;
         }
         if(!email.match(/^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/)){
             $("#emailSpan").attr("class","cells-block error ");
-            $("#emailSpan").find('span').html("邮箱格式不正确");
+            $("#emailSpan").find('span').html("<fmt:message key="page.user.email.format"/>");
             return false;
         }
         $("#emailSpan").attr("class","cells-block error none");
@@ -345,7 +345,3 @@
 </script>
 </body>
 </html>
-
-
-
-
