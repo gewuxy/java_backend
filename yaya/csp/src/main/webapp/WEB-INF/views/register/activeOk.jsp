@@ -8,11 +8,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
-    <title><fmt:message key="page.email.active.title"/></title>
+    <title><fmt:message key="page.email.active.title"/><fmt:message key="page.common.appName"/></title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
 </head>

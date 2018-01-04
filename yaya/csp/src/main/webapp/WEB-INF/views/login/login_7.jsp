@@ -11,7 +11,7 @@
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta charset="UTF-8">
-    <title><fmt:message key="page.email.login.title"/></title>
+    <title><fmt:message key="page.email.login.title"/><fmt:message key="page.common.appName"/></title>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
 </head>
@@ -37,15 +37,24 @@
                             <div class="login-form-item">
                                 <%-- 英文 --%>
                                 <label for="email" class="cells-block pr">
-                                    <input id="email" name="username" type="text" value="${email}" class="login-formInput" placeholder="<fmt:message key="page.email.login.address"/>">
+                                    <input id="email" name="username" type="text" value="${email}"
+                                           class="login-formInput"
+                                           placeholder="<fmt:message key="page.email.login.address"/>">
                                 </label>
                                 <label for="pwd" class="cells-block pr">
-                                    <input type="text" required placeholder="<fmt:message key="page.email.login.password"/>" class="login-formInput icon-register-hot last none" maxlength="24">
-                                    <input id="pwd" name="password" type="password" required placeholder="<fmt:message key="page.email.login.password"/>" class="login-formInput icon-register-hot hidePassword last" maxlength="24">
+                                    <input type="text" required
+                                           placeholder="<fmt:message key="page.email.login.password"/>"
+                                           class="login-formInput icon-register-hot last none" maxlength="24">
+                                    <input id="pwd" name="password" type="password" required
+                                           placeholder="<fmt:message key="page.email.login.password"/>"
+                                           class="login-formInput icon-register-hot hidePassword last" maxlength="24">
                                     <a href="javascript:;" class="icon-pwdChange pwdChange-on pwdChange-hook "></a>
                                 </label>
-                                <span class="cells-block error ${not empty error ? '':'none'} "><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span id="errorMessage">${error}</span></span>
-                                <input type="button" class="button login-button buttonBlue last" id="submitBtn" value="<fmt:message key="page.email.login"/>">
+                                <span class="cells-block error ${not empty error ? '':'none'} "><img
+                                        src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<span
+                                        id="errorMessage">${error}</span></span>
+                                <input type="button" class="button login-button buttonBlue last" id="submitBtn"
+                                       value="<fmt:message key="page.email.login"/>">
                             </div>
                         </form>
                     </div>

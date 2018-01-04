@@ -41,8 +41,8 @@
                         <div class="login-form-item">
                             <div class="login-message-text login-message-text-2">
                                 <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
-                                <p class="t-center color-blue">支付成功！</p>
-                                <p>交易金额：&nbsp;<span class="color-blue" id="successAmount">200元</span>&nbsp;(人民币)</p>
+                                <p class="t-center color-blue">Payment completed！</p>
+                                <p>Recharge amount：&nbsp;<span class="color-blue" id="successAmount">200</span>&nbsp;CNY</p>
                             </div>
                             <input href="login-01.html" type="button" id="close" class="button login-button buttonBlue last" style="width:500px; margin:0 auto;" value="关闭页面">
                         </div>
