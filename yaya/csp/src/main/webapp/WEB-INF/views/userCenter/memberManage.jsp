@@ -94,16 +94,20 @@
                                         <c:if test="${ cspPackage.id == 3}">
                                         <c:if test="${cspUserPackage.unlimited == false}">
                                             <div class="fl member-grade"><img src="${ctxStatic}/images/member-icon-grade-02.png" alt=""></div>
-                                            <div class="oh">
-                                                <h5 class="title"><fmt:message key="package.professional"/></h5>
-                                                <c:choose>
-                                                    <c:when test="${ cspPackage.packageCn == '专业版' || cspPackage.packageTw == '專業版'}">
-                                                        <div class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
-                                                    </c:when>
-                                                    <c:otherwise>
-                                                        <div class="member-mode-tips">${startTime}~${endTime}</div>
-                                                    </c:otherwise>
-                                                </c:choose>
+                                            <div class="oh" id="time">
+                                                <h5 class="title" id="title"><fmt:message key="package.professional"/></h5>
+                                                <div id="CnTime" class="member-mode-tips"><fmt:formatDate value="${cspPackage.packageStart}" type="both" pattern="yyyy-MM-dd"/>至<fmt:formatDate value="${cspPackage.packageEnd}" type="both" pattern="yyyy-MM-dd"/></div>
+                                                <div id="UsTime" class="member-mode-tips">${startTime}~${endTime}</div>
+                                                <script>
+                                                    $(document).ready(function(){
+                                                        var titleName = $("#title").text();
+                                                        if (titleName.startWith('专业版')||titleName.startWith('專業版')){
+                                                            $("#UsTime").hide()
+                                                       }else{
+                                                           $("#CnTime").hide()
+                                                       }
+                                                    })
+                                                </script>
                                             </div>
                                             </c:if>
                                         </c:if>
@@ -147,7 +151,7 @@
                                         </c:if>
                                         <c:if test="${info.iden =='ZB' && info.packageId == 3}"><li>
                                             <p><img src="${ctxStatic}/images/member-icon-05.png" alt=""></p>
-                                            <p><fmt:message key="page.remind.professional.ads"/></p>
+                                            <p><fmt:message key="page.remind.professional.meet"/></p>
                                           </li>
                                         </c:if>
                                         <c:if test="${info.iden =='GG' && info.state == false}">
@@ -168,6 +172,12 @@
                                         <p class="color-gray-03"><fmt:message key="page.remind.member.descript.watermark.switch"/></p>
                                         </li>
                                         </c:if>
+                                            <c:if test="${info.iden =='SYB' && info.state == true}">
+                                                <li>
+                                                    <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
+                                                    <p><fmt:message key="page.remind.member.descript.watermark.switch"/></p>
+                                                </li>
+                                            </c:if>
                                             <c:if test="${(info.iden =='SY' && info.state == true) || (info.iden =='SY' && info.packageId == 3)}">
                                                 <li>
                                                     <p><img src="${ctxStatic}/images/member-icon-04.png" alt=""></p>
