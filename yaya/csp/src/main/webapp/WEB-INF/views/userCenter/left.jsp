@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <div class="user-left-box">
     <div class="user-userinfo clearfix item-radius">
-        <div class="img"><a href="${ctx}/mgr/user/toAvatar" class="admin-user-head" title="编辑头像"><img <c:if test="${not empty dto.avatar}">src="${dto.avatar}"</c:if>
+        <div class="img"><a href="${ctx}/mgr/user/toAvatar" class="admin-user-head" title="<fmt:message key="page.label.words"/>"><img <c:if test="${not empty dto.avatar}">src="${dto.avatar}"</c:if>
         <c:if test="${empty dto.avatar}">src="${ctxStatic}/images/img/user-default.png"</c:if>
                id="image" alt="" style="widtH:126px; height:126px;"><i></i></a></div>
         <div class="name" id="name">${dto.nickName}</div>
@@ -18,6 +18,12 @@
                         <c:if test="${list.thirdPartyId == 5}">
                             <img src="${ctxStatic}/images/icon-user-medcn.png"  alt="">
                         </c:if>
+                        <c:if test="${list.thirdPartyId == 4}">
+                            <img src="${ctxStatic}/images/icon-user-twitter.png" alt="">
+                        </c:if>
+                        <c:if test="${list.thirdPartyId == 3}">
+                            <img src="${ctxStatic}/images/icon-user-facebook.png" alt="">
+                        </c:if>
                     </c:forEach>
             </c:if>
             <c:if test="${not empty dto.email}">
@@ -33,9 +39,9 @@
         <%--<img src="./images/icon-user-facebook.png" alt="">--%>
     </div>
     <div class="user-statistics item-radius">
-        <div class="title">PPT统计</div>
-        <div class="main line">上传数量 <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.pptCount}</span>个</span></div>
-        <div class="main">分享次数 <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.shareCount}</span>个</span></div>
+        <div class="title"><fmt:message key="page.words.ppt"/> </div>
+        <div class="main line"><fmt:message key="page.words.upload"/> <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.pptCount}</span><fmt:message key="page.words.upload.count"/> </span></div>
+        <div class="main"><fmt:message key="page.words.share"/> <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.shareCount}</span><fmt:message key="page.words.share.count"/> </span></div>
     </div>
 </div>
 
