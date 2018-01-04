@@ -76,7 +76,7 @@
                     $("#name", window.parent.document).html(nickName);
                     layer.msg("Updated successfully");
                 }else{
-                    layer.msg("update fail");
+                    layer.msg("Updated fail");
                 }
             });
 
