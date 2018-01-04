@@ -255,7 +255,7 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
     }
 
     @Override
-    public MyPage<CspOrderPlatFromDTO> getCapitalByDay(Pageable pageable) {
+    public MyPage<Map<String,Object>> getCapitalByDay(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(),pageable.getPageSize(),Pageable.countPage);
         return MyPage.page2Mypage((Page)packageOrderDAO.getCapitalByDay(pageable.getParams()));
     }
@@ -275,6 +275,21 @@ public class CspPackageOrderServiceImpl extends BaseServiceImpl<CspPackageOrder>
         } else {
             return local("package.professional");
         }
+    }
+
+    @Override
+    public CspOrderPlatFromDTO getTotalCapital(Integer grain, Integer abroad, Date startTime, Date endTime) {
+        return packageOrderDAO.getTotalCapital(grain,abroad,startTime,endTime);
+    }
+
+    @Override
+    public List<Map<String, Object>> transfStats(Date startTime, Date endTime) {
+        return packageOrderDAO.transfStats(startTime,endTime);
+    }
+
+    @Override
+    public List<Map<String, Object>> renewStats(Date startTime, Date endTime) {
+        return cspUserPackageHistoryDAO.renewStats(startTime,endTime);
     }
 }
 

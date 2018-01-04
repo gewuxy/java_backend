@@ -9,4 +9,8 @@
     <select id="selectEdition" resultType="Integer">
         SELECT count(*) FROM t_csp_user_package p LEFT JOIN t_csp_user_info i ON p.package_id = #{packageId} AND i.abroad = #{location} where p.user_id = i.id
     </select>
+
+    <select id="getTodayPackageInfo"  resultType="java.util.Map">
+       SELECT package_id,COUNT(package_id) AS num,(SELECT COUNT(id) FROM t_csp_user_info) AS userNum FROM t_csp_user_package GROUP BY package_id
+    </select>
 </mapper>
