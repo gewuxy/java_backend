@@ -562,14 +562,14 @@
         <div class="page-width clearfix pr">
             <c:if test="${(cspPackage.usedMeetCount + cspPackage.hiddenMeetCount) > cspPackage.limitMeets && packageId !=3}">
                 <div class="admin-tips" id="meetCountTips">
-                    <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage">您的会议数量已超过套餐权限，请删除部分会议或升级套餐后继续使用</a> </span>
+                    <span class="admin-tips-main"> <a href="${ctx}/mgr/user/memberManage"><fmt:message key="page.list.remind.meetCount"/></a> </span>
                     <span class="admin-tips-close" onclick="closeMeetCountTips()"></span>
                 </div>
             </c:if>
 
             <c:if test="${expireTimeCount <= 5  && expireTimeCount >=0}">
                 <div class="admin-tips" id="note">
-                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">还有 <strong class="color-blue">${expireTimeCount}</strong> 天到期</a> </span>
+                    <span class="admin-tips-main" > <a href="${ctx}/mgr/user/memberManage">${local}</a> </span>
                     <span class="admin-tips-close" onclick="closeClick()"></span>
                 </div>
             </c:if>
@@ -577,7 +577,7 @@
             <c:if test="${expireTimeCount > 5}">
                 <div class="admin-tips" id="pkTime">
                     <span class="admin-tips-main"  id="yearTime">
-                        <a href="${ctx}/mgr/user/memberManage">有效期为 <strong class="color-blue">${expireTimeCount}</strong> 天</a>
+                        <a href="${ctx}/mgr/user/memberManage">${local}</a>
                     </span>
                     <span class="admin-tips-close" onclick="pkTimeClose()"></span>
                 </div>

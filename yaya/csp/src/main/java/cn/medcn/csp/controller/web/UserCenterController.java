@@ -459,8 +459,12 @@ public class UserCenterController extends CspBaseController {
                 model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
             }
         }
-
+        String local = "";
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
+        for (CspPackageInfo cspPackageInfo: cspPackageInfos) {
+            local = local("page.remind.limit.meet", new Object[]{cspPackageInfo.getLimitMeets()});
+        }
+        model.addAttribute("limitMeets",local);
         model.addAttribute("cspPackageInfos", cspPackageInfos);
         model.addAttribute("cspUserPackage",cspUserPackage);
         model.addAttribute("cspPackage", cspPackage);
