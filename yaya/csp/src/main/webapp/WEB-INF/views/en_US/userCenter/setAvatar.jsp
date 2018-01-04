@@ -43,7 +43,7 @@
                                     </div>
                                     <p>Please select a jpg/png image less than 1M.</p>
                                     <input type="file" id="headimg" style="display:none" name="file" onchange="toUpload()">
-                                    <input href="#" type="button" class="button login-button buttonBlue last" onclick="headimg.click()" value="更换头像">
+                                    <input href="#" type="button" class="button login-button buttonBlue last" onclick="headimg.click()" value="Update Head-Portrait">
                                 </c:if>
                             </div>
                         </div>
