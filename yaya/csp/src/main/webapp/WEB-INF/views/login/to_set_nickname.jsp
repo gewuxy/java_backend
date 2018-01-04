@@ -77,17 +77,17 @@
             var nick = $("#nickname").val();
 
             if (isEmpty(nick)) {
-                $("#errorMessage").text("<fmt:message key="page.nickname.tip"/>");
+                $("#errorMessage").text("<fmt:message key="page.nickname.tips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#nickname").focus();
                 return false;
             } else if (nick.indexOf(" ") != -1) {
-                $("#errorMessage").text("<fmt:message key="page.nickname.trimTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.nickname.trimTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#nickname").focus();
                 return false;
             } else if ($.trim(nick).length > 18) {
-                $("#errorMessage").text("<fmt:message key="page.nickname.lengthTip"/>");
+                $("#errorMessage").text("<fmt:message key="page.nickname.lengthTips"/>");
                 $("#errorMessage").parent().removeClass("none");
                 $("#nickname").focus();
                 return false;
