@@ -34,7 +34,7 @@
                         <form action="">
                             <div class="login-form-item">
                                 <div class="login-message-text" style="text-align: left !important;">
-                                    <p style="font-size:16px;">Dear&nbsp;&nbsp;<span class="color-blue">${user}</span>,<br /> Welcome aboard! <a href="${ctx}/mgr/login" class="color-blue">Please click here to log in CSPmeeting.</a> </p>
+                                    <p style="font-size:16px;">Dear&nbsp;&nbsp;<span class="color-blue">${user}</span>,<br /> Welcome aboard! <a href="${ctx}/mgr/login" class="color-blue">Please click here to login CSPmeeting.</a> </p>
                                 </div>
                             </div>
                         </form>
