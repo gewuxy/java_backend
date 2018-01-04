@@ -8,11 +8,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
     <title>${course.title}</title>
     <meta id="MetaDescription" name="DESCRIPTION" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
     <meta id="MetaKeywords" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
+
 
     <!-- 高清方案 -->
     <script>!function(e){function t(a){if(i[a])return i[a].exports;var n=i[a]={exports:{},id:a,loaded:!1};return e[a].call(n.exports,n,n.exports,t),n.loaded=!0,n.exports}var i={};return t.m=e,t.c=i,t.p="",t(0)}([function(e,t){"use strict";Object.defineProperty(t,"__esModule",{value:!0});var i=window;t["default"]=i.flex=function(e,t){var a=e||100,n=t||1,r=i.document,o=navigator.userAgent,d=o.match(/Android[\S\s]+AppleWebkit\/(\d{3})/i),l=o.match(/U3\/((\d+|\.){5,})/i),c=l&&parseInt(l[1].split(".").join(""),10)>=80,p=navigator.appVersion.match(/(iphone|ipad|ipod)/gi),s=i.devicePixelRatio||1;p||d&&d[1]>534||c||(s=1);var u=1/s,m=r.querySelector('meta[name="viewport"]');m||(m=r.createElement("meta"),m.setAttribute("name","viewport"),r.head.appendChild(m)),m.setAttribute("content","width=device-width,user-scalable=no,initial-scale="+u+",maximum-scale="+u+",minimum-scale="+u),r.documentElement.style.fontSize=a/2*s*n+"px"},e.exports=t["default"]}]);  flex(100, 1);</script>
@@ -69,7 +70,7 @@
         <div class="error-item">
             <div class="logo-error">
                 <p><img src="${ctxStatic}/images/logo-csp.png" alt=""></p>
-                <p>会讲</p>
+                <p><fmt:message key="page.common.appName"/></p>
             </div>
             <div class="main-error">
                 <p>${error}</p>

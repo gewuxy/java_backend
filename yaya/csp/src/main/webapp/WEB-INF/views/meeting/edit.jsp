@@ -28,7 +28,7 @@
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
-
+        <c:set var="isZh" value="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}"/>
         <div class="page-width clearfix">
             <div class="admin-module clearfix item-radius">
                 <div class="row clearfix">
@@ -147,9 +147,9 @@
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.update.warn.noinfo"/></span>
 
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
-                                    <span class="subject"><fmt:message key="page.meeting.tab.category"/>&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? courseCategory.parent.nameCn : rootList[0].nameCn}</i></span><span class="office" id="subCategory">${empty course.category ? subList[0].nameCn : course.category}</span>
+                                    <span class="subject"><fmt:message key="page.meeting.tab.category"/>&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? (isZh ? courseCategory.parent.nameCn:courseCategory.parent.nameEn) : (isZh ? rootList[0].nameCn:rootList[0].nameEn)}</i></span><span class="office" id="subCategory">${empty course.category ? (isZh ? subList[0].nameCn : subList[0].nameEn) : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
-                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : subList[0].nameCn}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZH ? subList[0].nameCn : subList[0].nameEn)}">
                                 </div>
                                 <c:if test="${ not empty course.details && packageId > 1}">
                                     <div class="cells-block meeting-watermark">
@@ -261,7 +261,7 @@
                                             <c:if test="${status.index == 0}">class="cur"</c:if>
                                         </c:otherwise>
                                     </c:choose>
-                                ><a href="javascript:void (0);">${c.nameCn}</a></li>
+                                ><a href="javascript:void (0);">${isZh ? c.nameCn : c.nameEn}</a></li>
                             </c:forEach>
                         </ul>
                     </div>
@@ -285,7 +285,7 @@
                                 </c:choose>
 
                                 <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if>
-                            ><a href="javascript:void (0);">${cc.nameCn}</a></li>
+                            ><a href="javascript:void (0);">${isZh ? cc.nameCn : cc.nameEn}</a></li>
                             </c:forEach>
 
                         </ul>

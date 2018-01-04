@@ -8,10 +8,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
     <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
-    <%@include file="/WEB-INF/include/page_context.jsp"%>
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
@@ -127,31 +127,31 @@
     <div class="html5ShadePlay"></div>
 
     <!--引导下载-->
-    <div class="CSPmeeting-ad-item">
-        <a href="https://www.cspmeeting.com/scan/qrcode?local=zh_CN">
-            <div class="flex">
-                <div class="flex-item">
-                    <div class="fl">
-                        <img src="${ctxStatic}/images/meeting-ad-logo.png" alt="">
-                    </div>
-                    <div class="oh">
-                        <div class="logo-title">会讲</div>
-                        <p>全球公测中</p>
-                    </div>
-                </div>
-                <div class="flex-item">
-                    <span class="ad-button">参与</span>
-                </div>
-            </div>
-        </a>
-    </div>
+    <%--<div class="CSPmeeting-ad-item">--%>
+        <%--<a href="https://www.cspmeeting.com/scan/qrcode?local=zh_CN">--%>
+            <%--<div class="flex">--%>
+                <%--<div class="flex-item">--%>
+                    <%--<div class="fl">--%>
+                        <%--<img src="${ctxStatic}/images/meeting-ad-logo.png" alt="">--%>
+                    <%--</div>--%>
+                    <%--<div class="oh">--%>
+                        <%--<div class="logo-title">会讲</div>--%>
+                        <%--<p>全球公测中</p>--%>
+                    <%--</div>--%>
+                <%--</div>--%>
+                <%--<div class="flex-item">--%>
+                    <%--<span class="ad-button">参与</span>--%>
+                <%--</div>--%>
+            <%--</div>--%>
+        <%--</a>--%>
+    <%--</div>--%>
 
 </div>
 
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3>Info</h3></div>
+        <div class="title"><h3><fmt:message key="page.common.info"/> </h3></div>
         <div class="text hidden-box">
 
             <p>${not empty course.info ? course.info : 'undefined'}</p>
@@ -584,7 +584,7 @@
 
         function report(type){
             $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
-                layer.msg('举报成功');
+                layer.msg('<fmt:message key="page.meeting.report.success"/>');
             },'json');
         }
 
@@ -596,19 +596,19 @@
             }
             weui.actionSheet([
                 {
-                    label: '色情',
+                    label: '<fmt:message key="page.meeting.report.type.sex"/>',
                     onClick: function () {
                         report(0);
                         //layer.msg('举报成功');
                     }
                 }, {
-                    label: '违法犯罪',
+                    label: '<fmt:message key="page.meeting.report.type.crime"/>',
                     onClick: function () {
                         report(1);
                         //layer.msg('举报成功');
                     }
                 }, {
-                    label: '侵权',
+                    label: '<fmt:message key="page.meeting.report.type.infringement"/>',
                     onClick: function () {
                         report(2);
                         //layer.msg('举报成功');
@@ -616,7 +616,7 @@
                 }
             ], [
                 {
-                    label: '取消',
+                    label: '<fmt:message key="page.button.cancel"/>',
                     onClick: function () {
                         console.log('取消');
                         //关闭时还原高度。

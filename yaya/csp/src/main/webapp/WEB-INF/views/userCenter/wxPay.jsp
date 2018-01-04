@@ -2,15 +2,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>流量管理-个人中心-会讲</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
+    <title><fmt:message key="page.title.flux"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script type="text/javascript" src="${ctxStatic}/js/qrcode.js"></script>
 
@@ -23,16 +21,16 @@
     <div class="admin-content bg-gray" >
         <div class="page-width clearfix">
             <div class="subPage-head item-shadow item-radius clearfix">
-                <h3 class="title"><i class="icon icon-header-point"></i>微信支付</h3>
+                <h3 class="title"><i class="icon icon-header-point"></i><fmt:message key="page.words.weiXin.pay"/> </h3>
             </div>
             <!--正常流程-->
             <div class="subPage-main item-shadow item-radius wechat-state" >
                 <div id="codeDiv">
                     <h3 class="title" id="title"></h3>
                     <div class="img t-center" id="code"></div>
-                    <p><img src="${ctxStatic}/images/icon-payment.png" alt="">&nbsp;打开微信手机客户端扫一扫</p>
-                    <p id="active">距离二维码过期还剩 <span class="color-red" id="time">50</span> 秒，过期后请刷新页面重新获取二维码。</p>
-                    <p class="color-red" id="inActive" style="display: none">二维码已失效&nbsp;&nbsp;点击<a href="javascript:;" class="color-blue" onclick="useOldCode()">重新</a>获取二维码</p>
+                    <p><img src="${ctxStatic}/images/icon-payment.png" alt="">&nbsp;<fmt:message key="page.words.weiXin.tips1"/> </p>
+                    <p id="active"><fmt:message key="page.words.weiXin.tips2"/> <span class="color-red" id="time">50</span> <fmt:message key="page.words.weiXin.tips3"/> </p>
+                    <p class="color-red" id="inActive" style="display: none"><fmt:message key="page.words.weiXin.tips4"/> <a href="javascript:;" class="color-blue" onclick="useOldCode()"><fmt:message key="page.words.weiXin.tips5"/> </a><fmt:message key="page.words.weiXin.tips6"/> </p>
                 </div>
 
                 <!--切换  输入新密码-->
@@ -41,8 +39,8 @@
                         <div class="login-form-item">
                             <div class="login-message-text login-message-text-2">
                                 <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
-                                <p class="t-center color-blue">支付成功！</p>
-                                <p>交易金额：&nbsp;<span class="color-blue" id="successAmount">200元</span>&nbsp;(人民币)</p>
+                                <p class="t-center color-blue"><fmt:message key="page.words.weiXin.tips7"/> </p>
+                                <p><fmt:message key="page.words.weiXin.tips8"/> &nbsp;<span class="color-blue" id="successAmount">200<fmt:message key="page.words.weiXin.tip9"/> </span>&nbsp;<fmt:message key="page.words.weiXin.tips10"/></p>
                             </div>
                             <input href="login-01.html" type="button" id="close" class="button login-button buttonBlue last" style="width:500px; margin:0 auto;" value="关闭页面">
                         </div>
@@ -87,7 +85,7 @@
 
         var amount = (charge.amount)/100;
         money = amount;
-        $("#title").append('交易金额：<strong class="price color-blue">' + amount +'</strong>&nbsp;元');
+        $("#title").append('<fmt:message key="page.words.weiXin.tips9"/>' + '<strong class="price color-blue">' + amount +'</strong>&nbsp;' + '<fmt:message key="page.words.weiXin.tips10"/>');
 
 
         $("#time").text(curCount);
