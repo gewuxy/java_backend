@@ -51,7 +51,6 @@
         </span>
     </div>
 </form>
-<div id="exportView"></div>
 <div class="clearfix item-margin-bottom">
     <div id="echarts-2" class="echarts echarts-3"></div>
 </div>
@@ -195,13 +194,6 @@
             return 0;
         }
         return Math.floor(data * 100) / 100;
-    }
-
-    function initExport(data){
-        if(data.length > 0){
-            html = '<div class="clearfix "><div class="pull-left inputTime-item"><input class="btn btn-primary" type="button" id="export" value="导出Excel表格"/></div></div>'
-            $("#exportView").html(html);
-        }
     }
 </script>
 </body>

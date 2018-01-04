@@ -3,7 +3,13 @@
 <mapper namespace="cn.medcn.user.dao.CspPackageOrderDAO">
 
     <select id="totalMoney" resultType="java.util.Map">
-        SELECT currency_type,SUM(should_pay) AS money FROM t_csp_package_order GROUP BY currency_type
+        SELECT temp.currency_type,SUM(temp.should_pay) AS should_pay FROM (
+        SELECT currency_type,should_pay FROM t_csp_package_order WHERE state = 1
+        UNION ALL
+        SELECT  CASE WHEN platform='paypal' THEN 1
+        ELSE 0 END AS currency_type,
+        money AS should_pay
+        FROM `t_csp_user_flux_purchase` WHERE state = 1) AS temp GROUP BY temp.currency_type
     </select>
 
     <select id="orderCapitalStati" resultType="java.util.Map">
@@ -72,7 +78,7 @@
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
-        UNION
+        UNION ALL
         SELECT money AS should_pay,buy_time AS create_time,platform AS plat_form FROM `t_csp_user_flux_purchase` WHERE
         state = 1
         <if test="startTime != null and endTime != null">

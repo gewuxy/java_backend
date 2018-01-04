@@ -180,6 +180,7 @@
         return Math.floor(data * 100) / 100;
     }
 
+    //展现到处按钮
     function initExport(data) {
         $("#exportView").remove();
         if (data.length > 0) {
@@ -188,6 +189,7 @@
         }
     }
 
+    //导出数据
     function exports() {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();

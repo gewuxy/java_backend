@@ -14,13 +14,13 @@
 <div class="top-info clearfix">
     <div class="row-fluid ">
         <div class="row-span span6 hot">
-            <a href="#" onclick="changeAbroad(this);">
+            <a href="#" onclick="changeAbroad(this,0);">
                 <h4 class="title">人民币</h4>
                 <p><strong class="price">${rmb}</strong></p>
             </a>
         </div>
         <div class="row-span span6">
-            <a href="#" onclick="changeAbroad(this);">
+            <a href="#" onclick="changeAbroad(this,1);">
                 <h4 class="title">海外</h4>
                 <p><strong class="price">${usd}</strong></p>
             </a>
@@ -118,8 +118,6 @@
             initEcharts(grain);
             initTable(1, grain);
         });
-
-
     });
 
     //初始化图表
@@ -307,20 +305,16 @@
     }
 
     //海内海外切换
-    function changeAbroad(obj){
+    function changeAbroad(obj,value){
         $(obj).parent().addClass('hot').siblings().removeClass("hot");
-        if(abroad == 0){
-            abroad = 1;
-            $('#trView').html(htmlUSD);
-        }else {
-            abroad = 0;
-            $('#trView').html(htmlRND);
-        }
+        abroad = value;
+        value == 0 ? $('#trView').html("").html(htmlRND):$('#trView').html("").html(htmlUSD);
         var grain = $(".nav-pills .active").children().attr("grain");
         initEcharts(grain);
         initTable(1, grain);
     }
 
+    //加载到处数据按钮
     function initExport(data) {
         $("#exportView").remove();
         if (data.length > 0) {
@@ -329,6 +323,7 @@
         }
     }
 
+    //到处数据
     function exports() {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
