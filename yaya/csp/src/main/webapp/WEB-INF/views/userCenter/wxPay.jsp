@@ -39,10 +39,10 @@
                         <div class="login-form-item">
                             <div class="login-message-text login-message-text-2">
                                 <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
-                                <p class="t-center color-blue"><fmt:message key="page.words.weiXin.tips7"/> </p>
-                                <p><fmt:message key="page.words.weiXin.tips8"/> &nbsp;<span class="color-blue" id="successAmount">200<fmt:message key="page.words.weiXin.tip9"/> </span>&nbsp;<fmt:message key="page.words.weiXin.tips10"/></p>
+                                <p class="t-center color-blue"><fmt:message key="page.words.weiXin.tips7"/> !</p>
+                                <p><fmt:message key="page.words.weiXin.tips8"/> &nbsp;<span class="color-blue" id="successAmount">200<fmt:message key="page.words.weiXin.tips9"/> </span>&nbsp;<fmt:message key="page.words.weiXin.tips10"/></p>
                             </div>
-                            <input href="login-01.html" type="button" id="close" class="button login-button buttonBlue last" style="width:500px; margin:0 auto;" value="关闭页面">
+                            <input href="login-01.html" type="button" id="close" class="button login-button buttonBlue last" style="width:500px; margin:0 auto;" value="<fmt:message key="page.words.button.close"/>" >
                         </div>
                     </form>
                 </div>
