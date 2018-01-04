@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title><fmt:message key="page.title.delivery"/> </title>
+    <title><fmt:message key="page.header.delivery.history"/>-<fmt:message key="page.common.appName"/> </title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
@@ -117,7 +117,7 @@
                     <div class="admin-row clearfix">
                         <div class="admin-empty-data">
                             <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                            <p> <fmt:message key="page.words.no.delivery"/> </p>
+                            <p> - <fmt:message key="page.words.no.delivery"/> - </p>
                         </div>
                     </div>
                 </div>

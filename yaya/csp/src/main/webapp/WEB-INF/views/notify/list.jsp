@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <%@include file="/WEB-INF/include/page_context.jsp" %>
-    <title><fmt:message key="page.title.notifyList"/></title>
+    <title><fmt:message key="page.title.notifyList"/>-<fmt:message key="page.title.notifyList"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -50,7 +50,7 @@
                         <div class="admin-row clearfix">
                             <div class="admin-empty-data">
                                 <p><img src="${ctxStatic}/images/admin-empty-data-02.png" alt=""></p>
-                                <p><fmt:message key="page.words.notifyList.none"/></p>
+                                <p> - <fmt:message key="page.words.notifyList.none"/> -</p>
                             </div>
                         </div>
                     </c:if>
