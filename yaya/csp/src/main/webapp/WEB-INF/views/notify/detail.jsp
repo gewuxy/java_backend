@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <%@include file="/WEB-INF/include/page_context.jsp" %>
-    <title><fmt:message key="page.title.notifyDetail"/></title>
+    <title><fmt:message key="page.title.notifyDetail"/>-<fmt:message key="page.common.appName"/> </title>
     <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
@@ -26,7 +26,7 @@
                 <div class="subPage-main item-shadow item-radius" >
                     <div class="message-detail">
                         <div class="message-detail-crumbs ">
-                            <a href="${ctx}/mgr/message/list" class="color-gray"><fmt:message key="page.words.notifyList.notify"/></a> <i class="rowSpace">&gt;</i> <span><fmt:message key="page.title.notifyDetail.text"/></span>
+                            <a href="${ctx}/mgr/message/list" class="color-gray"><fmt:message key="page.words.notifyList.notify"/></a> <i class="rowSpace">&gt;</i> <span><fmt:message key="page.words.notifyDetail.text"/></span>
                         </div>
                         <div class="message-detail-title">
                             <h1>${notify.title}</h1>
