@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+    <context:property-placeholder location="classpath*:*.properties"/>
+
+    <!-- 任务调度器 -->
+    <bean id="taskScheduler"
+          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
+        <property name="triggers">
+            <list>
+                <ref bean="registerReportTaskTrigger"/>
+                <ref bean="userPackageTaskTrigger"/>
+            </list>
+        </property>
+        <property name="autoStartup" value="true"></property>
+    </bean>
+
+    <!-- 任务触发器定义 -->
+    <!-- 统计用户注册信息调度触发器 -->
+    <bean id="registerReportTaskTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="registerReportTaskDetail"/>
+        <property name="cronExpression">
+            <!-- 每天晚上23点55分做用户注册统计 -->
+            <value>0 55 23 * * ?</value>
+        </property>
+    </bean>
+
+    <bean id="userPackageTaskTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="userPackageTaskDetail"/>
+        <property name="cronExpression">
+            <!-- 每天晚上23点58分做用户套餐统计 -->
+            <value>0 50 23 * * ?</value>
+        </property>
+    </bean>
+
+    <bean id="registerReportTaskDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="registerReportTask">
+        </property>
+        <property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <bean id="userPackageTaskDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="userPackageTask">
+        </property>
+        <property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" />
+    </bean>
+
+    <!-- 任务定义 -->
+    <bean id="registerReportTask" class="cn.medcn.csp.admin.tasks.RegisterReportTask"></bean>
+    <bean id="userPackageTask" class="cn.medcn.csp.admin.tasks.UserPackageTask"></bean>
+</beans>
