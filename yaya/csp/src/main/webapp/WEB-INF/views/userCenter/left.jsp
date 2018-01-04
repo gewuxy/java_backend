@@ -40,8 +40,8 @@
     </div>
     <div class="user-statistics item-radius">
         <div class="title"><fmt:message key="page.words.ppt"/> </div>
-        <div class="main line">上传数量 <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.pptCount}</span>个</span></div>
-        <div class="main">分享次数 <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.shareCount}</span>个</span></div>
+        <div class="main line"><fmt:message key="page.words.upload"/> <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.pptCount}</span><fmt:message key="page.words.upload.count"/> </span></div>
+        <div class="main"><fmt:message key="page.words.share"/> <img src="${ctxStatic}/images/user-statistics-icon.png" alt="" class="icon"><span class="item"><span class="num">${dto.shareCount}</span><fmt:message key="page.words.share.count"/> </span></div>
     </div>
 </div>
 
