@@ -194,7 +194,7 @@
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
         var grain = $(".nav-pills .active").children().attr("grain");
-        window.location.href = "${ctr}/csp/stats/export/renew?startTime=" + startTime + "&endTime=" + endTime;
+        window.location.href = "${ctx}/csp/stats/export/renew?startTime=" + startTime + "&endTime=" + endTime;
     }
 </script>
 </body>
