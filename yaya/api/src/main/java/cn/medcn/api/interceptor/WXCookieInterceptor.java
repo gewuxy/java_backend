@@ -30,8 +30,8 @@ public class WXCookieInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Object o) throws Exception {
         String unionId = CookieUtils.getCookieValue(httpServletRequest, WeixinConfig.COOKIE_NAME_UNION_ID);
         String openId = CookieUtils.getCookieValue(httpServletRequest, WeixinConfig.COOKIE_NAME_OPEN_ID);
-        String oauthUrl = wxOauthService.generateOAUTHURL("weixin/oauth", WeixinConfig.SCOPE_TYPE_DEFAULT);
-        if (StringUtils.isEmpty(unionId) && StringUtils.isEmpty(openId)){
+        String oauthUrl = wxOauthService.generateOAUTHURL("weixin/oauth", WeixinConfig.SCOPE_TYPE_USERINFO);
+        if (StringUtils.isEmpty(unionId) || StringUtils.isEmpty(openId)){
             try {
                 CookieUtils.setCookie(httpServletResponse, WeixinConfig.REDIRECT_HISTORY, httpServletRequest.getRequestURI(), 0);
                 httpServletResponse.sendRedirect(oauthUrl);
