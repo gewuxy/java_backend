@@ -82,10 +82,10 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="cancel-popup-main">
-                    <p><img src="${ctxStatic}/images/question-32x32.png" alt="">是否放弃修改？</p>
+                    <p><img src="${ctxStatic}/images/question-32x32.png" alt=""><fmt:message key="page.insert.ppt.update"/>?</p>
                     <div class="admin-button t-right">
-                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" >取消</a>
-                        <input type="submit" class="button buttonBlue item-radius min-btn" value="确认">
+                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.common.cancel"/></a>
+                        <input type="submit" class="button buttonBlue item-radius min-btn" value="<fmt:message key="page.common.confirm"/>">
                     </div>
                 </div>
 
