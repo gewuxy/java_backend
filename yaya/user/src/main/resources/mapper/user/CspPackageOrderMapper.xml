@@ -94,7 +94,7 @@
 
     <!-- 转化率 -->
     <select id="transfStats" resultType="java.util.Map">
-        SELECT temp.createTime,temp.orderNum / temp.pvNum * 100  AS trans FROM
+        SELECT temp.createTime,temp.orderNum / temp.pvNum * 100  AS trans,temp.orderNum,temp.pvNum FROM
         (SELECT orderTemp.createTime,pvTemp.pvNum,orderTemp.orderNum FROM
         (SELECT date_format(log_time,'%Y-%m-%d') as createTime,
         COUNT(`action`) AS pvNum  FROM `t_csp_log`
