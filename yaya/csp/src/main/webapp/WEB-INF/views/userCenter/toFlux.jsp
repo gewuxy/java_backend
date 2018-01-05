@@ -50,15 +50,19 @@
                                             <c:if test="${csp_locale !='zh_CN'}">
                                                 <td class="col-w-3">${v.expense}M<fmt:message key="page.words.flux.usage"/></td>
                                             </c:if>
-
+                                            <td/>
                                             <c:if test="${not empty v.replayUrl}">
                                                 <c:if test="${v.downloadCount < 5}">
                                                     <input type="hidden" id="count_${v.courseId}" value="${v.downloadCount}">
-                                                    <td class="col-w-2 t-right"><a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook"><fmt:message key="page.words.video.download"/></a></td>
+                                                    <td <c:if test="${csp_locale == 'en_US'}">class="col-w-3 t-right"</c:if> <c:if test="${csp_locale != 'en_US'}">class="col-w-2 t-right"</c:if>>
+                                                        <a href="javascript:;" id="download_${v.courseId}" count="${v.downloadCount}" meetName="${v.meetName}" courseId="${v.courseId}" class="color-blue downButton-hook"><fmt:message key="page.words.video.download"/></a>
+                                                    </td>
 
                                                 </c:if>
                                                 <c:if test="${v.downloadCount >= 5}">
-                                                    <td class="col-w-2 t-right"><a href="javascript:;" class="color-gray videoListEmail-hook"><fmt:message key="page.words.get.videoUrl"/></a></td>
+                                                    <td <c:if test="${csp_locale == 'en_US'}">class="col-w-3 t-right"</c:if> <c:if test="${csp_locale != 'en_US'}">class="col-w-2 t-right"</c:if>>
+                                                        <a href="javascript:;" class="color-gray videoListEmail-hook"><fmt:message key="page.words.get.videoUrl"/></a>
+                                                    </td>
                                                 </c:if>
                                             </c:if>
                                         </tr>
