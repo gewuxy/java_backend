@@ -10,13 +10,13 @@
             date_format(register_time,'%Y-%m-%d')as register_time
         </if>
         <if test="grain == 1">
-            date_format(register_time,'%Y-%u')as register_time
+            date_format(register_time,'%Y-%m-%d')as register_time
         </if>
         <if test="grain == 2">
             date_format(register_time,'%Y-%m')as register_time
         </if>
         <if test="grain == 3">
-            CONCAT(YEAR(register_time),'_',QUARTER(register_time),'Q') as register_time
+            date_format(register_time,'%Y-%m-%d')as register_time
         </if>
         <if test="grain == 4">
             date_format(register_time,'%Y')as register_time

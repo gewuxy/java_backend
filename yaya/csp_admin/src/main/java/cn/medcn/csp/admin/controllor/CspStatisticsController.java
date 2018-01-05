@@ -31,6 +31,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * 资金统计
  * by create HuangHuibin 2017/11/3
  */
 @Controller
@@ -64,8 +65,8 @@ public class CspStatisticsController extends BaseController {
         model.addAttribute("endTime", endTime);
         //获取资金总额
         List<Map<String, Object>> total = cspPackageOrderService.totalMoney();
-        model.addAttribute("rmb", total.get(0).get("money"));
-        model.addAttribute("usd", total.get(1).get("money"));
+        model.addAttribute("rmb", Float.parseFloat(total.get(0).get("should_pay").toString()));
+        model.addAttribute("usd", Float.parseFloat(total.get(1).get("should_pay").toString()));
         model.addAttribute("abroad", 0);
         if (type == 0) { // 资金统计
             return "/statistics/moneyStats";
@@ -114,7 +115,6 @@ public class CspStatisticsController extends BaseController {
     @ResponseBody
     @Log(name = "获取各渠道金额")
     public String tableData(Pageable pageable, Integer abroad, String startTime, String endTime, Integer grain) {
-        pageable.setPageSize(12);
         pageable.put("abroad", abroad);
         pageable.put("grain", grain);
         pageable.put("startTime", getDate(startTime, grain, Constants.NUMBER_ZERO));
