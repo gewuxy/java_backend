@@ -1,6 +1,7 @@
 package cn.medcn.user.service.impl;
 
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.user.dao.ReportPackageDAO;
 import cn.medcn.user.dao.ReportRegisterDAO;
 import cn.medcn.user.dto.ReportRegisterDetailDTO;
 import cn.medcn.user.model.ReportRegister;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/12/26.
@@ -21,6 +23,9 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportRegister> implement
 
     @Autowired
     protected ReportRegisterDAO reportRegisterDAO;
+
+    @Autowired
+    protected ReportPackageDAO reportPackageDAO;
 
     @Override
     public Mapper<ReportRegister> getBaseMapper() {
@@ -57,6 +62,8 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportRegister> implement
     }
 
 
+
+
     protected void modifyDetailInfo(ReportRegister report, Integer registerFrom, Integer reportCount){
         if (report != null) {
             switch (registerFrom) {
@@ -86,5 +93,11 @@ public class ReportServiceImpl extends BaseServiceImpl<ReportRegister> implement
 
             }
         }
+    }
+
+
+    @Override
+    public List<Map<String, Object>> packageDistStats(Integer grain, Date startTime, Date endTime) {
+        return reportPackageDAO.packageDistStats(grain,startTime,endTime);
     }
 }

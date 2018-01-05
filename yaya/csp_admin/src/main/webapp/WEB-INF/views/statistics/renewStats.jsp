@@ -101,8 +101,8 @@
             "endTime": endTime,
         }, function (data) {
             if (data.code == 0) {
-                console.log(data);
                 fillEcharts(data.data);  //加载图表
+                initExport(data.data);
             } else {
                 layer.msg("获取数据失败");
             }
@@ -133,6 +133,12 @@
             legend: {
                 data:['高级版','专业版']
             },
+            label: {
+                normal: {
+                    show: true,
+                    formatter: '{c}%'
+                }
+            },
             grid: {
                 left: '3%',
                 right: '4%',
@@ -150,8 +156,11 @@
                 data: dataArray
             },
             yAxis: {
-                name: '续费率',
+                name: '单位 / %',
                 type: 'value',
+                axisLabel : {
+                    formatter: '{value} %'
+                },
                 max : 100,
                 min:0
             },
@@ -178,6 +187,22 @@
             return 0;
         }
         return Math.floor(data * 100) / 100;
+    }
+
+    //展现到处按钮
+    function initExport(data) {
+        $("#exportView").remove();
+        if (data.length > 0) {
+            html = '<div class="clearfix inputButton-item" id="exportView"><div class="pull-left inputTime-item"><input class="btn btn-primary" type="button" value="导出入账数据" onclick="exports()"/></div></div>';
+            $(".breadcrumb").after(html);
+        }
+    }
+
+    //导出数据
+    function exports() {
+        var startTime = $("#startTime").val();
+        var endTime = $("#endTime").val();
+        window.location.href = "${ctx}/csp/stats/export/renew?startTime=" + startTime + "&endTime=" + endTime;
     }
 </script>
 </body>

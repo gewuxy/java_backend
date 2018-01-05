@@ -3,19 +3,25 @@
 <mapper namespace="cn.medcn.user.dao.CspPackageOrderDAO">
 
     <select id="totalMoney" resultType="java.util.Map">
-        SELECT currency_type,SUM(should_pay) AS money FROM t_csp_package_order GROUP BY currency_type
+        SELECT temp.currency_type,SUM(temp.should_pay) AS should_pay FROM (
+        SELECT currency_type,should_pay FROM t_csp_package_order WHERE state = 1
+        UNION ALL
+        SELECT  CASE WHEN platform='paypal' THEN 1
+        ELSE 0 END AS currency_type,
+        money AS should_pay
+        FROM `t_csp_user_flux_purchase` WHERE state = 1) AS temp GROUP BY temp.currency_type
     </select>
 
     <select id="orderCapitalStati" resultType="java.util.Map">
         SELECT
         <if test="grain == 0">
-            date_format(temp.create_time,'%Y-%m-%d') createTime,
+            date_format(temp.create_time,'%Y-%m-%d') as createTime,
         </if>
         <if test="grain == 2">
-            date_format(temp.create_time,'%Y-%m')as createTime,
+            date_format(temp.create_time,'%Y-%m') as createTime,
         </if>
         <if test="grain == 4">
-            date_format(temp.create_time,'%Y')as createTime,
+            date_format(temp.create_time,'%Y') as createTime,
         </if>
         SUM(temp.should_pay) AS money
         FROM (<include refid="unionOrderAndFlux"/>) as temp where 1=1
@@ -34,7 +40,7 @@
     <select id="getCapitalByDay" resultType="java.util.Map">
         SELECT
         <if test="grain == 0">
-            date_format(temp.create_time,'%Y-%m-%d') createTime,
+            date_format(temp.create_time,'%Y-%m-%d') as createTime,
         </if>
         <if test="grain == 2">
             date_format(temp.create_time,'%Y-%m')as createTime,
@@ -42,9 +48,10 @@
         <if test="grain == 4">
             date_format(temp.create_time,'%Y')as createTime,
         </if>
-        SUM(CASE WHEN temp.plat_form='alipay_wap' or temp.plat_form = 'alipay_pc_direct' THEN temp.should_pay END) AS
+        SUM(CASE WHEN temp.plat_form='alipay_wap' or temp.plat_form = 'alipay_pc_direct' or temp.plat_form = 'alipay'
+        or temp.plat_form = 'alipay_wap' THEN temp.should_pay END) AS
         alipayWap,
-        SUM(CASE WHEN temp.plat_form='wx_pub_qr' THEN temp.should_pay END) AS wxPubQr,
+        SUM(CASE WHEN temp.plat_form='wx_pub_qr' or temp.plat_form='wx' THEN temp.should_pay END) AS wxPubQr,
         SUM(CASE WHEN temp.plat_form='upacp_wap' or temp.plat_form = 'upacp_pc' THEN temp.should_pay END) AS upacpWap,
         SUM(CASE WHEN temp.plat_form='paypal' THEN temp.should_pay END) AS paypal,
         SUM(temp.should_pay) AS money
@@ -71,7 +78,7 @@
         <if test="startTime != null and endTime != null">
             AND create_time BETWEEN #{startTime} AND #{endTime}
         </if>
-        UNION
+        UNION ALL
         SELECT money AS should_pay,buy_time AS create_time,platform AS plat_form FROM `t_csp_user_flux_purchase` WHERE
         state = 1
         <if test="startTime != null and endTime != null">
@@ -89,7 +96,7 @@
     <select id="transfStats" resultType="java.util.Map">
         SELECT temp.createTime,temp.orderNum / temp.pvNum * 100  AS trans FROM
         (SELECT orderTemp.createTime,pvTemp.pvNum,orderTemp.orderNum FROM
-        (SELECT date_format(log_time,'%Y-%m-%d') createTime,
+        (SELECT date_format(log_time,'%Y-%m-%d') as createTime,
         COUNT(`action`) AS pvNum  FROM `t_csp_log`
         WHERE `action` = '/mgr/pay/mark' AND log_time BETWEEN #{startTime} AND #{endTime} GROUP BY DATE(log_time)
         ) AS pvTemp

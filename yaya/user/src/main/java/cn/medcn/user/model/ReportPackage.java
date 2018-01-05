@@ -29,5 +29,8 @@ public class ReportPackage {
 
     private Integer userCount = 0;
 
+    //统计的数据类型 0：日  1：周  2：月  3：季 4：年
+    private Integer taskType = 0;
+
     private Date registerTime;
 }
