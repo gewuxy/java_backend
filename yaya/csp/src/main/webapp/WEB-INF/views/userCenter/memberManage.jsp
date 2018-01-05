@@ -181,11 +181,7 @@
             </div>
         </div>
     </div>
-    <div class="admin-bottom">
-        <div class="page-width clearfix">
-            <p class="t-center"><fmt:message key="page.foot.company.message"/></p>
-        </div>
-    </div>
+    <%@include file="../include/footer.jsp"%>
 </div>
 <!--弹出 充值-->
 <div class="cancel-popup-box" id="pkBuyMsg">
