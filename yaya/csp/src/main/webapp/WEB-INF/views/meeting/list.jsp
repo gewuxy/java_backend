@@ -6,7 +6,7 @@
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!Doctype html>
-<html lang="en">
+<html >
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
     <title><fmt:message key="page.header.meet"/> - <fmt:message key="page.common.appName"/> </title>

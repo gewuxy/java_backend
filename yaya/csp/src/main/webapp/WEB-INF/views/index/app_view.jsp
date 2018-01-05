@@ -11,7 +11,7 @@
 <%@taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
-<html lang="en">
+<html >
 <head>
     <fmt:setLocale value="${csp_locale}" scope="session"/>
     <meta charset="UTF-8">
