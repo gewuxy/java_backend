@@ -328,7 +328,7 @@
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
         var grain = $(".nav-pills .active").children().attr("grain");
-        window.location.href = "${ctr}/csp/stats/export/money?abroad=" + abroad + "&startTime=" + startTime + "&endTime=" + endTime + "&grain=" + grain;
+        window.location.href = "${ctx}/csp/stats/export/money?abroad=" + abroad + "&startTime=" + startTime + "&endTime=" + endTime + "&grain=" + grain;
     }
 
 </script>
