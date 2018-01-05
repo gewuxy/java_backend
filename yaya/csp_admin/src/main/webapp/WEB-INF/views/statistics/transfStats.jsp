@@ -101,7 +101,6 @@
             "endTime": endTime,
         }, function (data) {
             if (data.code == 0) {
-                console.log(data);
                 fillEcharts(data.data);  //加载图表
             } else {
                 layer.msg("获取数据失败");
