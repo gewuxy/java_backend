@@ -98,7 +98,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
             String imageFilePath;
             BufferedImage image = null;
             for (int i = 0; i < pageCount; i++) {
-                image = renderer.renderImage(i, 1.0f);
+                image = renderer.renderImage(i, 2f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 request.getSession().setAttribute(Constants.OFFICE_CONVERT_PROGRESS, new OfficeConvertProgress(pageCount, i + 1, courseId));
