@@ -52,7 +52,7 @@ public class AuthInterceptor implements HandlerInterceptor {
 
         //判断用户是否已经被冻结
         if (principal.getActive() != null && !principal.getActive()) {
-            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.error.not_authed")));
+            ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.unActive.email")));
             return false;
         }
 
