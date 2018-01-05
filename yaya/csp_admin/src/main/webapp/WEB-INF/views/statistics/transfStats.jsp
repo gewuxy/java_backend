@@ -129,6 +129,12 @@
             legend: {
                 data:['购买转化率']
             },
+            label: {
+                normal: {
+                    show: true,
+                    formatter: '{c}%'
+                }
+            },
             grid: {
                 left: '3%',
                 right: '4%',
@@ -146,9 +152,12 @@
                 data: dataArray
             },
             yAxis: {
-                name: '购买转化率',
+                name: '单位 / %',
                 type: 'value',
                 max : 100,
+                axisLabel : {
+                    formatter: '{value} %'
+                },
                 min:0
             },
             series: [

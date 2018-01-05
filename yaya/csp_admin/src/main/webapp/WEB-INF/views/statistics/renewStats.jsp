@@ -133,6 +133,12 @@
             legend: {
                 data:['高级版','专业版']
             },
+            label: {
+                normal: {
+                    show: true,
+                    formatter: '{c}%'
+                }
+            },
             grid: {
                 left: '3%',
                 right: '4%',
@@ -150,8 +156,11 @@
                 data: dataArray
             },
             yAxis: {
-                name: '续费率',
+                name: '单位 / %',
                 type: 'value',
+                axisLabel : {
+                    formatter: '{value} %'
+                },
                 max : 100,
                 min:0
             },
@@ -193,7 +202,6 @@
     function exports() {
         var startTime = $("#startTime").val();
         var endTime = $("#endTime").val();
-        var grain = $(".nav-pills .active").children().attr("grain");
         window.location.href = "${ctx}/csp/stats/export/renew?startTime=" + startTime + "&endTime=" + endTime;
     }
 </script>

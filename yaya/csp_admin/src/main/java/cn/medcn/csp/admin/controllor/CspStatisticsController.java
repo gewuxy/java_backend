@@ -9,10 +9,7 @@ import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.ExcelUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
-import cn.medcn.user.dto.CspNewlyStaticDTO;
-import cn.medcn.user.dto.CspOrderPlatFromDTO;
-import cn.medcn.user.dto.MoneyStatisticsExcel;
-import cn.medcn.user.dto.PackageRenewExcel;
+import cn.medcn.user.dto.*;
 import cn.medcn.user.service.CspPackageOrderService;
 import cn.medcn.user.service.ReportService;
 import com.google.common.collect.Lists;
@@ -56,7 +53,9 @@ public class CspStatisticsController extends BaseController {
     public String statistic(Model model, Integer type) {
         if (type == null) type = 0;
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd ");
-        Date endDate = CalendarUtils.calendarDay(-1);
+        Integer dateNum = 0;
+        if(type == 2 || type == 3) dateNum = -1;
+        Date endDate = CalendarUtils.calendarDay(dateNum);
         String endTime = format.format(endDate);
         model.addAttribute("endTime", endTime);
         Date startDate = CalendarUtils.calendarDay(-7);
@@ -161,7 +160,11 @@ public class CspStatisticsController extends BaseController {
         List<Object> dataList = Lists.newArrayList();
         float total = getTotalMoney(abroad, startTime, endTime, grain);
         bulidExcel(list.getDataList(), total, abroad, dataList);
-        exportExcel(fileName, dataList, response, MoneyStatisticsExcel.class);
+        if(abroad == Constants.NUMBER_ZERO){ //国内
+            exportExcel(fileName, dataList, response, MoneyStatisticsExcel.class);
+        }else{
+            exportExcel(fileName, dataList, response, MoneyUSDStatisticsExcel.class);
+        }
     }
 
     @RequestMapping(value = "/export/renew")
@@ -205,25 +208,31 @@ public class CspStatisticsController extends BaseController {
      * @param dataList
      */
     public void bulidExcel(List<Map<String, Object>> list, float total, Integer abroad, List<Object> dataList) {
-        for (int i = 0; i < list.size(); i++) {
-            MoneyStatisticsExcel data = new MoneyStatisticsExcel();
-            data.setCreateTime(list.get(i).get("createTime").toString());
-            if (abroad == Constants.NUMBER_ZERO) {  //国内
+        if(abroad == Constants.NUMBER_ZERO){
+            for (int i = 0; i < list.size(); i++) {
+                MoneyStatisticsExcel data = new MoneyStatisticsExcel();
+                data.setCreateTime(list.get(i).get("createTime").toString());
                 data.setWechat(getStringValue(list.get(i).get("wxPubQr")));
                 data.setAlipay(getStringValue(list.get(i).get("alipayWap")));
-                data.setPaypal("0.00");
-            } else {  //海外
-                data.setWechat("0.00");
-                data.setAlipay("0.00");
-                data.setPaypal(getStringValue(list.get(i).get("paypal")));
+                data.setSum(getStringValue(list.get(i).get("money")));
+                dataList.add(data);
             }
-            data.setSum(getStringValue(list.get(i).get("money")));
+            MoneyStatisticsExcel data = new MoneyStatisticsExcel();
+            data.setCreateTime("合计");
+            data.setWechat(String.valueOf((total)));
+            dataList.add(data);
+        }else{
+            for (int i = 0; i < list.size(); i++) {
+                MoneyUSDStatisticsExcel data = new MoneyUSDStatisticsExcel();
+                data.setPaypal(getStringValue(list.get(i).get("paypal")));
+                data.setSum(getStringValue(list.get(i).get("money")));
+                dataList.add(data);
+            }
+            MoneyUSDStatisticsExcel data = new MoneyUSDStatisticsExcel();
+            data.setCreateTime("合计");
+            data.setPaypal(String.valueOf(total));
             dataList.add(data);
         }
-        MoneyStatisticsExcel data = new MoneyStatisticsExcel();
-        data.setCreateTime("合计");
-        data.setWechat(String.valueOf(Math.round(total * 100) / 100));
-        dataList.add(data);
     }
 
     /**
@@ -247,7 +256,7 @@ public class CspStatisticsController extends BaseController {
         if (data == null) {
             return "0.00";
         } else {
-            return String.valueOf(Math.round(Float.parseFloat(data.toString()) * 100) / 100);
+            return String.valueOf(Float.parseFloat(data.toString()));
         }
     }
 
@@ -290,7 +299,7 @@ public class CspStatisticsController extends BaseController {
                 date = type == Constants.NUMBER_ZERO ? CalendarUtils.getCurrYearFirstDay(date) : CalendarUtils.getCurrYearLastDay(date);
             } else {
                 //按天为粒度
-                return date;
+                date = type == Constants.NUMBER_ZERO ? date:CalendarUtils.getLastTime(date);
             }
         } catch (ParseException e) {
             e.printStackTrace();

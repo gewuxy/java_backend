@@ -21,7 +21,7 @@
         </div>
         <div class="row-span span6">
             <a href="#" onclick="changeAbroad(this,1);">
-                <h4 class="title">海外</h4>
+                <h4 class="title">美元</h4>
                 <p><strong class="price">${usd}</strong></p>
             </a>
         </div>

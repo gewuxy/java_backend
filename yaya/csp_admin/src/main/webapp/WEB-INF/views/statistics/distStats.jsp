@@ -159,9 +159,18 @@
                 type: 'category',
                 data: dataArray
             },
+            label: {
+                normal: {
+                    show: true,
+                    formatter: '{c}%'
+                }
+            },
             yAxis: {
-                name: '分布百分比',
+                name: '单位 / %',
                 type: 'value',
+                axisLabel : {
+                    formatter: '{value} %'
+                },
                 max : 100,
                 min:0
             },
@@ -169,16 +178,25 @@
                 {
                     name:'标准版',
                     type:'line',
+                    axisLabel : {
+                        formatter: '{value} %'
+                    },
                     data:staArray
                 },
                 {
                     name:'高级版',
                     type:'line',
+                    axisLabel : {
+                        formatter: '{value} %'
+                    },
                     data:preArray
                 },
                 {
                     name:'专业版',
                     type:'line',
+                    axisLabel : {
+                        formatter: '{value} %'
+                    },
                     data:proArray
                 }
             ]

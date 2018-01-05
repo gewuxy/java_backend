@@ -19,9 +19,6 @@ public class MoneyStatisticsExcel {
     @ExcelField(columnIndex = 2,title = "支付宝")
     private String alipay;
 
-    @ExcelField(columnIndex = 3,title = "paypal")
-    private String paypal;
-
-    @ExcelField(columnIndex = 4,title = "付款总额")
+    @ExcelField(columnIndex = 3,title = "付款总额")
     private String sum;
 }
