@@ -14,6 +14,7 @@
         <property name="triggers">
             <list>
                 <ref bean="registerReportTaskTrigger"/>
+                <ref bean="userPackageTaskTrigger"/>
             </list>
         </property>
         <property name="autoStartup" value="true"></property>
@@ -30,6 +31,15 @@
         </property>
     </bean>
 
+    <bean id="userPackageTaskTrigger"
+          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
+        <property name="jobDetail" ref="userPackageTaskDetail"/>
+        <property name="cronExpression">
+            <!-- 每天晚上23点58分做用户套餐统计 -->
+            <value>0 50 23 * * ?</value>
+        </property>
+    </bean>
+
     <bean id="registerReportTaskDetail"
           class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
         <property name="targetObject" ref="registerReportTask">
@@ -38,7 +48,15 @@
         <property name="concurrent" value="false" />
     </bean>
 
+    <bean id="userPackageTaskDetail"
+          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
+        <property name="targetObject" ref="userPackageTask">
+        </property>
+        <property name="targetMethod" value="execute"></property>
+        <property name="concurrent" value="false" />
+    </bean>
 
     <!-- 任务定义 -->
-    <bean id="registerReportTask" class="cn.medcn.csp.tasks.RegisterReportTask"></bean>
+    <bean id="registerReportTask" class="cn.medcn.csp.admin.tasks.RegisterReportTask"></bean>
+    <bean id="userPackageTask" class="cn.medcn.csp.admin.tasks.UserPackageTask"></bean>
 </beans>

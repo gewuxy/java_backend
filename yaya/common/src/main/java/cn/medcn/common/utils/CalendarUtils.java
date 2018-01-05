@@ -58,6 +58,23 @@ public class CalendarUtils {
     }
 
     /**
+     * 两个date是否是同一天
+     * @param date1
+     * @param date2
+     * @return
+     */
+    public static boolean isSameDate(Date date1, Date date2) {
+        Calendar cal1 = Calendar.getInstance();
+        cal1.setTime(date1);
+        Calendar cal2 = Calendar.getInstance();
+        cal2.setTime(date2);
+        boolean isSameYear = cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR);
+        boolean isSameMonth = isSameYear && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH);
+        boolean isSameDate = isSameMonth && cal1.get(Calendar.DAY_OF_MONTH) == cal2.get(Calendar.DAY_OF_MONTH);
+        return isSameDate;
+    }
+
+    /**
      * 计算date时间day天之后的时间
      * @param day
      * @return
@@ -122,6 +139,17 @@ public class CalendarUtils {
         return c.getTime();
     }
 
+    public static Date getLastTime(Date date){
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(date);
+        //将小时至23
+        ca.set(Calendar.HOUR_OF_DAY, 23);
+        //将分钟至59
+        ca.set(Calendar.MINUTE, 59);
+        //将秒至59
+        ca.set(Calendar.SECOND,59);
+        return ca.getTime();
+    }
 
     /**
      * 获取本月最后一天结束时间
@@ -798,9 +826,11 @@ public class CalendarUtils {
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date myDate1 = dateFormat1.parse("2018-01-28 00:00:00");
+        Date myDate1 = dateFormat1.parse("2018-01-29 00:00:00");
         DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date myDate2 = dateFormat2.parse("2018-02-25 23:59:58");
+        Date myDate2 = dateFormat2.parse("2018-01-28 23:59:58");
+        System.out.println(isSameDate(myDate1,myDate2));
+        System.out.println(getWeekFirstDay());
         List list = getAllDateList(myDate1,myDate2);
         System.out.println(daysBetween(myDate1,myDate2));
         System.out.println(dateFormat1.format(calendarDay(myDate1,2)));

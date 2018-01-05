@@ -15,6 +15,24 @@
                 selectChange();
             })
 
+            /*版本号校验*/
+            $("#version").blur(function () {
+                var version = $("#version").val();
+                var reg = /\./g;
+                if (reg.test(version)){
+                    var subVer = version.substr(version.indexOf("."),version.length+1)
+                    if (subVer.length>4 || subVer.indexOf(".")==-1||subVer.indexOf(".")>2){
+                        layer.msg("格式有误,请填入xx.x.x格式");
+                        $("#btnSubmit").attr("disabled","disabled");
+                    }else {
+                        $("#btnSubmit").removeAttr("disabled");
+                    }
+                }else {
+                    layer.msg("格式有误,请填入xx.x.x格式");
+                    $("#btnSubmit").attr("disabled","disabled");
+                }
+            })
+
             function selectChange() {
                 var selectValue = $("#driveTag").val();
                 if (selectValue == "ios" || selectValue == "ipad"){
@@ -59,6 +77,8 @@
             $("#inputForm").ajaxSubmit(option);
             return true;
         }
+
+
     </script>
 
 </head>
@@ -72,9 +92,9 @@
     <div class="control-group">
         <label class="control-label">版本号:</label>
         <div class="controls">
-            <input type="search" name="versionStr" maxlength="50"  id="version"
-                   class="required input-xlarge" onkeyup="value=value.replace(/[^\d\.]/g,'')" onblur="value=value.replace(/[^\d\.]/g,'')"/>
-            <span class="help-inline"><font color="#a9a9a9">(必填)只允许输入数字和小数点*</font> </span>
+            <input type="search" name="versionStr" maxlength="8"  id="version"
+                   class="required input-xlarge"  onkeyup="value=value.replace(/[^\d\.]/g,'')" onblur="value=value.replace(/[^\d\.]/g,'')"/>
+            <span class="help-inline"><font color="#a9a9a9">(必填)只允许输入数字和小数点,请填入xx.x.x格式</font> </span>
         </div>
     </div>
     <div class="control-group">
