@@ -139,6 +139,17 @@ public class CalendarUtils {
         return c.getTime();
     }
 
+    public static Date getLastTime(Date date){
+        Calendar ca = Calendar.getInstance();
+        ca.setTime(date);
+        //将小时至23
+        ca.set(Calendar.HOUR_OF_DAY, 23);
+        //将分钟至59
+        ca.set(Calendar.MINUTE, 59);
+        //将秒至59
+        ca.set(Calendar.SECOND,59);
+        return ca.getTime();
+    }
 
     /**
      * 获取本月最后一天结束时间
@@ -815,9 +826,11 @@ public class CalendarUtils {
         Long s = 996l;
         System.out.println(secToTime(s.intValue()));*/
         DateFormat dateFormat1 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date myDate1 = dateFormat1.parse("2018-01-28 00:00:00");
+        Date myDate1 = dateFormat1.parse("2018-01-29 00:00:00");
         DateFormat dateFormat2 = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        Date myDate2 = dateFormat2.parse("2018-02-25 23:59:58");
+        Date myDate2 = dateFormat2.parse("2018-01-28 23:59:58");
+        System.out.println(isSameDate(myDate1,myDate2));
+        System.out.println(getWeekFirstDay());
         List list = getAllDateList(myDate1,myDate2);
         System.out.println(daysBetween(myDate1,myDate2));
         System.out.println(dateFormat1.format(calendarDay(myDate1,2)));
