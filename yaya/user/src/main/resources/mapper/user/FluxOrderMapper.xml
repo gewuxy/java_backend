@@ -47,7 +47,7 @@
 
     <select id="findOrderListByTime" resultType="Float">
         SELECT sum(money) FROM t_csp_user_flux_purchase WHERE
-        state = '1' AND buy_time BETWEEN #{startTime} AND #{endTime}
+        state = '1' AND platform NOT IN ('paypal') AND buy_time BETWEEN #{startTime} AND #{endTime}
     </select>
 
     <select id="findOrderListByTimeUs" resultType="Float">

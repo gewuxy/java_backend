@@ -36,15 +36,15 @@
 <div class="top-info clearfix">
     <div class="row-fluid ">
         <div class="row-span span4">
-            <h6 class="title"><a href="/routes_pages/userManage.html">昨日新增</a></h6>
+            <h6 class="title"><a href="${ctx}/sys/register/stats/home?location=1">昨日新增</a></h6>
             <p><strong class="price">${newUserCount}</strong></p>
         </div>
         <div class="row-span span4">
-            <h6 class="title"><a href="/routes_pages/moneyStats.html">昨日进账</a></h6>
+            <h6 class="title"><a href="${ctx}/csp/stats/money">昨日进账</a></h6>
             <p><strong class="price">${newMoney}</strong></p>
         </div>
         <div class="row-span span4">
-            <h6 class="title"><a href="/routes_pages/userManage.html">总用户</a></h6>
+            <h6 class="title"><a href="${ctx}/csp/user/list?listType=1">总用户</a></h6>
             <p><strong class="price">${allUserCount}</strong></p>
         </div>
     </div>
