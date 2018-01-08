@@ -60,6 +60,9 @@ public class CspPackageOrderDTO {
         if(dto.getTradeId().contains("PAY")){
             int start = dto.getTradeId().indexOf("P");
             dto.setTradeId(dto.getTradeId().substring(start));
+        }else if(dto.getTradeId().contains("T")){
+            int start = dto.getTradeId().indexOf("T") + 1;
+            dto.setTradeId(dto.getTradeId().substring(start));
         }
     }
 
