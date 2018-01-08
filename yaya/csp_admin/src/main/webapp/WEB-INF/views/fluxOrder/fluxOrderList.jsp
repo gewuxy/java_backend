@@ -63,7 +63,7 @@
             </label>
     </span>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>用户名</th><th>购买时间</th><th>订单状态</th><th>生效时间</th><th>订单号</th><th>流量充值</th><th>充值平台</th><th>付款金额</th><th>操作</th></tr></thead>
+    <thead><tr><th>用户名</th><th>购买时间</th><th>订单状态</th><th>生效时间</th><th>订单号</th><th>流量充值(M)</th><th>充值平台</th><th>付款金额</th><th>操作</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="data">
@@ -112,7 +112,7 @@
                     <c:if test="${type == 0}"><fmt:formatNumber type="number" value="${rmb }" pattern="0.00" maxFractionDigits="2"/></c:if>
                     <c:if test="${type == 1}"><fmt:formatNumber type="number" value="${usd }" pattern="0.00" maxFractionDigits="2"/></c:if>
                 </c:if>
-                <c:if test="${not empty queryMoney}">
+                <c:if test="${not empty queryMoney && startTime != null && endTime != null}">
                     <fmt:formatNumber type="number" value="${queryMoney }" pattern="0.00" maxFractionDigits="2"/>
                 </c:if>
                 <c:if test="${type == 0}">CNY</c:if><c:if test="${type == 1}">USD</c:if>
