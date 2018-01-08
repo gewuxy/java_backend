@@ -8,37 +8,37 @@
        http://www.springframework.org/schema/context/spring-context-4.3.xsd">
     <context:property-placeholder location="classpath*:*.properties"/>
 
-    <!-- 任务调度器 -->
-    <bean id="taskScheduler"
-          class="org.springframework.scheduling.quartz.SchedulerFactoryBean">
-        <property name="triggers">
-            <list>
-                <ref bean="registerReportTaskTrigger"/>
-            </list>
-        </property>
-        <property name="autoStartup" value="true"></property>
-    </bean>
+    <!--&lt;!&ndash; 任务调度器 &ndash;&gt;-->
+    <!--<bean id="taskScheduler"-->
+          <!--class="org.springframework.scheduling.quartz.SchedulerFactoryBean">-->
+        <!--<property name="triggers">-->
+            <!--<list>-->
+                <!--<ref bean="registerReportTaskTrigger"/>-->
+            <!--</list>-->
+        <!--</property>-->
+        <!--<property name="autoStartup" value="true"></property>-->
+    <!--</bean>-->
 
-    <!-- 任务触发器定义 -->
-    <!-- 统计用户注册信息调度触发器 -->
-    <bean id="registerReportTaskTrigger"
-          class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">
-        <property name="jobDetail" ref="registerReportTaskDetail"/>
-        <property name="cronExpression">
-            <!-- 每天晚上23点55分做用户注册统计 -->
-            <value>0 55 23 * * ?</value>
-        </property>
-    </bean>
+    <!--&lt;!&ndash; 任务触发器定义 &ndash;&gt;-->
+    <!--&lt;!&ndash; 统计用户注册信息调度触发器 &ndash;&gt;-->
+    <!--<bean id="registerReportTaskTrigger"-->
+          <!--class="org.springframework.scheduling.quartz.CronTriggerFactoryBean">-->
+        <!--<property name="jobDetail" ref="registerReportTaskDetail"/>-->
+        <!--<property name="cronExpression">-->
+            <!--&lt;!&ndash; 每天晚上23点55分做用户注册统计 &ndash;&gt;-->
+            <!--<value>0 55 23 * * ?</value>-->
+        <!--</property>-->
+    <!--</bean>-->
 
-    <bean id="registerReportTaskDetail"
-          class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">
-        <property name="targetObject" ref="registerReportTask">
-        </property>
-        <property name="targetMethod" value="execute"></property>
-        <property name="concurrent" value="false" />
-    </bean>
+    <!--<bean id="registerReportTaskDetail"-->
+          <!--class="org.springframework.scheduling.quartz.MethodInvokingJobDetailFactoryBean">-->
+        <!--<property name="targetObject" ref="registerReportTask">-->
+        <!--</property>-->
+        <!--<property name="targetMethod" value="execute"></property>-->
+        <!--<property name="concurrent" value="false" />-->
+    <!--</bean>-->
 
 
-    <!-- 任务定义 -->
-    <bean id="registerReportTask" class="cn.medcn.csp.tasks.RegisterReportTask"></bean>
+    <!--&lt;!&ndash; 任务定义 &ndash;&gt;-->
+    <!--<bean id="registerReportTask" class="cn.medcn.csp.tasks.RegisterReportTask"></bean>-->
 </beans>

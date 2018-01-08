@@ -84,6 +84,14 @@
         const userNameError = "Please enter email address";
         const passWordError = "Please enter password";
 
+        //判断登录框高度
+        if($('.login-box-item').height() > 360){
+            $('.login-box-info').css('bottom','5px');
+        } else {
+            //让协议定位到底部
+            $('.login-box-item').height($('.login-box').height());
+        }
+
         //让背景撑满屏幕
         $('.login-banner').height($(window).height());
         //让协议定位到底部
