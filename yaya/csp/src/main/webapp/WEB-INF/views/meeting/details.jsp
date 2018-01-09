@@ -12,11 +12,8 @@
     <meta charset="UTF-8">
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <title><fmt:message key="page.meeting.title.preview" /> - ${appName}</title>
-    <link rel="stylesheet" href="${ctxStatic}/css/global.css">
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
-    <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/style.css">
     <link rel="stylesheet" href="${ctxStatic}/js/layer/skin/style.css">
 
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
@@ -63,7 +60,8 @@
                 <div class="admin-line"></div>
                 <div class="admin-button t-center">
                     <%--<a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >返回</a>&nbsp;&nbsp;--%>
-                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="<fmt:message key='page.common.back'/>">
+                        <label for="addPPTFileBefore"><input type="file" class="none" name="file" id="addPPTFileBefore"><fmt:message key="page.meeting.button.insert_ppt"/></label>
+                    <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="<fmt:message key='page.common.confirm'/>">
                 </div>
             </div>
         </div>
@@ -215,14 +213,18 @@
             return fileName.endWith(".jpg") || fileName.endWith(".png") || fileName.endWith(".jpeg")
         }
 
-        $("#addPPTFile").change(function(){
-            var fSize = fileSize($("#addPPTFile").get(0));
+        /**
+         * 文件上传
+         * @param e
+         */
+        function uploadPPT(e, position){
+            var fSize = fileSize(e);
             if (fSize > file_size_limit){
                 layer.msg("<fmt:message key='page.meeting.detail.minlimit'/>");
                 return false;
             }
             var pageIndex = (parseInt(swiper.activeIndex) + 1);
-            var fileName = $("#addPPTFile").val().toLowerCase();
+            var fileName = e.value.toLowerCase();
             if (!isVideo(fileName) && !isPic(fileName)){
                 layer.msg("<fmt:message key='page.meeting.detail.format'/>");
                 return false;
@@ -231,16 +233,20 @@
                 shade: [0.1,'#fff'] //0.1透明度的白色背景
             });
             $.ajaxFileUpload({
-                url: "${ctx}/mgr/meet/detail/add"+"?courseId=${course.id}&index="+pageIndex, //用于文件上传的服务器端请求地址
+                url: "${ctx}/mgr/meet/detail/add/"+position+"?courseId=${course.id}&index="+pageIndex, //用于文件上传的服务器端请求地址
                 secureuri: false, //是否需要安全协议，一般设置为false
-                fileElementId: "addPPTFile", //文件上传域的ID
+                fileElementId: e.id, //文件上传域的ID
                 dataType: 'json', //返回值类型 一般设置为json
                 success: function (data)  //服务器成功响应处理函数
                 {
                     layer.close(index);
                     if (data.code == 0){
                         //回调函数传回传完之后的URL地址
-                        window.location.href = '${ctx}/mgr/meet/details/${course.id}?index='+pageIndex;
+                        layer.msg('<fmt:message key="page.meeting.upload.success"/>');
+                        setTimeout(function(){
+                            window.location.href = '${ctx}/mgr/meet/details/${course.id}?index='+(position == 0 ? pageIndex - 1 : pageIndex);
+                        }, 2000);
+
                     } else {
                         layer.msg(data.err);
                     }
@@ -250,6 +256,14 @@
                     layer.close(index);
                 }
             });
+        }
+
+        $("#addPPTFile").change(function(){
+            uploadPPT($("#addPPTFile").get(0), 1);
+        });
+
+        $("#addPPTFileBefore").change(function(){
+            uploadPPT($("#addPPTFileBefore").get(0), 0);
         });
 
         $('.popup-player-hook').on('click',function(){

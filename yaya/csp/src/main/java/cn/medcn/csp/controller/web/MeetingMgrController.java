@@ -431,14 +431,16 @@ public class MeetingMgrController extends CspBaseController {
         return localeView("/meeting/details");
     }
 
+
     /**
      * @param file
      * @param index
+     * @param position 插入幻灯片位置 0表示之前插入 1表示之后插入 默认为之后插入
      * @return
      */
-    @RequestMapping(value = "/detail/add")
+    @RequestMapping(value = "/detail/add/{position}")
     @ResponseBody
-    public String add(@RequestParam(value = "file") MultipartFile file, Integer courseId, Integer index) {
+    public String add(@RequestParam(value = "file") MultipartFile file, Integer courseId, Integer index, @PathVariable Integer position) {
         if (!audioService.editAble(courseId)) {
             return error(courseNonEditAbleError());
         }
@@ -454,7 +456,7 @@ public class MeetingMgrController extends CspBaseController {
         }
         AudioCourseDetail detail = new AudioCourseDetail();
         detail.setCourseId(courseId);
-        detail.setSort(index + 1);
+        detail.setSort(position == 0 ? index : index + 1);
 
         if (isPicture) {
             detail.setImgUrl(result.getRelativePath());
