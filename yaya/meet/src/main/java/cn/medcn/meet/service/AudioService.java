@@ -367,4 +367,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     boolean hasUndoneCourse(String cspUserId);
+
+    List<AudioCourseDetail> findDetailsByCourseId(Integer id);
 }

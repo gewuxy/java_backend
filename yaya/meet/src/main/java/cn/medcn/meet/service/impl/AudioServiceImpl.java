@@ -1153,4 +1153,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(draft.getId());
         return !CheckUtils.isEmpty(details);
     }
+
+    /**
+     * 获取会议详情
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<AudioCourseDetail> findDetailsByCourseId(Integer id) {
+        return audioCourseDetailDAO.findDetailsByCourseId(id);
+    }
 }
