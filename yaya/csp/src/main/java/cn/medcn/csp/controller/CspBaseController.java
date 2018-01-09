@@ -307,8 +307,11 @@ public class CspBaseController extends BaseController {
      * @return
      */
     protected Principal updatePackagePrincipal(String userId) {
+        // 获取最新的用户信息
         CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
+        // 用户token
         String token = userInfo.getToken();
+
         Principal principal = Principal.build(userInfo);
         CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
