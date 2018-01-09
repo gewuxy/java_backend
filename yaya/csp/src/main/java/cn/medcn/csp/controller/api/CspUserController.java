@@ -22,7 +22,11 @@ import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import cn.medcn.weixin.config.MiniProgramConfig;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
+import org.codehaus.xfire.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -32,7 +36,12 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import java.security.AlgorithmParameters;
+import java.security.Security;
 import java.text.ParseException;
 import java.util.*;
 
@@ -63,6 +72,12 @@ public class CspUserController extends CspBaseController {
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Value("${mini.appid}")
+    private String appId;
+
+    @Value("${mini.secret}")
+    private String secret;
 
     @Autowired
     protected CspPackageService packageService;
@@ -785,4 +800,109 @@ public class CspUserController extends CspBaseController {
         }
 
     }
+
+
+    /**
+     * 小程序接口，获取unionid
+     * @param code
+     * @return
+     */
+    @RequestMapping("/mini/unionid")
+    @ResponseBody
+    public String getUnionId(String code){
+        if(StringUtils.isEmpty(code)){
+            return error("code不能为空");
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put(MiniProgramConfig.MINI_APPID_KEY,appId);
+        map.put(MiniProgramConfig.MINI_SECRET_KEY,secret);
+        map.put(MiniProgramConfig.JS_CODE_KEY,code);
+        map.put(MiniProgramConfig.GRANT_TYPE_KEY,MiniProgramConfig.GRANT_TYPE_VALUE);
+        String result = HttpUtils.get(MiniProgramConfig.UNIONID_URL,map);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String errCode = jsonObject.getString("errcode");
+        //如果获取数据没有出错，将session_key存到缓存，判断用户是否已注册
+        if(StringUtils.isEmpty(errCode)){
+            //将session_key存到缓存
+            String sessionKey = jsonObject.getString("session_key");
+            String key = UUIDUtil.getUUID();
+            //TODO 存储的时长
+            redisCacheUtils.setCacheObject(key,sessionKey, Constants.TOKEN_EXPIRE_TIME);
+            //uuid的值作为对外的sessionKey
+            jsonObject.put("session_key",key);
+
+            //判断是否注册过
+            String unionId = jsonObject.getString("unionid");
+            if(StringUtils.isNotEmpty(unionId)){
+                CspUserInfo info = cspUserService.findBindUserByUniqueId(unionId);
+                jsonObject.put("has_user",info == null ? "false": "true");
+            }
+
+            return success(jsonObject);
+        }
+        return success(jsonObject);
+    }
+
+    /**
+     *微信小程序接口，获取用户信息
+     * @param encryptedData
+     * @param sessionKey uuid值
+     * @param iv
+     * @return
+     */
+    @RequestMapping("/mini/info")
+    @ResponseBody
+    public String getInfo(String encryptedData,String sessionKey,String iv){
+        if(StringUtils.isEmpty(encryptedData)){
+            return error("encryptedData不能为空");
+        }
+        if(StringUtils.isEmpty(sessionKey)){
+            return error("sessionKey不能为空");
+        }
+        if(StringUtils.isEmpty(iv)){
+            return error("iv不能为空");
+        }
+
+        //获取存储的session_key
+        String realSessionKey = redisCacheUtils.getCacheObject(sessionKey);
+        if(StringUtils.isEmpty(realSessionKey)){
+            return error("sessionKey失效或错误");
+        }
+
+        // 被加密的数据
+        byte[] dataByte = org.codehaus.xfire.util.Base64.decode(encryptedData);
+        // 加密秘钥
+        byte[] keyByte = org.codehaus.xfire.util.Base64.decode(realSessionKey);
+        // 偏移量
+        byte[] ivByte = org.codehaus.xfire.util.Base64.decode(iv);
+        try {
+            // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
+            int base = 16;
+            if (keyByte.length % base != 0) {
+                int groups = keyByte.length / base + (keyByte.length % base != 0 ? 1 : 0);
+                byte[] temp = new byte[groups * base];
+                Arrays.fill(temp, (byte) 0);
+                System.arraycopy(keyByte, 0, temp, 0, keyByte.length);
+                keyByte = temp;
+            }
+            // 初始化
+            Security.addProvider(new BouncyCastleProvider());
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding","BC");
+            SecretKeySpec spec = new SecretKeySpec(keyByte, "AES");
+            AlgorithmParameters parameters = AlgorithmParameters.getInstance("AES");
+            parameters.init(new IvParameterSpec(ivByte));
+            cipher.init(Cipher.DECRYPT_MODE, spec, parameters);// 初始化
+            byte[] resultByte = cipher.doFinal(dataByte);
+            if (null != resultByte && resultByte.length > 0) {
+                String result = new String(resultByte, "UTF-8");
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                return success(jsonObject);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return error("获取失败");
+        }
+        return null;
+    }
+
 }
