@@ -39,7 +39,7 @@
     </select>
 
     <select id="findCspUserList" resultType="cn.medcn.user.dto.CspUserInfoDTO">
-        SELECT cui.id as uid,cui.`abroad`,cui.`frozen_reason`,cui.`nick_name`,cui.`remark`,
+        SELECT cui.id as uid,cui.`abroad`,cui.`frozen_reason`,cui.frozen_state,cui.`nick_name`,cui.`remark`,
         cui.`register_time`,cui.`state`,cup.`package_start`,cup.`package_end`,cup.`unlimited`,cui.`active`,
         cup.`package_id`,temp.payTimes,temp.payMoneyCn,temp.payMoneyUs,meet.meets
         FROM t_csp_user_info cui
@@ -58,8 +58,8 @@
         <if test="abroad != null">
             AND cui.abroad = #{abroad}
         </if>
-        <if test="active != null">
-            AND cui.active = #{active}
+        <if test="frozen != null">
+            AND cui.frozen_state = #{frozen}
         </if>
         <if test="keyWord != null">
             AND (cui.nick_name like CONCAT(#{keyWord}, '%') OR

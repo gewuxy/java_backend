@@ -66,13 +66,13 @@ public class CspUserController extends BaseController {
             pageable.put("keyWord", keyWord);
             model.addAttribute("keyWord",keyWord);
         }
-        pageable.put("active",1);
+
         if(listType == null || listType == 0){  //国内
             pageable.put("abroad",0);
         }else if( listType == 1){  // 海外
            pageable.put("abroad",1);
-        }else{  //封号=未激活
-            pageable.put("active",0);
+        }else{  // 冻结用户列表
+            pageable.put("frozen",1);
         }
         model.addAttribute("listType",listType);
         MyPage<CspUserInfoDTO> page = cspUsersService.findCspUserList(pageable);
