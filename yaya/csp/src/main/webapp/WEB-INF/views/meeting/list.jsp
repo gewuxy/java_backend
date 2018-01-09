@@ -651,10 +651,18 @@
             </div>
             <c:choose>
                 <c:when test="${empty page.dataList}">
-                    <div class="admin-row clearfix">
-                        <div class="admin-empty-data">
-                            <p><img src="${ctxStatic}/images/admin-empty-data-01.png" alt=""></p>
-                            <p> - <fmt:message key="page.meeting.tips.no_content"/> -</p>
+                    <div class="admin-metting-list">
+                        <div class="row clearfix meeting-row-hock">
+                            <div class="col-lg-4">
+                                <div class="resource-list-item item-radius clearfix">
+                                    <a href="${ctx}/mgr/meet/edit" class="resource-NowButton">
+                                        <div class="resource-NowButton-box">
+                                            <div class="title"><fmt:message key="page.meeting.button.create"/></div>
+                                            <div class="main"><img src="${ctxStatic}/images/icon-succeed.png" alt=""></div>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -663,7 +671,7 @@
                     <div class="admin-metting-list">
 
                             <c:forEach items="${page.dataList}" var="course" varStatus="status">
-                                ${(status.index) % 3 == 0 ? '<div class="row clearfix">':''}
+                                ${(status.index) % 3 == 0 ? '<div class="row clearfix meeting-row-hock">':''}
                                 <div class="col-lg-4">
 
                                     <div class="resource-list-item item-radius clearfix ${course.locked ? 'meeting-lock' : ''}">
@@ -720,9 +728,27 @@
                                         </c:if>
                                     </div>
                                 </div>
+                                <!-- 如果会议不满6个 则添加一个新建会议图片 -->
+                                <c:if test="${fn:length(page.dataList) != 6 && status.index + 1 == fn:length(page.dataList)}">
+                                    <c:if test="${(status.index + 1) % 3 == 0 }">
+                                        </div>
+                                        <div class="row clearfix meeting-row-hock">
+                                    </c:if>
+                                    <div class="col-lg-4">
+                                        <div class="resource-list-item item-radius clearfix">
+                                            <a href="${ctx}/mgr/meet/edit" class="resource-NowButton">
+                                                <div class="resource-NowButton-box">
+                                                    <div class="title"><fmt:message key="page.meeting.button.create"/></div>
+                                                    <div class="main"><img src="${ctxStatic}/images/icon-succeed.png" alt=""></div>
+                                                </div>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </c:if>
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
 
                             </c:forEach>
+
                         <%@include file="../include/pageable.jsp"%>
                         <form id="pageForm" name="pageForm" method="post" action="${ctx}/mgr/meet/list">
                             <input type="hidden" name="pageNum">
