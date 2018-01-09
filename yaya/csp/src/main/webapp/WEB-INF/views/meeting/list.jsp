@@ -791,7 +791,7 @@
                                     <p>微博</p>
                                 </a>
                             </li>
-                            <li class="-mob-share-weibo">
+                            <li class="-mob-share-dingtalk">
                                 <a href="javascript:;">
                                     <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
                                     <p>钉钉</p>
