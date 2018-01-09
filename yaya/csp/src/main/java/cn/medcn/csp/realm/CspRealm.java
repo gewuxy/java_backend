@@ -78,7 +78,7 @@ public class CspRealm extends AuthorizingRealm {
         }
 
         // 用户被冻结
-        if (cspUser.getFrozenState() == null || !cspUser.getFrozenState()) {
+        if (cspUser.getFrozenState() != null && cspUser.getFrozenState()) {
             throw new AuthenticationException(SpringUtils.getMessage("user.frozen.account"));
         }
 
