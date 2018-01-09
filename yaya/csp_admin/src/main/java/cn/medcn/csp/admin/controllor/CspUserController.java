@@ -149,10 +149,10 @@ public class CspUserController extends BaseController {
             user.setUpdateTime(new Date());
             if(actionType == 4){  //冻结
                 user.setFrozenReason(frozenReason);
-                user.setFrozenState(false);
+                user.setFrozenState(true);
             }else{  //解冻
                 user.setFrozenReason("");
-                user.setFrozenState(true);
+                user.setFrozenState(false);
             }
             cspUserService.updateByPrimaryKeySelective(user);
         }else {  //升级降级修改时间
