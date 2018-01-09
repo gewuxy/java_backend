@@ -548,6 +548,29 @@
                 $("#meetCountTips").hide();
                 $("#standard").hide();
             }
+
+            if("${undoneWarn}" == "true"){
+                layer.open({
+                    type: 1,
+                    area: ['400px', '280px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["<fmt:message key='page.common.continue'/>","<fmt:message key='page.common.cancel'/>"],
+                    content: $('#undoneWarn'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='${ctx}/mgr/meet/edit';
+                    },
+                    cancel :function(){
+                        layer.closeAll();
+                    },
+                });
+            }
+
         })
 
 
@@ -926,6 +949,23 @@
             <form action="">
                 <div class="cancel-popup-main">
                     <p><fmt:message key="meet.error.count.out"/></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--弹出有未完成课件 提示-->
+<div class="cancel-popup-box" id="undoneWarn">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a ><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p><fmt:message key="page.meeting.undone.warn"/></p>
                 </div>
             </form>
         </div>

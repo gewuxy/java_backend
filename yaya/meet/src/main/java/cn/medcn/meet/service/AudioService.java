@@ -356,8 +356,15 @@ public interface AudioService extends BaseService<AudioCourse>  {
     boolean checkGuideExists(String cspUserId);
 
     /**
-     * 解锁用户最好的会议
+     * 解锁用户最早的会议
      * @param cspUserId
      */
     void doUnlockEarliestCourse(String cspUserId);
+
+    /**
+     * 檢測用戶是否有已經上傳了ppt但是沒有完成發佈的課件
+     * @param cspUserId
+     * @return
+     */
+    boolean hasUndoneCourse(String cspUserId);
 }
