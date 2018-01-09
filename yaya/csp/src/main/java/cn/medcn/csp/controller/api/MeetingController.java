@@ -680,12 +680,15 @@ public class MeetingController extends CspBaseController {
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public String list(Pageable pageable) {
+    public String list(Pageable pageable,Integer playType) {
         Principal principal = SecurityUtils.get();
         String cspUserId = principal.getId();
 
         pageable.put("cspUserId", cspUserId);
-
+        /*if (playType== null){
+            playType = AudioCourse.PlayType.normal.getType();
+        }*/
+        pageable.put("playType",playType);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
 
         if (!CheckUtils.isEmpty(page.getDataList())) {
