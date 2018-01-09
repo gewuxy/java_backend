@@ -1017,7 +1017,9 @@ a.color-wathet-blue:hover{color:#146ee3}
     -ms-flex-align: center;
 }
 .admin-metting-player  .swiper-slide-active { width:758px; height:522px;   margin-top:0px;}
-.admin-metting-player .addppt-button { position: absolute; right:270px; top:0;}
+.admin-metting-player .addppt-button-right { right:270px; top:0; }
+.admin-metting-player .addppt-button-left { left:270px; top:0; }
+.admin-metting-player .addppt-button { position: absolute; }
 .admin-metting-player .addppt-button label{  display: inline-block;padding:4px 18px; cursor: pointer; border:1px solid #7A8B9F;   -moz-border-radius: 27px; -webkit-border-radius:27px; border-radius: 27px; font-size:16px;}
 
 .admin-line { display: block; height:1px; background:#edf3f9; margin:90px 0 70px;}
@@ -1222,6 +1224,9 @@ a:hover.index-icon-facebook { background:url(../images/index-icon-04-cur.png) no
 /*会议弹出层*/
 .member-popup-zIndex { position: absolute !important;  -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}
 .member-popup-zIndex iframe{  -moz-border-radius: 8px; -webkit-border-radius: 8px; border-radius: 8px;}
+
+/*layer箭头取消*/
+.layui-layer-tips i.layui-layer-TipsB { display:none;}
 
 
 @media screen and (max-width:1200px) {

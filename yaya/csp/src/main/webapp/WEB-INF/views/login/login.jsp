@@ -109,6 +109,25 @@
     </div>
 </div>
 
+
+<div class="cancel-popup-box" id="tips-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p><fmt:message key='user.frozen.account'/></p>
+
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
     $(function(){
         //让背景撑满屏幕
@@ -117,7 +136,22 @@
         $('.login-box-item').height($('.login-box').height());
 
         if("${param.error_code}" == "freeze"){
-            layer.msg("<fmt:message key='user.frozen.account'/>");
+            layer.open({
+                type: 1,
+                area: ['480px', '280px'],
+                fix: false, //不固定
+                title:false,
+                anim:5,
+                closeBtn:0,
+                btn: ["<fmt:message key='page.common.confirm'/>"],
+                content: $('#tips-box'),
+                success:function(layero){
+
+                },
+                cancel :function(){
+
+                },
+            });
         }
     })
 </script>

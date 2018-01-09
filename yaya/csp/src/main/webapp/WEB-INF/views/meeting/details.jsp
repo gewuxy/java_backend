@@ -14,7 +14,6 @@
     <title><fmt:message key="page.meeting.title.preview" /> - ${appName}</title>
     <link rel="stylesheet" href="${ctxStatic}/css/menu.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/js/layer/skin/style.css">
 
     <script src="${ctxStatic}/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
@@ -49,7 +48,8 @@
                         </div>
 
                         <div class="metting-btn-item clearfix pr">
-                            <div class="addppt-button"><label for="addPPTFile"><input type="file" class="none" name="file" id="addPPTFile"><fmt:message key="page.meeting.button.insert_ppt"/></label></div>
+                            <div class="addppt-button addppt-button-left question-tipsHover-hook"><label for="addPPTFileBefore"><input type="file" class="none" name="file" id="addPPTFileBefore"><fmt:message key="page.meeting.button.left_insert"/></label></div>
+                            <div class="addppt-button addppt-button-right question-tipsHover-hook"><label for="addPPTFile"><input type="file" class="none" name="file" id="addPPTFile"><fmt:message key="page.meeting.button.right_insert"/></label></div>
                             <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
                             <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> <i>|</i> <span class="swiper-pagination-total">4</span></div>
                             <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
@@ -60,7 +60,6 @@
                 <div class="admin-line"></div>
                 <div class="admin-button t-center">
                     <%--<a href="${ctx}/mgr/meet/edit?courseId=${course.id}" class="button color-blue min-btn cancel-hook" >返回</a>&nbsp;&nbsp;--%>
-                        <label for="addPPTFileBefore"><input type="file" class="none" name="file" id="addPPTFileBefore"><fmt:message key="page.meeting.button.insert_ppt"/></label>
                     <input type="submit" class="button buttonBlue item-radius min-btn" onclick="window.location.href = '${ctx}/mgr/meet/edit?courseId=${course.id}'" value="<fmt:message key='page.common.confirm'/>">
                 </div>
             </div>
@@ -285,6 +284,13 @@
             });
         });
 
+        //上传Hover 提示
+        $(".question-tipsHover-hook").mouseenter(function(){
+            layer.tips('<fmt:message key="page.meeting.tips.file.limit"/>', $(this), {
+                tips: [3, '#333'],
+                time:3000
+            });
+        });
 
 //            $('.main-nav ul.sf-menu > li').last().addClass('last').end().hover(function(){ $(this).addClass('nav-hover'); },function(){ $(this).removeClass('nav-hover'); });
     })
