@@ -23,6 +23,15 @@ public class XMLRequestFilter extends FormAuthenticationFilter {
     @Autowired
     protected RedisCacheUtils redisCacheUtils;
 
+    /**
+     * 重写访问被拒绝方法
+     * 增加访问被拒绝的ajax处理
+     * @param req
+     * @param res
+     * @param mappedValue
+     * @return
+     * @throws Exception
+     */
     @Override
     protected boolean onAccessDenied(ServletRequest req, ServletResponse res, Object mappedValue) throws Exception {
         HttpServletRequest request = (HttpServletRequest) req;
@@ -41,19 +50,26 @@ public class XMLRequestFilter extends FormAuthenticationFilter {
         }
     }
 
-
+    /**
+     * 重写Shiro前置处理 判断用户是否已经被冻结
+     * @param req
+     * @param res
+     * @param mappedValue
+     * @return
+     * @throws Exception
+     */
     @Override
     public boolean onPreHandle(ServletRequest req, ServletResponse res, Object mappedValue) throws Exception {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
         Principal principal = getCachedPrincipal();
         if (isAjax(request)) {
-            if (principal != null && !principal.getActive()) {
-                ResponseUtils.writeJson(response, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.unActive.email")));
+            if (principal != null && !principal.getFrozenState()) {
+                ResponseUtils.writeJson(response, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.frozen.account")));
                 return false;
             }
         } else {
-            if (principal != null && !principal.getActive()) {
+            if (principal != null && !principal.getFrozenState()) {
                 //强制用户登出
                 Subject subject = SecurityUtils.getSubject();
                 subject.logout();

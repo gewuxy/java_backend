@@ -117,7 +117,7 @@
         $('.login-box-item').height($('.login-box').height());
 
         if("${param.error_code}" == "freeze"){
-            layer.msg("<fmt:message key='user.unActive.email'/>");
+            layer.msg("<fmt:message key='user.frozen.account'/>");
         }
     })
 </script>
