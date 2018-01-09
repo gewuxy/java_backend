@@ -39,7 +39,9 @@ public class Principal implements Serializable{
     protected String pkChangeMsg;
     //老用戶為true 新用戶為false
     protected Boolean state;
-    //是否冻结 true 表示未冻结 false 表示已冻结
+    // 是否冻结 true 表示未冻结 false 表示已冻结
+    protected Boolean frozenState;
+    // 是否激活 true=已激活 false=未激活
     protected Boolean active;
 
     public static Principal build(CspUserInfo userInfo){
@@ -54,7 +56,7 @@ public class Principal implements Serializable{
             principle.setAvatar(userInfo.getAvatar());
             principle.setState(userInfo.getState());
             principle.setActive(userInfo.getActive());
-
+            principle.setFrozenState(userInfo.getFrozenState());
             return principle;
         }
 

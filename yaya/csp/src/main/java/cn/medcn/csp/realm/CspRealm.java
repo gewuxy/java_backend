@@ -77,12 +77,19 @@ public class CspRealm extends AuthorizingRealm {
             throw new AuthenticationException(SpringUtils.getMessage("user.unActive.email"));
         }
 
+        // 用户被冻结
+        if (cspUser.getFrozenState() != null && cspUser.getFrozenState()) {
+            throw new AuthenticationException(SpringUtils.getMessage("user.frozen.account"));
+        }
+
+        // 判断host为空时，用户使用邮箱+密码登录
         if (CheckUtils.isEmpty(token.getHost())){
             if (!MD5Utils.md5(password).equals(cspUser.getPassword())) {
                 throw new AuthenticationException(SpringUtils.getMessage("user.error.password"));
             }
         }
 
+        // 是否海外账号登录
         boolean abroad = cspUser.getAbroad() == null ? false : cspUser.getAbroad();
         boolean loginAbroad = LocalUtils.getLocalStr().equals(LocalUtils.Local.zh_CN.name()) ? false : true;
         if (!abroad && loginAbroad) {

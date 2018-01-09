@@ -17,7 +17,7 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
- import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -50,18 +50,18 @@ public class LoginController extends CspBaseController {
     @Autowired
     protected EmailTempService tempService;
 
-    protected static final int COOKIE_MAX_AGE = (int)TimeUnit.DAYS.toSeconds(LOGIN_COOKIE_MAX_AGE);
+    protected static final int COOKIE_MAX_AGE = (int) TimeUnit.DAYS.toSeconds(LOGIN_COOKIE_MAX_AGE);
 
     @RequestMapping(value = "/login", method = RequestMethod.GET)
-    public String login(Integer thirdPartyId){
+    public String login(Integer thirdPartyId) {
 
         if (thirdPartyId == null || thirdPartyId == 0) {
             // 登录主界面
             return localeView("/login/login");
 
-        } else if (thirdPartyId > BindInfo.Type.YaYa.getTypeId() ){
+        } else if (thirdPartyId > BindInfo.Type.YaYa.getTypeId()) {
             // 第三方id=6或7（手机或邮箱登录）
-            return localeView("/login/login_"+thirdPartyId);
+            return localeView("/login/login_" + thirdPartyId);
 
         } else {
             // 第三方登录
@@ -75,7 +75,7 @@ public class LoginController extends CspBaseController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public String login(String username, String password, Integer thirdPartyId,
                         String mobile, String captcha, Model model,
-                        HttpServletResponse response, HttpServletRequest request){
+                        HttpServletResponse response, HttpServletRequest request) {
         // 默认为邮箱密码登录
         if (thirdPartyId == null) {
             thirdPartyId = BindInfo.Type.EMAIL.getTypeId();
@@ -94,26 +94,24 @@ public class LoginController extends CspBaseController {
             cspUserInfo = cspUserService.selectByMobile(mobile);
         }
 
-        if (cspUserInfo != null){
+        if (cspUserInfo != null) {
             modifyOldUser(cspUserInfo);
         }
 
-        return redirectUrl ;
+        return redirectUrl;
     }
-
-
-
 
 
     /**
      * 邮箱登录
+     *
      * @param username
      * @param password
      * @param model
      * @return
      */
     protected String loginByEmail(String username, String password,
-                                  Model model, HttpServletResponse response){
+                                  Model model, HttpServletResponse response) {
         String errorForwardUrl = localeView("/login/login_" + BindInfo.Type.EMAIL.getTypeId());
         if (CheckUtils.isEmpty(username)) {
             model.addAttribute("error", local("user.empty.username"));
@@ -157,8 +155,8 @@ public class LoginController extends CspBaseController {
 
             // 将当前用户添加到cookie缓存 保存7天
             Principal principal = getWebPrincipal();
-            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
-            CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getEmail() , COOKIE_MAX_AGE);
+            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId(), COOKIE_MAX_AGE);
+            CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getEmail(), COOKIE_MAX_AGE);
 
         } catch (Exception e) {
             model.addAttribute("error", e.getMessage());
@@ -172,6 +170,7 @@ public class LoginController extends CspBaseController {
 
     /**
      * 根据手机号码 检查用户是否存在，如果不存在 需注册新用户
+     *
      * @param mobile
      */
     public void checkUserByMobile(String mobile) {
@@ -180,7 +179,7 @@ public class LoginController extends CspBaseController {
         if (userInfo == null) {
             // 手机号码不存在，注册新用户
             userInfo = new CspUserInfo();
-            String userId =  StringUtils.nowStr();
+            String userId = StringUtils.nowStr();
             userInfo.setId(userId);
             userInfo.setMobile(mobile);
             userInfo.setRegisterTime(new Date());
@@ -195,13 +194,13 @@ public class LoginController extends CspBaseController {
             cspUserService.insert(userInfo);
 
             //新用户发送欢迎推送消息
-            sysNotifyService.addNotify(userId,local("user.notify.title"),local("user.notify.content"),local("user.notify.sender"));
+            sysNotifyService.addNotify(userId, local("user.notify.title"), local("user.notify.content"), local("user.notify.sender"));
         }
     }
 
     public boolean checkUserByMobiles(String mobile) {
         CspUserInfo userInfo = cspUserService.findByLoginName(mobile);
-        if (userInfo == null){
+        if (userInfo == null) {
             return false;
         }
         return true;
@@ -209,12 +208,13 @@ public class LoginController extends CspBaseController {
 
     /**
      * 手机登录
+     *
      * @param mobile
      * @param captcha
      * @param model
      * @return
      */
-    protected String loginByMobile(String mobile, String captcha, Model model, HttpServletResponse response, HttpServletRequest request )   {
+    protected String loginByMobile(String mobile, String captcha, Model model, HttpServletResponse response, HttpServletRequest request) {
         String errorForwardUrl = localeView("/login/login_" + BindInfo.Type.MOBILE.getTypeId());
         if (StringUtils.isEmpty(mobile)) {
             model.addAttribute("error", local("user.empty.mobile"));
@@ -232,28 +232,28 @@ public class LoginController extends CspBaseController {
             // 检查验证码是否有效
             checkCaptchaIsOrNotValid(mobile, captcha);
             // 检查手机号码是否注册
-            if (checkUserByMobiles(mobile)== false){
+            if (checkUserByMobiles(mobile) == false) {
                 checkUserByMobile(mobile);
             }
 
-                // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常时 浪费短信验证码）
-                UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
-                token.setHost("mobile");
-                Subject subject = SecurityUtils.getSubject();
+            // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常时 浪费短信验证码）
+            UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
+            token.setHost("mobile");
+            Subject subject = SecurityUtils.getSubject();
 
-                subject.login(token);
+            subject.login(token);
 
 
-                Principal principal = getWebPrincipal();
-                // 如果该用户没有昵称 需设置昵称才能登录
-                if (principal != null && principal.getNickName() == null) {
-                    model.addAttribute("id", principal.getId());
-                    return localeView("/login/to_set_nickname");
-                }
+            Principal principal = getWebPrincipal();
+            // 如果该用户没有昵称 需设置昵称才能登录
+            if (principal != null && principal.getNickName() == null) {
+                model.addAttribute("id", principal.getId());
+                return localeView("/login/to_set_nickname");
+            }
 
-                // 如果用户有昵称 直接登录 缓存登录用户账号
-                CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
-                CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile() , COOKIE_MAX_AGE);
+            // 如果用户有昵称 直接登录 缓存登录用户账号
+            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId(), COOKIE_MAX_AGE);
+            CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile(), COOKIE_MAX_AGE);
 
 
         } catch (AuthenticationException e) {
@@ -263,7 +263,7 @@ public class LoginController extends CspBaseController {
             return errorForwardUrl;
 
         } catch (SystemException ex) {
-           // 登录异常，需退出登录
+            // 登录异常，需退出登录
             Subject subject = SecurityUtils.getSubject();
             subject.logout();
             // 清除缓存
@@ -280,6 +280,7 @@ public class LoginController extends CspBaseController {
 
     /**
      * 手机登录 如果没有昵称，要先设置昵称 才能登录
+     *
      * @param id
      * @param nickName
      * @param model
@@ -300,16 +301,16 @@ public class LoginController extends CspBaseController {
 
         // 将当前用户添加到cookie缓存 保存7天
         Principal principal = getWebPrincipal();
-        CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
-        CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile() , COOKIE_MAX_AGE);
+        CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId(), COOKIE_MAX_AGE);
+        CookieUtils.setCookie(response, LOGIN_USER_KEY, principal.getMobile(), COOKIE_MAX_AGE);
 
         return defaultRedirectUrl();
     }
 
 
-
     /**
      * 第三方登录,绑定 回调地址
+     *
      * @param code
      * @param thirdPartyId
      * @return
@@ -326,17 +327,17 @@ public class LoginController extends CspBaseController {
                 if (StringUtils.isNotEmpty(uniqueId)) {
                     // 根据第三方用户唯一id 查询用户是否存在
                     CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(uniqueId);
-                    if(principal != null){
+                    if (principal != null) {
                         //第三方绑定操作
-                        doThirdPartWebBind(oAuthUser,thirdPartyId,redirectAttributes);
+                        doThirdPartWebBind(oAuthUser, thirdPartyId, redirectAttributes);
                         return "redirect:/mgr/user/toAccount";
-                    }else{
+                    } else {
                         //第三方登录操作
                         return doThirdPartWebLogin(thirdPartyId, oAuthUser, userInfo, response, model);
                     }
                 }
             }
-        }else{
+        } else {
             return "redirect:/mgr/login";
         }
         return null;
@@ -344,23 +345,24 @@ public class LoginController extends CspBaseController {
 
     /**
      * 推特/facebook 回调
+     *
      * @param user
      * @return
      */
-    @RequestMapping(value="/jsCallback",method = RequestMethod.POST)
+    @RequestMapping(value = "/jsCallback", method = RequestMethod.POST)
     public String twitterCallback(OAuthUser user, HttpServletRequest request, HttpServletResponse response,
                                   RedirectAttributes redirectAttributes, Model model) throws SystemException {
-        if(user == null){
+        if (user == null) {
             throw new SystemException("can't get userInfo");
         }
-        Principal principal =  getWebPrincipal();
+        Principal principal = getWebPrincipal();
         //登录回调
-        if(principal == null){
+        if (principal == null) {
             // 根据第三方用户唯一id 查询用户是否存在
             CspUserInfo userInfo = cspUserService.findBindUserByUniqueId(user.getUid());
             return doThirdPartWebLogin(user.getPlatformId(), user, userInfo, response, model);
 
-        }else{  //绑定回调
+        } else {  //绑定回调
             //将OauthUser转为BindInfo对象
             BindInfo info = new BindInfo();
             info.setThirdPartyId(user.getPlatformId());
@@ -370,9 +372,9 @@ public class LoginController extends CspBaseController {
             info.setAvatar(user.getIconUrl());
             info.setNickName(user.getNickname());
             try {
-                cspUserService.doBindThirdAccount(info,principal.getId());
+                cspUserService.doBindThirdAccount(info, principal.getId());
             } catch (SystemException e) {
-                addFlashMessage(redirectAttributes,e.getMessage());
+                addFlashMessage(redirectAttributes, e.getMessage());
                 return "redirect:/mgr/user/toAccount";
             }
 
@@ -382,38 +384,40 @@ public class LoginController extends CspBaseController {
 
     /**
      * 绑定第三方账号
+     *
      * @param oAuthUser
      * @param thirdPartId
      * @param redirectAttributes
      * @return
      */
-    private void doThirdPartWebBind(OAuthUser oAuthUser,Integer thirdPartId,RedirectAttributes redirectAttributes) {
-            String userId = getWebPrincipal().getId();
-            BindInfo info = OAuthUser.buildToBindInfo(oAuthUser);
-            info.setThirdPartyId(thirdPartId);
-            info.setId(StringUtils.nowStr());
+    private void doThirdPartWebBind(OAuthUser oAuthUser, Integer thirdPartId, RedirectAttributes redirectAttributes) {
+        String userId = getWebPrincipal().getId();
+        BindInfo info = OAuthUser.buildToBindInfo(oAuthUser);
+        info.setThirdPartyId(thirdPartId);
+        info.setId(StringUtils.nowStr());
         try {
-            cspUserService.doBindThirdAccount(info,userId);
+            cspUserService.doBindThirdAccount(info, userId);
             //绑定丫丫的需要更新缓存
-            if(info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()){
+            if (info.getThirdPartyId() == BindInfo.Type.YaYa.getTypeId()) {
                 audioService.doModifyAudioCourseByPackageId(userId, CspPackage.TypeId.PROFESSIONAL.getId());
                 updatePackagePrincipal(userId);
             }
-            addFlashMessage(redirectAttributes,local("user.bind.success"));
+            addFlashMessage(redirectAttributes, local("user.bind.success"));
         } catch (SystemException e) {
-           addFlashMessage(redirectAttributes,e.getMessage());
+            addFlashMessage(redirectAttributes, e.getMessage());
         }
     }
 
 
     /**
      * 第三方登录需要做的操作
+     *
      * @param thirdPartyId
      * @param oAuthUser
      * @param userInfo
      */
     private String doThirdPartWebLogin(Integer thirdPartyId, OAuthUser oAuthUser, CspUserInfo userInfo,
-                                     HttpServletResponse response, Model model) {
+                                       HttpServletResponse response, Model model) {
         // 用户不存在，去添加绑定账号及添加csp用户账号
         if (userInfo == null) {
             CspUserInfoDTO dto = OAuthUser.buildToCspUserInfoDTO(oAuthUser);
@@ -439,18 +443,18 @@ public class LoginController extends CspBaseController {
             //yaya登录
             if (thirdPartyId == BindInfo.Type.YaYa.getTypeId()) {
                 cspUserService.yayaBindUpdate(userInfo.getId());
-                if(userInfo.getState() == true){
+                if (userInfo.getState() == true) {
                     userInfo.setState(false);
                     cspUserService.updateByPrimaryKey(userInfo);
                 }
                 updatePackagePrincipal(userInfo.getId());
-            }else {
+            } else {
                 //新用户老用户处理
                 modifyOldUser(userInfo);
             }
-            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId() , COOKIE_MAX_AGE);
-            String nickName = URLEncoder.encode(principal.getNickName(),"UTF-8");
-            CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName , COOKIE_MAX_AGE);
+            CookieUtils.setCookie(response, LOGIN_USER_ID_KEY, principal.getId(), COOKIE_MAX_AGE);
+            String nickName = URLEncoder.encode(principal.getNickName(), "UTF-8");
+            CookieUtils.setCookie(response, LOGIN_USER_KEY, nickName, COOKIE_MAX_AGE);
         } catch (AuthenticationException e) {
             model.addAttribute("error", e.getMessage());
             return localeView("/login/login");
@@ -464,6 +468,7 @@ public class LoginController extends CspBaseController {
 
     /**
      * 跳转注册页面
+     *
      * @return
      */
     @RequestMapping(value = "/to/register")
@@ -473,18 +478,19 @@ public class LoginController extends CspBaseController {
 
     /**
      * 邮箱注册
+     *
      * @param userInfo
      * @return
      */
     @RequestMapping(value = "/register")
     @ResponseBody
     public String register(CspUserInfo userInfo, HttpServletRequest request) {
-        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(),EmailTemplate.Type.REGISTER.getLabelId(),EmailTemplate.UseType.CSP.getLabelId());
-       try {
-           //添加用户的注册设备
-           userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
+        EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(), EmailTemplate.Type.REGISTER.getLabelId(), EmailTemplate.UseType.CSP.getLabelId());
+        try {
+            //添加用户的注册设备
+            userInfo.setRegisterDevice(CspUserInfo.RegisterDevice.WEB.ordinal());
             userInfo.setLastLoginIp(request.getRemoteAddr());
-            return cspUserService.register(userInfo,template);
+            return cspUserService.register(userInfo, template);
         } catch (SystemException e) {
             return error(local(e.getMessage()));
         }
@@ -492,6 +498,7 @@ public class LoginController extends CspBaseController {
 
     /**
      * 忘记密码
+     *
      * @return
      */
     @RequestMapping(value = "/to/reset/password")
@@ -502,10 +509,11 @@ public class LoginController extends CspBaseController {
 
     /**
      * 退出登录 需清除cookie缓存的账号
+     *
      * @return
      */
     @RequestMapping(value = "/user/logout")
-    public String logout(HttpServletResponse response){
+    public String logout(HttpServletResponse response) {
         // 清除缓存
         CookieUtils.clearCookie(response, LOGIN_USER_ID_KEY);
         CookieUtils.clearCookie(response, LOGIN_USER_KEY);
