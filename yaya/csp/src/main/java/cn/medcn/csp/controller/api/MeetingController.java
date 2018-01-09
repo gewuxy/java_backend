@@ -45,8 +45,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static cn.medcn.common.Constants.*;
 import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
@@ -1007,5 +1010,58 @@ public class MeetingController extends CspBaseController {
 
         return content;
     }
+
+    /**
+     * 获取新手指导课件
+     *
+     * @return
+     */
+    @RequestMapping(value = "/tourist/course/guide")
+    @ResponseBody
+    public String getGuideCourse(Integer sourceId) {
+        AudioCourse course = audioService.selectByPrimaryKey(sourceId == null ? Constants.NUMBER_ONE:sourceId);
+        List<AudioCourseDetail> details = audioService.findDetailsByCourseId(course.getId());
+        Map<String, Object> map = new HashMap<>();
+        map.put("meet", course);
+        map.put("details", details);
+        return success(map);
+    }
+
+    /**
+     * 设置课件密码
+     *
+     * @param course
+     * @return
+     */
+    @RequestMapping(value = "/set/password")
+    @ResponseBody
+    public String meetPassword(AudioCourse course,Integer type) {
+        if(course.getId() == null || type == null){
+            return error(local("user.param.empty"));
+        }
+        Integer result = 0;
+        if(type == Constants.NUMBER_TWO){
+            AudioCourse update = audioService.selectByPrimaryKey(course.getId());
+            update.setPassword(null);
+            result = audioService.updateByPrimaryKey(update);
+        }else{
+            if(StringUtils.isEmpty(course.getPassword())){
+                return error(local("user.param.empty"));
+            }
+            String regEx  = "[a-zA-Z0-9]{4,8}";
+            Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
+            Matcher matcher = pattern.matcher(course.getPassword());
+            boolean rs = matcher.matches();
+            if(!rs) return  error(local("user.subscribe.paramError"));
+            result = audioService.updateByPrimaryKeySelective(course);
+        }
+        if (result > 0) {
+            return success();
+        } else {
+            return error();
+        }
+    }
+
+
 
 }

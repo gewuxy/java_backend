@@ -360,4 +360,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param cspUserId
      */
     void doUnlockEarliestCourse(String cspUserId);
+
+    List<AudioCourseDetail> findDetailsByCourseId(Integer id);
 }

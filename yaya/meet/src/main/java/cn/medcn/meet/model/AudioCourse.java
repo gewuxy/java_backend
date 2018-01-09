@@ -55,6 +55,8 @@ public class AudioCourse implements Serializable {
     protected Boolean locked;
     //是否是引导课件
     protected Boolean guide;
+    //课件密码
+    protected String password;
 
     @Transient
     @JsonIgnore

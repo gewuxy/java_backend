@@ -1137,4 +1137,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         }
         updateByPrimaryKey(earliestActiveCourse);
     }
+
+    /**
+     * 获取会议详情
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public List<AudioCourseDetail> findDetailsByCourseId(Integer id) {
+        return audioCourseDetailDAO.findDetailsByCourseId(id);
+    }
 }
