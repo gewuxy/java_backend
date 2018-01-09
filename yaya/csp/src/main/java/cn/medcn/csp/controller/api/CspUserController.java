@@ -864,7 +864,7 @@ public class CspUserController extends CspBaseController {
         }
 
         //获取存储的session_key
-        String realSessionKey = (String)redisCacheUtils.getCacheObject(sessionKey);
+        String realSessionKey = redisCacheUtils.getCacheObject(sessionKey);
         if(StringUtils.isEmpty(realSessionKey)){
             return error("sessionKey失效或错误");
         }
