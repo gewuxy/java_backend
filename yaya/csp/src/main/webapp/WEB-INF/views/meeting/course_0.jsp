@@ -269,6 +269,10 @@
                     //判断是否Iphone 的 Safari 浏览器
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
+                        //判断是否已经播放完成
+                        activeItemIsVideo.get(0).addEventListener('canplay',function(){
+                            $('.isIphoneSafari').hide();
+                        }, {once: true});
                     }
                     activeItemIsVideo.get(0).addEventListener('ended', function () {
                         console.log("video play end ...");
@@ -548,6 +552,7 @@
         } else {
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
+                $('.isIphoneSafari').hide();
                 $(this).hide();
                 popupPalyer.play();
                 playing = true;

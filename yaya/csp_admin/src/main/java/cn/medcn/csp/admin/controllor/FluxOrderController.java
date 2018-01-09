@@ -69,8 +69,6 @@ public class FluxOrderController extends BaseController{
             }else {
                 queryMoney = chargeService.findOrderListByTimeUs(startTime,endTime);
             }
-            model.addAttribute("startTime",startTime);
-            model.addAttribute("endTime",endTime);
 
         }
 
@@ -80,8 +78,10 @@ public class FluxOrderController extends BaseController{
             page= chargeService.findFluxOrderListByUs(pageable);
         }
         model.addAttribute("queryMoney",queryMoney == null ? 0:queryMoney);
-        model.addAttribute("search",true);
         model.addAttribute("page",page);
+        model.addAttribute("startTime",startTime);
+        model.addAttribute("endTime",endTime);
+
         return "/fluxOrder/fluxOrderList";
     }
 
@@ -138,10 +138,10 @@ public class FluxOrderController extends BaseController{
        FluxOrder fluxOrder = chargeService.selectByPrimaryKey(id);
        if (fluxOrder != null){
            fluxOrder.setState(2);
-           addFlashMessage(redirectAttributes,"删除成功");
+           addFlashMessage(redirectAttributes,"关闭订单成功");
            chargeService.updateByPrimaryKey(fluxOrder);
        }else {
-           addErrorFlashMessage(redirectAttributes,"删除失败");
+           addErrorFlashMessage(redirectAttributes,"关闭订单失败");
        }
        return "redirect:/csp/order/list";
    }

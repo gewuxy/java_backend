@@ -29,5 +29,15 @@ public interface OpenOfficeService {
 
     List<String> pdf2Images(String padFilePath, String imageDir,int courseId, HttpServletRequest request);
 
+    /**
+     * 打印PDF 然后转换成图片
+     * @param padFilePath
+     * @param imageDir
+     * @param courseId
+     * @param request
+     * @return
+     */
+    List<String> pdfPrintAndToImages(String padFilePath, String imageDir,int courseId, HttpServletRequest request);
+
     void convert2Html(String sourceFilePath, String destFilePath);
 }
