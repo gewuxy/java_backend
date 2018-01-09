@@ -56,7 +56,7 @@ public class CspUserInfo implements Serializable{
     protected Date registerTime;
     protected Date updateTime;
 
-    // 账户是否已冻结=true  未冻结=false
+    // 账户是否已冻结1=true  未冻结0=false
     protected Boolean frozenState;
     // 冻结原因
     protected String frozenReason;

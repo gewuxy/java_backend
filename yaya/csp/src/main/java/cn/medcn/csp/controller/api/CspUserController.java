@@ -251,8 +251,9 @@ public class CspUserController extends CspBaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
-            Boolean active = userInfo.getActive();
-            if (active != null && !active) {
+            Boolean frozen = userInfo.getFrozenState();
+            // 账号已经被冻结
+            if (frozen != null && frozen) {
                 return accountFrozenError();
             }
 
@@ -277,19 +278,23 @@ public class CspUserController extends CspBaseController {
 
             CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
             if (cspUserPackage == null){
-                if(userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
+                // YaYa账号登录
+                if (userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())) {
+                    // 设置YaYa账号套餐版本信息
                     cspUserService.yayaBindUpdate(userInfo.getId());
-                    if(userInfo.getState() == true){
+                    // 判断是否新用户
+                    if (userInfo.getState()) {
                         userInfo.setState(true);
                         cspUserService.updateByPrimaryKey(userInfo);
                     }
-                }else if(userInfo.getState() == true && !userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
+                } else if (userInfo.getState() && !userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())) {
                     modifyOldUser(userInfo);
-                }else{
+                } else {
                     //app端用户默认给标准版
                     cspUserPackageService.addStanardInfo(userInfo.getId());
                 }
             }
+
             // 缓存用户信息
             Principal principal = cachePrincipal(userInfo);
 
@@ -414,9 +419,10 @@ public class CspUserController extends CspBaseController {
             throw new SystemException(local("user.notexisted"));
         }
         // 邮箱未激活
-        if (userInfo.getActive() == false) {
+        if (!userInfo.getActive()) {
             throw new SystemException(local("user.unActive.email"));
         }
+
         // 用户输入密码是否正确
         if (!MD5Utils.md5(password).equals(userInfo.getPassword())) {
             throw new PasswordErrorException((local("user.password.error")));
