@@ -34,9 +34,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        String cacheKey = Constants.TOKEN+"_"+token;
+        String cacheKey = Constants.TOKEN + "_" + token;
         Principal principal = (Principal) redisCacheUtils.getCacheObject(cacheKey);
-        if(principal == null){
+        if (principal == null) {
             CspUserInfo cond = new CspUserInfo();
             cond.setToken(token);
             cond.setActive(true);
@@ -57,7 +57,7 @@ public class AuthInterceptor implements HandlerInterceptor {
         }
 
         // 用户被冻结
-        if (principal.getFrozenState() == null || principal.getFrozenState()) {
+        if (principal.getFrozenState() != null && principal.getFrozenState()) {
             ResponseUtils.writeJson(httpServletResponse, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.frozen.account")));
             return false;
         }

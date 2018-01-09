@@ -75,6 +75,8 @@ public class CspUserInfoDTO  {
     protected Date updateTime;
     //备注
     protected String remark;
+    // 冻结
+    protected Boolean frozenState;
     //冻结原因
     protected String frozenReason;
     //付费次数
@@ -108,6 +110,7 @@ public class CspUserInfoDTO  {
         } else {
             dto.setFlux(userInfo.getFlux());
         }
+        dto.setFrozenState(userInfo.getFrozenState());
 
         return dto;
     }
