@@ -1139,6 +1139,22 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
     /**
+     * 檢測用戶是否有已經上傳了ppt但是沒有完成發佈的課件
+     *
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public boolean hasUndoneCourse(String cspUserId) {
+        AudioCourse draft = findLastDraft(cspUserId);
+        if (draft == null) {
+            return false;
+        }
+        List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(draft.getId());
+        return !CheckUtils.isEmpty(details);
+    }
+
+    /**
      * 获取会议详情
      *
      * @param id

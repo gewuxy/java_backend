@@ -51,6 +51,12 @@ import static cn.medcn.csp.CspConstants.MIN_FLUX_LIMIT;
 @Controller
 @RequestMapping(value = "/mgr/meet")
 public class MeetingMgrController extends CspBaseController {
+    /**
+     * 用来标识当前会话是否已经提示过有未完成的课件
+     */
+    private static final String SHOW_UN_DONE_WARN_KEY = "show_undone";
+
+    private static final String SHOW_MEET_COUNT_OUT_TIPS_KEY = "showTips";
 
     @Autowired
     protected AudioService audioService;
@@ -109,28 +115,61 @@ public class MeetingMgrController extends CspBaseController {
     public String list(Pageable pageable, Model model, String keyword, Integer playType, String sortType, HttpServletRequest request, Boolean showWarn) {
         pageable.setPageSize(6);
 
-        //打开了投稿箱的公众号列表
-        Pageable pageable2 = new Pageable();
-        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable2);
-        AppUser.splitUserAvatar(myPage.getDataList(), fileBase);
-        model.addAttribute("accepterList", myPage.getDataList());
+        handleDelivery(model);
         //web获取当前用户信息
         Principal principal = getWebPrincipal();
+        //处理是否显示会议超出警告
+        handleWarnTips(model, showWarn, request);
 
-        if (showWarn == null) {
-            showWarn = false;
-        }
-
-        if (meetCountOut(CspUserInfo.RegisterDevice.WEB) || showWarn){
-            model.addAttribute("meetCountOut", true);
-
-            if (CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null) {
-                model.addAttribute("showTips", true);
-            }
-        }
+        //是否提示用户有未完成的课件需要继续完善
+        handleUnDoneWarn(model, principal, request);
+        //处理过期提醒
+        handleExpireNotify(principal, model);
 
         sortType = CheckUtils.isEmpty(sortType) ? "desc" : sortType;
 
+        pageable.put("sortType", sortType);
+        pageable.put("cspUserId", principal.getId());
+        pageable.put("keyword", keyword);
+        pageable.put("playType", playType);
+
+        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
+
+        CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
+        model.addAttribute("page", page);
+        model.addAttribute("newUser",principal.getNewUser());
+        model.addAttribute("successMsg",principal.getPkChangeMsg());
+        model.addAttribute("nickname",principal.getNickName());
+        return localeView("/meeting/list");
+    }
+
+    /**
+     * 处理用户有未完成的课件警告提示
+     * @param model
+     * @param principal
+     * @param request
+     */
+    protected void handleUnDoneWarn(Model model, Principal principal, HttpServletRequest request){
+        //在没有会议超出警告的提示的情况才判断是否要显示有未完成课件的提示
+        if (!model.containsAttribute(SHOW_MEET_COUNT_OUT_TIPS_KEY)){
+            String showUndone = (String) request.getSession().getAttribute(SHOW_UN_DONE_WARN_KEY);
+            boolean hasUndone = audioService.hasUndoneCourse(principal.getId());
+            if (hasUndone && showUndone == null) {
+                model.addAttribute("undoneWarn", "true");
+            }
+            request.getSession().setAttribute(SHOW_UN_DONE_WARN_KEY, "true");
+        }
+    }
+
+    protected void handleDelivery(Model model){
+        //打开了投稿箱的公众号列表
+        Pageable pageable = new Pageable();
+        MyPage<AppUser> myPage = appUserService.findAccepterList(pageable);
+        AppUser.splitUserAvatar(myPage.getDataList(), fileBase);
+        model.addAttribute("accepterList", myPage.getDataList());
+    }
+
+    protected void handleExpireNotify(Principal principal, Model model){
         //高级版和专业版进行时间提醒
         Integer packageId = principal.getPackageId() == null ? CspPackage.TypeId.STANDARD.getId() : principal.getPackageId();
         CspPackage cspPackage = principal.getCspPackage();
@@ -146,30 +185,19 @@ public class MeetingMgrController extends CspBaseController {
                 }
             }
         }
+    }
 
-        pageable.put("sortType", sortType);
-        pageable.put("cspUserId", principal.getId());
-        pageable.put("keyword", keyword);
-        pageable.put("playType", playType);
-
-        model.addAttribute("keyword", keyword);
-        model.addAttribute("playType", playType);
-        model.addAttribute("sortType", sortType);
-
-        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
-
-        //如果第二页或其他页数查找到无会议时，用前一页的会议列表代替(不加以下判断，删除会议时可能会出现无会议内容的情况)
-        if(page.getDataList().size() == 0 && pageable.getPageNum() != 1){
-            pageable.setPageNum(pageable.getPageNum() - 1);
-            page = audioService.findCspMeetingList(pageable);
+    protected void handleWarnTips(Model model, Boolean showWarn, HttpServletRequest request){
+        if (showWarn == null) {
+            showWarn = false;
         }
+        if (meetCountOut(CspUserInfo.RegisterDevice.WEB) || showWarn){
+            model.addAttribute("meetCountOut", true);
 
-        CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
-        model.addAttribute("page", page);
-        model.addAttribute("newUser",principal.getNewUser());
-        model.addAttribute("successMsg",principal.getPkChangeMsg());
-        model.addAttribute("nickname",principal.getNickName());
-        return localeView("/meeting/list");
+            if (CookieUtils.getCookie(request, MEET_COUNT_OUT_TIPS_KEY) == null) {
+                model.addAttribute("showTips", true);
+            }
+        }
     }
 
 

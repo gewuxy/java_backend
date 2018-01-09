@@ -548,6 +548,29 @@
                 $("#meetCountTips").hide();
                 $("#standard").hide();
             }
+
+            if("${undoneWarn}" == "true"){
+                layer.open({
+                    type: 1,
+                    area: ['400px', '280px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    btn: ["<fmt:message key='page.common.continue'/>","<fmt:message key='page.common.cancel'/>"],
+                    content: $('#undoneWarn'),
+                    success:function(){
+
+                    },
+                    yes:function(){
+                        //成功跳去会员页面，让用户升级
+                        window.location.href='${ctx}/mgr/meet/edit';
+                    },
+                    cancel :function(){
+                        layer.closeAll();
+                    },
+                });
+            }
+
         })
 
 
@@ -791,12 +814,12 @@
                                     <p>微博</p>
                                 </a>
                             </li>
-                            <li class="-mob-share-weibo">
-                                <a href="javascript:;">
-                                    <img src="${ctxStatic}/images/_weibo-icon.png" alt="">
-                                    <p>钉钉</p>
-                                </a>
-                            </li>
+                            <%--<li class="-mob-share-dingtalk">--%>
+                                <%--<a href="javascript:;">--%>
+                                    <%--<img src="${ctxStatic}/images/_weibo-icon.png" alt="">--%>
+                                    <%--<p>钉钉</p>--%>
+                                <%--</a>--%>
+                            <%--</li>--%>
                         </c:when>
                         <c:otherwise>
                             <li class="-mob-share-twitter">
@@ -825,12 +848,12 @@
                             <p><fmt:message key="page.meeting.button.copy_link"/></p>
                         </a>
                     </li>
-                    <li id="copyLi">
-                        <a href="javascript:;" class="copy-hook">
-                            <img src="${ctxStatic}/images/_copy-icon.png" alt="">
-                            <p><fmt:message key="page.meeting.button.duplicate"/></p>
-                        </a>
-                    </li>
+                    <%--<li id="copyLi">--%>
+                        <%--<a href="javascript:;" class="copy-hook">--%>
+                            <%--<img src="${ctxStatic}/images/_copy-icon.png" alt="">--%>
+                            <%--<p><fmt:message key="page.meeting.button.duplicate"/></p>--%>
+                        <%--</a>--%>
+                    <%--</li>--%>
                     <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
@@ -926,6 +949,23 @@
             <form action="">
                 <div class="cancel-popup-main">
                     <p><fmt:message key="meet.error.count.out"/></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--弹出有未完成课件 提示-->
+<div class="cancel-popup-box" id="undoneWarn">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a ><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p><fmt:message key="page.meeting.undone.warn"/></p>
                 </div>
             </form>
         </div>

@@ -116,6 +116,9 @@
         //让协议定位到底部
         $('.login-box-item').height($('.login-box').height());
 
+        if("${param.error_code}" == "freeze"){
+            layer.msg("<fmt:message key='user.frozen.account'/>");
+        }
     })
 </script>
 </body>
