@@ -34,9 +34,9 @@ public class AuthInterceptor implements HandlerInterceptor {
             return false;
         }
 
-        String cacheKey = Constants.TOKEN+"_"+token;
+        String cacheKey = Constants.TOKEN + "_" + token;
         Principal principal = (Principal) redisCacheUtils.getCacheObject(cacheKey);
-        if(principal == null){
+        if (principal == null) {
             CspUserInfo cond = new CspUserInfo();
             cond.setToken(token);
             cond.setActive(true);
