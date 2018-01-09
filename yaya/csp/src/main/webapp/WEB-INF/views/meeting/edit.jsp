@@ -342,6 +342,7 @@
     }
 
     function fleshPage(){
+        layer.msg('<fmt:message key="page.meeting.upload.success"/>');
         var reloadUrl = window.location.href;
         if (reloadUrl.indexOf("?") > 0){
             reloadUrl = reloadUrl + "&time="+new Date().getTime();
