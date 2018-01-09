@@ -176,6 +176,7 @@ public class RecommendMeetController extends BaseController {
             }
             meet.setLecturerId(lecturer.getId());
             meet.setState(state);
+            meet.setTuijian(recommend.getRecFlag());
             int meetCount = meetService.updateByPrimaryKeySelective(meet);
             if (meetCount != 1){
                 addFlashMessage(redirectAttributes,"会议更改失败");
