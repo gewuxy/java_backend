@@ -49,6 +49,7 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.csp.CspConstants.MEET_AFTER_START_EXPIRE_HOURS;
 import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
 
 /**
@@ -116,7 +117,6 @@ public class MeetingController extends CspBaseController {
     @RequestMapping("/share")
     public String share(String signature, Model model, HttpServletRequest request) {
         String linkError = local("share.link.error");
-        String abroadError = local("share.aboard.error");
 
         Map<String, Object> params = null;
         try {
@@ -133,12 +133,9 @@ public class MeetingController extends CspBaseController {
 
             String abroad = (String) params.get(ABROAD_KEY);
             boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
-            //boolean isAbroad = false;
             AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
-//            LocalUtils.set(address.isAbroad() ? Locale.US : Locale.SIMPLIFIED_CHINESE);
-//            LocalUtils.setLocalStr(address.isAbroad() ? LocalUtils.Local.zh_CN.name() : LocalUtils.Local.en_US.name());
             linkError = local("share.link.error");
-            abroadError = local("share.aboard.error");
+            String abroadError = local("share.aboard.error");
 
             if (address != null && address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
                 model.addAttribute("error", abroadError);
@@ -159,12 +156,6 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("error", local("source.has.deleted"));
                 return localeView("/meeting/share_error");
             }
-//            //增加会议是否被锁定判断
-//            if (course.getLocked() != null && course.getLocked() == true) {
-//                model.addAttribute("error", local("course.error.locked"));
-//                return localeView("/meeting/share_error");
-//            }
-
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
             }
@@ -184,12 +175,10 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("wsUrl", wsUrl);
 
                 Live live = liveService.findByCourseId(courseId);
-                Date now = new Date();
-
-                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal() || live.getEndTime().before(now)) {
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     model.addAttribute("error", local("share.live.over"));
                     return localeView("/meeting/share_error");
-                } else if (live.getStartTime().after(now)){//直播未开始
+                } else if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()){//直播未开始
                     model.addAttribute("error", local("share.live.not_start.error"));
                     return localeView("/meeting/share_error");
                 } else {
@@ -417,14 +406,11 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/scan/callback")
     @ResponseBody
     public String handleScan(Integer courseId, HttpServletRequest request) {
-
         Principal principal = SecurityUtils.get();
         AudioCourse course = audioService.findAudioCourse(courseId);
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));
         }
-
-
 
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN));
         if (hasDuplicate) {
@@ -435,7 +421,6 @@ public class MeetingController extends CspBaseController {
             result.put("duplicate", "1");
             return success(result);
         } else {
-
             Map<String, Object> result = new HashMap<>();
             result.put("courseId", courseId);
             result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
@@ -446,15 +431,9 @@ public class MeetingController extends CspBaseController {
             if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
                 Live live = liveService.findByCourseId(courseId);
                 if (live != null) {
-                    Date now = new Date();
-                    if (live.getStartTime().after(now)) {//直播还未开始
-                        return error(local("share.live.not_start.error"));
-                    }
-
-                    if (live.getEndTime().before(now)) {//直播已经结束
+                    if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {//直播已经结束
                         return error(local("share.live.over"));
                     }
-
                     result.put("startTime", live.getStartTime());
                     result.put("endTime", live.getEndTime());
                 }
@@ -487,13 +466,6 @@ public class MeetingController extends CspBaseController {
             throw new SystemException(local("course.error.api.locked"));
         }
 
-
-//        if (audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-//            audioCourse.setDetails(audioService.findLiveDetails(courseId));
-//        }
-
-
-
         audioService.handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
@@ -514,16 +486,18 @@ public class MeetingController extends CspBaseController {
             //查询出直播信息
             Live live = liveService.findByCourseId(courseId);
 
-            if (live != null) {//改变直播状态
-
-                if (live.getStartTime().getTime() > System.currentTimeMillis()) {
-                    return error(local("share.live.not_start.error"));
-                }
-
-                if (live.getEndTime().getTime() < System.currentTimeMillis() || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+            if (live != null) {
+                //已经结束 抛出异常 不再判断开始时间
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     return error(local("share.live.over"));
                 }
+                //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
+                if (live.getLiveStartTime() == null) {
+                    live.setLiveStartTime(new Date());
+                    live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+                }
 
+                //改变直播状态
                 live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
                 liveService.updateByPrimaryKey(live);
             }
@@ -766,10 +740,9 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
 
                 if (live != null) {
-                    live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
+                    live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
                     liveService.updateByPrimaryKey(live);
                 }
-
                 //删除缓存中的同步指令
                 redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
             } else {
@@ -781,7 +754,6 @@ public class MeetingController extends CspBaseController {
                 }
             }
         }
-
 
         return success();
     }
@@ -840,7 +812,7 @@ public class MeetingController extends CspBaseController {
 
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
             Live live = liveService.findByCourseId(courseId);
-            if (live.getEndTime().getTime() < System.currentTimeMillis() || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
         }
@@ -953,11 +925,7 @@ public class MeetingController extends CspBaseController {
         String pushUrl = null;
 
         if (live != null) {
-            if (live.getStartTime().getTime() > System.currentTimeMillis()) {
-                return error(local("share.live.not_start.error"));
-            }
-
-            if (live.getEndTime().getTime() < System.currentTimeMillis() || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
 

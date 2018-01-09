@@ -3,6 +3,6 @@
 <mapper namespace="cn.medcn.meet.dao.LiveDAO" >
 
     <select id="findTimeOutLives" resultType="cn.medcn.meet.model.Live">
-        SELECT * FROM t_csp_live WHERE live_state != 3 AND end_time &lt; #{now}
+        SELECT * FROM t_csp_live WHERE live_state != 3 AND expire_date &lt; #{now}
     </select>
 </mapper>
