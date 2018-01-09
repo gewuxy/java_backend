@@ -775,7 +775,7 @@ public class MeetingController extends CspBaseController {
 
            if (live.getVideoLive() != null && live.getVideoLive()) {//如果是视频直播
                 if (CheckUtils.isEmpty(live.getPushUrl())) {
-                    pushUrl = TXLiveUtils.genPushUrl(String.valueOf(courseId), live.getEndTime() == null ? 0 : live.getEndTime().getTime());
+                    pushUrl = TXLiveUtils.genPushUrl(String.valueOf(courseId), System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS));
                     live.setPushUrl(pushUrl);
                     live.setRtmpUrl(TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.rtmp));
                     live.setHlsUrl(TXLiveUtils.genStreamPullUrl(String.valueOf(courseId), TXLiveUtils.StreamPullType.hls));
