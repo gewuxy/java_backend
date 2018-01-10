@@ -102,7 +102,14 @@
         LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
         LEFT JOIN t_audio_course_detail fcd ON c.id = fcd.course_id and fcd .sort = 1
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
-        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
+        WHERE 1=1
+        <if test="cspUserId != null">
+            AND c.csp_user_id = #{cspUserId}
+        </if>
+        <if test="id != null">
+            AND c.id = #{id}
+        </if>
+        AND c.published = 1
         AND c.deleted != 1 AND locked != 1
         <if test="playType != null">
             AND c.play_type = #{playType}

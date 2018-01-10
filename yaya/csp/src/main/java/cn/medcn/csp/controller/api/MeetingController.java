@@ -45,7 +45,6 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -983,19 +982,37 @@ public class MeetingController extends CspBaseController {
     }
 
     /**
-     * 获取新手指导课件
+     * 游客获取新手指导课件
      *
      * @return
      */
-    @RequestMapping(value = "/tourist/course/guide")
+    @RequestMapping(value = "/tourist/list")
     @ResponseBody
     public String getGuideCourse(Integer sourceId) {
-        AudioCourse course = audioService.selectByPrimaryKey(sourceId == null ? Constants.NUMBER_ONE:sourceId);
-        List<AudioCourseDetail> details = audioService.findDetailsByCourseId(course.getId());
-        Map<String, Object> map = new HashMap<>();
-        map.put("meet", course);
-        map.put("details", details);
-        return success(map);
+        Pageable pageable = new Pageable();
+        pageable.put("id", sourceId == null ? Constants.NUMBER_ONE : sourceId);
+        MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
+        if (!CheckUtils.isEmpty(page.getDataList())) {
+            CourseDeliveryDTO.splitCoverUrl(page.getDataList(), fileBase);
+        }
+        return success(page.getDataList());
+    }
+
+    /**
+     * 游客会议阅览
+     *
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/tourist/view")
+    @ResponseBody
+    public String touristView(Integer courseId) {
+        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
+        //只能返回新手指导课件
+        if (audioCourse != null && audioCourse.getGuide() == false) {
+            return error(local("user.subscribe.paramError"));
+        }
+        return success(audioCourse);
     }
 
     /**
