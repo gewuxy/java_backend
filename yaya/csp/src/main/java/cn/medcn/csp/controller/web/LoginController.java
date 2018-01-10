@@ -231,10 +231,9 @@ public class LoginController extends CspBaseController {
         try {
             // 检查验证码是否有效
             checkCaptchaIsOrNotValid(mobile, captcha);
+
             // 检查手机号码是否注册
-            if (checkUserByMobiles(mobile) == false) {
-                checkUserByMobile(mobile);
-            }
+            checkUserByMobile(mobile);
 
             // 先登录成功之后再检查验证码 是否有效（避免如果登录出现异常时 浪费短信验证码）
             UsernamePasswordToken token = new UsernamePasswordToken(mobile, "");
