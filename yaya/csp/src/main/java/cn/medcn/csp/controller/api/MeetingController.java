@@ -1096,12 +1096,7 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/tourist/view")
     @ResponseBody
     public String touristView(Integer courseId) {
-        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
-        //只能返回新手指导课件
-        if (audioCourse != null && audioCourse.getGuide() == false) {
-            return error(local("user.subscribe.paramError"));
-        }
-        return success(audioCourse);
+        return view(courseId);
     }
 
     /**

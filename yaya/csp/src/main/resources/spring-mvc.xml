@@ -63,8 +63,7 @@
             <mvc:exclude-mapping path="/api/charge/pay_view/change"/>
             <mvc:exclude-mapping path="/api/charge/paypalCallback"/>
             <mvc:exclude-mapping path="/api/email/**"/>
-            <mvc:exclude-mapping path="/api/meeting/tourist/list"/>
-            <mvc:exclude-mapping path="/api/meeting/tourist/view"/>
+            <mvc:exclude-mapping path="/api/meeting/tourist/**"/>
             <mvc:exclude-mapping path="/api/meeting/share"/>
             <mvc:exclude-mapping path="/api/meeting/report"/>
             <mvc:exclude-mapping path="/api/live/**"/>
