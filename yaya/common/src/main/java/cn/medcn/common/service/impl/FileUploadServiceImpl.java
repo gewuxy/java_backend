@@ -4,6 +4,7 @@ import cn.medcn.common.dto.FileUploadResult;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.supports.FileTypeSuffix;
+import cn.medcn.common.utils.FileUtils;
 import cn.medcn.common.utils.UUIDUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -42,11 +43,11 @@ public class FileUploadServiceImpl implements FileUploadService {
             throw new SystemException("不能上传空文件");
         }
         String originalName = file.getOriginalFilename();
-        String suffix = file.getOriginalFilename().substring(originalName.lastIndexOf("."));
-        if (!uploadAllowed.contains(suffix.substring(1).toLowerCase())) {
+        String suffix = FileUtils.getSuffix(originalName, false);
+        if (!uploadAllowed.contains(suffix.toLowerCase())) {
             throw new SystemException("文件格式[" + suffix + "]不被允许上传");
         }
-        String relativePath = dir + "/" + UUIDUtil.getNowStringID() + suffix;
+        String relativePath = dir + "/" + UUIDUtil.getNowStringID() + "." + suffix;
         File saveFile = new File(appUploadBase + "/" + relativePath);
         if (!saveFile.exists()) {
             saveFile.mkdirs();

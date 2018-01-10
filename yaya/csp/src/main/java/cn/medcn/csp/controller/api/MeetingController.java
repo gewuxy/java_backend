@@ -12,6 +12,8 @@ import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
+import cn.medcn.csp.dto.CspCourseInfoDTO;
+import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
@@ -43,10 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -62,6 +61,10 @@ import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
 @Controller
 @RequestMapping(value = "/api/meeting")
 public class MeetingController extends CspBaseController {
+    /**
+     * 小程序上传录音格式 约定为MP3
+     */
+    private static final String MINI_PROGRAM_UPLOAD_AUDIO_FORMAT = ".mp3";
 
 
     @Autowired
@@ -262,28 +265,21 @@ public class MeetingController extends CspBaseController {
      * 上传音频
      *
      * @param file
-     * @param courseId
-     * @param detailId
+     * @param record
+     * @param request
      * @return
      */
     @RequestMapping(value = "/upload")
     @ResponseBody
-    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, Integer courseId, Integer playType, Integer pageNum, Integer detailId, HttpServletRequest request) {
-        //删除缓存
-        redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
-
-
-        String osType = request.getHeader(Constants.APP_OS_TYPE_KEY);
-        if (CheckUtils.isEmpty(osType)) {
-            osType = OS_TYPE_ANDROID;
-        }
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile file, RecordUploadDTO record, HttpServletRequest request) {
+        String osType = LocalUtils.getOSType();
         if (file == null) {
             return error(local("upload.error.null"));
         }
 
         String suffix =  "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
 
-        String relativePath = FilePath.COURSE.path + "/" + courseId + "/audio/";
+        String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
 
         File dir = new File(fileUploadBase + relativePath);
         if(!dir.exists()){
@@ -297,25 +293,119 @@ public class MeetingController extends CspBaseController {
         } catch (IOException e) {
             return error(local("upload.error"));
         }
+
+        //删除缓存
+        redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + record.getCourseId());
+
         FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
         //删除源文件
         FileUtils.deleteTargetFile(sourcePath);
-        AudioCourseDetail detail = audioService.findDetail(detailId);
-        if (playType == null) {
-            playType = AudioCourse.PlayType.normal.getType();
-        }
+
+        return handleUploadResult(record, relativePath, saveFileName);
+    }
+
+
+    protected String handleUploadResult(RecordUploadDTO record , String relativePath, String saveFileName){
+        AudioCourseDetail detail = audioService.findDetail(record.getDetailId());
 
         detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
-        if (playType == AudioCourse.PlayType.normal.getType()) {
+        if (record.getPlayType() == AudioCourse.PlayType.normal.getType()) {
             audioService.updateDetail(detail);
         }
 
-        handleLiveOrRecord(courseId, playType, pageNum, detail);
+        handleLiveOrRecord(record.getCourseId(), record.getPlayType(), record.getPageNum(), detail);
 
         Map<String, String> result = new HashMap<>();
         result.put("audioUrl", fileBase + relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
         return success(result);
+    }
+
+
+    /**
+     * 录音上传 上传多个文件
+     * 用于处理小程序续传的问题
+     * @since csp1.1.5
+     * @param files
+     * @param record
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/upload/multiple")
+    @ResponseBody
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile[] files, RecordUploadDTO record, HttpServletRequest request){
+        if (files == null || files.length == 0) {
+            return error(local("upload.error.null"));
+        }
+        String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
+
+        File dir = new File(fileUploadBase + relativePath);
+        if(!dir.exists()){
+            dir.mkdirs();
+        }
+
+        List<String> filePathQueue;
+        //上传所有的录音文件
+        try {
+            filePathQueue = saveRecordFiles(files, relativePath);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+
+        //整合音频
+        String saveFileName;
+        try {
+            saveFileName = mergeUploadAudio(filePathQueue, relativePath);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+
+        //删除缓存
+        redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + record.getCourseId());
+
+        return handleUploadResult(record, relativePath, saveFileName);
+    }
+
+    /**
+     * 处理MP3合并
+     * @param filePathQueue
+     * @param relativePath
+     * @return
+     * @throws SystemException
+     */
+    protected String mergeUploadAudio(List<String> filePathQueue, String relativePath) throws SystemException {
+        String saveFileName = StringUtils.nowStr() + MINI_PROGRAM_UPLOAD_AUDIO_FORMAT;
+
+        if (CheckUtils.isEmpty(filePathQueue)) {
+            throw new SystemException(local("upload.error"));
+        }
+        //只有单个文件的处理 不需要合并 直接返回第一个音频名称
+        if (filePathQueue.size() == 1) {
+            String firstAudioPath = filePathQueue.get(0);
+            saveFileName = FileUtils.getFileName(firstAudioPath);
+        } else {//多个音频文件需要合并成一个文件
+            String mergePath = fileUploadBase + relativePath + saveFileName;
+            FFMpegUtils.concatMp3(mergePath, true, filePathQueue.toArray(new String[filePathQueue.size()]));
+        }
+        return saveFileName;
+    }
+
+
+    protected List<String> saveRecordFiles(MultipartFile[] files, String relativePath) throws SystemException{
+        List<String> filePathQueue = new ArrayList<>();
+        for (MultipartFile file : files) {
+            String saveFileName = UUIDUtil.getNowStringID();
+            String sourcePath = fileUploadBase + relativePath + saveFileName + MINI_PROGRAM_UPLOAD_AUDIO_FORMAT;
+            File saveFile = new File(sourcePath);
+            try {
+                file.transferTo(saveFile);
+                filePathQueue.add(sourcePath);
+            } catch (IOException e) {
+                throw new SystemException(local("upload.error"));
+            }
+        }
+
+        return filePathQueue;
     }
 
 
@@ -475,13 +565,11 @@ public class MeetingController extends CspBaseController {
             throw new SystemException(local("course.error.author"));
         }
 
-        Map<String, Object> result = new HashMap<>();
-        result.put("course", audioCourse);
-
         String wsUrl = genWsUrl(request, courseId);
-        wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
+        wsUrl = UrlConverter.newInstance(wsUrl).put("liveType", LiveOrderDTO.LIVE_TYPE_PPT).convert();
 
-        result.put("wsUrl", wsUrl);
+        CspCourseInfoDTO dto = new CspCourseInfoDTO(audioCourse, wsUrl);
+
         if (audioCourse.getPlayType() == null) {
             audioCourse.setPlayType(0);
         }
@@ -504,19 +592,17 @@ public class MeetingController extends CspBaseController {
                 live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
                 liveService.updateByPrimaryKey(live);
             }
-            result.put("live", live);
+            dto.setLive(live);
         } else {//录播查询录播的进度信息
             AudioCoursePlay play = audioService.findPlayState(courseId);
             if (play != null) {
                 play.setPlayState(AudioCoursePlay.PlayState.playing.ordinal());
                 audioService.updateAudioCoursePlay(play);
             }
-            result.put("record", play);
+            dto.setRecord(play);
         }
-        //传递服务器时间
-        result.put("serverTime", new Date());
 
-        return success(result);
+        return success(dto);
     }
 
 
@@ -618,7 +704,7 @@ public class MeetingController extends CspBaseController {
 
                 //System.out.println("video live replay url = " + replayUrl);
 
-                String videoName = replayUrl.substring(replayUrl.lastIndexOf("/") + 1);
+                String videoName = FileUtils.getFileName(replayUrl);
 
                 String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + videoName;
 
@@ -632,7 +718,7 @@ public class MeetingController extends CspBaseController {
 
                 //检测是否有之前的直播视频
                 if (CheckUtils.isNotEmpty(live.getReplayUrl())) {
-                    String oldVideoName = live.getReplayUrl().substring(live.getReplayUrl().lastIndexOf("/") + 1);
+                    String oldVideoName = FileUtils.getFileName(live.getReplayUrl());
                     File oldFile = new File(videoDirPath + oldVideoName);
 
                     if (!videoName.equals(oldVideoName) && oldFile.exists()) {//文件名不相同 需要将两端视频整合为一段
@@ -871,7 +957,6 @@ public class MeetingController extends CspBaseController {
             liveStartOrder.setOrder(LiveOrderDTO.ORDER_LIVE_START);
             liveStartOrder.setCourseId(String.valueOf(courseId));
             liveService.publish(liveStartOrder);
-
 
         }
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);

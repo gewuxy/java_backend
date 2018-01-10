@@ -56,6 +56,10 @@ public class LocalUtils {
         return threadLocal.get();
     }
 
+    public static String getOSType(){
+        return osTypeLocal.get();
+    }
+
     /**
      * 是否是海外的请求
      * @return

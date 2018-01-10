@@ -314,12 +314,37 @@ public class FileUtils {
         return size / Constants.BYTE_UNIT_G + "G";
     }
 
+    /**
+     * 根据文件全路径获取文件名称
+     * @param filePath
+     * @return
+     */
+    public static String getFileName(String filePath){
+        if (CheckUtils.isNotEmpty(filePath)) {
+            return filePath.substring(filePath.lastIndexOf("/") + 1);
+        }
+        return filePath;
+    }
+
+    /**
+     * 获取文件后缀名
+     * @param filePath
+     * @param hasDot 是否包含点号
+     * @return
+     */
+    public static String getSuffix(String filePath, boolean hasDot){
+        if (CheckUtils.isNotEmpty(filePath)) {
+            if (hasDot) {
+                return filePath.substring(filePath.lastIndexOf("."));
+            } else {
+                return filePath.substring(filePath.lastIndexOf(".") + 1);
+            }
+        }
+        return null;
+    }
+
 
     public static void main(String[] args) {
-        String filePath = "D:/lixuan/test/test.mp4";
-        MediaInfo mediaInfo = parseAudioMediaInfo(filePath);
-        if(mediaInfo != null){
-            System.out.println("duration = "+mediaInfo.getDuration()+" - bitrate = "+mediaInfo.getBitRate());
-        }
+
     }
 }

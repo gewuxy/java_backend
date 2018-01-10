@@ -135,6 +135,23 @@ public class FFMpegUtils {
 
     }
 
+    /**
+     * 合并MP3文件
+     * @param mergePath
+     * @param deleteSource 是否删除源原件
+     * @param targetFileNames
+     */
+    public static void concatMp3(String mergePath, boolean deleteSource, String...targetFileNames){
+        concatMp3(mergePath, targetFileNames);
+
+        if (deleteSource) {
+            //删除零散录音文件 值保留整合后的录音文件
+            for (String filePath : targetFileNames) {
+                FileUtils.deleteTargetFile(filePath);
+            }
+        }
+    }
+
 
     /**
      * 合并mp4视频
@@ -211,6 +228,11 @@ public class FFMpegUtils {
 
 
     public static void main(String[] args) {
-        concatMp4("D:/lixuan/test/concat/concat.mp4", false, "D:/lixuan/test/clip.mp4", "D:/lixuan/test/clip2.mp4");
+        //concatMp4("D:/lixuan/test/concat/concat.mp4", false, "D:/lixuan/test/clip.mp4", "D:/lixuan/test/clip2.mp4");
+
+        String filePath = "D:/lixuan/test/merge/merge.mp3";
+
+        String[] targetFiles = new String[]{"D:/lixuan/test/merge/09166.mp3", "D:/lixuan/test/merge/0916612.mp3", "D:/lixuan/test/merge/0916613.mp3"};
+        concatMp3(filePath, true, targetFiles);
     }
 }
