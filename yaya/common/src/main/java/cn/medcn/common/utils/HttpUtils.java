@@ -235,6 +235,31 @@ public class HttpUtils {
     }
 
     /**
+     * 响应为流的情况
+     * @param url
+     * @param jsonParam
+     * @return
+     */
+    public static void postJsonResponseStream(String url, JSONObject jsonParam, String outputPath){
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        HttpPost method = new HttpPost(url);
+        method.setHeader("Content-Type","application/json");
+        method.setHeader("Content-Encoding","utf-8");
+        StringEntity entity = new StringEntity(jsonParam.toJSONString(),"utf-8");//解决中文乱码问题
+        entity.setContentEncoding("utf-8");
+        entity.setContentType("application/json");
+        method.setEntity(entity);
+        HttpResponse result = null;
+        try {
+            result = httpClient.execute(method);
+            // 请求结束，返回结果
+            result.getEntity().writeTo(new FileOutputStream(outputPath));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * GET方式获取数据
      * @param url
      * @return

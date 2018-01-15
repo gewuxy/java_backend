@@ -57,6 +57,10 @@ public class AudioCourse implements Serializable {
     protected Boolean guide;
     //课件密码
     protected String password;
+    /**
+     * @see StarRateType
+     */
+    protected Integer starRateType;
 
     @Transient
     @JsonIgnore
@@ -73,6 +77,13 @@ public class AudioCourse implements Serializable {
     //该会议的持有者id
     @Transient
     private String userId;
+
+
+    public enum StarRateType{
+        close,//关闭评分
+        simple,//简单评分(只有综合评分)
+        multiple;//复合评分(含明细评分)
+    }
 
 
     public enum PlayType{
