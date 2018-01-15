@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.CspStarRateHistoryDAO" >
+
+    <select id="findRateResultHasDetails" resultType="cn.medcn.meet.dto.StarRateResultDTO">
+        SELECT d.option_id, o.title, avg(d.score) AS avg_score, count(d.option_id) AS score_count FROM
+        t_csp_star_rate_option o INNER JOIN t_csp_star_rate_history_detail d on d.option_id = o.id
+        WHERE o.course_id = #{courseId} GROUP BY d.option_id
+    </select>
+
+    <select id="findRateResultExcludeDetails" resultType="cn.medcn.meet.dto.StarRateResultDTO">
+        SELECT avg(score) AS avg_score, count(course_id) AS score_count
+        FROM t_csp_star_rate_history WHERE course_id = #{courseId} GROUP BY course_id
+    </select>
+
+</mapper>
