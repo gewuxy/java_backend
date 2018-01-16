@@ -7,7 +7,6 @@ import cn.medcn.meet.dao.CspStarRateHistoryDAO;
 import cn.medcn.meet.dao.CspStarRateHistoryDetailDAO;
 import cn.medcn.meet.dao.CspStarRateOptionDAO;
 import cn.medcn.meet.dto.StarRateResultDTO;
-import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.CspStarRateHistory;
 import cn.medcn.meet.model.CspStarRateHistoryDetail;
 import cn.medcn.meet.model.CspStarRateOption;
@@ -16,7 +15,6 @@ import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
