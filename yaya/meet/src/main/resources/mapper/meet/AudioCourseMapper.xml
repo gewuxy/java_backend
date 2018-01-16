@@ -112,7 +112,14 @@
         AND c.published = 1
         AND c.deleted != 1 AND locked != 1
         <if test="playType != null">
-            AND c.play_type = #{playType}
+            <choose>
+                <when test="playType == 0">
+                    AND c.play_type = 0
+                </when>
+                <otherwise>
+                    AND c.play_type > 0
+                </otherwise>
+            </choose>
         </if>
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
