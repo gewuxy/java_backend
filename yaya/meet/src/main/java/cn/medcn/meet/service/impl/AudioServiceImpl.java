@@ -1064,6 +1064,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         course.setSourceType(AudioCourse.SourceType.csp.ordinal());
         course.setLocked(false);
         course.setGuide(false);
+        course.setStarRateFlag(false);
         audioCourseDAO.insert(course);
         return course;
     }

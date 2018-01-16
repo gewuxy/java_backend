@@ -25,6 +25,8 @@ public class StarRateResultDTO implements Serializable {
     protected float avgScore;
     //评分次数
     protected int scoreCount;
+    //简介
+    protected String info;
 
     //是否有星评
     protected Boolean starStatus;
