@@ -1154,7 +1154,7 @@ public class MeetingController extends CspBaseController {
         boolean abroad = LocalUtils.isAbroad();
         String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
         //判断二维码是否存在 不存在则重新生成
-        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG;
+        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
         boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
         if (!qrCodeExists) {
             QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
