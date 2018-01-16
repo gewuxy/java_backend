@@ -360,7 +360,7 @@ public class CspBaseController extends BaseController {
     }
 
     protected String accountFrozenError(){
-        return error(local("user.frozen.account"));
+        return error(APIUtils.ERROR_CODE_FROZEN, local("user.frozen.account"));
     }
 
     /**
