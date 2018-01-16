@@ -26,6 +26,12 @@ public class StarRateResultDTO implements Serializable {
     //评分次数
     protected int scoreCount;
 
+    //是否有星评
+    protected Boolean starStatus;
+
+    //星评二维码地址
+    protected String startCodeUrl;
+
 
     public float getAvgScore(){
         if (this.avgScore == 0) {

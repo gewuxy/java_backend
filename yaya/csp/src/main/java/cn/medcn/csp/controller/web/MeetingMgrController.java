@@ -14,13 +14,10 @@ import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
+import cn.medcn.meet.service.*;
 import cn.medcn.user.model.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
-import cn.medcn.meet.service.AudioService;
-import cn.medcn.meet.service.CourseCategoryService;
-import cn.medcn.meet.service.LiveService;
-import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
@@ -571,24 +568,12 @@ public class MeetingMgrController extends CspBaseController {
         String local = LocalUtils.getLocalStr();
         Principal principal = getWebPrincipal();
         boolean abroad = principal.getAbroad();
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
-                .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
-        String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
-
-        StringBuffer buffer2 = new StringBuffer();
-        try {
-            buffer2.append(appCspBase)
-                    .append("api/meeting/share?signature=")
-                    .append(URLEncoder.encode(signature, Constants.CHARSET));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
+        String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
         Map<String, Object> result = new HashMap<>();
-        result.put("shareUrl", buffer2.toString());
+        result.put("shareUrl", shareUrl);
         return success(result);
     }
+
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
