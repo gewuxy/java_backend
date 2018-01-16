@@ -4,6 +4,7 @@ import cn.medcn.article.dao.ArticleDAO;
 import cn.medcn.article.dao.NewsDAO;
 import cn.medcn.article.jobs.UpdateNewsThread;
 import cn.medcn.article.model.Article;
+import cn.medcn.article.model.ArticleCategory;
 import cn.medcn.article.model.News;
 import cn.medcn.article.model.NewsReadOnly;
 import cn.medcn.article.service.NewsService;
@@ -188,6 +189,16 @@ public class NewsServiceImpl extends BaseServiceImpl<News> implements NewsServic
         return MyPage.page2Mypage(page);
     }
 
+    @Override
+    public MyPage<News> findNewsList(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        Page<News> page = (Page<News>) newsDAO.findNewsList(pageable.getParams());
+        return MyPage.page2Mypage(page);
+    }
 
+    @Override
+    public List<ArticleCategory> findCategoryList() {
+        return newsDAO.findCategoryList();
+    }
 
 }

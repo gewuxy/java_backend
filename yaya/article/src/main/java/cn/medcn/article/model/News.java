@@ -17,6 +17,9 @@ import java.io.Serializable;
 @Table(name = "t_article")
 public class News extends Article implements Serializable {
 
+    protected String categoryId;
+    protected String categoryName;
+
     /**
      * 替换掉jsp标签
      * @param basePath
@@ -90,6 +93,16 @@ public class News extends Article implements Serializable {
             this.categoryId = categoryId;
         }
 
+    }
+
+    public String getCategoryName() {
+        String categoryName = null;
+        for (NEWS_CATEGORY c : NEWS_CATEGORY.values()) {
+            if (this.categoryId.equals(c.categoryId)) {
+                categoryName = NEWS_CATEGORY.values()[c.ordinal()].label;
+            }
+        }
+        return categoryName;
     }
 
     /**
