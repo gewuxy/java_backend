@@ -123,10 +123,10 @@
                                             <input type="radio" name="channel" class="none" value="wx_pub_qr" id="id21">
                                             <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                         </label>
-                                        <%--<label for="id31" class="item item-radius">--%>
-                                            <%--<input type="radio" name="channel" class="none" value="upacp_pc" id="id31">--%>
-                                            <%--<img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">--%>
-                                        <%--</label>--%>
+                                        <label for="id31" class="item item-radius">
+                                            <input type="radio" name="channel" class="none" value="upacp_pc" id="id31">
+                                            <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                        </label>
                                     </div>
                                     <div class="pay-mode-list EN-hook ${!isCN ? '':'none'}">
                                         <label for="id5" class="item item-radius pay-on">
