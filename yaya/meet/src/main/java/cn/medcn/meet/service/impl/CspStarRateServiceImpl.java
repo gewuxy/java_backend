@@ -66,18 +66,15 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
      */
     @Override
     public List<StarRateResultDTO> findRateResult(Integer courseId) {
-        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
-        List<StarRateResultDTO> result = new ArrayList<>();
-        if (course != null) {
-            if (course.getStarRateType() == null
-                    || course.getStarRateType().intValue() == AudioCourse.StarRateType.close.ordinal()) {//未开启星评的情况
-                return result;
-            } else if (course.getStarRateType().intValue() == AudioCourse.StarRateType.simple.ordinal()) {//简单评分的情况
-                return cspStarRateHistoryDAO.findRateResultExcludeDetails(courseId);
-            } else {//包含星评明细的情况
-                return cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
-            }
+        List<StarRateResultDTO> result;
+
+        List<CspStarRateOption> options = findRateOptions(courseId);
+        if (CheckUtils.isEmpty(options)) {//没有分项评分的情况
+            result = cspStarRateHistoryDAO.findRateResultExcludeDetails(courseId);
+        } else {
+            result = cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
         }
+
         return result;
     }
 
