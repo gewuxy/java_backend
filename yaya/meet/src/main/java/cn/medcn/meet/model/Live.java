@@ -32,9 +32,8 @@ public class Live {
 
     protected String picUrl;//视频截图地址
 
-    protected Date startTime;//直播预计开始时间
+    protected Date startTime;//直播预计开始时间 在直播开始之后变成视频真正开始时间
 
-    protected Date liveStartTime;//直播真正开始时间
     @Deprecated
     protected Date endTime;//直播结束时间
 

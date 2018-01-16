@@ -588,8 +588,8 @@ public class MeetingController extends CspBaseController {
                     return error(local("share.live.over"));
                 }
                 //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
-                if (live.getLiveStartTime() == null) {
-                    live.setLiveStartTime(new Date());
+                if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
+                    live.setStartTime(new Date());
                     live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
                 }
 
@@ -1154,7 +1154,7 @@ public class MeetingController extends CspBaseController {
         boolean abroad = LocalUtils.isAbroad();
         String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
         //判断二维码是否存在 不存在则重新生成
-        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG;
+        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
         boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
         if (!qrCodeExists) {
             QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);

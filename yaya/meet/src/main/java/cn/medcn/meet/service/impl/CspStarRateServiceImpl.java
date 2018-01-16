@@ -85,14 +85,24 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
     public void doScore(CspStarRateHistory history) {
         if (history != null) {
             history.setRateTime(new Date());
-            cspStarRateHistoryDAO.insert(history);
-
             if (!CheckUtils.isEmpty(history.getDetails())) {
+                //计算综合得分
+                int totalScore = 0;
+                for (CspStarRateHistoryDetail detail : history.getDetails()) {
+                    totalScore += detail.getScore();
+                }
+                history.setScore(totalScore * 1.0f / history.getDetails().size());
+
+                cspStarRateHistoryDAO.insert(history);
+
                 for (CspStarRateHistoryDetail detail : history.getDetails()) {
                     detail.setHistoryId(history.getId());
                     cspStarRateHistoryDetailDAO.insert(detail);
                 }
+            } else {
+                cspStarRateHistoryDAO.insert(history);
             }
+
         }
     }
 }

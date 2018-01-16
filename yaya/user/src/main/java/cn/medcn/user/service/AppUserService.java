@@ -291,4 +291,15 @@ public interface AppUserService extends BaseService<AppUser> {
      * @return
      */
     List<AppUser> selectByPub(Integer pubFlag);
+
+    MyPage<UnitAccountDTO> findUnitAccounts(Pageable pageable);
+
+    /**
+     * 注册单位号用户
+     * @param appUser
+     * @param activeStore
+     */
+    void executeRegisterUnitAccount(AppUser appUser, Integer activeStore);
+
+    void updateUnitAccount(AppUser appUser, Integer activeStore);
 }

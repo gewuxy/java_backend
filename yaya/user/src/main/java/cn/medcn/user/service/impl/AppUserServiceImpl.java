@@ -963,4 +963,56 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
         }
         return list;
     }
+
+
+    @Override
+    public MyPage<UnitAccountDTO> findUnitAccounts(Pageable pageable) {
+        startPage(pageable, true);
+        MyPage<UnitAccountDTO> page = MyPage.page2Mypage((Page) appUnitDAO.findUnitAccounts(pageable.getParams()));
+        return page;
+    }
+
+    /**
+     * 注册单位号用户
+     *
+     * @param appUser
+     * @param activeStore
+     */
+    @Override
+    public void executeRegisterUnitAccount(AppUser appUser, Integer activeStore) {
+        appUser.setRegistDate(new Date());
+        appUser.setRoleId(AppRole.AppRoleType.PUB_USER.getId());
+        appUser.setPubFlag(true);
+        appUser.setAuthed(true);
+        appUser.setPassword(MD5Utils.MD5Encode(Constants.RESET_PASSWORD));
+
+        appUserDAO.insert(appUser);
+
+        AppUnit appUnit = new AppUnit();
+        appUnit.setUserId(appUser.getId());
+        appUnitDAO.insert(appUnit);
+
+        ActiveStore store = new ActiveStore();
+        store.setId(appUser.getId());
+        store.setStore(activeStore == null ? 0 : activeStore);
+        activeStoreDAO.insert(store);
+    }
+
+    @Override
+    public void updateUnitAccount(AppUser appUser, Integer activeStore) {
+        appUserDAO.updateByPrimaryKeySelective(appUser);
+        if (activeStore != null) {
+
+            ActiveStore store = activeStoreDAO.selectByPrimaryKey(appUser.getId());
+            if (store == null) {
+                store = new ActiveStore();
+                store.setId(appUser.getId());
+                store.setStore(activeStore);
+                activeStoreDAO.insert(store);
+            } else {
+                store.setStore(activeStore);
+                activeStoreDAO.updateByPrimaryKeySelective(store);
+            }
+        }
+    }
 }
