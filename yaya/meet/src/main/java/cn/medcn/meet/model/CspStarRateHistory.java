@@ -25,7 +25,7 @@ public class CspStarRateHistory implements Serializable {
     //课件ID
     protected Integer courseId;
     //评分
-    protected Integer score;
+    protected Float score;
     //评分时间
     protected Date rateTime;
 
