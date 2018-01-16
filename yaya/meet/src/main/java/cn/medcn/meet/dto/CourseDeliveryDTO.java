@@ -81,6 +81,9 @@ public class CourseDeliveryDTO implements Serializable {
     //是否是引导会议
     protected Boolean guide;
 
+    //星评开关
+    protected Boolean starRateFlag;
+
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
             for (CourseDeliveryDTO deliveryDTO : list) {

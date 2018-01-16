@@ -107,4 +107,5 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
     void updateByUserIdOpen(@Param("cspUserId") String cspUserId,@Param("meets")Integer meets);
 
     void updateByUserIdOpenAll(@Param("cspUserId") String cspUserId);
+
 }
