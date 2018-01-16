@@ -17,6 +17,7 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
+import cn.medcn.meet.dto.StarRateResultDTO;
 import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
@@ -183,6 +184,7 @@ public class MeetingController extends CspBaseController {
                 wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
                 model.addAttribute("wsUrl", wsUrl);
 
+                //TODO 缺少星评页面
                 Live live = liveService.findByCourseId(courseId);
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     model.addAttribute("error", local("share.live.over"));
@@ -1131,5 +1133,34 @@ public class MeetingController extends CspBaseController {
     }
 
 
+    /**
+     * 获取星评状态和星评二维码
+     * @param courseId
+     * @return
+     */
+    @RequestMapping("/star/code")
+    @ResponseBody
+    public String getStarAndCode(Integer courseId){
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if(course == null){
+            return error(local("source.not.exists"));
+        }
+        StarRateResultDTO dto = new StarRateResultDTO();
+        dto.setStarStatus(course.getStarRateFlag());
+        String local = LocalUtils.getLocalStr();
+        boolean abroad = LocalUtils.isAbroad();
+        String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
+        //判断二维码是否存在 不存在则重新生成
+        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
+        if (!qrCodeExists) {
+            QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
+        }
+        dto.setStartCodeUrl(fileBase + qrCodePath);
+        return success(dto);
+    }
 
 }
