@@ -1166,4 +1166,27 @@ public class MeetingController extends CspBaseController {
         return success(dto);
     }
 
+
+    /**
+     * 开启星评接口
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/star_rate/open")
+    @ResponseBody
+    public String openStarRate(Integer courseId){
+        //修改直播状态为星评中状态
+        Live live = liveService.findByCourseId(courseId);
+        live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+        liveService.updateByPrimaryKey(live);
+
+        //发送开启星评指令
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(String.valueOf(courseId));
+        order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
+        liveService.publish(order);
+
+        return success();
+    }
+
 }
