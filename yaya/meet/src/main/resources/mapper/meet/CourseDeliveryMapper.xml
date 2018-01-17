@@ -32,11 +32,20 @@
 
 
     <select id="findDeliveryList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT  tc.img_url AS coverUrl, td.source_id as id, t.play_type,tu.avatar,tu.user_name as name,tu.email FROM t_csp_delivery td
+        SELECT  tc.img_url AS coverUrl, td.source_id AS id, td.delivery_time,t.play_type,t.`star_rate_flag`,
+        tu.avatar,tu.user_name AS NAME,tu.email,tu.mobile,t.category,t.title,IFNULL(AVG(th.`score`),0) AS score,COUNT(th.`course_id`) AS num
+        FROM t_csp_delivery td
         INNER JOIN t_audio_course t ON td.source_id = t.id
-        left JOIN t_audio_course_detail tc ON td.source_id = tc.course_id AND tc.sort = 1
+        LEFT JOIN t_audio_course_detail tc ON td.source_id = tc.course_id AND tc.sort = 1
+        LEFT JOIN `t_csp_star_rate_history` th ON th.course_id = t.id
         INNER JOIN t_csp_user_info tu ON td.author_id = tu.id
-        WHERE td.accept_id = #{userId} ORDER BY td.delivery_time DESC
+        WHERE td.accept_id = #{userId}
+        <if test="keyWord != null">
+            AND (t.title LIKE CONCAT('%',#{keyWord}, '%')
+            OR tu.user_name LIKE CONCAT('%',#{keyWord}, '%'))
+        </if>
+        GROUP BY t.id,th.`course_id`
+        ORDER BY td.delivery_time DESC
     </select>
 
     <select id="findCSPList"  resultType="cn.medcn.meet.dto.CourseDeliveryDTO">

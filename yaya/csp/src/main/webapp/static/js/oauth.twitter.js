@@ -3,9 +3,12 @@
  */
 
 var fbToken;
+
+
 window.fbAsyncInit = function() {
+
     FB.init({
-        appId :'263615967498316',
+        appId :fbKey,
         xfbml : true,
         version : 'v2.6' //facebook登录版本
     });
@@ -41,7 +44,7 @@ window.twttr = (function (d, s, id) {
 
 var log = console.log;
 hello.init(
-    {'twitter': 'hqhT16vzm2ZJxJary0WOULGfv'},//公司运营的twitter账号的key
+    {'twitter': twitterKey},//公司运营的twitter账号的key
     {oauth_proxy: 'https://auth-server.herokuapp.com/proxy'}
 );
 
