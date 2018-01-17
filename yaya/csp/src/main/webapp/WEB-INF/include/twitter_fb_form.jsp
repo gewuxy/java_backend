@@ -20,15 +20,8 @@
 <script src="//adodson.com/hello.js/dist/hello.all.js"></script>
 <script>
 
-    var twitterKey;
-    var fbKey;
+
     $(function () {
-        $.get('${ctx}/mgr/user/twitter/facebook',{}, function (data) {
-            if (data.code == 0){
-                twitterKey = data.data.twitter;
-                fbKey = data.data.fb;
-            }
-        },'json');
 
     });
 
