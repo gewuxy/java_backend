@@ -60,6 +60,18 @@ public class CourseDeliveryDTO implements Serializable {
 
     //投稿者邮箱
     private String email;
+    //分类
+    private String category;
+    //投稿者手机
+    private String mobile;
+    //投稿时间
+    private String deliveryTime;
+    //星评开启状态
+    private Integer staRateFlag;
+    //评分人数
+    private Integer num;
+    //评分数
+    private Integer score;
 
     //录播ppt总时长
     private Integer duration;
