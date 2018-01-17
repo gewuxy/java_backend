@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -16,8 +17,9 @@ import java.io.Serializable;
 @Entity
 @Table(name = "t_article")
 public class News extends Article implements Serializable {
-
+    @Transient
     protected String categoryId;
+    @Transient
     protected String categoryName;
 
     /**

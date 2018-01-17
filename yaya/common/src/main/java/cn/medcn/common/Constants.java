@@ -221,6 +221,9 @@ public class Constants {
     public static final String VIDEO_DOWNLOAD_URL = "video_download_";
     public static final String RESET_PASSWORD = "123456";
 
+    // 压缩图片的宽和高
+    public static final int WIDTH = 120;
+    public static final int HEIGHT = 120;
 
     /********** 合理用药 *************/
 

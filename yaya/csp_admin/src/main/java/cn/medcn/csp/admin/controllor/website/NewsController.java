@@ -3,12 +3,14 @@ package cn.medcn.csp.admin.controllor.website;
 import cn.medcn.article.model.ArticleCategory;
 import cn.medcn.article.model.News;
 import cn.medcn.article.service.NewsService;
+import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.APIUtils;
 import cn.medcn.common.utils.CalendarUtils;
+import cn.medcn.common.utils.CompressImgUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,10 +74,15 @@ public class NewsController extends BaseController {
 
     @RequestMapping(value = "/view")
     @Log(name = "查看新闻详情内容")
-    public String viewNewsContent(String newsId, Model model) {
-        if (StringUtils.isNotEmpty(newsId)) {
-            News news = newsService.selectByPrimaryKey(newsId);
-            String imgUrl = news.getArticleImg();
+    public String viewNewsContent(String id, Model model) {
+        if (StringUtils.isNotEmpty(id)) {
+            News news = newsService.selectByPrimaryKey(id);
+
+            // 查询新闻类别
+            List<ArticleCategory> categoryList = newsService.findCategoryList();
+            model.addAttribute("categoryList", categoryList);
+
+            String imgUrl = news.getArticleImgS();
             model.addAttribute("imgURL", appFileBase + imgUrl);
             model.addAttribute("news", news);
         }
@@ -150,7 +157,6 @@ public class NewsController extends BaseController {
             // 新闻图片地址前缀
             String imgPrefixPath = appFileUploadBase + imgFolder;
 
-
             if (suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix)
                     || suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPEG.suffix)
                     || suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix)
@@ -162,12 +168,23 @@ public class NewsController extends BaseController {
                 // 前端显示的图片地址
                 String imgUrl = imgFolder + dateFolderPath + "/" + saveFileName;
 
+                // 小图片地址
+                String smallImgUrl = imgFolder + dateFolderPath + "/s_" + saveFileName;
+
                 File saveFile = new File(imgFilePath);
                 if (!saveFile.exists()) {
                     saveFile.mkdirs();
                 }
                 try {
                     file.transferTo(saveFile);
+
+                    // 压缩小图片
+                    CompressImgUtils compressUtils = new CompressImgUtils();
+                    String filePath = imgPrefixPath + dateFolderPath;
+                    String smallFileName = "s_" + saveFileName;
+                    compressUtils.pressImg(filePath, filePath, saveFileName, smallFileName,
+                            compressUtils.getOutputWidth(), compressUtils.getOutputHeight(), true);
+
                 } catch (IOException e) {
                     e.printStackTrace();
                     return APIUtils.error("文件保存出错");
@@ -177,6 +194,7 @@ public class NewsController extends BaseController {
                 map.put("imgURL", imgUrl);
                 map.put("src", appFileBase + imgUrl);
                 map.put("title", saveFileName);
+                map.put("smallImgUrl", appFileBase + smallImgUrl);
                 return success(map);
             } else {
                 return error("文件格式错误");

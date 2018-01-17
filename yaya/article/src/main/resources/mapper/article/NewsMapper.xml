@@ -21,14 +21,15 @@
 
     <select id="findNewsList" resultType="cn.medcn.article.model.News">
         SELECT a.id,a.title,a.category_id, a.create_time, a.xfrom, a.author, a.summary, a.keywords,
-               a.content, a.out_link, a.article_img, a.article_img_s
-               FROM t_article a WHERE category_id in
+               a.content, a.out_link, a.article_img, a.article_img_s, c.`name` as categoryName
+        FROM t_article a LEFT JOIN t_article_category c ON c.id = a.category_id
+        WHERE a.category_id in
               (SELECT id from t_article_category where pre_id = '170510101223456' or id='17051016434243959379')
         <if test="keyword != null">
             AND ( a.title like CONCAT('%',#{keyword}, '%') OR
-            a.keywords like CONCAT('%',#{keyword}, '%') OR
-            a.category_id = #{keyword}
-            )
+                  a.keywords like CONCAT('%',#{keyword}, '%') OR
+                  a.category_id = #{keyword}
+                )
         </if>
         ORDER BY a.weight,a.create_time  DESC
     </select>
