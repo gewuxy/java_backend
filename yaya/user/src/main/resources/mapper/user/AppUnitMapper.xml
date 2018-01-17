@@ -8,8 +8,9 @@
 
 
     <select id="findUnitAccounts" resultType="cn.medcn.user.dto.UnitAccountDTO">
-        SELECT u.*, a.store AS active_store FROM t_app_user u LEFT JOIN
+        SELECT u.*, a.store AS active_store, count(att.id) AS fans FROM t_app_user u LEFT JOIN
         t_active_store a ON a.id = u.id
+        LEFT JOIN t_app_attention att ON u.id = att.master_id
         WHERE role_id = 1 AND authed = true
         <if test="rcd!=null">
             AND u.tuijian = #{rcd}
@@ -26,4 +27,12 @@
         GROUP BY u.id
         ORDER BY regist_date DESC
     </select>
+
+    <insert id="importFans" >
+        INSERT INTO t_app_attention(attention_time, slaver_id, master_id)
+        SELECT NOW() AS attention_time, u.id AS slaver_id ,#{unitId} AS master_id
+        FROM t_app_user u WHERE u.role_id = 2 AND u.test_flag = 1
+        AND NOT EXISTS (SELECT id FROM t_app_attention WHERE master_id = #{unitId} AND slaver_id = u.id)
+        GROUP BY u.id LIMIT #{fans}
+    </insert>
 </mapper>

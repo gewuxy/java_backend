@@ -281,13 +281,6 @@ public class MeetingMgrController extends CspBaseController {
                 throw new SystemException(local("share.live.over"));
             }
 
-            Date now = new Date();
-            if (live.getStartTime().after(now)) {
-                throw new SystemException(local("share.live.not_start.error"));
-            } else if (live.getEndTime().before(now)){
-                throw new SystemException(local("share.live.over"));
-            }
-
             model.addAttribute("live", live);
             return localeView("/meeting/screen");
         }

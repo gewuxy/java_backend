@@ -851,6 +851,8 @@
                         //还原
                         $("#ck-video").attr('style','height:auto');
                     }
+                } else if (data.order == 13){//开启星评指令
+                    // todo 打开星评界面
                 }
             }
 

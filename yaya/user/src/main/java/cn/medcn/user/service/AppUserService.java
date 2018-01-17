@@ -302,4 +302,10 @@ public interface AppUserService extends BaseService<AppUser> {
     void executeRegisterUnitAccount(AppUser appUser, Integer activeStore);
 
     void updateUnitAccount(AppUser appUser, Integer activeStore);
+
+    /**
+     * 为选定的单位号导入指定数量的粉丝
+     * @param unitIds
+     */
+    void doImportFans(Integer[] unitIds, Integer fans);
 }

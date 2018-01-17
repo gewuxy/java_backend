@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -1013,6 +1010,22 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
                 store.setStore(activeStore);
                 activeStoreDAO.updateByPrimaryKeySelective(store);
             }
+        }
+    }
+
+    /**
+     * 为选定的单位号导入指定数量的粉丝
+     *
+     * @param unitIds
+     * @param fans
+     */
+    @Override
+    public void doImportFans(Integer[] unitIds, Integer fans) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fans", fans);
+        for (Integer unitId : unitIds) {
+            params.put("unitId", unitId);
+            appUnitDAO.importFans(params);
         }
     }
 }
