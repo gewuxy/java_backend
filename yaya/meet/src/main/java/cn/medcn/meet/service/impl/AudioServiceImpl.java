@@ -1,11 +1,13 @@
 package cn.medcn.meet.service.impl;
 
+import cn.medcn.common.Constants;
 import cn.medcn.common.excptions.NotEnoughCreditsException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.DESUtils;
 import cn.medcn.common.utils.FileUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.dto.CreditPayDTO;
@@ -29,6 +31,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -68,6 +72,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
+
 
     @Autowired
     protected AudioCoursePlayDAO audioCoursePlayDAO;
@@ -1057,6 +1062,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         course.setSourceType(AudioCourse.SourceType.csp.ordinal());
         course.setLocked(false);
         course.setGuide(false);
+        course.setStarRateFlag(false);
         audioCourseDAO.insert(course);
         return course;
     }
@@ -1163,5 +1169,30 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public List<AudioCourseDetail> findDetailsByCourseId(Integer id) {
         return audioCourseDetailDAO.findDetailsByCourseId(id);
+    }
+
+    /**
+     * 获取会议分享接口地址
+     * @param local
+     * @param courseId
+     * @param abroad
+     * @return
+     */
+    @Override
+    public String getMeetShareUrl(String appCspBase,String local, Integer courseId, boolean abroad) {
+        StringBuffer buffer = new StringBuffer();
+        buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
+                .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
+        String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
+
+        StringBuffer buffer2 = new StringBuffer();
+        try {
+            buffer2.append(appCspBase)
+                    .append("api/meeting/share?signature=")
+                    .append(URLEncoder.encode(signature, Constants.CHARSET));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return buffer2.toString();
     }
 }

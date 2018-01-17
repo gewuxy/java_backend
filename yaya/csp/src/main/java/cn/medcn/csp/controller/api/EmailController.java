@@ -6,10 +6,7 @@ import cn.medcn.common.email.MailBean;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.JPushService;
 import cn.medcn.common.service.PushService;
-import cn.medcn.common.utils.LocalUtils;
-import cn.medcn.common.utils.MD5Utils;
-import cn.medcn.common.utils.RedisCacheUtils;
-import cn.medcn.common.utils.RegexUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.EmailTemplate;
@@ -103,6 +100,11 @@ public class EmailController extends BaseController{
         CspUserInfo info = cspUserService.findByLoginName(email);
         if(info == null){
             return error(local("user.notexisted"));
+        } else {
+            // 检查用户如果已经被冻结 弹出被冻结提示，且不会发送找回密码邮件
+            if (info.getFrozenState() != null && info.getFrozenState()) {
+                return error(APIUtils.ERROR_CODE_FROZEN, local("user.frozen.account"));
+            }
         }
 
         //获取邮件模板对象

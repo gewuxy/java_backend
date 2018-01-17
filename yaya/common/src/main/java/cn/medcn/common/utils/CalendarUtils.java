@@ -812,6 +812,17 @@ public class CalendarUtils {
         return calendar.getTime();
     }
 
+    /**
+     * 获取当前日期
+     * @return 返回字符串 yyyyMMdd 格式
+     */
+    public static String getCurrentDate() {
+        Date currentTime = new Date();
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+        String dateString = formatter.format(currentTime);
+        return dateString;
+    }
+
 
 
     public static void main(String[] args) throws ParseException {
@@ -848,6 +859,11 @@ public class CalendarUtils {
             System.out.println("ss: "+formatTimesDiff(startTime, endTime,0));
             System.out.println(sdf.format(calendarDay(1)));
             Calendar calendar = Calendar.getInstance();
+
+            Date currentTime = new Date();
+            SimpleDateFormat formatter = new SimpleDateFormat("yyyyMMdd");
+            String dateString = formatter.format(currentTime);
+            System.out.println(dateString);
         } catch (ParseException e) {
             e.printStackTrace();
         }

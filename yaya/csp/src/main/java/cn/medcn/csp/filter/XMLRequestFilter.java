@@ -65,7 +65,7 @@ public class XMLRequestFilter extends FormAuthenticationFilter {
         Principal principal = getCachedPrincipal();
         if (isAjax(request)) {
             if (principal != null &&principal.getFrozenState() != null && principal.getFrozenState()) {
-                ResponseUtils.writeJson(response, APIUtils.error(APIUtils.ERROR_CODE_UNAUTHED, SpringUtils.getMessage("user.frozen.account")));
+                ResponseUtils.writeJson(response, APIUtils.error(APIUtils.ERROR_CODE_FROZEN, SpringUtils.getMessage("user.frozen.account")));
                 return false;
             }
         } else {

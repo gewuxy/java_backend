@@ -17,6 +17,7 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
+import cn.medcn.meet.dto.StarRateResultDTO;
 import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
@@ -87,6 +88,9 @@ public class MeetingController extends CspBaseController {
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Value("${csp.app.csp.base}")
+    protected String appCspBase;
 
     @Autowired
     protected EmailTempService emailTempService;
@@ -183,6 +187,7 @@ public class MeetingController extends CspBaseController {
                 wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
                 model.addAttribute("wsUrl", wsUrl);
 
+                //TODO 缺少星评页面
                 Live live = liveService.findByCourseId(courseId);
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     model.addAttribute("error", local("share.live.over"));
@@ -586,8 +591,8 @@ public class MeetingController extends CspBaseController {
                     return error(local("share.live.over"));
                 }
                 //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
-                if (live.getLiveStartTime() == null) {
-                    live.setLiveStartTime(new Date());
+                if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
+                    live.setStartTime(new Date());
                     live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
                 }
 
@@ -1131,5 +1136,57 @@ public class MeetingController extends CspBaseController {
     }
 
 
+    /**
+     * 获取星评状态和星评二维码
+     * @param courseId
+     * @return
+     */
+    @RequestMapping("/star/code")
+    @ResponseBody
+    public String getStarAndCode(Integer courseId){
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if(course == null){
+            return error(local("source.not.exists"));
+        }
+        StarRateResultDTO dto = new StarRateResultDTO();
+        dto.setStarStatus(course.getStarRateFlag());
+        String local = LocalUtils.getLocalStr();
+        boolean abroad = LocalUtils.isAbroad();
+        String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
+        //判断二维码是否存在 不存在则重新生成
+        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
+        if (!qrCodeExists) {
+            QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
+        }
+        dto.setStartCodeUrl(fileBase + qrCodePath);
+        return success(dto);
+    }
+
+
+    /**
+     * 开启星评接口
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/star_rate/open")
+    @ResponseBody
+    public String openStarRate(Integer courseId){
+        //修改直播状态为星评中状态
+        Live live = liveService.findByCourseId(courseId);
+        live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+        liveService.updateByPrimaryKey(live);
+
+        //发送开启星评指令
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(String.valueOf(courseId));
+        order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
+        liveService.publish(order);
+
+        return success();
+    }
 
 }

@@ -14,13 +14,12 @@ import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
+import cn.medcn.meet.service.*;
+import cn.medcn.meet.dto.StarRateResultDTO;
+import cn.medcn.meet.service.*;
 import cn.medcn.user.model.Principal;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
 import cn.medcn.meet.model.*;
-import cn.medcn.meet.service.AudioService;
-import cn.medcn.meet.service.CourseCategoryService;
-import cn.medcn.meet.service.LiveService;
-import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.AppUser;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
@@ -103,6 +102,8 @@ public class MeetingMgrController extends CspBaseController {
 
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
+
+    protected CspStarRateService cspStarRateService;
 
     /**
      * 查询当前用户的课件列表
@@ -200,6 +201,23 @@ public class MeetingMgrController extends CspBaseController {
         }
     }
 
+    /**
+     * 首页点击查看星评
+     * @param courseId
+     * @return
+     */
+    /*@RequestMapping(value = "/clickStar/{courseId}")
+    public String HaveStarRate(@PathVariable Integer courseId,Model model){
+        //TODO 待验证
+        AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
+        if (audioCourse.getStarRateFlag() == false){
+            model.addAttribute("info",audioCourse.getInfo());
+        }else{
+            List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
+            model.addAttribute("result",result);
+        }
+        return localeView("/meeting/screen");
+    }*/
 
 
     /**
@@ -325,7 +343,15 @@ public class MeetingMgrController extends CspBaseController {
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
+            //TODO 星评详情
+            //星评信息
+            /*if (course.getStarRateFlag()== true) {
+                List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
+                model.addAttribute("rateOptions",result);
 
+                //List<CspStarRateOption> rateOptions = cspStarRateService.findRateOptions(courseId);
+                // model.addAttribute("rateOptions",rateOptions);
+            }*/
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
@@ -335,10 +361,11 @@ public class MeetingMgrController extends CspBaseController {
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
-
         if (course.getCategoryId() != null) {
             model.addAttribute("courseCategory", courseCategoryService.findCategoryHasParent(course.getCategoryId()));
         }
+
+
 
         model.addAttribute("rootList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.root.depth));
         model.addAttribute("subList", courseCategoryService.findByLevel(CourseCategory.CategoryDepth.sub.depth));
@@ -571,24 +598,12 @@ public class MeetingMgrController extends CspBaseController {
         String local = LocalUtils.getLocalStr();
         Principal principal = getWebPrincipal();
         boolean abroad = principal.getAbroad();
-        StringBuffer buffer = new StringBuffer();
-        buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
-                .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
-        String signature = DESUtils.encode(Constants.DES_PRIVATE_KEY, buffer.toString());
-
-        StringBuffer buffer2 = new StringBuffer();
-        try {
-            buffer2.append(appCspBase)
-                    .append("api/meeting/share?signature=")
-                    .append(URLEncoder.encode(signature, Constants.CHARSET));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-
+        String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
         Map<String, Object> result = new HashMap<>();
-        result.put("shareUrl", buffer2.toString());
+        result.put("shareUrl", shareUrl);
         return success(result);
     }
+
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)

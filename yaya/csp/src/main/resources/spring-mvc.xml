@@ -68,8 +68,8 @@
             <mvc:exclude-mapping path="/api/meeting/report"/>
             <mvc:exclude-mapping path="/api/live/**"/>
             <mvc:exclude-mapping path="/api/version/**"/>
-            <mvc:exclude-mapping path="/api/mini/unionid"/>
-            <mvc:exclude-mapping path="/api/mini/info"/>
+            <mvc:exclude-mapping path="/api/user/mini/unionid"/>
+            <mvc:exclude-mapping path="/api/user/mini/info"/>
             <bean class="cn.medcn.csp.interceptor.AuthInterceptor"/>
         </mvc:interceptor>
 

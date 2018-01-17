@@ -19,41 +19,41 @@ import java.util.List;
 public class AppUser {
     @Id
     @GeneratedValue(generator = "JDBC")
-    private Integer id;
+    protected Integer id;
     /**用户名*/
-    private String username;
+    protected String username;
     /**昵称*/
-    private String nickname;
+    protected String nickname;
     /**真实姓名*/
-    private String linkman;
+    protected String linkman;
     /**用户头像*/
-    private String headimg;
+    protected String headimg;
     /**联系电话*/
-    private String mobile;
+    protected String mobile;
     /**密码*/
-    private String password;
+    protected String password;
     /**微信OPENID*/
-    private String unionid;
+    protected String unionid;
     /**历史遗留ID*/
-    private Integer oldId;
+    protected Integer oldId;
     /**最后登录时间*/
-    private Date lastLoginTime;
+    protected Date lastLoginTime;
     /**最后登录IP*/
-    private String lastLoginIp;
+    protected String lastLoginIp;
     /**是否审核通过*/
-    private Boolean authed;
+    protected Boolean authed;
     /**是否是公众号*/
-    private Boolean pubFlag;
+    protected Boolean pubFlag;
     /**个性签名*/
-    private String sign;
+    protected String sign;
     /**注册时间*/
-    private Date registDate;
+    protected Date registDate;
     /**审核人ID*/
-    private Integer authedBy;
+    protected Integer authedBy;
     /**是否是推荐公众号 只有公众号才有此属性*/
-    private Boolean tuijian;
+    protected Boolean tuijian;
 
-    private String token;
+    protected String token;
 
     protected Boolean testFlag;//测试标记 标识该用户未测试用户 主要用于单位号的会议不会被选择到
 
@@ -80,26 +80,26 @@ public class AppUser {
     protected String openid;
 
     @Transient
-    private AppUserDetail userDetail;
+    protected AppUserDetail userDetail;
 
     @Transient
     protected String roleName;
 
     @Transient
-    private Integer credits;
+    protected Integer credits;
 
     @Transient
-    private WXUserInfo wxUserInfo;
+    protected WXUserInfo wxUserInfo;
 
     /*数量统计*/
     @Transient
-    private String years;
+    protected String years;
 
     @Transient
-    private String months;
+    protected String months;
 
     @Transient
-    private String counts;
+    protected String counts;
 
 
 

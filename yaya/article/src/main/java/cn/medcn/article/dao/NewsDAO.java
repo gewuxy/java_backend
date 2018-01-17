@@ -1,5 +1,6 @@
 package cn.medcn.article.dao;
 
+import cn.medcn.article.model.ArticleCategory;
 import cn.medcn.article.model.News;
 import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -17,4 +18,8 @@ public interface NewsDAO extends Mapper<News>{
     Integer getMaxNid(@Param("categoryId")String categoryId);
 
     List<News> findAllNews(Map<String, Object> params);
+
+    List<News> findNewsList(Map<String, Object> params);
+
+    List<ArticleCategory> findCategoryList();
 }

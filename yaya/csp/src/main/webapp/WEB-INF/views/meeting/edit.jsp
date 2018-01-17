@@ -190,14 +190,14 @@
                                             <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="liveTimeSelector" id="timeStart">
-                                                                    <fmt:message key="page.common.time"/><input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="<fmt:message key='page.common.time.start'/> - <fmt:message key='page.common.time.start'/>"
-                                                                             <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/> - <fmt:formatDate value="${live.endTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
+                                                                    <fmt:message key="page.common.time"/><input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
+                                                                             <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
                                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.tips.time_limit"/></span>
                                                 <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
-                                                <input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
+                                                <%--<input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">--%>
                                             </div>
 
                                         </div>
@@ -522,11 +522,11 @@
             if (playType == 0){
                 $("#coursePlayType").val();
                 $("#liveStartTime").attr("disabled", "true");
-                $("#liveEndTime").attr("disabled", "true");
+                /*$("#liveEndTime").attr("disabled", "true");*/
                 $(".meeting-tab-main").addClass("none");
             } else {
                 $("#liveStartTime").removeAttr("disabled");
-                $("#liveEndTime").removeAttr("disabled");
+                /*$("#liveEndTime").removeAttr("disabled");*/
                 $(".meeting-tab-main").removeClass("none");
             }
             $(this).parent().siblings().removeClass("cur");
@@ -596,9 +596,9 @@
 
             if (playType >= 1){
                 var startTime = $("#liveStartTime").val();
-                var endTime = $("#liveEndTime").val();
+                /*var endTime = $("#liveEndTime").val();*/
                 var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
-                if(startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||dateBeforeNow){
+                if(/*startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||*/dateBeforeNow){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
@@ -686,15 +686,16 @@
             });
         });
 
-
+/*123*/
         $('#timeStart').dateRangePicker({
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
             startOfWeek: 'monday',
-            separator : ' - ',
+            /*separator : ' - ',*/
             format: 'YYYY/MM/DD HH:mm:ss',
             autoClose: false,
+            singleDate:true,
             startDate:new Date(),
             time: {
                 enabled: true
@@ -704,10 +705,11 @@
             console.log('first-date-selected',obj);
         }).bind('datepicker-change',function(event,obj){
             console.log('change',obj);
-            var timeArray = obj.value.split(" - ");
-            $("#liveStartTime").val(timeArray[0]);
-            $("#liveEndTime").val(timeArray[1]);
+          /*  var timeArray = obj.value.split(" - ");*/
+
+            /*$("#liveEndTime").val(timeArray[1]);*/
             $(this).find('input').val(obj.value);
+            $("#liveStartTime").val(obj.value);
         });
         if("${course != null && course.published && course.playType > 0}" == "true") {
             showLiveMessage();
