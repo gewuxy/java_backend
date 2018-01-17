@@ -33,8 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by LiuLP on 2017/10/11/011.
@@ -80,6 +82,12 @@ public class UserCenterController extends CspBaseController {
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Value("${Twitter.app_key}")
+    protected String twitterKey;
+
+    @Value("${FaceBook.app_key}")
+    protected String fbKey;
 
 
     /**
@@ -468,5 +476,19 @@ public class UserCenterController extends CspBaseController {
         model.addAttribute("cspPackage", cspPackage);
         model.addAttribute("successMsg",principal.getPkChangeMsg());
         return "/userCenter/memberManage";
+    }
+
+
+    /**
+     * 获取twitter和facebook的key
+     * @return
+     */
+    @RequestMapping("/twitter/facebook")
+    @ResponseBody
+    public String getTwitterAndFBKey(){
+        Map<String,String> map = new HashMap<>();
+        map.put("twitter",twitterKey);
+        map.put("fb",fbKey);
+        return success(map);
     }
 }

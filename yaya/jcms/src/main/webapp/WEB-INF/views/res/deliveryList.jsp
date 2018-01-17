@@ -8,23 +8,25 @@
 </head>
 <body>
 
-
 <!-- main -->
 <div class="g-main clearfix">
     <!-- header -->
-    <%@include file="resHeader.jsp"%>
+    <%@include file="resHeader.jsp" %>
     <!-- header end -->
     <div class="tab-bd">
         <div class="table-box-div1 mar-btm-1">
-            <div class="table-top-box clearfix">
-                <div class="formrow t-right">
-					<span class="checkboxIcon">
-                        <input type="checkbox" id="popup_checkbox_2" <c:if test="${flag == 1}"> checked </c:if> class="chk_1 chk-hook">
-						<label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico"></i>&nbsp;&nbsp;开启CSPmeeting来稿功能</label>
-					</span>&nbsp;
-                    <span class="question-tipsHover-hook">
-                        <img src="${ctxStatic}/images/icon-question.png" alt="">
-                    </span>
+            <div class="table-top-box clearfix" style="padding: 0px 0px;">
+                <div class="formControls">
+                    <input type="button" id="submitBtn" class="formButton formButton-max" value="导出Excel投稿历史">
+                <span class="search-box ">
+                        <form id="searchForm" action="${ctx}/func/res/list" method="post">
+                            <label for="keyWord" class="search-text-hook">
+                                <input id="keyWord" name="keyWord" type="text" class="sear-txt" placeholder="请输入会议名称或讲者姓名" value="${keyWord}"/>
+                            </label>
+                            <input type="hidden" name="isOpen" value="1">
+                             <input type="button" class="sear-button" onclick="submit()"/>
+                        </form>
+                </span>
                 </div>
             </div>
             <div class="resource-list clearfix" id="deliveryList">
@@ -56,10 +58,10 @@
                                             <div class="row clearfix">
                                                 <div class="col-lg-10">
                                                     <c:if test="${empty d.name}">
-                                                        <h3 >&nbsp;</h3>
+                                                        <h3>&nbsp;</h3>
                                                     </c:if>
                                                     <c:if test="${not empty d.name}">
-                                                        <h3 >${d.name}</h3>
+                                                        <h3>${d.name}</h3>
                                                     </c:if>
                                                     <c:if test="${empty d.email}">
                                                         <p>&nbsp;</p>
@@ -68,34 +70,30 @@
                                                         <p>${d.email}</p>
                                                     </c:if>
                                                 </div>
-                                                <c:if test="${d.playType != 0}" >
+                                                <c:if test="${d.playType != 0}">
                                                     <div class="col-lg-2">
                                                         <div class="state">直播</div>
                                                     </div>
                                                 </c:if>
                                             </div>
-
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </c:forEach>
                 </div>
             </div>
-
-            <%@include file="/WEB-INF/include/pageable.jsp"%>
-
+            <%@include file="/WEB-INF/include/pageable.jsp" %>
         </div>
     </div>
 </div>
 <form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
     <input type="hidden" name="pageNum" id="pageNum">
+    <input type="hidden" name="keyWord" value="${keyWord}">
     <input type="hidden" name="isOpen" id="isOpen" value="1">
 </form>
-
 
 <script src="${ctxStatic}/js/jquery.min.js"></script>
 <script src="${ctxStatic}/js/slide.js"></script>
@@ -113,6 +111,10 @@
                 tips: [3, '#333'],
                 time:2000
             });
+        });
+
+        $("#submitBtn").click(function(){
+            window.location.href = "${ctx}/func/res/export";
         });
 
         $("#popup_checkbox_2").click(function(){
@@ -138,7 +140,6 @@
                        }
                     }
                 }
-
             });
         });
 
@@ -155,9 +156,11 @@
                 content:'${ctx}/func/res/view?courseId='+courseId
             });
         });
+    });
 
-    })
+    function submit(){
+        $("#searchForm").submit();
+    }
 </script>
-
 </body>
 </html>

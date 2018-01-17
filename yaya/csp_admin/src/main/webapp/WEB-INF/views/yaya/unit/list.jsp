@@ -56,7 +56,7 @@
                             </c:otherwise>
                         </c:choose>
                         &nbsp;&nbsp;
-                        <a style="cursor: pointer;" userId="${user.id}" class="resetPwd"></a>
+                        <a style="cursor: pointer;" userId="${user.id}" class="resetPwd">重置密码</a>
                     </shiro:hasPermission>
                 </td>
             </tr>
@@ -72,16 +72,22 @@
 <%@include file="/WEB-INF/include/pageable.jsp"%>
 <script>
     $(function(){
-        $("#resetPwd").click(function(){
+        $(".resetPwd").click(function(){
             var userId = $(this).attr("userId");
             top.layer.confirm("确定要重置该单位号的密码？", function(){
                 $.get('${ctx}/yaya/unit/pwd/reset/' + userId, {}, function (data) {
                     if (data.code == 0){
-
+                        top.layer.closeAll('dialog');
+                        top.layer.open({
+                            type: 0,
+                            area:['200px', '200px'],
+                            content: '密码已重置为 : ' + data.data.currentPwd //这里content是一个普通的String
+                        });
                     } else {
                         layer.msg(data.err);
+                        top.layer.closeAll('dialog');
                     }
-                    top.layer.closeAll('dialog');
+
                 },'json');
             });
 

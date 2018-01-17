@@ -60,6 +60,18 @@ public class CourseDeliveryDTO implements Serializable {
 
     //投稿者邮箱
     private String email;
+    //分类
+    private String category;
+    //投稿者手机
+    private String mobile;
+    //投稿时间
+    private String deliveryTime;
+    //星评开启状态
+    private Integer staRateFlag;
+    //评分人数
+    private Integer num;
+    //评分数
+    private Integer score;
 
     //录播ppt总时长
     private Integer duration;
@@ -83,6 +95,11 @@ public class CourseDeliveryDTO implements Serializable {
 
     //星评开关
     protected Boolean starRateFlag;
+
+    //星评人数
+    protected Integer scoreCount;
+    //综合评分
+    protected Integer avgScore;
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){

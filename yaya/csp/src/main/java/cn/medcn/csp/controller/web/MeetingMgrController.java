@@ -137,6 +137,7 @@ public class MeetingMgrController extends CspBaseController {
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
+        model.addAttribute("sortType", sortType);
         model.addAttribute("page", page);
         model.addAttribute("newUser",principal.getNewUser());
         model.addAttribute("successMsg",principal.getPkChangeMsg());
