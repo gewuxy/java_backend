@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
 </head>
 <body>
+<%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
 <div id="wrapper">
     <div class="login login-banner" >
         <div class="page-width pr">
