@@ -89,6 +89,9 @@ public class MeetingController extends CspBaseController {
     @Value("${app.file.base}")
     protected String fileBase;
 
+    @Value("${csp.app.csp.base}")
+    protected String appCspBase;
+
     @Autowired
     protected EmailTempService emailTempService;
 
@@ -1152,7 +1155,7 @@ public class MeetingController extends CspBaseController {
         dto.setStarStatus(course.getStarRateFlag());
         String local = LocalUtils.getLocalStr();
         boolean abroad = LocalUtils.isAbroad();
-        String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
+        String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
         //判断二维码是否存在 不存在则重新生成
         String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
         boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);

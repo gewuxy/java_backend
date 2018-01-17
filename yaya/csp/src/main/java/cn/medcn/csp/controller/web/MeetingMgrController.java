@@ -598,7 +598,7 @@ public class MeetingMgrController extends CspBaseController {
         String local = LocalUtils.getLocalStr();
         Principal principal = getWebPrincipal();
         boolean abroad = principal.getAbroad();
-        String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
+        String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
         Map<String, Object> result = new HashMap<>();
         result.put("shareUrl", shareUrl);
         return success(result);

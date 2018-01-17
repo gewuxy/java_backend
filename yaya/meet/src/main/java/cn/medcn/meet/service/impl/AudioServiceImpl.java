@@ -73,8 +73,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
 
-    @Value("${csp.app.csp.base}")
-    protected String appCspBase;
 
     @Autowired
     protected AudioCoursePlayDAO audioCoursePlayDAO;
@@ -1181,7 +1179,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     @Override
-    public String getMeetShareUrl(String local, Integer courseId, boolean abroad) {
+    public String getMeetShareUrl(String appCspBase,String local, Integer courseId, boolean abroad) {
         StringBuffer buffer = new StringBuffer();
         buffer.append("id=").append(courseId).append("&").append(Constants.LOCAL_KEY).append("=")
                 .append(local).append("&abroad=" + (abroad ? CspUserInfo.AbroadType.abroad.ordinal() : CspUserInfo.AbroadType.home.ordinal()));
