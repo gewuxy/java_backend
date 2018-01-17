@@ -74,7 +74,8 @@ public class News extends Article implements Serializable {
 
     public enum NEWS_CATEGORY{
         CATEGORY_YYXW("医药新闻", "170510101223456"),
-        CATEGORY_ZYZX("专业资讯","170510121548925"),
+        CATEGORY_YXZH("医学综合","170510121548925"),
+        CATEGORY_ZYZX("药品资讯","170510121522684"),
         CATEGORY_AQYY("安全用药","170510121523528"),
         CATEGORY_YYDT("医药动态", "170510121548956"),
         CATEGORY_GSDT("公司动态", "17051016434243959379"),
@@ -95,16 +96,6 @@ public class News extends Article implements Serializable {
             this.categoryId = categoryId;
         }
 
-    }
-
-    public String getCategoryName() {
-        String categoryName = null;
-        for (NEWS_CATEGORY c : NEWS_CATEGORY.values()) {
-            if (this.categoryId.equals(c.categoryId)) {
-                categoryName = NEWS_CATEGORY.values()[c.ordinal()].label;
-            }
-        }
-        return categoryName;
     }
 
     /**

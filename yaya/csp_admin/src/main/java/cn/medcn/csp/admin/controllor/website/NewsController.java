@@ -13,6 +13,7 @@ import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.CompressImgUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -54,6 +55,8 @@ public class NewsController extends BaseController {
     @RequestMapping(value = "/list")
     public String findNewsList(Pageable pageable, String keyword,Model model) {
         if (StringUtils.isNotEmpty(keyword)) {
+            model.addAttribute("keyword", keyword);
+
             if (keyword.equals(News.NEWS_CATEGORY.CATEGORY_AQYY.label)) { // 安全用药
                 keyword = News.NEWS_CATEGORY.CATEGORY_AQYY.categoryId;
             } else if (keyword.equals(News.NEWS_CATEGORY.CATEGORY_ZYZX.label)) { // 专业资讯
@@ -62,9 +65,10 @@ public class NewsController extends BaseController {
                 keyword = News.NEWS_CATEGORY.CATEGORY_YYDT.categoryId;
             } else if (keyword.equals(News.NEWS_CATEGORY.CATEGORY_GSDT.label)) { // 公司动态
                 keyword = News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId;
+            } else if (keyword.equals(News.NEWS_CATEGORY.CATEGORY_YXZH.label)) { // 医学综合
+                keyword = News.NEWS_CATEGORY.CATEGORY_YXZH.categoryId;
             }
             pageable.put("keyword", keyword);
-            model.addAttribute("keyword", keyword);
         }
         MyPage<News> page = newsService.findNewsList(pageable);
         model.addAttribute("page", page);
@@ -73,6 +77,7 @@ public class NewsController extends BaseController {
 
 
     @RequestMapping(value = "/view")
+    @RequiresPermissions("website:news:view")
     @Log(name = "查看新闻详情内容")
     public String viewNewsContent(String id, Model model) {
         if (StringUtils.isNotEmpty(id)) {
@@ -83,13 +88,16 @@ public class NewsController extends BaseController {
             model.addAttribute("categoryList", categoryList);
 
             String imgUrl = news.getArticleImgS();
-            model.addAttribute("imgURL", appFileBase + imgUrl);
+            if (StringUtils.isNotEmpty(imgUrl)) {
+                model.addAttribute("smallImgUrl", appFileBase + imgUrl);
+            }
             model.addAttribute("news", news);
         }
         return "/news/viewEdit";
     }
 
     @RequestMapping(value = "/to/add")
+    @RequiresPermissions("website:news:auth")
     @Log(name = "跳转到发布新闻页面")
     public String toAddNews(Model model) {
         // 查询新闻类别
@@ -99,17 +107,23 @@ public class NewsController extends BaseController {
     }
 
     @RequestMapping(value = "/add")
+    @RequiresPermissions("website:news:add")
     @Log(name = "发布新闻")
     public String addNews(News news, RedirectAttributes redirectAttributes) {
         if (news != null) {
+            news.setId(StringUtils.nowStr());
             news.setCreateTime(new Date());
             newsService.insert(news);
             addFlashMessage(redirectAttributes,"发布成功");
+        } else {
+            addErrorFlashMessage(redirectAttributes,"发布失败");
+
         }
         return "redirect:/website/news/list";
     }
 
     @RequestMapping(value = "/update")
+    @RequiresPermissions("website:news:auth")
     @Log(name = "修改新闻内容")
     public String updateNewsContent(News news, RedirectAttributes redirectAttributes) {
         if (news != null) {
@@ -123,6 +137,7 @@ public class NewsController extends BaseController {
 
 
     @RequestMapping(value = "/delete")
+    @RequiresPermissions("website:news:del")
     @Log(name = "删除新闻")
     public String delete(String id, RedirectAttributes redirectAttributes) {
         if (id != null) {
@@ -179,11 +194,13 @@ public class NewsController extends BaseController {
                     file.transferTo(saveFile);
 
                     // 压缩小图片
-                    CompressImgUtils compressUtils = new CompressImgUtils();
-                    String filePath = imgPrefixPath + dateFolderPath;
+                    String filePath = CompressImgUtils.inputDir + dateFolderPath + "\\";
                     String smallFileName = "s_" + saveFileName;
-                    compressUtils.pressImg(filePath, filePath, saveFileName, smallFileName,
-                            compressUtils.getOutputWidth(), compressUtils.getOutputHeight(), true);
+                    int width = CompressImgUtils.outputWidth;
+                    int height = CompressImgUtils.outputHeight;
+
+                    CompressImgUtils.pressImg(filePath, filePath, saveFileName, smallFileName,
+                            width, height, CompressImgUtils.proportion);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -194,7 +211,7 @@ public class NewsController extends BaseController {
                 map.put("imgURL", imgUrl);
                 map.put("src", appFileBase + imgUrl);
                 map.put("title", saveFileName);
-                map.put("smallImgUrl", appFileBase + smallImgUrl);
+                map.put("smallImgUrl", smallImgUrl);
                 return success(map);
             } else {
                 return error("文件格式错误");

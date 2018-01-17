@@ -20,24 +20,30 @@ import java.io.IOException;
 public class CompressImgUtils {
     private static Log log = LogFactory.getLog(CompressImgUtils.class);
 
-    /**
-     * 缩略图类（通用） 本java类能将jpg、bmp、png、gif图片文件，进行等比或非等比的大小转换。 具体使用方法
-     * compressPic(大图片路径,生成小图片路径,大图片文件名,生成小图片文名,生成小图片宽度,生成小图片高度,是否等比缩放(默认为true))
-     **/
-    protected  File file = null; // 文件对象
-    protected  String inputDir; // 输入图路径
-    protected  String outputDir; // 输出图路径
-    protected  String inputFileName; // 输入图文件名
-    protected  String outputFileName; // 输出图文件名
-    protected  int outputWidth = 120; // 默认输出图片宽
-    protected  int outputHeight = 120; // 默认输出图片高
-    protected  boolean proportion = true; // 是否等比缩放标记(默认为等比缩放)
+    // 文件对象
+    public static File file = null;
 
+    // 输入图路径
+    public static String inputDir = "Z:\\news\\images\\";
 
-    public void setWidthAndHeight(int width, int height) {
-        this.outputWidth = width;
-        this.outputHeight = height;
-    }
+    // 输出图路径
+    public static String outputDir = "Z:\\news\\images\\";
+
+    // 输入图文件名
+    public static String inputFileName;
+
+    // 输出图文件名
+    public static String outputFileName;
+
+    // 默认输出图片宽
+    public static int outputWidth = 120;
+
+    // 默认输出图片高
+    public static int outputHeight = 120;
+
+    // 是否等比缩放标记(默认为等比缩放)
+    public static boolean proportion = true;
+
 
     /**
      * 获得图片大小
@@ -45,17 +51,25 @@ public class CompressImgUtils {
      * @param path 图片路径
      * @return
      */
-    public long getImgSize(String path) {
+    public static long getImgSize(String path) {
         file = new File(path);
         return file.length();
     }
 
+
     /**
-     * 压缩图片处理
-     *
+     * 等比压缩图片
+     * @param inputDir 大图片路径
+     * @param outputDir 生成小图片路径
+     * @param inputFileName 大图片文件名
+     * @param outputFileName 生成小图片文名
+     * @param outputWidth 生成小图片宽度
+     * @param outputHeight 生成小图片高度
+     * @param gp 是否等比缩放 默认为true
      * @return
      */
-    public String pressImg() {
+    public static String pressImg(String inputDir, String outputDir, String inputFileName, String outputFileName,
+                                  int outputWidth, int outputHeight, boolean gp) {
         try {
             // 获得源文件
             file = new File(inputDir + inputFileName);
@@ -74,7 +88,7 @@ public class CompressImgUtils {
                 int newHeight;
 
                 // 判断是否是等比缩放
-                if (this.proportion == true) {
+                if (proportion == true) {
                     // 为等比缩放计算输出的图片宽度及高度
                     double rate1 = ((double) img.getWidth(null)) / (double) outputWidth + 0.1;
                     double rate2 = ((double) img.getHeight(null)) / (double) outputHeight + 0.1;
@@ -110,69 +124,19 @@ public class CompressImgUtils {
     }
 
 
-    /**
-     * 压缩图片参数初始化
-     *
-     * @param inputDir
-     * @param outputDir
-     * @param inputFileName
-     * @param outputFileName
-     * @return
-     */
-    public String pressImg(String inputDir, String outputDir, String inputFileName, String outputFileName) {
-        // 输入图路径
-        this.inputDir = inputDir;
-        // 输出图路径
-        this.outputDir = outputDir;
-        // 输入图文件名
-        this.inputFileName = inputFileName;
-        // 输出图文件名
-        this.outputFileName = outputFileName;
-        return pressImg();
-    }
-
-    /**
-     * 等比压缩图片参数初始化
-     *
-     * @param inputDir
-     * @param outputDir
-     * @param inputFileName
-     * @param outputFileName
-     * @param width
-     * @param height
-     * @param gp
-     * @return
-     */
-    public String pressImg(String inputDir, String outputDir, String inputFileName, String outputFileName, int width, int height, boolean gp) {
-        // 输入图路径
-        this.inputDir = inputDir;
-        // 输出图路径
-        this.outputDir = outputDir;
-        // 输入图文件名
-        this.inputFileName = inputFileName;
-        // 输出图文件名
-        this.outputFileName = outputFileName;
-        // 设置图片长宽
-        setWidthAndHeight(width, height);
-        // 是否是等比缩放 标记
-        this.proportion = gp;
-        return pressImg();
-    }
-
     public static void main(String[] arg) {
-        String inputDir = "Z:\\news\\images\\20180117\\";
-        String outputDir = "Z:\\news\\images\\20180117\\";
-        String inputFileName = "18011711080741938028.jpg";
+        String inputDir = CompressImgUtils.inputDir + "20180117\\";
+        String outputDir = CompressImgUtils.inputDir + "20180117\\";
+        String inputFileName = "18011714534680923159.jpg";
         String outputFileName = "s_"+inputFileName;
-        int width = 120;
-        int height = 120;
+        int width = CompressImgUtils.outputWidth;
+        int height = CompressImgUtils.outputHeight;
 
-        CompressImgUtils imgUtils = new CompressImgUtils();
-        System.out.println("输入的图片大小：" + imgUtils.getImgSize("Z:\\news\\images\\20180117\\18011711080741938028.jpg") / 1024 + "KB");
+        System.out.println("输入的图片大小：" + getImgSize(inputDir + inputFileName) / 1024 + "KB");
 
-        imgUtils.pressImg(inputDir, outputDir, inputFileName, outputFileName, width, height, true);
+        pressImg(inputDir, outputDir, inputFileName, outputFileName, width, height, CompressImgUtils.proportion);
 
-        System.out.println("输出的图片大小：" + imgUtils.getImgSize(outputDir + outputFileName) / 1024 + "KB");
+        System.out.println("输出的图片大小：" + getImgSize(outputDir + outputFileName) / 1024 + "KB");
 
     }
 

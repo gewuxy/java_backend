@@ -19,19 +19,21 @@
 
         // 是否审核的选中状态
         $(function () {
+            $("#imgId").attr("src", "${smallImgUrl}");
+
             var checkObj = ${news.authed};
             if (checkObj == 1) {
                 $("#checked").attr("checked", "checked");
             } else {
                 $("#unchecked").attr("checked", "checked");
             }
-            $("#imgId").attr("src", "${smallImgUrl}");
         });
 
         // 上传图片
         function selectFile() {
             $("#uploadFile").trigger("click");
         }
+
         function fileUpload() {
             var option = {
                 url: "${ctx}/website/news/upload",
@@ -48,16 +50,17 @@
                         layer.msg(data.err);
                     }
                 }
-            };
-            $("#inputForm").ajaxSubmit(option);
-            return true;
+        };
+        $("#inputForm").ajaxSubmit(option);
+        return true;
         }
     </script>
 </head>
 
 <body>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#">发布新闻</a></li>
+        <li><a href="${ctx}/website/news/list">新闻列表</a></li>
+        <li class="active"><a href="#">编辑新闻</a></li>
     </ul>
 
     <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/website/news/update"  enctype="multipart/form-data">
