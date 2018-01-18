@@ -8,10 +8,7 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.supports.FileTypeSuffix;
-import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.CalendarUtils;
-import cn.medcn.common.utils.CompressImgUtils;
-import cn.medcn.common.utils.StringUtils;
+import cn.medcn.common.utils.*;
 import cn.medcn.csp.admin.log.Log;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,7 +159,7 @@ public class NewsController extends BaseController {
     public String uploadImg(MultipartFile file){
         if (file != null) {
             String fileName = file.getOriginalFilename();
-            String suffix = file.getOriginalFilename().substring(fileName.lastIndexOf("."));
+            String suffix = FileUtils.getSuffix(fileName, false);
             // 图片名称
             String saveFileName = StringUtils.nowStr() + suffix;
 
@@ -171,7 +168,7 @@ public class NewsController extends BaseController {
             String dateFolderPath = CalendarUtils.getCurrentDate();
             // 新闻图片地址前缀
             String imgPrefixPath = appFileUploadBase + imgFolder;
-
+            suffix = suffix.toLowerCase();
             if (suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix)
                     || suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPEG.suffix)
                     || suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix)
