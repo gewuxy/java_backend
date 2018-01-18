@@ -137,6 +137,7 @@ public class MeetingMgrController extends CspBaseController {
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingList(pageable);
 
         CourseDeliveryDTO.splitCoverUrl(page.getDataList(),fileBase);
+        model.addAttribute("sortType", sortType);
         model.addAttribute("page", page);
         model.addAttribute("newUser",principal.getNewUser());
         model.addAttribute("successMsg",principal.getPkChangeMsg());
@@ -277,13 +278,6 @@ public class MeetingMgrController extends CspBaseController {
             }
 
             if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                throw new SystemException(local("share.live.over"));
-            }
-
-            Date now = new Date();
-            if (live.getStartTime().after(now)) {
-                throw new SystemException(local("share.live.not_start.error"));
-            } else if (live.getEndTime().before(now)){
                 throw new SystemException(local("share.live.over"));
             }
 

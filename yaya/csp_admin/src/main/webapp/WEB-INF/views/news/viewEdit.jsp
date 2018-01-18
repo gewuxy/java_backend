@@ -16,20 +16,24 @@
     <link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 
     <script>
+
         // 是否审核的选中状态
         $(function () {
+            $("#imgId").attr("src", "${smallImgUrl}");
+
             var checkObj = ${news.authed};
             if (checkObj == 1) {
-                $("#checked").attr("checked", "checked")
+                $("#checked").attr("checked", "checked");
             } else {
-                $("#unchecked").attr("checked", "checked")
+                $("#unchecked").attr("checked", "checked");
             }
-        })
+        });
 
         // 上传图片
         function selectFile() {
             $("#uploadFile").trigger("click");
         }
+
         function fileUpload() {
             var option = {
                 url: "${ctx}/website/news/upload",
@@ -40,21 +44,23 @@
                     if (data.code == 0){
                         layer.msg("上传成功");
                         $("#imgUrl").val(data.data.imgURL);
+                        $("#simgUrl").val(data.data.smallImgUrl);
                         $("#imgId").attr("src", data.data.src);
                     }else {
                         layer.msg(data.err);
                     }
                 }
-            };
-            $("#inputForm").ajaxSubmit(option);
-            return true;
+        };
+        $("#inputForm").ajaxSubmit(option);
+        return true;
         }
     </script>
 </head>
 
 <body>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#">发布新闻</a></li>
+        <li><a href="${ctx}/website/news/list">新闻列表</a></li>
+        <li class="active"><a href="#">编辑新闻</a></li>
     </ul>
 
     <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/website/news/update"  enctype="multipart/form-data">
@@ -70,15 +76,11 @@
         <div class="control-group">
             <label class="control-label">新闻类别:</label>
             <div class="controls">
-                <select id="type" name="type" style="width: 100px;">
-                    <option value=""/>
-                    -- 请选择 --
-                    <option value="${news.categoryId}"/>
-                    ${news.categoryName}
+                <select name="categoryId" style="width: 200px;">
+                    <c:forEach items="${categoryList}" var="c">
+                        <option value="${c.id}" ${news.categoryId == c.id ? 'selected':''}>${c.name}</option>
+                    </c:forEach>
                 </select>
-                <script>
-                    document.getElementById("type").value="${news.categoryName}";
-                </script>
             </div>
         </div>
 
@@ -99,14 +101,14 @@
         <div class="control-group">
             <label class="control-label">摘要:</label>
             <div class="controls">
-                <textarea name="summary" rows="3" maxlength="2000" class="input-xxlarge">${news.summary}</textarea>
+                <textarea name="summary" rows="5" maxlength="2000" class="input-xxlarge">${news.summary}</textarea>
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label">关键字:</label>
             <div class="controls">
-                <input type="search" name="author" value="${news.keywords}" maxlength="50" class="required input-xlarge">
+                <input type="search" name="keywords" value="${news.keywords}" maxlength="50" class="required input-xlarge">
             </div>
         </div>
 
@@ -143,7 +145,8 @@
                        onchange="fileUpload()">
                 <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
                 <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-                <input type="hidden" name="imgUrl" id="imgUrl" value="" maxlength="50" class="required input-xlarge">
+                <input type="hidden" name="articleImg" id="imgUrl" value="" maxlength="50" class="required input-xlarge">
+                <input type="hidden" name="articleImgS" id="simgUrl" value="" maxlength="50" class="required input-xlarge">
             </div>
         </div>
         <div class="control-group">

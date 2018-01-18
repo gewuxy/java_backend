@@ -94,6 +94,11 @@ public class CourseDeliveryDTO implements Serializable {
     //星评开关
     protected Boolean starRateFlag;
 
+    //星评人数
+    protected Integer scoreCount;
+    //综合评分
+    protected Integer avgScore;
+
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
             for (CourseDeliveryDTO deliveryDTO : list) {

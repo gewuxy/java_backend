@@ -208,4 +208,20 @@ public class UnitAccountController extends BaseController {
         return success();
     }
 
+
+    @RequestMapping(value = "/batch/fans")
+    @ResponseBody
+    @Log(name = "批量导入粉丝")
+    @RequiresPermissions("yaya:unit:edit")
+    public String batchFans(Integer[] unitIds, Integer fans){
+        if (unitIds == null || unitIds.length == 0) {
+            return error("请选择需要导入粉丝的单位号");
+        }
+        if (fans == null || fans == 0) {
+            return error("请输入需要导入的粉丝数量");
+        }
+        appUserService.doImportFans(unitIds, fans);
+        return success();
+    }
+
 }

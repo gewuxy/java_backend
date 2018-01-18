@@ -16,4 +16,10 @@ public interface AppUnitDAO extends Mapper<AppUnit>{
     void deleteDetail(@Param("userId") Integer userId);
 
     List<UnitAccountDTO> findUnitAccounts(Map<String, Object> params);
+
+    /**
+     * 批量导入粉丝
+     * @param params
+     */
+    void importFans(Map<String, Object> params);
 }

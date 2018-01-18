@@ -229,6 +229,8 @@
                 show();
             } else if(data.order == 11){//直播开始指令
                 living = true;
+            } else if (data.order == 13){//开启星评指令
+                //todo 弹出扫码星评二维码界面
             }
 
         }
