@@ -316,6 +316,21 @@
     </div>
 </div>
 
+<div class="cancel-popup-box" id="uploadSuccess">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="cancel-popup-main">
+                <p><fmt:message key="page.meeting.upload.success"/></p>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
@@ -342,17 +357,25 @@
     }
 
     function fleshPage(){
-        layer.msg('<fmt:message key="page.meeting.upload.success"/>');
-        var reloadUrl = window.location.href;
-        if (reloadUrl.indexOf("?") > 0){
-            reloadUrl = reloadUrl + "&time="+new Date().getTime();
-        } else {
-            reloadUrl = reloadUrl + "?time="+new Date().getTime();
-        }
-        setTimeout(function (){
-            window.location.href = reloadUrl;
-        }, 2000);
+        layer.open({
+            type: 1,
+            area: ['300px', '260px'],
+            fix: false, //不固定
+            title:false,
+            closeBtn:0,
+            anim:5,
+            btn: ["<fmt:message key='page.button.sure'/>"],
+            content: $('#uploadSuccess'),
+            success:function(){
 
+            },
+            yes:function(){
+                window.location.reload();
+            },
+            cancel :function(){
+
+            },
+        });
     }
 
     function uploadFile(f){
@@ -423,7 +446,7 @@
             if (data.data.progress.indexOf("100") != -1){
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
-                fleshPage();
+                //fleshPage();
             } else {
                 if(!uploadOver){
                     setTimeout(showConvertProgress, 500);
