@@ -18,6 +18,7 @@ import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
+import cn.medcn.meet.service.CspStarRateService;
 import cn.medcn.user.dto.MoneyStatisticsExcel;
 import cn.medcn.user.dto.MoneyUSDStatisticsExcel;
 import cn.medcn.user.dto.PackageRenewExcel;
@@ -57,6 +58,9 @@ public class ResourceController extends BaseController {
 
     @Autowired
     private CourseDeliveryService courseDeliveryService;
+
+    @Autowired
+    private CspStarRateService cspStarRateService;
 
     @Value("${app.file.base}")
     private String appFileBase;
@@ -359,14 +363,15 @@ public class ResourceController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String users(Integer isOpen,String keyWord,Pageable pageable, Model model) {
-
+    public String users(Integer isOpen,Integer viewType,String keyWord,Pageable pageable, Model model) {
+        if(viewType == null) viewType = 0;
+        String view = viewType == 0 ? "/res/deliveryList":"/res/deliveryCard";
         Integer userId = SubjectUtils.getCurrentUserid();
         if (isOpen == null) {  //点击资源平台动作
             //查询用户是否开启投稿功能
             int flag = appUserService.findDeliveryFlag(userId);
             if (flag == 0) {  //没有开启投稿功能
-                return "/res/deliveryList";
+                return view;
             }
         }
         pageable.setPageSize(12);
@@ -384,7 +389,14 @@ public class ResourceController extends BaseController {
         model.addAttribute("page", myPage);
         model.addAttribute("flag", 1);
         model.addAttribute("keyWord",keyWord);
-        return "/res/deliveryList";
+        model.addAttribute("viewType",viewType);
+        return view;
+    }
+
+    @RequestMapping(value = "/rate/view")
+    public String rateView(Integer courseId, Model model) {
+       // cspStarRateService.
+        return "/res/view";
     }
 
 
