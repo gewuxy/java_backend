@@ -66,8 +66,6 @@ public class CourseDeliveryDTO implements Serializable {
     private String mobile;
     //投稿时间
     private String deliveryTime;
-    //星评开启状态
-    private Integer staRateFlag;
     //评分人数
     private Integer num;
     //评分数

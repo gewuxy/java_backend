@@ -29,18 +29,6 @@
         <li>
             <a href="${ctx}/func/res/share/list">共享资源<i></i></a>
         </li>
-        <div class="table-top-box clearfix" style="padding: 15px 50px;">
-            <div class="formrow t-right">
-					<span class="checkboxIcon">
-                        <input type="checkbox" id="popup_checkbox_2"
-                        <c:if test="${flag == 1}"> checked </c:if> class="chk_1 chk-hook">
-						<label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico"></i>&nbsp;&nbsp;开启CSPmeeting来稿功能</label>
-					</span>&nbsp;
-                <span class="question-tipsHover-hook">
-                        <img src="${ctxStatic}/images/icon-question.png" alt="">
-                    </span>
-            </div>
-        </div>
     </ul>
 </div>
 
@@ -55,5 +43,53 @@
                 $(this).addClass("cur").siblings().removeClass("cur");
             }
         });
+
+        // 点击切换卡片列表
+        $(".changeListButton").click(function(){
+            if($("#pages").val() <= 1){
+                $("#pageForm").find("input[name='pageNum']").val(1);
+            }
+            $("#viewType").val() == 0 ?  $("#viewType").val(1): $("#viewType").val(0);
+            $("#pageForm").submit();
+        });
+
+        //点击预览
+        $(".popup-player-hook").click(function(){
+            var courseId = $(this).attr("courseId");
+            top.layer.open({
+                type:2,
+                area: ['860px', '800px'],
+                fix: false, //不固定
+                fixed:true,
+                offset: '100px',
+                title:false,
+                content:'${ctx}/func/res/view?courseId='+courseId
+            });
+        });
+
+        //简介和星评
+        $(".grade-state").click(function(){
+            var courseId = $(this).attr("courseId");
+            top.layer.open({
+                type:2,
+                area: ['860px', '800px'],
+                fix: false, //不固定
+                fixed:true,
+                offset: '100px',
+                title:false,
+                content:'${ctx}/func/res/rate/view?courseId='+courseId
+            });
+        });
+
+
+
+        $("#exportBtn").click(function(){
+            window.location.href = "${ctx}/func/res/export";
+        });
     });
+
+    //点击搜索
+    function submit(){
+        $("#searchForm").submit();
+    }
 </script>

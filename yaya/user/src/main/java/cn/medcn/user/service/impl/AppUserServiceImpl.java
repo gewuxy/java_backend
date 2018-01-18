@@ -396,7 +396,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
      * @param user
      */
     @Override
-    public void updateDoctor(AppUser user)  throws Exception{
+    public void updateDoctor(AppUser user)  {
         user.setAuthed(true);  //防止user所有字段为null导致抛出异常
         if(!StringUtils.isEmpty(user.getProvince()) && !StringUtils.isEmpty(user.getCity())){ //防止zone为空没有更新
             if(user.getZone() == null){
@@ -1011,6 +1011,19 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
                 activeStoreDAO.updateByPrimaryKeySelective(store);
             }
         }
+    }
+
+
+    /**
+     * 医生账号列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<AppUserDTO> findDoctorAccounts(Pageable pageable) {
+        startPage(pageable, true);
+        MyPage<AppUserDTO> page = MyPage.page2Mypage((Page) appUnitDAO.findDoctorAccounts(pageable.getParams()));
+        return page;
     }
 
     /**
