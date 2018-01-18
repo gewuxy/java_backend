@@ -169,14 +169,16 @@ public class NewsController extends BaseController {
         if (file != null) {
             String fileName = file.getOriginalFilename();
             String suffix = FileUtils.getSuffix(fileName, false);
+
             // 图片名称
-            String saveFileName = StringUtils.nowStr() + suffix;
+            String saveFileName = StringUtils.nowStr() + "." + suffix;
 
             String imgFolder = "news/images/";
             // 当天新闻图片日期文件夹
             String dateFolderPath = CalendarUtils.getCurrentDate();
             // 新闻图片地址前缀
             String imgPrefixPath = appFileUploadBase + imgFolder;
+
             suffix = suffix.toLowerCase();
             if (suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix)
                     || suffix.endsWith(FileTypeSuffix.IMAGE_SUFFIX_JPEG.suffix)
@@ -185,28 +187,22 @@ public class NewsController extends BaseController {
 
                 // 上传保存到服务器的文件
                 String imgFilePath = imgPrefixPath + dateFolderPath + "/" + saveFileName;
-
-                // 前端显示的图片地址
-                String imgUrl = imgFolder + dateFolderPath + "/" + saveFileName;
-
-                // 小图片地址
-                String smallImgUrl = imgFolder + dateFolderPath + "/s_" + saveFileName;
-
                 File saveFile = new File(imgFilePath);
                 if (!saveFile.exists()) {
                     saveFile.mkdirs();
                 }
+
+                // 前端显示的图片地址
+                String imgUrl = imgFolder + dateFolderPath + "/" + saveFileName;
+                // 小图片地址
+                String smallImgPath = dateFolderPath + "/s_" + saveFileName;
+                String smallImgUrl = null;
+
                 try {
                     file.transferTo(saveFile);
-
-                    // 压缩小图片
-                    String filePath = CompressImgUtils.inputDir + dateFolderPath + "\\";
-                    String smallFileName = "s_" + saveFileName;
-                    int width = CompressImgUtils.outputWidth;
-                    int height = CompressImgUtils.outputHeight;
-
-                    CompressImgUtils.pressImg(filePath, filePath, saveFileName, smallFileName,
-                            width, height, CompressImgUtils.proportion);
+                    // 生成缩略图
+                    smallImgUrl = FileUtils.thumbnailUploadImage(saveFile, FileUtils.thumbWidth,
+                            FileUtils.thumbWidth, smallImgPath, imgPrefixPath );
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -289,16 +285,11 @@ public class NewsController extends BaseController {
             }
 
             String newFileName = StringUtils.nowStr() + "." + fileExt;
-            String smallImgUrl = null;
             try {
                 File uploadedFile = new File(savePath, newFileName);
 
                 // 写入文件
                 iFile.transferTo(uploadedFile);
-
-                // 生成缩略图
-                smallImgUrl = FileUtils.thumbnailUploadImage(uploadedFile, FileUtils.thumbWidth,
-                                FileUtils.thumbWidth, savePath, savePath );
 
             } catch (Exception e) {
                 return error("上传文件失败");
@@ -306,7 +297,6 @@ public class NewsController extends BaseController {
 
             Map<String, String> map = new HashMap();
             map.put("url", saveUrl + newFileName);
-            map.put("smallImgUrl", smallImgUrl);
             return success(map);
         }
 

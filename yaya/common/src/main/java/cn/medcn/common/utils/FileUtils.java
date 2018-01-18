@@ -362,14 +362,12 @@ public class FileUtils {
      * @param file
      * @param width
      * @param height
-     * @param uploadPath 上传路径相对路径
+     * @param uploadPath 缩略图实际存储路径
      * @param realUploadPath 原图实际路径
      * @return
      */
     public static String thumbnailUploadImage(File file, int width, int height, String uploadPath, String realUploadPath){
-
-        //缩略图实际存储路径
-        String des = realUploadPath + "s_" + file.getName();
+         String des = realUploadPath + uploadPath;
         try {
 
             Thumbnails.of(file).size(width, height).toFile(new File(des));
