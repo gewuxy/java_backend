@@ -26,6 +26,7 @@
 .table-box-1 .table-td-7 { width:100px; text-align: right; }
 .table-box-1 .table-td-8 { width:240px; }
 .table-box-1 .table-td-9 { width:60px; padding:20px 0; text-align:right;}
+.star-table-list .table-td-4  { text-align: left;}
 .table-box-1 td a { color:#888; }
 .table-box-1 td a:hover { color:#3fa9f5; }
 .table-box-1 .t-left { text-align: left;}
@@ -310,7 +311,9 @@ input.page-border { width: 40px; }
 .layer-grade-popup .layer-grade-main .metting-grade-info .main { min-height: 230px;   overflow: hidden;  position: relative;}
 
 .layer-grade-popup .layer-grade-main .metting-star  { font-size:18px; color:#78889b;  border-top: 1px solid #edf3f9;}
-.layer-grade-popup .layer-grade-main .metting-star .star-title { font-size:18px; margin:15px 0 10px; font-weight:bold;}.layer-grade-popup .layer-grade-main .metting-star .star-box > div{ display: inline-block; vertical-align: middle; }
+.layer-grade-popup .layer-grade-main .metting-star .star-title { font-size:18px; margin:15px 0 10px; font-weight:bold;}
+.layer-grade-popup .layer-grade-main .metting-star .star-box .grade { min-width: 45px; text-align: right;}
+.layer-grade-popup .layer-grade-main .metting-star .star-box > div{ display: inline-block; vertical-align: middle; }
 .layer-grade-popup .layer-grade-main .metting-star .star-list { font-size:18px; background:#F7F7F7;  vertical-align: middle; padding:10px 20px; margin:15px 0 30px;     min-height: 200px; }
 .layer-grade-popup .layer-grade-main .metting-star .star-list .star-list-row{ margin:10px 0; }
 .layer-grade-popup .layer-grade-main .metting-star .star-list .star-list-row .fl{ position: relative; top:3px;}

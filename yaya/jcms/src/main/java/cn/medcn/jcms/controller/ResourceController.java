@@ -363,9 +363,9 @@ public class ResourceController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String users(Integer isOpen,Integer viewType,String keyWord,Pageable pageable, Model model) {
-        if(viewType == null) viewType = 0;
-        String view = viewType == 0 ? "/res/deliveryList":"/res/deliveryCard";
+    public String users(Integer isOpen, Integer viewType, String keyWord, Pageable pageable, Model model) {
+        if (viewType == null) viewType = 0;
+        String view = viewType == 0 ? "/res/deliveryCard" : "/res/deliveryList";
         Integer userId = SubjectUtils.getCurrentUserid();
         if (isOpen == null) {  //点击资源平台动作
             //查询用户是否开启投稿功能
@@ -388,20 +388,42 @@ public class ResourceController extends BaseController {
         }
         model.addAttribute("page", myPage);
         model.addAttribute("flag", 1);
-        model.addAttribute("keyWord",keyWord);
-        model.addAttribute("viewType",viewType);
+        model.addAttribute("keyWord", keyWord);
+        model.addAttribute("viewType", viewType);
         return view;
     }
 
+    /**
+     * 查看简介跟星评评分
+     *
+     * @param courseId
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/rate/view")
     public String rateView(Integer courseId, Model model) {
-       // cspStarRateService.
-        return "/res/view";
+        StarRateResultDTO result = cspStarRateService.getTotleRateResult(courseId);
+        model.addAttribute("result", result);
+        return "/res/rateView";
+    }
+
+    /**
+     * 获取星评详情
+     *
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/rate/detail")
+    @ResponseBody
+    public String detail(Integer courseId) {
+        List<StarRateResultDTO> list = cspStarRateService.getStarRateDetail(courseId);
+        return success(list);
     }
 
 
     /**
      * 导出数据
+     *
      * @param response
      * @throws SystemException
      */
@@ -414,10 +436,10 @@ public class ResourceController extends BaseController {
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
         String fileName = "投稿历史" + StringUtils.nowStr() + ".xls";
         List<Object> dataList = Lists.newArrayList();
-        if(myPage.getDataList().size() > 0){
-            writeDate(myPage, dataList,pageable);
+        if (myPage.getDataList().size() > 0) {
+            writeDate(myPage, dataList, pageable);
         }
-        if(dataList.size() > 0){
+        if (dataList.size() > 0) {
             try {
                 Workbook workbook = ExcelUtils.writeExcel(fileName, dataList, ExamHistoryExcel.class);
                 ExcelUtils.outputWorkBook(fileName, workbook, response);
@@ -433,12 +455,13 @@ public class ResourceController extends BaseController {
 
     /**
      * 获取导出excel数据
+     *
      * @param myPage
      * @param dataList
      */
-    public void writeDate(MyPage<CourseDeliveryDTO>  myPage, List<Object> dataList,Pageable pageable) {
+    public void writeDate(MyPage<CourseDeliveryDTO> myPage, List<Object> dataList, Pageable pageable) {
         Integer pages = myPage.getPages();
-        while (myPage.getPageNum() <= pages){
+        while (myPage.getPageNum() <= pages) {
             List<CourseDeliveryDTO> list = myPage.getDataList();
             for (int i = 0; i < list.size(); i++) {
                 ExamHistoryExcel data = new ExamHistoryExcel();

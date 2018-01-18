@@ -9,7 +9,8 @@
     </select>
 
     <select id="findRateResultExcludeDetails" resultType="cn.medcn.meet.dto.StarRateResultDTO">
-        SELECT t.title,t.info,AVG(th.score) AS avg_score, COUNT(th.course_id) AS score_count
+        SELECT  t.id,t.title,t.info,AVG(th.score) AS avg_score,
+        COUNT(th.course_id) AS score_count,t.`star_rate_flag` AS starStatus
         FROM t_audio_course t
         LEFT JOIN  t_csp_star_rate_history th
         ON t.id = th.course_id
