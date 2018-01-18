@@ -3,29 +3,36 @@ package cn.medcn.csp.admin.controllor.website;
 import cn.medcn.article.model.ArticleCategory;
 import cn.medcn.article.model.News;
 import cn.medcn.article.service.NewsService;
-import cn.medcn.common.Constants;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.admin.log.Log;
+import com.alibaba.fastjson.JSONObject;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 /**
  * Created by Liuchangling on 2018/1/16.
@@ -44,13 +51,14 @@ public class NewsController extends BaseController {
 
     /**
      * 查询新闻列表
+     *
      * @param pageable
      * @param keyword
      * @param model
      * @return
      */
     @RequestMapping(value = "/list")
-    public String findNewsList(Pageable pageable, String keyword,Model model) {
+    public String findNewsList(Pageable pageable, String keyword, Model model) {
         if (StringUtils.isNotEmpty(keyword)) {
             model.addAttribute("keyword", keyword);
 
@@ -111,9 +119,9 @@ public class NewsController extends BaseController {
             news.setId(StringUtils.nowStr());
             news.setCreateTime(new Date());
             newsService.insert(news);
-            addFlashMessage(redirectAttributes,"发布成功");
+            addFlashMessage(redirectAttributes, "发布成功");
         } else {
-            addErrorFlashMessage(redirectAttributes,"发布失败");
+            addErrorFlashMessage(redirectAttributes, "发布失败");
 
         }
         return "redirect:/website/news/list";
@@ -125,9 +133,9 @@ public class NewsController extends BaseController {
     public String updateNewsContent(News news, RedirectAttributes redirectAttributes) {
         if (news != null) {
             newsService.updateByPrimaryKeySelective(news);
-            addFlashMessage(redirectAttributes,"修改成功");
+            addFlashMessage(redirectAttributes, "修改成功");
         } else {
-            addErrorFlashMessage(redirectAttributes,"修改失败");
+            addErrorFlashMessage(redirectAttributes, "修改失败");
         }
         return "redirect:/website/news/list";
     }
@@ -140,23 +148,24 @@ public class NewsController extends BaseController {
         if (id != null) {
             int delSta = newsService.deleteByPrimaryKey(id);
             if (delSta != 1) {
-                addErrorFlashMessage(redirectAttributes,"删除失败");
+                addErrorFlashMessage(redirectAttributes, "删除失败");
             }
         } else {
-            addErrorFlashMessage(redirectAttributes,"删除失败");
+            addErrorFlashMessage(redirectAttributes, "删除失败");
         }
         return "redirect:/website/news/list";
     }
 
     /**
      * 上传新闻图片
+     *
      * @param file
      * @return
      */
-    @RequestMapping(value = "/upload")
+    @RequestMapping(value = "/upload/img")
     @ResponseBody
-    @Log(name = "上传新闻图片")
-    public String uploadImg(MultipartFile file){
+    @Log(name = "上传新闻小图片")
+    public String uploadImg(MultipartFile file) {
         if (file != null) {
             String fileName = file.getOriginalFilename();
             String suffix = FileUtils.getSuffix(fileName, false);
@@ -216,4 +225,94 @@ public class NewsController extends BaseController {
         }
         return null;
     }
+
+
+    /**
+     * 上传新闻图片
+     *
+     * @return
+     */
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @ResponseBody
+    @Log(name = "上传新闻图片")
+    public String uploadNewsImg(HttpServletRequest request, HttpServletResponse response,
+                                @RequestParam("imgFile") MultipartFile[] imgFile) {
+        String imgFolder = "news/images/";
+
+        // 当天新闻图片日期文件夹
+        String dateFolderPath = CalendarUtils.getCurrentDate();
+
+        // 上传保存的新闻图片地址
+        String savePath = appFileUploadBase + imgFolder + dateFolderPath + "/";
+
+        // 前端显示的图片URL
+        String saveUrl = appFileBase + imgFolder + dateFolderPath + "/";
+
+        // 定义允许上传的文件扩展名
+        HashMap<String, String> extMap = new HashMap<String, String>();
+        String imgSuffix = "gif,jpg,jpeg,png,bmp";
+        extMap.put("image", imgSuffix);
+
+        response.setContentType("text/html; charset=UTF-8");
+
+        if (!ServletFileUpload.isMultipartContent(request)) {
+            return error("请选择文件");
+        }
+        // 检查目录
+        File uploadDir = new File(savePath);
+        if (!uploadDir.isDirectory()) {
+            return error("上传目录不存在");
+        }
+        // 检查目录写权限
+        if (!uploadDir.canWrite()) {
+            return error("上传目录没有写权限");
+        }
+
+        String dirName = request.getParameter("dir");
+        if (dirName == null) {
+            dirName = "image";
+        }
+
+        // 创建文件夹
+        File saveDirFile = new File(savePath);
+        if (!saveDirFile.exists()) {
+            saveDirFile.mkdirs();
+        }
+
+        // 保存文件
+        for (MultipartFile iFile : imgFile) {
+            String fileName = iFile.getOriginalFilename();
+            // 检查扩展名
+            String fileExt = FileUtils.getSuffix(fileName, false).toLowerCase();
+            if (!Arrays.<String>asList(extMap.get(dirName).split(",")).contains(fileExt)) {
+                return error("上传文件扩展名是不允许的扩展名。\n只允许" + extMap.get(dirName) + "格式。");
+            }
+
+            String newFileName = StringUtils.nowStr() + "." + fileExt;
+            String smallImgUrl = null;
+            try {
+                File uploadedFile = new File(savePath, newFileName);
+
+                // 写入文件
+                iFile.transferTo(uploadedFile);
+
+                // 生成缩略图
+                smallImgUrl = FileUtils.thumbnailUploadImage(uploadedFile, FileUtils.thumbWidth,
+                                FileUtils.thumbWidth, savePath, savePath );
+
+            } catch (Exception e) {
+                return error("上传文件失败");
+            }
+
+            Map<String, String> map = new HashMap();
+            map.put("url", saveUrl + newFileName);
+            map.put("smallImgUrl", smallImgUrl);
+            return success(map);
+        }
+
+        return null;
+
+    }
+
+
 }

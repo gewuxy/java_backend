@@ -6,15 +6,28 @@ import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Header;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import javax.sound.sampled.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * Created by lixuan on 2017/1/5.
  */
 public class FileUtils {
+
+    // 生成新闻缩略图路径
+    public static String realUploadPath = "Z:\\news\\images\\";
+
+    // 缩略图片宽
+    public static int thumbWidth = 120;
+
+    // 缩略图片高
+    public static int thumbHeight = 120;
+
 
     public static String readFromInputStream(InputStream inputStream){
         InputStreamReader isr = null;
@@ -344,7 +357,39 @@ public class FileUtils {
     }
 
 
-    public static void main(String[] args) {
+    /**
+     * 上传图片 生成缩略图
+     * @param file
+     * @param width
+     * @param height
+     * @param uploadPath 上传路径相对路径
+     * @param realUploadPath 原图实际路径
+     * @return
+     */
+    public static String thumbnailUploadImage(File file, int width, int height, String uploadPath, String realUploadPath){
 
+        //缩略图实际存储路径
+        String des = realUploadPath + "s_" + file.getName();
+        try {
+
+            Thumbnails.of(file).size(width, height).toFile(new File(des));
+            //Thumbnails.of(file.getInputStream()).size(width, height).toFile(des);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return des;
+    }
+
+
+    public static void main(String[] args) {
+        //缩略图实际存储路径
+        String dateFolderPath = CalendarUtils.getCurrentDate();
+        String filePath = realUploadPath + dateFolderPath + "\\";
+        System.out.println(filePath);
+
+        File file = new File(filePath + "18011816525170399094.png");
+
+        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbWidth, filePath, filePath));
     }
 }
