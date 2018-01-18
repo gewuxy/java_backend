@@ -1032,6 +1032,10 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/report")
     @ResponseBody
     public String report(Integer type, Integer courseId, String shareUrl){
+        if(CheckUtils.isEmpty(shareUrl)){
+            shareUrl = audioService.getMeetShareUrl(appCspBase, LocalUtils.Local.zh_CN.name(), courseId, false);
+        }
+
         EmailTemplate template = emailTempService.selectByPrimaryKey(EmailTempService.REPORT_TEMPLATE_ID);
 
         if (template != null) {

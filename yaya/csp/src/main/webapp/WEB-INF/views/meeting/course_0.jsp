@@ -199,6 +199,7 @@
             console.log("load audio source error ...");
             console.log("is playing = " + playing);
             console.log("isVideo.length == " + isVideo.length);
+            $(".boxAudio").addClass("none");
             clearTimeout(slideTimer);
             if (playing){
                 if (isVideo.length == 0){
@@ -472,6 +473,7 @@
             }
             dataSrc = swiperCurrent.attr('audio-src');
             //如果有音频，才进行播放
+            alert(dataSrc.length);
             if(dataSrc.length > 0){
                 $('.boxAudio').removeClass('none');
                 popupPalyer.load(dataSrc);
@@ -493,16 +495,23 @@
 
         }
 
+        var localFlag = false;
 
 
         //播放按钮
         $(".button-icon-state").on('click',function(){
-            changePlayerStete();
+            if(localFlag){
+                $('.button-icon-play').addClass('none').siblings().removeClass('none');
+            } else {
+                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
+            }
+            //changePlayerStete();
         })
 
         var changePlayerStete = function(state){
+
+            $('.button-icon-play').addClass('none').siblings().removeClass('none');
             if(playerState || state == true){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
@@ -511,18 +520,13 @@
                     popupPalyer.play();
                 }
             } else {
-                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
                 playerState = true;
-                //this = window
 
                 //有video文件
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).pause();
                 } else {
                     popupPalyer.pause();
-//                    $(this).on('touchstart',function(){
-//                        popupPalyer.play();
-//                    })
                 }
 
             }
@@ -548,7 +552,7 @@
             $('.html5ShadePlay').hide();
             popupPalyer.play();
             playing = true;
-            changePlayerStete(false);
+            changePlayerStete(true);
         } else {
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
@@ -556,7 +560,7 @@
                 $(this).hide();
                 popupPalyer.play();
                 playing = true;
-                changePlayerStete(false);
+                changePlayerStete(true);
             });
         }
 
