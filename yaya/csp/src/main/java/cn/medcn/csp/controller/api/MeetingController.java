@@ -1157,16 +1157,19 @@ public class MeetingController extends CspBaseController {
         }
         StarRateResultDTO dto = new StarRateResultDTO();
         dto.setStarStatus(course.getStarRateFlag());
-        String local = LocalUtils.getLocalStr();
-        boolean abroad = LocalUtils.isAbroad();
-        String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
-        //判断二维码是否存在 不存在则重新生成
-        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
-        boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
-        if (!qrCodeExists) {
-            QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
+        //开启了星评，生成二维码
+        if(course.getStarRateFlag()){
+            String local = LocalUtils.getLocalStr();
+            boolean abroad = LocalUtils.isAbroad();
+            String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
+            //判断二维码是否存在 不存在则重新生成
+            String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+            boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
+            if (!qrCodeExists) {
+                QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
+            }
+            dto.setStartCodeUrl(fileBase + qrCodePath);
         }
-        dto.setStartCodeUrl(fileBase + qrCodePath);
         return success(dto);
     }
 
