@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import org.springframework.util.StringUtils;
 import cn.medcn.sys.model.SystemProperties;
 
+import java.util.Date;
+
 /**
  * Created by lixuan on 2017/5/3.
  */
@@ -87,6 +89,8 @@ public class AppUserDTO {
 
     //个人资料完整度
     private Integer integrity ;
+
+    private Date registerDate;
 
     public static AppUserDTO buildFromDoctor(AppUser user){
         AppUserDTO dto = new AppUserDTO();

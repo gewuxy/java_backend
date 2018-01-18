@@ -28,6 +28,25 @@
         ORDER BY regist_date DESC
     </select>
 
+    <select id="findDoctorAccounts" resultType="cn.medcn.user.dto.AppUserDTO">
+      SELECT u.id,u.username,u.nickname,u.mobile,u.regist_date AS registerDate,u.province,u.city,u.zone,d.unit_name AS hospital,d.sub_unit_name AS department,u.headimg FROM t_app_user u LEFT JOIN t_app_user_detail d ON u.id = d.user_id
+        <if test="id == null">
+            WHERE u.pub_flag!=1 AND  u.authed = TRUE
+            <if test="keyword!=null">
+                AND (
+                u.username LIKE CONCAT('%',#{keyword}, '%') OR
+                u.nickname LIKE CONCAT('%',#{keyword}, '%') OR
+                u.mobile LIKE CONCAT('%',#{keyword}, '%')
+                )
+            </if>
+            ORDER BY u.regist_date DESC
+        </if>
+        <if test="id != null">
+            WHERE u.id = #{id}
+        </if>
+
+    </select>
+
     <insert id="importFans" >
         INSERT INTO t_app_attention(attention_time, slaver_id, master_id)
         SELECT NOW() AS attention_time, u.id AS slaver_id ,#{unitId} AS master_id
