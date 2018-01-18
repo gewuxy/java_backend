@@ -16,7 +16,7 @@
     <div class="tab-bd">
         <div class="table-box-div1 mar-btm-1 meeting-contribute">
             <div class="table-top-box clearfix">
-                <a href="#" class="changeListButton"><i class="icon-card none"></i><i class="icon-list"></i></a>
+                <a href="#" class="changeListButton"><i class="icon-card "></i><i class="icon-list none"></i></a>
                 <a href="#" id="exportBtn" class="mask-le cur">导出Excel投稿历史</a>
                 <span class="search-box">
                      <form id="searchForm" action="${ctx}/func/res/list" method="post">
@@ -37,50 +37,74 @@
                     </span>
                 </div>
             </div>
-            <table class="table-box-1 star-table-list" id="deliveryList">
-                <colgroup>
-                    <col class="table-td-9">
-                    <col class="table-td-6">
-                    <col class="table-td-2">
-                    <col class="table-td-4">
-                    <col class="table-td-5">
-                </colgroup>
-                <tbody>
-                <c:forEach items="${page.dataList}" var="d">
-                    <tr>
-                        <td class="table-td-9">
-                            <c:if test="${d.starRateFlag == true}">
-                                <div class="star"><span class="full"></span></div><div class="grade ">${d.score}&nbsp;分</div>
-                            </c:if>
-                            <c:if test="${d.starRateFlag == false}">
-                                <span class="star-info info-hook"></span>
-                            </c:if>
-                        </td>
-                        <td class="table-td-6">
-                            <a href="">${d.title}</a>
-                        </td>
-                        <td class="table-td-2">
-                            <span>${d.category}</span>
-                        </td>
-                        <td class="table-td-4 tb-popupBox-img">
-							<span class="img">
-								<img src="${ctxStatic}/img/hz-detail-img-info.jpg" class="img-radius" width="32" height="32" alt="">
-							</span>
-                            <span class="text">${d.category}</span>
-                        </td>
-                        <td class="table-td-5">
-                            <a href="javascript:;" class="popup-player-hook" courseId="${d.id}">预览</a><i class="rowSpace">|</i><a href="${ctx}/func/meet/edit?courseId=${d.id}">立即发布</a>
-                        </td>
-                </c:forEach>
-                </tbody>
-            </table>
+            <div class="resource-list clearfix" id="deliveryList">
+                <div class="row clearfix">
+                    <c:forEach items="${page.dataList}" var="d">
+                        <div class="col-lg-response">
+                            <div class="resource-list-box">
+                                <div class="resource-list-item">
+                                    <div class="resource-img ">
+                                        <img src="${d.coverUrl}" alt="" class="img-response">
+                                        <div class="resource-link">
+                                            <a href="#" class="resource-icon-play popup-player-hook" courseId="${d.id}">
+                                                <i></i>
+                                                预览
+                                            </a><a href="${ctx}/func/meet/edit?courseId=${d.id}" class="resource-icon-edit">
+                                            <i></i>
+                                            立即发布
+                                        </a>
+                                        </div>
+                                        <c:if test="${d.playType == 2}">
+                                            <div class="resource-state"><span class="icon iconfont icon-minIcon26"></span></div>
+                                        </c:if>
+                                        <c:if test="${d.starRateFlag == true}">
+                                            <div class="grade-state star-hook" courseId="${d.id}"><span class="icon-grade-star"><i></i>${d.score}&nbsp;分</span></div>
+                                        </c:if>
+                                        <c:if test="${d.starRateFlag == false}">
+                                            <div class="grade-state info-hook" courseId="${d.id}"><span class="icon-grade-info"></span></div>
+                                        </c:if>
+                                    </div>
+                                    <div class="resource-info">
+                                        <div class="fl">
+                                            <img src="${d.avatar}" alt="">
+                                        </div>
+                                        <div class="oh">
+                                            <div class="row clearfix">
+                                                <div class="col-lg-10">
+                                                    <c:if test="${empty d.name}">
+                                                        <h3>&nbsp;</h3>
+                                                    </c:if>
+                                                    <c:if test="${not empty d.name}">
+                                                        <h3>${d.name}</h3>
+                                                    </c:if>
+                                                    <c:if test="${empty d.email}">
+                                                        <p>&nbsp;</p>
+                                                    </c:if>
+                                                    <c:if test="${not empty d.email}">
+                                                        <p>${d.email}</p>
+                                                    </c:if>
+                                                </div>
+                                                <c:if test="${d.playType != 0}">
+                                                    <div class="col-lg-2">
+                                                        <div class="state">直播</div>
+                                                    </div>
+                                                </c:if>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
             <%@include file="/WEB-INF/include/pageable.jsp" %>
         </div>
     </div>
 </div>
 <form id="pageForm" name="pageForm" action="${ctx}/func/res/list" method="post">
     <input type="hidden" name="pageSize" id="pageSize" value="${page.pageSize}">
-    <input type="hidden" name="pageNum" id="pageNum" value="<c:if test="${page.pages>1}"> ${page.pageNum}</c:if>">
+    <input type="hidden" name="pageNum" id="pageNum" <c:if test="${page.pages>1}">value="${page.pageNum}"</c:if>>
     <input type="hidden" name="keyWord" value="${keyWord}">
     <input type="hidden" name="pages" id="pages" value="${page.pages}">
     <input type="hidden" name="viewType" id="viewType" value="${viewType}">
@@ -94,42 +118,5 @@
 <script src="${ctxStatic}/js/layer/layer.js"></script>
 <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
 <script src="${ctxStatic}/js/screenfull.min.js"></script>
-
-<script>
-    $(function(){
-        //上传Hover 提示
-        $(".question-tipsHover-hook").mouseenter(function(){
-            layer.tips('CSPmeeting是全球领先的云同步回放会议系统，开通该功能可接收来自全球各地用户的学术会议投稿。', '.question-tipsHover-hook', {
-                tips: [3, '#333'],
-                time:2000
-            });
-        });
-
-        $("#popup_checkbox_2").click(function(){
-            var flag = 0;
-            if($('#popup_checkbox_2').is(':checked')){
-                flag = 1;
-            }
-            $.ajax({
-                //服务器的地址
-                url:"${ctx}/func/res/change?flag="+flag,
-                dataType:'json', //返回数据类型
-                type:'POST', //请求类型
-                contentType: "application/json; charset=utf-8",
-                success: function(data) {
-                    if(data.code == 0){
-                       if(flag == 0){
-                           //关闭投稿
-                           $("#deliveryList").empty();
-                           $(".page-box").empty();
-                       }else{
-                           window.location.href='${ctx}/func/res/list?isOpen='+flag;
-                       }
-                    }
-                }
-            });
-        });
-    });
-</script>
 </body>
 </html>

@@ -9,7 +9,7 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <title></title>
+    <title>查看简介和星评</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <link rel="stylesheet" href="${ctxStatic}/css/swiper.min.css" />
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
@@ -21,61 +21,75 @@
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="${ctxStatic}/js/screenfull.min.js"></script>
     <script src="${ctxStatic}/js/popupAudioPalyer.js"></script>
-
+    <style>
+        .layer-grade-popup { display: block;}
+    </style>
 </head>
 <body>
 <!--弹出星评-->
 <div class="layer-grade-popup layer-grade-star-box">
-    <div class="layer-hospital-popup-title">
-        <strong>&nbsp;</strong>
-        <div class="layui-layer-close"><img src="./images/popup-close.png" alt=""></div>
-    </div>
     <div class="layer-grade-main clearfix">
         <div class="metting-grade-info hidden-box">
-            <div class="title">【新手指引】您好，会讲</div>
-            <div class="main">&nbsp;&nbsp;CSPmeeting主要以邮箱作为账号进行注册，注册后您的邮箱将会收到一封激活邮件，点击链接即可完成账号激活；同时支持使用手机验证码或敬信数字平台（含YaYa医师会议管理系统和PRM患者管理系统）/微信/微博/Facebook/Twitter等第三方账号授权登录。包括本协议期限内的用户所使用的各项服务和软件的升级和更新。</div>
+            <div class="title">${result.title}</div>
+            <div class="main">&nbsp;&nbsp;${result.info}</div>
+            <input type="hidden" name="courseId" id="courseId" value="${result.id}">
         </div>
-        <div class="metting-star">
-            <div class="star-title">综合评分</div>
-            <div class="star-box star-max"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-            <div class="star-list hidden-box clearfix">
-                <div class="star-list-row clearfix">
-                    <div class="fr">
-                        <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                    </div>
-                    <div class="fl"> 内容实用</div>
-                </div>
-                <div class="star-list-row clearfix">
-                    <div class="fr">
-                        <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                    </div>
-                    <div class="fl"> 整体安排</div>
-                </div>
-                <div class="star-list-row clearfix">
-                    <div class="fr">
-                        <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                    </div>
-                    <div class="fl"> 语言表达</div>
-                </div>
-                <div class="star-list-row clearfix">
-                    <div class="fr">
-                        <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                    </div>
-                    <div class="fl"> 课件质量</div>
-                </div>
-                <div class="star-list-row clearfix">
-                    <div class="fr">
-                        <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                    </div>
-                    <div class="fl"> 学员互动</div>
-                </div>
-            </div>
-            <div class="footer-row">参与评分人数：2人</div>
+        <div class="metting-star" id="rateDetail">
         </div>
     </div>
 </div>
 <script>
+    $(function () {
+        //如果有评分，进行加载
+        if ('${result.starStatus}' == "true") {
+            var vagScore = parseInt(${result.avgScore});
+            var html = '<div class="star-title">综合评分</div><div class="star-box star-max"><div class="star">';
+            html = initStar(vagScore, html);
+            html += '</div><div class="grade ">' + ${result.avgScore} +'分</div></div>';
+            var courseId = $("#courseId").val();
+            $.ajax({
+                url: "${ctx}/func/res/rate/detail?courseId=" + courseId,
+                dataType: 'json', //返回数据类型
+                type: 'POST', //请求类型
+                async: false,
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.code == 0) {
+                        var dataList = data.data;
+                        if (dataList != null) {
+                            html += '<div class="star-list hidden-box clearfix">';
+                            for (var j = 0; j < dataList.length; j++) {
+                                html += '<div class="star-list-row clearfix"><div class="fr"><div class="star-box star-min"><div class="star">';
+                                html = initStar(dataList[j].avgScore, html);
+                                html += '</div><div class="grade">' + dataList[j].avgScore + '分</div></div>';
+                                html += '</div><div class="fl">' + dataList[j].title + '</div></div>';
+                            }
+                            html += '</div>';
+                        }
+                    } else {
+                        layer.msg("获取星评详情失败");
+                    }
+                }
+            });
+            html += '<div class="footer-row">参与评分人数：' + ${result.scoreCount} +'</div>';
+            $("#rateDetail").html(html);
+        }
+    });
 
+    //加载星星
+    function initStar(score, html) {
+        var i = score % 1 == 0 ? 1 : 0;
+        for (i; i <= score; i++) {
+            if (score - i >= 1 || score - i == 0) html += '<span class="full"></span>';
+            if (0 < score - i && score - i < 1) {
+                html += '<span class="half"></span>';
+            }
+        }
+        for (score % 1 == 0 ? i : i++; i <= 5; i++) {
+            html += '<span class="null"></span>';
+        }
+        return html;
+    }
 </script>
 </body>
 </html>
