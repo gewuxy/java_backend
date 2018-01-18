@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.text.DecimalFormat;
+import java.util.Date;
 
 /**
  * 星评统计结果
@@ -36,6 +37,8 @@ public class StarRateResultDTO implements Serializable {
 
     //星评二维码地址
     protected String startCodeUrl;
+
+    protected Date serverTime = new Date();
 
 
     public float getAvgScore(){

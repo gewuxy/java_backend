@@ -96,6 +96,8 @@ public class AudioCourse implements Serializable {
 
     public enum SourceType{
         YaYa,
-        csp;
+        csp,
+        template,//制作模板
+        redPacket;//有声红包
     }
 }
