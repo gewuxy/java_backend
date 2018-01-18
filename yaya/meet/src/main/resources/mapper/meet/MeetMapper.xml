@@ -256,10 +256,10 @@
     </select>
 
     <select id="searchMeetFolderInfo" resultType="cn.medcn.meet.dto.MeetFolderDTO">
-        SELECT * FROM v_meet_folder_final WHERE type=0
+        SELECT * FROM v_meet_folder_search WHERE type=0
         and meet_name like CONCAT('%',#{keyword}, '%')
         UNION
-        SELECT * FROM v_meet_folder_final
+        SELECT * FROM v_meet_folder_search
         WHERE state BETWEEN 1 AND 3 AND type=1
         and meet_name like CONCAT('%',#{keyword}, '%')
     </select>
