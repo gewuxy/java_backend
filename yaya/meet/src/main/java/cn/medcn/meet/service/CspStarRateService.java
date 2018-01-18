@@ -33,4 +33,17 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
      */
     void doScore(CspStarRateHistory history);
 
+    /**
+     * 获取课件及星评基本评分
+     * @param courseId
+     * @return
+     */
+    StarRateResultDTO getTotleRateResult(Integer courseId);
+
+    /**
+     * 获取星评详细
+     * @param courseId
+     * @return
+     */
+    List<StarRateResultDTO> getStarRateDetail(Integer courseId);
 }

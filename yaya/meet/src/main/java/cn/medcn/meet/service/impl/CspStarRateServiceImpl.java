@@ -64,15 +64,15 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
      */
     @Override
     public List<StarRateResultDTO> findRateResult(Integer courseId) {
-        List<StarRateResultDTO> result;
+        List<StarRateResultDTO> result = null;
 
         List<CspStarRateOption> options = findRateOptions(courseId);
         if (CheckUtils.isEmpty(options)) {//没有分项评分的情况
-            result = cspStarRateHistoryDAO.findRateResultExcludeDetails(courseId);
+            StarRateResultDTO results = cspStarRateHistoryDAO.findRateResultExcludeDetails(courseId);
+            result.add(results);
         } else {
             result = cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
         }
-
         return result;
     }
 
@@ -104,5 +104,25 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
             }
 
         }
+    }
+
+    /**
+     * 获取课件及星评基本评分
+     * @param courseId
+     * @return
+     */
+    @Override
+    public StarRateResultDTO getTotleRateResult(Integer courseId) {
+        return cspStarRateHistoryDAO.findRateResultExcludeDetails(courseId);
+    }
+
+    /**
+     * 获取星评详细
+     * @param courseId
+     * @return
+     */
+    @Override
+    public List<StarRateResultDTO> getStarRateDetail(Integer courseId) {
+            return cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
     }
 }

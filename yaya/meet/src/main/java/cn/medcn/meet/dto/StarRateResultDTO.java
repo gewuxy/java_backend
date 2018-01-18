@@ -17,6 +17,9 @@ import java.text.DecimalFormat;
 public class StarRateResultDTO implements Serializable {
 
     public static final String MULTIPLE_RATE_LOCAL_KEY = "page.meeting.multiple.score";
+
+    //课件id
+    protected Integer id;
     //评分项ID
     protected int optionId = 0;
     //评分项名称
