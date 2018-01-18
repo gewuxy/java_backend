@@ -373,7 +373,7 @@
                 window.location.reload();
             },
             cancel :function(){
-
+                window.location.reload();
             },
         });
     }
