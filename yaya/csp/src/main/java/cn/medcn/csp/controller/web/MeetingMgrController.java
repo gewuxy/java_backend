@@ -39,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
@@ -204,25 +205,6 @@ public class MeetingMgrController extends CspBaseController {
     }
 
     /**
-     * 首页点击查看星评
-     * @param courseId
-     * @return
-     */
-    /*@RequestMapping(value = "/clickStar/{courseId}")
-    public String HaveStarRate(@PathVariable Integer courseId,Model model){
-        //TODO 待验证
-        AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
-        if (audioCourse.getStarRateFlag() == false){
-            model.addAttribute("info",audioCourse.getInfo());
-        }else{
-            List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
-            model.addAttribute("result",result);
-        }
-        return localeView("/meeting/screen");
-    }*/
-
-
-    /**
      * 进入投屏界面
      *
      * @param courseId
@@ -338,14 +320,11 @@ public class MeetingMgrController extends CspBaseController {
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
-            //TODO 星评详情
+            /*//TODO 星评详情 evaluate
             //星评信息
-            /*if (course.getStarRateFlag()== true) {
+            if (course.getStarRateFlag()== true) {
                 List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
-                model.addAttribute("rateOptions",result);
-
-                //List<CspStarRateOption> rateOptions = cspStarRateService.findRateOptions(courseId);
-                // model.addAttribute("rateOptions",rateOptions);
+                model.addAttribute("result",result);
             }*/
         } else {
             course = audioService.findLastDraft(principal.getId());
@@ -382,6 +361,25 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("flux", format.format(fluxValue));
         model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
+    }
+
+    /**
+     * 操作星评
+     * @param courseId
+     * @param option
+     */
+    @RequestMapping(value = "/doStar")
+    public void doStarEvaluate(Integer courseId,CspStarRateOption option){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course.getStarRateFlag() == false){
+            course.setStarRateFlag(true);
+            option.setCourseId(courseId);
+            cspStarRateService.insert(option);
+        }else{
+            course.setStarRateFlag(false);
+            //删除历史分数 和 详情表中的分数
+        }
+        audioService.updateByPrimaryKey(course);
     }
 
     /**
@@ -602,7 +600,7 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course,StarRateResultDTO dto, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
         MeetWatermark newWatermark = course.getWatermark();
 
@@ -623,7 +621,16 @@ public class MeetingMgrController extends CspBaseController {
         }
         //更新操作，包括更新或生成水印
         Integer packageId = getWebPrincipal().getPackageId();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+        try {
+            Date liveStarDate = simpleDateFormat.parse(liveTime);
+            course.getLive().setStartTime(liveStarDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
+
+        //保存星评
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
