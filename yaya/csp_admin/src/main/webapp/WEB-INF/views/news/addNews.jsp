@@ -91,7 +91,6 @@
 
     <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/website/news/add" enctype="multipart/form-data">
         <input type="hidden" name="uploadimages" id="uploadimages" value="">
-        <input type="hidden" name="articleImg" id="imgUrl" value="" maxlength="50" class="required input-xlarge">
 
         <div class="control-group">
             <label class="control-label">新闻标题:</label>
@@ -147,29 +146,6 @@
                 <textarea id="kindeditor" name="content" cols="200" rows="10" style="width:800px;height:360px;visibility:hidden;"></textarea>
             </div>
         </div>
-
-        <%--<div class="layui-input-block">
-            <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="content"></textarea>
-            <script type="text/javascript">
-                layui.use(['form', 'layedit', 'laydate'], function() {
-                    var form = layui.form
-                        , layer = layui.layer
-                        , layedit = layui.layedit
-                        , laydate = layui.laydate;
-                    layedit.set({
-                        uploadImage: {
-                            url: '${ctx}/website/news/upload' //接口url
-                            ,type: 'post' //默认post
-                        }
-                    });
-                    //创建一个编辑器
-                    var editIndex = layedit.build('content',{
-                            height:400
-                        }
-                    );
-                });
-            </script>
-        </div>--%>
 
         <div class="control-group">
             <label class="control-label">上传图片:</label>
