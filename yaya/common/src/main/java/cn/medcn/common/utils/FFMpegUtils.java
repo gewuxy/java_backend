@@ -230,9 +230,9 @@ public class FFMpegUtils {
     public static void main(String[] args) {
         //concatMp4("D:/lixuan/test/concat/concat.mp4", false, "D:/lixuan/test/clip.mp4", "D:/lixuan/test/clip2.mp4");
 
-        String filePath = "D:/lixuan/test/merge/merge.mp3";
+        String filePath = "C:/Users/Administrator/Desktop/test/merge.mp3";
 
-        String[] targetFiles = new String[]{"D:/lixuan/test/merge/09166.mp3", "D:/lixuan/test/merge/0916612.mp3", "D:/lixuan/test/merge/0916613.mp3"};
+        String[] targetFiles = new String[]{"C:/Users/Administrator/Desktop/test/01.mp3","C:/Users/Administrator/Desktop/test/02.mp3", "C:/Users/Administrator/Desktop/test/03.mp3", "C:/Users/Administrator/Desktop/test/04.mp3"};
         concatMp3(filePath, true, targetFiles);
     }
 }
