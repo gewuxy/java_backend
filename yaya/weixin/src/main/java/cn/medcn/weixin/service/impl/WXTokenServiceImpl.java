@@ -1,6 +1,7 @@
 package cn.medcn.weixin.service.impl;
 
 import cn.medcn.common.ctrl.FilePath;
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.FileUtils;
 import cn.medcn.common.utils.HttpUtils;
@@ -18,7 +19,12 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.Map;
+
+import static cn.medcn.weixin.config.MiniProgramConfig.*;
+import static cn.medcn.weixin.config.MiniProgramConfig.ACCESS_TOKEN_STR;
+import static cn.medcn.weixin.config.MiniProgramConfig.ACCESS_TOKEN_URL;
 
 /**
  * Created by lixuan on 2017/7/18.
@@ -132,5 +138,27 @@ public class WXTokenServiceImpl extends WXBaseServiceImpl implements WXTokenServ
         String downloadUrl = WeixinConfig.QRCODE_SHOW_URL + "?ticket=" + ticket;
         String saveDir = fileUploadBase + FilePath.QRCODE + File.separator;
         FileUtils.downloadNetWorkFile(downloadUrl, saveDir, sceneId + "." + FileTypeSuffix.IMAGE_SUFFIX_JPG.suffix);
+    }
+
+
+    /**
+     * 获取微信小程序access_token
+     * @param appId
+     * @param secret
+     * @return
+     */
+    @Override
+    public String getMiniAccessToken(String appId, String secret) throws SystemException {
+        Map<String,Object> map = new HashMap<>();
+        map.put(MINI_APPID_KEY,appId);
+        map.put(MINI_SECRET_KEY,secret);
+        map.put(GRANT_TYPE_KEY,ACCESS_TOKEN_GRANT_TYPE_VALUE);
+        String result = HttpUtils.get(ACCESS_TOKEN_URL,map);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String accessToken = jsonObject.getString(ACCESS_TOKEN_STR);
+        if(StringUtils.isEmpty(accessToken)){
+            throw new SystemException("获取token失败");
+        }
+        return accessToken;
     }
 }

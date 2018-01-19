@@ -7,12 +7,8 @@
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
 </head>
 <body>
-
-<!-- main -->
 <div class="g-main clearfix">
-    <!-- header -->
     <%@include file="resHeader.jsp" %>
-    <!-- header end -->
     <div class="tab-bd">
         <div class="table-box-div1 mar-btm-1 meeting-contribute">
             <div class="table-top-box clearfix">
@@ -50,7 +46,7 @@
                     <tr>
                         <td class="table-td-9">
                             <c:if test="${d.starRateFlag == true}">
-                                <div class="star-box star-min star-hook" courseId="${d.id}"><div class="star"><span class="full"></span></div><div class="grade ">${d.score}分</div></div>
+                                <div class="star-box star-min star-hook" courseId="${d.id}"><div class="star"><span class="full"></span></div><div class="grade ">${d.avgScore}分</div></div>
                             </c:if>
                             <c:if test="${d.starRateFlag == false}">
                                 <span class="star-info info-hook" courseId="${d.id}"></span>

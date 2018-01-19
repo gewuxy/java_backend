@@ -35,6 +35,9 @@ import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import cn.medcn.weixin.config.WeixinConfig;
+import cn.medcn.weixin.service.WXTokenService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -82,6 +85,9 @@ public class MeetingController extends CspBaseController {
     @Autowired
     protected LiveService liveService;
 
+    @Autowired
+    protected WXTokenService wxTokenService;
+
     @Value("${ZeGo.replay.expire.days}")
     protected int expireDays;
 
@@ -93,6 +99,12 @@ public class MeetingController extends CspBaseController {
 
     @Value("${csp.app.csp.base}")
     protected String appCspBase;
+
+    @Value("${mini.appid}")
+    private String appId;
+
+    @Value("${mini.secret}")
+    private String secret;
 
     @Autowired
     protected EmailTempService emailTempService;
@@ -1209,6 +1221,30 @@ public class MeetingController extends CspBaseController {
         liveService.publish(order);
 
         return success();
+    }
+
+
+    /**
+     * 获取小程序二维码
+     * @param id 课程id
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/mini/qrcode")
+    @ResponseBody
+    public String getMiniQRCode(Integer id,String page) throws SystemException, IOException {
+        if(id == null){
+            return error(local("courseId.empty"));
+        }
+        //获取access_token
+        String accessToken = redisCacheUtils.getCacheObject(CSP_MINI_ACCESS_TOKEN_KEY);
+        if(StringUtils.isEmpty(accessToken)){
+            accessToken = wxTokenService.getMiniAccessToken(appId,secret);
+            //有效时间 7200s
+            redisCacheUtils.setCacheObject(CSP_MINI_ACCESS_TOKEN_KEY,accessToken, WeixinConfig.TOKEN_EXPIRE_TIME);
+        }
+        String codeUrl  = audioService.getMiniQRCode(id,page,accessToken);
+        return success(codeUrl);
     }
 
 }

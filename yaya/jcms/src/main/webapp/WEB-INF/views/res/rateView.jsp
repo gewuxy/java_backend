@@ -1,10 +1,3 @@
-<%--
-  Created by IntelliJ IDEA.
-  User: Administrator
-  Date: 2018/1/18
-  Time: 10:16
-  To change this template use File | Settings | File Templates.
---%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <!DOCTYPE html>
 <html lang="zh-CN">
@@ -42,10 +35,10 @@
     $(function () {
         //如果有评分，进行加载
         if ('${result.starStatus}' == "true") {
-            var vagScore = parseInt(${result.avgScore});
+            var vagScore = '${result.avgScore}';
             var html = '<div class="star-title">综合评分</div><div class="star-box star-max"><div class="star">';
             html = initStar(vagScore, html);
-            html += '</div><div class="grade ">' + ${result.avgScore} +'分</div></div>';
+            html += '</div><div class="grade ">' + vagScore +'分</div></div>';
             var courseId = $("#courseId").val();
             $.ajax({
                 url: "${ctx}/func/res/rate/detail?courseId=" + courseId,

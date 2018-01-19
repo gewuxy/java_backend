@@ -70,11 +70,6 @@ public class CourseDeliveryDTO implements Serializable {
     private String mobile;
     //投稿时间
     private String deliveryTime;
-    //评分人数
-    private Integer num;
-    //评分数
-    private Integer score;
-
     //录播ppt总时长
     private Integer duration;
 
@@ -101,9 +96,10 @@ public class CourseDeliveryDTO implements Serializable {
     //星评人数
     protected Integer scoreCount;
     //综合评分
-    protected Integer avgScore;
+    protected float avgScore;
     //观看密码
     protected String password;
+
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
