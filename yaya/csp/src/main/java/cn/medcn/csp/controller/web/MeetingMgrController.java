@@ -714,7 +714,7 @@ public class MeetingMgrController extends CspBaseController {
     }
 
 
-    @RequestMapping(value = "/course_info/${courseId}")
+    @RequestMapping(value = "/course_info/{courseId}")
     @ResponseBody
     public String infoAndRateResult(@PathVariable Integer courseId){
         Map<String, Object> result = new HashMap<>();
