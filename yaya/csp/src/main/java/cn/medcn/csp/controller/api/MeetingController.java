@@ -18,6 +18,7 @@ import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
 import cn.medcn.meet.dto.StarRateResultDTO;
+import cn.medcn.meet.service.CourseThemeService;
 import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
@@ -104,6 +105,8 @@ public class MeetingController extends CspBaseController {
     @Autowired
     protected CspUserService cspUserService;
 
+    @Autowired
+    protected CourseThemeService courseThemeService;
 
     /**
      * 会议阅览

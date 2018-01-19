@@ -169,7 +169,7 @@
 
     <select id="findAudioCourseList" resultType="cn.medcn.meet.model.AudioCourse">
         SELECT * from t_audio_course where source_type = 1
-        and deleted != 1 AND locked != 1 AND publish =1 AND guide != 1 AND csp_user_id = #{cspUserId}
+        and deleted != 1 AND locked != 1 AND published =1 AND guide != 1 AND csp_user_id = #{cspUserId}
         ORDER BY create_time asc
     </select>
     
