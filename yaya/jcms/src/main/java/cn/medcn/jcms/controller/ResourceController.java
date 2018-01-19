@@ -6,6 +6,7 @@ import cn.medcn.common.excptions.NotEnoughCreditsException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.ExcelUtils;
 import cn.medcn.common.utils.StringUtils;
@@ -35,6 +36,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -434,7 +436,7 @@ public class ResourceController extends BaseController {
         pageable.setPageSize(50);
         pageable.put("userId", userId);
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
-        String fileName = "投稿历史" + StringUtils.nowStr() + ".xls";
+        String fileName = "投稿历史.xls";
         List<Object> dataList = Lists.newArrayList();
         if (myPage.getDataList().size() > 0) {
             writeDate(myPage, dataList, pageable);
@@ -463,16 +465,16 @@ public class ResourceController extends BaseController {
         Integer pages = myPage.getPages();
         while (myPage.getPageNum() <= pages) {
             List<CourseDeliveryDTO> list = myPage.getDataList();
-            for (int i = 0; i < list.size(); i++) {
+            for(CourseDeliveryDTO dto:list){
                 ExamHistoryExcel data = new ExamHistoryExcel();
-                data.setTitle(list.get(i).getTitle());
-                data.setCategory(list.get(i).getCategory());
-                data.setName(list.get(i).getName());
-                data.setDeliveryTime(list.get(i).getDeliveryTime());
-                data.setEmail(list.get(i).getEmail());
-                data.setMobile(list.get(i).getMobile());
-                data.setNum(list.get(i).getNum().toString());
-                data.setScore(list.get(i).getScore().toString());
+                data.setTitle(dto.getTitle());
+                data.setCategory(dto.getCategory());
+                data.setName(dto.getName());
+                data.setDeliveryTime(dto.getDeliveryTime() != null ? dto.getDeliveryTime().substring(0,dto.getDeliveryTime().length()-2):"");
+                data.setEmail(dto.getEmail());
+                data.setMobile(dto.getMobile());
+                data.setNum(dto.getScoreCount().toString());
+                data.setScore(String.valueOf(dto.getAvgScore()));
                 dataList.add(data);
             }
             pageable.setPageNum(myPage.getPageNum() + 1);
