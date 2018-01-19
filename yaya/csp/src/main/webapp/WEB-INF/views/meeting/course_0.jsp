@@ -164,6 +164,7 @@
     var asAllItem = audiojs.createAll();
     var playing = false;
     var started = false;
+    var hasAudioUrl = true;
     var slideTimer ;
 
     $(function(){
@@ -171,7 +172,11 @@
 
         function slideToNext(){
             clearTimeout(slideTimer);
-            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
+            slideTimer = setTimeout(function(){
+                if(!playerState){
+                    galleryTop.slideNext();
+                }
+            }, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];
@@ -198,14 +203,15 @@
             console.log("is playing = " + playing);
             console.log("isVideo.length == " + isVideo.length);
             $(".boxAudio").addClass("none");
+            console.log("playerState = " + playerState);
+            hasAudioUrl = false;
             clearTimeout(slideTimer);
             if (started){
-                if (isVideo.length == 0 && playing){
+                if (isVideo.length == 0 && !playerState){
                     slideToNext();
                 }
             } else {
                 if (isVideo.length == 0){
-                    alert("playing ...");
                     $('.html5ShadePlay').hide();
                     popupPalyer.play();
                     playing = true;
@@ -462,6 +468,7 @@
 
         //播放器切换加载对应的路径
         var swiperChangeAduio = function(current){
+            hasAudioUrl = true;
             playing = true;
             var swiperCurrent;
 
@@ -483,7 +490,8 @@
                 popupPalyer.load('isNotSrc');
                 console.log('没加载音频');
                 $('.boxAudio').addClass('none');
-                changePlayerStete(false);
+                changePlayerStete(true);
+                slideToNext();
             }
             //如果有视频
             if(activeItemIsVideo.length > 0){
@@ -505,8 +513,9 @@
         })
 
         var changePlayerStete = function(state){
+
             if(playerState || state == true){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
+
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
@@ -514,9 +523,11 @@
                 } else {
                     popupPalyer.play();
                 }
+                if (!hasAudioUrl){
+                    slideToNext();
+                }
             } else {
                 playerState = true;
-                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
                 //有video文件
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).pause();
@@ -524,6 +535,11 @@
                     popupPalyer.pause();
                 }
 
+            }
+            if (!playerState){
+                $('.button-icon-play').addClass('none').siblings().removeClass('none');
+            } else {
+                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
             }
         }
 
