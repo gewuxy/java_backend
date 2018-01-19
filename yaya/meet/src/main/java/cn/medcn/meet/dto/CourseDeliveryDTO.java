@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -99,6 +100,12 @@ public class CourseDeliveryDTO implements Serializable {
     protected float avgScore;
     //观看密码
     protected String password;
+
+    public float getAvgScore(){
+        DecimalFormat format = new DecimalFormat( "#0.0");
+        String avgStr = format.format(this.avgScore);
+        return Float.valueOf(avgStr);
+    }
 
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){

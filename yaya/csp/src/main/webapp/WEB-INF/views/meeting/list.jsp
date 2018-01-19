@@ -1116,40 +1116,46 @@
             </div>
             <div class="metting-star none">
                 <div class="star-title"><fmt:message key="page.meeting.multiple.score"/> </div>
-                <div class="star-box star-max"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span id="avgScoreSpan"></span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                <div class="star-box star-max"><div class="star"><span class="null maxStar"></span><span class="null maxStar"></span><span class="null maxStar"></span><span class="null maxStar"></span><span class="null maxStar"></span></div><div class="grade "><span id="avgScoreSpan">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
                 <div class="star-list  clearfix">
-                    <div class="star-list-row clearfix">
+                    <div class="star-list-row clearfix" index="0">
                         <div class="fr">
-                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
                         </div>
-                        <div class="fl"> 内容实用</div>
+                        <div class="fl"> </div>
+                    </div>
+                    <div class="star-list-row clearfix" index="1">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                        </div>
+                        <div class="fl"> </div>
+                    </div>
+                    <div class="star-list-row clearfix" index="2">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                        </div>
+                        <div class="fl"> </div>
+                    </div>
+                    <div class="star-list-row clearfix" index="3">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                        </div>
+                        <div class="fl"> </div>
+                    </div>
+                    <div class="star-list-row clearfix" index="4">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                        </div>
+                        <div class="fl"> </div>
                     </div>
                     <div class="star-list-row clearfix">
                         <div class="fr">
-                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
                         </div>
-                        <div class="fl"> 整体安排</div>
-                    </div>
-                    <div class="star-list-row clearfix">
-                        <div class="fr">
-                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                        </div>
-                        <div class="fl"> 语言表达</div>
-                    </div>
-                    <div class="star-list-row clearfix">
-                        <div class="fr">
-                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                        </div>
-                        <div class="fl"> 课件质量</div>
-                    </div>
-                    <div class="star-list-row clearfix">
-                        <div class="fr">
-                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
-                        </div>
-                        <div class="fl"> 学员互动</div>
+                        <div class="fl"> </div>
                     </div>
                 </div>
-                <div class="footer-row">参与评分人数：2人</div>
+                <div class="footer-row"><fmt:message key="page.meeting.star.rate.attend"/><span id="scoreCount">0</span>人</div>
             </div>
         </div>
     </div>
@@ -1281,11 +1287,66 @@
     }
 
     $(function(){
+
+        function handleMultipleResult(result){
+            var $maxStar = $(".star-max").find(".star");
+            $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
+            $("#avgScoreSpan").text(0);
+            $("#scoreCount").text(0);
+            if(result != undefined && result.avgScore > 0){
+                var avgScore = result.avgScore;
+                $("#avgScoreSpan").text(avgScore);
+                $("#scoreCount").text(result.scoreCount);
+                var index = 1;
+                $maxStar.find(".maxStar").each(function(){
+                    if(avgScore > index){
+                        $(this).removeClass("null").addClass("full");
+                    } else {
+                        $(this).removeClass("null").addClass("half");
+                        return false;
+                    }
+                    index ++;
+                });
+            }
+
+        }
+
+
+        function handleDetailResult(result){
+            $(".detailScore").text("0");
+            $(".fl").text(" ");
+            $(".star-list-row").addClass("none");
+            if (result != undefined && result.length > 0){
+                for(var index in result){
+                    var detail = result[index];
+                    var avgScore = detail.avgScore;
+                    var $currentRow = $(".star-list-row[index='"+index+"']");
+                    $currentRow.find(".fl").text(" " + detail.title);
+                    $currentRow.find(".detailScore").text(avgScore);
+                    var index = 1;
+                    $currentRow.find(".star").find("span").each(function(){
+                        if(avgScore > index){
+                            $(this).removeClass("null").addClass("full");
+                        } else {
+                            $(this).removeClass("null").addClass("half");
+                            return false;
+                        }
+                        index ++;
+                    });
+
+                    $currentRow.removeClass("none");
+                }
+            }
+        }
+
         $(".star-hook, .info-hook").click(function(){
             var id = $(this).attr("courseId");
             ajaxGet('${ctx}/mgr/meet/course_info/' + id, {}, function(data){
                 $(".metting-grade-info").find(".title").text(data.data.title);
                 $(".metting-grade-info").find(".main").text(data.data.info);
+                handleMultipleResult(data.data.multipleResult);
+
+                handleDetailResult(data.data.detailList);
                 if(data.data.starRateFlag){
                     $(".metting-star").removeClass("none");
                 } else {

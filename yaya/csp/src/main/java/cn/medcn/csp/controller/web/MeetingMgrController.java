@@ -14,6 +14,7 @@ import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspAudioCourseDTO;
+import cn.medcn.meet.dto.StarRateInfoDTO;
 import cn.medcn.meet.service.*;
 import cn.medcn.meet.dto.StarRateResultDTO;
 import cn.medcn.meet.service.*;
@@ -718,16 +719,9 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/course_info/{courseId}")
     @ResponseBody
     public String infoAndRateResult(@PathVariable Integer courseId){
-        Map<String, Object> result = new HashMap<>();
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        result.put("starRateFlag", course.getStarRateFlag());
-        result.put("title", course.getTitle());
-        result.put("info", course.getInfo());
-        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
-            result.put("history", cspStarRateService.findRateResult(courseId));
-        }
+        StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
 
-        return success(result);
+        return success(dto);
     }
 
     @RequestMapping(value = "/password/modify/{courseId}")

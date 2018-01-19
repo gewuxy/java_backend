@@ -1,6 +1,7 @@
 package cn.medcn.meet.service;
 
 import cn.medcn.common.service.BaseService;
+import cn.medcn.meet.dto.StarRateInfoDTO;
 import cn.medcn.meet.dto.StarRateResultDTO;
 import cn.medcn.meet.model.CspStarRateHistory;
 import cn.medcn.meet.model.CspStarRateOption;
@@ -26,6 +27,13 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
      * @return
      */
     List<StarRateResultDTO> findRateResult(Integer courseId);
+
+    /**
+     * 获取最终星评结果
+     * @param courseId
+     * @return
+     */
+    StarRateInfoDTO findFinalRateResult(Integer courseId);
 
     /**
      * 用户给课件评分
