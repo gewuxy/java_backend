@@ -221,6 +221,9 @@ public class Constants {
     public static final String VIDEO_DOWNLOAD_URL = "video_download_";
     public static final String RESET_PASSWORD = "123456";
 
+    //将access_token存储在redis时使用的key
+    public static final String CSP_MINI_ACCESS_TOKEN_KEY = "csp_mini_access_token";
+
     /********** 合理用药 *************/
 
 }
