@@ -737,9 +737,7 @@
                                             <c:otherwise><fmt:message key="page.meeting.tab.live"/> </c:otherwise>
                                         </c:choose>
                                     </span>
-                                            <c:if test="${not empty course.password}">
-                                                <i class="lock"></i>
-                                            </c:if>
+                                        <i class="lock ${not empty course.password ? '':'none'}"></i>
                                         </div>
                                         <div class="resource-menu">
                                             <div class="col-lg-6">
@@ -962,11 +960,11 @@
                         <span href="javascript:;" class="code" id="btnSendCode" onclick="randomNum()"><fmt:message key='page.meeting.button.auto.create'/></span>
                     </label>
                     <span class="cells-block hiht"><fmt:message key='page.meeting.tips.watch.password'/></span>
-                    <span class="cells-block error none"><fmt:message key='page.meeting.tips.watch.password.holder'/></span>
+                    <span class="cells-block error none" id="passwordError"><fmt:message key='page.meeting.tips.watch.password.holder'/></span>
                     <div class="layer-hospital-popup-bottom">
                         <div class="fr">
                             <span class="button min-btn layui-layer-close"><fmt:message key="page.common.cancel"/> </span>
-                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value=""><fmt:message key="page.meeting.button.password.sure"/> </a>
+                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value="" onclick="modifyPassword()"><fmt:message key="page.meeting.button.password.sure"/> </a>
                         </div>
                     </div>
                 </div>
@@ -1157,6 +1155,35 @@
     </div>
 </div>
 
+<!--密码框弹出成功-->
+<div class="lock-popup-box-succeed">
+    <div class="layer-hospital-popup lock-popup clearfix">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="lock-popup-main login-form-item pr">
+                    <div class="cells-block t-center">
+                        <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
+                        <p class="hiht"><fmt:message key="page.meeting.tips.password.success"/></p>
+                    </div>
+                    <div class="cells-block lock-popup-showRandomNum">1345</div>
+                    <span class="cells-block hiht t-center"><fmt:message key="page.meeting.tips.password.delete"/></span>
+                    <div class="layer-hospital-popup-bottom clearfix">
+                        <div class="fr">
+                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" onclick="deletePassword()"><fmt:message key="page.meeting.button.password.cancel"/></a>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
 
 <script>
     //随机数函数（根据自己的思路来，我这里只是简单呈现效果）
@@ -1175,13 +1202,16 @@
 
     function openPasswordView(){
         var pwd = $("#courseView_" + courseId).attr("pwd");
+        $("#passwordError").addClass("none");
         $("#randomNum").val(pwd);
         //弹出观看密码
         layer.open({
             type: 1,
-            area: ['609px', '278px'],
+            area: ['609px', '328px'],
             fix: false, //不固定
             title:false,
+            anim:5,
+            isOutAnim: false,
             closeBtn:0,
             shadeClose:true,
             content: $('.lock-popup-box'),
@@ -1189,11 +1219,65 @@
                 layer.close(layer.index-1);
             },
             cancel :function(){
-
-            },
+                $("#passwordError").addClass("none");
+            }
         });
 
 
+    }
+
+    function modifyPassword(){
+        var pwd = $.trim($("#randomNum").val());
+        if(pwd == ''){
+            $("#passwordError").removeClass("none");
+            return;
+        }
+        ajaxGet('${ctx}/mgr/meet/password/modify/'+courseId, {"password":pwd}, function(data){
+            if (data.code == 0){
+                $("#courseView_" + courseId).find(".lock").removeClass("none");
+                $("#courseView_" + courseId).attr("pwd", pwd);
+                $(".lock-popup-showRandomNum").text(pwd);
+                openConfirmPasswordView();
+            } else {
+                layer.msg(data.err);
+            }
+
+        });
+    }
+
+    function openConfirmPasswordView(){
+        //弹出观看密码成功
+        layer.open({
+            type: 1,
+            area: ['609px', '400px'],
+            fix: false, //不固定
+            title:false,
+            closeBtn:0,
+            shadeClose:true,
+            content: $('.lock-popup-box-succeed'),
+            success:function(){
+                layer.close(layer.index-1);
+                //清空原来已设置的密码
+                $('#randomNum').val('');
+            },
+            cancel :function(){
+                layer.closeAll();
+            },
+        });
+
+    }
+
+    function deletePassword(){
+        ajaxGet('${ctx}/mgr/meet/password/del/'+courseId, {}, function(data){
+            if (data.code == 0){
+                $("#courseView_" + courseId).find(".lock").addClass("none");
+                $("#courseView_" + courseId).attr("pwd", "");
+                openPasswordView();
+            } else {
+                layer.msg(data.err);
+            }
+
+        });
     }
 
     $(function(){
