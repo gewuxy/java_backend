@@ -103,6 +103,7 @@ public class MeetingMgrController extends CspBaseController {
     @Autowired
     protected CspUserPackageHistoryService cspUserPackageHistoryService;
 
+    @Autowired
     protected CspStarRateService cspStarRateService;
 
     /**
@@ -719,6 +720,8 @@ public class MeetingMgrController extends CspBaseController {
     public String infoAndRateResult(@PathVariable Integer courseId){
         Map<String, Object> result = new HashMap<>();
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        result.put("starRateFlag", course.getStarRateFlag());
+        result.put("title", course.getTitle());
         result.put("info", course.getInfo());
         if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
             result.put("history", cspStarRateService.findRateResult(courseId));

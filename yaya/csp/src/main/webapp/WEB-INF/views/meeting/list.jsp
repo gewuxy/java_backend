@@ -38,7 +38,7 @@
             }
 
             //判断是否新用户，新用户弹出购买套餐
-            if(${newUser}){
+            if("${newUser}"){
                 layer.open({
                     type: 2,
                     title: false,
@@ -699,19 +699,19 @@
 
                                                     <c:choose>
                                                         <c:when test="${course.avgScore > 0}">
-                                                            <div class="resource-fixed-icon star-hook">
+                                                            <div class="resource-fixed-icon star-hook" courseId="${course.id}">
                                                                 <div class="resource-star "><span class="icon-resource-star">${course.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span></div>
                                                             </div>
                                                         </c:when>
                                                         <c:otherwise>
-                                                            <div class="resource-fixed-icon star-hook">
+                                                            <div class="resource-fixed-icon star-hook" courseId="${course.id}">
                                                                 <div class="resource-star "><span class="icon-resource-star"><fmt:message key="page.meeting.tips.unrate"/> </span></div>
                                                             </div>
                                                         </c:otherwise>
                                                     </c:choose>
                                                 </c:when>
                                                 <c:otherwise>
-                                                    <div class="resource-fixed-icon info-hook">
+                                                    <div class="resource-fixed-icon info-hook" courseId="${course.id}">
                                                         <div class="resource-icon-info "></div>
                                                     </div>
                                                 </c:otherwise>
@@ -1103,20 +1103,20 @@
 
 
 <!--弹窗星评-->
-    <div class="layer-grade-star-box" id="starRate">
+<div class="layer-grade-star-box" id="starRate">
     <div class="layer-hospital-popup layer-grade-popup clearfix">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><img src="./images/popup-close.png" alt=""></div>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-main ">
             <div class="metting-grade-info ">
-                <div class="title">【新手指引】您好，会讲</div>
-                <div class="main">&nbsp;&nbsp;CSPmeeting主要以邮箱作为账号进行注册，注册后您的邮箱将会收到一封激活邮件，点击链接即可完成账号激活；同时支持使用手机验证码或敬信数字平台（含YaYa医师会议管理系统和PRM患者管理系统）/微信/微博/Facebook/Twitter等第三方账号授权登录。包括本协议期限内的用户所使用的各项服务和软件的升级和更新。</div>
+                <div class="title"></div>
+                <div class="main"></div>
             </div>
-            <div class="metting-star">
+            <div class="metting-star none">
                 <div class="star-title"><fmt:message key="page.meeting.multiple.score"/> </div>
-                <div class="star-box star-max"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                <div class="star-box star-max"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span id="avgScoreSpan"></span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
                 <div class="star-list  clearfix">
                     <div class="star-list-row clearfix">
                         <div class="fr">
@@ -1169,7 +1169,7 @@
                         <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
                         <p class="hiht"><fmt:message key="page.meeting.tips.password.success"/></p>
                     </div>
-                    <div class="cells-block lock-popup-showRandomNum">1345</div>
+                    <div class="cells-block lock-popup-showRandomNum"></div>
                     <span class="cells-block hiht t-center"><fmt:message key="page.meeting.tips.password.delete"/></span>
                     <div class="layer-hospital-popup-bottom clearfix">
                         <div class="fr">
@@ -1281,7 +1281,35 @@
     }
 
     $(function(){
+        $(".star-hook, .info-hook").click(function(){
+            var id = $(this).attr("courseId");
+            ajaxGet('${ctx}/mgr/meet/course_info/' + id, {}, function(data){
+                $(".metting-grade-info").find(".title").text(data.data.title);
+                $(".metting-grade-info").find(".main").text(data.data.info);
+                if(data.data.starRateFlag){
+                    $(".metting-star").removeClass("none");
+                } else {
+                    $(".metting-star").addClass("none");
+                }
+                layer.open({
+                    type: 1,
+                    area: ['670px', '90%'],
+                    fix: false, //不固定
+                    title:false,
+                    anim:5,
+                    closeBtn:0,
+                    shadeClose:true,
+                    content: $('.layer-grade-star-box'),
+                    success:function(){
 
+                    },
+                    cancel :function(){
+
+                    },
+                });
+            });
+
+        });
     });
 </script>
 </body>
