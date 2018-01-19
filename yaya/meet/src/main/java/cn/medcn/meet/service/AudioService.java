@@ -370,5 +370,5 @@ public interface AudioService extends BaseService<AudioCourse>  {
 
     List<AudioCourseDetail> findDetailsByCourseId(Integer id);
 
-    String getMeetShareUrl(String local,Integer courseId,boolean abroad);
+    String getMeetShareUrl(String appCspBase ,String local,Integer courseId,boolean abroad);
 }

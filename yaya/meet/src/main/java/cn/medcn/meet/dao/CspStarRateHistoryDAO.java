@@ -24,5 +24,5 @@ public interface CspStarRateHistoryDAO extends Mapper<CspStarRateHistory> {
      * @param courseId
      * @return
      */
-    List<StarRateResultDTO> findRateResultExcludeDetails(@Param("courseId") Integer courseId);
+    StarRateResultDTO findRateResultExcludeDetails(@Param("courseId") Integer courseId);
 }

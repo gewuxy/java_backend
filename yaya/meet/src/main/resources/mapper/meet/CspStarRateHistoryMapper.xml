@@ -9,8 +9,13 @@
     </select>
 
     <select id="findRateResultExcludeDetails" resultType="cn.medcn.meet.dto.StarRateResultDTO">
-        SELECT avg(score) AS avg_score, count(course_id) AS score_count
-        FROM t_csp_star_rate_history WHERE course_id = #{courseId} GROUP BY course_id
+        SELECT  t.id,t.title,t.info,AVG(th.score) AS avg_score,
+        COUNT(th.course_id) AS score_count,t.`star_rate_flag` AS starStatus
+        FROM t_audio_course t
+        LEFT JOIN  t_csp_star_rate_history th
+        ON t.id = th.course_id
+        WHERE t.id = #{courseId}
+        GROUP BY t.id,th.course_id
     </select>
 
 </mapper>

@@ -7,20 +7,24 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.common.utils.ExcelUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.goods.model.Credits;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.jcms.security.Principal;
 import cn.medcn.jcms.utils.SubjectUtils;
-import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.dto.CourseReprintDTO;
-import cn.medcn.meet.dto.CourseSharedDTO;
-import cn.medcn.meet.dto.ResourceCategoryDTO;
+import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.CourseDelivery;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseDeliveryService;
+import cn.medcn.meet.service.CspStarRateService;
+import cn.medcn.user.dto.MoneyStatisticsExcel;
+import cn.medcn.user.dto.MoneyUSDStatisticsExcel;
+import cn.medcn.user.dto.PackageRenewExcel;
 import cn.medcn.user.service.AppUserService;
+import com.google.common.collect.Lists;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -29,7 +33,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static cn.medcn.common.Constants.SHARE_PAGE_SIZE;
 
@@ -51,6 +58,9 @@ public class ResourceController extends BaseController {
 
     @Autowired
     private CourseDeliveryService courseDeliveryService;
+
+    @Autowired
+    private CspStarRateService cspStarRateService;
 
     @Value("${app.file.base}")
     private String appFileBase;
@@ -353,19 +363,20 @@ public class ResourceController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String users(Integer isOpen, Pageable pageable, Model model) {
-
+    public String users(Integer isOpen, Integer viewType, String keyWord, Pageable pageable, Model model) {
+        if (viewType == null) viewType = 0;
+        String view = viewType == 0 ? "/res/deliveryCard" : "/res/deliveryList";
         Integer userId = SubjectUtils.getCurrentUserid();
         if (isOpen == null) {  //点击资源平台动作
             //查询用户是否开启投稿功能
-
             int flag = appUserService.findDeliveryFlag(userId);
             if (flag == 0) {  //没有开启投稿功能
-                return "/res/deliveryList";
+                return view;
             }
         }
         pageable.setPageSize(12);
         pageable.put("userId", userId);
+        pageable.put("keyWord", keyWord);
         MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
         for (CourseDeliveryDTO dto : myPage.getDataList()) {
             if (dto.getAvatar() != null && !dto.getAvatar().startsWith("http")) {
@@ -377,8 +388,95 @@ public class ResourceController extends BaseController {
         }
         model.addAttribute("page", myPage);
         model.addAttribute("flag", 1);
-        return "/res/deliveryList";
+        model.addAttribute("keyWord", keyWord);
+        model.addAttribute("viewType", viewType);
+        return view;
+    }
+
+    /**
+     * 查看简介跟星评评分
+     *
+     * @param courseId
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/rate/view")
+    public String rateView(Integer courseId, Model model) {
+        StarRateResultDTO result = cspStarRateService.getTotleRateResult(courseId);
+        model.addAttribute("result", result);
+        return "/res/rateView";
+    }
+
+    /**
+     * 获取星评详情
+     *
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/rate/detail")
+    @ResponseBody
+    public String detail(Integer courseId) {
+        List<StarRateResultDTO> list = cspStarRateService.getStarRateDetail(courseId);
+        return success(list);
     }
 
 
+    /**
+     * 导出数据
+     *
+     * @param response
+     * @throws SystemException
+     */
+    @RequestMapping(value = "/export")
+    public void export(HttpServletResponse response) throws SystemException {
+        Integer userId = SubjectUtils.getCurrentUserid();
+        Pageable pageable = new Pageable();
+        pageable.setPageSize(50);
+        pageable.put("userId", userId);
+        MyPage<CourseDeliveryDTO> myPage = courseDeliveryService.findDeliveryList(pageable);
+        String fileName = "投稿历史" + StringUtils.nowStr() + ".xls";
+        List<Object> dataList = Lists.newArrayList();
+        if (myPage.getDataList().size() > 0) {
+            writeDate(myPage, dataList, pageable);
+        }
+        if (dataList.size() > 0) {
+            try {
+                Workbook workbook = ExcelUtils.writeExcel(fileName, dataList, ExamHistoryExcel.class);
+                ExcelUtils.outputWorkBook(fileName, workbook, response);
+            } catch (IOException e) {
+                e.printStackTrace();
+                throw new SystemException("文件导出失败");
+            } catch (SystemException e) {
+                e.printStackTrace();
+                throw new SystemException("文件导出失败");
+            }
+        }
+    }
+
+    /**
+     * 获取导出excel数据
+     *
+     * @param myPage
+     * @param dataList
+     */
+    public void writeDate(MyPage<CourseDeliveryDTO> myPage, List<Object> dataList, Pageable pageable) {
+        Integer pages = myPage.getPages();
+        while (myPage.getPageNum() <= pages) {
+            List<CourseDeliveryDTO> list = myPage.getDataList();
+            for (int i = 0; i < list.size(); i++) {
+                ExamHistoryExcel data = new ExamHistoryExcel();
+                data.setTitle(list.get(i).getTitle());
+                data.setCategory(list.get(i).getCategory());
+                data.setName(list.get(i).getName());
+                data.setDeliveryTime(list.get(i).getDeliveryTime());
+                data.setEmail(list.get(i).getEmail());
+                data.setMobile(list.get(i).getMobile());
+                data.setNum(list.get(i).getNum().toString());
+                data.setScore(list.get(i).getScore().toString());
+                dataList.add(data);
+            }
+            pageable.setPageNum(myPage.getPageNum() + 1);
+            myPage = courseDeliveryService.findDeliveryList(pageable);
+        }
+    }
 }

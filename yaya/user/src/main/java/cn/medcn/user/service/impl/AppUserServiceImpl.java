@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -399,7 +396,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
      * @param user
      */
     @Override
-    public void updateDoctor(AppUser user)  throws Exception{
+    public void updateDoctor(AppUser user)  {
         user.setAuthed(true);  //防止user所有字段为null导致抛出异常
         if(!StringUtils.isEmpty(user.getProvince()) && !StringUtils.isEmpty(user.getCity())){ //防止zone为空没有更新
             if(user.getZone() == null){
@@ -1013,6 +1010,35 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
                 store.setStore(activeStore);
                 activeStoreDAO.updateByPrimaryKeySelective(store);
             }
+        }
+    }
+
+
+    /**
+     * 医生账号列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<AppUserDTO> findDoctorAccounts(Pageable pageable) {
+        startPage(pageable, true);
+        MyPage<AppUserDTO> page = MyPage.page2Mypage((Page) appUnitDAO.findDoctorAccounts(pageable.getParams()));
+        return page;
+    }
+
+    /**
+     * 为选定的单位号导入指定数量的粉丝
+     *
+     * @param unitIds
+     * @param fans
+     */
+    @Override
+    public void doImportFans(Integer[] unitIds, Integer fans) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fans", fans);
+        for (Integer unitId : unitIds) {
+            params.put("unitId", unitId);
+            appUnitDAO.importFans(params);
         }
     }
 }

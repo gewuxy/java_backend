@@ -3,9 +3,31 @@
  */
 
 var fbToken;
+var fbKey;
+
+
+//将facebook的key赋值给fbKey,同时返回twitterKey
+function getTwitterKey(){
+    var twitterKey;
+    $.ajax({
+        url:ctx+'/mgr/user/twitter/facebook',
+        data:{},
+        async:false,
+        type:'post',
+        dataType:'json',
+        success:function(data) {
+            if (data.code == 0){
+                twitterKey = data.data.twitter;
+                fbKey = data.data.fb;
+            }
+        }
+    });
+    return twitterKey;
+}
+
 window.fbAsyncInit = function() {
     FB.init({
-        appId :'263615967498316',
+        appId :fbKey,
         xfbml : true,
         version : 'v2.6' //facebook登录版本
     });
@@ -41,7 +63,7 @@ window.twttr = (function (d, s, id) {
 
 var log = console.log;
 hello.init(
-    {'twitter': 'hqhT16vzm2ZJxJary0WOULGfv'},//公司运营的twitter账号的key
+    {'twitter': getTwitterKey()},//公司运营的twitter账号的key
     {oauth_proxy: 'https://auth-server.herokuapp.com/proxy'}
 );
 

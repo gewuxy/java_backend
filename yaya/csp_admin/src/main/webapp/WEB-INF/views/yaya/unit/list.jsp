@@ -30,16 +30,22 @@
     /
     <input placeholder="单位号/邮箱" value="${keyword}" size="40"  type="search" name="keyword" maxlength="50" class="required"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
+    <input id="importBtn" class="btn btn-primary" type="button" value="导入粉丝"/>
 </form>
+
+<form id="importForm" name="importForm">
+    <input type="hidden" name="fans" id="fans" value="0">
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
-    <thead><tr><th>账号</th><th>单位号</th><th>注册日期</th><th>激活码数量</th><th>是否推荐</th><th>账号类型</th><th>操作</th></tr></thead>
+    <thead><tr><th width="50" valign="top"><input type="checkbox" id="checkAll"></th><th>账号</th><th>单位号</th><th>注册日期</th><th>粉丝数量</th><th>激活码数量</th><th>是否推荐</th><th>账号类型</th><th>操作</th></tr></thead>
     <tbody>
     <c:if test="${not empty page.dataList}">
         <c:forEach items="${page.dataList}" var="user">
             <tr>
+                <td><input type="checkbox" name="unitIds" value="${user.id}"></td>
                 <td>${user.username}</td>
                 <td>${user.nickname}</td>
                 <td><fmt:formatDate value="${user.registDate}" pattern="yyyy/MM/dd"/></td>
+                <td>${user.fans}</td>
                 <td>${empty user.activeStore ? '0': user.activeStore}</td>
                 <td>${user.tuijian ? '<span style="color:green">已推荐</span>':'<span style="color:blue">未推荐</span>'}</td>
                 <td>${user.testFlag ? '<span style="color:blue">测试账号</span>' : '<span style="color:green">正式账号</span>'}</td>
@@ -56,7 +62,7 @@
                             </c:otherwise>
                         </c:choose>
                         &nbsp;&nbsp;
-                        <a style="cursor: pointer;" userId="${user.id}" class="resetPwd"></a>
+                        <a style="cursor: pointer;" userId="${user.id}" class="resetPwd">重置密码</a>
                     </shiro:hasPermission>
                 </td>
             </tr>
@@ -69,22 +75,80 @@
     </c:if>
     </tbody>
 </table>
+</form>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
 <script>
     $(function(){
-        $("#resetPwd").click(function(){
+        $(".resetPwd").click(function(){
             var userId = $(this).attr("userId");
             top.layer.confirm("确定要重置该单位号的密码？", function(){
                 $.get('${ctx}/yaya/unit/pwd/reset/' + userId, {}, function (data) {
                     if (data.code == 0){
-
+                        top.layer.closeAll('dialog');
+                        top.layer.open({
+                            type: 0,
+                            area:['200px', '200px'],
+                            content: '密码已重置为 : ' + data.data.currentPwd //这里content是一个普通的String
+                        });
                     } else {
                         layer.msg(data.err);
+                        top.layer.closeAll('dialog');
                     }
-                    top.layer.closeAll('dialog');
+
                 },'json');
             });
 
+        });
+
+
+        $("#checkAll").change(function(){
+            if ($(this).is(":checked")){
+                $("input[name='unitIds']").prop("checked", "true");
+            } else {
+                $("input[name='unitIds']").removeAttr("checked");
+            }
+        });
+
+        $("#importBtn").click(function(){
+            var checked = false;
+            $("input[name='unitIds']").each(function(){
+                if ($(this).is(":checked")){
+                    checked = true;
+                    return false;
+                }
+            });
+
+            if (!checked){
+                top.layer.msg("请勾选要导入粉丝的单位号");
+                return false;
+            } else {
+                top.layer.prompt({title: '输入要导入的粉丝数量[1-500]，并确认', formType: 0}, function(pass, index){
+                    var reg = /^[1-9]+[0-9]*$/g
+                    if (!reg.test(pass)){
+                        top.layer.msg("请输入正确的数字");
+                    } else if(pass > 500){
+                        top.layer.msg("请输入500或以下的数字");
+                    } else {
+                        top.layer.closeAll();
+                        $("#fans").val(pass);
+                        var index = top.layer.load(1, {
+                            shade: [0.1,'#fff'] //0.1透明度的白色背景
+                        });
+                        $.post('${ctx}/yaya/unit/batch/fans', $("#importForm").serialize(), function (data) {
+                            top.layer.close(index);
+                            if(data.code == 0){
+                                top.layer.msg('操作成功', {time:2000}, function () {
+                                    window.location.reload();
+                                });
+                            } else {
+                                top.layer.msg(data.err);
+                            }
+                        }, 'json');
+                    }
+
+
+                });
+            }
         });
     });
 </script>

@@ -89,6 +89,9 @@ public class MeetingController extends CspBaseController {
     @Value("${app.file.base}")
     protected String fileBase;
 
+    @Value("${csp.app.csp.base}")
+    protected String appCspBase;
+
     @Autowired
     protected EmailTempService emailTempService;
 
@@ -1029,6 +1032,10 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/report")
     @ResponseBody
     public String report(Integer type, Integer courseId, String shareUrl){
+        if(CheckUtils.isEmpty(shareUrl)){
+            shareUrl = audioService.getMeetShareUrl(appCspBase, LocalUtils.Local.zh_CN.name(), courseId, false);
+        }
+
         EmailTemplate template = emailTempService.selectByPrimaryKey(EmailTempService.REPORT_TEMPLATE_ID);
 
         if (template != null) {
@@ -1150,17 +1157,43 @@ public class MeetingController extends CspBaseController {
         }
         StarRateResultDTO dto = new StarRateResultDTO();
         dto.setStarStatus(course.getStarRateFlag());
-        String local = LocalUtils.getLocalStr();
-        boolean abroad = LocalUtils.isAbroad();
-        String shareUrl = audioService.getMeetShareUrl(local,courseId,abroad);
-        //判断二维码是否存在 不存在则重新生成
-        String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
-        boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
-        if (!qrCodeExists) {
-            QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
+        //开启了星评，生成二维码
+        if(course.getStarRateFlag()){
+            String local = LocalUtils.getLocalStr();
+            boolean abroad = LocalUtils.isAbroad();
+            String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
+            //判断二维码是否存在 不存在则重新生成
+            String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+            boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
+            if (!qrCodeExists) {
+                QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
+            }
+            dto.setStartCodeUrl(fileBase + qrCodePath);
         }
-        dto.setStartCodeUrl(fileBase + qrCodePath);
         return success(dto);
+    }
+
+
+    /**
+     * 开启星评接口
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/star_rate/open")
+    @ResponseBody
+    public String openStarRate(Integer courseId){
+        //修改直播状态为星评中状态
+        Live live = liveService.findByCourseId(courseId);
+        live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+        liveService.updateByPrimaryKey(live);
+
+        //发送开启星评指令
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(String.valueOf(courseId));
+        order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
+        liveService.publish(order);
+
+        return success();
     }
 
 }

@@ -284,6 +284,8 @@
                     if (playOver && !activeItemIsVideo.length){
                         galleryTop.slideNext();
                     }
+                } else if(data.order == 13){//开始星评
+                    // todo 弹出星评界面
                 }
             }
 

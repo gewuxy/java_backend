@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class UnitAccountDTO extends AppUser {
-    //粉丝数量
+    //激活码数量
     protected Integer activeStore = 0;
+    //粉丝数量
+    protected Integer fans;
 }

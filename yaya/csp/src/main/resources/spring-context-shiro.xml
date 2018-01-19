@@ -75,6 +75,7 @@
                 /static/**=anon
                 /mgr/login=anon
                 /mgr/user/cache/download=anon
+                /mgr/user/twitter/facebook=anon
                 /mgr/to/register=anon
                 /mgr/register=anon
                 /mgr/charge/success=anon
@@ -84,6 +85,7 @@
                 /mgr/jsCallback=anon
                 /mgr/sendCaptcha=anon
                 /mgr/**=authc
+
             </value>
         </property>
     </bean>

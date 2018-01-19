@@ -10,29 +10,32 @@
 <head>
     <title>新闻详情</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
-
     <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
-    <script type="text/javascript" src="${ctxStatic}/layer/layui.all.js"></script>
-    <link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 
+    <%--引入kindeditor富文本编辑器样式及js--%>
+    <%@include file="/WEB-INF/include/kindeditor.jsp" %>
     <script>
+
         // 是否审核的选中状态
         $(function () {
+            $("#imgId").attr("src", "${smallImgUrl}");
+
             var checkObj = ${news.authed};
             if (checkObj == 1) {
-                $("#checked").attr("checked", "checked")
+                $("#checked").attr("checked", "checked");
             } else {
-                $("#unchecked").attr("checked", "checked")
+                $("#unchecked").attr("checked", "checked");
             }
-        })
+        });
 
         // 上传图片
         function selectFile() {
             $("#uploadFile").trigger("click");
         }
+
         function fileUpload() {
             var option = {
-                url: "${ctx}/website/news/upload",
+                url: "${ctx}/website/news/upload/img",
                 type: 'POST',
                 dataType: 'json',
                 clearForm: false,
@@ -40,13 +43,14 @@
                     if (data.code == 0){
                         layer.msg("上传成功");
                         $("#imgUrl").val(data.data.imgURL);
+                        $("#simgUrl").val(data.data.smallImgUrl);
                         $("#imgId").attr("src", data.data.src);
                     }else {
                         layer.msg(data.err);
                     }
                 }
-            };
-            $("#inputForm").ajaxSubmit(option);
+             };
+            $("#inputForms").ajaxSubmit(option);
             return true;
         }
     </script>
@@ -54,11 +58,13 @@
 
 <body>
     <ul class="nav nav-tabs">
-        <li class="active"><a href="#">发布新闻</a></li>
+        <li><a href="${ctx}/website/news/list">新闻列表</a></li>
+        <li class="active"><a href="#">编辑新闻</a></li>
     </ul>
 
-    <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/website/news/update"  enctype="multipart/form-data">
+    <form id="inputForms" method="post" class="form-horizontal" action="${ctx}/website/news/update"  enctype="multipart/form-data">
         <input type="hidden" name="id" value="${news.id}"/>
+        <input type="hidden" name="uploadimages" id="uploadimages" value="">
 
         <div class="control-group">
             <label class="control-label">新闻标题:</label>
@@ -70,15 +76,11 @@
         <div class="control-group">
             <label class="control-label">新闻类别:</label>
             <div class="controls">
-                <select id="type" name="type" style="width: 100px;">
-                    <option value=""/>
-                    -- 请选择 --
-                    <option value="${news.categoryId}"/>
-                    ${news.categoryName}
+                <select name="categoryId" style="width: 200px;">
+                    <c:forEach items="${categoryList}" var="c">
+                        <option value="${c.id}" ${news.categoryId == c.id ? 'selected':''}>${c.name}</option>
+                    </c:forEach>
                 </select>
-                <script>
-                    document.getElementById("type").value="${news.categoryName}";
-                </script>
             </div>
         </div>
 
@@ -99,40 +101,21 @@
         <div class="control-group">
             <label class="control-label">摘要:</label>
             <div class="controls">
-                <textarea name="summary" rows="3" maxlength="2000" class="input-xxlarge">${news.summary}</textarea>
+                <textarea name="summary" rows="5" maxlength="2000" class="input-xxlarge">${news.summary}</textarea>
             </div>
         </div>
 
         <div class="control-group">
             <label class="control-label">关键字:</label>
             <div class="controls">
-                <input type="search" name="author" value="${news.keywords}" maxlength="50" class="required input-xlarge">
+                <input type="search" name="keywords" value="${news.keywords}" maxlength="50" class="required input-xlarge">
             </div>
         </div>
 
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">内容</label>
-            <div class="layui-input-block">
-                <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="content">${news.content}</textarea>
-                <script type="text/javascript">
-                    layui.use(['form', 'layedit', 'laydate'], function() {
-                        var form = layui.form
-                            , layer = layui.layer
-                            , layedit = layui.layedit
-                            , laydate = layui.laydate;
-                        layedit.set({
-                            uploadImage: {
-                                url: '${ctx}/website/news/upload' //接口url
-                                ,type: 'post' //默认post
-                            }
-                        });
-                        //创建一个编辑器
-                        var editIndex = layedit.build('content',{
-                                height:400
-                            }
-                        );
-                    });
-                </script>
+        <div class="control-group">
+            <label class="control-label">内容:</label>
+            <div class="controls">
+                <textarea id="kindeditor" name="content" cols="200" rows="10" style="width:800px;height:360px;visibility:hidden;">${news.content}</textarea>
             </div>
         </div>
 
@@ -143,7 +126,8 @@
                        onchange="fileUpload()">
                 <input class="btn-dr" type="button" value="上传文件" onclick="selectFile()">
                 <input type="hidden" id="hiUpload" value="${saveFileName}" name="uploadFile">
-                <input type="hidden" name="imgUrl" id="imgUrl" value="" maxlength="50" class="required input-xlarge">
+                <input type="hidden" name="articleImg" id="imgUrl" value="" maxlength="50" class="required input-xlarge">
+                <input type="hidden" name="articleImgS" id="simgUrl" value="" maxlength="50" class="required input-xlarge">
             </div>
         </div>
         <div class="control-group">
