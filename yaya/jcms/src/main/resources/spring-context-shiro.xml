@@ -88,6 +88,8 @@
                 /func/**=authc
 
                 /mng/**=authc
+                /home=authc
+                /home/=authc
                 /data/**=authc
                 /**=anon
             </value>

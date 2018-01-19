@@ -32,7 +32,9 @@ public class CourseDeliveryDTO implements Serializable {
 
     protected String coverUrl;//封面
 
-    // 直播状态 0表示未开始 1表示正在直播 2表示已关闭
+    /**
+     * @see cn.medcn.meet.model.AudioCoursePlay.PlayState
+     */
     protected Integer liveState;
 
     // ppt总页数
@@ -48,7 +50,9 @@ public class CourseDeliveryDTO implements Serializable {
     // 录播 正在播放的页码
     protected Integer playPage;
 
-    // 录播状态 0表示未开始 1表示录播中 2表示录播结束
+    /**
+     * @see cn.medcn.meet.model.AudioCoursePlay.PlayState
+     */
     protected Integer playState;
 
 
@@ -66,11 +70,6 @@ public class CourseDeliveryDTO implements Serializable {
     private String mobile;
     //投稿时间
     private String deliveryTime;
-    //评分人数
-    private Integer num;
-    //评分数
-    private Integer score;
-
     //录播ppt总时长
     private Integer duration;
 
@@ -97,7 +96,10 @@ public class CourseDeliveryDTO implements Serializable {
     //星评人数
     protected Integer scoreCount;
     //综合评分
-    protected Integer avgScore;
+    protected float avgScore;
+    //观看密码
+    protected String password;
+
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){

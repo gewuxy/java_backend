@@ -7,12 +7,8 @@
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
 </head>
 <body>
-
-<!-- main -->
 <div class="g-main clearfix">
-    <!-- header -->
     <%@include file="resHeader.jsp" %>
-    <!-- header end -->
     <div class="tab-bd">
         <div class="table-box-div1 mar-btm-1 meeting-contribute">
             <div class="table-top-box clearfix">
@@ -58,7 +54,7 @@
                                             <div class="resource-state"><span class="icon iconfont icon-minIcon26"></span></div>
                                         </c:if>
                                         <c:if test="${d.starRateFlag == true}">
-                                            <div class="grade-state star-hook" courseId="${d.id}"><span class="icon-grade-star"><i></i>${d.score}&nbsp;分</span></div>
+                                            <div class="grade-state star-hook" courseId="${d.id}"><span class="icon-grade-star"><i></i>${d.avgScore}&nbsp;分</span></div>
                                         </c:if>
                                         <c:if test="${d.starRateFlag == false}">
                                             <div class="grade-state info-hook" courseId="${d.id}"><span class="icon-grade-info"></span></div>
@@ -110,7 +106,6 @@
     <input type="hidden" name="viewType" id="viewType" value="${viewType}">
     <input type="hidden" name="isOpen" id="isOpen" value="1">
 </form>
-
 <script src="${ctxStatic}/js/jquery.min.js"></script>
 <script src="${ctxStatic}/js/slide.js"></script>
 <script src="${ctxStatic}/js/swiper.jquery.min.js"></script>

@@ -17,7 +17,9 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
+import cn.medcn.meet.dto.CourseThemeDTO;
 import cn.medcn.meet.dto.StarRateResultDTO;
+import cn.medcn.meet.service.CourseThemeService;
 import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
@@ -33,6 +35,9 @@ import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import cn.medcn.weixin.config.WeixinConfig;
+import cn.medcn.weixin.service.WXTokenService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -80,6 +85,9 @@ public class MeetingController extends CspBaseController {
     @Autowired
     protected LiveService liveService;
 
+    @Autowired
+    protected WXTokenService wxTokenService;
+
     @Value("${ZeGo.replay.expire.days}")
     protected int expireDays;
 
@@ -91,6 +99,12 @@ public class MeetingController extends CspBaseController {
 
     @Value("${csp.app.csp.base}")
     protected String appCspBase;
+
+    @Value("${mini.appid}")
+    private String appId;
+
+    @Value("${mini.secret}")
+    private String secret;
 
     @Autowired
     protected EmailTempService emailTempService;
@@ -104,6 +118,8 @@ public class MeetingController extends CspBaseController {
     @Autowired
     protected CspUserService cspUserService;
 
+    @Autowired
+    protected CourseThemeService courseThemeService;
 
     /**
      * 会议阅览
@@ -114,8 +130,19 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/view")
     @ResponseBody
     public String view(Integer courseId) {
-        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
-        return success(audioCourse);
+        Principal principal = SecurityUtils.get();
+        if (courseId == null || courseId == 0) {
+            return error(local("error.param"));
+        }
+
+        // 检查该会议是否是当前登录者的会议
+        boolean isMine = audioService.checkCourseIsMine(principal.getId(), courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+
+        CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
+        return success(themeDTO);
     }
 
 
@@ -1194,6 +1221,30 @@ public class MeetingController extends CspBaseController {
         liveService.publish(order);
 
         return success();
+    }
+
+
+    /**
+     * 获取小程序二维码
+     * @param id 课程id
+     * @return
+     * @throws SystemException
+     */
+    @RequestMapping("/mini/qrcode")
+    @ResponseBody
+    public String getMiniQRCode(Integer id,String page) throws SystemException, IOException {
+        if(id == null){
+            return error(local("courseId.empty"));
+        }
+        //获取access_token
+        String accessToken = redisCacheUtils.getCacheObject(CSP_MINI_ACCESS_TOKEN_KEY);
+        if(StringUtils.isEmpty(accessToken)){
+            accessToken = wxTokenService.getMiniAccessToken(appId,secret);
+            //有效时间 7200s
+            redisCacheUtils.setCacheObject(CSP_MINI_ACCESS_TOKEN_KEY,accessToken, WeixinConfig.TOKEN_EXPIRE_TIME);
+        }
+        String codeUrl  = audioService.getMiniQRCode(id,page,accessToken);
+        return success(codeUrl);
     }
 
 }

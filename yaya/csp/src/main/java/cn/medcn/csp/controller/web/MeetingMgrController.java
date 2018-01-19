@@ -720,4 +720,47 @@ public class MeetingMgrController extends CspBaseController {
         DecimalFormat format = new DecimalFormat( "#####0.0");
         return success(format.format(fluxValue));
     }
+
+
+    @RequestMapping(value = "/course_info/{courseId}")
+    @ResponseBody
+    public String infoAndRateResult(@PathVariable Integer courseId){
+        Map<String, Object> result = new HashMap<>();
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        result.put("starRateFlag", course.getStarRateFlag());
+        result.put("title", course.getTitle());
+        result.put("info", course.getInfo());
+        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
+            result.put("history", cspStarRateService.findRateResult(courseId));
+        }
+
+        return success(result);
+    }
+
+    @RequestMapping(value = "/password/modify/{courseId}")
+    @ResponseBody
+    public String modifyPassword(@PathVariable Integer courseId, String password){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        course.setPassword(password);
+        audioService.updateByPrimaryKey(course);
+        return success();
+    }
+
+    @RequestMapping(value = "/password/del/{courseId}")
+    @ResponseBody
+    public String delPassword(@PathVariable Integer courseId){
+
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        course.setPassword(null);
+        audioService.updateByPrimaryKey(course);
+        return success();
+    }
 }
