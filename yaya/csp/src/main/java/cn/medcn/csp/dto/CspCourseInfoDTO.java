@@ -1,8 +1,6 @@
 package cn.medcn.csp.dto;
 
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCoursePlay;
-import cn.medcn.meet.model.Live;
+import cn.medcn.meet.model.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,14 +22,20 @@ public class CspCourseInfoDTO implements Serializable {
     //录播信息
     protected AudioCoursePlay record;
     //图片背景
-    protected String pictureBackground;
+    protected BackgroundImage backgroundImage;
     //音乐背景
-    protected String audioBackground;
+    protected BackgroundMusic backgroundMusic;
 
     protected Date serverTime = new Date();
 
     public CspCourseInfoDTO(AudioCourse course, String wsUrl){
         this.course = course;
         this.wsUrl = wsUrl;
+    }
+
+    public CspCourseInfoDTO(AudioCourse course, BackgroundImage backgroundImage, BackgroundMusic backgroundMusic){
+        this.course = course;
+        this.backgroundImage = backgroundImage;
+        this.backgroundMusic = backgroundMusic;
     }
 }

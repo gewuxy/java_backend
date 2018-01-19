@@ -167,15 +167,11 @@
         WHERE c.id = #{id} GROUP BY c.id
     </select>
 
-    <select id="findAudioCourseList" resultType="cn.medcn.csp.dto.CspCourseInfoDTO">
-        SELECT c.*,i.*,m.* FROM t_audio_course c
-        LEFT JOIN t_audio_course_theme t ON t.course_id = c.id
-        LEFT JOIN t_csp_background_image i ON i.id = t.image_id
-        LEFT JOIN t_csp_background_music m ON m.id = t.music_id
-        WHERE c.source_type = 1 and c.deleted != 1
-        AND c.locked != 1 AND c.published =1
-        AND c.guide != 1 AND c.csp_user_id = 1
-        ORDER BY c.create_time asc
+    <select id="findAudioCourseList" resultType="cn.medcn.meet.model.AudioCourse">
+        SELECT * from t_audio_course where source_type = 1
+        and deleted != 1 AND locked != 1 AND published =1 AND guide != 1 AND csp_user_id = #{cspUserId}
+        ORDER BY create_time asc
+
     </select>
     
     <select id="findEarliestCourse" resultType="cn.medcn.meet.model.AudioCourse">
