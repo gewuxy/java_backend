@@ -672,7 +672,7 @@
 
                             <c:forEach items="${page.dataList}" var="course" varStatus="status">
                                 ${(status.index) % 3 == 0 ? '<div class="row clearfix meeting-row-hock">':''}
-                                <div class="col-lg-4">
+                                <div class="col-lg-4" id="courseView_${course.id}" pwd="${course.password}">
 
                                     <div class="resource-list-item item-radius clearfix ${course.locked ? 'meeting-lock' : ''}">
                                         <div class="resource-img ">
@@ -694,6 +694,29 @@
                                                 <fmt:message key="page.meeting.button.scan_screen"/>
                                             </a>
                                             </div>
+                                            <c:choose>
+                                                <c:when test="${course.starRateFlag}">
+
+                                                    <c:choose>
+                                                        <c:when test="${course.avgScore > 0}">
+                                                            <div class="resource-fixed-icon star-hook">
+                                                                <div class="resource-star "><span class="icon-resource-star">${course.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span></div>
+                                                            </div>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <div class="resource-fixed-icon star-hook">
+                                                                <div class="resource-star "><span class="icon-resource-star"><fmt:message key="page.meeting.tips.unrate"/> </span></div>
+                                                            </div>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <div class="resource-fixed-icon info-hook">
+                                                        <div class="resource-icon-info "></div>
+                                                    </div>
+                                                </c:otherwise>
+                                            </c:choose>
+
                                         </div>
                                         <h3 class="resource-title overflowText">${course.title}</h3>
                                         <div class="resource-label">
@@ -714,6 +737,7 @@
                                             <c:otherwise><fmt:message key="page.meeting.tab.live"/> </c:otherwise>
                                         </c:choose>
                                     </span>
+                                        <i class="lock ${not empty course.password ? '':'none'}"></i>
                                         </div>
                                         <div class="resource-menu">
                                             <div class="col-lg-6">
@@ -738,12 +762,13 @@
                                         <div class="resource-list-item item-radius clearfix">
                                             <a href="${ctx}/mgr/meet/edit" class="resource-NowButton">
                                                 <div class="resource-NowButton-box">
+                                                    <div class="main"><img src="${ctxStatic}/images/icon-metting-add.png" alt=""></div>
                                                     <div class="title"><fmt:message key="page.meeting.button.create"/></div>
-                                                    <div class="main"><img src="${ctxStatic}/images/icon-succeed.png" alt=""></div>
                                                 </div>
                                             </a>
                                         </div>
                                     </div>
+
                                 </c:if>
                                 ${(status.index + 1) % 3 == 0 || status.index + 1 == fn:length(page.dataList) ? "</div>":""}
 
@@ -880,6 +905,13 @@
                             <%--<p><fmt:message key="page.meeting.button.duplicate"/></p>--%>
                         <%--</a>--%>
                     <%--</li>--%>
+                    <li>
+                        <a href="javascript:;" class="lock-hook" onclick="openPasswordView()">
+                            <img src="${ctxStatic}/images/_lock-icon.png" alt="">
+                            <p><fmt:message key="page.meeting.button.watch.password"/></p>
+                        </a>
+                    </li>
+
                     <li id="editLi">
                         <a href="javascript:;" onclick="edit()">
                             <img src="${ctxStatic}/images/_edit-icon.png" alt="">
@@ -912,6 +944,36 @@
         </div>
     </div>
 </div>
+
+<!--弹窗密码框-->
+<div class="lock-popup-box">
+    <div class="layer-hospital-popup lock-popup clearfix">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="lock-popup-main login-form-item pr">
+                    <label for="randomNum" class="cells-block pr ">
+                        <input id="randomNum" type="text" class="login-formInput" value="" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                        <span href="javascript:;" class="code" id="btnSendCode" onclick="randomNum()"><fmt:message key='page.meeting.button.auto.create'/></span>
+                    </label>
+                    <span class="cells-block hiht"><fmt:message key='page.meeting.tips.watch.password'/></span>
+                    <span class="cells-block error none" id="passwordError"><fmt:message key='page.meeting.tips.watch.password.holder'/></span>
+                    <div class="layer-hospital-popup-bottom">
+                        <div class="fr">
+                            <span class="button min-btn layui-layer-close"><fmt:message key="page.common.cancel"/> </span>
+                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value="" onclick="modifyPassword()"><fmt:message key="page.meeting.button.password.sure"/> </a>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
 
 <div class="player-popup-box">
     <div class="layer-hospital-popup">
@@ -1039,5 +1101,188 @@
     </div>
 </div>
 
+
+<!--弹窗星评-->
+    <div class="layer-grade-star-box" id="starRate">
+    <div class="layer-hospital-popup layer-grade-popup clearfix">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="./images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <div class="metting-grade-info ">
+                <div class="title">【新手指引】您好，会讲</div>
+                <div class="main">&nbsp;&nbsp;CSPmeeting主要以邮箱作为账号进行注册，注册后您的邮箱将会收到一封激活邮件，点击链接即可完成账号激活；同时支持使用手机验证码或敬信数字平台（含YaYa医师会议管理系统和PRM患者管理系统）/微信/微博/Facebook/Twitter等第三方账号授权登录。包括本协议期限内的用户所使用的各项服务和软件的升级和更新。</div>
+            </div>
+            <div class="metting-star">
+                <div class="star-title"><fmt:message key="page.meeting.multiple.score"/> </div>
+                <div class="star-box star-max"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                <div class="star-list  clearfix">
+                    <div class="star-list-row clearfix">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                        </div>
+                        <div class="fl"> 内容实用</div>
+                    </div>
+                    <div class="star-list-row clearfix">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                        </div>
+                        <div class="fl"> 整体安排</div>
+                    </div>
+                    <div class="star-list-row clearfix">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                        </div>
+                        <div class="fl"> 语言表达</div>
+                    </div>
+                    <div class="star-list-row clearfix">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                        </div>
+                        <div class="fl"> 课件质量</div>
+                    </div>
+                    <div class="star-list-row clearfix">
+                        <div class="fr">
+                            <div class="star-box star-min"><div class="star"><span class="full"></span><span class="half"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">3.6分</div></div>
+                        </div>
+                        <div class="fl"> 学员互动</div>
+                    </div>
+                </div>
+                <div class="footer-row">参与评分人数：2人</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--密码框弹出成功-->
+<div class="lock-popup-box-succeed">
+    <div class="layer-hospital-popup lock-popup clearfix">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="lock-popup-main login-form-item pr">
+                    <div class="cells-block t-center">
+                        <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
+                        <p class="hiht"><fmt:message key="page.meeting.tips.password.success"/></p>
+                    </div>
+                    <div class="cells-block lock-popup-showRandomNum">1345</div>
+                    <span class="cells-block hiht t-center"><fmt:message key="page.meeting.tips.password.delete"/></span>
+                    <div class="layer-hospital-popup-bottom clearfix">
+                        <div class="fr">
+                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" onclick="deletePassword()"><fmt:message key="page.meeting.button.password.cancel"/></a>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+    //随机数函数（根据自己的思路来，我这里只是简单呈现效果）
+    var randomNum = function() {
+        var num = "";
+        for(var i=0;i<4;i++){
+            num += Math.floor(Math.random()*10)
+        }
+        $('#randomNum').val(num);
+
+        console.log($('#randomNum').val());
+        $('.lock-popup-showRandomNum').text(num)
+
+    }
+
+
+    function openPasswordView(){
+        var pwd = $("#courseView_" + courseId).attr("pwd");
+        $("#passwordError").addClass("none");
+        $("#randomNum").val(pwd);
+        //弹出观看密码
+        layer.open({
+            type: 1,
+            area: ['609px', '328px'],
+            fix: false, //不固定
+            title:false,
+            anim:5,
+            isOutAnim: false,
+            closeBtn:0,
+            shadeClose:true,
+            content: $('.lock-popup-box'),
+            success:function(){
+                layer.close(layer.index-1);
+            },
+            cancel :function(){
+                $("#passwordError").addClass("none");
+            }
+        });
+
+
+    }
+
+    function modifyPassword(){
+        var pwd = $.trim($("#randomNum").val());
+        if(pwd == ''){
+            $("#passwordError").removeClass("none");
+            return;
+        }
+        ajaxGet('${ctx}/mgr/meet/password/modify/'+courseId, {"password":pwd}, function(data){
+            if (data.code == 0){
+                $("#courseView_" + courseId).find(".lock").removeClass("none");
+                $("#courseView_" + courseId).attr("pwd", pwd);
+                $(".lock-popup-showRandomNum").text(pwd);
+                openConfirmPasswordView();
+            } else {
+                layer.msg(data.err);
+            }
+
+        });
+    }
+
+    function openConfirmPasswordView(){
+        //弹出观看密码成功
+        layer.open({
+            type: 1,
+            area: ['609px', '400px'],
+            fix: false, //不固定
+            title:false,
+            closeBtn:0,
+            shadeClose:true,
+            content: $('.lock-popup-box-succeed'),
+            success:function(){
+                layer.close(layer.index-1);
+                //清空原来已设置的密码
+                $('#randomNum').val('');
+            },
+            cancel :function(){
+                layer.closeAll();
+            },
+        });
+
+    }
+
+    function deletePassword(){
+        ajaxGet('${ctx}/mgr/meet/password/del/'+courseId, {}, function(data){
+            if (data.code == 0){
+                $("#courseView_" + courseId).find(".lock").addClass("none");
+                $("#courseView_" + courseId).attr("pwd", "");
+                openPasswordView();
+            } else {
+                layer.msg(data.err);
+            }
+
+        });
+    }
+
+    $(function(){
+
+    });
+</script>
 </body>
 </html>

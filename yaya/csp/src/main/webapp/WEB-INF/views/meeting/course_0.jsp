@@ -163,7 +163,8 @@
 <script>
     var asAllItem = audiojs.createAll();
     var playing = false;
-
+    var started = false;
+    var hasAudioUrl = true;
     var slideTimer ;
 
     $(function(){
@@ -171,7 +172,11 @@
 
         function slideToNext(){
             clearTimeout(slideTimer);
-            slideTimer = setTimeout(function(){galleryTop.slideNext();}, 3000);
+            slideTimer = setTimeout(function(){
+                if(!playerState){
+                    galleryTop.slideNext();
+                }
+            }, 3000);
         }
 
         var target = $('.layer-hospital-popup-fullSize')[0];
@@ -186,12 +191,10 @@
         var prevAudioSrc;
         $("#audioPlayer")[0].addEventListener("ended", function(){
             console.log("audio play over ...");
-            if (playing){
-                if($("#audioPlayer")[0].src != prevAudioSrc){
-                    galleryTop.slideNext();
-                }
-                prevAudioSrc = $("#audioPlayer")[0].src;
+            if($("#audioPlayer")[0].src != prevAudioSrc){
+                galleryTop.slideNext();
             }
+            prevAudioSrc = $("#audioPlayer")[0].src;
         });
 //
         $("#audioPlayer")[0].addEventListener("error", function(){
@@ -200,9 +203,11 @@
             console.log("is playing = " + playing);
             console.log("isVideo.length == " + isVideo.length);
             $(".boxAudio").addClass("none");
+            console.log("playerState = " + playerState);
+            hasAudioUrl = false;
             clearTimeout(slideTimer);
-            if (playing){
-                if (isVideo.length == 0){
+            if (started){
+                if (isVideo.length == 0 && !playerState){
                     slideToNext();
                 }
             } else {
@@ -210,6 +215,7 @@
                     $('.html5ShadePlay').hide();
                     popupPalyer.play();
                     playing = true;
+                    started = true;
                     changePlayerStete(false);
                     slideToNext();
                 }
@@ -462,6 +468,8 @@
 
         //播放器切换加载对应的路径
         var swiperChangeAduio = function(current){
+            hasAudioUrl = true;
+            playing = true;
             var swiperCurrent;
 
             popupPalyer.pause();
@@ -473,7 +481,6 @@
             }
             dataSrc = swiperCurrent.attr('audio-src');
             //如果有音频，才进行播放
-            alert(dataSrc.length);
             if(dataSrc.length > 0){
                 $('.boxAudio').removeClass('none');
                 popupPalyer.load(dataSrc);
@@ -483,7 +490,8 @@
                 popupPalyer.load('isNotSrc');
                 console.log('没加载音频');
                 $('.boxAudio').addClass('none');
-                changePlayerStete(false);
+                changePlayerStete(true);
+                slideToNext();
             }
             //如果有视频
             if(activeItemIsVideo.length > 0){
@@ -500,18 +508,14 @@
 
         //播放按钮
         $(".button-icon-state").on('click',function(){
-            if(localFlag){
-                $('.button-icon-play').addClass('none').siblings().removeClass('none');
-            } else {
-                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
-            }
-            //changePlayerStete();
+            playing = !playing;
+            changePlayerStete();
         })
 
         var changePlayerStete = function(state){
 
-            $('.button-icon-play').addClass('none').siblings().removeClass('none');
             if(playerState || state == true){
+
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
@@ -519,9 +523,11 @@
                 } else {
                     popupPalyer.play();
                 }
+                if (!hasAudioUrl){
+                    slideToNext();
+                }
             } else {
                 playerState = true;
-
                 //有video文件
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).pause();
@@ -529,6 +535,11 @@
                     popupPalyer.pause();
                 }
 
+            }
+            if (!playerState){
+                $('.button-icon-play').addClass('none').siblings().removeClass('none');
+            } else {
+                $('.button-icon-stop').addClass('none').siblings().removeClass('none');
             }
         }
 

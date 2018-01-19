@@ -9,9 +9,6 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.admin.log.Log;
-import com.alibaba.fastjson.JSONObject;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +20,15 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
+ * 官网新闻管理
  * Created by Liuchangling on 2018/1/16.
  */
 @Controller
@@ -101,6 +95,7 @@ public class NewsController extends BaseController {
         return "/news/viewEdit";
     }
 
+
     @RequestMapping(value = "/to/add")
     @RequiresPermissions("website:news:auth")
     @Log(name = "跳转到发布新闻页面")
@@ -110,6 +105,7 @@ public class NewsController extends BaseController {
         model.addAttribute("categoryList", categoryList);
         return "/news/addNews";
     }
+
 
     @RequestMapping(value = "/add")
     @RequiresPermissions("website:news:add")
@@ -126,6 +122,7 @@ public class NewsController extends BaseController {
         }
         return "redirect:/website/news/list";
     }
+
 
     @RequestMapping(value = "/update")
     @RequiresPermissions("website:news:auth")
@@ -156,15 +153,16 @@ public class NewsController extends BaseController {
         return "redirect:/website/news/list";
     }
 
+
     /**
-     * 上传新闻图片
+     * 上传新闻封面（小）图片
      *
      * @param file
      * @return
      */
     @RequestMapping(value = "/upload/img")
     @ResponseBody
-    @Log(name = "上传新闻小图片")
+    @Log(name = "上传新闻封面图片")
     public String uploadImg(MultipartFile file) {
         if (file != null) {
             String fileName = file.getOriginalFilename();
@@ -196,13 +194,13 @@ public class NewsController extends BaseController {
                 String imgUrl = imgFolder + dateFolderPath + "/" + saveFileName;
                 // 小图片地址
                 String smallImgPath = dateFolderPath + "/s_" + saveFileName;
-                String smallImgUrl = null;
+                String smallImgUrl = imgFolder + smallImgPath;
 
                 try {
                     file.transferTo(saveFile);
                     // 生成缩略图
-                    smallImgUrl = FileUtils.thumbnailUploadImage(saveFile, FileUtils.thumbWidth,
-                            FileUtils.thumbWidth, smallImgPath, imgPrefixPath );
+                    FileUtils.thumbnailUploadImage(saveFile, FileUtils.thumbWidth,
+                            FileUtils.thumbWidth, smallImgPath, imgPrefixPath);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -224,15 +222,14 @@ public class NewsController extends BaseController {
 
 
     /**
-     * 上传新闻图片
+     * 上传新闻内容图片
      *
      * @return
      */
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     @ResponseBody
-    @Log(name = "上传新闻图片")
-    public String uploadNewsImg(HttpServletRequest request, HttpServletResponse response,
-                                @RequestParam("imgFile") MultipartFile[] imgFile) {
+    @Log(name = "上传新闻内容图片")
+    public String uploadNewsImg(HttpServletRequest request, @RequestParam("imgFile") MultipartFile[] imgFile) {
         String imgFolder = "news/images/";
 
         // 当天新闻图片日期文件夹
@@ -249,20 +246,18 @@ public class NewsController extends BaseController {
         String imgSuffix = "gif,jpg,jpeg,png,bmp";
         extMap.put("image", imgSuffix);
 
-        response.setContentType("text/html; charset=UTF-8");
-
         if (!ServletFileUpload.isMultipartContent(request)) {
             return error("请选择文件");
         }
         // 检查目录
-        File uploadDir = new File(savePath);
+        /*File uploadDir = new File(savePath);
         if (!uploadDir.isDirectory()) {
             return error("上传目录不存在");
         }
         // 检查目录写权限
         if (!uploadDir.canWrite()) {
             return error("上传目录没有写权限");
-        }
+        }*/
 
         String dirName = request.getParameter("dir");
         if (dirName == null) {
