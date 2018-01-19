@@ -9,12 +9,10 @@ import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.*;
-import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
-import cn.medcn.sys.service.SysNotifyService;
-import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.*;
@@ -22,11 +20,9 @@ import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
-import cn.medcn.weixin.config.MiniProgramConfig;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
-import org.codehaus.xfire.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -46,6 +42,8 @@ import java.text.ParseException;
 import java.util.*;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.weixin.config.MiniProgramConfig.*;
+
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -65,6 +63,7 @@ public class CspUserController extends CspBaseController {
 
     @Autowired
     protected EmailTempService tempService;
+
 
     @Value("${app.file.upload.base}")
     protected String uploadBase;
@@ -814,25 +813,25 @@ public class CspUserController extends CspBaseController {
             return error("code不能为空");
         }
         Map<String,Object> map = new HashMap<>();
-        map.put(MiniProgramConfig.MINI_APPID_KEY,appId);
-        map.put(MiniProgramConfig.MINI_SECRET_KEY,secret);
-        map.put(MiniProgramConfig.JS_CODE_KEY,code);
-        map.put(MiniProgramConfig.GRANT_TYPE_KEY,MiniProgramConfig.GRANT_TYPE_VALUE);
-        String result = HttpUtils.get(MiniProgramConfig.UNIONID_URL,map);
+        map.put(MINI_APPID_KEY,appId);
+        map.put(MINI_SECRET_KEY,secret);
+        map.put(JS_CODE_KEY,code);
+        map.put(GRANT_TYPE_KEY,UNION_ID_GRANT_TYPE_VALUE);
+        String result = HttpUtils.get(UNIONID_URL,map);
         JSONObject jsonObject = JSONObject.parseObject(result);
-        String errCode = jsonObject.getString("errcode");
+        String errCode = jsonObject.getString(ERR_CODE_STR);
         //如果获取数据没有出错，将session_key存到缓存，判断用户是否已注册
         if(StringUtils.isEmpty(errCode)){
             //将session_key存到缓存
-            String sessionKey = jsonObject.getString("session_key");
+            String sessionKey = jsonObject.getString(SESSION_KEY_STR);
             String key = UUIDUtil.getUUID();
             //TODO 存储的时长
             redisCacheUtils.setCacheObject(key,sessionKey, Constants.TOKEN_EXPIRE_TIME);
             //uuid的值作为对外的sessionKey
-            jsonObject.put("session_key",key);
+            jsonObject.put(SESSION_KEY_STR,key);
 
             //判断是否注册过
-            String unionId = jsonObject.getString("unionid");
+            String unionId = jsonObject.getString(UNION_ID_STR);
             if(StringUtils.isNotEmpty(unionId)){
                 CspUserInfo info = cspUserService.findBindUserByUniqueId(unionId);
                 jsonObject.put("has_user",info == null ? "false": "true");
@@ -904,5 +903,8 @@ public class CspUserController extends CspBaseController {
         }
         return null;
     }
+
+
+
 
 }

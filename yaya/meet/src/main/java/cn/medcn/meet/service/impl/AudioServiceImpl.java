@@ -6,10 +6,8 @@ import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
-import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.DESUtils;
-import cn.medcn.common.utils.FileUtils;
-import cn.medcn.common.utils.StringUtils;
+import cn.medcn.common.supports.FileTypeSuffix;
+import cn.medcn.common.utils.*;
 import cn.medcn.goods.dto.CreditPayDTO;
 import cn.medcn.goods.service.CreditsService;
 import cn.medcn.meet.dao.*;
@@ -21,9 +19,15 @@ import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspUserInfoDAO;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.abel533.mapper.Mapper;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import org.apache.commons.collections.map.HashedMap;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,6 +35,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.Date;
@@ -38,6 +44,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
+
+import static cn.medcn.weixin.config.MiniProgramConfig.*;
 
 /**
  * Created by lixuan on 2017/4/25.
@@ -72,6 +80,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
+
+    @Value("${app.file.base}")
+    private String appFileBase;
 
 
     @Autowired
@@ -1194,5 +1205,44 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             e.printStackTrace();
         }
         return buffer2.toString();
+    }
+
+
+    /**
+     * 获取小程序二维码
+     * @param id
+     * @param page
+     * @return
+     */
+    @Override
+    public String getMiniQRCode(Integer id, String page, String accessToken) throws IOException {
+        String path = appFileBase + "/mini/qrcode";
+        //创建文件夹
+        File dir = new File(path);
+        if (!dir.exists()){
+            dir.mkdirs();
+        }
+        //如果文件存在，直接返回
+        String codeUrl =  path + "/" +  id + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        File file = new File(codeUrl);
+        if(file.exists()){
+            return codeUrl;
+        }
+
+        //获取小程序码
+        Map<String,Object> map = new HashMap<>();
+        map.put(SCENE_STR,id + "");
+        map.put(PAGE_STR,page);
+        map.put(CODE_WIDTH_STR,430);
+        map.put(CODE_AUTO_COLOR_STR,false);
+        Map<String,String> colorMap = new HashMap<>();
+        colorMap.put("r","0");
+        colorMap.put("g","0");
+        colorMap.put("b","0");
+        map.put(CODE_LINE_COLOR_STR,colorMap);
+        String url = MINI_CODE_URL + "?" + ACCESS_TOKEN_STR + "=" + accessToken;
+        JSONObject params = JSONObject.parseObject(JSON.toJSONString(map));
+        HttpUtils.postJsonResponseStream(url,params,codeUrl);
+        return codeUrl;
     }
 }

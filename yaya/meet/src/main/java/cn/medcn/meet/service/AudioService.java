@@ -7,7 +7,9 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -371,4 +373,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
     List<AudioCourseDetail> findDetailsByCourseId(Integer id);
 
     String getMeetShareUrl(String appCspBase ,String local,Integer courseId,boolean abroad);
+
+    /**
+     * 获取小程序二维码
+     * @param id
+     * @param page
+     * @return
+     */
+    String getMiniQRCode(Integer id, String page, String accessToken) throws IOException;
 }
