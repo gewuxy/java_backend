@@ -1255,7 +1255,7 @@
         //弹出观看密码成功
         layer.open({
             type: 1,
-            area: ['609px', '400px'],
+            area: ['609px', '430px'],
             fix: false, //不固定
             title:false,
             closeBtn:0,
