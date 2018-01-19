@@ -13,7 +13,7 @@ import javax.persistence.Table;
 @Data
 @NoArgsConstructor
 @Entity
-@Table(name = "t_background_music")
+@Table(name = "t_csp_background_music")
 public class BackgroundMusic {
     @Id
     protected Integer id;
