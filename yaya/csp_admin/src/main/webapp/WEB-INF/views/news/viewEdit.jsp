@@ -10,11 +10,10 @@
 <head>
     <title>新闻详情</title>
     <%@include file="/WEB-INF/include/page_context.jsp" %>
-
     <script type="text/javascript" src="${ctxStatic}/jquery-plugin/jquery-form.js"></script>
-    <script type="text/javascript" src="${ctxStatic}/layer/layui.all.js"></script>
-    <link rel="stylesheet" href="${ctxStatic}/layer/css/layui.css">
 
+    <%--引入kindeditor富文本编辑器样式及js--%>
+    <%@include file="/WEB-INF/include/kindeditor.jsp" %>
     <script>
 
         // 是否审核的选中状态
@@ -36,7 +35,7 @@
 
         function fileUpload() {
             var option = {
-                url: "${ctx}/website/news/upload",
+                url: "${ctx}/website/news/upload/img",
                 type: 'POST',
                 dataType: 'json',
                 clearForm: false,
@@ -50,9 +49,9 @@
                         layer.msg(data.err);
                     }
                 }
-        };
-        $("#inputForm").ajaxSubmit(option);
-        return true;
+             };
+            $("#inputForms").ajaxSubmit(option);
+            return true;
         }
     </script>
 </head>
@@ -63,8 +62,9 @@
         <li class="active"><a href="#">编辑新闻</a></li>
     </ul>
 
-    <form id="inputForm" method="post" class="form-horizontal" action="${ctx}/website/news/update"  enctype="multipart/form-data">
+    <form id="inputForms" method="post" class="form-horizontal" action="${ctx}/website/news/update"  enctype="multipart/form-data">
         <input type="hidden" name="id" value="${news.id}"/>
+        <input type="hidden" name="uploadimages" id="uploadimages" value="">
 
         <div class="control-group">
             <label class="control-label">新闻标题:</label>
@@ -112,29 +112,10 @@
             </div>
         </div>
 
-        <div class="layui-form-item layui-form-text">
-            <label class="layui-form-label">内容</label>
-            <div class="layui-input-block">
-                <textarea class="layui-textarea layui-hide" name="content" lay-verify="content" id="content">${news.content}</textarea>
-                <script type="text/javascript">
-                    layui.use(['form', 'layedit', 'laydate'], function() {
-                        var form = layui.form
-                            , layer = layui.layer
-                            , layedit = layui.layedit
-                            , laydate = layui.laydate;
-                        layedit.set({
-                            uploadImage: {
-                                url: '${ctx}/website/news/upload' //接口url
-                                ,type: 'post' //默认post
-                            }
-                        });
-                        //创建一个编辑器
-                        var editIndex = layedit.build('content',{
-                                height:400
-                            }
-                        );
-                    });
-                </script>
+        <div class="control-group">
+            <label class="control-label">内容:</label>
+            <div class="controls">
+                <textarea id="kindeditor" name="content" cols="200" rows="10" style="width:800px;height:360px;visibility:hidden;">${news.content}</textarea>
             </div>
         </div>
 
