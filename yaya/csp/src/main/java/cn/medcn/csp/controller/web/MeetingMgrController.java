@@ -731,6 +731,10 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String modifyPassword(@PathVariable Integer courseId, String password){
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
         course.setPassword(password);
         audioService.updateByPrimaryKey(course);
         return success();
@@ -739,7 +743,12 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/password/del/{courseId}")
     @ResponseBody
     public String delPassword(@PathVariable Integer courseId){
+
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
         course.setPassword(null);
         audioService.updateByPrimaryKey(course);
         return success();
