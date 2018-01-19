@@ -17,14 +17,11 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
-import cn.medcn.meet.dto.CourseThemeDTO;
-import cn.medcn.meet.dto.StarRateResultDTO;
+import cn.medcn.meet.dto.*;
 import cn.medcn.meet.service.CourseThemeService;
 import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
-import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.dto.LiveOrderDTO;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.LiveService;
@@ -1245,6 +1242,33 @@ public class MeetingController extends CspBaseController {
         }
         String codeUrl  = audioService.getMiniQRCode(id,page,accessToken);
         return success(codeUrl);
+    }
+
+    /**
+     * 小程序活动贺卡模板列表
+     * @return
+     */
+    @RequestMapping("/mini/template/list")
+    @ResponseBody
+    public String templateList() {
+        List<AudioCourseDTO> templateList = audioService.findMiniTemplate();
+        return success(templateList);
+    }
+
+    /**
+     * 通过小程序二维码 获取贺卡模板
+     * @param id 模块id即课程id
+     * @return
+     */
+    @RequestMapping("/mini/template")
+    @ResponseBody
+    public String getTemplate(Integer id) {
+        if (id == null) {
+            // 随机返回贺卡模板
+            id = 0;
+        }
+        AudioCourseDTO courseDTO = audioService.findMiniTemplateByIdOrRand(id);
+        return success(courseDTO);
     }
 
 }

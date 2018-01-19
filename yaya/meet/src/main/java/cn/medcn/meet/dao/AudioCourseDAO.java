@@ -1,9 +1,6 @@
 package cn.medcn.meet.dao;
 
-import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.dto.CourseReprintDTO;
-import cn.medcn.meet.dto.CourseSharedDTO;
-import cn.medcn.meet.dto.ResourceCategoryDTO;
+import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.AudioCourse;
 import com.github.abel533.mapper.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -108,4 +105,16 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
 
     void updateByUserIdOpenAll(@Param("cspUserId") String cspUserId);
 
+    /**
+     * 小程序活动贺卡模板列表
+     * @return
+     */
+    List<AudioCourseDTO> findMiniTemplate();
+
+    /**
+     * 通过小程序二维码（固定）或者搜索小程序（随机） 返回贺卡模板
+     * @param id
+     * @return
+     */
+    AudioCourseDTO findMiniTemplateByIdOrRand(@Param("id") Integer id);
 }
