@@ -381,4 +381,17 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     String getMiniQRCode(Integer id, String page, String accessToken) throws IOException;
+
+    /**
+     * 小程序活动贺卡模板列表
+     * @return
+     */
+    List<AudioCourseDTO> findMiniTemplate();
+
+    /**
+     * 通过小程序二维码（固定）或者搜索小程序（随机） 返回贺卡模板
+     * @return
+     */
+    AudioCourseDTO findMiniTemplateByIdOrRand(Integer id);
+
 }

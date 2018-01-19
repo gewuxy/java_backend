@@ -1247,4 +1247,23 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         HttpUtils.postJsonResponseStream(url,params,codeUrl);
         return codeUrl;
     }
+
+    /**
+     * 小程序活动贺卡模板列表
+     * @return
+     */
+    @Override
+    public List<AudioCourseDTO> findMiniTemplate(){
+        return audioCourseDAO.findMiniTemplate();
+    }
+
+    /**
+     * 通过小程序二维码（固定）或者搜索小程序（随机） 返回贺卡模板
+     * @param id
+     * @return
+     */
+    @Override
+    public AudioCourseDTO findMiniTemplateByIdOrRand(Integer id){
+        return audioCourseDAO.findMiniTemplateByIdOrRand(id);
+    }
 }

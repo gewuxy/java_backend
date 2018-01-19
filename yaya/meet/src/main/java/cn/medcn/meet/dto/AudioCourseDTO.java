@@ -21,6 +21,9 @@ public class AudioCourseDTO implements Serializable{
 
     private String category;
 
+    // 封面url
+    private String coverUrl;
+
     private List<AudioCourseDetailDTO> details;
 
     public static AudioCourseDTO build(AudioCourse course){
