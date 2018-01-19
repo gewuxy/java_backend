@@ -21,10 +21,6 @@ public class CspCourseInfoDTO implements Serializable {
     protected Live live;
     //录播信息
     protected AudioCoursePlay record;
-    //图片背景
-    protected BackgroundImage backgroundImage;
-    //音乐背景
-    protected BackgroundMusic backgroundMusic;
 
     protected Date serverTime = new Date();
 
@@ -33,9 +29,4 @@ public class CspCourseInfoDTO implements Serializable {
         this.wsUrl = wsUrl;
     }
 
-    public CspCourseInfoDTO(AudioCourse course, BackgroundImage backgroundImage, BackgroundMusic backgroundMusic){
-        this.course = course;
-        this.backgroundImage = backgroundImage;
-        this.backgroundMusic = backgroundMusic;
-    }
 }

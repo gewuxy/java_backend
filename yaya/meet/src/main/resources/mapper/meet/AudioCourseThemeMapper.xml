@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.meet.dao.AudioCourseThemeDAO" >
+
+    <select id="findCourseThemeByCourseId" resultType="cn.medcn.meet.model.AudioCourseTheme">
+        SELECT t.*, i.img_name,i.img_size,i.img_url,m.name,m.duration,m.size,m.url
+        FROM  t_audio_course_theme t
+        LEFT JOIN t_csp_background_image i ON i.id = t.image_id
+        LEFT JOIN t_csp_background_music m ON m.id = t.music_id
+        WHERE t.course_id = #{courseId}
+    </select>
+
+</mapper>

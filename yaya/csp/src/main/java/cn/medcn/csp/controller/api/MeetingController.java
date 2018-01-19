@@ -17,6 +17,7 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
+import cn.medcn.meet.dto.CourseThemeDTO;
 import cn.medcn.meet.dto.StarRateResultDTO;
 import cn.medcn.meet.service.CourseThemeService;
 import cn.medcn.user.model.Principal;
@@ -117,8 +118,19 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/view")
     @ResponseBody
     public String view(Integer courseId) {
-        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
-        return success(audioCourse);
+        Principal principal = SecurityUtils.get();
+        if (courseId == null || courseId == 0) {
+            return error(local("error.param"));
+        }
+
+        // 检查该会议是否是当前登录者的会议
+        boolean isMine = audioService.checkCourseIsMine(principal.getId(), courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+
+        CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
+        return success(themeDTO);
     }
 
 
