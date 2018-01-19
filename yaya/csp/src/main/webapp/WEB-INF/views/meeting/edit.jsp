@@ -59,29 +59,29 @@
                                                                 </label>
                                                             </div>
                                                         </c:if>
-                                                            <div class="logo-watermark-edit-position">
-                                                                <div class="logo-watermark-edit-position-title">
-                                                                    <fmt:message key="page.meeting.watermark.position"/>
-                                                                </div>
-                                                                <div class="logo-watermark-edit-position-item">
-                                                                    <label for="positionTopLeft" class="watermark-radio watermark-radio-topLeft ">
-                                                                        <input type="radio" name="watermark" class="none" id="positionTopLeft" value="0" >
-                                                                        <span class="icon"></span>
-                                                                    </label>
-                                                                    <label for="positionTopRight" class="watermark-radio watermark-radio-topRight">
-                                                                        <input type="radio" name="watermark" class="none" id="positionTopRight" value="2">
-                                                                        <span class="icon"></span>
-                                                                    </label>
-                                                                    <label for="positionBottomLeft" class="watermark-radio watermark-radio-bottomLeft">
-                                                                        <input type="radio" name="watermark" class="none" id="positionBottomLeft" value="1">
-                                                                        <span class="icon"></span>
-                                                                    </label>
-                                                                    <label for="positionBottomRight" class="watermark-radio watermark-radio-bottomRight">
-                                                                        <input type="radio" name="watermark" class="none" id="positionBottomRight" value="3">
-                                                                        <span class="icon"></span>
-                                                                    </label>
-                                                                </div>
+                                                        <div class="logo-watermark-edit-position">
+                                                            <div class="logo-watermark-edit-position-title">
+                                                                <fmt:message key="page.meeting.watermark.position"/>
                                                             </div>
+                                                            <div class="logo-watermark-edit-position-item">
+                                                                <label for="positionTopLeft" class="watermark-radio watermark-radio-topLeft ">
+                                                                    <input type="radio" name="watermark" class="none" id="positionTopLeft" value="0" >
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                                <label for="positionTopRight" class="watermark-radio watermark-radio-topRight">
+                                                                    <input type="radio" name="watermark" class="none" id="positionTopRight" value="2">
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                                <label for="positionBottomLeft" class="watermark-radio watermark-radio-bottomLeft">
+                                                                    <input type="radio" name="watermark" class="none" id="positionBottomLeft" value="1">
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                                <label for="positionBottomRight" class="watermark-radio watermark-radio-bottomRight">
+                                                                    <input type="radio" name="watermark" class="none" id="positionBottomRight" value="3">
+                                                                    <span class="icon"></span>
+                                                                </label>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </c:if>
 
@@ -111,16 +111,16 @@
 
                                 </div>
                                 <div class="admin-button t-center">
-                                <c:choose>
-                                    <c:when test="${not empty course.details}">
-                                        <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span  class="button min-btn" ><fmt:message key="page.meeting.button.reload"/></span>&nbsp;&nbsp;&nbsp;</label>
+                                    <c:choose>
+                                        <c:when test="${not empty course.details}">
+                                            <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span  class="button min-btn" ><fmt:message key="page.meeting.button.reload"/></span>&nbsp;&nbsp;&nbsp;</label>
                                             <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn"><fmt:message key="page.meeting.button.edit"/></a>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span  class="button color-blue min-btn"><fmt:message key="page.meeting.upload.doc"/></span></label>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span  class="button color-blue min-btn"><fmt:message key="page.meeting.upload.doc"/></span></label>
 
-                                    </c:otherwise>
-                                </c:choose>
+                                        </c:otherwise>
+                                    </c:choose>
                                 </div>
                                 <c:if test="${empty course.details}">
                                     <p class="color-gray-02"><fmt:message key="page.meeting.upload.limit100"/></p>
@@ -129,7 +129,51 @@
                                 <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.upload.warn.nofile"/></span>
                             </div>
                         </div>
+
+                        <%--星评功能--%>
+                        <div class="upload-metting-star">
+
+                            <div class="upload-metting-star-head">
+                                <div class="fr upload-metting-star-switch">
+                                    <div class="weui-cell__ft">
+                                        <label for="switchCPStar" class="mui-switch-box">
+                                            <input type="checkbox" name="" id="switchCPStar" class="mui-switch none" >
+                                            <div class="weui-switch-cp__box"></div>
+                                        </label>
+                                    </div>
+                                    <span class="subject">关闭 </span>
+                                </div>
+                                <div class="title">评分功能</div>
+                            </div>
+
+                            <div class="upload-metting-star-main">
+                                <div class="upload-metting-star-row">
+                                    <div class="fr">
+                                        <div class="star-box star-max"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">未评价</div></div>
+                                    </div>
+                                    <div class="title">综合评分</div>
+                                </div>
+
+                                <div class="upload-metting-star-row star-input-box" >
+                                    <div class="fr">
+                                        <div class="star-input-button"><input class="button" type="submit" value="保存"><a href="javascript:;" class="close">取消</a></div>
+                                    </div>
+                                    <div class="oh">
+                                        <div class="star-input"><input type="text" placeholder="最多输入6个中文字"></div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <div class="upload-metting-star-footer">
+                                <%--<span class="cells-block error ">最多添加5项</span>--%>
+                                <a href="javascript:;" class="upload-metting-star-add-button cells-block">添加</a>
+
+                            </div>
+                        </div>
                     </div>
+
+
+
                     <div class="col-lg-7">
                         <form action="${ctx}/mgr/meet/save" method="post" id="courseForm" name="courseForm">
                             <input type="hidden" name="course.id" value="${course.id}">
@@ -137,7 +181,8 @@
                             <input type="hidden" name="watermark.state" id="state" value="1">
                             <input type="hidden" name="watermark.name" id="name" value="${appName}">
                             <div class="meeting-form-item login-form-item">
-                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"></label>
+
+                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"><span class="icon-metting-lock lock-hook">观看密码</span></label>
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.update.warn.notitle"/></span>
 
                                 <div class="textarea">
@@ -172,8 +217,8 @@
                                 </c:if>
 
 
-                                        <input type="hidden" name="course.playType" id="coursePlayType" value="${course.playType}">
-                                    <div class="meeting-tab clearfix">
+                                <input type="hidden" name="course.playType" id="coursePlayType" value="${course.playType}">
+                                <div class="meeting-tab clearfix">
                                     <label for="recorded" class="recorded-btn ${course.playType == 0 ? 'cur' : ''}" >
                                         <input id="recorded" type="radio" class="course_play" name="course.playType" value="0" ${course.playType == null || course.playType == 0 ? 'checked':''} ${course != null && course.published ? 'disabled':''}>
                                         <div class="meeting-tab-btn"><i></i><fmt:message key="page.meeting.tab.screen_record"/></div>
@@ -185,34 +230,35 @@
 
                                     </label>
                                     <div class="meeting-tab-main ${course.playType == 0 ? 'none':''}">
-                                    <div class="clearfix">
-                                        <div class="formrow">
-                                            <div class="formControls">
+                                        <div class="clearfix">
+                                            <div class="formrow">
+                                                <div class="formControls">
                                                             <span class="time-tj">
                                                                 <label for="liveTimeSelector" id="timeStart">
                                                                     <fmt:message key="page.common.time"/><input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
-                                                                             <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
+                                                                                                                <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
                                                                 >
                                                                 </label>
                                                             </span>
-                                                <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.tips.time_limit"/></span>
-                                                <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
-                                                <%--<input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">--%>
-                                            </div>
+                                                    <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.tips.time_limit"/></span>
+                                                    <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
+                                                    <%--<input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">--%>
+                                                </div>
 
+
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="cells-block clearfix checkbox-box" style="display: block;">
+                                        <div class="cells-block clearfix checkbox-box" style="display: block;">
                                                     <span class="checkboxIcon">
                                                         <input type="checkbox" id="popup_checkbox_2" name="openLive" value="1" class="chk_1 chk-hook" ${course.playType == 2 ? 'checked' : ''} >
                                                         <label for="popup_checkbox_2" class="popup_checkbox_hook"><i class="ico checkboxCurrent"></i>&nbsp;&nbsp;<fmt:message key="page.meeting.live.flag"/></label>
                                                     </span>
-                                        <div class="checkbox-main">
-                                            <p><fmt:message key="page.meeting.live.flux_tips"/></p>
-                                            <div class="text"><fmt:message key="page.meeting.live.flux_balance"/><span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook"><fmt:message key="page.charge.recharge"/></a></div>
+                                            <div class="checkbox-main">
+                                                <p><fmt:message key="page.meeting.live.flux_tips"/></p>
+                                                <div class="text"><fmt:message key="page.meeting.live.flux_balance"/><span class="color-blue" id="myFlux">${flux == null ? 0 : flux}</span>G <a href="${ctx}/mgr/user/toFlux" target="_blank" class="cancel-hook"><fmt:message key="page.charge.recharge"/></a></div>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
                                 </div>
 
                                 <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
@@ -251,16 +297,16 @@
 
                             <c:forEach items="${rootList}" var="c" varStatus="status">
                                 <li cid="${c.id}"
-                                    <c:choose>
-                                        <c:when test="${not empty courseCategory}">
-                                            <c:if test="${courseCategory.parentId == c.id }">
-                                                class="cur"
-                                            </c:if>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <c:if test="${status.index == 0}">class="cur"</c:if>
-                                        </c:otherwise>
-                                    </c:choose>
+                                        <c:choose>
+                                            <c:when test="${not empty courseCategory}">
+                                                <c:if test="${courseCategory.parentId == c.id }">
+                                                    class="cur"
+                                                </c:if>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:if test="${status.index == 0}">class="cur"</c:if>
+                                            </c:otherwise>
+                                        </c:choose>
                                 ><a href="javascript:void (0);">${isZh ? c.nameCn : c.nameEn}</a></li>
                             </c:forEach>
                         </ul>
@@ -272,20 +318,20 @@
                         <ul id="subList">
 
                             <c:forEach items="${subList}" var="cc" varStatus="status">
-                            <li parentId="${cc.parentId}" categoryId="${cc.id}"
-                                <c:choose>
-                                    <c:when test="${not empty courseCategory}">
-                                        <c:if test="${cc.id == courseCategory.id}">
-                                            class="cur"
-                                        </c:if>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <c:if test="${status.index == 0}">class="cur"</c:if>
-                                    </c:otherwise>
-                                </c:choose>
+                                <li parentId="${cc.parentId}" categoryId="${cc.id}"
+                                        <c:choose>
+                                            <c:when test="${not empty courseCategory}">
+                                                <c:if test="${cc.id == courseCategory.id}">
+                                                    class="cur"
+                                                </c:if>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <c:if test="${status.index == 0}">class="cur"</c:if>
+                                            </c:otherwise>
+                                        </c:choose>
 
-                                <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if>
-                            ><a href="javascript:void (0);">${isZh ? cc.nameCn : cc.nameEn}</a></li>
+                                    <c:if test="${cc.parentId != rootId}">style="display: none;" </c:if>
+                                ><a href="javascript:void (0);">${isZh ? cc.nameCn : cc.nameEn}</a></li>
                             </c:forEach>
 
                         </ul>
@@ -304,13 +350,13 @@
             <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
         </div>
         <div class="layer-hospital-popup-main ">
-                <div class="cancel-popup-main">
-                    <p><fmt:message key="page.words.charge.tips"/></p>
-                    <div class="admin-button t-right">
-                        <a href="javascript:;" class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.words.charge.problem"/></a>
-                        <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="<fmt:message key='page.words.charge.success'/>">
-                    </div>
+            <div class="cancel-popup-main">
+                <p><fmt:message key="page.words.charge.tips"/></p>
+                <div class="admin-button t-right">
+                    <a href="javascript:;" class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.words.charge.problem"/></a>
+                    <input type="button" onclick="freshFlux()" class="button buttonBlue item-radius min-btn" value="<fmt:message key='page.words.charge.success'/>">
                 </div>
+            </div>
 
         </div>
     </div>
@@ -332,11 +378,117 @@
 </div>
 
 
+<%--密码提示  和   星评提示--%>
+
+<!--弹窗密码框-->
+<div class="lock-popup-box">
+    <div class="layer-hospital-popup lock-popup clearfix">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="lock-popup-main login-form-item pr">
+                    <label for="randomNum" class="cells-block pr ">
+                        <input id="randomNum" type="text" class="login-formInput" value="" placeholder="输入四位数密码" maxlength=4>
+                        <span href="javascript:;" class="code" id="btnSendCode" onclick="randomNum()">自动生成</span>
+                    </label>
+                    <span class="cells-block hiht">请设置密码，需通过输入正确密码才能打开链接（不影响投稿）</span>
+                    <span class="cells-block error none">请输入4位数字密码</span>
+                    <div class="layer-hospital-popup-bottom">
+                        <div class="fr">
+                            <span class="button min-btn layui-layer-close">取消</span>
+                            <!--<input type="submit" class="button buttonBlue min-btn lock-succeed-hook" value="设置密码">-->
+                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value="">设置密码</a>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--密码框弹出成功-->
+<div class="lock-popup-box-succeed">
+    <div class="layer-hospital-popup lock-popup clearfix">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="lock-popup-main login-form-item pr">
+                    <div class="cells-block t-center">
+                        <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
+                        <p class="hiht">密码设置成功</p>
+                    </div>
+                    <div class="cells-block lock-popup-showRandomNum">1345</div>
+                    <span class="cells-block hiht t-center">可通过“取消密码”的方式取消或重制观看密码</span>
+                    <div class="layer-hospital-popup-bottom clearfix">
+                        <div class="fr">
+                            <!--<input type="submit" class="button buttonBlue min-btn" value="取消密码">-->
+                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" >取消密码</a>
+                        </div>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--弹出 星评提示1-->
+<div class="succeed-01-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="succeed-popup-main">
+                    <p>关闭星评后，评分数据将保留，并且不再接受评分。</p>
+                    <!--<div class="admin-button t-right">-->
+                    <!--<a href="javascript:;" class="button color-blue min-btn layui-layer-close" >取消</a>-->
+                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" value="确认">-->
+                    <!--</div>-->
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--弹出 星评提示2-->
+<div class="succeed-02-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="succeed-popup-main">
+                    <p>开启后不可再编辑评分项目</p>
+                    <!--<div class="admin-button t-right">-->
+                    <!--<a href="javascript:;" class="button color-blue min-btn layui-layer-close" >取消</a>-->
+                    <!--<input type="submit" class="button buttonBlue item-radius min-btn" value="确认">-->
+                    <!--</div>-->
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
 <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
 <script src="${ctxStatic}/js/moment.min.js" type="text/javascript"></script>
 <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
-
-<script src="${ctxStatic}/js/jquery.daterangepicker.js"></script>
+<script src="${ctxStatic}/js/daterangepicker.js"></script>
 <script src="${ctxStatic}/js/ajaxUtils.js"></script>
 
 <script>
@@ -709,31 +861,152 @@
             });
         });
 
-/*123*/
-        $('#timeStart').dateRangePicker({
-            singleMonth: true,
-            showShortcuts: false,
-            showTopbar: false,
-            startOfWeek: 'monday',
-            /*separator : ' - ',*/
-            format: 'YYYY/MM/DD HH:mm:ss',
-            autoClose: false,
-            singleDate:true,
-            startDate:new Date(),
-            time: {
-                enabled: true
-            }
-        }).bind('datepicker-first-date-selected', function(event, obj){
-            /*首次点击的时间*/
-            console.log('first-date-selected',obj);
-        }).bind('datepicker-change',function(event,obj){
-            console.log('change',obj);
-          /*  var timeArray = obj.value.split(" - ");*/
+        /*123*/
+        //弹出观看密码
+        $('.lock-hook').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['609px', '278px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                shadeClose:true,
+                content: $('.lock-popup-box'),
+                success:function(){
+                    layer.close(layer.index-1);
+                },
+                cancel :function(){
 
-            /*$("#liveEndTime").val(timeArray[1]);*/
-            $(this).find('input').val(obj.value);
-            $("#liveStartTime").val(obj.value);
+                },
+            });
         });
+
+        //弹出观看密码成功
+        $('.lock-succeed-hook').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['609px', '400px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                shadeClose:true,
+                content: $('.lock-popup-box-succeed'),
+                success:function(){
+                    layer.close(layer.index-1);
+                    //清空原来已设置的密码
+                    $('#randomNum').val('');
+                },
+                cancel :function(){
+                    layer.closeAll();
+                },
+            });
+        });
+
+        //星标提示语1
+        //投稿
+        $('.succeed-01-hook').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['440px', '250px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                shadeClose:true,
+                btn: ["确认","取消"],
+                content: $('.succeed-01-popup-box'),
+                success:function(){
+
+                },
+                cancel :function(){
+
+                },
+            });
+        });
+        /*提示语模板*/
+        $('.succeed-02-hook').on('click',function(){
+            layer.open({
+                type: 1,
+                area: ['440px', '224px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                shadeClose:true,
+                btn: ["确认","取消"],
+                content: $('.succeed-02-popup-box'),
+                success:function(){
+
+                },
+                cancel :function(){
+
+                },
+            });
+        });
+
+        //随机数函数（根据自己的思路来，我这里只是简单呈现效果）
+        var randomNum = function() {
+            var num = "";
+            for(var i=0;i<4;i++){
+                num += Math.floor(Math.random()*10)
+            }
+            $('#randomNum').val(num);
+
+            console.log($('#randomNum').val());
+            $('.lock-popup-showRandomNum').text(num)
+
+            //向后台发送处理数据
+//            $.ajax({
+//                type: "POST", //用POST方式传输
+//                dataType: "text", //数据格式:JSON
+//                url: 'Login.ashx', //目标地址
+//                data: "dealType=" + dealType +"&uid=" + uid + "&code=" + code,
+//                error: function (XMLHttpRequest, textStatus, errorThrown) { },
+//                success: function (msg){ }
+//            });
+        }
+
+
+        var beginTimeTake;
+        /*123*/
+        $('#timeStart').daterangepicker({
+            singleDatePicker: true,
+            showDropDowns: true,
+            autoUpdateInput: false,
+            timePicker24Hour : true,
+            timePicker : true,
+            minDate:new Date(),
+            "locale": {
+                format: 'YYYY-MM-DD HH:mm',
+                applyLabel: "<fmt:message key='page.meeting.time.start.plugin.true'/>",
+                cancelLabel: "<fmt:message key='page.meeting.time.start.plugin.false'/>",
+                weekLabel: 'W',
+                customRangeLabel: "<fmt:message key='page.meeting.time.start.plugin.select'/>",
+                daysOfWeek:["<fmt:message key='page.meeting.time.start.plugin.sun'/>",
+                                "<fmt:message key='page.meeting.time.start.plugin.mon'/>",
+                                "<fmt:message key='page.meeting.time.start.plugin.tues'/>",
+                                "<fmt:message key='page.meeting.time.start.plugin.wed'/>",
+                                "<fmt:message key='page.meeting.time.start.plugin.thur'/>",
+                                "<fmt:message key='page.meeting.time.start.plugin.fri'/>",
+                                "<fmt:message key='page.meeting.time.start.plugin.sat'/>"],
+                monthNames: ["01","02","03","04","05","06","07","08","09","10","11","12"],
+            }
+        },function(start,end,label) {
+            beginTimeTake = start;
+            console.log(this.startDate.format(this.locale.format));
+
+            if(!this.startDate){
+                this.element.find('.timedate-input').val('');
+            }else{
+               this.element.find('.timedate-input').val(this.startDate.format(this.locale.format));
+            }
+        });
+        //上传Hover 提示
+        $("#timeStart").mouseenter(function(){
+            layer.tips("<fmt:message key='page.meeting.time.start.tips'/>", $(this), {
+                tips: [2,'#8abcfe'],
+                time:2000
+            });
+        });
+
         if("${course != null && course.published && course.playType > 0}" == "true") {
             showLiveMessage();
         }

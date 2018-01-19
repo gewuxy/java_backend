@@ -39,6 +39,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static cn.medcn.csp.CspConstants.MEET_COUNT_OUT_TIPS_KEY;
@@ -204,25 +205,6 @@ public class MeetingMgrController extends CspBaseController {
     }
 
     /**
-     * 首页点击查看星评
-     * @param courseId
-     * @return
-     */
-    @RequestMapping(value = "/clickStar/{courseId}")
-    public String HaveStarRate(@PathVariable Integer courseId,Model model){
-        //TODO 待验证
-        AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
-        if (audioCourse.getStarRateFlag() == false){
-            model.addAttribute("info",audioCourse.getInfo());
-        }else{
-            List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
-            model.addAttribute("result",result);
-        }
-        return "";
-    }
-
-
-    /**
      * 进入投屏界面
      *
      * @param courseId
@@ -338,12 +320,12 @@ public class MeetingMgrController extends CspBaseController {
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
-            //TODO 星评详情 evaluate
+            /*//TODO 星评详情 evaluate
             //星评信息
             if (course.getStarRateFlag()== true) {
                 List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
                 model.addAttribute("result",result);
-            }
+            }*/
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
@@ -639,6 +621,13 @@ public class MeetingMgrController extends CspBaseController {
         }
         //更新操作，包括更新或生成水印
         Integer packageId = getWebPrincipal().getPackageId();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm");
+        try {
+            Date liveStarDate = simpleDateFormat.parse(liveTime);
+            course.getLive().setStartTime(liveStarDate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
 
         //保存星评
