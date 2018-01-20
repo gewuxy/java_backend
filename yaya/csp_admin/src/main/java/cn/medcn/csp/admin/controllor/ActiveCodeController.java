@@ -22,7 +22,7 @@ public class ActiveCodeController extends BaseController{
     protected ActiveCodeService activeCodeService;
 
     @RequestMapping("/list")
-    public String activeCodeList(Pageable pageable, String nickname, Integer used, Integer actived, Model model) {
+    public String activeCodeList(Pageable pageable, String nickname, Integer used, Model model) {
         if (CheckUtils.isNotEmpty(nickname)) {
             pageable.put("nickname", nickname);
             model.addAttribute("nickname", nickname);
@@ -30,10 +30,6 @@ public class ActiveCodeController extends BaseController{
         if (used != null) {
             pageable.put("used", used);
             model.addAttribute("used", used);
-        }
-        if (actived != null) {
-            pageable.put("actived", actived);
-            model.addAttribute("actived", actived);
         }
 
         MyPage<ActiveCode> page = activeCodeService.findActiveCodeList(pageable);

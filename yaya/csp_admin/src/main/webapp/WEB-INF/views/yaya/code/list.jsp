@@ -25,7 +25,6 @@
         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
         <input  name="nickname" type="hidden" value="${nickname}"/>
         <input  name="used" type="hidden" value="${used}"/>
-        <input  name="actived" type="hidden" value="${actived}"/>
     </form>
 
     <form id="searchForm" method="post" action="${ctx}/yaya/code/list" class="breadcrumb form-search">
@@ -35,12 +34,6 @@
             <option value="">使用状态</option>
             <option value="0" ${used eq 0 ? 'selected':''}>未使用</option>
             <option value="1" ${used eq 1 ? 'selected':''}>已使用</option>
-        </select>
-        &nbsp;&nbsp;
-        <select name="actived" id="actived" style="width: 150px;">
-            <option value="">激活状态</option>
-            <option value="0" ${actived eq 0 ? 'selected':''}>未激活</option>
-            <option value="1" ${actived eq 1 ? 'selected':''}>已激活</option>
         </select>
         &nbsp;&nbsp;
         <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
@@ -55,7 +48,6 @@
                     <td>${c.code}</td>
                     <td>${c.used ?'<span style="color:green">已使用</span>':'<span style="color:blue">未使用</span>'}</td>
                     <td>${c.toName}</td>
-                    <td>${c.actived ?'<span style="color:green">已激活</span>':'<span style="color:blue">未激活</span>'}</td>
                     <td><fmt:formatDate value="${c.sendTime}" pattern="yyyy/MM/dd"/></td>
                     <td><fmt:formatDate value="${c.activeTime}" pattern="yyyy/MM/dd"/></td>
                     <td>${c.nickname}</td>
@@ -64,7 +56,7 @@
         </c:if>
         <c:if test="${empty page.dataList}">
             <tr>
-                <td colspan="7">没有查询到数据</td>
+                <td colspan="6">没有查询到数据</td>
             </tr>
         </c:if>
         </tbody>

@@ -11,9 +11,6 @@
         <if test="used != null">
             AND c.used = #{used}
         </if>
-        <if test="actived != null">
-            AND c.actived = #{actived}
-        </if>
         ORDER BY c.active_time DESC
     </select>
 </mapper>
