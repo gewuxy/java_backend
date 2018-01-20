@@ -77,6 +77,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
 
+    @Autowired
+    protected CspStarRateOptionDAO cspStarRateOptionDAO;
+
+    @Autowired
+    protected CspStarRateHistoryDAO cspStarRateHistoryDAO;
+
+    @Autowired
+    protected CspStarRateHistoryDetailDAO cspStarRateHistoryDetailDAO;
+
 
     @Value("${app.file.upload.base}")
     private String appFileUploadBase;
@@ -951,10 +960,64 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             play.setPlayPage(0);
             audioCoursePlayDAO.insert(play);
 
+            //复制星评信息
+            doCopyStarRateHistory(courseId, copyCourseId);
+
             return copyCourseId;
         }
 
         return null;
+    }
+
+    protected void doCopyStarRateHistory(Integer srcCourseId, Integer copyCourseId){
+
+        //处理综合评分
+        CspStarRateHistory historyCond = new CspStarRateHistory();
+        historyCond.setCourseId(srcCourseId);
+        List<CspStarRateHistory> historyList = cspStarRateHistoryDAO.select(historyCond);
+        if (!CheckUtils.isEmpty(historyList)) {
+            for (CspStarRateHistory history : historyList) {
+                CspStarRateHistory h = new CspStarRateHistory();
+                h.setCourseId(copyCourseId);
+                h.setRateTime(history.getRateTime());
+                h.setScore(history.getScore());
+                h.setTicket(history.getTicket());
+                cspStarRateHistoryDAO.insert(h);
+            }
+        }
+
+        //处理评分项明细
+        CspStarRateOption cond = new CspStarRateOption();
+        cond.setCourseId(srcCourseId);
+        List<CspStarRateOption> options = cspStarRateOptionDAO.select(cond);
+
+        CspStarRateHistoryDetail detailCond = new CspStarRateHistoryDetail();
+        detailCond.setCourseId(srcCourseId);
+
+        if (!CheckUtils.isEmpty(options)) {
+            for (CspStarRateOption option : options) {
+                CspStarRateOption o = new CspStarRateOption();
+                o.setCourseId(copyCourseId);
+                o.setTitle(option.getTitle());
+                cspStarRateOptionDAO.insert(o);
+
+                detailCond.setOptionId(option.getId());
+
+                List<CspStarRateHistoryDetail> detailList = cspStarRateHistoryDetailDAO.select(detailCond);
+                if (!CheckUtils.isEmpty(detailList)) {
+                    for (CspStarRateHistoryDetail detail : detailList) {
+                        CspStarRateHistoryDetail d = new CspStarRateHistoryDetail();
+                        d.setOptionId(o.getId());
+                        d.setCourseId(copyCourseId);
+                        d.setScore(detail.getScore());
+                        cspStarRateHistoryDetailDAO.insert(d);
+                    }
+                }
+
+            }
+        }
+
+
     }
 
 
