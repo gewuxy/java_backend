@@ -1,6 +1,7 @@
 package cn.medcn.meet.service.impl;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.NotEnoughCreditsException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
@@ -34,15 +35,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.weixin.config.MiniProgramConfig.*;
@@ -1246,6 +1245,53 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         JSONObject params = JSONObject.parseObject(JSON.toJSONString(map));
         HttpUtils.postJsonResponseStream(url,params,codeUrl);
         return codeUrl;
+    }
+
+
+    /**
+     * 根据图片和标题创建课件和明细
+     * @param files
+     * @param title
+     * @return
+     */
+    @Override
+    public Integer createAudioAndDetail(MultipartFile[] files, String title, String userId) throws SystemException {
+        //生成课件
+          AudioCourse course = new AudioCourse();
+          course.setUserId(userId);
+          course.setTitle(title);
+          course.setCreateTime(new Date());
+          course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+          insert(course);
+          Integer courseId = course.getId();
+
+        //相对路径
+        String relativePath = FilePath.COURSE.path + "/" + courseId + "/ppt/";
+        //文件保存路径
+        String savePath = appFileUploadBase + relativePath;
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String fileName = null;
+        //文件绝对路径
+        String absoluteName = null;
+
+        List<String> imgList = new ArrayList<>();
+        for(MultipartFile file : files){
+            fileName = UUIDUtil.getNowStringID() + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+            absoluteName = savePath + fileName;
+            File saveFile = new File(absoluteName);
+            try {
+                file.transferTo(saveFile);
+            } catch (IOException e) {
+                throw new SystemException(local("upload.error"));
+            }
+            imgList.add(relativePath + fileName);
+        }
+            updateAllDetails(courseId,imgList);
+
+        return courseId;
     }
 
     /**
