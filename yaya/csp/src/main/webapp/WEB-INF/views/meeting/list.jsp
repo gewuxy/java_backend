@@ -1299,37 +1299,8 @@
                 $("#scoreCount").text(result.scoreCount);
                 var index = 1;
                 $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
-                $maxStar.find(".maxStar").each(function(){
-                    if(avgScore > index){
-                        $(this).removeClass("null").addClass("full");
-                    } else if(avgScore == index){
-                        $(this).removeClass("null").addClass("full");
-                        return false;
-                    } else {
-                        $(this).removeClass("null").addClass("half");
-                        return false;
-                    }
-                    index ++;
-                });
-            }
-
-        }
-
-
-        function handleDetailResult(result){
-            $(".detailScore").text("0");
-            $(".fl").text(" ");
-            $(".star-list-row").addClass("none");
-            if (result != undefined && result.length > 0){
-                for(var index in result){
-                    var detail = result[index];
-                    var avgScore = detail.avgScore;
-                    var $currentRow = $(".star-list-row[index='"+index+"']");
-                    $currentRow.find(".fl").text(" " + detail.title);
-                    $currentRow.find(".detailScore").text(avgScore);
-                    var index = 1;
-                    $currentRow.find(".star").find("span").removeClass("full").removeClass("half").addClass("null");
-                    $currentRow.find(".star").find("span").each(function(){
+                if(avgScore > 0){
+                    $maxStar.find(".maxStar").each(function(){
                         if(avgScore > index){
                             $(this).removeClass("null").addClass("full");
                         } else if(avgScore == index){
@@ -1341,7 +1312,40 @@
                         }
                         index ++;
                     });
+                }
 
+            }
+
+        }
+
+
+        function handleDetailResult(result){
+            $(".detailScore").text("0");
+            $(".star-list-row .fl").text(" ");
+            $(".star-list-row").addClass("none");
+            if (result != undefined && result.length > 0){
+                for(var index in result){
+                    var detail = result[index];
+                    var avgScore = detail.avgScore;
+                    var $currentRow = $(".star-list-row[index='"+index+"']");
+                    $currentRow.find(".fl").text(" " + detail.title);
+                    $currentRow.find(".detailScore").text(avgScore);
+                    var index = 1;
+                    $currentRow.find(".star").find("span").removeClass("full").removeClass("half").addClass("null");
+                    if(avgScore > 0){
+                        $currentRow.find(".star").find("span").each(function(){
+                            if(avgScore > index){
+                                $(this).removeClass("null").addClass("full");
+                            } else if(avgScore == index){
+                                $(this).removeClass("null").addClass("full");
+                                return false;
+                            } else {
+                                $(this).removeClass("null").addClass("half");
+                                return false;
+                            }
+                            index ++;
+                        });
+                    }
                     $currentRow.removeClass("none");
                 }
             }
