@@ -2,4 +2,18 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.user.dao.ActiveCodeDAO" >
 
+    <select id="findActiveCodeList" resultType="cn.medcn.user.model.ActiveCode">
+        SELECT c.*,u.nickname FROM t_active_code c
+        LEFT JOIN t_app_user u ON u.id = c.onwerid WHERE 1=1
+        <if test="nickname != null">
+            AND u.nickname = #{nickname}
+        </if>
+        <if test="used != null">
+            AND c.used = #{used}
+        </if>
+        <if test="actived != null">
+            AND c.actived = #{actived}
+        </if>
+        ORDER BY c.active_time DESC
+    </select>
 </mapper>
