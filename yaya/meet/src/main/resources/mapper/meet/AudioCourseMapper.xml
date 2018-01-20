@@ -67,17 +67,17 @@
 
     <!-- csp method sql for web-->
     <select id="findCspMeetingList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,c.star_rate_flag,
-        fcd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,count(h.id) AS score_count, avg(h.score) AS avg_score,
+        SELECT i.* , count(h.id) AS score_count, avg(h.score) AS avg_score FROM
+        (SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,c.star_rate_flag,
+        fcd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
         p.play_page,p.play_state, c.info,c.category_id, c.password
         FROM t_audio_course c
         LEFT JOIN t_csp_live l ON l.course_id = c.id
         LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
         LEFT JOIN t_audio_course_detail fcd ON c.id = fcd.course_id and fcd .sort = 1
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
-        LEFT JOIN t_csp_star_rate_history h ON h.course_id = c.id
-        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
-        AND c.deleted != 1
+
+        WHERE c.csp_user_id = 1 AND c.published = 1 AND c.deleted = 0
         <if test="playType != null">
             <choose>
                 <when test="playType == 0">
@@ -91,7 +91,8 @@
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
         </if>
-        GROUP BY c.id
+        GROUP BY c.id) as i LEFT JOIN t_csp_star_rate_history h ON h.course_id = i.id
+        GROUP BY i.id
     </select>
     <!-- for api -->
     <select id="findCspMeetingListForApp" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">

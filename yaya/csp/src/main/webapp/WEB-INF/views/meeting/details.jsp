@@ -204,7 +204,7 @@
         const file_size_limit = 50*1024*1024;
 
         function isVideo(fileName){
-            var isVideo = fileName.endWith(".mp4") || fileName.endWith(".avi") || fileName.endWith(".wmv");
+            var isVideo = fileName.endWith(".mp4");
             return isVideo;
         }
 

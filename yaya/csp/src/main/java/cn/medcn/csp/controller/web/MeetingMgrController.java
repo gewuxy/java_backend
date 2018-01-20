@@ -484,6 +484,7 @@ public class MeetingMgrController extends CspBaseController {
         } else {
             detail.setVideoUrl(result.getRelativePath());
             detail.setImgUrl(dir + "/" + FFMpegUtils.printScreen(fileUploadBase + result.getRelativePath()));
+            detail.setDuration(FFMpegUtils.duration(fileUploadBase + result.getRelativePath()));
         }
 
         audioService.addDetail(detail);
