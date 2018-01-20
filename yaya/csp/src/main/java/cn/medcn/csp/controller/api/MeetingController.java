@@ -186,15 +186,17 @@ public class MeetingController extends CspBaseController {
                 return localeView("/meeting/share_error");
             }
 
-            audioService.handleHttpUrl(fileBase, course);
-            model.addAttribute("course", course);
-
             if (course.getDeleted() != null && course.getDeleted() == true) {
                 model.addAttribute("error", local("source.has.deleted"));
                 return localeView("/meeting/share_error");
             }
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
+            }
+
+            //对观看密码进行简单加密
+            if (CheckUtils.isNotEmpty(course.getPassword())) {
+                course.setPassword(DESUtils.encode(Constants.DES_PRIVATE_KEY, course.getPassword()));
             }
 
             //设置会议水印
@@ -226,12 +228,38 @@ public class MeetingController extends CspBaseController {
 
 
             }
+
+            audioService.handleHttpUrl(fileBase, course);
+            model.addAttribute("course", course);
+
             return localeView("/meeting/course_" + course.getPlayType().intValue());
         } catch (Exception e) {
             e.printStackTrace();
             model.addAttribute("error", linkError);
             return localeView("/meeting/share_error");
         }
+    }
+
+    @RequestMapping(value = "/share/pwd/check")
+    @ResponseBody
+    public String checkPassword(Integer courseId, String password){
+        if (courseId == null || courseId == 0) {
+            return error();
+        }
+
+        if (CheckUtils.isEmpty(password)) {
+            return error();
+        }
+
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course == null) {
+            return error();
+        }
+
+        if (!password.equalsIgnoreCase(course.getPassword())){
+            return error();
+        }
+        return success();
     }
 
     /**
@@ -1249,7 +1277,10 @@ public class MeetingController extends CspBaseController {
      * @param courseId
      * @param files
      * @param title
+     * @param imgId
+     * @param musicId
      * @return
+     * @throws SystemException
      */
     @RequestMapping("/mini/create/update")
     @ResponseBody
@@ -1274,7 +1305,9 @@ public class MeetingController extends CspBaseController {
                 return error(local("meeting.title.not.none"));
             }
             courseId = audioService.createAudioAndDetail(files, course, theme);
-            return success(courseId);
+            Map<String,Integer> map = new HashMap<>();
+            map.put("courseId",courseId);
+            return success(map);
 
         }else{  //修改课件
             theme.setCourseId(courseId);
