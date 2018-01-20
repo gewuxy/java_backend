@@ -4,12 +4,15 @@ import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.CheckUtils;
+import cn.medcn.csp.admin.log.Log;
 import cn.medcn.user.model.ActiveCode;
 import cn.medcn.user.service.ActiveCodeService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Created by Liuchangling on 2018/1/20.
@@ -38,9 +41,19 @@ public class ActiveCodeController extends BaseController{
     }
 
 
-    @RequestMapping("/create")
-    public String createCode() {
+    @RequestMapping("/batch/create")
+    @ResponseBody
+    @RequiresPermissions("yaya:code:add")
+    @Log(name = "批量生成激活码")
+    public String createCode(Integer[] unitIds, Integer codeNum) {
+        if (unitIds == null || unitIds.length == 0) {
+            return error("请选择需要生成激活码的单位号");
+        }
+        if (codeNum == null || codeNum == 0) {
+            return error("请输入需要生成的激活码数量");
+        }
 
-        return "/yaya/code/list";
+        activeCodeService.doCreateActiveCode(unitIds, codeNum);
+        return success();
     }
 }

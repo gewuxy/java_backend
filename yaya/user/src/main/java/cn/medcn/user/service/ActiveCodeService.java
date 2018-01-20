@@ -15,4 +15,6 @@ public interface ActiveCodeService extends BaseService<ActiveCode> {
     int getActiveStore(Integer userId);
 
     MyPage<ActiveCode> findActiveCodeList(Pageable pageable);
+
+    void doCreateActiveCode(Integer[] unitIds, Integer codeNum);
 }
