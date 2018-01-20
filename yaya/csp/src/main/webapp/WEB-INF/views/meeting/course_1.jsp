@@ -138,7 +138,7 @@
     </div>
 
     <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}">
+    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
         <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
@@ -315,6 +315,13 @@
                     // todo 弹出星评界面
                 } else if(data.order == 11){//直播開始
                     $("#liveStartView").removeClass("none");
+                } else if(data.order == 14){//直播结束
+                    if(activeItemIsVideo.length > 0){
+                        activeItemIsVideo.get(0).pause();
+                    } else {
+                        popupPalyer.pause();
+                    }
+                    $("#liveOverView").removeClass("none");
                 }
             }
 

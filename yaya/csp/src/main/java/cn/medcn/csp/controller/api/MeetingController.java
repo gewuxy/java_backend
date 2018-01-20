@@ -173,7 +173,7 @@ public class MeetingController extends CspBaseController {
             }
 
             Integer courseId = Integer.valueOf(id);
-            AudioCourse course = audioService.findAudioCourse(courseId);
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
             if (course == null) {
                 model.addAttribute("error", linkError);
                 return localeView("/meeting/share_error");
@@ -211,11 +211,9 @@ public class MeetingController extends CspBaseController {
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     model.addAttribute("totalLiveTime", CalendarUtils.formatTimesDiff(live.getStartTime(), live.getEndTime(), 0));
                 }
-
                 model.addAttribute("live", live);
-                return localeView("/meeting/course_" + course.getPlayType().intValue());
-
-
+            } else {
+                course.setDetails(audioService.findDetailsByCourseId(courseId));
             }
 
             audioService.handleHttpUrl(fileBase, course);
@@ -1029,6 +1027,9 @@ public class MeetingController extends CspBaseController {
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
             liveService.doModifyLiveState(live);
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
+            liveService.publish(order);
         }
 
         return success();
