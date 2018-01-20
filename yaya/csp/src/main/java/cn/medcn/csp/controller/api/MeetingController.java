@@ -1249,7 +1249,10 @@ public class MeetingController extends CspBaseController {
      * @param courseId
      * @param files
      * @param title
+     * @param imgId
+     * @param musicId
      * @return
+     * @throws SystemException
      */
     @RequestMapping("/mini/create/update")
     @ResponseBody
