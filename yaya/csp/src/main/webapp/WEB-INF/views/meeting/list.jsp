@@ -1298,6 +1298,7 @@
                 $("#avgScoreSpan").text(avgScore);
                 $("#scoreCount").text(result.scoreCount);
                 var index = 1;
+                $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
                 $maxStar.find(".maxStar").each(function(){
                     if(avgScore > index){
                         $(this).removeClass("null").addClass("full");
@@ -1327,6 +1328,7 @@
                     $currentRow.find(".fl").text(" " + detail.title);
                     $currentRow.find(".detailScore").text(avgScore);
                     var index = 1;
+                    $currentRow.find(".star").find("span").removeClass("full").removeClass("half").addClass("null");
                     $currentRow.find(".star").find("span").each(function(){
                         if(avgScore > index){
                             $(this).removeClass("null").addClass("full");
