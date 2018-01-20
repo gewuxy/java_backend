@@ -1301,6 +1301,9 @@
                 $maxStar.find(".maxStar").each(function(){
                     if(avgScore > index){
                         $(this).removeClass("null").addClass("full");
+                    } else if(avgScore == index){
+                        $(this).removeClass("null").addClass("full");
+                        return false;
                     } else {
                         $(this).removeClass("null").addClass("half");
                         return false;
@@ -1327,6 +1330,9 @@
                     $currentRow.find(".star").find("span").each(function(){
                         if(avgScore > index){
                             $(this).removeClass("null").addClass("full");
+                        } else if(avgScore == index){
+                            $(this).removeClass("null").addClass("full");
+                            return false;
                         } else {
                             $(this).removeClass("null").addClass("half");
                             return false;
