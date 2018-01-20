@@ -1348,6 +1348,9 @@
         }
 
         $(".star-hook, .info-hook").click(function(){
+            var loading = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             var id = $(this).attr("courseId");
             ajaxGet('${ctx}/mgr/meet/course_info/' + id, {}, function(data){
                 $(".metting-grade-info").find(".title").text(data.data.title);
@@ -1370,7 +1373,7 @@
                     shadeClose:true,
                     content: $('.layer-grade-star-box'),
                     success:function(){
-
+                        layer.close(loading);
                     },
                     cancel :function(){
 
