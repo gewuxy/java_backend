@@ -631,15 +631,6 @@ public class MeetingController extends CspBaseController {
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     return error(local("share.live.over"));
                 }
-                //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
-                if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
-                    live.setStartTime(new Date());
-                    live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-                }
-
-                //改变直播状态
-                live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-                liveService.updateByPrimaryKey(live);
             }
             dto.setLive(live);
         } else {//录播查询录播的进度信息
@@ -1012,6 +1003,16 @@ public class MeetingController extends CspBaseController {
             liveService.publish(liveStartOrder);
 
         }
+        Live live = liveService.findByCourseId(courseId);
+        //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
+        if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
+            live.setStartTime(new Date());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+            //改变直播状态
+            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+            liveService.updateByPrimaryKey(live);
+        }
+
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
 
         return success();
