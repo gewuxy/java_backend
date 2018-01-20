@@ -1245,6 +1245,41 @@ public class MeetingController extends CspBaseController {
     }
 
     /**
+     * 小程序创建课件或者更新课件
+     * @param courseId
+     * @param files
+     * @param title
+     * @return
+     */
+    @RequestMapping("/mini/create/update")
+    @ResponseBody
+    public String createOrUpdateAudio(Integer courseId, @RequestParam("files") MultipartFile[] files, String title) throws SystemException {
+        if(StringUtils.isEmpty(title)){
+            return error(local("meeting.title.not.none"));
+        }
+        String userId = SecurityUtils.get().getId();
+        //新建课件
+        if(courseId == null){
+            if(files == null){
+                return error(local("upload.error.null"));
+            }
+            courseId = audioService.createAudioAndDetail(files,title,userId);
+            return success(courseId);
+
+        }else{  //修改课件，只能修改标题
+            AudioCourse course = new AudioCourse();
+            course.setId(courseId);
+            course.setTitle(title);
+            course.setUserId(userId);
+            int count = audioService.updateByPrimaryKey(course);
+            if(count != 1){
+                return error(local("page.words.update.fail"));
+            }
+                return success();
+        }
+    }
+
+    /**
      * 小程序活动贺卡模板列表
      * @return
      */
