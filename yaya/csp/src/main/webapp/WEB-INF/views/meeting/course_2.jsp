@@ -201,6 +201,19 @@
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
 
+    <!--输入密码界面-->
+    <div class="fixed-full-screen-box ${empty course.password ? 'none':''}" id="passwordView">
+        <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
+        <div class="fixed-full-screen-main fixed-full-screen-min-main">
+            <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
+            <div class="fixed-row t-center pr">
+                <input type="text" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+            </div>
+            <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
+            <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
+        </div>
+    </div>
+
 </div>
 
 <!--弹出的简介-->
@@ -224,6 +237,21 @@
     var playOver = false;
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
+
+    function checkPwd(){
+        var password = $("#password").val();
+        if ($.trim(password) == ''){
+            $("#passwordError").removeClass("none");
+            return ;
+        }
+        $.get('${ctx}/api/meeting/share/pwd/check', {"courseId":"${course.id}", "password":password}, function (data) {
+            if(data.code == 0){
+                $("#passwordView").addClass("none");
+            } else {
+                $("#passwordError").removeClass("none");
+            }
+        },'json');
+    }
 
     //判断手机终端类型
     var browser={
