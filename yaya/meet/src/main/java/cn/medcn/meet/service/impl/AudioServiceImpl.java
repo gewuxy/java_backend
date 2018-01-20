@@ -939,6 +939,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
         if (course != null) {
             List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
+            if (CheckUtils.isEmpty(details)) {
+                details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
+            }
 
             AudioCourse copyCourse = new AudioCourse();
             BeanUtils.copyProperties(course, copyCourse);

@@ -173,7 +173,7 @@ public class MeetingController extends CspBaseController {
             }
 
             Integer courseId = Integer.valueOf(id);
-            AudioCourse course = audioService.findAudioCourse(courseId);
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
             if (course == null) {
                 model.addAttribute("error", linkError);
                 return localeView("/meeting/share_error");
@@ -209,17 +209,11 @@ public class MeetingController extends CspBaseController {
                 //TODO 缺少星评页面
                 Live live = liveService.findByCourseId(courseId);
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                    model.addAttribute("error", local("share.live.over"));
-                    return localeView("/meeting/share_error");
-                } else if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {//直播未开始
-                    model.addAttribute("error", local("share.live.not_start.error"));
-                    return localeView("/meeting/share_error");
-                } else {
-                    model.addAttribute("live", live);
-                    return localeView("/meeting/course_" + course.getPlayType().intValue());
+                    model.addAttribute("totalLiveTime", CalendarUtils.formatTimesDiff(live.getStartTime(), live.getEndTime(), 0));
                 }
-
-
+                model.addAttribute("live", live);
+            } else {
+                course.setDetails(audioService.findDetailsByCourseId(courseId));
             }
 
             audioService.handleHttpUrl(fileBase, course);
@@ -584,7 +578,6 @@ public class MeetingController extends CspBaseController {
                         return error(local("share.live.over"));
                     }
                     result.put("startTime", live.getStartTime());
-                    result.put("endTime", live.getEndTime());
                 }
             }
 
@@ -638,15 +631,6 @@ public class MeetingController extends CspBaseController {
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     return error(local("share.live.over"));
                 }
-                //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
-                if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
-                    live.setStartTime(new Date());
-                    live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-                }
-
-                //改变直播状态
-                live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-                liveService.updateByPrimaryKey(live);
             }
             dto.setLive(live);
         } else {//录播查询录播的进度信息
@@ -884,6 +868,9 @@ public class MeetingController extends CspBaseController {
 
                 if (live != null) {
                     live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
+                    if (over == 1) {
+                        live.setEndTime(new Date());
+                    }
                     liveService.updateByPrimaryKey(live);
                 }
                 //删除缓存中的同步指令
@@ -1016,6 +1003,16 @@ public class MeetingController extends CspBaseController {
             liveService.publish(liveStartOrder);
 
         }
+        Live live = liveService.findByCourseId(courseId);
+        //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
+        if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
+            live.setStartTime(new Date());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+            //改变直播状态
+            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+            liveService.updateByPrimaryKey(live);
+        }
+
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
 
         return success();
@@ -1031,6 +1028,9 @@ public class MeetingController extends CspBaseController {
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
             liveService.doModifyLiveState(live);
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
+            liveService.publish(order);
         }
 
         return success();

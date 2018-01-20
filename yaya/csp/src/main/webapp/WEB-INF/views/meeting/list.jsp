@@ -1155,7 +1155,7 @@
                         <div class="fl"> </div>
                     </div>
                 </div>
-                <div class="footer-row"><fmt:message key="page.meeting.star.rate.attend"/><span id="scoreCount">0</span>人</div>
+                <div class="footer-row"><fmt:message key="page.meeting.star.rate.attend"/><span id="scoreCount">0</span><fmt:message key="page.meeting.tips.score.user.unit"/></div>
             </div>
         </div>
     </div>
@@ -1298,15 +1298,22 @@
                 $("#avgScoreSpan").text(avgScore);
                 $("#scoreCount").text(result.scoreCount);
                 var index = 1;
-                $maxStar.find(".maxStar").each(function(){
-                    if(avgScore > index){
-                        $(this).removeClass("null").addClass("full");
-                    } else {
-                        $(this).removeClass("null").addClass("half");
-                        return false;
-                    }
-                    index ++;
-                });
+                $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
+                if(avgScore > 0){
+                    $maxStar.find(".maxStar").each(function(){
+                        if(avgScore > index){
+                            $(this).removeClass("null").addClass("full");
+                        } else if(avgScore == index){
+                            $(this).removeClass("null").addClass("full");
+                            return false;
+                        } else {
+                            $(this).removeClass("null").addClass("half");
+                            return false;
+                        }
+                        index ++;
+                    });
+                }
+
             }
 
         }
@@ -1314,7 +1321,7 @@
 
         function handleDetailResult(result){
             $(".detailScore").text("0");
-            $(".fl").text(" ");
+            $(".star-list-row .fl").text(" ");
             $(".star-list-row").addClass("none");
             if (result != undefined && result.length > 0){
                 for(var index in result){
@@ -1324,22 +1331,30 @@
                     $currentRow.find(".fl").text(" " + detail.title);
                     $currentRow.find(".detailScore").text(avgScore);
                     var index = 1;
-                    $currentRow.find(".star").find("span").each(function(){
-                        if(avgScore > index){
-                            $(this).removeClass("null").addClass("full");
-                        } else {
-                            $(this).removeClass("null").addClass("half");
-                            return false;
-                        }
-                        index ++;
-                    });
-
+                    $currentRow.find(".star").find("span").removeClass("full").removeClass("half").addClass("null");
+                    if(avgScore > 0){
+                        $currentRow.find(".star").find("span").each(function(){
+                            if(avgScore > index){
+                                $(this).removeClass("null").addClass("full");
+                            } else if(avgScore == index){
+                                $(this).removeClass("null").addClass("full");
+                                return false;
+                            } else {
+                                $(this).removeClass("null").addClass("half");
+                                return false;
+                            }
+                            index ++;
+                        });
+                    }
                     $currentRow.removeClass("none");
                 }
             }
         }
 
         $(".star-hook, .info-hook").click(function(){
+            var loading = layer.load(1, {
+                shade: [0.1,'#fff'] //0.1透明度的白色背景
+            });
             var id = $(this).attr("courseId");
             ajaxGet('${ctx}/mgr/meet/course_info/' + id, {}, function(data){
                 $(".metting-grade-info").find(".title").text(data.data.title);
@@ -1362,7 +1377,7 @@
                     shadeClose:true,
                     content: $('.layer-grade-star-box'),
                     success:function(){
-
+                        layer.close(loading);
                     },
                     cancel :function(){
 
