@@ -394,4 +394,18 @@ public interface AudioService extends BaseService<AudioCourse>  {
      */
     AudioCourseDTO findMiniTemplateByIdOrRand(Integer id);
 
+    /**
+     * 小程序 选择贺卡模板 制作有声贺卡
+     * @param id 模板id
+     * @param cspUserId
+     * @return
+     */
+    Integer doCopyCourseTemplate(Integer id, String cspUserId);
+
+
+    /**
+     * 复制讲本主题 （背景图片、背景音乐）
+     * @param courseTheme
+     */
+    void doCopyCourseTheme(AudioCourseTheme courseTheme, Integer courseId);
 }
