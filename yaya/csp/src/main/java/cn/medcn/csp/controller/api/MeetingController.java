@@ -1277,33 +1277,42 @@ public class MeetingController extends CspBaseController {
      * @param courseId
      * @param files
      * @param title
+     * @param imgId
+     * @param musicId
      * @return
+     * @throws SystemException
      */
     @RequestMapping("/mini/create/update")
     @ResponseBody
-    public String createOrUpdateAudio(Integer courseId, @RequestParam("files") MultipartFile[] files, String title) throws SystemException {
-        if(StringUtils.isEmpty(title)){
-            return error(local("meeting.title.not.none"));
-        }
+    public String createOrUpdateAudio(Integer courseId, @RequestParam("files") MultipartFile[] files, String title, Integer imgId,Integer musicId) throws SystemException {
+
         String userId = SecurityUtils.get().getId();
+        AudioCourse course = new AudioCourse();
+        course.setId(courseId);
+        course.setTitle(title);
+        course.setUserId(userId);
+
+        AudioCourseTheme theme = new AudioCourseTheme();
+        theme.setMusicId(musicId);
+        theme.setImageId(imgId);
+
         //新建课件
         if(courseId == null){
             if(files == null){
                 return error(local("upload.error.null"));
             }
-            courseId = audioService.createAudioAndDetail(files,title,userId);
-            return success(courseId);
-
-        }else{  //修改课件，只能修改标题
-            AudioCourse course = new AudioCourse();
-            course.setId(courseId);
-            course.setTitle(title);
-            course.setUserId(userId);
-            int count = audioService.updateByPrimaryKey(course);
-            if(count != 1){
-                return error(local("page.words.update.fail"));
+            if(StringUtils.isEmpty(title)){
+                return error(local("meeting.title.not.none"));
             }
-                return success();
+            courseId = audioService.createAudioAndDetail(files, course, theme);
+            Map<String,Integer> map = new HashMap<>();
+            map.put("courseId",courseId);
+            return success(map);
+
+        }else{  //修改课件
+            theme.setCourseId(courseId);
+            audioService.updateMiniCourse(course,theme);
+            return success();
         }
     }
 

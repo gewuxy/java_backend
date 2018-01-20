@@ -77,6 +77,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     protected CspUserInfoDAO cspUserInfoDAO;
 
     @Autowired
+    protected AudioCourseThemeDAO audioCourseThemeDAO;
+
+    @Autowired
     protected CspStarRateOptionDAO cspStarRateOptionDAO;
 
     @Autowired
@@ -1314,19 +1317,24 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     /**
      * 根据图片和标题创建课件和明细
      * @param files
-     * @param title
+     * @param course
+     * @param theme
      * @return
+     * @throws SystemException
      */
     @Override
-    public Integer createAudioAndDetail(MultipartFile[] files, String title, String userId) throws SystemException {
+    public Integer createAudioAndDetail(MultipartFile[] files, AudioCourse course, AudioCourseTheme theme) throws SystemException {
         //生成课件
-          AudioCourse course = new AudioCourse();
-          course.setUserId(userId);
-          course.setTitle(title);
           course.setCreateTime(new Date());
           course.setSourceType(AudioCourse.SourceType.csp.ordinal());
           insert(course);
           Integer courseId = course.getId();
+
+          //创建讲本的主题和背景音乐
+        if(theme.getImageId() != null || theme.getMusicId() != null){
+            theme.setCourseId(courseId);
+            audioCourseThemeDAO.insert(theme);
+        }
 
         //相对路径
         String relativePath = FilePath.COURSE.path + "/" + courseId + "/ppt/";
@@ -1374,5 +1382,29 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public AudioCourseDTO findMiniTemplateByIdOrRand(Integer id){
         return audioCourseDAO.findMiniTemplateByIdOrRand(id);
+    }
+
+    /**
+     * 更新小程序课件信息
+     * @param course
+     * @param theme
+     * @return
+     */
+    @Override
+    public void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException {
+        int count1 = updateByPrimaryKeySelective(course);
+        if(count1 != 1){
+            throw new SystemException(local("page.words.update.fail"));
+        }
+        AudioCourseTheme condition = new AudioCourseTheme();
+        condition.setCourseId(course.getId());
+        AudioCourseTheme result = audioCourseThemeDAO.selectOne(condition);
+        if(result != null){
+            theme.setId(result.getId());
+            int count2 = audioCourseThemeDAO.updateByPrimaryKeySelective(theme);
+            if(count2 != 1){
+                throw new SystemException(local("page.words.update.fail"));
+            }
+        }
     }
 }

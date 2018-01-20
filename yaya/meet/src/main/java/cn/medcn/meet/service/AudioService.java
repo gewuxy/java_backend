@@ -386,10 +386,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
     /**
      * 根据图片和标题创建课件和明细
      * @param files
-     * @param title
+     * @param course
+     * @param theme
      * @return
+     * @throws SystemException
      */
-    Integer createAudioAndDetail(MultipartFile[] files, String title, String userId) throws SystemException;
+    Integer createAudioAndDetail(MultipartFile[] files, AudioCourse course, AudioCourseTheme theme) throws SystemException;
 
     /**
      * 小程序活动贺卡模板列表
@@ -403,4 +405,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
      */
     AudioCourseDTO findMiniTemplateByIdOrRand(Integer id);
 
+    /**
+     * 更新小程序课件的信息
+     * @param course
+     * @param theme
+     * @return
+     */
+    void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException;
 }
