@@ -44,6 +44,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import java.io.File;
 import java.io.IOException;
@@ -127,17 +128,9 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/view")
     @ResponseBody
     public String view(Integer courseId) {
-        Principal principal = SecurityUtils.get();
         if (courseId == null || courseId == 0) {
-            return error(local("error.param"));
+            return error(local("user.param.empty"));
         }
-
-        // 检查该会议是否是当前登录者的会议
-        boolean isMine = audioService.checkCourseIsMine(principal.getId(), courseId);
-        if (!isMine) {
-            return error(local("course.error.author"));
-        }
-
         CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
         return success(themeDTO);
     }
@@ -260,6 +253,7 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 复制副本
+     *
      * @param courseId
      * @param title
      * @return
@@ -277,7 +271,7 @@ public class MeetingController extends CspBaseController {
             return error(local("meet.error.count.out"));
         }
 
-        if (courseId == null || courseId ==0
+        if (courseId == null || courseId == 0
                 || StringUtils.isEmpty(title)) {
             return error(local("error.param"));
         }
@@ -333,12 +327,12 @@ public class MeetingController extends CspBaseController {
             return error(local("upload.error.null"));
         }
 
-        String suffix =  "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
+        String suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
 
         String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
 
         File dir = new File(fileUploadBase + relativePath);
-        if(!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
         String saveFileName = UUIDUtil.getNowStringID();
@@ -361,10 +355,10 @@ public class MeetingController extends CspBaseController {
     }
 
 
-    protected String handleUploadResult(RecordUploadDTO record , String relativePath, String saveFileName){
+    protected String handleUploadResult(RecordUploadDTO record, String relativePath, String saveFileName) {
         AudioCourseDetail detail = audioService.findDetail(record.getDetailId());
 
-        detail.setAudioUrl(relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        detail.setAudioUrl(relativePath + saveFileName + "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
         if (record.getPlayType() == AudioCourse.PlayType.normal.getType()) {
             audioService.updateDetail(detail);
@@ -373,7 +367,7 @@ public class MeetingController extends CspBaseController {
         handleLiveOrRecord(record.getCourseId(), record.getPlayType(), record.getPageNum(), detail);
 
         Map<String, String> result = new HashMap<>();
-        result.put("audioUrl", fileBase + relativePath + saveFileName + "." +FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        result.put("audioUrl", fileBase + relativePath + saveFileName + "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
         return success(result);
     }
 
@@ -381,22 +375,23 @@ public class MeetingController extends CspBaseController {
     /**
      * 录音上传 上传多个文件
      * 用于处理小程序续传的问题
-     * @since csp1.1.5
+     *
      * @param files
      * @param record
      * @param request
      * @return
+     * @since csp1.1.5
      */
     @RequestMapping(value = "/upload/multiple")
     @ResponseBody
-    public String upload(@RequestParam(value = "file", required = false) MultipartFile[] files, RecordUploadDTO record, HttpServletRequest request){
+    public String upload(@RequestParam(value = "file", required = false) MultipartFile[] files, RecordUploadDTO record, HttpServletRequest request) {
         if (files == null || files.length == 0) {
             return error(local("upload.error.null"));
         }
         String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
 
         File dir = new File(fileUploadBase + relativePath);
-        if(!dir.exists()){
+        if (!dir.exists()) {
             dir.mkdirs();
         }
 
@@ -424,6 +419,7 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 处理MP3合并
+     *
      * @param filePathQueue
      * @param relativePath
      * @return
@@ -447,7 +443,7 @@ public class MeetingController extends CspBaseController {
     }
 
 
-    protected List<String> saveRecordFiles(MultipartFile[] files, String relativePath) throws SystemException{
+    protected List<String> saveRecordFiles(MultipartFile[] files, String relativePath) throws SystemException {
         List<String> filePathQueue = new ArrayList<>();
         for (MultipartFile file : files) {
             String saveFileName = UUIDUtil.getNowStringID();
@@ -465,7 +461,7 @@ public class MeetingController extends CspBaseController {
     }
 
 
-    protected void handleLiveDetail(Integer courseId, AudioCourseDetail detail){
+    protected void handleLiveDetail(Integer courseId, AudioCourseDetail detail) {
         //添加直播明细
         Integer maxSort = audioService.findMaxLiveDetailSort(courseId);
         if (maxSort == null) {
@@ -501,7 +497,7 @@ public class MeetingController extends CspBaseController {
     }
 
 
-    protected void handleLiveOrRecord(Integer courseId, Integer playType, Integer pageNum, AudioCourseDetail detail){
+    protected void handleLiveOrRecord(Integer courseId, Integer playType, Integer pageNum, AudioCourseDetail detail) {
         if (playType == null) {
             playType = AudioCourse.PlayType.normal.getType();
         }
@@ -575,7 +571,7 @@ public class MeetingController extends CspBaseController {
             result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
             result.put("duplicate", "0");
             result.put("title", course.getTitle());
-            result.put("coverUrl", !CheckUtils.isEmpty(course.getDetails()) ?  course.getDetails().get(0).getImgUrl() : "");
+            result.put("coverUrl", !CheckUtils.isEmpty(course.getDetails()) ? course.getDetails().get(0).getImgUrl() : "");
 
             if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
                 Live live = liveService.findByCourseId(courseId);
@@ -600,7 +596,7 @@ public class MeetingController extends CspBaseController {
     }
 
 
-    protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException{
+    protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException {
         Principal principal = SecurityUtils.get();
         AudioCourse audioCourse = audioService.findAudioCourse(courseId);
         if (audioCourse == null) {
@@ -663,7 +659,7 @@ public class MeetingController extends CspBaseController {
 
     @RequestMapping(value = "/video/next")
     @ResponseBody
-    public String videoNext(Integer courseId, Integer detailId){
+    public String videoNext(Integer courseId, Integer detailId) {
         AudioCourseDetail detail = audioService.findDetail(detailId);
         handleLiveDetail(courseId, detail);
         return success();
@@ -671,8 +667,8 @@ public class MeetingController extends CspBaseController {
 
     @RequestMapping(value = "/join")
     @ResponseBody
-    public String join(Integer courseId, HttpServletRequest request){
-        if (courseId == null || courseId == 0){
+    public String join(Integer courseId, HttpServletRequest request) {
+        if (courseId == null || courseId == 0) {
             return error(local("error.param"));
         }
         try {
@@ -761,15 +757,15 @@ public class MeetingController extends CspBaseController {
 
                 String videoName = FileUtils.getFileName(replayUrl);
 
-                String finalReplayPath = FilePath.COURSE.path + "/" +channelId + "/replay/" + videoName;
+                String finalReplayPath = FilePath.COURSE.path + "/" + channelId + "/replay/" + videoName;
 
-                String videoDirPath = fileUploadBase + FilePath.COURSE.path + "/" +channelId + "/replay/";
+                String videoDirPath = fileUploadBase + FilePath.COURSE.path + "/" + channelId + "/replay/";
 
                 File dir = new File(videoDirPath);
-                if (!dir.exists()){
+                if (!dir.exists()) {
                     dir.mkdirs();
                 }
-                FileUtils.downloadNetWorkFile(replayUrl, videoDirPath , videoName);
+                FileUtils.downloadNetWorkFile(replayUrl, videoDirPath, videoName);
 
                 //检测是否有之前的直播视频
                 if (CheckUtils.isNotEmpty(live.getReplayUrl())) {
@@ -820,6 +816,7 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 删除会议
+     *
      * @param id
      * @return
      */
@@ -846,7 +843,7 @@ public class MeetingController extends CspBaseController {
         //当前删除的会议如果是锁定状态则不处理 否则需要解锁用户最早的一个锁定的会议
         if (course.getLocked() != null && course.getLocked() != true && course.getGuide() != true) {
             //判断是否有锁定的会议
-            if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()){
+            if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()) {
                 audioService.doUnlockEarliestCourse(principal.getId());
             }
         }
@@ -858,6 +855,7 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 退出录播
+     *
      * @param courseId
      * @param pageNum
      * @param over
@@ -865,7 +863,7 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/record/exit")
     @ResponseBody
-    public String exit(Integer courseId, Integer pageNum, Integer over){
+    public String exit(Integer courseId, Integer pageNum, Integer over) {
         if (over == null) {
             over = 0;
         }
@@ -905,15 +903,16 @@ public class MeetingController extends CspBaseController {
      * 根据课件ID获取推流地址
      * 如果已经存在则返回原有地址
      * 不存在则生成推流地址
+     *
      * @param courseId
      * @return
      */
-    protected String getPushUrl(Integer courseId){
+    protected String getPushUrl(Integer courseId) {
         Live live = liveService.findByCourseId(courseId);
         String pushUrl = null;
         if (live != null) {
 
-           if (live.getVideoLive() != null && live.getVideoLive()) {//如果是视频直播
+            if (live.getVideoLive() != null && live.getVideoLive()) {//如果是视频直播
                 if (CheckUtils.isEmpty(live.getPushUrl())) {
                     pushUrl = TXLiveUtils.genPushUrl(String.valueOf(courseId), System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS));
                     live.setPushUrl(pushUrl);
@@ -925,20 +924,21 @@ public class MeetingController extends CspBaseController {
                 } else {
                     pushUrl = live.getPushUrl();
                 }
-           }
+            }
         }
         return pushUrl;
     }
 
     /**
      * 检测是否有重复登录
+     *
      * @param courseId
      * @param request
      * @return
      */
     @RequestMapping(value = "/join/check")
     @ResponseBody
-    public String joinCheck(Integer courseId, HttpServletRequest request, String liveType){
+    public String joinCheck(Integer courseId, HttpServletRequest request, String liveType) {
 
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         if (course == null) {
@@ -990,6 +990,7 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 直播开始
+     *
      * @param courseId
      * @param imgUrl
      * @param videoUrl
@@ -998,7 +999,7 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/live/start")
     @ResponseBody
-    public String startLive(Integer courseId, String imgUrl, String videoUrl, Integer firstClk, Integer pageNum){
+    public String startLive(Integer courseId, String imgUrl, String videoUrl, Integer firstClk, Integer pageNum) {
         if (firstClk == null) {
             firstClk = 0;
         }
@@ -1021,7 +1022,7 @@ public class MeetingController extends CspBaseController {
 
     @RequestMapping(value = "/live/over")
     @ResponseBody
-    public String liveOver(Integer courseId){
+    public String liveOver(Integer courseId) {
         //删除缓存中的同步指令
         redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
 
@@ -1033,7 +1034,7 @@ public class MeetingController extends CspBaseController {
         return success();
     }
 
-    protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl, Integer pageNum){
+    protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl, Integer pageNum) {
         LiveOrderDTO order = new LiveOrderDTO();
         order.setCourseId(String.valueOf(courseId));
         order.setOrder(LiveOrderDTO.ORDER_SYNC);
@@ -1046,12 +1047,13 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 开始视频直播 保存推拉流信息
+     *
      * @param courseId
      * @return
      */
     @RequestMapping(value = "/live/video/start")
     @ResponseBody
-    public String videoLiveStart(Integer courseId){
+    public String videoLiveStart(Integer courseId) {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         if (course.getDeleted() != null && course.getDeleted() == true) {
             return error("source.has.deleted");
@@ -1081,8 +1083,8 @@ public class MeetingController extends CspBaseController {
 
     @RequestMapping(value = "/report")
     @ResponseBody
-    public String report(Integer type, Integer courseId, String shareUrl){
-        if(CheckUtils.isEmpty(shareUrl)){
+    public String report(Integer type, Integer courseId, String shareUrl) {
+        if (CheckUtils.isEmpty(shareUrl)) {
             shareUrl = audioService.getMeetShareUrl(appCspBase, LocalUtils.Local.zh_CN.name(), courseId, false);
         }
 
@@ -1107,7 +1109,7 @@ public class MeetingController extends CspBaseController {
     }
 
 
-    protected String handleReportContent(String content, Integer courseId, String shareUrl, int reportType){
+    protected String handleReportContent(String content, Integer courseId, String shareUrl, int reportType) {
         if (content != null) {
             AudioCourse course = audioService.selectByPrimaryKey(courseId);
             if (course != null) {
@@ -1162,24 +1164,24 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/set/password")
     @ResponseBody
-    public String meetPassword(AudioCourse course,Integer type) {
-        if(course.getId() == null || type == null){
+    public String meetPassword(AudioCourse course, Integer type) {
+        if (course.getId() == null || type == null) {
             return error(local("user.param.empty"));
         }
         Integer result = 0;
-        if(type == Constants.NUMBER_TWO){
+        if (type == Constants.NUMBER_TWO) {
             AudioCourse update = audioService.selectByPrimaryKey(course.getId());
             update.setPassword(null);
             result = audioService.updateByPrimaryKey(update);
-        }else{
-            if(StringUtils.isEmpty(course.getPassword())){
+        } else {
+            if (StringUtils.isEmpty(course.getPassword())) {
                 return error(local("user.param.empty"));
             }
-            String regEx  = "[a-zA-Z0-9]{4,8}";
+            String regEx = "[a-zA-Z0-9]{4,8}";
             Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(course.getPassword());
             boolean rs = matcher.matches();
-            if(!rs) return  error(local("user.subscribe.paramError"));
+            if (!rs) return error(local("user.subscribe.paramError"));
             result = audioService.updateByPrimaryKeySelective(course);
         }
         if (result > 0) {
@@ -1192,26 +1194,27 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 获取星评状态和星评二维码
+     *
      * @param courseId
      * @return
      */
     @RequestMapping("/star/code")
     @ResponseBody
-    public String getStarAndCode(Integer courseId){
-        if(courseId == null){
+    public String getStarAndCode(Integer courseId) {
+        if (courseId == null) {
             return error(local("courseId.empty"));
         }
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if(course == null){
+        if (course == null) {
             return error(local("source.not.exists"));
         }
         StarRateResultDTO dto = new StarRateResultDTO();
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
-        if(course.getStarRateFlag()){
+        if (course.getStarRateFlag()) {
             String local = LocalUtils.getLocalStr();
             boolean abroad = LocalUtils.isAbroad();
-            String shareUrl = audioService.getMeetShareUrl(appCspBase,local,courseId,abroad);
+            String shareUrl = audioService.getMeetShareUrl(appCspBase, local, courseId, abroad);
             //判断二维码是否存在 不存在则重新生成
             String qrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
             boolean qrCodeExists = FileUtils.exists(fileUploadBase + qrCodePath);
@@ -1226,12 +1229,13 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 开启星评接口
+     *
      * @param courseId
      * @return
      */
     @RequestMapping(value = "/star_rate/open")
     @ResponseBody
-    public String openStarRate(Integer courseId){
+    public String openStarRate(Integer courseId) {
         //修改直播状态为星评中状态
         Live live = liveService.findByCourseId(courseId);
         live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
@@ -1249,26 +1253,28 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 获取小程序二维码
+     *
      * @param id 课程id
      * @return
      * @throws SystemException
      */
     @RequestMapping("/mini/qrcode")
     @ResponseBody
-    public String getMiniQRCode(Integer id,String page) throws SystemException, IOException {
-        if(id == null){
+    public String getMiniQRCode(Integer id, String page) throws SystemException, IOException {
+        if (id == null) {
             return error(local("courseId.empty"));
         }
         //获取access_token
         String accessToken = redisCacheUtils.getCacheObject(CSP_MINI_ACCESS_TOKEN_KEY);
-        if(StringUtils.isEmpty(accessToken)){
-            accessToken = wxTokenService.getMiniAccessToken(appId,secret);
+        if (StringUtils.isEmpty(accessToken)) {
+            accessToken = wxTokenService.getMiniAccessToken(appId, secret);
             //有效时间 7200s
-            redisCacheUtils.setCacheObject(CSP_MINI_ACCESS_TOKEN_KEY,accessToken, WeixinConfig.TOKEN_EXPIRE_TIME);
+            redisCacheUtils.setCacheObject(CSP_MINI_ACCESS_TOKEN_KEY, accessToken, WeixinConfig.TOKEN_EXPIRE_TIME);
         }
-        String codeUrl  = audioService.getMiniQRCode(id,page,accessToken);
+        String codeUrl = audioService.getMiniQRCode(id, page, accessToken);
         return success(codeUrl);
     }
+
 
     /**
      * 小程序创建课件或者更新课件
@@ -1316,23 +1322,28 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 小程序活动贺卡模板列表
+     *
      * @return
      */
     @RequestMapping("/mini/template/list")
     @ResponseBody
     public String templateList() {
+        Principal principal = SecurityUtils.get();
         List<AudioCourseDTO> templateList = audioService.findMiniTemplate();
         return success(templateList);
     }
 
+
     /**
      * 通过小程序二维码 获取贺卡模板
-     * @param id 模块id即课程id
+     *
+     * @param id 模板id即课程id
      * @return
      */
     @RequestMapping("/mini/template")
     @ResponseBody
     public String getTemplate(Integer id) {
+        Principal principal = SecurityUtils.get();
         if (id == null) {
             // 随机返回贺卡模板
             id = 0;
@@ -1341,4 +1352,24 @@ public class MeetingController extends CspBaseController {
         return success(courseDTO);
     }
 
+    /**
+     * 选择贺卡模板后生成讲本（即课件）
+     *
+     * @param id 贺卡模板id即courseId
+     * @return
+     */
+    @RequestMapping("/mini/create/course")
+    @ResponseBody
+    public String createCourse(Integer id) {
+        Principal principal = SecurityUtils.get();
+        if (id == null) {
+            return error("user.param.empty");
+        }
+
+        String cspUserId = principal.getId();
+        // 查找选择的贺卡模板讲本内容 并复制创建当前用户的讲本
+        Integer courseId = audioService.doCopyCourseTemplate(id, cspUserId);
+
+        return view(courseId);
+    }
 }

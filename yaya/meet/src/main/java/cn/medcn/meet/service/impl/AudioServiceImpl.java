@@ -108,6 +108,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected CspPackageDAO cspPackageDAO;
 
+    @Autowired
+    protected AudioCourseThemeDAO courseThemeDAO;
+
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
         return audioCourseDAO;
@@ -1383,6 +1386,59 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public AudioCourseDTO findMiniTemplateByIdOrRand(Integer id){
         return audioCourseDAO.findMiniTemplateByIdOrRand(id);
     }
+
+    /**
+     * 小程序 选择贺卡模板 制作有声贺卡
+     * @param id 贺卡模板id
+     * @param cspUserId
+     * @return
+     */
+    @Override
+    public Integer doCopyCourseTemplate(Integer id, String cspUserId) {
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(id);
+        Integer courseId = null;
+        if (course != null) {
+            // 复制模板生成讲本
+            AudioCourse newCourse = new AudioCourse();
+            BeanUtils.copyProperties(course, newCourse);
+            newCourse.setId(null);
+            newCourse.setCspUserId(cspUserId);
+            newCourse.setCreateTime(new Date());
+            newCourse.setSourceType(AudioCourse.SourceType.csp.ordinal()); // 生成csp讲本
+            audioCourseDAO.insert(newCourse);
+
+            courseId = newCourse.getId();
+
+            // 复制课程明细
+            List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(id);
+            if (details != null) {
+                doCopyDetails(details, courseId);
+            }
+
+            // 查询该模板是否有背景图片和背景音乐
+            AudioCourseTheme courseTheme = courseThemeDAO.findCourseThemeByCourseId(id);
+            if (courseTheme != null) {
+                doCopyCourseTheme(courseTheme, courseId);
+            }
+        }
+
+        return courseId;
+    }
+
+
+    /**
+     * 复制课程主题背景音乐 背景图片
+     * @param courseTheme
+     * @param courseId
+     */
+    public void doCopyCourseTheme(AudioCourseTheme courseTheme, Integer courseId) {
+        AudioCourseTheme newCourseTheme = new AudioCourseTheme();
+        newCourseTheme.setCourseId(courseId);
+        newCourseTheme.setImageId(courseTheme.getImageId());
+        newCourseTheme.setMusicId(courseTheme.getMusicId());
+        courseThemeDAO.insert(newCourseTheme);
+    }
+
 
     /**
      * 更新小程序课件信息
