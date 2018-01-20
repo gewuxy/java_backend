@@ -1155,7 +1155,7 @@
                         <div class="fl"> </div>
                     </div>
                 </div>
-                <div class="footer-row"><fmt:message key="page.meeting.star.rate.attend"/><span id="scoreCount">0</span>人</div>
+                <div class="footer-row"><fmt:message key="page.meeting.star.rate.attend"/><span id="scoreCount">0</span><fmt:message key="page.meeting.tips.score.user.unit"/></div>
             </div>
         </div>
     </div>
