@@ -182,7 +182,7 @@
                             <input type="hidden" name="watermark.name" id="name" value="${appName}">
                             <div class="meeting-form-item login-form-item">
 
-                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"><span class="icon-metting-lock lock-hook" id="lookPwd"><fmt:message key="page.meeting.look.password"/></span></label>
+                                <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"><span class="icon-metting-lock lock-hook" id="lookPwd"><fmt:message key="page.meeting.button.watch.password"/></span></label>
                                 <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.update.warn.notitle"/></span>
 
                                 <div class="textarea">
@@ -391,16 +391,16 @@
             <form action="">
                 <div class="lock-popup-main login-form-item pr">
                     <label for="randomNum" class="cells-block pr ">
-                        <input id="randomNum" name="password" type="text" class="login-formInput" value="" placeholder="输入四位数密码" maxlength=4>
-                        <span href="javascript:;" class="code" id="btnSendCode">自动生成</span>
+                        <input id="randomNum" name="password" type="text" class="login-formInput" value="" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                        <span href="javascript:;" class="code" id="btnSendCode"><fmt:message key='page.meeting.button.auto.create'/></span>
                     </label>
-                    <span class="cells-block hiht">请设置密码，需通过输入正确密码才能打开链接（不影响投稿）</span>
-                    <span class="cells-block error none" id="passwordError">请输入4位数字密码</span>
+                    <span class="cells-block hiht"><fmt:message key='page.meeting.tips.watch.password'/></span>
+                    <span class="cells-block error none" id="passwordError"><fmt:message key='page.meeting.tips.watch.password.holder'/></span>
                     <div class="layer-hospital-popup-bottom">
                         <div class="fr">
-                            <span class="button min-btn layui-layer-close">取消</span>
-                            <!--<input type="submit" class="button buttonBlue min-btn lock-succeed-hook" value="设置密码">-->
-                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value="" id="modifyPwd">设置密码</a>
+                            <span class="button min-btn layui-layer-close"><fmt:message key='page.meeting.button.cancel.password'/></span>
+                            <!--<input type="submit" class="button buttonBlue min-btn lock-succeed-hook" value="设置密码"> -->
+                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value="" id="modifyPwd"><fmt:message key='page.meeting.button.password.sure'/></a>
                         </div>
                     </div>
                 </div>
@@ -422,14 +422,14 @@
                 <div class="lock-popup-main login-form-item pr">
                     <div class="cells-block t-center">
                         <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
-                        <p class="hiht">密码设置成功</p>
+                        <p class="hiht"><fmt:message key='page.meeting.tips.password.success'/></p>
                     </div>
-                    <div class="cells-block lock-popup-showRandomNum">1345</div>
-                    <span class="cells-block hiht t-center">可通过“取消密码”的方式取消或重制观看密码</span>
+                    <div class="cells-block lock-popup-showRandomNum"></div>
+                    <span class="cells-block hiht t-center"><fmt:message key='page.meeting.tips.password.delete'/></span>
                     <div class="layer-hospital-popup-bottom clearfix">
                         <div class="fr">
                             <!--<input type="submit" class="button buttonBlue min-btn" value="取消密码">-->
-                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" id="delPwd">取消密码</a>
+                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" id="delPwd"><fmt:message key='page.meeting.button.password.cancel'/></a>
                         </div>
                     </div>
                 </div>
@@ -874,32 +874,12 @@
             console.log($('#randomNum').val());
             $('.lock-popup-showRandomNum').text(num)
         })
-       /* function randomNum() {
 
-        }*/
 
         $("#lookPwd").click(function () {
             $("#passwordError").addClass("none");
             //弹出观看密码
             openPasswordView();
-            /*$('.lock-hook').on('click',function(){
-                layer.open({
-                    type: 1,
-                    area: ['609px', '278px'],
-                    fix: false, //不固定
-                    title:false,
-                    closeBtn:0,
-                    shadeClose:true,
-                    content: $('.lock-popup-box'),
-                    success:function(){
-                        layer.close(layer.index-1);
-                    },
-                    cancel :function(){
-                        $("#passwordError").addClass("none");
-                    },
-                });
-            });*/
-
         })
         function openPasswordView(){
             layer.open({
@@ -920,7 +900,7 @@
                 }
             });
         }
-        //modifyPwd modifyPassword
+
         $("#modifyPwd").click(function () {
             var pwd = $.trim($("#randomNum").val());
             if (pwd == '') {
@@ -938,9 +918,7 @@
                 }
             });
         })
-        /*function modifyPassword() {
 
-        }*/
 
         function openConfirmPasswordView(){
             //弹出观看密码成功
@@ -962,7 +940,7 @@
                     },
                 });
         }
-        //delPwd  deletePassword
+
         $("#delPwd").click(function () {
             ajaxGet('${ctx}/mgr/meet/password/del/'+${course.id}, {}, function(data){
                 if (data.code == 0){
@@ -974,9 +952,7 @@
                 }
             })
         })
-        /*function deletePassword() {
 
-        }*/
 
         //星标提示语1
         //投稿
