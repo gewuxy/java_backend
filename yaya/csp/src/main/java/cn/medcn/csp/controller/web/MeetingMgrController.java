@@ -600,7 +600,7 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course,StarRateResultDTO dto, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
         MeetWatermark newWatermark = course.getWatermark();
 
@@ -621,12 +621,14 @@ public class MeetingMgrController extends CspBaseController {
         }
         //更新操作，包括更新或生成水印
         Integer packageId = getWebPrincipal().getPackageId();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-DD HH:mm");
-        try {
-            Date liveStarDate = simpleDateFormat.parse(liveTime);
-            course.getLive().setStartTime(liveStarDate);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        if (ac.getPlayType() != null && ac.getPlayType().intValue() > 0){
+            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+            try {
+                Date liveStarDate = simpleDateFormat.parse(liveTime);
+                course.getLive().setStartTime(liveStarDate);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
 
