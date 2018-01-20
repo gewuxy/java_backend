@@ -1274,7 +1274,9 @@ public class MeetingController extends CspBaseController {
                 return error(local("meeting.title.not.none"));
             }
             courseId = audioService.createAudioAndDetail(files, course, theme);
-            return success(courseId);
+            Map<String,Integer> map = new HashMap<>();
+            map.put("courseId",courseId);
+            return success(map);
 
         }else{  //修改课件
             theme.setCourseId(courseId);
