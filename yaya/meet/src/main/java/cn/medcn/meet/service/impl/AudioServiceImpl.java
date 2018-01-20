@@ -1,6 +1,7 @@
 package cn.medcn.meet.service.impl;
 
 import cn.medcn.common.Constants;
+import cn.medcn.common.ctrl.FilePath;
 import cn.medcn.common.excptions.NotEnoughCreditsException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.pagination.MyPage;
@@ -34,15 +35,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.weixin.config.MiniProgramConfig.*;
@@ -76,6 +75,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Autowired
     protected CspUserInfoDAO cspUserInfoDAO;
+
+    @Autowired
+    protected AudioCourseThemeDAO audioCourseThemeDAO;
+
+    @Autowired
+    protected CspStarRateOptionDAO cspStarRateOptionDAO;
+
+    @Autowired
+    protected CspStarRateHistoryDAO cspStarRateHistoryDAO;
+
+    @Autowired
+    protected CspStarRateHistoryDetailDAO cspStarRateHistoryDetailDAO;
 
 
     @Value("${app.file.upload.base}")
@@ -954,10 +965,64 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             play.setPlayPage(0);
             audioCoursePlayDAO.insert(play);
 
+            //复制星评信息
+            doCopyStarRateHistory(courseId, copyCourseId);
+
             return copyCourseId;
         }
 
         return null;
+    }
+
+    protected void doCopyStarRateHistory(Integer srcCourseId, Integer copyCourseId){
+
+        //处理综合评分
+        CspStarRateHistory historyCond = new CspStarRateHistory();
+        historyCond.setCourseId(srcCourseId);
+        List<CspStarRateHistory> historyList = cspStarRateHistoryDAO.select(historyCond);
+        if (!CheckUtils.isEmpty(historyList)) {
+            for (CspStarRateHistory history : historyList) {
+                CspStarRateHistory h = new CspStarRateHistory();
+                h.setCourseId(copyCourseId);
+                h.setRateTime(history.getRateTime());
+                h.setScore(history.getScore());
+                h.setTicket(history.getTicket());
+                cspStarRateHistoryDAO.insert(h);
+            }
+        }
+
+        //处理评分项明细
+        CspStarRateOption cond = new CspStarRateOption();
+        cond.setCourseId(srcCourseId);
+        List<CspStarRateOption> options = cspStarRateOptionDAO.select(cond);
+
+        CspStarRateHistoryDetail detailCond = new CspStarRateHistoryDetail();
+        detailCond.setCourseId(srcCourseId);
+
+        if (!CheckUtils.isEmpty(options)) {
+            for (CspStarRateOption option : options) {
+                CspStarRateOption o = new CspStarRateOption();
+                o.setCourseId(copyCourseId);
+                o.setTitle(option.getTitle());
+                cspStarRateOptionDAO.insert(o);
+
+                detailCond.setOptionId(option.getId());
+
+                List<CspStarRateHistoryDetail> detailList = cspStarRateHistoryDetailDAO.select(detailCond);
+                if (!CheckUtils.isEmpty(detailList)) {
+                    for (CspStarRateHistoryDetail detail : detailList) {
+                        CspStarRateHistoryDetail d = new CspStarRateHistoryDetail();
+                        d.setOptionId(o.getId());
+                        d.setCourseId(copyCourseId);
+                        d.setScore(detail.getScore());
+                        cspStarRateHistoryDetailDAO.insert(d);
+                    }
+                }
+
+            }
+        }
+
+
     }
 
 
@@ -1251,6 +1316,58 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         return codeUrl;
     }
 
+
+    /**
+     * 根据图片和标题创建课件和明细
+     * @param files
+     * @param course
+     * @param theme
+     * @return
+     * @throws SystemException
+     */
+    @Override
+    public Integer createAudioAndDetail(MultipartFile[] files, AudioCourse course, AudioCourseTheme theme) throws SystemException {
+        //生成课件
+          course.setCreateTime(new Date());
+          course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+          insert(course);
+          Integer courseId = course.getId();
+
+          //创建讲本的主题和背景音乐
+        if(theme.getImageId() != null || theme.getMusicId() != null){
+            theme.setCourseId(courseId);
+            audioCourseThemeDAO.insert(theme);
+        }
+
+        //相对路径
+        String relativePath = FilePath.COURSE.path + "/" + courseId + "/ppt/";
+        //文件保存路径
+        String savePath = appFileUploadBase + relativePath;
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String fileName = null;
+        //文件绝对路径
+        String absoluteName = null;
+
+        List<String> imgList = new ArrayList<>();
+        for(MultipartFile file : files){
+            fileName = UUIDUtil.getNowStringID() + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+            absoluteName = savePath + fileName;
+            File saveFile = new File(absoluteName);
+            try {
+                file.transferTo(saveFile);
+            } catch (IOException e) {
+                throw new SystemException(local("upload.error"));
+            }
+            imgList.add(relativePath + fileName);
+        }
+            updateAllDetails(courseId,imgList);
+
+        return courseId;
+    }
+
     /**
      * 小程序活动贺卡模板列表
      * @return
@@ -1322,4 +1439,28 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         courseThemeDAO.insert(newCourseTheme);
     }
 
+
+    /**
+     * 更新小程序课件信息
+     * @param course
+     * @param theme
+     * @return
+     */
+    @Override
+    public void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException {
+        int count1 = updateByPrimaryKeySelective(course);
+        if(count1 != 1){
+            throw new SystemException(local("page.words.update.fail"));
+        }
+        AudioCourseTheme condition = new AudioCourseTheme();
+        condition.setCourseId(course.getId());
+        AudioCourseTheme result = audioCourseThemeDAO.selectOne(condition);
+        if(result != null){
+            theme.setId(result.getId());
+            int count2 = audioCourseThemeDAO.updateByPrimaryKeySelective(theme);
+            if(count2 != 1){
+                throw new SystemException(local("page.words.update.fail"));
+            }
+        }
+    }
 }
