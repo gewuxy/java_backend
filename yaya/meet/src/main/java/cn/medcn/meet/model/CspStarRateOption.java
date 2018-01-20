@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.io.Serializable;
 public class CspStarRateOption implements Serializable {
 
     @Id
+    @GeneratedValue(generator = "JDBC")
     protected Integer id;
 
     protected String title;

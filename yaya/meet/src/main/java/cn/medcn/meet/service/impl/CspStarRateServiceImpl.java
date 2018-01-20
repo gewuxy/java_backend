@@ -6,7 +6,9 @@ import cn.medcn.meet.dao.AudioCourseDAO;
 import cn.medcn.meet.dao.CspStarRateHistoryDAO;
 import cn.medcn.meet.dao.CspStarRateHistoryDetailDAO;
 import cn.medcn.meet.dao.CspStarRateOptionDAO;
+import cn.medcn.meet.dto.StarRateInfoDTO;
 import cn.medcn.meet.dto.StarRateResultDTO;
+import cn.medcn.meet.model.AudioCourse;
 import cn.medcn.meet.model.CspStarRateHistory;
 import cn.medcn.meet.model.CspStarRateHistoryDetail;
 import cn.medcn.meet.model.CspStarRateOption;
@@ -15,6 +17,7 @@ import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -64,7 +67,7 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
      */
     @Override
     public List<StarRateResultDTO> findRateResult(Integer courseId) {
-        List<StarRateResultDTO> result = null;
+        List<StarRateResultDTO> result = new ArrayList<>();
 
         List<CspStarRateOption> options = findRateOptions(courseId);
         if (CheckUtils.isEmpty(options)) {//没有分项评分的情况
@@ -74,6 +77,29 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
             result = cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
         }
         return result;
+    }
+
+    /**
+     * 获取最终星评结果
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public StarRateInfoDTO findFinalRateResult(Integer courseId) {
+        StarRateInfoDTO dto = new StarRateInfoDTO();
+
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+
+        dto.setTitle(course.getTitle());
+        dto.setInfo(course.getInfo());
+        dto.setStarRateFlag(course.getStarRateFlag());
+        //计算综合评分
+        StarRateResultDTO totalResult = cspStarRateHistoryDAO.findRateResultExcludeDetails(courseId);
+        dto.setMultipleResult(totalResult);
+        //计算评分明细
+        dto.setDetailList(cspStarRateHistoryDAO.findRateResultHasDetails(courseId));
+        return dto;
     }
 
     /**

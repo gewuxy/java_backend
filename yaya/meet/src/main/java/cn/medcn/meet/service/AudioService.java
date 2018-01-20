@@ -8,6 +8,7 @@ import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
@@ -381,4 +382,34 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     String getMiniQRCode(Integer id, String page, String accessToken) throws IOException;
+
+    /**
+     * 根据图片和标题创建课件和明细
+     * @param files
+     * @param course
+     * @param theme
+     * @return
+     * @throws SystemException
+     */
+    Integer createAudioAndDetail(MultipartFile[] files, AudioCourse course, AudioCourseTheme theme) throws SystemException;
+
+    /**
+     * 小程序活动贺卡模板列表
+     * @return
+     */
+    List<AudioCourseDTO> findMiniTemplate();
+
+    /**
+     * 通过小程序二维码（固定）或者搜索小程序（随机） 返回贺卡模板
+     * @return
+     */
+    AudioCourseDTO findMiniTemplateByIdOrRand(Integer id);
+
+    /**
+     * 更新小程序课件的信息
+     * @param course
+     * @param theme
+     * @return
+     */
+    void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException;
 }
