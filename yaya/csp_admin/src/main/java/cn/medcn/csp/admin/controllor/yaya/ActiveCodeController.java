@@ -1,4 +1,4 @@
-package cn.medcn.csp.admin.controllor;
+package cn.medcn.csp.admin.controllor.yaya;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
