@@ -192,7 +192,6 @@
             $('.more-hook').on('click',function(){
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
-                var info = $(this).attr("info");
                 var locked = $(this).attr("locked");
                 if (locked == "true"){
                     $("#copyLi").hide();
@@ -211,7 +210,7 @@
                     params: {
                         url: shareUrl, // 分享链接
                         title: '会讲 | ' + courseTitle, // 分享标题
-                        description: info,
+                        description: "用会讲，做有声PPT,随讲随录随分享",
                         pic: coverUrl, // 分享图片，使用逗号,隔开
                         reason:'',//自定义评论内容，只应用与QQ,QZone与朋友网
                     },
@@ -746,7 +745,7 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}"><fmt:message key="page.meeting.button.delivery"/></a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" info="${course.info}" locked="${course.locked == null ? false : course.locked}"><i></i><fmt:message key="page.meeting.button.more"/> </a>
+                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i><fmt:message key="page.meeting.button.more"/> </a>
                                             </div>
                                         </div>
                                         <c:if test="${course.locked}">
