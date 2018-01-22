@@ -250,6 +250,10 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("fileBase", fileBase);
         model.addAttribute("qrCodeUrl", qrCodePath);
 
+        // 星评状态 获取星评二维码
+        String starQrCodePath = getStarQrCodeUrl(courseId);
+        model.addAttribute("starQrCodeUrl", starQrCodePath);
+
         if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
             AudioCoursePlay play = audioService.findPlayState(courseId);
             model.addAttribute("record", play);
@@ -260,7 +264,7 @@ public class MeetingMgrController extends CspBaseController {
             if (live == null) {
                 throw new SystemException(local("error.data"));
             }
-//
+
 //            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
 //                throw new SystemException(local("share.live.over"));
 //            }
@@ -269,7 +273,26 @@ public class MeetingMgrController extends CspBaseController {
             return localeView("/meeting/screen");
         }
 
+    }
 
+    /**
+     * 生成星评二维码地址
+     *
+     * @param courseId
+     * @return
+     */
+    protected String getStarQrCodeUrl(Integer courseId) {
+        String local = LocalUtils.getLocalStr();
+        boolean abroad = LocalUtils.isAbroad();
+        String shareUrl = audioService.getMeetShareUrl(appCspBase, local, courseId, abroad);
+
+        // 判断二维码是否存在星评二维码 不存在则重新生成
+        String starQrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        boolean starQrCodeExists = FileUtils.exists(fileUploadBase + starQrCodePath);
+        if (!starQrCodeExists) {
+            QRCodeUtils.createQRCode(shareUrl, fileUploadBase + starQrCodePath);
+        }
+        return starQrCodePath;
     }
 
 
