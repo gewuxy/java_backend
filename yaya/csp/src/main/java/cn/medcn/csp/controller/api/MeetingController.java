@@ -1313,6 +1313,7 @@ public class MeetingController extends CspBaseController {
         course.setId(courseId);
         course.setTitle(title);
         course.setUserId(userId);
+        course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
 
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setMusicId(musicId);
