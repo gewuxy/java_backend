@@ -85,7 +85,7 @@ public class CourseDeliveryDTO implements Serializable {
     //是否可编辑
     protected Boolean editAble;
 
-    protected Date serverTime;
+    protected Date serverTime = new Date();
 
     //会议是否被锁定
     protected Boolean locked;
