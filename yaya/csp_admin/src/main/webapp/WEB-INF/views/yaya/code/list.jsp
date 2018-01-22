@@ -15,9 +15,6 @@
 <body>
     <ul class="nav nav-tabs">
         <li class="active"><a href="${ctx}/yaya/code/list">激活码列表</a></li>
-        <shiro:hasPermission name="yaya:code:add">
-            <li><a href="${ctx}/yaya/code/create">生成激活码</a></li>
-        </shiro:hasPermission>
     </ul>
 
     <form id="pageForm" name="pageForm" action="${ctx}/yaya/code/list" method="post">
@@ -40,7 +37,7 @@
     </form>
 
     <table id="contentTable" class="table table-striped table-bordered table-condensed">
-        <thead><tr><th>激活码</th><th>使用状态</th><th>使用者</th><th>激活状态</th><th>发送时间</th><th>激活时间</th><th>所属单位号</th></tr></thead>
+        <thead><tr><th>激活码</th><th>使用状态</th><th>使用者</th><th>发送时间</th><th>激活时间</th><th>所属单位号</th></tr></thead>
         <tbody>
         <c:if test="${not empty page.dataList}">
             <c:forEach items="${page.dataList}" var="c">

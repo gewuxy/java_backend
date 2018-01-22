@@ -3,6 +3,7 @@ package cn.medcn.user.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.ActiveCodeUtils;
 import cn.medcn.user.dao.ActiveCodeDAO;
 import cn.medcn.user.dao.ActiveStoreDAO;
 import cn.medcn.user.model.ActiveCode;
@@ -13,6 +14,7 @@ import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -47,5 +49,27 @@ public class ActiveCodeServiceImpl extends BaseServiceImpl<ActiveCode> implement
         startPage(pageable, true);
         Page<ActiveCode> page = (Page)activeCodeDAO.findActiveCodeList(pageable.getParams());
         return MyPage.page2Mypage(page);
+    }
+
+    /**
+     * 批量生成激活码
+     *
+     * @param unitIds
+     * @param codeNum
+     */
+    @Override
+    public void doCreateActiveCode(Integer[] unitIds, Integer codeNum) {
+        for (Integer unitId : unitIds) {
+            for(int i = 0; i < codeNum; i ++){
+                ActiveCode code = new ActiveCode();
+                code.setOnwerid(unitId);
+                code.setCode(ActiveCodeUtils.genericActiveCode());
+                code.setUsed(false);
+                code.setSendTime(new Date());
+                code.setActived(true);
+                activeCodeDAO.insert(code);
+            }
+        }
+
     }
 }
