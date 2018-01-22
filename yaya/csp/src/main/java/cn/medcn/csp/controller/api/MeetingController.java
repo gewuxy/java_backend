@@ -1374,4 +1374,36 @@ public class MeetingController extends CspBaseController {
 
         return view(courseId);
     }
+
+
+    /**
+     * 小程序接口
+     * 获取主题和背景音乐
+     * @param type type为null或者0时，获取主题，为1时获取背景音乐
+     * @return
+     */
+    @RequestMapping("/mini/image/music")
+    @ResponseBody
+    public String getImageAndMusic(Integer type){
+        if(type == null){
+            type = ImageMusic.IMAGE.ordinal();
+        }
+        Map<String,Object> map = new HashMap<>();
+        //获取主题
+         if(type == ImageMusic.IMAGE.ordinal()){
+            List<BackgroundImage> imageList = courseThemeService.findImageList();
+            map.put("imageList",imageList);
+             return success(map);
+         }else{
+             //获取背景音乐
+             List<BackgroundMusic> musicList = courseThemeService.findMusicList();
+             map.put("musicList",musicList);
+             return success(map);
+         }
+    }
+
+    private enum ImageMusic{
+        IMAGE,
+        MUSIC;
+    }
 }
