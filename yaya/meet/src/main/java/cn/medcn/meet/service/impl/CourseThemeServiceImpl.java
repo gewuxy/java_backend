@@ -1,13 +1,9 @@
 package cn.medcn.meet.service.impl;
 
 import cn.medcn.common.service.impl.BaseServiceImpl;
-import cn.medcn.meet.dao.AudioCourseDAO;
-import cn.medcn.meet.dao.AudioCourseDetailDAO;
-import cn.medcn.meet.dao.AudioCourseThemeDAO;
+import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.CourseThemeDTO;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
-import cn.medcn.meet.model.AudioCourseTheme;
+import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.CourseThemeService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +26,7 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
 
     @Autowired
     protected AudioCourseDetailDAO audioCourseDetailDAO;
+
 
     @Override
     public Mapper<AudioCourseTheme> getBaseMapper() {
@@ -61,5 +58,17 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
             }
         }
         return themeDTO;
+    }
+
+    @Override
+    public List<BackgroundImage> findImageList() {
+        List<BackgroundImage> list = courseThemeDAO.findImageList();
+        return list;
+    }
+
+    @Override
+    public List<BackgroundMusic> findMusicList() {
+        List<BackgroundMusic> list = courseThemeDAO.findMusicList();
+        return list;
     }
 }
