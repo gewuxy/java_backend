@@ -200,7 +200,7 @@ public class NewsController extends BaseController {
                     file.transferTo(saveFile);
                     // 生成缩略图
                     FileUtils.thumbnailUploadImage(saveFile, FileUtils.thumbWidth,
-                            FileUtils.thumbWidth, smallImgPath, imgPrefixPath);
+                            FileUtils.thumbHeight, smallImgPath, imgPrefixPath);
 
                 } catch (IOException e) {
                     e.printStackTrace();
