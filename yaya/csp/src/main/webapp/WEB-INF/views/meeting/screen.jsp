@@ -231,6 +231,8 @@
                 living = true;
             } else if (data.order == 13){//开启星评指令
                 //todo 弹出扫码星评二维码界面
+            } else if(data.order == 14){//结束
+                //todo 结束
             }
 
         }

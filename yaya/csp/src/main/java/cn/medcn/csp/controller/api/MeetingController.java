@@ -862,7 +862,9 @@ public class MeetingController extends CspBaseController {
             if (course.getPlayType() == null) {
                 course.setPlayType(AudioCourse.PlayType.normal.getType());
             }
-
+            LiveOrderDTO overOrder = new LiveOrderDTO();
+            overOrder.setCourseId(String.valueOf(courseId));
+            overOrder.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
             if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
                 Live live = liveService.findByCourseId(courseId);
 
@@ -870,6 +872,7 @@ public class MeetingController extends CspBaseController {
                     live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
                     if (over == 1) {
                         live.setEndTime(new Date());
+                        liveService.publish(overOrder);
                     }
                     liveService.updateByPrimaryKey(live);
                 }
@@ -881,6 +884,10 @@ public class MeetingController extends CspBaseController {
                     play.setPlayPage(pageNum);
                     play.setPlayState(over == 1 ? AudioCoursePlay.PlayState.over.ordinal() : play.getPlayState());
                     audioService.updateAudioCoursePlay(play);
+                }
+                //发送结束指定到投屏端
+                if (over == 1) {
+                    liveService.publish(overOrder);
                 }
             }
         }

@@ -209,6 +209,10 @@
                 }
             } else if(data.order == 100){//扫码成功
                 show();
+            } else if(data.order == 13){//开启星评阶段
+                //todo 打开星评二维码
+            } else if(data.order == 14){
+                //todo 打开结束界面
             }
 
         }
