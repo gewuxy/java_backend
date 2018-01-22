@@ -1402,11 +1402,11 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String getImageAndMusic(Integer type){
         if(type == null){
-            type = ImageMusic.IMAGE.ordinal();
+            type = AudioCourseTheme.ImageMusic.IMAGE.ordinal();
         }
         Map<String,Object> map = new HashMap<>();
         //获取主题
-         if(type == ImageMusic.IMAGE.ordinal()){
+         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
             List<BackgroundImage> imageList = courseThemeService.findImageList();
             map.put("imageList",imageList);
              return success(map);
@@ -1418,8 +1418,5 @@ public class MeetingController extends CspBaseController {
          }
     }
 
-    private enum ImageMusic{
-        IMAGE,
-        MUSIC;
-    }
+
 }
