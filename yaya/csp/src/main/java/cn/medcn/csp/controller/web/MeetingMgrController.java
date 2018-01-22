@@ -260,10 +260,10 @@ public class MeetingMgrController extends CspBaseController {
             if (live == null) {
                 throw new SystemException(local("error.data"));
             }
-
-            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                throw new SystemException(local("share.live.over"));
-            }
+//
+//            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+//                throw new SystemException(local("share.live.over"));
+//            }
 
             model.addAttribute("live", live);
             return localeView("/meeting/screen");
