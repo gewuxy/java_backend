@@ -1245,10 +1245,19 @@ public class MeetingController extends CspBaseController {
     @RequestMapping(value = "/star_rate/open")
     @ResponseBody
     public String openStarRate(Integer courseId) {
-        //修改直播状态为星评中状态
-        Live live = liveService.findByCourseId(courseId);
-        live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
-        liveService.updateByPrimaryKey(live);
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course != null) {
+            if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+                AudioCoursePlay play = audioService.findPlayState(courseId);
+                play.setPlayState(AudioCoursePlay.PlayState.rating.ordinal());
+                audioService.updateAudioCoursePlay(play);
+            } else {
+                //修改直播状态为星评中状态
+                Live live = liveService.findByCourseId(courseId);
+                live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                liveService.updateByPrimaryKey(live);
+            }
+        }
 
         //发送开启星评指令
         LiveOrderDTO order = new LiveOrderDTO();
