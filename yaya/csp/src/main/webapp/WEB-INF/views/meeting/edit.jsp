@@ -154,6 +154,63 @@
                                     </div>
                                     <div class="title">综合评分</div>
                                 </div>
+                                    <div class="upload-metting-star-row" style="display: none">
+                                        <div class="fr">
+                                        <div class="star-box star-max">
+                                            <div class="star">
+                                            <span class="null"></span>
+                                        <span class="null"></span>
+                                        <span class="null"></span>
+                                        <span class="null">
+                                    </span><span class="null"></span>
+                                    </div>
+                                        <div class="grade "><span id="avgScoreSpan">0</span><fmt:message key="page.meeting.tips.score.unit"/></div>
+                                    </div>
+                                    </div>
+                                        <div class="title">
+                                            <span class="star-remove-button"></span>
+                                        </div>
+                                    </div>
+                                <%--<div class="star-list  clearfix" style="display: none" id="eidtStar">
+                                    <div class="star-list-row clearfix" index="0">
+                                        <div class="fr">
+                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                                        </div>
+                                        <div class="fl"> </div>
+                                    </div>
+                                    <div class="star-list-row clearfix" index="1">
+                                        <div class="fr">
+                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                                        </div>
+                                        <div class="fl"> </div>
+                                    </div>
+                                    <div class="star-list-row clearfix" index="2">
+                                        <div class="fr">
+                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                                        </div>
+                                        <div class="fl"> </div>
+                                    </div>
+                                    <div class="star-list-row clearfix" index="3">
+                                        <div class="fr">
+                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                                        </div>
+                                        <div class="fl"> </div>
+                                    </div>
+                                    <div class="star-list-row clearfix" index="4">
+                                        <div class="fr">
+                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                                        </div>
+                                        <div class="fl"> </div>
+                                    </div>
+                                    <div class="star-list-row clearfix">
+                                        <div class="fr">
+                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
+                                        </div>
+                                        <div class="fl"> </div>
+                                    </div>
+                                </div>--%>
+
+
                                 <div class="upload-metting-star-row star-input-box" id="submitOption" style="display: none">
                                     <div class="fr">
                                         <div class="star-input-button"><input class="button" type="submit" value="保存" id="btnStar"><a href="javascript:;" class="close">取消</a></div>
@@ -956,12 +1013,85 @@
         $(function () {
             var flag = ${course.starRateFlag}
             if(flag){
+                //var scoreCount = ${dto.multipleResult.scoreCount};
                 $("#switchCPStar").attr("checked",true);
                 $("#starOpen").text("开启");
-                $("#starTitle").html("参与评分人数:");
+                $("#starTitle").html('<div class="title" id="starTitle">参与评分人数: <span id="scoreCount">0</span>人</div>');
                 $("#insertOption").hide();
                 $("#submitOption").css('display','none');
                 $(".star-remove-button").css('display','none');
+                $(".star-list  clearfix").css('display',"");
+                //var multipleResult = ${multipleResult};
+                //var detailList = ${detailList};
+               // console.log(multipleResult);
+                //console.log(detailList);
+                $("#eidtStar").css('display',"");
+                //handleMultipleResult(multipleResult);
+               // handleDetailResult(detailList);
+            }
+
+
+            function handleMultipleResult(result){
+                var $maxStar = $(".star-max").find(".star");
+                $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
+                $("#avgScoreSpan").text(0);
+                $("#scoreCount").text(0);
+                if(result != undefined && result.avgScore > 0){
+                    var avgScore = result.avgScore;
+                    $("#avgScoreSpan").text(avgScore);
+                    $("#scoreCount").text(result.scoreCount);
+                    var index = 1;
+                    $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
+                    if(avgScore > 0){
+                        $maxStar.find(".maxStar").each(function(){
+                            if(avgScore > index){
+                                $(this).removeClass("null").addClass("full");
+                            } else if(avgScore == index){
+                                $(this).removeClass("null").addClass("full");
+                                return false;
+                            } else {
+                                $(this).removeClass("null").addClass("half");
+                                return false;
+                            }
+                            index ++;
+                        });
+                    }
+
+                }
+
+            }
+
+
+            function handleDetailResult(result){
+                $(".detailScore").text("0");
+                $(".star-list-row .fl").text(" ");
+                $(".star-list-row").addClass("none");
+                if (result != undefined && result.length > 0){
+                    for(var index in result){
+                        var detail = result[index];
+                        var avgScore = detail.avgScore;
+                        var $currentRow = $(".star-list-row[index='"+index+"']");
+                        $currentRow.find(".fl").text(" " + detail.title);
+                        $currentRow.find(".detailScore").text(avgScore);
+                        var index = 1;
+                        $currentRow.find(".star").find("span").removeClass("full").removeClass("half").addClass("null");
+                        if(avgScore > 0){
+                            $currentRow.find(".star").find("span").each(function(){
+                                if(avgScore > index){
+                                    $(this).removeClass("null").addClass("full");
+                                } else if(avgScore == index){
+                                    $(this).removeClass("null").addClass("full");
+                                    return false;
+                                } else {
+                                    $(this).removeClass("null").addClass("half");
+                                    return false;
+                                }
+                                index ++;
+                            });
+                        }
+                        $currentRow.removeClass("none");
+                    }
+                }
             }
         })
         $(function(){
@@ -1162,6 +1292,7 @@
                 this.element.find('.timedate-input').val('');
             }else{
                this.element.find('.timedate-input').val(this.startDate.format(this.locale.format));
+               $("#liveStartTime").val(this.startDate.format(this.locale.format));
             }
         });
         //上传Hover 提示
