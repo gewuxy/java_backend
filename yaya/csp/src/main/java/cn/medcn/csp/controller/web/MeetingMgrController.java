@@ -344,12 +344,13 @@ public class MeetingMgrController extends CspBaseController {
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
-            /*//TODO 星评详情 evaluate
+            //TODO 星评详情 evaluate
             //星评信息
             if (course.getStarRateFlag()== true) {
-                List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
-                model.addAttribute("result",result);
-            }*/
+                StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
+                model.addAttribute("dto",dto);
+                //model.addAttribute("result",result);
+            }
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
