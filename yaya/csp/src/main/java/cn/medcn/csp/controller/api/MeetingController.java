@@ -1113,10 +1113,12 @@ public class MeetingController extends CspBaseController {
                 return error(local("share.live.over"));
             }
             //改变直播状态
-            live.setStartTime(new Date());
-            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-            liveService.updateByPrimaryKey(live);
+            if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()){
+                live.setStartTime(new Date());
+                live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+                live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+                liveService.updateByPrimaryKey(live);
+            }
 
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
