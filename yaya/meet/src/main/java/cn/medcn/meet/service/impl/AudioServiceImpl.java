@@ -831,6 +831,11 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
 
+        // 判断 如果是快捷会议 不允许编辑
+        if (course.getSourceType() != null && course.getSourceType() == AudioCourse.SourceType.QuickMeet.ordinal()) {
+            return false;
+        }
+
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
             //判断是否有投稿历史
             CourseDelivery cond = new CourseDelivery();
@@ -840,6 +845,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 return false;
             }
         }
+
         return true;
     }
 

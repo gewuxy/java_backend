@@ -155,9 +155,15 @@ public class CourseDeliveryDTO implements Serializable {
 
 
     public String getPlayTime(){
-        int pt = getDuration();
+        long pt = 0;
+        if (playType == AudioCourse.PlayType.normal.getType()) {
+            pt = getDuration();
+        } else {
+            if (endTime != null) {
+                pt = (endTime.getTime() - startTime.getTime()) / 1000;
+            }
+        }
         return CalendarUtils.formatTimesDiff(pt);
-
     }
 
     public Integer getDuration(){

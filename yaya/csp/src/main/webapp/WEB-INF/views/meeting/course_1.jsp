@@ -103,8 +103,8 @@
                         <div class="flex-item">
                             <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
                                 <c:choose>
-                                    <c:when test="${empty rateResult.multipleResult}">
-                                        <span class="off none"><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
+                                    <c:when test="${empty rateResult.multipleResult || rateResult.multipleResult.avgScore == 0.0}">
+                                        <span class="off "><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
