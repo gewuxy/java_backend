@@ -26,6 +26,8 @@ import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -348,6 +350,8 @@ public class MeetingMgrController extends CspBaseController {
             //星评信息
             if (course.getStarRateFlag()== true) {
                 StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
+                model.addAttribute("multipleResult",JSON.toJSONString(dto.getMultipleResult()));
+                model.addAttribute("detailList",JSON.toJSONString(dto.getDetailList()));
                 model.addAttribute("dto",dto);
                 //model.addAttribute("result",result);
             }
