@@ -70,7 +70,7 @@
                     </div>
                 </c:forEach>
                 <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
-                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/images/meeting-last-img.png')"></div>
+                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/logo-max-img.png')"></div>
                 </div>
             </div>
             <!--音频文件-->
@@ -145,7 +145,7 @@
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
             <div class="fixed-row t-center pr">
-                <input type="text" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
             </div>
             <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
             <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
@@ -614,9 +614,9 @@
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
-                }
-                if (!hasAudioUrl){
-                    slideToNext();
+                    if (!hasAudioUrl){
+                        slideToNext();
+                    }
                 }
             } else {
                 playerState = true;
@@ -661,7 +661,6 @@
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
                 $(this).hide();
-                popupPalyer.play();
                 started = true;
                 playing = true;
                 changePlayerStete(true);
