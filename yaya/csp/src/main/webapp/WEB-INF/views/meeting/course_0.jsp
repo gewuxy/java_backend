@@ -617,15 +617,11 @@
                 //有video文件
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).play();
-                    activeItemIsVideo.get(0).addEventListener('ended', function () {
-                        console.log("video play end ...");
-                        galleryTop.slideNext();
-                    }, {once: true});
                 } else {
                     popupPalyer.play();
-                }
-                if (!hasAudioUrl){
-                    slideToNext();
+                    if (!hasAudioUrl){
+                        slideToNext();
+                    }
                 }
             } else {
                 playerState = true;
