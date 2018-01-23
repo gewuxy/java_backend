@@ -844,8 +844,8 @@
             if (playType >= 1){
                 var startTime = $("#liveStartTime").val();
                 /*var endTime = $("#liveEndTime").val();*/
-                var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
-                if(startTime == "" ||dateBeforeNow || startTime == null){
+                //var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
+                if(startTime == ""  || startTime == null){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
@@ -1282,6 +1282,7 @@
             timePicker24Hour : true,
             timePicker : true,
             minDate:new Date(),
+            startDate: new Date(),
             "locale": {
                 format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: "<fmt:message key='page.meeting.time.start.plugin.true'/>",
@@ -1298,6 +1299,7 @@
                 monthNames: ["01","02","03","04","05","06","07","08","09","10","11","12"],
             }
         },function(start,end,label) {
+            alert(start)
             beginTimeTake = start;
             console.log(this.startDate.format(this.locale.format));
 
