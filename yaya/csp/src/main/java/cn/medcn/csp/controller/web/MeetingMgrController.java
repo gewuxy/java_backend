@@ -549,7 +549,8 @@ public class MeetingMgrController extends CspBaseController {
         updatePackagePrincipal(principal.getId());
 
         //当前删除的会议如果是锁定状态则不处理 否则需要解锁用户最早的一个锁定的会议
-        if (course.getLocked() != null && course.getLocked() != true && course.getGuide() != true) {
+        if (course.getLocked() != null && course.getLocked() != true && course.getGuide() != true
+                && course.getSourceType()!= AudioCourse.SourceType.QuickMeet.ordinal()) {
             //判断是否有锁定的会议
             if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()){
                 audioService.doUnlockEarliestCourse(principal.getId());
@@ -611,7 +612,7 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
         ac.setStarRateFlag(starRateFlag);
         MeetWatermark newWatermark = course.getWatermark();
@@ -632,15 +633,7 @@ public class MeetingMgrController extends CspBaseController {
         }
         //更新操作，包括更新或生成水印
         Integer packageId = getWebPrincipal().getPackageId();
-        if (ac.getPlayType() != null && ac.getPlayType().intValue() > 0){
-            SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-            try {
-                Date liveStarDate = simpleDateFormat.parse(liveTime);
-                course.getLive().setStartTime(liveStarDate);
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
-        }
+
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
 
         updatePackagePrincipal(getWebPrincipal().getId());

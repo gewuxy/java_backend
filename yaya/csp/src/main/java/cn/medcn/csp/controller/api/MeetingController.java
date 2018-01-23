@@ -867,7 +867,8 @@ public class MeetingController extends CspBaseController {
         audioService.deleteCspCourse(id);
         AudioCourse course = audioService.selectByPrimaryKey(id);
         //当前删除的会议如果是锁定状态则不处理 否则需要解锁用户最早的一个锁定的会议
-        if (course.getLocked() != null && course.getLocked() != true && course.getGuide() != true) {
+        if (course.getLocked() != null && course.getLocked() != true && course.getGuide() != true
+                && course.getSourceType()!= AudioCourse.SourceType.QuickMeet.ordinal()) {
             //判断是否有锁定的会议
             if (principal.getPackageId().intValue() != CspPackage.TypeId.PROFESSIONAL.getId()) {
                 audioService.doUnlockEarliestCourse(principal.getId());
@@ -1044,13 +1045,7 @@ public class MeetingController extends CspBaseController {
         }
         Live live = liveService.findByCourseId(courseId);
         //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
-        if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
-            live.setStartTime(new Date());
-            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-            //改变直播状态
-            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-            liveService.updateByPrimaryKey(live);
-        }
+        updateLiveState(live);
 
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
 
@@ -1112,17 +1107,23 @@ public class MeetingController extends CspBaseController {
             if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
-            //改变直播状态
-            live.setStartTime(new Date());
-            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-            liveService.updateByPrimaryKey(live);
+            updateLiveState(live);
 
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
         }
 
         return success(result);
+    }
+
+    protected void updateLiveState(Live live){
+        //改变直播状态
+        if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()){
+            live.setStartTime(new Date());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+            liveService.updateByPrimaryKey(live);
+        }
     }
 
 

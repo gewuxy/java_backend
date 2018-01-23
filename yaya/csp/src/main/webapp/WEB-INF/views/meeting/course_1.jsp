@@ -8,10 +8,10 @@
 <!DOCTYPE html>
 <html >
 <head>
+    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
     <meta id="description" name="description" content="<fmt:message key='page.meeting.share.description'/>" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
-    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
@@ -103,8 +103,8 @@
                         <div class="flex-item">
                             <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
                                 <c:choose>
-                                    <c:when test="${empty rateResult.multipleResult}">
-                                        <span class="off none"><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
+                                    <c:when test="${empty rateResult.multipleResult || rateResult.multipleResult.avgScore == 0.0}">
+                                        <span class="off "><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>

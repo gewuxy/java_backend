@@ -154,7 +154,7 @@
                                     </div>
                                     <div class="title">综合评分</div>
                                 </div>
-                                    <div class="upload-metting-star-row" style="display: none">
+                                    <%--<div class="upload-metting-star-row" style="display: none">
                                         <div class="fr">
                                         <div class="star-box star-max">
                                             <div class="star">
@@ -170,8 +170,8 @@
                                         <div class="title">
                                             <span class="star-remove-button"></span>
                                         </div>
-                                    </div>
-                                <%--<div class="star-list  clearfix" style="display: none" id="eidtStar">
+                                    </div>--%>
+                                <div class="star-list  clearfix" style="display: none" id="eidtStar">
                                     <div class="star-list-row clearfix" index="0">
                                         <div class="fr">
                                             <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
@@ -208,7 +208,7 @@
                                         </div>
                                         <div class="fl"> </div>
                                     </div>
-                                </div>--%>
+                                </div>
 
 
                                 <div class="upload-metting-star-row star-input-box" id="submitOption" style="display: none">
@@ -297,14 +297,28 @@
                                             <div class="formrow">
                                                 <div class="formControls">
                                                             <span class="time-tj">
-                                                                <label for="liveTimeSelector" id="timeStart">
-                                                                    <fmt:message key="page.common.time"/><input type="text"  readonly class="timedate-input " id="liveTimeSelector" name="liveTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
-                                                                                                                <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy/MM/dd HH:mm:ss"/>"</c:if>
-                                                                >
+                                                                <c:choose>
+                                                                    <c:when test="${live.liveState == 0 || live.liveState == 1 || live.liveState == 2 }">
+                                                                        <label for="liveTimeSelector">
+                                                                    <fmt:message key="page.common.time"/>
+                                                                    <input type="text"  readonly class="timedate-input " id="liveStartTime" name="live.startTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
+                                                                           <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"</c:if>
+                                                                    >
                                                                 </label>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <label for="liveTimeSelector" id="timeStart">
+                                                                    <fmt:message key="page.common.time"/>
+                                                                    <input type="text"  readonly class="timedate-input " id="liveStartTime" name="live.startTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
+                                                                           <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"</c:if>
+                                                                    >
+                                                                </label>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+
                                                             </span>
                                                     <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.tips.time_limit"/></span>
-                                                    <input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">
+                                                    <%--<input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">--%>
                                                     <%--<input type="hidden" name="live.endTime"  ${course.playType == '0' ? 'disabled':''}  id="liveEndTime" value="<fmt:formatDate value='${live.endTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">--%>
                                                 </div>
 
@@ -830,8 +844,8 @@
             if (playType >= 1){
                 var startTime = $("#liveStartTime").val();
                 /*var endTime = $("#liveEndTime").val();*/
-                var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
-                if(startTime == "" ||dateBeforeNow || startTime == null){
+                //var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
+                if(startTime == ""  || startTime == null){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
@@ -1012,22 +1026,21 @@
         /*123星评功能*/
         $(function () {
             var flag = ${course.starRateFlag}
-            if(flag){
-                //var scoreCount = ${dto.multipleResult.scoreCount};
+            if(flag == true){
+                //var scoreCount =${dto.multipleResult.scoreCount} ;
                 $("#switchCPStar").attr("checked",true);
                 $("#starOpen").text("开启");
-                $("#starTitle").html('<div class="title" id="starTitle">参与评分人数: <span id="scoreCount">0</span>人</div>');
+                //$("#starTitle").html('<div class="title" id="starTitle">参与评分人数: <span id="scoreCount">'+scoreCount+'</span>人</div>');
                 $("#insertOption").hide();
                 $("#submitOption").css('display','none');
                 $(".star-remove-button").css('display','none');
                 $(".star-list  clearfix").css('display',"");
-                //var multipleResult = ${multipleResult};
-                //var detailList = ${detailList};
-               // console.log(multipleResult);
-                //console.log(detailList);
                 $("#eidtStar").css('display',"");
-                //handleMultipleResult(multipleResult);
-               // handleDetailResult(detailList);
+                ajaxGet('${ctx}/mgr/meet/course_info/' + ${course.id}, {}, function(data){
+                    handleMultipleResult(data.data.multipleResult);
+                    handleDetailResult(data.data.detailList);
+                });
+
             }
 
 
@@ -1269,8 +1282,9 @@
             timePicker24Hour : true,
             timePicker : true,
             minDate:new Date(),
+            startDate: new Date(),
             "locale": {
-                format: 'YYYY-MM-DD HH:mm',
+                format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: "<fmt:message key='page.meeting.time.start.plugin.true'/>",
                 cancelLabel: "<fmt:message key='page.meeting.time.start.plugin.false'/>",
                 weekLabel: 'W',
@@ -1285,6 +1299,7 @@
                 monthNames: ["01","02","03","04","05","06","07","08","09","10","11","12"],
             }
         },function(start,end,label) {
+            alert(start)
             beginTimeTake = start;
             console.log(this.startDate.format(this.locale.format));
 
@@ -1292,7 +1307,7 @@
                 this.element.find('.timedate-input').val('');
             }else{
                this.element.find('.timedate-input').val(this.startDate.format(this.locale.format));
-               $("#liveStartTime").val(this.startDate.format(this.locale.format));
+               $("#liveStartTime").val(this.startDate.format(this.locale.format))
             }
         });
         //上传Hover 提示
