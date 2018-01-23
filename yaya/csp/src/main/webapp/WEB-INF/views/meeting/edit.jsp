@@ -137,6 +137,9 @@
                                     <div class="weui-cell__ft">
                                         <label for="switchCPStar" class="mui-switch-box">
                                             <input type="checkbox" name="starRateFlag" id="switchCPStar" class="mui-switch none" value="${course.starRateFlag}">
+                                            <script>
+                                                /*123*/
+                                            </script>
                                             <div class="weui-switch-cp__box"></div>
                                         </label>
                                     </div>
@@ -155,7 +158,6 @@
                                     <div class="fr">
                                         <div class="star-input-button"><input class="button" type="submit" value="保存" id="btnStar"><a href="javascript:;" class="close">取消</a></div>
                                     </div>
-                                    <%--<c:set var="isZh" value="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}"/> en_US--%>
                                     <c:if test="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}">
                                     <div class="oh">
                                         <div class="star-input"><input type="text" placeholder="最多输入6个中文字" maxlength="6" id="limitOptionCn" name="title"></div>
@@ -183,7 +185,7 @@
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
                             <input type="hidden" name="watermark.name" id="name" value="${appName}">
-                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="">
+                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="0">
                             <div class="meeting-form-item login-form-item">
 
                                 <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"><span class="icon-metting-lock lock-hook" id="lookPwd"><fmt:message key="page.meeting.button.watch.password"/></span></label>
@@ -772,7 +774,7 @@
                 var startTime = $("#liveStartTime").val();
                 /*var endTime = $("#liveEndTime").val();*/
                 var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
-                if(/*startTime >= endTime || Date.parse(endTime) - Date.parse(startTime) > 24 * 3600 * 1000 ||*/dateBeforeNow){
+                if(startTime == "" ||dateBeforeNow || startTime == null){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
                     return;
@@ -951,6 +953,17 @@
         })
 
         /*123星评功能*/
+        $(function () {
+            var flag = ${course.starRateFlag}
+            if(flag){
+                $("#switchCPStar").attr("checked",true);
+                $("#starOpen").text("开启");
+                $("#starTitle").html("参与评分人数:");
+                $("#insertOption").hide();
+                $("#submitOption").css('display','none');
+                $(".star-remove-button").css('display','none');
+            }
+        })
         $(function(){
             $("#switchCPStar").click(function () {
                 var isCheck = $("#switchCPStar").is(":checked");
@@ -1074,7 +1087,7 @@
                 yes: function(index, layero){
                     $("[name=starRateFlag]:checkbox").prop("checked", true);
                     $("#starOpen").text("开启");
-                    $("#starTitle").html("参与评分人数:");
+                    $("#starTitle").html("参与评分人数: 0 人");
                     $("#insertOption").hide();
                     var isCheck = $("#switchCPStar").is(":checked");
                     $("#switchCPStar").val(isCheck);
