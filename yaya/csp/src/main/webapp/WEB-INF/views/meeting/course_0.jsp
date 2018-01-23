@@ -125,8 +125,6 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
-
-
                 <div class="flex-item">
                     <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
                 </div>
@@ -195,8 +193,6 @@
             </div>
         </c:if>
     </div>
-
-
 </div>
 
 <!--弹出选择框-->
@@ -207,7 +203,6 @@
         <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
     </div>
 </div>
-
 
 <!--星評彈出層-->
 <div class="CSPMeeting-meeting-star-popup meeting-star-popup">
@@ -707,7 +702,6 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
-
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
@@ -771,12 +765,10 @@
 
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
-
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
             }
-
             layer.open({
                 type: 1,
                 anim: 5,
@@ -852,7 +844,6 @@
         }
     });
 
-
     function doRate(){
         if(!$("#submitBtn").hasClass("disabled")){
             var data = $("#dataForm").serialize();
@@ -864,10 +855,6 @@
             }, 'json');
         }
     }
-
-
-
-
 </script>
 </body>
 
