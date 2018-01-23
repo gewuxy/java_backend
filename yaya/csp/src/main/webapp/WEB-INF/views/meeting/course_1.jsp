@@ -9,7 +9,7 @@
 <html >
 <head>
     <meta charset="UTF-8">
-    <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
+    <meta id="description" name="description" content="用会讲，做有声PPT,随讲随录随分享" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <title>${course.title}</title>
