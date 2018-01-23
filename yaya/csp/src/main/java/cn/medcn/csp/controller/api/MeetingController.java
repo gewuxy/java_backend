@@ -986,13 +986,6 @@ public class MeetingController extends CspBaseController {
             return error(local("course.error.api.locked"));
         }
 
-        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-            Live live = liveService.findByCourseId(courseId);
-            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                return error(local("share.live.over"));
-            }
-        }
-
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);
         Map<String, Object> result = new HashMap<>();
 
