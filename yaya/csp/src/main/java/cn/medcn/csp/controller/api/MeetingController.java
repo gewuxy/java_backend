@@ -1258,7 +1258,7 @@ public class MeetingController extends CspBaseController {
         StarRateResultDTO dto = new StarRateResultDTO();
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
-        if (course.getStarRateFlag()) {
+        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
             String local = LocalUtils.getLocalStr();
             boolean abroad = LocalUtils.isAbroad();
             String shareUrl = audioService.getMeetShareUrl(appCspBase, local, courseId, abroad);
