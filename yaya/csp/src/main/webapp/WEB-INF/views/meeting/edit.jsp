@@ -297,11 +297,25 @@
                                             <div class="formrow">
                                                 <div class="formControls">
                                                             <span class="time-tj">
-                                                                <label for="liveTimeSelector" id="timeStart">
-                                                                    <fmt:message key="page.common.time"/><input type="text"  readonly class="timedate-input " id="liveStartTime" name="live.startTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
-                                                                                                                <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"</c:if>
-                                                                >
+                                                                <c:choose>
+                                                                    <c:when test="${live.liveState == 0 || live.liveState == 1 || live.liveState == 2 }">
+                                                                        <label for="liveTimeSelector">
+                                                                    <fmt:message key="page.common.time"/>
+                                                                    <input type="text"  readonly class="timedate-input " id="liveStartTime" name="live.startTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
+                                                                           <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"</c:if>
+                                                                    >
                                                                 </label>
+                                                                    </c:when>
+                                                                    <c:otherwise>
+                                                                        <label for="liveTimeSelector" id="timeStart">
+                                                                    <fmt:message key="page.common.time"/>
+                                                                    <input type="text"  readonly class="timedate-input " id="liveStartTime" name="live.startTime" placeholder="<fmt:message key='page.common.time.select.start'/>"
+                                                                           <c:if test="${not empty live.startTime}">value="<fmt:formatDate value="${live.startTime}" pattern="yyyy-MM-dd HH:mm:ss"/>"</c:if>
+                                                                    >
+                                                                </label>
+                                                                    </c:otherwise>
+                                                                </c:choose>
+
                                                             </span>
                                                     <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.tips.time_limit"/></span>
                                                     <%--<input type="hidden" name="live.startTime" ${course.playType == '0' ? 'disabled':''} id="liveStartTime" value="<fmt:formatDate value='${live.startTime}' pattern="yyyy/MM/dd HH:mm:ss"/>">--%>
@@ -1301,10 +1315,6 @@
                 time:2000
             });
         });
-
-        if (${live.state == 0 || live.state == 1 || live.state == 2 }){
-            $("#timeStart").daterangepicker("disable").attr("readonly","readonly");
-        }
 
         if("${course != null && course.published && course.playType > 0}" == "true") {
             showLiveMessage();
