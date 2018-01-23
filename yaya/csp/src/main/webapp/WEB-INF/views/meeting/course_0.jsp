@@ -10,7 +10,7 @@
 <head>
     <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
-    <meta id="description" name="description" content="用会讲，做有声PPT,随讲随录随分享" />
+    <meta id="description" name="description" content="<fmt:message key='page.meeting.share.description'/>" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
