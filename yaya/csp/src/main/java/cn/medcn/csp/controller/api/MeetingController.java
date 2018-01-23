@@ -1484,5 +1484,18 @@ public class MeetingController extends CspBaseController {
         return success();
     }
 
+    @RequestMapping(value = "/share/live/duration")
+    @ResponseBody
+    public String liveDuration(Integer courseId){
+        Live live = liveService.findByCourseId(courseId);
+        Map<String, Object> result = new HashMap<>();
+        long duration = 0;
+        if (live != null && live.getEndTime() != null) {
+            duration = (live.getEndTime().getTime() - live.getStartTime().getTime()) / 1000;
+        }
+        result.put("duration", CalendarUtils.formatTimesDiff(duration));
+        return success(result);
+    }
+
 
 }

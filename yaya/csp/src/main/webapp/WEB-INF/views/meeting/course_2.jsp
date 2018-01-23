@@ -214,7 +214,7 @@
         <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
-            <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> ${totalLiveTime}</p>
+            <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
         </div>
     </div>
 
@@ -899,7 +899,7 @@
                 } else if (data.order == 13){//开启星评指令
                     // todo 打开星评界面
                 } else if(data.order == 11){//直播開始
-                    $("#liveStartView").removeClass("none");
+                    $("#liveStartView").addClass("none");
                 } else if(data.order == 14){//直播结束
                     if(activeItemIsVideo.length > 0){
                         activeItemIsVideo.get(0).pause();
@@ -908,7 +908,7 @@
                     }
 
                     CKobject.getObjectById('ck-video').videoClear();
-
+                    getLiveDuration();
                     $("#liveOverView").removeClass("none");
                 }
             }
@@ -997,6 +997,14 @@
 
     });
 
+    function getLiveDuration(){
+        var url = '${ctx}/api/meeting/share/live/duration';
+        $.get(url, {"courseId":"${course.id}"}, function(data){
+            if(data.code == 0){
+                $("#liveDuration").text(data.data.duration);
+            }
+        },'json');
+    }
 
 </script>
 <script type="text/javascript">
