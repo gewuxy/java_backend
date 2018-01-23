@@ -26,6 +26,8 @@ import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.UserFlux;
 import cn.medcn.user.model.*;
 import cn.medcn.user.service.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -344,12 +346,15 @@ public class MeetingMgrController extends CspBaseController {
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
-            /*//TODO 星评详情 evaluate
+            //TODO 星评详情 evaluate
             //星评信息
             if (course.getStarRateFlag()== true) {
-                List<StarRateResultDTO> result = cspStarRateService.findRateResult(courseId);
-                model.addAttribute("result",result);
-            }*/
+                StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
+                model.addAttribute("multipleResult",JSON.toJSONString(dto.getMultipleResult()));
+                model.addAttribute("detailList",JSON.toJSONString(dto.getDetailList()));
+                model.addAttribute("dto",dto);
+                //model.addAttribute("result",result);
+            }
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
@@ -385,25 +390,6 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("flux", format.format(fluxValue));
         model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
-    }
-
-    /**
-     * 操作星评
-     * @param courseId
-     * @param option
-     */
-    @RequestMapping(value = "/doStar")
-    public void doStarEvaluate(Integer courseId,CspStarRateOption option){
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if (course.getStarRateFlag() == false){
-            course.setStarRateFlag(true);
-            option.setCourseId(courseId);
-            cspStarRateService.insert(option);
-        }else{
-            course.setStarRateFlag(false);
-            //删除历史分数 和 详情表中的分数
-        }
-        audioService.updateByPrimaryKey(course);
     }
 
     /**
@@ -625,10 +611,10 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
+        ac.setStarRateFlag(starRateFlag);
         MeetWatermark newWatermark = course.getWatermark();
-
         //编辑操作需要判断是否可以进行修改
         if (ac.getId() != null && ac.getId() != 0) {
             if (!audioService.editAble(ac.getId())) {
@@ -656,8 +642,6 @@ public class MeetingMgrController extends CspBaseController {
             }
         }
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
-
-        //保存星评
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
@@ -782,5 +766,24 @@ public class MeetingMgrController extends CspBaseController {
         course.setPassword(null);
         audioService.updateByPrimaryKey(course);
         return success();
+    }
+
+    @RequestMapping(value = "/star/save/{courseId}")
+    @ResponseBody
+    public String saveStarOption(@PathVariable Integer courseId ,CspStarRateOption cspStarRateOption){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        cspStarRateService.insert(cspStarRateOption);
+        return success(cspStarRateOption);
+    }
+
+    @RequestMapping(value = "/star/del/{optionId}")
+    @ResponseBody
+    public String delStarOption(@PathVariable Integer optionId ,CspStarRateOption cspStarRateOption){
+        cspStarRateService.deleteByPrimaryKey(optionId);
+        return success(cspStarRateOption);
     }
 }

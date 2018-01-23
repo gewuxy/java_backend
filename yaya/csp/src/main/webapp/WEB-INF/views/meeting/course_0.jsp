@@ -10,7 +10,7 @@
 <head>
     <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
-    <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
+    <meta id="description" name="description" content="<fmt:message key='page.meeting.share.description'/>" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
@@ -70,7 +70,7 @@
                     </div>
                 </c:forEach>
                 <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
-                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/images/meeting-last-img.png')"></div>
+                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/logo-max-img.png')"></div>
                 </div>
             </div>
             <!--音频文件-->
@@ -102,25 +102,38 @@
         <!--buttonBottom-->
         <div class="CSPMeeting-bottom">
             <div class="flex">
-                <div class="flex-item">
-                    <div class="button button-icon-info info-popup-hook">
-                        <i></i>
-                    </div>
-                </div>
+                <c:choose>
+                    <c:when test="${course.starRateFlag}">
+                        <div class="flex-item">
+                            <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
+                                <c:choose>
+                                    <c:when test="${empty rateResult.multipleResult}">
+                                        <span class="off none"><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <div class="flex-item">
+                            <div class="button button-icon-info star-popup-button-hook">
+                                <i></i>
+                            </div>
+                        </div>
+                    </c:otherwise>
+                </c:choose>
                 <div class="flex-item">
                     <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
                 </div>
-                <div class="flex-item">
-                    <div class="button button-icon-report report-popup-button-hook"><i></i></div>
-                </div>
+
                 <div class="flex-item">
                     <div class="button button-icon-onFull changeFull-hook"><i></i></div>
                 </div>
             </div>
-
-
         </div>
-
     </div>
 
     <!--自动播放层-->
@@ -132,7 +145,7 @@
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
             <div class="fixed-row t-center pr">
-                <input type="text" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
             </div>
             <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
             <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
@@ -146,11 +159,134 @@
     <div class="meeting-info-popup-main ">
         <div class="title"><h3><fmt:message key="page.common.info"/> </h3></div>
         <div class="text hidden-box">
-
-            <p>${not empty course.info ? course.info : 'undefined'}</p>
+            <p>${course.info}</p>
         </div>
+        <c:if test="${course.starRateFlag}">
+            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
+            <div class="star-showScore ">
+                <div class="star-showScore-main clearfix">
+                    <div class="fr">
+                        <div class="star-box star-min">
+                            <div class="star-item">
+                                <c:forEach begin="1" end="5" step="1" var="curr">
+                                    <c:choose>
+                                        <c:when test="${avgScore >= curr}">
+                                            <span class="full"></span>
+                                        </c:when>
+                                        <c:when test="${avgScore > curr - 1 && avgScore < curr}">
+                                            <span class="half"></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="null"></span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </div>
+                            <div class="grade ">${avgScore}<fmt:message key="page.meeting.tips.score.unit"/></div>
+                        </div>
+                    </div>
+                    <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
+                </div>
+                <div class="star-showScore-button popup-star-button t-center">
+                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
+                </div>
+            </div>
+        </c:if>
     </div>
 </div>
+
+<!--弹出选择框-->
+<div class="listItme-popup">
+    <div class="listItme-popup-main">
+        <a href="javscript:;" class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
+        <c:if test="${course.starRateFlag}"><a href="javscript:;" class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
+        <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
+    </div>
+</div>
+
+<!--星評彈出層-->
+<div class="CSPMeeting-meeting-star-popup meeting-star-popup">
+    <div class="meeting-star-popup-main ">
+        <div class="meeting-star-head">
+            <p><span><fmt:message key="page.meeting.rate.me.want"/></span></p>
+            <h3>${course.title}</h3>
+            <div class="meeting-star-img">
+                <c:choose>
+                    <c:when test="${empty publisher.avatar}">
+                        <img src="${ctxStatic}/images/icon-video-notPlay.png" alt="">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${publisher.avatar}"/>
+                    </c:otherwise>
+                </c:choose>
+                </div>
+            <div class="meeting-star-author"><span>${publisher.nickName}</span></div>
+        </div>
+        <div class="meeting-star-main clearfix">
+
+            <!--==========================选择分数小版-->
+            <c:set var="rated" scope="page" value="${not empty rateHistory}"/>
+            <form id="dataForm" name="dataForm">
+                <input type="hidden" name="courseId" value="${course.id}">
+            <div class="meeting-star-getStarNum">
+                <c:choose>
+                    <c:when test="${empty rateOptions}">
+                        <div class="meeting-star-row clearfix getShowNum-min">
+                            <div class="fr">
+                                <div class="star_bg">
+                                    <input type="radio" id="starScore1" class="score score_1" value="1" name="score">
+                                    <a href="#starScore1" class="star star_1" title="差"><label for="starScore1"></label></a>
+                                    <input type="radio" id="starScore2" class="score score_2" value="2" name="score">
+                                    <a href="#starScore2" class="star star_2" title="较差"><label for="starScore2"></label></a>
+                                    <input type="radio" id="starScore3" class="score score_3" value="3" name="score">
+                                    <a href="#starScore3" class="star star_3" title="普通"><label for="starScore3"></label></a>
+                                    <input type="radio" id="starScore4" class="score score_4" value="4" name="score">
+                                    <a href="#starScore4" class="star star_4" title="较好"><label for="starScore4"></label></a>
+                                    <input type="radio" id="starScore5" class="score score_5" value="5" name="score">
+                                    <a href="#5" class="star star_5" title="好"><label for="starScore5"></label></a>
+                                </div>
+                                <div class="grade ">${rated ? rateHistory.multipleResult.avgScore : 0}<fmt:message key="page.meeting.tips.score.unit"/> </div>
+                            </div>
+                            <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/></div>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <c:forEach items="${rateOptions}" var="op" varStatus="status">
+                            <div class="meeting-star-row clearfix getShowNum-min">
+                                <div class="fr">
+                                    <div class="star_bg">
+                                        <input type="radio" id="starDetailScore${status.index}1" ${rated && rateHistory.detailList[status.index].avgScore == 1 ? 'checked':''} class="score score_1" value="1" name="details[${status.index}].score">
+                                        <a href="#starScore1" class="star star_1" title="差"><label for="starDetailScore${status.index}1"></label></a>
+                                        <input type="radio" id="starDetailScore${status.index}2" ${rated && rateHistory.detailList[status.index].avgScore == 2 ? 'checked':''} class="score score_2" value="2" name="details[${status.index}].score">
+                                        <a href="#starScore2" class="star star_2" title="较差"><label for="starDetailScore${status.index}2"></label></a>
+                                        <input type="radio" id="starDetailScore${status.index}3" ${rated && rateHistory.detailList[status.index].avgScore == 3 ? 'checked':''} class="score score_3" value="3" name="details[${status.index}].score">
+                                        <a href="#starScore3" class="star star_3" title="普通"><label for="starDetailScore${status.index}3"></label></a>
+                                        <input type="radio" id="starDetailScore${status.index}4" ${rated && rateHistory.detailList[status.index].avgScore == 4 ? 'checked':''} class="score score_4" value="4" name="details[${status.index}].score">
+                                        <a href="#starScore4" class="star star_4" title="较好"><label for="starDetailScore${status.index}4"></label></a>
+                                        <input type="radio" id="starDetailScore${status.index}5" ${rated && rateHistory.detailList[status.index].avgScore == 5 ? 'checked':''} class="score score_5" value="5" name="details[${status.index}].score">
+                                        <a href="#5" class="star star_5" title="好"><label for="starDetailScore${status.index}5"></label></a>
+                                    </div>
+                                    <div class="grade "><span>${!rated ? 0 : rateHistory.detailList[status.index].avgScore}</span><fmt:message key="page.meeting.tips.score.unit"/> </div>
+                                </div>
+                                <div class="star-showScore-title">${op.title}</div>
+                            </div>
+                        </c:forEach>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            </form>
+        </div>
+
+        <div class="meeting-star-button popup-star-button t-center">
+                <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+                <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
+                <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
+        </div>
+
+    </div>
+</div>
+
+
 
 
 <script>
@@ -216,15 +352,6 @@
             clearTimeout(slideTimer);
             if (started){
                 if (isVideo.length == 0 && !playerState){
-                    slideToNext();
-                }
-            } else {
-                if (isVideo.length == 0){
-                    $('.html5ShadePlay').hide();
-                    popupPalyer.play();
-                    playing = true;
-                    started = true;
-                    changePlayerStete(false);
                     slideToNext();
                 }
             }
@@ -385,60 +512,17 @@
         //超出页面下拉
         $(".hidden-box").perfectScrollbar();
 
-        /*弹出留言*/
-        $(".faq-popup-button-hook").on('click',function(){
-            layer.open({
-                type: 1,
-                anim: 5,
-                area: ['100%','100%'],
-                fix: false, //不固定
-                title: false,
-                content: $('.faq-popup-hook'),
-                success: function () {
-                    popupPalyer.play();
-                },
-                end:function(){
-                    popupPalyer.play();
-                }
-            })
-        });
-
-        //启动留言输入框
-        $(".meeting-faq-popup-input-text").on('click',function(){
-            layer.open({
-                type: 1,
-                anim: 2,
-                area: ['100%','4rem'],
-                offset:'b',
-                title:false,
-                content: $('.meeting-faq-popup-keyboard'),
-                success: function (swiper) {
-                    popupPalyer.play();
-                    swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
-                        var target = this;
-                        //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
-                            target.scrollIntoView(true);
-                        },100)
-                    });
-                },
-                end:function(){
-                    popupPalyer.play();
-                }
-            })
-        });
-
         //弹出简介
         $('.info-popup-hook').click(function(){
             layer.open({
                 type: 1,
-                area: ['85%','65%'],
+                area: ['95%','85%'],
                 fix: false, //不固定
                 title:false,
                 skin: 'info-popup',
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
+                    layer.close(layer.index-1);
                     //popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
@@ -530,9 +614,9 @@
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
-                }
-                if (!hasAudioUrl){
-                    slideToNext();
+                    if (!hasAudioUrl){
+                        slideToNext();
+                    }
                 }
             } else {
                 playerState = true;
@@ -577,7 +661,7 @@
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
                 $(this).hide();
-                popupPalyer.play();
+                started = true;
                 playing = true;
                 changePlayerStete(true);
             });
@@ -618,9 +702,10 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
+            layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
-                activeItemIsVideo.height(0);
+                activeItemIsVideo.attr('style','margin-top:300rem');
             }
             weui.actionSheet([
                 {
@@ -649,7 +734,7 @@
                         console.log('取消');
                         //关闭时还原高度。
                         if(browser.isAndroid || activeItemIsVideo.length > 0){
-                            activeItemIsVideo.height('auto');
+                            activeItemIsVideo.attr('style','margin-top:0');
                         }
                     }
                 }
@@ -659,7 +744,7 @@
                     console.log('关闭');
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style','margin-top:0');
                     }
                 }
             });
@@ -678,12 +763,98 @@
 
         });
 
+        //弹出功能选项
+        $('.star-popup-button-hook').on('click',function() {
+            //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
+            layer.open({
+                type: 1,
+                anim: 5,
+                area: ['90%', 'auto'],
+                fix: false, //不固定
+                title: false,
+                shadeClose: true,
+                content: $('.listItme-popup'),
+                success: function () {
+                    //popupPalyer.play();
+                },
+                end: function () {
+                    //popupPalyer.play();
+                    //关闭时还原高度。
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.height('auto');
+                    }
+                }
+            })
+        });
 
+        //星评弹出
+        function openStarRate(){
+            layer.open({
+                type: 1,
+                area: ['90%','85%'],
+                fix: false, //不固定
+                title:false,
+                shadeClose : true,
+                skin: 'info-popup',
+                content: $('.CSPMeeting-meeting-star-popup'),
+                success: function (swiper) {
+                    layer.close(layer.index-1);
+                    //弹出星评后,关闭之前打开他的窗
+//                    layer.close(layer.index-1);
+//                    popupPalyer.play();
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height(0);
+                    }
+                },
+                end:function(){
+                    //popupPalyer.play();
+                    //关闭时还原高度。
+                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        activeItemIsVideo.height('auto');
+                    }
+                    layer.closeAll();
+                }
+            })
+        }
+        $('.star-popup-hook').on('click',function(){
+            openStarRate();
+        });
+
+        $("input[type='radio']").click(function(){
+            $(this).parent().siblings("div").find("span").text($(this).val());
+            var submitAble = true;
+            $("input[type='radio']").parent().siblings("div").find("span").each(function(){
+                if($(this).text() == '' || $(this).text() == 0){
+                    submitAble = false;
+                    return false;
+                }
+            });
+
+            if(submitAble){
+                $("#submitBtn").removeClass("disabled");
+            }
+        });
+
+        if("${play.playState == 3}" == "true"){
+            openStarRate();
+        }
     });
 
-
-
-
+    function doRate(){
+        if(!$("#submitBtn").hasClass("disabled")){
+            var data = $("#dataForm").serialize();
+            $.post('${ctx}/api/meeting/share/rate', data, function (result) {
+                if(result.code == 0){
+                    $("#submitBtn").addClass("none");
+                    $("#ratedBtn").removeClass("none");
+                }
+            }, 'json');
+        }
+    }
 </script>
 </body>
 

@@ -112,17 +112,21 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
         if (history != null) {
             history.setRateTime(new Date());
             if (!CheckUtils.isEmpty(history.getDetails())) {
+                List<CspStarRateOption> options = findRateOptions(history.getCourseId());
                 //计算综合得分
                 int totalScore = 0;
                 for (CspStarRateHistoryDetail detail : history.getDetails()) {
                     totalScore += detail.getScore();
                 }
-                history.setScore(totalScore * 1.0f / history.getDetails().size());
+                history.setScore(totalScore * 1.0f / history.getDetails().length);
 
                 cspStarRateHistoryDAO.insert(history);
 
-                for (CspStarRateHistoryDetail detail : history.getDetails()) {
+                for (int i = 0; i< history.getDetails().length; i ++) {
+                    CspStarRateHistoryDetail detail = history.getDetails()[i];
                     detail.setHistoryId(history.getId());
+                    detail.setCourseId(history.getCourseId());
+                    detail.setOptionId(options.get(i).getId());
                     cspStarRateHistoryDetailDAO.insert(detail);
                 }
             } else {
@@ -151,4 +155,46 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
     public List<StarRateResultDTO> getStarRateDetail(Integer courseId) {
             return cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
     }
+
+    /**
+     * 判断当前用户是否已经评过分
+     *
+     * @param courseId
+     * @param ticket
+     * @return
+     */
+    @Override
+    public StarRateInfoDTO findRateHistory(Integer courseId, String ticket) {
+        CspStarRateHistory cond = new CspStarRateHistory();
+        cond.setTicket(ticket);
+        cond.setCourseId(courseId);
+
+        List<CspStarRateHistory> historyList = cspStarRateHistoryDAO.select(cond);
+        if (CheckUtils.isEmpty(historyList)){
+            return null;
+        } else {
+            CspStarRateHistory history = historyList.get(0);
+            StarRateInfoDTO dto = new StarRateInfoDTO();
+            StarRateResultDTO multiple = new StarRateResultDTO();
+            multiple.setAvgScore(history.getScore());
+            dto.setMultipleResult(multiple);
+            CspStarRateHistoryDetail detailCond = new CspStarRateHistoryDetail();
+            detailCond.setCourseId(courseId);
+            detailCond.setHistoryId(history.getId());
+            List<CspStarRateHistoryDetail> details = cspStarRateHistoryDetailDAO.select(detailCond);
+
+            if (!CheckUtils.isEmpty(details)) {
+                List<StarRateResultDTO> results = new ArrayList<>();
+                for (CspStarRateHistoryDetail detail : details) {
+                    StarRateResultDTO result = new StarRateResultDTO();
+                    result.setAvgScore(detail.getScore());
+                    result.setOptionId(detail.getOptionId());
+                    results.add(result);
+                }
+                dto.setDetailList(results);
+            }
+            return dto;
+        }
+    }
+
 }

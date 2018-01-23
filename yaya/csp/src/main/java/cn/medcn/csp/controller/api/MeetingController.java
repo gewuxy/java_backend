@@ -11,6 +11,7 @@ import cn.medcn.common.service.EmailService;
 import cn.medcn.common.service.FileUploadService;
 import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.utils.*;
+import cn.medcn.csp.CspConstants;
 import cn.medcn.csp.controller.CspBaseController;
 import cn.medcn.csp.dto.CspCourseInfoDTO;
 import cn.medcn.csp.dto.RecordUploadDTO;
@@ -18,14 +19,11 @@ import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
 import cn.medcn.meet.dto.*;
-import cn.medcn.meet.service.CourseThemeService;
+import cn.medcn.meet.service.*;
 import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
 import cn.medcn.meet.model.*;
-import cn.medcn.meet.service.AudioService;
-import cn.medcn.meet.service.LiveService;
-import cn.medcn.meet.service.MeetWatermarkService;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
 import cn.medcn.user.model.CspUserPackage;
@@ -46,6 +44,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -58,6 +57,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.csp.CspConstants.COURSE_RATE_TICKET_KEY;
 import static cn.medcn.csp.CspConstants.MEET_AFTER_START_EXPIRE_HOURS;
 import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
 
@@ -119,6 +119,9 @@ public class MeetingController extends CspBaseController {
     @Autowired
     protected CourseThemeService courseThemeService;
 
+    @Autowired
+    protected CspStarRateService cspStarRateService;
+
     /**
      * 会议阅览
      *
@@ -145,10 +148,11 @@ public class MeetingController extends CspBaseController {
      * @return
      */
     @RequestMapping("/share")
-    public String share(String signature, Model model, HttpServletRequest request) {
+    public String share(String signature, Model model, HttpServletRequest request, HttpServletResponse response) {
         String linkError = local("share.link.error");
 
         Map<String, Object> params = null;
+
         try {
             params = parseParams(signature);
         } catch (SystemException e) {
@@ -162,11 +166,17 @@ public class MeetingController extends CspBaseController {
             LocalUtils.setLocalStr(local);
 
             String abroad = (String) params.get(ABROAD_KEY);
-            boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
-            AddressDTO address = AddressUtils.parseAddress(request.getRemoteHost());
-            linkError = local("share.link.error");
-            String abroadError = local("share.aboard.error");
 
+            String abroadError = local("share.aboard.error");
+            linkError = local("share.link.error");
+
+            boolean isAbroad = CheckUtils.isEmpty(abroad) ? false : ("0".equals(abroad) ? false : true);
+            AddressDTO address = new AddressDTO();
+            address.setCountry_id("CN");
+
+            if (!AddressUtils.isLan(request.getRemoteHost())) {
+                address = AddressUtils.parseAddress(request.getRemoteHost());
+            }
             if (address != null && address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
                 model.addAttribute("error", abroadError);
                 return localeView("/meeting/share_error");
@@ -174,6 +184,7 @@ public class MeetingController extends CspBaseController {
 
             Integer courseId = Integer.valueOf(id);
             AudioCourse course = audioService.selectByPrimaryKey(courseId);
+
             if (course == null) {
                 model.addAttribute("error", linkError);
                 return localeView("/meeting/share_error");
@@ -187,10 +198,34 @@ public class MeetingController extends CspBaseController {
                 course.setPlayType(0);
             }
 
+            //查询出星评信息
+            if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
+                StarRateInfoDTO rateResult = cspStarRateService.findFinalRateResult(courseId);
+                model.addAttribute("rateResult", rateResult);
+
+                List<CspStarRateOption> options = cspStarRateService.findRateOptions(courseId);
+                model.addAttribute("rateOptions", options);
+
+                String ticket = CookieUtils.getCookieValue(request, CspConstants.COURSE_RATE_TICKET_KEY);
+                if (CheckUtils.isEmpty(ticket)) {
+                    ticket = StringUtils.uniqueStr();
+                    CookieUtils.setCookie(response, COURSE_RATE_TICKET_KEY, ticket);
+                } else {
+                    StarRateInfoDTO rateHistory = cspStarRateService.findRateHistory(courseId, ticket);
+                    model.addAttribute("rateHistory", rateHistory);
+                }
+            }
+
             //对观看密码进行简单加密
             if (CheckUtils.isNotEmpty(course.getPassword())) {
                 course.setPassword(DESUtils.encode(Constants.DES_PRIVATE_KEY, course.getPassword()));
             }
+            //查询出会议发布者信息
+            CspUserInfo publisher = cspUserService.selectByPrimaryKey(course.getCspUserId());
+            if (CheckUtils.isNotEmpty(publisher.getAvatar()) && !publisher.getAvatar().toLowerCase().startsWith("http")){
+                publisher.setAvatar(fileBase + publisher.getAvatar());
+            }
+            model.addAttribute("publisher", publisher);
 
             //设置会议水印
             MeetWatermark watermark = meetWatermarkService.findWatermarkByCourseId(courseId);
@@ -214,6 +249,8 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("live", live);
             } else {
                 course.setDetails(audioService.findDetailsByCourseId(courseId));
+                AudioCoursePlay play = audioService.findPlayState(courseId);
+                model.addAttribute("play", play);
             }
 
             audioService.handleHttpUrl(fileBase, course);
@@ -869,12 +906,14 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
 
                 if (live != null) {
-                    live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
-                    if (over == 1) {
-                        live.setEndTime(new Date());
-                        liveService.publish(overOrder);
+                    if (live.getLiveState() != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                        live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
+                        if (over == 1) {
+                            live.setEndTime(new Date());
+                            liveService.publish(overOrder);
+                        }
+                        liveService.updateByPrimaryKey(live);
                     }
-                    liveService.updateByPrimaryKey(live);
                 }
                 //删除缓存中的同步指令
                 redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
@@ -947,13 +986,6 @@ public class MeetingController extends CspBaseController {
 
         if (course.getLocked() != null && course.getLocked()) {
             return error(local("course.error.api.locked"));
-        }
-
-        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-            Live live = liveService.findByCourseId(courseId);
-            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                return error(local("share.live.over"));
-            }
         }
 
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);
@@ -1073,7 +1105,6 @@ public class MeetingController extends CspBaseController {
         }
 
         Live live = liveService.findByCourseId(courseId);
-
         Map<String, Object> result = new HashMap<>();
         String pushUrl = null;
 
@@ -1081,6 +1112,11 @@ public class MeetingController extends CspBaseController {
             if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
+            //改变直播状态
+            live.setStartTime(new Date());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+            liveService.updateByPrimaryKey(live);
 
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
@@ -1417,6 +1453,43 @@ public class MeetingController extends CspBaseController {
              map.put("musicList",musicList);
              return success(map);
          }
+    }
+
+    private enum ImageMusic{
+        IMAGE,
+        MUSIC;
+    }
+
+    /**
+     * 用户评分
+     * @param history
+     * @param request
+     * @return
+     */
+    @RequestMapping(value = "/share/rate")
+    @ResponseBody
+    public String doRate(CspStarRateHistory history, HttpServletRequest request, HttpServletResponse response){
+        String ticket = CookieUtils.getCookieValue(request, COURSE_RATE_TICKET_KEY);
+        if (CheckUtils.isEmpty(ticket)) {
+            ticket = StringUtils.uniqueStr();
+            CookieUtils.setCookie(response, COURSE_RATE_TICKET_KEY, ticket, (int)TimeUnit.DAYS.toSeconds(30));
+        }
+        history.setTicket(ticket);
+        cspStarRateService.doScore(history);
+        return success();
+    }
+
+    @RequestMapping(value = "/share/live/duration")
+    @ResponseBody
+    public String liveDuration(Integer courseId){
+        Live live = liveService.findByCourseId(courseId);
+        Map<String, Object> result = new HashMap<>();
+        long duration = 0;
+        if (live != null && live.getEndTime() != null) {
+            duration = (live.getEndTime().getTime() - live.getStartTime().getTime()) / 1000;
+        }
+        result.put("duration", CalendarUtils.formatTimesDiff(duration));
+        return success(result);
     }
 
 
