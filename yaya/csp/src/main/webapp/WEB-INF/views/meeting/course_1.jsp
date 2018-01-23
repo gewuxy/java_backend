@@ -8,10 +8,10 @@
 <!DOCTYPE html>
 <html >
 <head>
+    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
     <meta id="description" name="description" content="<fmt:message key='page.meeting.share.description'/>" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
-    <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
