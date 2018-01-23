@@ -10,7 +10,7 @@
 <head>
     <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <meta charset="UTF-8">
-    <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
+    <meta id="description" name="description" content="<fmt:message key='page.meeting.share.description'/>" />
     <meta id="KEYWORDS" name="KEYWORDS" content="医学会议,独立直播间,医生互动" />
     <title>${course.title}</title>
     <link rel="stylesheet" href="${ctxStatic}/phone/css/reset.css">
@@ -70,7 +70,7 @@
                     </div>
                 </c:forEach>
                 <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
-                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/images/meeting-last-img.png')"></div>
+                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/logo-max-img.png')"></div>
                 </div>
             </div>
             <!--音频文件-->
@@ -125,8 +125,6 @@
                         </div>
                     </c:otherwise>
                 </c:choose>
-
-
                 <div class="flex-item">
                     <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
                 </div>
@@ -147,7 +145,7 @@
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
             <div class="fixed-row t-center pr">
-                <input type="text" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
             </div>
             <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
             <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
@@ -195,8 +193,6 @@
             </div>
         </c:if>
     </div>
-
-
 </div>
 
 <!--弹出选择框-->
@@ -207,7 +203,6 @@
         <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
     </div>
 </div>
-
 
 <!--星評彈出層-->
 <div class="CSPMeeting-meeting-star-popup meeting-star-popup">
@@ -619,9 +614,9 @@
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
-                }
-                if (!hasAudioUrl){
-                    slideToNext();
+                    if (!hasAudioUrl){
+                        slideToNext();
+                    }
                 }
             } else {
                 playerState = true;
@@ -666,7 +661,6 @@
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
                 $(this).hide();
-                popupPalyer.play();
                 started = true;
                 playing = true;
                 changePlayerStete(true);
@@ -708,7 +702,6 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
-
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
@@ -772,12 +765,10 @@
 
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
-
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
             }
-
             layer.open({
                 type: 1,
                 anim: 5,
@@ -853,7 +844,6 @@
         }
     });
 
-
     function doRate(){
         if(!$("#submitBtn").hasClass("disabled")){
             var data = $("#dataForm").serialize();
@@ -865,10 +855,6 @@
             }, 'json');
         }
     }
-
-
-
-
 </script>
 </body>
 

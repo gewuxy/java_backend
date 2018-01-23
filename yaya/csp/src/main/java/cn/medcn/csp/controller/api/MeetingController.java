@@ -906,12 +906,14 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
 
                 if (live != null) {
-                    live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
-                    if (over == 1) {
-                        live.setEndTime(new Date());
-                        liveService.publish(overOrder);
+                    if (live.getLiveState() != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                        live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
+                        if (over == 1) {
+                            live.setEndTime(new Date());
+                            liveService.publish(overOrder);
+                        }
+                        liveService.updateByPrimaryKey(live);
                     }
-                    liveService.updateByPrimaryKey(live);
                 }
                 //删除缓存中的同步指令
                 redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
@@ -986,13 +988,6 @@ public class MeetingController extends CspBaseController {
             return error(local("course.error.api.locked"));
         }
 
-        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-            Live live = liveService.findByCourseId(courseId);
-            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
-                return error(local("share.live.over"));
-            }
-        }
-
         boolean hasDuplicate = LiveOrderHandler.hasDuplicate(String.valueOf(courseId), request.getHeader(Constants.TOKEN), liveType);
         Map<String, Object> result = new HashMap<>();
 
@@ -1049,13 +1044,7 @@ public class MeetingController extends CspBaseController {
         }
         Live live = liveService.findByCourseId(courseId);
         //判断直播是否已经开始过 如果未开始过 设置开始时间和过期时间
-        if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()) {
-            live.setStartTime(new Date());
-            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-            //改变直播状态
-            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-            liveService.updateByPrimaryKey(live);
-        }
+        updateLiveState(live);
 
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
 
@@ -1117,17 +1106,23 @@ public class MeetingController extends CspBaseController {
             if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
-            //改变直播状态
-            live.setStartTime(new Date());
-            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
-            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
-            liveService.updateByPrimaryKey(live);
+            updateLiveState(live);
 
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
         }
 
         return success(result);
+    }
+
+    protected void updateLiveState(Live live){
+        //改变直播状态
+        if (live.getLiveState() == null || live.getLiveState().intValue() == AudioCoursePlay.PlayState.init.ordinal()){
+            live.setStartTime(new Date());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(MEET_AFTER_START_EXPIRE_HOURS)));
+            live.setLiveState(AudioCoursePlay.PlayState.playing.ordinal());
+            liveService.updateByPrimaryKey(live);
+        }
     }
 
 
@@ -1261,7 +1256,7 @@ public class MeetingController extends CspBaseController {
         StarRateResultDTO dto = new StarRateResultDTO();
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
-        if (course.getStarRateFlag()) {
+        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
             String local = LocalUtils.getLocalStr();
             boolean abroad = LocalUtils.isAbroad();
             String shareUrl = audioService.getMeetShareUrl(appCspBase, local, courseId, abroad);

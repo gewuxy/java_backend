@@ -9,7 +9,7 @@
 <html >
 <head>
     <meta charset="UTF-8">
-    <meta id="description" name="description" content="首个医学会议视频直播平台，以后医院都这样开会啦！独立直播间，同步会议现场，随时与参会医生互动，直播会议数据后台详尽记录....还等什么，快来申请使用吧" />
+    <meta id="description" name="description" content="<fmt:message key='page.meeting.share.description'/>" />
     <meta id="keywords" name="keywords" content="医学会议,独立直播间,医生互动" />
     <%@include file="/WEB-INF/include/page_phone_context.jsp"%>
     <title>${course.title}</title>
@@ -164,18 +164,34 @@
                 });
             }
         </script>
-
-
-        <!--buttonBottom-->
-
     </div>
+
+    <!--buttonBottom-->
     <div class="CSPMeeting-bottom">
         <div class="flex">
-            <div class="flex-item">
-                <div class="button button-icon-info info-popup-hook">
-                    <i></i>
-                </div>
-            </div>
+            <c:choose>
+                <c:when test="${course.starRateFlag}">
+                    <div class="flex-item">
+                        <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
+                            <c:choose>
+                                <c:when test="${empty rateResult.multipleResult}">
+                                    <span class="off none"><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
+                                </c:when>
+                                <c:otherwise>
+                                    <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
+                                </c:otherwise>
+                            </c:choose>
+                        </div>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <div class="flex-item">
+                        <div class="button button-icon-info star-popup-button-hook">
+                            <i></i>
+                        </div>
+                    </div>
+                </c:otherwise>
+            </c:choose>
             <div class="flex-item">
                 <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
             </div>
@@ -183,15 +199,9 @@
                 <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
             </div>
             <div class="flex-item">
-                <div class="button button-icon-report report-popup-button-hook"><i></i></div>
-            </div>
-            <div class="flex-item">
                 <div class="button button-icon-onFull changeFull-hook"><i></i></div>
             </div>
-
         </div>
-
-
     </div>
 
 
@@ -224,7 +234,7 @@
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
             <div class="fixed-row t-center pr">
-                <input type="text" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
             </div>
             <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
             <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
@@ -236,13 +246,131 @@
 <!--弹出的简介-->
 <div class="CSPMeeting-meeting-info-popup meeting-info-popup">
     <div class="meeting-info-popup-main ">
-        <div class="title"><h3><fmt:message key="page.common.info"/></h3></div>
+        <div class="title"><h3><fmt:message key="page.common.time"/>:<fmt:formatDate value="${live.startTime}" pattern="yyyy年MM月dd日 HH:mm"/></h3></div>
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
+        <c:if test="${course.starRateFlag}">
+            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
+            <div class="star-showScore ">
+                <div class="star-showScore-main clearfix">
+                    <div class="fr">
+                        <div class="star-box star-min">
+                            <div class="star-item">
+                                <c:forEach begin="1" end="5" step="1" var="curr">
+                                    <c:choose>
+                                        <c:when test="${avgScore >= curr}">
+                                            <span class="full"></span>
+                                        </c:when>
+                                        <c:when test="${avgScore > curr - 1 && avgScore < curr}">
+                                            <span class="half"></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="null"></span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </div>
+                            <div class="grade ">${avgScore}<fmt:message key="page.meeting.tips.score.unit"/></div>
+                        </div>
+                    </div>
+                    <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
+                </div>
+                <div class="star-showScore-button popup-star-button t-center">
+                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
+                </div>
+            </div>
+        </c:if>
     </div>
 </div>
 
+<!--弹出选择框-->
+<div class="listItme-popup">
+    <div class="listItme-popup-main">
+        <a href="javscript:;" class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
+        <c:if test="${course.starRateFlag}"><a href="javscript:;" class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
+        <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
+    </div>
+</div>
+
+<!--星評彈出層-->
+<div class="CSPMeeting-meeting-star-popup meeting-star-popup">
+    <div class="meeting-star-popup-main ">
+        <div class="meeting-star-head">
+            <p><span><fmt:message key="page.meeting.rate.me.want"/></span></p>
+            <h3>${course.title}</h3>
+            <div class="meeting-star-img">
+                <c:choose>
+                    <c:when test="${empty publisher.avatar}">
+                        <img src="${ctxStatic}/images/icon-video-notPlay.png" alt="">
+                    </c:when>
+                    <c:otherwise>
+                        <img src="${publisher.avatar}"/>
+                    </c:otherwise>
+                </c:choose>
+            </div>
+            <div class="meeting-star-author"><span>${publisher.nickName}</span></div>
+        </div>
+        <div class="meeting-star-main clearfix">
+            <!--==========================选择分数小版-->
+            <c:set var="rated" scope="page" value="${not empty rateHistory}"/>
+            <form id="dataForm" name="dataForm">
+                <input type="hidden" name="courseId" value="${course.id}">
+                <div class="meeting-star-getStarNum">
+                    <c:choose>
+                        <c:when test="${empty rateOptions}">
+                            <div class="meeting-star-row clearfix getShowNum-min">
+                                <div class="fr">
+                                    <div class="star_bg">
+                                        <input type="radio" id="starScore1" class="score score_1" value="1" name="score">
+                                        <a href="#starScore1" class="star star_1" title="差"><label for="starScore1"></label></a>
+                                        <input type="radio" id="starScore2" class="score score_2" value="2" name="score">
+                                        <a href="#starScore2" class="star star_2" title="较差"><label for="starScore2"></label></a>
+                                        <input type="radio" id="starScore3" class="score score_3" value="3" name="score">
+                                        <a href="#starScore3" class="star star_3" title="普通"><label for="starScore3"></label></a>
+                                        <input type="radio" id="starScore4" class="score score_4" value="4" name="score">
+                                        <a href="#starScore4" class="star star_4" title="较好"><label for="starScore4"></label></a>
+                                        <input type="radio" id="starScore5" class="score score_5" value="5" name="score">
+                                        <a href="#5" class="star star_5" title="好"><label for="starScore5"></label></a>
+                                    </div>
+                                    <div class="grade ">${rated ? rateHistory.multipleResult.avgScore : 0}<fmt:message key="page.meeting.tips.score.unit"/> </div>
+                                </div>
+                                <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/></div>
+                            </div>
+                        </c:when>
+                        <c:otherwise>
+                            <c:forEach items="${rateOptions}" var="op" varStatus="status">
+                                <div class="meeting-star-row clearfix getShowNum-min">
+                                    <div class="fr">
+                                        <div class="star_bg">
+                                            <input type="radio" id="starDetailScore${status.index}1" ${rated && rateHistory.detailList[status.index].avgScore == 1 ? 'checked':''} class="score score_1" value="1" name="details[${status.index}].score">
+                                            <a href="#starScore1" class="star star_1" title="差"><label for="starDetailScore${status.index}1"></label></a>
+                                            <input type="radio" id="starDetailScore${status.index}2" ${rated && rateHistory.detailList[status.index].avgScore == 2 ? 'checked':''} class="score score_2" value="2" name="details[${status.index}].score">
+                                            <a href="#starScore2" class="star star_2" title="较差"><label for="starDetailScore${status.index}2"></label></a>
+                                            <input type="radio" id="starDetailScore${status.index}3" ${rated && rateHistory.detailList[status.index].avgScore == 3 ? 'checked':''} class="score score_3" value="3" name="details[${status.index}].score">
+                                            <a href="#starScore3" class="star star_3" title="普通"><label for="starDetailScore${status.index}3"></label></a>
+                                            <input type="radio" id="starDetailScore${status.index}4" ${rated && rateHistory.detailList[status.index].avgScore == 4 ? 'checked':''} class="score score_4" value="4" name="details[${status.index}].score">
+                                            <a href="#starScore4" class="star star_4" title="较好"><label for="starDetailScore${status.index}4"></label></a>
+                                            <input type="radio" id="starDetailScore${status.index}5" ${rated && rateHistory.detailList[status.index].avgScore == 5 ? 'checked':''} class="score score_5" value="5" name="details[${status.index}].score">
+                                            <a href="#5" class="star star_5" title="好"><label for="starDetailScore${status.index}5"></label></a>
+                                        </div>
+                                        <div class="grade "><span>${!rated ? 0 : rateHistory.detailList[status.index].avgScore}</span><fmt:message key="page.meeting.tips.score.unit"/> </div>
+                                    </div>
+                                    <div class="star-showScore-title">${op.title}</div>
+                                </div>
+                            </c:forEach>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </form>
+        </div>
+        <div class="meeting-star-button popup-star-button t-center">
+            <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+            <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
+            <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
+        </div>
+    </div>
+</div>
 
 <script>
     var galleryTop;
@@ -255,24 +383,27 @@
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
 
-    function checkPwd(){
+    function checkPwd() {
         var password = $("#password").val();
-        if ($.trim(password) == ''){
+        if ($.trim(password) == '') {
             $("#passwordError").removeClass("none");
-            return ;
+            return;
         }
-        $.get('${ctx}/api/meeting/share/pwd/check', {"courseId":"${course.id}", "password":password}, function (data) {
-            if(data.code == 0){
+        $.get('${ctx}/api/meeting/share/pwd/check', {
+            "courseId": "${course.id}",
+            "password": password
+        }, function (data) {
+            if (data.code == 0) {
                 $("#passwordView").addClass("none");
             } else {
                 $("#passwordError").removeClass("none");
             }
-        },'json');
+        }, 'json');
     }
 
     //判断手机终端类型
-    var browser={
-        versions:function(){
+    var browser = {
+        versions: function () {
             var u = navigator.userAgent, app = navigator.appVersion;
             return {
                 trident: u.indexOf('Trident') > -1, //IE内核
@@ -282,7 +413,7 @@
                 mobile: !!u.match(/AppleWebKit.*Mobile.*/), //是否为移动终端
                 ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
                 android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
-                iPhone: u.indexOf('iPhone') > -1 , //是否为iPhone或者QQHD浏览器
+                iPhone: u.indexOf('iPhone') > -1, //是否为iPhone或者QQHD浏览器
                 iPad: u.indexOf('iPad') > -1, //是否iPad
                 iPod: u.indexOf('iPod') > -1, //是否iPad
                 webApp: u.indexOf('Safari') == -1, //是否web应该程序，没有头部与底部
@@ -290,23 +421,22 @@
                 isOs69: u.match(/OS [4-9]_\d[_\d]* like Mac OS X/i)
             };
         }(),
-        language:(navigator.browserLanguage || navigator.language).toLowerCase()
+        language: (navigator.browserLanguage || navigator.language).toLowerCase()
     }
 
-    $(function(){
+    $(function () {
         var fullState = true;
         var ismuted = true;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
 
-        var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
+        var activeItemIsVideo, prevItemIsVideo, nextItemIsVideo;
         var cH = window.innerHeight;
         var phoneDpi = window.devicePixelRatio;
 
         var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
         var isVideo = $('.swiper-slide-active').find('video');
-
 
 
 //        $("#audioPlayer")[0].addEventListener("ended", function(){
@@ -323,20 +453,23 @@
 //        });
 
         CSPMeetingGallery.height(cH);
-        $(window).resize(function(){
+        $(window).resize(function () {
             cH = window.innerHeight;
             CSPMeetingGallery.height(cH);
         });
+
 //        asAllItem[0].play();
 
 
-        function slideToNext(){
-            setTimeout(function(){galleryTop.slideNext();}, 3000);
+        function slideToNext() {
+            setTimeout(function () {
+                galleryTop.slideNext();
+            }, 3000);
         }
 
         var prevAudioSrc;
-        $("#audioPlayer")[0].addEventListener("ended", function(){
-            if($("#audioPlayer")[0].src != prevAudioSrc){
+        $("#audioPlayer")[0].addEventListener("ended", function () {
+            if ($("#audioPlayer")[0].src != prevAudioSrc) {
                 console.log("audio ended");
                 console.log("audio play over ...");
                 galleryTop.slideNext();
@@ -346,21 +479,19 @@
 
         });
 
-        $("#audioPlayer")[0].addEventListener("error", function(){
+        $("#audioPlayer")[0].addEventListener("error", function () {
             $(".boxAudio-loading").removeClass("none");
             $(".boxAudio").addClass("none");
         });
 
-        $("#audioPlayer")[0].addEventListener("loadedmetadata", function(){
+        $("#audioPlayer")[0].addEventListener("loadedmetadata", function () {
             $(".boxAudio").removeClass("none");
             $(".boxAudio-loading").addClass("none");
         });
 
 
-
-
         //手机端 点击任何一个地方  自动播放音频
-        $('.html5ShadePlay').on('touchstart',function(){
+        $('.html5ShadePlay').on('touchstart', function () {
             $('.isIphoneSafari').hide();
             $(this).hide();
             //播放音频
@@ -368,14 +499,13 @@
             //音频文件静音
             popupPalyer.element.muted = false;
 
-            if("${live.hlsUrl}"){
+            if ("${live.hlsUrl}") {
                 $("#ck-video")[0].play();
 
                 CKobject.getObjectById('ck-video').changeVolume(0);
                 $("#ck-video")[0].muted = true;
             }
         });
-
 
 
         function isPC() {
@@ -393,7 +523,7 @@
             return flag;
         }
 
-        if (isPC()){
+        if (isPC()) {
             $('.html5ShadePlay').hide();
             popupPalyer.play();
             playing = true;
@@ -401,7 +531,7 @@
             $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
         } else {
             //手机端 点击任何一个地方  自动播放音频
-            $('.html5ShadePlay').on('touchstart',function(){
+            $('.html5ShadePlay').on('touchstart', function () {
                 $(this).hide();
                 popupPalyer.play();
                 playing = true;
@@ -412,41 +542,34 @@
         }
 
 
-
-
-
-
-
-
         //移动到最新PPT 页
-        var slideToPage = function (pageNum){
+        var slideToPage = function (pageNum) {
             galleryTop.slideTo(pageNum, 1000, false);
         };
 
-        $('.icon-added').on('click',function(){
+        $('.icon-added').on('click', function () {
             //点击跳转到最后一页
             galleryTop.slideTo(galleryTop.slides.length);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
 
-
-
-        $(".play-hook").click(function(){
+        $(".play-hook").click(function () {
 
         })
 
-        $(".full-hook").click(function(){
+        $(".full-hook").click(function () {
 
         })
 
-        function mutedHanlder(){
+        function mutedHanlder() {
 
         }
-        $(".quit-full-hook").click(function(){
-            if(isAndroid) {
+
+        $(".quit-full-hook").click(function () {
+            if (isAndroid) {
                 //解决黑边与遮挡
-                $("#ck-video").attr('style','margin-top:9999px');
+                $("#ck-video").attr('style', 'margin-top:9999px');
                 weui.actionSheet([
                     {
                         label: '<fmt:message key="page.meeting.tab.change.mute"/>',
@@ -466,20 +589,20 @@
                         onClick: function () {
                             console.log('取消');
                             //还原设置
-                            $("#ck-video").attr('style','margin-top:0');
+                            $("#ck-video").attr('style', 'margin-top:0');
                         }
                     }
                 ], {
                     className: 'custom-classname',
-                    onClose: function(){
+                    onClose: function () {
                         console.log('关闭');
-                        $("#ck-video").attr('style','margin-top:0');
+                        $("#ck-video").attr('style', 'margin-top:0');
                     }
                 });
             } else {
                 if (browser.versions.iPhone || browser.versions.iPad || browser.versions.iPod) {
                     // 判断系统版本号是否大于 9
-                    if(browser.versions.isOs69){
+                    if (browser.versions.isOs69) {
                         alert('<fmt:message key="page.meeting.warn.voice.unusable"/>');
                     } else {
                         changeTrack();
@@ -495,26 +618,26 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
-            onSlideChangeStart:function(swiper){
+            onSlideChangeStart: function (swiper) {
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
-                if(activeItemIsVideo.length > 0){
+                if (activeItemIsVideo.length > 0) {
                     activeItemIsVideo.get(0).load();
                     //判断是否Iphone 的 Safari 浏览器
-                    if(browser.versions.ios && browser.versions.iphoneSafari) {
+                    if (browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
                         //判断是否已经播放完成
-                        activeItemIsVideo.get(0).addEventListener('canplay',function(){
+                        activeItemIsVideo.get(0).addEventListener('canplay', function () {
                             $('.isIphoneSafari').hide();
                         }, {once: true});
                     }
                     //判断是否已经播放完成
-                    activeItemIsVideo.get(0).addEventListener('ended',function(){
+                    activeItemIsVideo.get(0).addEventListener('ended', function () {
                         galleryTop.slideNext();
                     }, {once: true});
                 }
             },
-            onSlideChangeEnd:function(swiper){
+            onSlideChangeEnd: function (swiper) {
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
@@ -525,24 +648,24 @@
 
 //                CKobject.getObjectById('ck-video').play();
             },
-            onSlideNextEnd:function(){
+            onSlideNextEnd: function () {
 
                 prevItemIsVideo = $('.swiper-slide-prev').find('video');
                 //判断前一个是否有视频
-                if(prevItemIsVideo.length > 0){
+                if (prevItemIsVideo.length > 0) {
                     //重新加载视频
                     prevItemIsVideo.get(0).load();
                 }
             },
-            onSlidePrevEnd:function(){
+            onSlidePrevEnd: function () {
                 nextItemIsVideo = $('.swiper-slide-next').find('video');
                 //判断后一个是否有视频
-                if(nextItemIsVideo.length > 0){
+                if (nextItemIsVideo.length > 0) {
                     //重新加载视频
                     nextItemIsVideo.get(0).load();
                 }
             },
-            onInit: function(swiper){
+            onInit: function (swiper) {
                 //选中的项是否有视频
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
@@ -566,19 +689,19 @@
 //        })
 
 
-        $('.changeFull-hook').click(function(){
-            if(fullState && !isPC()) {
+        $('.changeFull-hook').click(function () {
+            if (fullState && !isPC()) {
                 $('.CSPMeeting-gallery-live').addClass('popup-fullStatus');
-                $('.CSPMeeting-gallery-live').find('.popup-min-screen').on('click',function(){
+                $('.CSPMeeting-gallery-live').find('.popup-min-screen').on('click', function () {
                     changeScreen();
 //                    galleryTop.update(true);
                 });
                 fullState = false;
                 $(this).addClass('button-icon-onFull-off');
-            } else if(fullState === false && !isPC()) {
+            } else if (fullState === false && !isPC()) {
                 $('.CSPMeeting-gallery-live').removeClass('popup-fullStatus');
                 galleryTop.update(true);
-                $('.CSPMeeting-gallery-live').find('.popup-min-screen').off('click',function(){
+                $('.CSPMeeting-gallery-live').find('.popup-min-screen').off('click', function () {
                     changeScreen();
                 });
                 fullState = true;
@@ -590,13 +713,13 @@
         });
 
         //播放器切换加载对应的路径
-        var swiperChangeAduio = function(current){
+        var swiperChangeAduio = function (current) {
             var swiperCurrent;
 
             popupPalyer.pause();
-            if(current.find(".swiper-slide-active")){
-                swiperCurrent  = current.find(".swiper-slide-active");
-            }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
+            if (current.find(".swiper-slide-active")) {
+                swiperCurrent = current.find(".swiper-slide-active");
+            } else if (current.parents('.swiper-container-horizontal').find(".swiper-slide-active")) {
                 swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             }
             var dataSrc = swiperCurrent.attr('audio-src');
@@ -607,9 +730,9 @@
         }
 
         //点击切换状态
-        var changeScreen = function(){
+        var changeScreen = function () {
 
-            if(!isAndroid) {
+            if (!isAndroid) {
                 $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
                 $(this).addClass('popup-volume').removeClass("popup-min-screen");
             }
@@ -618,8 +741,8 @@
 
             if (browser.versions.iPhone || browser.versions.iPad || browser.versions.iPod) {
                 // 判断系统版本号是否大于 9
-                if(browser.versions.isOs69){
-                    if($('.popup-volume').find('audio').length > 0){
+                if (browser.versions.isOs69) {
+                    if ($('.popup-volume').find('audio').length > 0) {
                         popupPalyer.element.play();
                         $("#ck-video")[0].load();
                         needSync = false;
@@ -632,8 +755,8 @@
             }
 
 //            viedoMuted();
-            if (ismuted){
-                if($('.popup-volume').find('audio').length > 0){
+            if (ismuted) {
+                if ($('.popup-volume').find('audio').length > 0) {
                     popupPalyer.element.muted = false;
                     needSync = false;
                 } else if ($('.popup-volume').find('video').length) {
@@ -649,7 +772,7 @@
 
         };
         //静音
-        var viedoMuted = function(){
+        var viedoMuted = function () {
             //音频文件静音
             popupPalyer.element.muted = true;
             //直播静音
@@ -659,18 +782,18 @@
         }
 
         //兼容安卓点击按钮切换状态
-        var androidChangeScreen = function(){
+        var androidChangeScreen = function () {
             $('.popup-volume').removeClass('popup-volume').addClass('popup-min-screen').siblings('div').removeClass('popup-min-screen').addClass('popup-volume');
         }
 
         //切换静音状态
-        var changeTrack = function(){
-            if(ismuted == true){
+        var changeTrack = function () {
+            if (ismuted == true) {
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
                 ismuted = false
             } else {
-                if($('.popup-volume').find('audio').length > 0){
+                if ($('.popup-volume').find('audio').length > 0) {
                     popupPalyer.element.muted = false;
 
                 } else if ($('.popup-volume').find('video').length) {
@@ -685,17 +808,17 @@
         }
 
         //绑定状态切换
-        $(document).on('click','.popup-min-screen',changeScreen);
+        $(document).on('click', '.popup-min-screen', changeScreen);
 
         //超出页面下拉
         $(".hidden-box").perfectScrollbar();
 
         /*弹出留言*/
-        $(".faq-popup-button-hook").on('click',function(){
+        $(".faq-popup-button-hook").on('click', function () {
             layer.open({
                 type: 1,
                 anim: 5,
-                area: ['100%','100%'],
+                area: ['100%', '100%'],
                 fix: false, //不固定
                 title: false,
                 content: $('.faq-popup-hook'),
@@ -706,54 +829,55 @@
         });
 
         //启动留言输入框
-        $(".meeting-faq-popup-input-text").on('click',function(){
+        $(".meeting-faq-popup-input-text").on('click', function () {
             layer.open({
                 type: 1,
                 anim: 2,
-                area: ['100%','4rem'],
-                offset:'b',
-                title:false,
+                area: ['100%', '4rem'],
+                offset: 'b',
+                title: false,
                 content: $('.meeting-faq-popup-keyboard'),
                 success: function (swiper) {
                     swiper.find('textarea').focus();
-                    $(this).find('textarea').on('click',function(){
+                    $(this).find('textarea').on('click', function () {
                         var target = this;
                         //解决IOS弹出输入框挡住问题
-                        setTimeout(function(){
+                        setTimeout(function () {
                             target.scrollIntoView(true);
-                        },100)
+                        }, 100)
                     });
                 }
             })
         });
 
         //弹出简介
-        $('.info-popup-hook').click(function(){
+        $('.info-popup-hook').click(function () {
             layer.open({
                 type: 1,
-                shadeClose : true,
-                area: ['85%','65%'],
+                shadeClose: true,
+                area: ['85%', '65%'],
                 fix: false, //不固定
-                title:false,
+                title: false,
                 skin: 'info-popup',
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
+                    layer.close(layer.index-1);
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.height(0);
                     }
-                    if(isAndroid) {
-                        $("#ck-video").attr('style','margin-top:9999px');
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:9999px');
                     }
                 },
                 cancel: function (swiper) {
                     //关闭时还原高度。
-                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.height('auto');
                     }
                     //还原设置
-                    if(isAndroid) {
-                        $("#ck-video").attr('style','margin-top:0');
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:0');
                     }
                 }
 
@@ -761,18 +885,15 @@
         });
 
 
-
-
-
         //切换屏幕状态
-        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+        window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
             cH = window.innerHeight;
             if (window.orientation === 180 || window.orientation === 0) {
                 console.log('竖屏状态！');
                 CSPMeetingGallery.height(cH);
                 $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
             }
-            if (window.orientation === 90 || window.orientation === -90 ){
+            if (window.orientation === 90 || window.orientation === -90) {
                 console.log('横屏状态！');
                 CSPMeetingGallery.height(cH);
                 $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
@@ -780,7 +901,7 @@
         }, false);
 
 
-        $("#ck-video")[0].addEventListener('pause',function(){
+        $("#ck-video")[0].addEventListener('pause', function () {
             $("#ck-video")[0].play();
         })
 
@@ -789,119 +910,124 @@
         var health_timeout = 3000;
         var myWs;
         var wsUrl = "${wsUrl}";
-        $(function(){
+        $(function () {
             //ws = ws_conn( "ws://211.100.41.186:9999" );
-            if (wsUrl){
+            if (wsUrl) {
                 myWs = ws_conn(wsUrl);
             }
 
         });
 
-        function keepalive( ws ){
+        function keepalive(ws) {
             var time = new Date();
-            if( last_health != -1 && ( time.getTime() - last_health > health_timeout ) ){
+            if (last_health != -1 && ( time.getTime() - last_health > health_timeout )) {
                 console.log("Connection broken !!!");
             }
-            else{
+            else {
                 console.log("Connection success ...");
             }
         }
 
         //websocket function
-        function ws_conn( to_url ){
+        function ws_conn(to_url) {
             to_url = to_url || "";
-            if( to_url == "" ){
+            if (to_url == "") {
                 return false;
             }
 
-            clearInterval( heartbeat_timer );
-            var ws = new WebSocket( to_url );
+            clearInterval(heartbeat_timer);
+            var ws = new WebSocket(to_url);
 
-            ws.onopen=function(){
+            ws.onopen = function () {
                 console.log("Connected !!!")
-                heartbeat_timer = setInterval( function(){keepalive(ws)}, 5000 );
+                heartbeat_timer = setInterval(function () {
+                    keepalive(ws)
+                }, 5000);
             }
-            ws.onerror=function(){
+            ws.onerror = function () {
                 console.log("Connection error !!!");
-                clearInterval( heartbeat_timer );
+                clearInterval(heartbeat_timer);
             }
-            ws.onclose=function(){
+            ws.onclose = function () {
                 console.log("Connection closed !!!");
-                clearInterval( heartbeat_timer );
+                clearInterval(heartbeat_timer);
             }
 
-            ws.onmessage=function(msg){
+            ws.onmessage = function (msg) {
                 var data = JSON.parse(msg.data);
 
-                console.log("order = "+data.order);
-                if (data.onLines){
+                console.log("order = " + data.order);
+                if (data.onLines) {
                     $(".num").text(data.onLines);
                 }
-                if (data.order == 0){//直播指令
+                if (data.order == 0) {//直播指令
                     var currentPageNo = parseInt(data.pageNum) + 1;
                     console.log("data.audioUrl = " + data.audioUrl);
-                    if(data.audioUrl != undefined) {
-                        $(".swiper-slide[data-num='"+currentPageNo+"']").attr("audio-src", data.audioUrl);
+                    if (data.audioUrl != undefined) {
+                        $(".swiper-slide[data-num='" + currentPageNo + "']").attr("audio-src", data.audioUrl);
                     }
-                    if (data.pageNum == galleryTop.activeIndex){
+                    if (data.pageNum == galleryTop.activeIndex) {
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
 
-                    if (playOver && !needSync){
+                    if (playOver && !needSync) {
                         galleryTop.slideNext();
                     }
 
-                    setTimeout(function(){$(".icon-added").hide()}, 5000);
+                    setTimeout(function () {
+                        $(".icon-added").hide()
+                    }, 5000);
 
-                } else if (data.order == 1){//同步指令
+                } else if (data.order == 1) {//同步指令
                     var lastPage = $(".swiper-slide:last");
                     var temp = lastPage.attr("istemp");
                     console.log("last page is temp = " + lastPage.attr("istemp"));
-                    if (temp == "1"){
+                    if (temp == "1") {
                         console.log("video url = " + data.videoUrl + " - imgUrl = " + data.imgUrl);
-                        if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
+                        if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != '') {
                             lastPage.find("video").attr("src", data.videoUrl);
                         } else {
                             console.log("current img url = " + data.imgUrl);
-                            lastPage.find("div").find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                            lastPage.find("div").find(".swiper-picture").css("background-image", "url('" + data.imgUrl + "')");
                         }
                         lastPage.attr("istemp", "0");
                     } else {
                         $(".icon-added").show();
                         var currentPageNo = galleryTop.slides.length + 1;
                         $("#newLivePage").text("P " + currentPageNo);
-                        totalPages ++;
-                        var newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><div class="swiper-zoom-container pinch-zoom" style="height:100%;"><div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div></div></div>';
-                        if (data.videoUrl != undefined && data.videoUrl != ''){
-                            newSlide = '<div class="swiper-slide" data-num="'+(totalPages)+'" audio-src=""><video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div></div>';
+                        totalPages++;
+                        var newSlide = '<div class="swiper-slide" data-num="' + (totalPages) + '" audio-src=""><div class="swiper-zoom-container pinch-zoom" style="height:100%;"><div class="swiper-picture" style=" background-image:url(' + data.imgUrl + ')"></div></div></div>';
+                        if (data.videoUrl != undefined && data.videoUrl != '') {
+                            newSlide = '<div class="swiper-slide" data-num="' + (totalPages) + '" audio-src=""><video src="' + data.videoUrl + '"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div></div>';
                         }
 
                         galleryTop.appendSlide(newSlide);
 
                         console.log("need sync = " + needSync);
 
-                        if (needSync){
+                        if (needSync) {
                             $(".boxAudio-loading").removeClass("none");
                             galleryTop.slideTo(totalPages);
                         } else {
                             $(".boxAudio-loading").addClass("none");
                         }
                     }
-                } else if (data.order == 12){//接收到推流
+                } else if (data.order == 12) {//接收到推流
                     $("#ck-video")[0].play();
                     $(".video-play-live").removeClass("video-notPlay-item");
                     $(".video-notPlay-bg").addClass("none");
                     $(".video-notPlay").addClass("none");
-                    if(isAndroid){
+                    if (isAndroid) {
                         //还原
-                        $("#ck-video").attr('style','height:auto');
+                        $("#ck-video").attr('style', 'height:auto');
                     }
-                } else if (data.order == 13){//开启星评指令
+                } else if (data.order == 13) {//开启星评指令
                     // todo 打开星评界面
-                } else if(data.order == 11){//直播開始
+                    openStarRate();
+                } else if (data.order == 11) {//直播開始
                     $("#liveStartView").addClass("none");
-                } else if(data.order == 14){//直播结束
-                    if(activeItemIsVideo.length > 0){
+                } else if (data.order == 14) {//直播结束
+                    if (activeItemIsVideo.length > 0) {
                         activeItemIsVideo.get(0).pause();
                     } else {
                         popupPalyer.pause();
@@ -917,21 +1043,26 @@
         }
 
 
-        function report(type){
-            $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
+        function report(type) {
+            $.get("${ctx}/api/meeting/report", {
+                "type": type,
+                "shareUrl": window.location.href,
+                "courseId": "${course.id}"
+            }, function (data) {
                 layer.msg('<fmt:message key="page.meeting.report.success"/>');
-            },'json');
+            }, 'json');
         }
 
         //举报按钮
-        $('.report-popup-button-hook').on('click',function(){
+        $('.report-popup-button-hook').on('click', function () {
+            layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if(browser.isAndroid || activeItemIsVideo.length > 0){
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
             }
             //解决黑边与遮挡
-            if(isAndroid) {
-                $("#ck-video").attr('style','margin-top:9999px');
+            if (isAndroid) {
+                $("#ck-video").attr('style', 'margin-top:9999px');
             }
             weui.actionSheet([
                 {
@@ -959,24 +1090,24 @@
                     onClick: function () {
                         console.log('取消');
                         //关闭时还原高度。
-                        if(browser.isAndroid || activeItemIsVideo.length > 0){
+                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
                             activeItemIsVideo.height('auto');
                         }
-                        if(isAndroid) {
-                            $("#ck-video").attr('style','margin-top:0');
+                        if (isAndroid) {
+                            $("#ck-video").attr('style', 'margin-top:0');
                         }
                     }
                 }
             ], {
                 className: 'custom-classname',
-                onClose: function(){
+                onClose: function () {
                     console.log('关闭');
                     //关闭时还原高度。
-                    if(browser.isAndroid || activeItemIsVideo.length > 0){
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.height('auto');
                     }
-                    if(isAndroid) {
-                        $("#ck-video").attr('style','margin-top:0');
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:0');
                     }
                 }
             });
@@ -988,30 +1119,117 @@
         });
 
         //手机端 点击任何一个地方  自动播放音频
-        $('.isIphoneSafari').on('touchstart',function(){
+        $('.isIphoneSafari').on('touchstart', function () {
             $(this).hide();
             activeItemIsVideo.get(0).load();
             activeItemIsVideo.get(0).play();
 
         });
 
+        //弹出功能选项
+        $('.star-popup-button-hook').on('click',function() {
+            //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
+            layer.open({
+                type: 1,
+                anim: 5,
+                area: ['90%', 'auto'],
+                fix: false, //不固定
+                title: false,
+                shadeClose: true,
+                content: $('.listItme-popup'),
+                success: function () {
+                    //popupPalyer.play();
+                },
+                end: function () {
+                    //popupPalyer.play();
+                    //关闭时还原高度。
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.height('auto');
+                    }
+                }
+            })
+        });
+
+        //星评弹出
+        function openStarRate() {
+            layer.open({
+                type: 1,
+                area: ['90%', '85%'],
+                fix: false, //不固定
+                title: false,
+                shadeClose: true,
+                skin: 'info-popup',
+                content: $('.CSPMeeting-meeting-star-popup'),
+                success: function (swiper) {
+                    layer.close(layer.index - 1);
+                    //弹出星评后,关闭之前打开他的窗
+//                    layer.close(layer.index-1);
+//                    popupPalyer.play();
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.height(0);
+                    }
+                },
+                end: function () {
+                    //popupPalyer.play();
+                    //关闭时还原高度。
+                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.height('auto');
+                    }
+                    layer.closeAll();
+                }
+            })
+        }
+
+        $('.star-popup-hook').on('click', function () {
+            openStarRate();
+        });
+
+        $("input[type='radio']").click(function () {
+            $(this).parent().siblings("div").find("span").text($(this).val());
+            var submitAble = true;
+            $("input[type='radio']").parent().siblings("div").find("span").each(function () {
+                if ($(this).text() == '' || $(this).text() == 0) {
+                    submitAble = false;
+                    return false;
+                }
+            });
+
+            if (submitAble) {
+                $("#submitBtn").removeClass("disabled");
+            }
+        });
+
+        if ("${play.playState == 3}" == "true") {
+            openStarRate();
+        }
     });
 
-    function getLiveDuration(){
+    //提交评分
+    function doRate() {
+        if (!$("#submitBtn").hasClass("disabled")) {
+            var data = $("#dataForm").serialize();
+            $.post('${ctx}/api/meeting/share/rate', data, function (result) {
+                if (result.code == 0) {
+                    $("#submitBtn").addClass("none");
+                    $("#ratedBtn").removeClass("none");
+                }
+            }, 'json');
+        }
+    }
+
+    function getLiveDuration() {
         var url = '${ctx}/api/meeting/share/live/duration';
-        $.get(url, {"courseId":"${course.id}"}, function(data){
-            if(data.code == 0){
+        $.get(url, {"courseId": "${course.id}"}, function (data) {
+            if (data.code == 0) {
                 $("#liveDuration").text(data.data.duration);
             }
-        },'json');
+        }, 'json');
     }
 
 </script>
-<script type="text/javascript">
-
-
-
-</script>
 </body>
-
 </html>
