@@ -1018,6 +1018,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                         d.setOptionId(o.getId());
                         d.setCourseId(copyCourseId);
                         d.setScore(detail.getScore());
+                        d.setHistoryId(detail.getHistoryId());
                         cspStarRateHistoryDetailDAO.insert(d);
                     }
                 }

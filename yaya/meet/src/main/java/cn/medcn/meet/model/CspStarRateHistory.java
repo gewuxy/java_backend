@@ -30,5 +30,5 @@ public class CspStarRateHistory implements Serializable {
     protected Date rateTime;
 
     @Transient
-    protected List<CspStarRateHistoryDetail> details;
+    protected CspStarRateHistoryDetail[] details;
 }

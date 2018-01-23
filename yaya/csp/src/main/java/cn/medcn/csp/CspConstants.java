@@ -35,4 +35,6 @@ public class CspConstants {
     public static final String PACKAGE_ORDER_FLAG = "T";
     //会议开始之后的过期时间
     public static final int MEET_AFTER_START_EXPIRE_HOURS = 24;
+
+    public static final String COURSE_RATE_TICKET_KEY = "rate_ticket";
 }
