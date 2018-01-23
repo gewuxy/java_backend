@@ -33,7 +33,7 @@ public class Live {
 
     protected String picUrl;//视频截图地址
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     protected Date startTime;//直播预计开始时间 在直播开始之后变成视频真正开始时间
 
     protected Date endTime;//直播结束时间

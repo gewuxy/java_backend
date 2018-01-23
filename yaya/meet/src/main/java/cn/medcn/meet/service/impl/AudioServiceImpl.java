@@ -41,6 +41,8 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 
@@ -708,29 +710,28 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#audioCourse.id")
     public void updateAudioCourseInfo(AudioCourse audioCourse, Live live) {
-        Live oldLive = liveService.findByCourseId(audioCourse.getId());
+            Live oldLive = liveService.findByCourseId(audioCourse.getId());
+            if (oldLive == null) {
+                oldLive = new Live();
+                oldLive.setId(cn.medcn.common.utils.StringUtils.nowStr());
+                oldLive.setCourseId(audioCourse.getId());
+                oldLive.setLiveState(Live.LiveState.init.getType());
+                oldLive.setLivePage(0);
+                oldLive.setVideoLive(audioCourse.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
+                oldLive.setStartTime(live.getStartTime());
+                oldLive.setEndTime(live.getEndTime());
 
-        if (oldLive == null) {
-            oldLive = new Live();
-            oldLive.setId(cn.medcn.common.utils.StringUtils.nowStr());
-            oldLive.setCourseId(audioCourse.getId());
-            oldLive.setLiveState(Live.LiveState.init.getType());
-            oldLive.setLivePage(0);
-            oldLive.setVideoLive(audioCourse.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
-            oldLive.setStartTime(live.getStartTime());
-            oldLive.setEndTime(live.getEndTime());
+                liveService.insert(oldLive);
+            } else {
+                oldLive.setVideoLive(audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
+                oldLive.setStartTime(live.getStartTime());
+                oldLive.setEndTime(live.getEndTime());
 
-            liveService.insert(oldLive);
-        } else {
-            oldLive.setVideoLive(audioCourse.getPlayType() != null && audioCourse.getPlayType().intValue() == AudioCourse.PlayType.live_video.getType());
-            oldLive.setStartTime(live.getStartTime());
-            oldLive.setEndTime(live.getEndTime());
+                liveService.updateByPrimaryKeySelective(oldLive);
+            }
 
-            liveService.updateByPrimaryKeySelective(oldLive);
-        }
-
-        audioCourse.setPublished(true);
-        updateByPrimaryKeySelective(audioCourse);
+            audioCourse.setPublished(true);
+            updateByPrimaryKeySelective(audioCourse);
     }
 
 
