@@ -365,25 +365,6 @@ public class MeetingMgrController extends CspBaseController {
     }
 
     /**
-     * 操作星评
-     * @param courseId
-     * @param option
-     */
-    @RequestMapping(value = "/doStar")
-    public void doStarEvaluate(Integer courseId,CspStarRateOption option){
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if (course.getStarRateFlag() == false){
-            course.setStarRateFlag(true);
-            option.setCourseId(courseId);
-            cspStarRateService.insert(option);
-        }else{
-            course.setStarRateFlag(false);
-            //删除历史分数 和 详情表中的分数
-        }
-        audioService.updateByPrimaryKey(course);
-    }
-
-    /**
      * 上传PPT或者PDF文件 并转换成图片
      *
      * @param file
@@ -601,10 +582,10 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
+        ac.setStarRateFlag(starRateFlag);
         MeetWatermark newWatermark = course.getWatermark();
-
         //编辑操作需要判断是否可以进行修改
         if (ac.getId() != null && ac.getId() != 0) {
             if (!audioService.editAble(ac.getId())) {
@@ -632,8 +613,6 @@ public class MeetingMgrController extends CspBaseController {
             }
         }
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
-
-        //保存星评
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
@@ -758,5 +737,24 @@ public class MeetingMgrController extends CspBaseController {
         course.setPassword(null);
         audioService.updateByPrimaryKey(course);
         return success();
+    }
+
+    @RequestMapping(value = "/star/save/{courseId}")
+    @ResponseBody
+    public String saveStarOption(@PathVariable Integer courseId ,CspStarRateOption cspStarRateOption){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        cspStarRateService.insert(cspStarRateOption);
+        return success(cspStarRateOption);
+    }
+
+    @RequestMapping(value = "/star/del/{optionId}")
+    @ResponseBody
+    public String delStarOption(@PathVariable Integer optionId ,CspStarRateOption cspStarRateOption){
+        cspStarRateService.deleteByPrimaryKey(optionId);
+        return success(cspStarRateOption);
     }
 }

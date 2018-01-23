@@ -151,4 +151,5 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
     public List<StarRateResultDTO> getStarRateDetail(Integer courseId) {
             return cspStarRateHistoryDAO.findRateResultHasDetails(courseId);
     }
+
 }

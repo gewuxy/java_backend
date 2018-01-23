@@ -1080,8 +1080,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         } else {
             updateAudioCourseInfo(ac, new AudioCoursePlay());
         }
-
-        //保存星评
     }
 
 

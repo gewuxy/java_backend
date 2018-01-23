@@ -54,4 +54,5 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
      * @return
      */
     List<StarRateResultDTO> getStarRateDetail(Integer courseId);
+
 }
