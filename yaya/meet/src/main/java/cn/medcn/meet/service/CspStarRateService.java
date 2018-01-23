@@ -54,4 +54,12 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
      * @return
      */
     List<StarRateResultDTO> getStarRateDetail(Integer courseId);
+
+    /**
+     * 判断当前用户是否已经评过分
+     * @param courseId
+     * @param ticket
+     * @return
+     */
+    StarRateInfoDTO findRateHistory(Integer courseId, String ticket);
 }
