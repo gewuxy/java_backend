@@ -906,12 +906,14 @@ public class MeetingController extends CspBaseController {
                 Live live = liveService.findByCourseId(courseId);
 
                 if (live != null) {
-                    live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
-                    if (over == 1) {
-                        live.setEndTime(new Date());
-                        liveService.publish(overOrder);
+                    if (live.getLiveState() != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                        live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
+                        if (over == 1) {
+                            live.setEndTime(new Date());
+                            liveService.publish(overOrder);
+                        }
+                        liveService.updateByPrimaryKey(live);
                     }
-                    liveService.updateByPrimaryKey(live);
                 }
                 //删除缓存中的同步指令
                 redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
