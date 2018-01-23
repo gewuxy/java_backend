@@ -192,6 +192,12 @@
             $('.more-hook').on('click',function(){
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
+                var sourceType = $(this).attr("sourceType");
+                if(sourceType != 1){
+                    $("#editLi").hide();
+                } else {
+                    $("#editLi").show();
+                }
                 var locked = $(this).attr("locked");
                 if (locked == "true"){
                     $("#copyLi").hide();
@@ -745,7 +751,7 @@
                                                 <a href="javascript:;" class="contribute-hook" courseId="${course.id}"><fmt:message key="page.meeting.button.delivery"/></a>
                                             </div>
                                             <div class="col-lg-6">
-                                                <a href="javascript:;" class="more more-hook" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i><fmt:message key="page.meeting.button.more"/> </a>
+                                                <a href="javascript:;" class="more more-hook" sourceType="${course.sourceType}" courseId="${course.id}" courseTitle="${course.title}" locked="${course.locked == null ? false : course.locked}"><i></i><fmt:message key="page.meeting.button.more"/> </a>
                                             </div>
                                         </div>
                                         <c:if test="${course.locked}">
@@ -965,7 +971,7 @@
                     <div class="layer-hospital-popup-bottom">
                         <div class="fr">
                             <span class="button min-btn layui-layer-close"><fmt:message key="page.common.cancel"/> </span>
-                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" value="" onclick="modifyPassword()"><fmt:message key="page.meeting.button.password.sure"/> </a>
+                            <a href="javascript:;" class="button buttonBlue min-btn lock-succeed-hook" id="modifyBtn" password="" onclick="modifyPassword()"><fmt:message key="page.meeting.button.password.sure"/> </a>
                         </div>
                     </div>
                 </div>
@@ -1180,7 +1186,7 @@
                     <span class="cells-block hiht t-center"><fmt:message key="page.meeting.tips.password.delete"/></span>
                     <div class="layer-hospital-popup-bottom clearfix">
                         <div class="fr">
-                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" onclick="deletePassword()"><fmt:message key="page.meeting.button.password.cancel"/></a>
+                            <a href="javascript:;" type="submit" class="button buttonBlue min-btn lock-hook" onclick="deletePassword(true)"><fmt:message key="page.meeting.button.password.cancel"/></a>
                         </div>
                     </div>
                 </div>
@@ -1206,9 +1212,20 @@
 
     }
 
+    const modifyPwd = '<fmt:message key="page.meeting.button.password.sure"/>';
+    const cancelPwd = '<fmt:message key="page.meeting.button.password.cancel"/>';
 
     function openPasswordView(){
         var pwd = $("#courseView_" + courseId).attr("pwd");
+        $("#modifyBtn").attr("password", pwd);
+        if(pwd != undefined && pwd != ''){
+            //取消
+            $("#modifyBtn").text(cancelPwd);
+        } else {
+            //保存
+            $("#modifyBtn").text(modifyPwd);
+        }
+
         $("#passwordError").addClass("none");
         $("#randomNum").val(pwd);
         //弹出观看密码
@@ -1234,22 +1251,27 @@
     }
 
     function modifyPassword(){
-        var pwd = $.trim($("#randomNum").val());
-        if(pwd == '' || pwd.length > 4){
-            $("#passwordError").removeClass("none");
-            return;
-        }
-        ajaxGet('${ctx}/mgr/meet/password/modify/'+courseId, {"password":pwd}, function(data){
-            if (data.code == 0){
-                $("#courseView_" + courseId).find(".lock").removeClass("none");
-                $("#courseView_" + courseId).attr("pwd", pwd);
-                $(".lock-popup-showRandomNum").text(pwd);
-                openConfirmPasswordView();
-            } else {
-                layer.msg(data.err);
+        var hasOldPwd = $("#modifyBtn").attr("password") != '';
+        if(hasOldPwd){
+            deletePassword(false);
+        } else {
+            var pwd = $.trim($("#randomNum").val());
+            if(pwd == '' || pwd.length > 4){
+                $("#passwordError").removeClass("none");
+                return;
             }
+            ajaxGet('${ctx}/mgr/meet/password/modify/'+courseId, {"password":pwd}, function(data){
+                if (data.code == 0){
+                    $("#courseView_" + courseId).find(".lock").removeClass("none");
+                    $("#courseView_" + courseId).attr("pwd", pwd);
+                    $(".lock-popup-showRandomNum").text(pwd);
+                    openConfirmPasswordView();
+                } else {
+                    layer.msg(data.err);
+                }
 
-        });
+            });
+        }
     }
 
     function openConfirmPasswordView(){
@@ -1274,12 +1296,18 @@
 
     }
 
-    function deletePassword(){
+    function deletePassword(openPwdView){
         ajaxGet('${ctx}/mgr/meet/password/del/'+courseId, {}, function(data){
             if (data.code == 0){
                 $("#courseView_" + courseId).find(".lock").addClass("none");
                 $("#courseView_" + courseId).attr("pwd", "");
-                openPasswordView();
+                if(openPwdView){
+                    openPasswordView();
+                } else {
+                    layer.closeAll();
+                }
+
+
             } else {
                 layer.msg(data.err);
             }

@@ -101,6 +101,10 @@ public class CourseDeliveryDTO implements Serializable {
     protected float avgScore;
     //观看密码
     protected String password;
+    /**
+     * @see cn.medcn.meet.model.AudioCourse.SourceType
+     */
+    protected Integer sourceType;
 
     public float getAvgScore(){
         DecimalFormat format = new DecimalFormat( "#0.0");
