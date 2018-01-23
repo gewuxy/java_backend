@@ -487,6 +487,19 @@ public class CalendarUtils {
         return (day*24+hour) + ":" + min + ":" + sec ;
     }
 
+    public static String formatTimesDiff(Date startTime, Date endTime){
+        if(startTime == null || endTime == null){
+            throw new RuntimeException("开始时间或者结束时间不能为空");
+        }
+        return formatTimesDiff((endTime.getTime() - startTime.getTime()) / 1000);
+    }
+
+    public static String formatTimesDiff(long secondTime){
+        long min = secondTime / 60;
+        long sec = secondTime % 60;
+        return unitFormat((int) min) + "'" + unitFormat((int) sec) + "\"";
+    }
+
     /**
      * 获取时间差 或者秒数 转换为分′秒″ 格式
      * @param startTime
@@ -495,27 +508,11 @@ public class CalendarUtils {
      * @return
      */
     public static String formatTimesDiff(Date startTime, Date endTime, long secondTime){
-        long diff = 0l;
-        if (startTime != null && endTime != null) {
-
-            long stTime = startTime.getTime();
-            long edTime = endTime.getTime();
-
-            if (stTime < edTime) {
-                diff = edTime - stTime;
-            } else {
-                diff = stTime - edTime;
-            }
-
-            diff = diff / 1000;
-        }
-
         if (secondTime > 0) {
-            diff = secondTime;
+            return formatTimesDiff(secondTime);
+        } else {
+            return formatTimesDiff(startTime, endTime);
         }
-        long min = diff / 60;
-        long sec = diff % 60;
-        return unitFormat((int) min) + "′" + unitFormat((int) sec) + "″";
     }
 
     /**

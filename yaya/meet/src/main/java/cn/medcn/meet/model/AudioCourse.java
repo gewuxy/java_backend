@@ -98,6 +98,7 @@ public class AudioCourse implements Serializable {
         YaYa,
         csp,
         template,//制作模板
-        redPacket;//有声红包
+        redPacket,//有声红包
+        QuickMeet;//快捷讲本
     }
 }

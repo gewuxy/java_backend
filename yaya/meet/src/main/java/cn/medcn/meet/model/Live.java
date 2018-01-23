@@ -36,7 +36,6 @@ public class Live {
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     protected Date startTime;//直播预计开始时间 在直播开始之后变成视频真正开始时间
 
-    @Deprecated
     protected Date endTime;//直播结束时间
 
     protected Integer liveState;//直播状态

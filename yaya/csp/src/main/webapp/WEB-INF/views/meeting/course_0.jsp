@@ -127,7 +127,7 @@
     <div class="html5ShadePlay"></div>
 
     <!--输入密码界面-->
-    <div class="fixed-full-screen-box ${empty course.password ? 'none':''}" id="passwordView">
+    <div class="fixed-full-screen-box ${empty course.password || course.password eq ''? 'none':''}" id="passwordView">
         <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>

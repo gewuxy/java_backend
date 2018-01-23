@@ -129,8 +129,27 @@
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
 
+    <!--开始界面-->
+    <div class="fixed-full-screen-box ${live.liveState == 0 ? '' : 'none'}" id="liveStartView">
+        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
+        <div class="fixed-full-screen-main">
+            <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
+        </div>
+    </div>
+
+    <!--结束界面-->
+    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
+        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
+        <div class="fixed-full-screen-main">
+            <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
+            <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> ${totalLiveTime}</p>
+        </div>
+    </div>
+
+
+
     <!--输入密码界面-->
-    <div class="fixed-full-screen-box ${empty course.password ? 'none':''}" id="passwordView">
+    <div class="fixed-full-screen-box ${empty course.password || live.liveState ==4 ? 'none':''}" id="passwordView">
         <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
@@ -294,6 +313,15 @@
                     }
                 } else if(data.order == 13){//开始星评
                     // todo 弹出星评界面
+                } else if(data.order == 11){//直播開始
+                    $("#liveStartView").removeClass("none");
+                } else if(data.order == 14){//直播结束
+                    if(activeItemIsVideo.length > 0){
+                        activeItemIsVideo.get(0).pause();
+                    } else {
+                        popupPalyer.pause();
+                    }
+                    $("#liveOverView").removeClass("none");
                 }
             }
 

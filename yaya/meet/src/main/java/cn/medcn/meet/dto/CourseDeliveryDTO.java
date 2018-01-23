@@ -1,5 +1,6 @@
 package cn.medcn.meet.dto;
 
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.model.AudioCourse;
@@ -84,7 +85,7 @@ public class CourseDeliveryDTO implements Serializable {
     //是否可编辑
     protected Boolean editAble;
 
-    protected Date serverTime;
+    protected Date serverTime = new Date();
 
     //会议是否被锁定
     protected Boolean locked;
@@ -155,14 +156,8 @@ public class CourseDeliveryDTO implements Serializable {
 
     public String getPlayTime(){
         int pt = getDuration();
-        if (pt == 0) {
-            return  "00'00\"";
-        } else {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(pt / 60);
-            buffer.append("'").append(pt % 60).append("\"");
-            return buffer.toString();
-        }
+        return CalendarUtils.formatTimesDiff(pt);
+
     }
 
     public Integer getDuration(){

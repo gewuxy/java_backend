@@ -388,6 +388,6 @@ public class FileUtils {
 
         File file = new File(filePath + "18011816525170399094.png");
 
-        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbWidth, filePath, filePath));
+        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));
     }
 }

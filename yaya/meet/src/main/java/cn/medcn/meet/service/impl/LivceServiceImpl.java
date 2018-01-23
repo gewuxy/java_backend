@@ -88,6 +88,7 @@ public class LivceServiceImpl extends BaseServiceImpl<Live> implements LiveServi
     public void doModifyLiveState(Live live) {
         if (live.getLiveState() != AudioCoursePlay.PlayState.over.ordinal()) {
             live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+            live.setEndTime(new Date());
             liveDAO.updateByPrimaryKey(live);
 
             //将直播课件复制成录播课件
