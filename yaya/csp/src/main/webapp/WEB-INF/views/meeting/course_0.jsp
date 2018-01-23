@@ -119,7 +119,7 @@
                     </c:when>
                     <c:otherwise>
                         <div class="flex-item">
-                            <div class="button button-icon-info info-popup-hook">
+                            <div class="button button-icon-info star-popup-button-hook">
                                 <i></i>
                             </div>
                         </div>
@@ -163,35 +163,37 @@
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
-        <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
-        <div class="star-showScore ">
-            <div class="star-showScore-main clearfix">
-                <div class="fr">
-                    <div class="star-box star-min">
-                        <div class="star-item">
-                            <c:forEach begin="1" end="5" step="1" var="curr">
-                                <c:choose>
-                                    <c:when test="${avgScore >= curr}">
-                                        <span class="full"></span>
-                                    </c:when>
-                                    <c:when test="${avgScore > curr - 1 && avgScore < curr}">
-                                        <span class="half"></span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="null"></span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </c:forEach>
+        <c:if test="${course.starRateFlag}">
+            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
+            <div class="star-showScore ">
+                <div class="star-showScore-main clearfix">
+                    <div class="fr">
+                        <div class="star-box star-min">
+                            <div class="star-item">
+                                <c:forEach begin="1" end="5" step="1" var="curr">
+                                    <c:choose>
+                                        <c:when test="${avgScore >= curr}">
+                                            <span class="full"></span>
+                                        </c:when>
+                                        <c:when test="${avgScore > curr - 1 && avgScore < curr}">
+                                            <span class="half"></span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="null"></span>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </c:forEach>
+                            </div>
+                            <div class="grade ">${avgScore}<fmt:message key="page.meeting.tips.score.unit"/></div>
                         </div>
-                        <div class="grade ">${avgScore}<fmt:message key="page.meeting.tips.score.unit"/></div>
                     </div>
+                    <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
                 </div>
-                <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
+                <div class="star-showScore-button popup-star-button t-center">
+                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
+                </div>
             </div>
-            <div class="star-showScore-button popup-star-button t-center">
-                <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
-            </div>
-        </div>
+        </c:if>
     </div>
 
 
@@ -201,7 +203,7 @@
 <div class="listItme-popup">
     <div class="listItme-popup-main">
         <a href="javscript:;" class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
-        <a href="javscript:;" class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a>
+        <c:if test="${course.starRateFlag}"><a href="javscript:;" class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
         <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
     </div>
 </div>
