@@ -62,4 +62,5 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
      * @return
      */
     StarRateInfoDTO findRateHistory(Integer courseId, String ticket);
+
 }

@@ -1354,6 +1354,7 @@ public class MeetingController extends CspBaseController {
         course.setId(courseId);
         course.setTitle(title);
         course.setUserId(userId);
+        course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
 
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setMusicId(musicId);
@@ -1443,11 +1444,11 @@ public class MeetingController extends CspBaseController {
     @ResponseBody
     public String getImageAndMusic(Integer type){
         if(type == null){
-            type = ImageMusic.IMAGE.ordinal();
+            type = AudioCourseTheme.ImageMusic.IMAGE.ordinal();
         }
         Map<String,Object> map = new HashMap<>();
         //获取主题
-         if(type == ImageMusic.IMAGE.ordinal()){
+         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
             List<BackgroundImage> imageList = courseThemeService.findImageList();
             map.put("imageList",imageList);
              return success(map);
@@ -1482,5 +1483,6 @@ public class MeetingController extends CspBaseController {
         cspStarRateService.doScore(history);
         return success();
     }
+
 
 }

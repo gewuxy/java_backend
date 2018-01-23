@@ -250,6 +250,10 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("fileBase", fileBase);
         model.addAttribute("qrCodeUrl", qrCodePath);
 
+        // 星评状态 获取星评二维码
+        String starQrCodePath = getStarQrCodeUrl(courseId);
+        model.addAttribute("starQrCodeUrl", starQrCodePath);
+
         if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
             AudioCoursePlay play = audioService.findPlayState(courseId);
             model.addAttribute("record", play);
@@ -260,7 +264,7 @@ public class MeetingMgrController extends CspBaseController {
             if (live == null) {
                 throw new SystemException(local("error.data"));
             }
-//
+
 //            if (live.getLiveState() != null && live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
 //                throw new SystemException(local("share.live.over"));
 //            }
@@ -269,7 +273,26 @@ public class MeetingMgrController extends CspBaseController {
             return localeView("/meeting/screen");
         }
 
+    }
 
+    /**
+     * 生成星评二维码地址
+     *
+     * @param courseId
+     * @return
+     */
+    protected String getStarQrCodeUrl(Integer courseId) {
+        String local = LocalUtils.getLocalStr();
+        boolean abroad = LocalUtils.isAbroad();
+        String shareUrl = audioService.getMeetShareUrl(appCspBase, local, courseId, abroad);
+
+        // 判断二维码是否存在星评二维码 不存在则重新生成
+        String starQrCodePath = FilePath.QRCODE.path + "/share/" + courseId + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        boolean starQrCodeExists = FileUtils.exists(fileUploadBase + starQrCodePath);
+        if (!starQrCodeExists) {
+            QRCodeUtils.createQRCode(shareUrl, fileUploadBase + starQrCodePath);
+        }
+        return starQrCodePath;
     }
 
 
@@ -362,25 +385,6 @@ public class MeetingMgrController extends CspBaseController {
         model.addAttribute("flux", format.format(fluxValue));
         model.addAttribute("packageId",getWebPrincipal().getPackageId());
         return localeView("/meeting/edit");
-    }
-
-    /**
-     * 操作星评
-     * @param courseId
-     * @param option
-     */
-    @RequestMapping(value = "/doStar")
-    public void doStarEvaluate(Integer courseId,CspStarRateOption option){
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if (course.getStarRateFlag() == false){
-            course.setStarRateFlag(true);
-            option.setCourseId(courseId);
-            cspStarRateService.insert(option);
-        }else{
-            course.setStarRateFlag(false);
-            //删除历史分数 和 详情表中的分数
-        }
-        audioService.updateByPrimaryKey(course);
     }
 
     /**
@@ -602,10 +606,10 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
-    public String save(CspAudioCourseDTO course, Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, String liveTime, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
+        ac.setStarRateFlag(starRateFlag);
         MeetWatermark newWatermark = course.getWatermark();
-
         //编辑操作需要判断是否可以进行修改
         if (ac.getId() != null && ac.getId() != 0) {
             if (!audioService.editAble(ac.getId())) {
@@ -633,8 +637,6 @@ public class MeetingMgrController extends CspBaseController {
             }
         }
         audioService.updateInfo(ac,course.getLive() ,newWatermark,packageId);
-
-        //保存星评
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
@@ -759,5 +761,24 @@ public class MeetingMgrController extends CspBaseController {
         course.setPassword(null);
         audioService.updateByPrimaryKey(course);
         return success();
+    }
+
+    @RequestMapping(value = "/star/save/{courseId}")
+    @ResponseBody
+    public String saveStarOption(@PathVariable Integer courseId ,CspStarRateOption cspStarRateOption){
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        Principal principal = getWebPrincipal();
+        if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        cspStarRateService.insert(cspStarRateOption);
+        return success(cspStarRateOption);
+    }
+
+    @RequestMapping(value = "/star/del/{optionId}")
+    @ResponseBody
+    public String delStarOption(@PathVariable Integer optionId ,CspStarRateOption cspStarRateOption){
+        cspStarRateService.deleteByPrimaryKey(optionId);
+        return success(cspStarRateOption);
     }
 }

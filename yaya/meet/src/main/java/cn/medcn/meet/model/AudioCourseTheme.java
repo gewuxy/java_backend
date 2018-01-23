@@ -50,5 +50,10 @@ public class AudioCourseTheme {
     protected String url;
 
 
+    public enum ImageMusic{
+        IMAGE,
+        MUSIC;
+    }
+
 
 }

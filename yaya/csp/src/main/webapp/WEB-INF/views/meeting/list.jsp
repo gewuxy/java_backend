@@ -209,7 +209,8 @@
                     appkey: shareSdkAppKey, // appkey
                     params: {
                         url: shareUrl, // 分享链接
-                        title: '${nickname}' + " 正在使用【会讲】讲解 " + courseTitle, // 分享标题
+                        title: '会讲 | ' + courseTitle, // 分享标题
+                        description: "用会讲，做有声PPT,随讲随录随分享",
                         pic: coverUrl, // 分享图片，使用逗号,隔开
                         reason:'',//自定义评论内容，只应用与QQ,QZone与朋友网
                     },
