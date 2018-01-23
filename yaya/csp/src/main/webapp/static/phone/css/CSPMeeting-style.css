@@ -640,8 +640,12 @@ textarea { -webkit-appearance: none;}
 
 
     /*竖屏全屏录播*/
-    .CSPMeeting-popup-fullsize .layer-hospital-popup { height:100%; overflow: inherit; margin:0; z-index: auto;}
+    .CSPMeeting-popup-fullsize .layer-hospital-popup { height:100% ; overflow: inherit; margin:0; z-index: auto;}
+    .CSPMeeting-gallery-live.popup-fullStatus .video-play-live .viedoItem video,
+    .CSPMeeting-popup-fullsize .layer-hospital-popup video {  height:auto !important; width:100% !important; margin-top:45% !important;}
     .CSPMeeting-popup-fullsize { padding-top:0;}
+
+
 
 }
 @media ( orientation: landscape ){
@@ -687,5 +691,8 @@ textarea { -webkit-appearance: none;}
     .fixed-full-screen-min-logo { margin:0.5rem 0; }
     .fixed-full-screen-min-main .fixed-text { margin:.3rem 0;}
     .fixed-error { top:-0.15rem;  }
+
+    .CSPMeeting-bottom, .CSPMeeting-bottom ,
+    .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
 
 }
