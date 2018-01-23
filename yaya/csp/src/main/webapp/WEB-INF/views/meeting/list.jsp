@@ -957,7 +957,7 @@
             <form action="">
                 <div class="lock-popup-main login-form-item pr">
                     <label for="randomNum" class="cells-block pr ">
-                        <input id="randomNum" type="text" class="login-formInput" value="" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                        <input id="randomNum" type="number" class="login-formInput" value="" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength="4">
                         <span href="javascript:;" class="code" id="btnSendCode" onclick="randomNum()"><fmt:message key='page.meeting.button.auto.create'/></span>
                     </label>
                     <span class="cells-block hiht"><fmt:message key='page.meeting.tips.watch.password'/></span>
@@ -1235,7 +1235,7 @@
 
     function modifyPassword(){
         var pwd = $.trim($("#randomNum").val());
-        if(pwd == ''){
+        if(pwd == '' || pwd.length > 4){
             $("#passwordError").removeClass("none");
             return;
         }
