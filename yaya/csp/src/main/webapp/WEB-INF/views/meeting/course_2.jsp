@@ -1203,7 +1203,7 @@
             }
         });
 
-        if ("${play.playState == 3}" == "true") {
+        if ("${live.liveState == 3}" == "true") {
             openStarRate();
         }
     });
