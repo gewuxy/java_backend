@@ -150,67 +150,10 @@
                             <div class="upload-metting-star-main" id="starDiv">
                                 <div class="upload-metting-star-row" >
                                     <div class="fr">
-                                        <div class="star-box star-max"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade ">未评价</div></div>
+                                        <div class="star-box star-max"><div class="star"></div><div class="grade ">未评价</div></div>
                                     </div>
                                     <div class="title">综合评分</div>
                                 </div>
-                                    <%--<div class="upload-metting-star-row" style="display: none">
-                                        <div class="fr">
-                                        <div class="star-box star-max">
-                                            <div class="star">
-                                            <span class="null"></span>
-                                        <span class="null"></span>
-                                        <span class="null"></span>
-                                        <span class="null">
-                                    </span><span class="null"></span>
-                                    </div>
-                                        <div class="grade "><span id="avgScoreSpan">0</span><fmt:message key="page.meeting.tips.score.unit"/></div>
-                                    </div>
-                                    </div>
-                                        <div class="title">
-                                            <span class="star-remove-button"></span>
-                                        </div>
-                                    </div>--%>
-                                <div class="star-list  clearfix" style="display: none" id="eidtStar">
-                                    <div class="star-list-row clearfix" index="0">
-                                        <div class="fr">
-                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
-                                        </div>
-                                        <div class="fl"> </div>
-                                    </div>
-                                    <div class="star-list-row clearfix" index="1">
-                                        <div class="fr">
-                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
-                                        </div>
-                                        <div class="fl"> </div>
-                                    </div>
-                                    <div class="star-list-row clearfix" index="2">
-                                        <div class="fr">
-                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
-                                        </div>
-                                        <div class="fl"> </div>
-                                    </div>
-                                    <div class="star-list-row clearfix" index="3">
-                                        <div class="fr">
-                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
-                                        </div>
-                                        <div class="fl"> </div>
-                                    </div>
-                                    <div class="star-list-row clearfix" index="4">
-                                        <div class="fr">
-                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
-                                        </div>
-                                        <div class="fl"> </div>
-                                    </div>
-                                    <div class="star-list-row clearfix">
-                                        <div class="fr">
-                                            <div class="star-box star-min"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><span class="detailScore">0</span><fmt:message key="page.meeting.tips.score.unit"/></div></div>
-                                        </div>
-                                        <div class="fl"> </div>
-                                    </div>
-                                </div>
-
-
                                 <div class="upload-metting-star-row star-input-box" id="submitOption" style="display: none">
                                     <div class="fr">
                                         <div class="star-input-button"><input class="button" type="submit" value="保存" id="btnStar"><a href="javascript:;" class="close">取消</a></div>
@@ -1026,97 +969,87 @@
         /*123星评功能*/
         $(function () {
             var flag = ${course.starRateFlag}
-            if(flag == true){
-                //var scoreCount =${dto.multipleResult.scoreCount} ;
-                $("#switchCPStar").attr("checked",true);
-                $("#starOpen").text("开启");
-                //$("#starTitle").html('<div class="title" id="starTitle">参与评分人数: <span id="scoreCount">'+scoreCount+'</span>人</div>');
-                $("#insertOption").hide();
-                $("#submitOption").css('display','none');
-                $(".star-remove-button").css('display','none');
-                $(".star-list  clearfix").css('display',"");
-                $("#eidtStar").css('display',"");
-                ajaxGet('${ctx}/mgr/meet/course_info/' + ${course.id}, {}, function(data){
-                    handleMultipleResult(data.data.multipleResult);
-                    handleDetailResult(data.data.detailList);
+            var state = ${course.published}
+            if(flag == true && state == true){
+                $.ajax({
+                    url: "${ctx}/mgr/meet/course_info/" + ${course.id},
+                    dataType: 'json', //返回数据类型
+                    type: 'POST', //请求类型
+                    async: false,
+                    contentType: "application/json; charset=utf-8",
+                    success: function (data) {
+                        if (data.code == 0) {
+                            var detailList = data.data.detailList;
+                            var score =data.data.multipleResult.scoreCount;
+                            $("#switchCPStar").attr("checked",true);
+                            $("#starOpen").text("开启");
+                            $("#starTitle").html('参与评分人数:' +score+' 人');
+                            $("#insertOption").hide();
+                            $("#submitOption").css('display','none');
+                            $(".star-remove-button").css('display','none');
+                            var avgScore =data.data.multipleResult.avgScore;
+                            var html = '<div class="upload-metting-star-row" >\n' +
+                                '                                    <div class="fr">\n' +
+                                '                                        <div class="star-box star-max"><div class="star">'
+                            html = initStar(avgScore,html);
+                            html +='</div><div class="grade ">' +avgScore+'分</div></div></div>\n' +
+                                '                                    <div class="title">综合评分</div>\n' +
+                                '                                </div>'
+                            if (detailList != null) {
+                                //html += '<div class="star-list hidden-box clearfix">';
+                                for (var j = 0; j < detailList.length; j++) {
+                                    html += '<div class="upload-metting-star-row">\n' +
+                                        '                                        <div class="fr">\n' +
+                                        '                                        <div class="star-box star-max">\n' +
+                                        '                                            <div class="star">';
+                                    html = initStar(detailList[j].avgScore, html);
+                                    html += '</div><div class="grade">' + detailList[j].avgScore + '分</div></div>';
+                                    html += '</div><div class="title">' + detailList[j].title + '</div></div>';
+                                }
+                                html += '</div>';
+                                $("#starDiv").html(html);
+                            }
+                        } else {
+                            layer.msg("获取星评详情失败");
+                        }
+                    }
                 });
 
-            }
-
-
-            function handleMultipleResult(result){
-                var $maxStar = $(".star-max").find(".star");
-                $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
-                $("#avgScoreSpan").text(0);
-                $("#scoreCount").text(0);
-                if(result != undefined && result.avgScore > 0){
-                    var avgScore = result.avgScore;
-                    $("#avgScoreSpan").text(avgScore);
-                    $("#scoreCount").text(result.scoreCount);
-                    var index = 1;
-                    $maxStar.find(".maxStar").removeClass("full").removeClass("half").addClass("null");
-                    if(avgScore > 0){
-                        $maxStar.find(".maxStar").each(function(){
-                            if(avgScore > index){
-                                $(this).removeClass("null").addClass("full");
-                            } else if(avgScore == index){
-                                $(this).removeClass("null").addClass("full");
-                                return false;
-                            } else {
-                                $(this).removeClass("null").addClass("half");
-                                return false;
-                            }
-                            index ++;
-                        });
-                    }
-
-                }
 
             }
 
-
-            function handleDetailResult(result){
-                $(".detailScore").text("0");
-                $(".star-list-row .fl").text(" ");
-                $(".star-list-row").addClass("none");
-                if (result != undefined && result.length > 0){
-                    for(var index in result){
-                        var detail = result[index];
-                        var avgScore = detail.avgScore;
-                        var $currentRow = $(".star-list-row[index='"+index+"']");
-                        $currentRow.find(".fl").text(" " + detail.title);
-                        $currentRow.find(".detailScore").text(avgScore);
-                        var index = 1;
-                        $currentRow.find(".star").find("span").removeClass("full").removeClass("half").addClass("null");
-                        if(avgScore > 0){
-                            $currentRow.find(".star").find("span").each(function(){
-                                if(avgScore > index){
-                                    $(this).removeClass("null").addClass("full");
-                                } else if(avgScore == index){
-                                    $(this).removeClass("null").addClass("full");
-                                    return false;
-                                } else {
-                                    $(this).removeClass("null").addClass("half");
-                                    return false;
-                                }
-                                index ++;
-                            });
-                        }
-                        $currentRow.removeClass("none");
+            function initStar(score, html) {
+                var i = score % 1 == 0 ? 1 : 0;
+                for (i; i <= score; i++) {
+                    if (score - i >= 1 || score - i == 0) html += '<span class="full"></span>';
+                    if (0 < score - i && score - i < 1) {
+                        html += '<span class="half"></span>';
                     }
                 }
+                for (score % 1 == 0 ? i : i++; i <= 5; i++) {
+                    html += '<span class="null"></span>';
+                }
+                return html;
             }
         })
+
+
+
         $(function(){
             $("#switchCPStar").click(function () {
                 var isCheck = $("#switchCPStar").is(":checked");
-                if (isCheck){
-                    starTips();
+                //var size = ${size}
+                if(${course.published == false}){
+                    if (isCheck){
+                        starTips();
+                    }else {
+                        $("#starOpen").text("关闭");
+                        $("#starTitle").html("评分功能");
+                        $("#insertOption").show();
+                        $(".star-remove-button").css('display',"");
+                    }
                 }else {
-                    $("#starOpen").text("关闭");
-                    $("#starTitle").html("评分功能");
-                    $("#insertOption").show();
-                    $(".star-remove-button").css('display',"");
+
                 }
             })
         })
@@ -1131,6 +1064,7 @@
             }
         })
 
+        var starHtml;
         $("#btnStar").click(function () {
             var starOption;
              if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
@@ -1148,13 +1082,13 @@
                 ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
-                        $('<div class="upload-metting-star-row">' +
+                       starHtml =  $('<div class="upload-metting-star-row">' +
                             '<div class="fr"><div class="star-box star-max"><div class="star"><span class="null">' +
                             '</span><span class="null"></span><span class="null"></span><span class="null">' +
                             '</span><span class="null"></span></div><div class="grade ">未评价</div></div></div>' +
                             '<div class="title"><span class="star-remove-button"></span> '+data.data.title+'</div></div>').insertBefore($("#submitOption"));
                             optionId = data.data.id;
-                            alert(optionId);
+                            alert(starHtml);
                         $(".star-remove-button").click(function () {
                             ajaxGet('${ctx}/mgr/meet/star/del/'+optionId, {}, function(data){
                                 //console.log(data)
@@ -1228,17 +1162,18 @@
                 btn: ["确认","取消"],
                 content: $('.succeed-02-popup-box'),
                 yes: function(index, layero){
-                    $("[name=starRateFlag]:checkbox").prop("checked", true);
-                    $("#starOpen").text("开启");
-                    $("#starTitle").html("参与评分人数: 0 人");
-                    $("#insertOption").hide();
-                    var isCheck = $("#switchCPStar").is(":checked");
-                    $("#switchCPStar").val(isCheck);
-                    var starRateFlag=$("#switchCPStar").val();
-                    $("#starRateFlag").val(starRateFlag)
-                    $("#submitOption").css('display','none');
-                    $(".star-remove-button").css('display','none');
-                    layer.closeAll()
+                                var score =data.data.multipleResult.scoreCount;
+                                $("[name=starRateFlag]:checkbox").prop("checked", true);
+                                $("#starOpen").text("开启");
+                                $("#starTitle").html('参与评分人数:' +score+' 人');
+                                $("#insertOption").hide();
+                                var isCheck = $("#switchCPStar").is(":checked");
+                                $("#switchCPStar").val(isCheck);
+                                var starRateFlag=$("#switchCPStar").val();
+                                $("#starRateFlag").val(starRateFlag)
+                                $("#submitOption").css('display','none');
+                                $(".star-remove-button").css('display','none');
+                                layer.closeAll()
                 },
                 btn2: function(index, layero){
                     $("[name=starRateFlag]:checkbox").prop("checked", false);
@@ -1282,7 +1217,6 @@
             timePicker24Hour : true,
             timePicker : true,
             minDate:new Date(),
-            startDate: new Date(),
             "locale": {
                 format: 'YYYY-MM-DD HH:mm:ss',
                 applyLabel: "<fmt:message key='page.meeting.time.start.plugin.true'/>",
@@ -1299,10 +1233,9 @@
                 monthNames: ["01","02","03","04","05","06","07","08","09","10","11","12"],
             }
         },function(start,end,label) {
-            alert(start)
             beginTimeTake = start;
             console.log(this.startDate.format(this.locale.format));
-
+            console.log(1);
             if(!this.startDate){
                 this.element.find('.timedate-input').val('');
             }else{

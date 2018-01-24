@@ -3,13 +3,13 @@
 <mapper namespace="cn.medcn.meet.dao.CspStarRateHistoryDAO" >
 
     <select id="findRateResultHasDetails" resultType="cn.medcn.meet.dto.StarRateResultDTO">
-        SELECT o.id, o.title, avg(d.score) AS avg_score, count(d.id) AS score_count FROM
+        SELECT o.id, o.title, IFNULL(avg(d.score),0) AS avg_score, count(d.id) AS score_count FROM
         t_csp_star_rate_option o LEFT JOIN t_csp_star_rate_history_detail d on d.option_id = o.id
         WHERE o.course_id = #{courseId} GROUP BY o.id
     </select>
 
     <select id="findRateResultExcludeDetails" resultType="cn.medcn.meet.dto.StarRateResultDTO">
-        SELECT  t.id,t.title,t.info,AVG(th.score) AS avg_score,
+        SELECT  t.id,t.title,t.info,IFNULL(AVG(th.score),0) AS avg_score,
         COUNT(th.course_id) AS score_count,t.`star_rate_flag` AS starStatus
         FROM t_audio_course t
         LEFT JOIN  t_csp_star_rate_history th

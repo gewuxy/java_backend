@@ -348,19 +348,17 @@ public class MeetingMgrController extends CspBaseController {
             model.addAttribute("watermark",watermark);
             //TODO 星评详情 evaluate
             //星评信息
-            if (course.getStarRateFlag()== true) {
-                StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
-                model.addAttribute("multipleResult",JSON.toJSONString(dto.getMultipleResult()));
-                model.addAttribute("detailList",JSON.toJSONString(dto.getDetailList()));
-                model.addAttribute("dto",dto);
-                //model.addAttribute("result",result);
-            }
+            StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
+            model.addAttribute("dto",dto);
         } else {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
                 course = audioService.createNewCspCourse(principal.getId());
+                //List<CspStarRateOption> options = cspStarRateService.findRateOptions(course.getId());
+                //model.addAttribute("size",options.size());
             }
         }
+
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
