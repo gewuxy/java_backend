@@ -438,7 +438,11 @@
                         galleryTop.slideNext();
                     }
                 } else if(data.order == 13){//开始星评
-                    // todo 弹出星评界面
+                    if(activeItemIsVideo.length > 0){
+                        activeItemIsVideo.get(0).pause();
+                    } else {
+                        popupPalyer.pause();
+                    }
                     openStarRate();
                 } else if(data.order == 11){//直播開始
                     console.log("直播开始");

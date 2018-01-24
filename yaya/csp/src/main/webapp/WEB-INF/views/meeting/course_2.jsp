@@ -1022,7 +1022,15 @@
                         $("#ck-video").attr('style', 'height:auto');
                     }
                 } else if (data.order == 13) {//开启星评指令
-                    // todo 打开星评界面
+                    if (activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.get(0).pause();
+                    } else {
+                        popupPalyer.pause();
+                    }
+
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:9999px');
+                    }
                     openStarRate();
                 } else if (data.order == 11) {//直播開始
                     $("#liveStartView").addClass("none");
@@ -1180,6 +1188,9 @@
                     //关闭时还原高度。
                     if (browser.isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.height('auto');
+                    }
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:0px');
                     }
                     layer.closeAll();
                 }
