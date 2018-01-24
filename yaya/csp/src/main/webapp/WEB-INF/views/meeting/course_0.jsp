@@ -234,18 +234,18 @@
                         <div class="meeting-star-row clearfix getShowNum-min">
                             <div class="fr">
                                 <div class="star_bg">
-                                    <input type="radio" id="starScore1" class="score score_1" value="1" name="score">
+                                    <input type="radio" id="starScore1" class="score score_1" ${rated && rateHistory.multipleResult.avgScore == 1 ? 'checked':''} value="1" name="score">
                                     <a href="#starScore1" class="star star_1" title="差"><label for="starScore1"></label></a>
-                                    <input type="radio" id="starScore2" class="score score_2" value="2" name="score">
+                                    <input type="radio" id="starScore2" class="score score_2" ${rated && rateHistory.multipleResult.avgScore == 2 ? 'checked':''} value="2" name="score">
                                     <a href="#starScore2" class="star star_2" title="较差"><label for="starScore2"></label></a>
-                                    <input type="radio" id="starScore3" class="score score_3"  value="3" name="score">
+                                    <input type="radio" id="starScore3" class="score score_3" ${rated && rateHistory.multipleResult.avgScore == 3 ? 'checked':''}  value="3" name="score">
                                     <a href="#starScore3" class="star star_3" title="普通"><label for="starScore3"></label></a>
-                                    <input type="radio" id="starScore4" class="score score_4"  value="4" name="score">
+                                    <input type="radio" id="starScore4" class="score score_4" ${rated && rateHistory.multipleResult.avgScore == 4 ? 'checked':''}  value="4" name="score">
                                     <a href="#starScore4" class="star star_4" title="较好"><label for="starScore4"></label></a>
-                                    <input type="radio" id="starScore5" class="score score_5" value="5" name="score">
+                                    <input type="radio" id="starScore5" class="score score_5" ${rated && rateHistory.multipleResult.avgScore == 5 ? 'checked':''} value="5" name="score">
                                     <a href="#5" class="star star_5" title="好"><label for="starScore5"></label></a>
                                 </div>
-                                <div class="grade ">${rated ? rateHistory.multipleResult.avgScore : 0}<fmt:message key="page.meeting.tips.score.unit"/> </div>
+                                <div class="grade "><span>${rated ? rateHistory.multipleResult.avgScore : 0}</span><fmt:message key="page.meeting.tips.score.unit"/> </div>
                             </div>
                             <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/></div>
                         </div>
