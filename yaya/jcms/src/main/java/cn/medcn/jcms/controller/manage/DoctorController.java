@@ -408,12 +408,11 @@ public class DoctorController extends BaseController{
                 if(StringUtils.isEmpty(excel.getCity())){
                     throw new SystemException("医生:"+excel.getLinkman()+"的城市不能为空");
                 }
-                if(!RegexUtils.checkMobile(excel.getMobile())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的手机格式不正确,请仔细检查");
+                //手机和邮箱都不正确
+                if(!RegexUtils.checkMobile(excel.getMobile()) && !RegexUtils.checkEmail(excel.getUsername())){
+                    throw new SystemException("医生:"+excel.getLinkman()+"的手机或者邮箱填写不正确,请仔细检查");
                 }
-                if(!RegexUtils.checkEmail(excel.getUsername())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的邮箱格式不正确,请仔细检查");
-                }
+
                 if(!"123456".equals(excel.getPassword())){
                     throw new SystemException("请设置初始密码为123456");
                 }
