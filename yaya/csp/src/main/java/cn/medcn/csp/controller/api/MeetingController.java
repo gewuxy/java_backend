@@ -1270,7 +1270,7 @@ public class MeetingController extends CspBaseController {
             dto.setStartCodeUrl(fileBase + qrCodePath);
         }
 
-        openStarRate(courseId);
+        openStarRate(course);
 
         return success(dto);
     }
@@ -1280,16 +1280,15 @@ public class MeetingController extends CspBaseController {
      * 开启星评
      * @param courseId
      */
-    public void openStarRate(Integer courseId) {
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+    public void openStarRate(AudioCourse course) {
         if (course != null) {
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
-                AudioCoursePlay play = audioService.findPlayState(courseId);
+                AudioCoursePlay play = audioService.findPlayState(course.getId());
                 play.setPlayState(AudioCoursePlay.PlayState.rating.ordinal());
                 audioService.updateAudioCoursePlay(play);
             } else {
                 //修改直播状态为星评中状态
-                Live live = liveService.findByCourseId(courseId);
+                Live live = liveService.findByCourseId(course.getId());
                 live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
                 liveService.updateByPrimaryKey(live);
             }
@@ -1297,7 +1296,7 @@ public class MeetingController extends CspBaseController {
 
         //发送开启星评指令
         LiveOrderDTO order = new LiveOrderDTO();
-        order.setCourseId(String.valueOf(courseId));
+        order.setCourseId(String.valueOf(course.getId()));
         order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
         liveService.publish(order);
 
