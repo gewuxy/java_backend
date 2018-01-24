@@ -193,17 +193,11 @@
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
                 var sourceType = $(this).attr("sourceType");
-                if(sourceType != 1){
-                    $("#editLi").hide();
-                } else {
-                    $("#editLi").show();
-                }
+
                 var locked = $(this).attr("locked");
-                if (locked == "true"){
-                    $("#copyLi").hide();
+                if (locked == "true" || sourceType == 4){//锁定的或者是快捷会议不允许修改
                     $("#editLi").hide();
                 } else {
-                    $("#copyLi").show();
                     $("#editLi").show();
                 }
 
