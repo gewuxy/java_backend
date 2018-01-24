@@ -1269,19 +1269,18 @@ public class MeetingController extends CspBaseController {
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
         }
+
+        openStarRate(courseId);
+
         return success(dto);
     }
 
 
     /**
-     * 开启星评接口
-     *
+     * 开启星评
      * @param courseId
-     * @return
      */
-    @RequestMapping(value = "/star_rate/open")
-    @ResponseBody
-    public String openStarRate(Integer courseId) {
+    public void openStarRate(Integer courseId) {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
         if (course != null) {
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
@@ -1302,7 +1301,6 @@ public class MeetingController extends CspBaseController {
         order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
         liveService.publish(order);
 
-        return success();
     }
 
 
