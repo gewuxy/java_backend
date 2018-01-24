@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -380,6 +381,7 @@ public class DoctorController extends BaseController{
                           continue;
                     }
                      AppUser user = AppUserDTO.rebuildToDoctor(getUserDTO(docExcel));
+                     user.setRegistDate(new Date());
                     appUserService.executeBatchRegister(user,SubjectUtils.getCurrentUserid());
                     finishCount ++;
             }
