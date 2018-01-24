@@ -633,7 +633,8 @@ public class MeetingController extends CspBaseController {
 
     protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException {
         Principal principal = SecurityUtils.get();
-        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
+        AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
+        audioCourse.setDetails(audioService.findDetailsByCourseId(courseId));
         if (audioCourse == null) {
             throw new SystemException(local("source.not.exists"));
         }
@@ -1284,7 +1285,7 @@ public class MeetingController extends CspBaseController {
 
     /**
      * 开启星评
-     * @param courseId
+     * @param course
      */
     public void openStarRate(AudioCourse course) {
         if (course != null) {
