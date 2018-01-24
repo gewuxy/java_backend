@@ -333,7 +333,7 @@
                                         <input type="radio" id="starScore5" ${rated && rateHistory.multipleResult.avgScore == 5 ? 'checked':''} class="score score_5" value="5" name="score">
                                         <a href="#5" class="star star_5" title="好"><label for="starScore5"></label></a>
                                     </div>
-                                    <div class="grade ">${rated ? rateHistory.multipleResult.avgScore : 0}<fmt:message key="page.meeting.tips.score.unit"/> </div>
+                                    <div class="grade "><span>${rated ? rateHistory.multipleResult.avgScore : 0}</span><fmt:message key="page.meeting.tips.score.unit"/> </div>
                                 </div>
                                 <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/></div>
                             </div>
