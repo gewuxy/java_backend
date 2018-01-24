@@ -609,6 +609,7 @@
             if(playerState || state == true){
 
                 playerState = false;
+                started = true;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).play();
@@ -792,6 +793,7 @@
 
         //星评弹出
         function openStarRate(){
+            $(".html5ShadePlay").hide();
             layer.open({
                 type: 1,
                 area: ['90%','85%'],
