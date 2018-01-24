@@ -426,4 +426,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException;
+
+    /**
+     * 修改课件密码
+     * @param course
+     * @param password
+     */
+    void doModifyPassword(AudioCourse course, String password);
 }

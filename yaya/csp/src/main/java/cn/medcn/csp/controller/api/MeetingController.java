@@ -1221,27 +1221,22 @@ public class MeetingController extends CspBaseController {
         if (course.getId() == null || type == null) {
             return error(local("user.param.empty"));
         }
-        Integer result = 0;
-        if (type == Constants.NUMBER_TWO) {
-            AudioCourse update = audioService.selectByPrimaryKey(course.getId());
-            update.setPassword(null);
-            result = audioService.updateByPrimaryKey(update);
-        } else {
-            if (StringUtils.isEmpty(course.getPassword())) {
-                return error(local("user.param.empty"));
-            }
-            String regEx = "[a-zA-Z0-9]{4,8}";
-            Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(course.getPassword());
-            boolean rs = matcher.matches();
-            if (!rs) return error(local("user.subscribe.paramError"));
-            result = audioService.updateByPrimaryKeySelective(course);
+        //判断会议是否存在
+        AudioCourse update = audioService.selectByPrimaryKey(course.getId());
+        if (update == null) {
+            return error(local("source.not.exists"));
         }
-        if (result > 0) {
-            return success();
-        } else {
-            return error();
+        //密码大于4位
+        if (course.getPassword() != null && course.getPassword().length() > 4) {
+            return error(local("page.meeting.tips.watch.password.holder"));
         }
+        //判断用户操作的是否是自己的会议
+        Principal principal = SecurityUtils.get();
+        if (!principal.getId().equalsIgnoreCase(update.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        audioService.doModifyPassword(update, course.getPassword());
+        return success();
     }
 
 
@@ -1276,7 +1271,7 @@ public class MeetingController extends CspBaseController {
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
         }
-
+        //将会议设置为星评阶段
         openStarRate(course);
 
         return success(dto);

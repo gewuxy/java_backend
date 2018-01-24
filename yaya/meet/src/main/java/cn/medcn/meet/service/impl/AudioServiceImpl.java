@@ -1472,4 +1472,16 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             }
         }
     }
+
+    /**
+     * 修改课件密码
+     *
+     * @param course
+     * @param password
+     */
+    @Override
+    public void doModifyPassword(AudioCourse course, String password) {
+        course.setPassword(password);
+        updateByPrimaryKey(course);
+    }
 }
