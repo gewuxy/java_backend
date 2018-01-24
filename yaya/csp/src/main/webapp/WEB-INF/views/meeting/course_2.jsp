@@ -1140,6 +1140,9 @@
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
             }
+            if (isAndroid) {
+                $("#ck-video").attr('style', 'margin-top:9999px');
+            }
             layer.open({
                 type: 1,
                 anim: 5,

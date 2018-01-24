@@ -1109,6 +1109,12 @@ public class MeetingController extends CspBaseController {
             }
             updateLiveState(live);
 
+            //发送直播开始指令 只用于投屏同步
+            LiveOrderDTO liveStartOrder = new LiveOrderDTO();
+            liveStartOrder.setOrder(LiveOrderDTO.ORDER_LIVE_START);
+            liveStartOrder.setCourseId(String.valueOf(courseId));
+            liveService.publish(liveStartOrder);
+
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
         }

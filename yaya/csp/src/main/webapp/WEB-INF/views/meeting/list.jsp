@@ -38,7 +38,7 @@
             }
 
             //判断是否新用户，新用户弹出购买套餐
-            if(${newUser}){
+            if("${newUser}" == "true" ){
                 layer.open({
                     type: 2,
                     title: false,
