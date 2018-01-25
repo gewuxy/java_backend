@@ -24,7 +24,7 @@
     </style>
 
 </head>
-<body onbeforeunload=" if (success) return '' ">
+<body onbeforeunload=" if (success == false) return '' ">
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
@@ -215,7 +215,13 @@
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
                             <input type="hidden" name="watermark.name" id="name" value="${appName}">
-                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="0">
+                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="">
+                            <script>
+                                $(function () {
+                                    var checkOpen = $("#switchCPStar").val()
+                                    $("#starRateFlag").val(checkOpen);
+                                })
+                            </script>
                             <div class="meeting-form-item login-form-item">
 
                                 <label for="courseTitle" class="cells-block pr"><input id="courseTitle" type="text" class="login-formInput" name="course.title" placeholder="<fmt:message key='page.meeting.update.warn.notitle'/>" value="${course.title}"><span class="icon-metting-lock lock-hook" id="lookPwd"><fmt:message key="page.meeting.button.watch.password"/></span></label>
@@ -397,7 +403,7 @@
 </div>
 
 <!--弹出 充值-->
-<div class="cancel-popup-box">
+<div class="cancel-popup-box" id="fluxTips">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
             <strong>&nbsp;</strong>
@@ -808,7 +814,7 @@
                 title:false,
                 closeBtn:0,
                 anim:5,
-                content: $('.cancel-popup-box'),
+                content: $('#fluxTips'),
                 success:function(){
 
                 },
@@ -1145,7 +1151,11 @@
                                 }
                                 html += '</div>';
                                 $("#starDiv").html(html);
-                                $(".star-remove-button").hide();
+                                if (${course.starRateFlag ==true}){
+                                    $(".star-remove-button").hide();
+                                }else{
+                                    $(".star-remove-button").show();
+                                }
                                 $(".star-remove-button").click(function () {
                                     var oid = $(this).attr("optionId");
                                     ajaxGet('${ctx}/mgr/meet/star/del/'+oid, {}, function(data){
@@ -1189,7 +1199,6 @@
 
         $("#submitCPStar").click(function () {
             var length = $(".grade").length
-            alert(length);
             if (length >5){
                 $("#submitOption").hide();
             }else{
@@ -1197,8 +1206,6 @@
             }
         })
 
-        //var optionId ;
-        //alert(optionId)
         $("#btnStar").click(function () {
             var starOption;
              if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
@@ -1213,7 +1220,7 @@
             var  regStarOption= reg.test(starOption);
             //regStarOption = spaceReg.test(starOption);
             var optionId ;
-            if (regStarOption){
+            if (starOption != "" && regStarOption){
                 ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
@@ -1222,7 +1229,6 @@
                             '</span><span class="null"></span><span class="null"></span><span class="null">' +
                             '</span><span class="null"></span></div><div class="grade ">'+'<fmt:message key="page.meeting.star.rate.none"/>'+'</div></div></div><div class="title"><span class="star-remove-button"></span> '+data.data.title+'</div></div>').insertBefore($("#submitOption"));
                             optionId = data.data.id;
-                        alert(optionId)
                         $(".star-remove-button").click(function () {
                             ajaxGet('${ctx}/mgr/meet/star/del/'+optionId, {}, function(data){
                                 if (data.code == 0){
@@ -1243,16 +1249,12 @@
 
 
             }else{
-                if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
-                    $("#limitOptionCn").val("")
-                }else{
-                    $("#limitOptionUs").val("");
-                }
+                layer.msg("不能为空");
             }
 
             var length = $(".grade").length;
 
-            if(length > 4){
+            if((length > 5 || length == 5 )&& starOption != ""){
                 $("#limitFive").removeClass("none");
                 $("#submitOption").hide();
                 $("#limitInsert").text("<fmt:message key="page.meeting.star.allow"/>");
@@ -1284,16 +1286,19 @@
                         if (${size>0}){
                             $(".star-remove-button").show();
                         }
+                        $("#insertOption").show();
 
                         layer.closeAll();
                     },
                     btn2:function () {
                         $("#switchCPStar").prop("checked", true);
                         $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                        $("#insertOption").hide();
                         layer.closeAll();
                     },
                     cancel :function(){
                         $("#switchCPStar").prop("checked", true);
+                        $("#insertOption").hide();
                         $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
                     },
                 });
@@ -1321,6 +1326,8 @@
                         if(data.code==0){
                             $("#switchCPStar").prop("checked", true);
                             $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                            $("#insertOption").hide();
+                            $("#submitOption").hide();
                         }else{
                             layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
                         }
@@ -1333,6 +1340,8 @@
                     if (${size>0}){
                         $(".star-remove-button").show();
                     }
+                    $("#insertOption").show();
+                    $("#submitOption").show();
                     layer.closeAll();
                 },
                 cancel :function(){
@@ -1341,6 +1350,8 @@
                     if (${size>0}){
                         $(".star-remove-button").show();
                     }
+                    $("#insertOption").show();
+                    $("#submitOption").show();
                     layer.closeAll();
                 },
             });
@@ -1563,9 +1574,10 @@
 
         /*页面提交*/
         $(function () {
+            success = true;
             $("#limitFive").addClass("none");
+
             $("#saveSubmit").click(function () {
-                success = true;
                 var submitFormState=  ${course.published};
                 if(submitFormState == false){
                     saveFormNoPublished();
@@ -1583,12 +1595,22 @@
                     dataType:"JSON",
                     success: function(data) {
                     if(data.code=="0"){
+                        //var checkOpen = $("#starRateFlag").val();
+                        var isStarCheck = $("#switchCPStar").is(":checked")
                         $(".icon-tips-blue").show();
-                        $(".star-remove-button").show();
-                        $("#insertOption").show();
                         if(${size < 5}){
                             $("#submitOption").show();
                         }
+                        if (isStarCheck == false){
+                            $(".star-remove-button").show();
+                            $("#insertOption").show();
+                            $("#submitOption").show();
+                        }else{
+                            $(".star-remove-button").hide();
+                            $("#insertOption").hide();
+                            $("#submitOption").hide();
+                        }
+
                     }else{
                         layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
                     }
