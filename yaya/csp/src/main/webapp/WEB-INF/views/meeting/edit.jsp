@@ -186,7 +186,7 @@
                                 </div>
                                 <div class="upload-metting-star-row star-input-box" id="submitOption" hidden>
                                     <div class="fr">
-                                        <div class="star-input-button"><input class="button" type="submit" value="<fmt:message key="page.common.save" />" id="btnStar"><a href="javascript:;" class="close"><fmt:message key="page.common.cancel" /></a></div>
+                                        <div class="star-input-button"><input class="button" type="submit" value="<fmt:message key="page.common.save" />" id="btnStar"><a href="javascript:;" class="close" id="cancelStar"><fmt:message key="page.common.cancel" /></a></div>
                                     </div>
                                     <c:if test="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}">
                                     <div class="oh">
@@ -1206,6 +1206,10 @@
             }
         })
 
+        $("#cancelStar").click(function () {
+            $("#submitOption").hide();
+        })
+
         $("#btnStar").click(function () {
             var starOption;
              if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
@@ -1224,6 +1228,7 @@
                 ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
+                        $("#submitOption").hide();
                         $('<div class="upload-metting-star-row">' +
                             '<div class="fr"><div class="star-box star-max"><div class="star"><span class="null">' +
                             '</span><span class="null"></span><span class="null"></span><span class="null">' +
