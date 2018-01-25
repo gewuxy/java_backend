@@ -433,4 +433,11 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param password
      */
     void doModifyPassword(AudioCourse course, String password);
+
+    /**
+     * 根据会议来源和会议类型筛选出会议列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findMiniMeetingListByType(Pageable pageable);
 }
