@@ -1484,7 +1484,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         MeetLearningRecord oldProgressRecord = meetLearningRecordDAO.selectOne(condition);
         // 查询用户是否已经有学习进度
         if (oldProgressRecord != null) {
+            // 设置新的学习进度及学习总时长
             oldProgressRecord.setCompleteProgress(record.getCompleteProgress());
+            oldProgressRecord.setUsedTime(oldProgressRecord.getUsedTime() + record.getUsedTime());
             meetLearningRecordDAO.updateByPrimaryKey(oldProgressRecord);
         } else {// 没有 则添加记录
             meetLearningRecordDAO.insert(record);
