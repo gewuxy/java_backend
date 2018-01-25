@@ -582,6 +582,7 @@
     }
 
     function fleshPage(data){
+        detailsLength = 1;
         $(".metting-progreesItem").addClass("none");
         $("#editBtn").removeClass("none");
 
@@ -698,6 +699,7 @@
         }, 'json');
     }
 
+    var detailsLength = "${fn:length(course.details)}";
     $(function(){
 
         //拖动上传
@@ -830,7 +832,6 @@
             var $courseInfo = $("#courseInfo");
             var $timedate = $(".timedate-input");
 
-            var detailsLength = "${fn:length(course.details)}";
             if (detailsLength == 0){
                 $("#detailsError").removeClass("none");
                 return;
