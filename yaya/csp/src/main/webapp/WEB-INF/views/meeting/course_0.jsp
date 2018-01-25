@@ -710,12 +710,6 @@
             }
             weui.actionSheet([
                 {
-                    label: '<fmt:message key="page.meeting.report.type.sex"/>',
-                    onClick: function () {
-                        report(0);
-                        //layer.msg('举报成功');
-                    }
-                }, {
                     label: '<fmt:message key="page.meeting.report.type.crime"/>',
                     onClick: function () {
                         report(1);
