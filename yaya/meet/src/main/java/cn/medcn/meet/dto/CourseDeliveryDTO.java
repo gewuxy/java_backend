@@ -163,7 +163,9 @@ public class CourseDeliveryDTO implements Serializable {
         if (playType == AudioCourse.PlayType.normal.getType()) {
             pt = getDuration();
         } else {
-            if (endTime != null) {
+            if (this.liveState == 0)  {
+                pt = 0;
+            } else if (endTime != null) {
                 pt = (endTime.getTime() - startTime.getTime()) / 1000;
             } else {
                 pt = (System.currentTimeMillis() - startTime.getTime()) / 1000;
