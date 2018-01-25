@@ -1249,7 +1249,7 @@
 
 
             }else{
-                layer.msg("不能为空");
+                layer.msg("<fmt:message key="page.meeting.star.rate.not.none"/>");
             }
 
             var length = $(".grade").length;
@@ -1579,12 +1579,23 @@
 
             $("#saveSubmit").click(function () {
                 var submitFormState=  ${course.published};
-                if(submitFormState == false){
-                    saveFormNoPublished();
+                    var $courseInfo = $("#courseInfo");
+                    if ($.trim($courseInfo.val()) == ''){
+                        $courseInfo.focus();
+                        $courseInfo.parent().next(".error").removeClass("none");
+                        return;
+                    } else {
+                        if(submitFormState == false){
+                            saveFormNoPublished();
 
-                }else{
-                    registPost();
-                }
+                        }else {
+                            registPost();
+                        }
+                        $courseInfo.parent().next(".error").addClass("none");
+                    }
+
+
+
             })
 
             function registPost () {

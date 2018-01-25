@@ -1486,7 +1486,11 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         if (oldProgressRecord != null) {
             // 设置新的学习进度及学习总时长
             oldProgressRecord.setCompleteProgress(record.getCompleteProgress());
-            oldProgressRecord.setUsedTime(oldProgressRecord.getUsedTime() + record.getUsedTime());
+            if (oldProgressRecord.getUsedTime() != null) {
+                oldProgressRecord.setUsedTime(oldProgressRecord.getUsedTime() + record.getUsedTime());
+            } else {
+                oldProgressRecord.setUsedTime(record.getUsedTime());
+            }
             meetLearningRecordDAO.updateByPrimaryKey(oldProgressRecord);
         } else {// 没有 则添加记录
             meetLearningRecordDAO.insert(record);
