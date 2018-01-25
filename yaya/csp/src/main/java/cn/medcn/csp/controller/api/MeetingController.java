@@ -633,7 +633,8 @@ public class MeetingController extends CspBaseController {
 
     protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException {
         Principal principal = SecurityUtils.get();
-        AudioCourse audioCourse = audioService.findAudioCourse(courseId);
+        AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
+        audioCourse.setDetails(audioService.findDetailsByCourseId(courseId));
         if (audioCourse == null) {
             throw new SystemException(local("source.not.exists"));
         }
@@ -1109,6 +1110,12 @@ public class MeetingController extends CspBaseController {
             }
             updateLiveState(live);
 
+            //发送直播开始指令 只用于投屏同步
+            LiveOrderDTO liveStartOrder = new LiveOrderDTO();
+            liveStartOrder.setOrder(LiveOrderDTO.ORDER_LIVE_START);
+            liveStartOrder.setCourseId(String.valueOf(courseId));
+            liveService.publish(liveStartOrder);
+
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
         }
@@ -1214,27 +1221,22 @@ public class MeetingController extends CspBaseController {
         if (course.getId() == null || type == null) {
             return error(local("user.param.empty"));
         }
-        Integer result = 0;
-        if (type == Constants.NUMBER_TWO) {
-            AudioCourse update = audioService.selectByPrimaryKey(course.getId());
-            update.setPassword(null);
-            result = audioService.updateByPrimaryKey(update);
-        } else {
-            if (StringUtils.isEmpty(course.getPassword())) {
-                return error(local("user.param.empty"));
-            }
-            String regEx = "[a-zA-Z0-9]{4,8}";
-            Pattern pattern = Pattern.compile(regEx, Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(course.getPassword());
-            boolean rs = matcher.matches();
-            if (!rs) return error(local("user.subscribe.paramError"));
-            result = audioService.updateByPrimaryKeySelective(course);
+        //判断会议是否存在
+        AudioCourse update = audioService.selectByPrimaryKey(course.getId());
+        if (update == null) {
+            return error(local("source.not.exists"));
         }
-        if (result > 0) {
-            return success();
-        } else {
-            return error();
+        //密码大于4位
+        if (course.getPassword() != null && course.getPassword().length() > 4) {
+            return error(local("page.meeting.tips.watch.password.holder"));
         }
+        //判断用户操作的是否是自己的会议
+        Principal principal = SecurityUtils.get();
+        if (!principal.getId().equalsIgnoreCase(update.getCspUserId())){
+            return error(local("meet.notmine"));
+        }
+        audioService.doModifyPassword(update, course.getPassword());
+        return success();
     }
 
 
@@ -1269,28 +1271,26 @@ public class MeetingController extends CspBaseController {
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
         }
+        //将会议设置为星评阶段
+        openStarRate(course);
+
         return success(dto);
     }
 
 
     /**
-     * 开启星评接口
-     *
-     * @param courseId
-     * @return
+     * 开启星评
+     * @param course
      */
-    @RequestMapping(value = "/star_rate/open")
-    @ResponseBody
-    public String openStarRate(Integer courseId) {
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+    public void openStarRate(AudioCourse course) {
         if (course != null) {
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
-                AudioCoursePlay play = audioService.findPlayState(courseId);
+                AudioCoursePlay play = audioService.findPlayState(course.getId());
                 play.setPlayState(AudioCoursePlay.PlayState.rating.ordinal());
                 audioService.updateAudioCoursePlay(play);
             } else {
                 //修改直播状态为星评中状态
-                Live live = liveService.findByCourseId(courseId);
+                Live live = liveService.findByCourseId(course.getId());
                 live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
                 liveService.updateByPrimaryKey(live);
             }
@@ -1298,11 +1298,10 @@ public class MeetingController extends CspBaseController {
 
         //发送开启星评指令
         LiveOrderDTO order = new LiveOrderDTO();
-        order.setCourseId(String.valueOf(courseId));
+        order.setCourseId(String.valueOf(course.getId()));
         order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
         liveService.publish(order);
 
-        return success();
     }
 
 

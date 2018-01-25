@@ -441,7 +441,7 @@
             <form action="">
                 <div class="lock-popup-main login-form-item pr">
                     <label for="randomNum" class="cells-block pr ">
-                        <input id="randomNum" name="password" type="text" class="login-formInput" value="" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
+                        <input id="randomNum" name="password" type="text" class="login-formInput" value="${course.password}" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
                         <span href="javascript:;" class="code" id="btnSendCode"><fmt:message key='page.meeting.button.auto.create'/></span>
                     </label>
                     <span class="cells-block hiht"><fmt:message key='page.meeting.tips.watch.password'/></span>
@@ -470,7 +470,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="lock-popup-main login-form-item pr">
-                    <div class="cells-block t-center">
+                    <div class="cells-block t-center modify-success">
                         <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
                         <p class="hiht"><fmt:message key='page.meeting.tips.password.success'/></p>
                     </div>
@@ -939,9 +939,38 @@
 
         $("#lookPwd").click(function () {
             $("#passwordError").addClass("none");
-            //弹出观看密码
-            openPasswordView();
+            if($("input[name='password']").val() == ''){
+                //弹出观看密码
+                openPasswordView();
+            } else {//已经存在密码的情况
+                $(".lock-popup-showRandomNum").text($("input[name='password']").val());
+                openCancelPasswordView();
+            }
         })
+
+        function openCancelPasswordView(){
+            //弹出观看密码成功
+            layer.open({
+                type: 1,
+                area: ['609px', '300px'],
+                fix: false, //不固定
+                title:false,
+                closeBtn:0,
+                shadeClose:true,
+                content: $('.lock-popup-box-succeed'),
+                success:function(){
+                    layer.close(layer.index-1);
+                    $(".modify-success").addClass("none");
+                    //清空原来已设置的密码
+                    $('#randomNum').val('');
+                },
+                cancel :function(){
+                    layer.closeAll();
+                },
+            });
+
+        }
+
         function openPasswordView(){
             layer.open({
                 type: 1,
@@ -993,6 +1022,7 @@
                     content: $('.lock-popup-box-succeed'),
                     success:function(){
                         layer.close(layer.index-1);
+                        $(".modify-success").removeClass("none");
                         //清空原来已设置的密码
                         $('#randomNum').val('');
                     },

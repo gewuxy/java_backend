@@ -38,7 +38,7 @@
             }
 
             //判断是否新用户，新用户弹出购买套餐
-            if(${newUser}){
+            if("${newUser}" == "true" ){
                 layer.open({
                     type: 2,
                     title: false,
@@ -193,17 +193,11 @@
                 courseId = $(this).attr("courseId");
                 courseTitle = $(this).attr("courseTitle");
                 var sourceType = $(this).attr("sourceType");
-                if(sourceType != 1){
-                    $("#editLi").hide();
-                } else {
-                    $("#editLi").show();
-                }
+
                 var locked = $(this).attr("locked");
-                if (locked == "true"){
-                    $("#copyLi").hide();
+                if (locked == "true" || sourceType == 4){//锁定的或者是快捷会议不允许修改
                     $("#editLi").hide();
                 } else {
-                    $("#copyLi").show();
                     $("#editLi").show();
                 }
 
@@ -913,7 +907,7 @@
                         <%--</a>--%>
                     <%--</li>--%>
                     <li>
-                        <a href="javascript:;" class="lock-hook" onclick="openPasswordView()">
+                        <a href="javascript:;" class="lock-hook" id="openPasswordBtn" >
                             <img src="${ctxStatic}/images/_lock-icon.png" alt="">
                             <p><fmt:message key="page.meeting.button.watch.password"/></p>
                         </a>
@@ -1178,7 +1172,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="lock-popup-main login-form-item pr">
-                    <div class="cells-block t-center">
+                    <div class="cells-block t-center modify-success">
                         <p><img src="${ctxStatic}/images/icon-succeed.png" alt=""></p>
                         <p class="hiht"><fmt:message key="page.meeting.tips.password.success"/></p>
                     </div>
@@ -1218,13 +1212,9 @@
     function openPasswordView(){
         var pwd = $("#courseView_" + courseId).attr("pwd");
         $("#modifyBtn").attr("password", pwd);
-        if(pwd != undefined && pwd != ''){
-            //取消
-            $("#modifyBtn").text(cancelPwd);
-        } else {
-            //保存
-            $("#modifyBtn").text(modifyPwd);
-        }
+
+        //保存
+        $("#modifyBtn").text(modifyPwd);
 
         $("#passwordError").addClass("none");
         $("#randomNum").val(pwd);
@@ -1274,6 +1264,29 @@
         }
     }
 
+    function openCancelPasswordView(){
+        //弹出观看密码成功
+        layer.open({
+            type: 1,
+            area: ['609px', '300px'],
+            fix: false, //不固定
+            title:false,
+            closeBtn:0,
+            shadeClose:true,
+            content: $('.lock-popup-box-succeed'),
+            success:function(){
+                layer.close(layer.index-1);
+                $(".modify-success").addClass("none");
+                //清空原来已设置的密码
+                $('#randomNum').val('');
+            },
+            cancel :function(){
+                layer.closeAll();
+            },
+        });
+
+    }
+
     function openConfirmPasswordView(){
         //弹出观看密码成功
         layer.open({
@@ -1286,6 +1299,7 @@
             content: $('.lock-popup-box-succeed'),
             success:function(){
                 layer.close(layer.index-1);
+                $(".modify-success").removeClass("none");
                 //清空原来已设置的密码
                 $('#randomNum').val('');
             },
@@ -1316,6 +1330,17 @@
     }
 
     $(function(){
+
+        $("#openPasswordBtn").click(function(){
+            var pwd = $("#courseView_" + courseId).attr("pwd");
+            var hasOldPwd = pwd != '';
+            if(!hasOldPwd){
+                openPasswordView();
+            } else {
+                $('.lock-popup-showRandomNum').text(pwd);
+                openCancelPasswordView();
+            }
+        });
 
         function handleMultipleResult(result){
             var $maxStar = $(".star-max").find(".star");

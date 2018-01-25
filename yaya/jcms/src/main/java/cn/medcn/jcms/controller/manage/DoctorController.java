@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -176,7 +177,7 @@ public class DoctorController extends BaseController{
             }
         }else{
             //新增操作
-                doctorService.insertSelective(group);
+            doctorService.insertSelective(group);
         }
         return APIUtils.success();
     }
@@ -224,12 +225,12 @@ public class DoctorController extends BaseController{
         if(groupId == null){
             return APIUtils.error("groupId不能为空");
         }
-            for(Integer docId:doctorId){
-                if(docId == null){
-                    continue;
-                }
-                doctorService.allotGroup(docId,groupId,userId);
+        for(Integer docId:doctorId){
+            if(docId == null){
+                continue;
             }
+            doctorService.allotGroup(docId,groupId,userId);
+        }
 
         return APIUtils.success();
     }
@@ -340,7 +341,7 @@ public class DoctorController extends BaseController{
     @RequestMapping("/uploadTemp")
     @ResponseBody
     public String uploadExcel(@RequestParam(value = "file", required = false)MultipartFile file, String fileType, Long limitSize, HttpServletRequest request) throws Exception {
-       //上传文件
+        //上传文件
         if(file == null){
             return APIUtils.error("不能上传空文件");
         }
@@ -361,72 +362,81 @@ public class DoctorController extends BaseController{
         String filePath = uploadBase + result.getRelativePath();
         File excelFile = new File(filePath);
         List<DoctorImportExcel> docList = (List<DoctorImportExcel>)ExcelUtils.readFirstSheetToExcelDataList(excelFile,true,DoctorImportExcel.class);
-                int hasUserCount = 0;
-                int finishCount = 0;
-             for(DoctorImportExcel docExcel:docList){
-                      //判断数据合法性
-                 if(StringUtils.isEmpty(docExcel.getLinkman())){
-                    break;
-                 }
-                    try {
-                        checkData(docExcel);
-                    } catch (SystemException e) {
-                        excelFile.delete();
-                        return APIUtils.error(e.getMessage());
-                    }
-                    //判断用户是否存在
-                    if(hasUser(docExcel.getUsername())){
-                        hasUserCount ++;
-                          continue;
-                    }
-                     AppUser user = AppUserDTO.rebuildToDoctor(getUserDTO(docExcel));
-                    appUserService.executeBatchRegister(user,SubjectUtils.getCurrentUserid());
-                    finishCount ++;
+        int hasUserCount = 0;
+        int finishCount = 0;
+        for(DoctorImportExcel docExcel:docList){
+            //判断数据合法性
+            if(StringUtils.isEmpty(docExcel.getLinkman())){
+                break;
             }
-                if(hasUserCount > 0){
-                    return APIUtils.success("成功导入"+finishCount+"个用户，有"+hasUserCount+"个用户已存在");
-                }else {
-                    return APIUtils.success("成功导入"+finishCount+"个用户");
-                }
+            try {
+                checkData(docExcel);
+            } catch (SystemException e) {
+                excelFile.delete();
+                return APIUtils.error(e.getMessage());
+            }
+            //判断用户是否存在
+            if(hasUser(docExcel.getUsername(),docExcel.getMobile())){
+                hasUserCount ++;
+                continue;
+            }
+            AppUser user = AppUserDTO.rebuildToDoctor(getUserDTO(docExcel));
+            user.setRegistDate(new Date());
+            appUserService.executeBatchRegister(user,SubjectUtils.getCurrentUserid());
+            finishCount ++;
+        }
+        if(hasUserCount > 0){
+            return APIUtils.success("成功导入"+finishCount+"个用户，有"+hasUserCount+"个用户已存在");
+        }else {
+            return APIUtils.success("成功导入"+finishCount+"个用户");
+        }
     }
 
 
     private void checkData(DoctorImportExcel excel) throws SystemException{
 
-                if(StringUtils.isEmpty(excel.getHospital())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的单位不能为空");
-                }
-                if(StringUtils.isEmpty(excel.getHosLevel())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的医院级别不能为空");
-                }
-                if(StringUtils.isEmpty(excel.getDepartment())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的科室不能为空");
-                }
-                if(StringUtils.isEmpty(excel.getProvince())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的省份不能为空");
-                }
-                if(StringUtils.isEmpty(excel.getCity())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的城市不能为空");
-                }
-                //手机和邮箱都不正确
-                if(!RegexUtils.checkMobile(excel.getMobile()) && !RegexUtils.checkEmail(excel.getUsername())){
-                    throw new SystemException("医生:"+excel.getLinkman()+"的手机或者邮箱填写不正确,请仔细检查");
-                }
+        if(StringUtils.isEmpty(excel.getHospital())){
+            throw new SystemException("医生:"+excel.getLinkman()+"的单位不能为空");
+        }
+        if(StringUtils.isEmpty(excel.getHosLevel())){
+            throw new SystemException("医生:"+excel.getLinkman()+"的医院级别不能为空");
+        }
+        if(StringUtils.isEmpty(excel.getDepartment())){
+            throw new SystemException("医生:"+excel.getLinkman()+"的科室不能为空");
+        }
+        if(StringUtils.isEmpty(excel.getProvince())){
+            throw new SystemException("医生:"+excel.getLinkman()+"的省份不能为空");
+        }
+        if(StringUtils.isEmpty(excel.getCity())){
+            throw new SystemException("医生:"+excel.getLinkman()+"的城市不能为空");
+        }
+        //手机和邮箱都不正确
+        if(!RegexUtils.checkMobile(excel.getMobile()) && !RegexUtils.checkEmail(excel.getUsername())){
+            throw new SystemException("医生:"+excel.getLinkman()+"的手机或者邮箱填写不正确,请仔细检查");
+        }
 
-                if(!"123456".equals(excel.getPassword())){
-                    throw new SystemException("请设置初始密码为123456");
-                }
+        if(!"123456".equals(excel.getPassword())){
+            throw new SystemException("请设置初始密码为123456");
+        }
 
     }
 
-    private Boolean hasUser(String username){
+    private Boolean hasUser(String username,String mobile){
         AppUser user  = new AppUser();
-        user.setUsername(username);
-        return appUserService.selectOne(user) != null;
+        boolean hasUser = false;
+        if(!StringUtils.isEmpty(username)){
+            user.setUsername(username);
+            hasUser = appUserService.selectOne(user) != null ? true :false;
+        }
+        if(!hasUser && !StringUtils.isEmpty(mobile) ){
+            user.setMobile(mobile);
+            hasUser = appUserService.selectOne(user) != null ? true : false;
+        }
+        return hasUser;
     }
 
     private AppUserDTO getUserDTO(DoctorImportExcel docExcel){
-       AppUserDTO dto = new AppUserDTO();
+        AppUserDTO dto = new AppUserDTO();
         dto.setLinkman(docExcel.getLinkman());
         dto.setNickname(docExcel.getLinkman());
         dto.setHospital(docExcel.getHospital());
@@ -434,11 +444,11 @@ public class DoctorController extends BaseController{
         dto.setDepartment(docExcel.getDepartment());
         dto.setProvince(docExcel.getProvince());
         dto.setCity(docExcel.getCity());
-       dto.setZone(docExcel.getZone());
-       dto.setAddress(docExcel.getProvince()+docExcel.getCity()+docExcel.getZone());
-       dto.setMobile(docExcel.getMobile());
-       dto.setUsername(docExcel.getUsername());
-       dto.setPassword("123456");
+        dto.setZone(docExcel.getZone());
+        dto.setAddress(docExcel.getProvince()+docExcel.getCity()+docExcel.getZone());
+        dto.setMobile(docExcel.getMobile());
+        dto.setUsername(docExcel.getUsername());
+        dto.setPassword("123456");
         return dto;
     }
 
@@ -465,7 +475,7 @@ public class DoctorController extends BaseController{
         Workbook workbook = null;
         if(ExportType.meet.name().equals(type)) {
             MyPage<MeetHistoryDTO> myPage = getMeetHistory(pageable,docId);
-             fileName = "会议历史.xls";
+            fileName = "会议历史.xls";
             for(MeetHistoryDTO dto:myPage.getDataList()){
                 MeetHistoryExcelData data = new MeetHistoryExcelData();
                 data.setMeetType(MeetModule.ModuleFunction.PPT.getFunName());

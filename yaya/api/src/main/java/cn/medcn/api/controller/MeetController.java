@@ -493,6 +493,8 @@ public class MeetController extends BaseController {
         Integer funcId = MeetModule.ModuleFunction.PPT.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(userId, meetId, funcId);
         learningRecord.setCompleteProgress(completeCount);
+        // todo 1、这里需要累计学习记录的用时
+        // todo 2、需要将之前的t_audio_history表中的数据统计一下 赋值到t_meet_learning_record表的记录当中
         learningRecord.setUsedTime(new Long(history.getUsedtime()));
         meetService.saveOrUpdateLearnRecord(learningRecord);
         return APIUtils.success();
