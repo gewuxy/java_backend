@@ -100,8 +100,7 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
             String imageFilePath;
             BufferedImage image = null;
             for (int i = 0; i < pageCount; i++) {
-                //将scale调节为4.0 2018-01-05 会议决定
-                image = renderer.renderImage(i, 3f);
+                image = renderer.renderImage(i, 2f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
                 if (request != null) {
