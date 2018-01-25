@@ -24,43 +24,19 @@
 </head>
 <body>
 <div id="wrapper" >
-    <c:choose>
-        <c:when test="${record.playState == 0 || record.playState == 1}">
-            <%-- 投屏 --%>
-            <div class="full-qrcode" id="screen">
-                <div class="full-qrcode-item">
-                    <div class="full-qrcode-box">
-                        <div class="qrcode" ><img src="${fileBase}${qrCodeUrl}" alt=""></div>
-                        <p class="t-center"><fmt:message key="page.meeting.tips.scan.continue"/></p>
-                    </div>
-                </div>
+
+    <%-- 投屏 --%>
+    <div class="full-qrcode ${record.playState < 3 ? '':'none'}" id="screen">
+        <div class="full-qrcode-item">
+            <div class="full-qrcode-box">
+                <div class="qrcode" ><img src="${fileBase}${qrCodeUrl}" alt=""></div>
+                <p class="t-center"><fmt:message key="page.meeting.tips.scan.continue"/></p>
             </div>
-        </c:when>
-        <c:when test="${record.playState == 3}">
-            <%-- 星评 --%>
-            <div class="full-qrcode" >
-                <div class="full-qrcode-item">
-                    <div class="full-qrcode-box">
-                        <div class="qrcode" ><img src="${fileBase}${starQrCodeUrl}" alt=""></div>
-                        <p class="t-center"><fmt:message key="page.meeting.tips.scan.star"/></p>
-                    </div>
-                </div>
-            </div>
-        </c:when>
-        <c:when test="${record.playState == 4}">
-            <%-- 结束 --%>
-            <div class="full-qrcode">
-                <div class="full-qrcode-item">
-                    <div class="full-qrcode-box">
-                        <img src="${ctxStatic}/images/full-end-logo.png" alt="">
-                    </div>
-                </div>
-            </div>
-        </c:when>
-    </c:choose>
+        </div>
+    </div>
 
     <%-- 星评 --%>
-    <div class="full-qrcode" id="star">
+    <div class="full-qrcode ${record.playState == 3 ? '':'none'}" id="star">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode" ><img src="${fileBase}${starQrCodeUrl}" alt=""></div>
@@ -70,7 +46,7 @@
     </div>
 
     <%-- 结束 --%>
-    <div class="full-qrcode" id="cspmake">
+    <div class="full-qrcode ${record.playState == 4 ? '':'none'}" id="cspmake">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <img src="${ctxStatic}/images/full-end-logo.png" alt="">
@@ -79,7 +55,7 @@
     </div>
     
 <c:choose>
- <c:when test="${record.playState == 0 || record.playState == 1}">
+ <c:when test="${record.playState <3}">
     <div class="swiper-fullPage">
         <div class="metting-swiper">
             <!-- Swiper -->
@@ -267,11 +243,13 @@
                 // 弹出扫码星评二维码界面
                 hideFullPage();
                 $("#screen").addClass("none");
+                $("#cspmake").addClass("none");
                 $("#star").removeClass("none");
             } else if(data.order == 14){//结束
                 // 结束
                 hideFullPage();
                 $("#screen").addClass("none");
+                $("#star").addClass("none");
                 $("#cspmake").removeClass("none");
             }
 
