@@ -165,6 +165,8 @@ public class CourseDeliveryDTO implements Serializable {
         } else {
             if (endTime != null) {
                 pt = (endTime.getTime() - startTime.getTime()) / 1000;
+            } else {
+                pt = (System.currentTimeMillis() - startTime.getTime()) / 1000;
             }
         }
         return CalendarUtils.formatTimesDiff(pt);
