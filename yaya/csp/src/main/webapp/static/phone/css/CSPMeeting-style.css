@@ -129,7 +129,7 @@ textarea { -webkit-appearance: none;}
 .popup-volume-icon { position: absolute; top:.2rem; left:.2rem; z-index: 5;}
 .popup-volume-icon i{ display:inline-block; width:.52rem; height:.52rem; background:url(../images/icon-popup-volume.png) no-repeat; background-size:.52rem .52rem; }
 .swiper-picture { display: inline-block; vertical-align: middle; background-repeat: no-repeat; background-position: 50% 50%; background-size: contain;  cursor: pointer; margin: 0; padding: 0; position: absolute; top: 0; right: 0; bottom: 0; left: 0; height: 100%;}
-.meeting-last-img { background-size:2.54rem 2.34rem;}
+.meeting-last-img { background-size:2.94rem 2.34rem;}
 .meeting-last-img-EN { background-size:3.9rem 1.42rem; }
 
 .video-notPlay-bg { position: absolute; left:50%; top:50%; margin-left:-1.08rem; margin-top:-.56rem; z-index: 12; color:#fff; text-align: center; font-size:.24rem;}
@@ -389,7 +389,7 @@ textarea { -webkit-appearance: none;}
 .CSPmeeting-ad-item .logo-title { font-size:.3rem; line-height: 1.2; margin-top:.05rem;}
 .CSPmeeting-ad-item { font-size:.22rem;}
 
-/*双屏切换*/
+    /*双屏切换*/
 .popup-fullStatus {}
 .popup-volume {}
 .warp .popup-fullStatus .popup-min-screen .viedoItem,
@@ -402,7 +402,7 @@ textarea { -webkit-appearance: none;}
 .warp .popup-fullStatus .popup-min-screen .boxAudio{ display: none;}
 .warp .popup-fullStatus .popup-min-screen .logo-watermark { display: none;}
 
-/*水印*/
+    /*水印*/
 .logo-watermark { position: absolute; z-index: 100;}
 .logo-watermark-item {
     display: inline-block;
@@ -469,7 +469,7 @@ textarea { -webkit-appearance: none;}
 .fixed-row { padding:0 10%;}
 
 
-/*weui*/
+    /*weui*/
 .weui-mask {
     position: fixed;
     z-index: 1000;
@@ -571,7 +571,7 @@ textarea { -webkit-appearance: none;}
     transform-origin: 0 100%;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
-}
+ }
 .weui-actionsheet__title-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -692,7 +692,7 @@ textarea { -webkit-appearance: none;}
     .fixed-full-screen-min-main .fixed-text { margin:.3rem 0;}
     .fixed-error { top:-0.15rem;  }
 
-    .CSPMeeting-bottom, .CSPMeeting-bottom ,
-    .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
+     .CSPMeeting-bottom, .CSPMeeting-bottom ,
+     .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
 
 }
