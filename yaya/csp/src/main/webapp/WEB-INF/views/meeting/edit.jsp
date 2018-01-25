@@ -1249,7 +1249,7 @@
 
 
             }else{
-                layer.msg("不能为空");
+                layer.msg("<fmt:message key="page.meeting.star.rate.not.none"/>");
             }
 
             var length = $(".grade").length;
