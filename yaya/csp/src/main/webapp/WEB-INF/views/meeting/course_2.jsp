@@ -1074,12 +1074,6 @@
             }
             weui.actionSheet([
                 {
-                    label: '色情',
-                    onClick: function () {
-                        report(0);
-                        //layer.msg('举报成功');
-                    }
-                }, {
                     label: '违法犯罪',
                     onClick: function () {
                         report(1);
