@@ -1493,4 +1493,36 @@ public class MeetingController extends CspBaseController {
     }
 
 
+    /**
+     * 根据会议来源和会议类型筛选出会议列表，供小程序或app调用
+     * @param playType  如果为null，默认为录播类型
+     * @param sourceType  如果为null，默认来源为YaYa
+     * @param pageable
+     * @return
+     */
+    @RequestMapping("/mini/list")
+    @ResponseBody
+    public String miniMeetingList(Integer playType, Integer sourceType,Pageable pageable){
+        if(playType == null){
+            playType = AudioCourse.PlayType.normal.getType();
+        }
+        if(sourceType == null){
+            sourceType = AudioCourse.SourceType.YaYa.ordinal();
+        }
+        String userId = SecurityUtils.get().getId();
+        pageable.put("cspUserId",userId);
+        pageable.put("playType",playType);
+        pageable.put("sourceType",sourceType);
+        MyPage<CourseDeliveryDTO> page = audioService.findMiniMeetingListByType(pageable);
+        if (!CheckUtils.isEmpty(page.getDataList())) {
+            CourseDeliveryDTO.splitCoverUrl(page.getDataList(), fileBase);
+        }
+        Map<String, Object> result = new HashMap<>();
+        result.put("list", page.getDataList());
+        CspPackage cspPackage = SecurityUtils.get().getCspPackage();
+        result.put("hideCount", cspPackage.getHiddenMeetCount() == null ? 0 : cspPackage.getHiddenMeetCount());
+        result.put("packageId", cspPackage.getId());
+        return success(result);
+    }
+
 }

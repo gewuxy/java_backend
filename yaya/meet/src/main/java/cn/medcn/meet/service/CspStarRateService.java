@@ -63,4 +63,9 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
      */
     StarRateInfoDTO findRateHistory(Integer courseId, String ticket);
 
+    int deleteDetailByCourseId(Integer courseId);
+
+    int deleteHistoryByCourseId(Integer courseId);
+
+    StarRateResultDTO findRateResultExcludeDetails(Integer id);
 }
