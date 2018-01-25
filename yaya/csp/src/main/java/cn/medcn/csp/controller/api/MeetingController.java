@@ -914,7 +914,7 @@ public class MeetingController extends CspBaseController {
                             live.setEndTime(new Date());
                             liveService.publish(overOrder);
                         } else {
-                            if(live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()){
+                            if(live.getLiveState().intValue() == AudioCoursePlay.PlayState.playing.ordinal()){
                                 live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
                             }
                         }
