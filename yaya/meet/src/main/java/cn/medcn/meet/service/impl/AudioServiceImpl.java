@@ -1484,4 +1484,16 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         course.setPassword(password);
         updateByPrimaryKey(course);
     }
+
+
+    /**
+     * 根据会议来源和会议类型筛选出会议列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<CourseDeliveryDTO> findMiniMeetingListByType(Pageable pageable) {
+        PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
+        return MyPage.page2Mypage((Page) audioCourseDAO.findMiniMeetingListByType(pageable.getParams()));
+    }
 }
