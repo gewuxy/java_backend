@@ -1225,6 +1225,9 @@ public class MeetingController extends CspBaseController {
         if (course.getId() == null || type == null) {
             return error(local("user.param.empty"));
         }
+        if (type != Constants.NUMBER_ONE || type != Constants.NUMBER_TWO) {
+            return error(local("user.subscribe.paramError"));
+        }
         //判断会议是否存在
         AudioCourse update = audioService.selectByPrimaryKey(course.getId());
         if (update == null) {
@@ -1239,7 +1242,7 @@ public class MeetingController extends CspBaseController {
         if (!principal.getId().equalsIgnoreCase(update.getCspUserId())){
             return error(local("meet.notmine"));
         }
-        audioService.doModifyPassword(update, course.getPassword());
+        audioService.doModifyPassword(update, type == Constants.NUMBER_ONE? course.getPassword():null);
         return success();
     }
 
