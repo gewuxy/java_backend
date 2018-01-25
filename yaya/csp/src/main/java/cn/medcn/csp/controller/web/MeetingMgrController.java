@@ -670,6 +670,7 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/convert/progress")
     @ResponseBody
     public String convertProgress(HttpServletRequest request){
+        uploadClear(request);
         OfficeConvertProgress progress = (OfficeConvertProgress) request.getSession().getAttribute(Constants.OFFICE_CONVERT_PROGRESS);
         if (progress == null) {
             progress = new OfficeConvertProgress(0, 0, 0);
