@@ -37,7 +37,7 @@
                             <c:choose>
                                 <c:when test="${fn:length(course.details) > 0}">
                                     <div class="upload-ppt-area upload-ppt-area-finish logo-watermark">
-                                        <img src="${fileBase}${course.details[0].imgUrl}" alt="">
+                                        <img src="${fileBase}${course.details[0].imgUrl}" alt="" id="cover">
                                         <div <c:if test="${empty watermark || watermark.direction == 2}" >class="logo-watermark-item watermark-position-right "</c:if>
                                              <c:if test="${watermark.direction == 0}" >class="logo-watermark-item watermark-position-left "</c:if>
                                              <c:if test="${watermark.direction == 1}" >class="logo-watermark-item watermark-position-left-bottom "</c:if>
@@ -97,8 +97,8 @@
                                     <div class="upload-ppt-area">
                                         <label for="uploadFile">
                                             <input type="file" name="file" class="none" id="uploadFile">
-                                            <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt=""></p>
-                                            <p><fmt:message key="page.meeting.drag.upload"/></p>
+                                            <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt="" id="cover"></p>
+                                            <p id="uploadTipView"><fmt:message key="page.meeting.drag.upload"/></p>
                                         </label>
                                     </div>
                                 </c:otherwise>
@@ -111,19 +111,23 @@
 
                                 </div>
                                 <div class="admin-button t-center">
-                                    <c:choose>
-                                        <c:when test="${not empty course.details}">
-                                            <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile"><span  class="button min-btn" ><fmt:message key="page.meeting.button.reload"/></span>&nbsp;&nbsp;&nbsp;</label>
-                                            <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn"><fmt:message key="page.meeting.button.edit"/></a>
-                                        </c:when>
-                                        <c:otherwise>
-                                            <label for="reUploadFile2"><input type="file" name="file" class="none" id="reUploadFile2"><span  class="button color-blue min-btn"><fmt:message key="page.meeting.upload.doc"/></span></label>
+                                    <label for="reUploadFile"><input type="file" name="file" class="none" id="reUploadFile">
+                                    <span  class="button min-btn" id="uploadTextView">
+                                        <c:choose>
+                                            <c:when test="${empty course.details}">
+                                                <fmt:message key="page.meeting.upload.doc"/>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <fmt:message key="page.meeting.button.reload"/>
+                                            </c:otherwise>
+                                        </c:choose>
 
-                                        </c:otherwise>
-                                    </c:choose>
+                                    </span>&nbsp;&nbsp;&nbsp;</label>
+                                    <a href="${ctx}/mgr/meet/details/${course.id}" class="button color-blue min-btn ${not empty course.details?'':'none'}" id="editBtn"><fmt:message key="page.meeting.button.edit"/></a>
+
                                 </div>
                                 <c:if test="${empty course.details}">
-                                    <p class="color-gray-02"><fmt:message key="page.meeting.upload.limit100"/></p>
+                                    <p class="color-gray-02 ${empty course.details ? '' : 'none'}" id="limitView"><fmt:message key="page.meeting.upload.limit100"/></p>
                                 </c:if>
 
                                 <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;<fmt:message key="page.meeting.upload.warn.nofile"/></span>
@@ -523,7 +527,26 @@
         });
     }
 
-    function fleshPage(){
+    function fleshPage(data){
+        $(".metting-progreesItem").addClass("none");
+        $("#editBtn").removeClass("none");
+
+        $("#limitView").addClass("none");
+        var reloadText = '<fmt:message key="page.meeting.button.reload"/>';
+        $("#uploadTextView").text(reloadText);
+        $("#courseTitle").val(data.title);
+        $("#cover").attr("src", data.coverUrl);
+        $(".upload-ppt-area").addClass("upload-ppt-area upload-ppt-area-finish logo-watermark");
+        $("#uploadTipView").addClass("none");
+
+        $("#uploadFile").replaceWith('<input type="file" id="uploadFile" name="file" class="none">');
+        $("#reUploadFile").replaceWith('<input type="file" id="reUploadFile" name="file" class="none">');
+        $("#uploadFile, #reUploadFile").change(function(){
+            var id = $(this).attr("id");
+            uploadFile(document.getElementById(id));
+        });
+
+
         layer.open({
             type: 1,
             area: ['300px', '260px'],
@@ -537,10 +560,10 @@
 
             },
             yes:function(){
-                window.location.reload();
+                layer.closeAll();
             },
             cancel :function(){
-                window.location.reload();
+
             },
         });
     }
@@ -570,7 +593,7 @@
                 layer.close(index);
                 if (data.code == 0){
                     //回调函数传回传完之后的URL地址
-                    fleshPage();
+                    fleshPage(data.data);
                 } else {
                     uploadOver = true;
                     layer.msg(data.err);
@@ -613,7 +636,6 @@
             if (data.data.progress.indexOf("100") != -1){
                 $.get('${ctx}/mgr/meet/convert/clear', {}, function (data1) {
                 }, 'json');
-                //fleshPage();
             } else {
                 if(!uploadOver){
                     setTimeout(showConvertProgress, 500);
@@ -685,11 +707,15 @@
             xhr = new XMLHttpRequest();
             xhr.open("post", "${ctx}/mgr/meet/upload?courseId=${course.id}", true);
             xhr.setRequestHeader("X-Requested-With", "XMLHttpRequest");
-
             var fd = new FormData();
             fd.append('file', f);
 
             xhr.send(fd);
+            var data = xhr.response;
+            xhr.onloadend = function(data){
+                fleshPage(data.data);
+            }
+
             showUploadProgress();
         }
 

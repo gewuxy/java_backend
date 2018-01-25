@@ -428,7 +428,10 @@ public class MeetingMgrController extends CspBaseController {
             audioService.updateByPrimaryKey(course);
         }
         audioService.updateAllDetails(courseId, imgList);
-        return success();
+        Map<String, Object> map = new HashMap<>();
+        map.put("coverUrl", fileBase + imgList.get(0));
+        map.put("title", course.getTitle());
+        return success(map);
     }
 
 

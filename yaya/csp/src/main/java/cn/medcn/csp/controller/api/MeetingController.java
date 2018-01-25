@@ -909,10 +909,14 @@ public class MeetingController extends CspBaseController {
 
                 if (live != null) {
                     if (live.getLiveState() != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
-                        live.setLiveState(over == 0 ? AudioCoursePlay.PlayState.pause.ordinal() : AudioCoursePlay.PlayState.over.ordinal());
-                        if (over == 1) {
+                        if(over == 1){
+                            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
                             live.setEndTime(new Date());
                             liveService.publish(overOrder);
+                        } else {
+                            if(live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()){
+                                live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
+                            }
                         }
                         liveService.updateByPrimaryKey(live);
                     }
