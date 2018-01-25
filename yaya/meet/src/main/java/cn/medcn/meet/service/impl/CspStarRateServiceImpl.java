@@ -197,4 +197,19 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
         }
     }
 
+    @Override
+    public int deleteDetailByCourseId(Integer courseId) {
+        return cspStarRateHistoryDetailDAO.deleteDetailByCourseId(courseId);
+    }
+
+    @Override
+    public int deleteHistoryByCourseId(Integer courseId) {
+        return cspStarRateHistoryDAO.deleteHistoryByCourseId(courseId);
+    }
+
+    @Override
+    public StarRateResultDTO findRateResultExcludeDetails(Integer id) {
+        return cspStarRateHistoryDAO.findRateResultExcludeDetails(id);
+    }
+
 }

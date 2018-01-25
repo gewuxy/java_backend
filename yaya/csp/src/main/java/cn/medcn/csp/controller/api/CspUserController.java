@@ -20,6 +20,7 @@ import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import cn.medcn.weixin.util.EmojiFilterUtil;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
@@ -124,6 +125,8 @@ public class CspUserController extends CspBaseController {
             return error(local("user.linkman.notnull"));
         }
 
+        //去除昵称中的非法字符，表情
+        userInfo.setNickName(EmojiFilterUtil.filterName(userInfo.getNickName()));
         // 获取邮箱模板
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(), EmailTemplate.Type.REGISTER.getLabelId(), EmailTemplate.UseType.CSP.getLabelId());
         try {
@@ -243,6 +246,9 @@ public class CspUserController extends CspBaseController {
         if (thirdPartyId == null || thirdPartyId == 0) {
             return error(local("user.empty.ThirdPartyId"));
         }
+
+        //去除昵称中的非法字符
+        userInfoDTO.setNickName(EmojiFilterUtil.filterName(userInfoDTO.getNickName()));
 
         // 获取app header中是否海外登录
         Boolean abroad = LocalUtils.isAbroad();

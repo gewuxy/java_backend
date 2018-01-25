@@ -216,4 +216,29 @@
             ORDER BY RAND() limit 1
         </if>
     </select>
+
+    <select id="findMiniMeetingListByType" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,
+        fcd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
+        p.play_page,p.play_state, c.info,c.category_id,c.star_rate_flag, c.password,c.source_type
+        FROM t_audio_course c
+        LEFT JOIN t_csp_live l ON l.course_id = c.id
+        LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_audio_course_detail fcd ON c.id = fcd.course_id and fcd .sort = 1
+        LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
+        WHERE 1=1 AND c.published = 1 AND c.deleted != 1 AND locked != 1
+        <if test="cspUserId != null">
+            AND c.csp_user_id = #{cspUserId}
+        </if>
+        <if test="playType != null">
+            AND  c.play_type = #{playType}
+        </if>
+        <if test="sourceType != null">
+            AND  c.source_type = #{sourceType}
+        </if>
+        <if test="keyword != null">
+            AND c.title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
+        GROUP BY c.id ORDER BY c.create_time DESC
+    </select>
 </mapper>

@@ -18,4 +18,8 @@
         GROUP BY t.id,th.course_id
     </select>
 
+    <delete id="deleteHistoryByCourseId" parameterType="Integer">
+        DELETE FROM t_csp_star_rate_history WHERE course_id = #{courseId}
+    </delete>
+
 </mapper>

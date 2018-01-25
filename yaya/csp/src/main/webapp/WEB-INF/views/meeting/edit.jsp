@@ -24,7 +24,7 @@
     </style>
 
 </head>
-<body>
+<body onbeforeunload=" if (success) return '' ">
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
@@ -141,42 +141,68 @@
                                     <div class="weui-cell__ft">
                                         <label for="switchCPStar" class="mui-switch-box">
                                             <input type="checkbox" name="starRateFlag" id="switchCPStar" class="mui-switch none" value="${course.starRateFlag}">
-                                            <script>
-                                                /*123*/
-                                            </script>
                                             <div class="weui-switch-cp__box"></div>
                                         </label>
                                     </div>
-                                    <span class="subject" id="starOpen">关闭</span>
+                                    <span class="subject" id="starOpen"><fmt:message key="page.meeting.star.off"/></span>
                                 </div>
-                                <div class="title" id="starTitle">评分功能</div>
+                                <div class="title" id="starTitle"><fmt:message key="page.meeting.star.rate"/></div>
                             </div>
-                            <div class="upload-metting-star-main" id="starDiv">
+                            <div class="upload-metting-star-main">
+                                <div id="starDiv">
                                 <div class="upload-metting-star-row" >
                                     <div class="fr">
-                                        <div class="star-box star-max"><div class="star"></div><div class="grade ">未评价</div></div>
+                                        <div class="star-box star-max"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><fmt:message key="page.meeting.star.rate.none" /></div></div>
                                     </div>
-                                    <div class="title">综合评分</div>
+                                    <div class="title"><fmt:message key="page.meeting.multiple.score"/></div>
                                 </div>
-                                <div class="upload-metting-star-row star-input-box" id="submitOption" style="display: none">
+
+
+                                        <c:forEach var="option" items="${options}">
+                                    <div class="upload-metting-star-row">
+                                        <div class="fr">
+                                            <div class="star-box star-max"><div class="star"><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span><span class="null"></span></div><div class="grade "><fmt:message key="page.meeting.star.rate.none" /></div></div>
+                                        </div>
+                                        <div class="title"><div class="star-remove-button"  optionId="${option.id}"></div> ${option.title}</div>
+                                    </div>
+                                        </c:forEach>
+                                    <script>
+                                        $(".star-remove-button").click(function () {
+                                            var oid = $(this).attr("optionId");
+                                            ajaxGet('${ctx}/mgr/meet/star/del/'+oid, {}, function(data){
+                                                if (data.code == 0){
+                                                    layer.msg("<fmt:message key="page.meeting.star.rate.del" />");
+                                                    $(".star-remove-button[optionId='"+oid+"']").parent().parent().remove();
+                                                    $("#limitFive").addClass("none");
+                                                    $("#submitOption").show();
+                                                    $("#limitInsert").text("<fmt:message key="page.meeting.star.rate.Add" />");
+                                                } else {
+                                                    layer.msg(data.err);
+                                                }
+                                            })
+                                        })
+                                    </script>
+
+                                </div>
+                                <div class="upload-metting-star-row star-input-box" id="submitOption" hidden>
                                     <div class="fr">
-                                        <div class="star-input-button"><input class="button" type="submit" value="保存" id="btnStar"><a href="javascript:;" class="close">取消</a></div>
+                                        <div class="star-input-button"><input class="button" type="submit" value="<fmt:message key="page.common.save" />" id="btnStar"><a href="javascript:;" class="close"><fmt:message key="page.common.cancel" /></a></div>
                                     </div>
                                     <c:if test="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}">
                                     <div class="oh">
-                                        <div class="star-input"><input type="text" placeholder="最多输入6个中文字" maxlength="6" id="limitOptionCn" name="title"></div>
+                                        <div class="star-input"><input type="text" placeholder="<fmt:message key="page.meeting.star.rate.characters.allowed"/>" maxlength="6" id="limitOptionCn" name="title" onkeyup="this.value=this.value.replace(/\s+/g,'')"></div>
                                     </div>
                                     </c:if>
                                     <c:if test="${csp_locale eq 'en_US'}">
                                         <div class="oh">
-                                            <div class="star-input"><input type="text" placeholder="最多输入12个中文字" maxlength="12" id="limitOptionUs"></div>
+                                            <div class="star-input"><input type="text" placeholder="<fmt:message key="page.meeting.star.rate.characters.allowed" />" maxlength="12" id="limitOptionUs" onkeyup="this.value=this.value.replace(/\s+/g,'')"></div>
                                         </div>
                                     </c:if>
                                 </div>
                             </div>
-                            <div class="upload-metting-star-footer" id="insertOption">
-                                <span class="cells-block error " id="limitFive" style="display: none">最多添加5项</span>
-                                <a href="javascript:;" class="upload-metting-star-add-button cells-block" id="submitCPStar"><span id="limitInsert">添加</span></a>
+                            <div class="upload-metting-star-footer" id="insertOption" >
+                                <div class="cells-block error none" id="limitFive"><fmt:message key="page.meeting.star.rate.limit.five"/></div>
+                                <a href="javascript:;" class="upload-metting-star-add-button cells-block" id="submitCPStar"><span id="limitInsert"><fmt:message key="page.meeting.star.rate.Add" /></span></a>
                             </div>
                         </div>
                     </div>
@@ -184,7 +210,7 @@
 
 
                     <div class="col-lg-7">
-                        <form action="${ctx}/mgr/meet/save" method="post" id="courseForm" name="courseForm">
+                        <form action="${ctx}/mgr/meet/save" method="post" id="courseForm" name="courseForm" onsubmit="return false;">
                             <input type="hidden" name="course.id" value="${course.id}">
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
@@ -285,8 +311,12 @@
                                     </div>
                                 </div>
 
-                                <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
-                                <input type="button" class="button login-button buttonBlue last" value="<fmt:message key='page.common.submit.confirm'/>">
+                                <%--<div class="clearfix cells-block">
+                                    <input type="button" class="button login-button buttonBlue last displayInline" value="<fmt:message key='page.common.submit.confirm'/>"><span class="icon-tips-blue"><i></i>内容已更新，请 <a href="index.html" class="color-blue">返回首页</a></span>
+                                </div>--%>
+
+                            <%--<span class="cells-block error one"><img src="images/login-error-icon.png" alt="">&nbsp;输入正确密码</span>--%>
+                                <input id="saveSubmit"  type="button" class="button login-button buttonBlue last displayInline" value="<fmt:message key='page.common.submit.confirm'/>"><span class="icon-tips-blue" hidden><i></i><fmt:message key="page.meeting.star.rate.update"/> <a href="${ctx}/mgr/meet/list" class="color-blue"><fmt:message key="page.meeting.star.save.return"/></a></span>
                             </div>
                         </form>
                     </div>
@@ -473,7 +503,7 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="succeed-popup-main">
-                    <p>关闭星评后，评分数据将保留，并且不再接受评分。</p>
+                    <p><fmt:message key="page.meeting.star.rate.close"/></p>
                     <!--<div class="admin-button t-right">-->
                     <!--<a href="javascript:;" class="button color-blue min-btn layui-layer-close" >取消</a>-->
                     <!--<input type="submit" class="button buttonBlue item-radius min-btn" value="确认">-->
@@ -485,7 +515,7 @@
     </div>
 </div>
 
-<!--弹出 星评提示2-->
+<!--弹出 星评提示2 重新开启星评，将清空历史评分-->
 <div class="succeed-02-popup-box">
     <div class="layer-hospital-popup">
         <div class="layer-hospital-popup-title">
@@ -495,7 +525,23 @@
         <div class="layer-hospital-popup-main ">
             <form action="">
                 <div class="succeed-popup-main">
-                    <p>开启后不可再编辑评分项目</p>
+                    <p><fmt:message key="page.meeting.star.start.no.rate"/></p>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="succeed-03-popup-box">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="succeed-popup-main">
+                    <p><fmt:message key="page.meeting.star.clean.point"/></p>
                 </div>
             </form>
         </div>
@@ -514,6 +560,8 @@
     const file_size_limit = 100*1024*1024;
 
     var uploadOver = false;
+
+    var success = false;
 
     $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
         var id = $(this).attr("id");
@@ -1022,35 +1070,68 @@
             })
         })
 
-        /*123星评功能*/
+        /*123 星评功能*/
+
+        $(function(){
+            $("#switchCPStar").click(function () {
+                var isStarCheck = $("#switchCPStar").is(":checked");
+                var starFlag = ${course.starRateFlag};
+                var size = ${size}
+                var published = ${course.published}
+                var count = ${count}
+                if(published == false){
+                    if (isStarCheck){
+                        starTips();
+                    }else {
+                        $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                        $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
+                        $("#insertOption").show();
+                        $(".star-remove-button").show();
+                    }
+                }else {
+                    if ((size == 0||size >0 ) && isStarCheck && starFlag==true){
+                        delTips();
+                    }else if ((size == 0||size >0 ) && starFlag==false && isStarCheck){
+                            starTips();
+                    }else {
+                        closeTips();
+                    }
+                }
+            })
+        })
+
         $(function () {
-            var flag = ${course.starRateFlag}
-            var state = ${course.published}
-            if(flag == true && state == true){
+            var flag = ${course.starRateFlag};
+            var state = ${course.published};
+            if(state == true){
                 $.ajax({
                     url: "${ctx}/mgr/meet/course_info/" + ${course.id},
-                    dataType: 'json', //返回数据类型
-                    type: 'POST', //请求类型
-                    async: false,
-                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json', //返回数据类型 icon-tips-blue
+                    type: 'GET', //请求类型
                     success: function (data) {
                         if (data.code == 0) {
                             var detailList = data.data.detailList;
                             var score =data.data.multipleResult.scoreCount;
-                            $("#switchCPStar").attr("checked",true);
-                            $("#starOpen").text("开启");
-                            $("#starTitle").html('参与评分人数:' +score+' 人');
-                            $("#insertOption").hide();
-                            $("#submitOption").css('display','none');
-                            $(".star-remove-button").css('display','none');
+                            if(flag == true){
+                                $("#switchCPStar").attr("checked",true);
+                                $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                                $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +score+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
+                                $("#insertOption").hide();
+                                $("#submitOption").hide();
+                                $(".star-remove-button").hide();
+                            }else{
+                                $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                                $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
+                                $("#insertOption").show();
+                                $(".star-remove-button").show();
+                            }
                             var avgScore =data.data.multipleResult.avgScore;
+                            var optionId = data.data.multipleResult.optionId;
                             var html = '<div class="upload-metting-star-row" >\n' +
                                 '                                    <div class="fr">\n' +
                                 '                                        <div class="star-box star-max"><div class="star">'
                             html = initStar(avgScore,html);
-                            html +='</div><div class="grade ">' +avgScore+'分</div></div></div>\n' +
-                                '                                    <div class="title">综合评分</div>\n' +
-                                '                                </div>'
+                            html +='</div><div class="grade ">' +avgScore+'<fmt:message key="page.meeting.tips.score.unit"/>'+'</div></div></div><div class="title"><fmt:message key="page.meeting.multiple.score"/></div></div>'
                             if (detailList != null) {
                                 //html += '<div class="star-list hidden-box clearfix">';
                                 for (var j = 0; j < detailList.length; j++) {
@@ -1059,14 +1140,30 @@
                                         '                                        <div class="star-box star-max">\n' +
                                         '                                            <div class="star">';
                                     html = initStar(detailList[j].avgScore, html);
-                                    html += '</div><div class="grade">' + detailList[j].avgScore + '分</div></div>';
-                                    html += '</div><div class="title">' + detailList[j].title + '</div></div>';
+                                    html += '</div><div class="grade">' + detailList[j].avgScore + '<fmt:message key="page.meeting.tips.score.unit"/>'+'</div></div>';
+                                    html += '</div><div class="title"><span class="star-remove-button" optionId="'+detailList[j].id+'"></span>' + detailList[j].title + '</div></div>';
                                 }
                                 html += '</div>';
                                 $("#starDiv").html(html);
+                                $(".star-remove-button").hide();
+                                $(".star-remove-button").click(function () {
+                                    var oid = $(this).attr("optionId");
+                                    ajaxGet('${ctx}/mgr/meet/star/del/'+oid, {}, function(data){
+                                        if (data.code == 0){
+                                            layer.msg("<fmt:message key="page.meeting.star.rate.del"/>");
+                                            $(".star-remove-button[optionId='"+oid+"']").parent().parent().remove();
+                                            $("#limitFive").addClass("none");
+                                            $("#submitOption").show();
+                                            $("#limitInsert").text("<fmt:message key="page.meeting.star.rate.Add"/>");
+                                        } else {
+                                            layer.msg(data.err);
+                                        }
+                                    })
+                                })
+
                             }
                         } else {
-                            layer.msg("获取星评详情失败");
+                            layer.msg("<fmt:message key="page.meeting.star.fail"/>");
                         }
                     }
                 });
@@ -1090,37 +1187,18 @@
         })
 
 
-
-        $(function(){
-            $("#switchCPStar").click(function () {
-                var isCheck = $("#switchCPStar").is(":checked");
-                //var size = ${size}
-                if(${course.published == false}){
-                    if (isCheck){
-                        starTips();
-                    }else {
-                        $("#starOpen").text("关闭");
-                        $("#starTitle").html("评分功能");
-                        $("#insertOption").show();
-                        $(".star-remove-button").css('display',"");
-                    }
-                }else {
-
-                }
-            })
-        })
-
-
         $("#submitCPStar").click(function () {
-            var length = $(".grade").length;
-            if (length >=6){
-                $("#submitOption").css('display','none');
+            var length = $(".grade").length
+            alert(length);
+            if (length >5){
+                $("#submitOption").hide();
             }else{
-                $("#submitOption").css('display','block');
+                $("#submitOption").show();
             }
         })
 
-        var starHtml;
+        //var optionId ;
+        //alert(optionId)
         $("#btnStar").click(function () {
             var starOption;
              if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
@@ -1133,31 +1211,30 @@
             var starLength = starOption.length;
             var reg = /^[\u4e00-\u9fa5]{1,6}$|^[a-zA-Z]{1,12}$/;
             var  regStarOption= reg.test(starOption);
+            //regStarOption = spaceReg.test(starOption);
             var optionId ;
             if (regStarOption){
                 ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
-                       starHtml =  $('<div class="upload-metting-star-row">' +
+                        $('<div class="upload-metting-star-row">' +
                             '<div class="fr"><div class="star-box star-max"><div class="star"><span class="null">' +
                             '</span><span class="null"></span><span class="null"></span><span class="null">' +
-                            '</span><span class="null"></span></div><div class="grade ">未评价</div></div></div>' +
-                            '<div class="title"><span class="star-remove-button"></span> '+data.data.title+'</div></div>').insertBefore($("#submitOption"));
+                            '</span><span class="null"></span></div><div class="grade ">'+'<fmt:message key="page.meeting.star.rate.none"/>'+'</div></div></div><div class="title"><span class="star-remove-button"></span> '+data.data.title+'</div></div>').insertBefore($("#submitOption"));
                             optionId = data.data.id;
-                            alert(starHtml);
+                        alert(optionId)
                         $(".star-remove-button").click(function () {
                             ajaxGet('${ctx}/mgr/meet/star/del/'+optionId, {}, function(data){
-                                //console.log(data)
                                 if (data.code == 0){
-                                    layer.msg("删除成功");
+                                    layer.msg("<fmt:message key="page.meeting.star.rate.del"/>");
                                 } else {
                                     layer.msg(data.err);
                                 }
                             })
                             $(this).parent().parent().remove();
-                            $("#limitFive").css('display','none');
-                            $("#submitOption").css('display','block');
-                            $("#limitInsert").text("添加");
+                            $("#limitFive").addClass("none");
+                            $("#submitOption").show();
+                            $("#limitInsert").text("<fmt:message key="page.meeting.star.rate.Add"/>");
                         })
                     } else {
                         layer.msg(data.err);
@@ -1165,30 +1242,66 @@
                 })
 
 
+            }else{
+                if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
+                    $("#limitOptionCn").val("")
+                }else{
+                    $("#limitOptionUs").val("");
+                }
             }
 
             var length = $(".grade").length;
 
-            if(length >= 6){
-                $("#limitFive").css('display','block');
-                $("#submitOption").css('display','none');
-                $("#submitCPStar").removeAttr("href");
-                $("#submitCPStar").attr("disabled","true");
-                $("#limitInsert").text("已达到上限");
+            if(length > 4){
+                $("#limitFive").removeClass("none");
+                $("#submitOption").hide();
+                $("#limitInsert").text("<fmt:message key="page.meeting.star.allow"/>");
             }else{
-                $("#submitOption").css('display','block');
-                $("#limitFive").css('display','none')
-                $("#submitCPStar").removeAttr("disabled");
-                $("#submitCPStar").attr("href");
-                $("#limitInsert").text("添加");
+                $("#submitOption").show();
+                $("#limitFive").addClass("none");
+                $("#limitInsert").text("<fmt:message key="page.meeting.star.rate.Add"/>");
             }
         })
 
 
 
+
         //星标提示语1
         //投稿
-        $('.succeed-01-hook').on('click',function(){
+            function closeTips() {
+                layer.open({
+                    type: 1,
+                    area: ['440px', '280px'],
+                    fix: false, //不固定
+                    title:false,
+                    closeBtn:0,
+                    shadeClose:true,
+                    btn: ["<fmt:message key="page.common.confirm"/>","<fmt:message key="page.common.cancel"/>"],
+                    content: $('.succeed-01-popup-box'),
+                    yes:function(){
+                        $("#switchCPStar").removeAttr("checked");
+                        $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                        if (${size>0}){
+                            $(".star-remove-button").show();
+                        }
+
+                        layer.closeAll();
+                    },
+                    btn2:function () {
+                        $("#switchCPStar").prop("checked", true);
+                        $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                        layer.closeAll();
+                    },
+                    cancel :function(){
+                        $("#switchCPStar").prop("checked", true);
+                        $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                    },
+                });
+            }
+
+            //succeed-03-popup-box
+
+        function delTips() {
             layer.open({
                 type: 1,
                 area: ['440px', '250px'],
@@ -1196,17 +1309,45 @@
                 title:false,
                 closeBtn:0,
                 shadeClose:true,
-                btn: ["确认","取消"],
-                content: $('.succeed-01-popup-box'),
-                success:function(){
-
+                btn: ["<fmt:message key="page.common.confirm"/>","<fmt:message key="page.common.cancel"/>"],
+                content: $('.succeed-03-popup-box'),
+                yes:function(){
+                    $("#switchCPStar").prop("checked", true);
+                    $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                    if (${size>0}){
+                        $(".star-remove-button").hide();
+                    }
+                    $.get('${ctx}/mgr/meet/starDetail/del/'+${course.id}, {}, function(data){
+                        if(data.code==0){
+                            $("#switchCPStar").prop("checked", true);
+                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                        }else{
+                            layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
+                        }
+                    },'json')
+                    layer.closeAll();
+                },
+                btn2 :function(){
+                    $("#switchCPStar").removeAttr("checked");
+                    $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                    if (${size>0}){
+                        $(".star-remove-button").show();
+                    }
+                    layer.closeAll();
                 },
                 cancel :function(){
-
+                    $("#switchCPStar").removeAttr("checked");
+                    $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                    if (${size>0}){
+                        $(".star-remove-button").show();
+                    }
+                    layer.closeAll();
                 },
             });
-        });
-        /*提示语模板  $('.succeed-02-hook').on('click',function(){*/
+        }
+
+
+        /*创建会议的提示语  $('.succeed-02-hook').on('click',function(){*/
         function starTips() {
             layer.open({
                 type: 1,
@@ -1215,45 +1356,45 @@
                 title:false,
                 closeBtn:0,
                 shadeClose:true,
-                btn: ["确认","取消"],
+                btn: ["<fmt:message key="page.common.confirm"/>","<fmt:message key="page.common.cancel"/>"],
                 content: $('.succeed-02-popup-box'),
                 yes: function(index, layero){
-                                var score =data.data.multipleResult.scoreCount;
-                                $("[name=starRateFlag]:checkbox").prop("checked", true);
-                                $("#starOpen").text("开启");
-                                $("#starTitle").html('参与评分人数:' +score+' 人');
+                                //var score =data.data.multipleResult.scoreCount;
+                                $("#switchCPStar").prop("checked", true);
+                                $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                                $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +0+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
                                 $("#insertOption").hide();
-                                var isCheck = $("#switchCPStar").is(":checked");
-                                $("#switchCPStar").val(isCheck);
+                                var isStarCheck = $("#switchCPStar").is(":checked");
+                                $("#switchCPStar").val(isStarCheck);
                                 var starRateFlag=$("#switchCPStar").val();
                                 $("#starRateFlag").val(starRateFlag)
-                                $("#submitOption").css('display','none');
-                                $(".star-remove-button").css('display','none');
+                                $("#submitOption").hide();
+                                $(".star-remove-button").hide();
                                 layer.closeAll()
                 },
                 btn2: function(index, layero){
-                    $("[name=starRateFlag]:checkbox").prop("checked", false);
-                    $("#starOpen").text("关闭");
-                    $("#starTitle").html("评分功能");
+                    $("#switchCPStar").prop("checked", false);
+                    $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                    $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
                     $("#insertOption").show();
-                    var isCheck = $("#switchCPStar").is(":checked");
-                    $("#switchCPStar").val(isCheck);
+                    var isStarCheck = $("#switchCPStar").is(":checked");
+                    $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
                     $("#starRateFlag").val(starRateFlag)
-                    $("#submitOption").css('display','block');
-                    $(".star-remove-button").css('display',"");
+                    $("#submitOption").show();
+                    $(".star-remove-button").show();
                     layer.close(layer.index-1);
                 },
                 cancel: function(index,layero){ //按右上角“X”按钮
-                    $("[name=starRateFlag]:checkbox").prop("checked", false);
-                    $("#starOpen").text("关闭");
-                    $("#starTitle").html("评分功能");
+                    $("#switchCPStar").prop("checked", false);
+                    $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                    $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
                     $("#submitCPStar").show();
-                    var isCheck = $("#switchCPStar").is(":checked");
-                    $("#switchCPStar").val(isCheck);
+                    var isStarCheck = $("#switchCPStar").is(":checked");
+                    $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
-                    $("#submitOption").css('display','block');
-                    $(".star-remove-button").css('display',"");
+                    $("#submitOption").show();
+                    $(".star-remove-button").show();
                     layer.close(layer.index-1);
                 },
             });
@@ -1392,7 +1533,7 @@
                 $('.logo-watermark-input').find('input').val($(this).val());
             }
         });
-        $('.mui-switch').on('click',function(){
+        $('#switchCP').on('click',function(){
             if($(this).is(':checked')){
                 $('.logo-watermark-item').show();
             } else {
@@ -1420,6 +1561,61 @@
             $("#positionTopRight").parent().attr("class","watermark-radio watermark-radio-topRight radio-on ");
         }
 
+        /*页面提交*/
+        $(function () {
+            $("#limitFive").addClass("none");
+            $("#saveSubmit").click(function () {
+                success = true;
+                var submitFormState=  ${course.published};
+                if(submitFormState == false){
+                    saveFormNoPublished();
+
+                }else{
+                    registPost();
+                }
+            })
+
+            function registPost () {
+                $.ajax({
+                    type: "post",
+                    url: "${ctx}/mgr/meet/save",
+                    data: $('#courseForm').serialize(),
+                    dataType:"JSON",
+                    success: function(data) {
+                    if(data.code=="0"){
+                        $(".icon-tips-blue").show();
+                        $(".star-remove-button").show();
+                        $("#insertOption").show();
+                        if(${size < 5}){
+                            $("#submitOption").show();
+                        }
+                    }else{
+                        layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
+                    }
+                }
+
+                })
+            }
+
+            function saveFormNoPublished () {
+                $.ajax({
+                    type: "post",
+                    url: "${ctx}/mgr/meet/save",
+                    data: $('#courseForm').serialize(),
+                    dataType:"JSON",
+                    success: function(data) {
+                        console.log(data.code)
+                        if(data.code=="0"){
+                            location.href="${ctx}/mgr/meet/list"
+                        }else{
+                            layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
+                        }
+                    }
+
+                })
+            }
+
+        })
 
 
     });

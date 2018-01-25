@@ -354,10 +354,14 @@ public class MeetingMgrController extends CspBaseController {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
                 course = audioService.createNewCspCourse(principal.getId());
-                //List<CspStarRateOption> options = cspStarRateService.findRateOptions(course.getId());
-                //model.addAttribute("size",options.size());
+
             }
         }
+        List<CspStarRateOption> options = cspStarRateService.findRateOptions(course.getId());
+        StarRateResultDTO result = cspStarRateService.findRateResultExcludeDetails(course.getId());
+        model.addAttribute("count",result.getScoreCount());
+        model.addAttribute("size",options.size());
+        model.addAttribute("options",options);
 
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
@@ -613,6 +617,7 @@ public class MeetingMgrController extends CspBaseController {
 
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
     public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, RedirectAttributes redirectAttributes) throws SystemException {
         AudioCourse ac = course.getCourse();
         ac.setStarRateFlag(starRateFlag);
@@ -639,8 +644,7 @@ public class MeetingMgrController extends CspBaseController {
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
-        addFlashMessage(redirectAttributes, local("operate.success"));
-        return defaultRedirectUrl();
+        return success();
     }
 
 
@@ -790,5 +794,16 @@ public class MeetingMgrController extends CspBaseController {
     public String delStarOption(@PathVariable Integer optionId ,CspStarRateOption cspStarRateOption){
         cspStarRateService.deleteByPrimaryKey(optionId);
         return success(cspStarRateOption);
+    }
+
+    @RequestMapping(value = "/starDetail/del/{courseId}")
+    @ResponseBody
+    public String delStarDetail(@PathVariable Integer courseId){
+        List<CspStarRateOption> options = cspStarRateService.findRateOptions(courseId);
+        if (options.size()>0){
+            int count = cspStarRateService.deleteDetailByCourseId(courseId);
+        }
+        int count = cspStarRateService.deleteHistoryByCourseId(courseId);
+        return success();
     }
 }
