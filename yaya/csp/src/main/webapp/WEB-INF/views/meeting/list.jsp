@@ -1061,47 +1061,6 @@
     </div>
 </div>
 
-<!--弹出 充值-->
-<div class="cancel-popup-box" id="pkBuyMsg">
-    <div class="layer-hospital-popup">
-        <div class="layer-hospital-popup-title">
-            <strong>&nbsp;</strong>
-            <div class="layui-layer-close"><a href="${ctx}/mgr/meet/list"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
-        </div>
-        <div class="layer-hospital-popup-main ">
-            <form >
-                <div class="cancel-popup-main">
-                    <p>请在充值页面完成付款，付款完成前请不要关闭此窗口</p>
-                    <div class="admin-button t-right">
-                        <a href="${ctx}/mgr/meeting/list"  class="button color-blue min-btn layui-layer-close" >付款遇到问题，重试</a>
-                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="我已付款成功">
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
-<!--弹出 提示-->
-<div class="cancel-popup-box" id="pkSuccessMsg">
-    <div class="layer-hospital-popup">
-        <div class="layer-hospital-popup-title">
-            <strong>&nbsp;</strong>
-            <div class="layui-layer-close clearMsg"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
-        </div>
-        <div class="layer-hospital-popup-main ">
-            <form action="">
-                <div class="cancel-popup-main">
-                    <p id="backMsg"></p>
-                </div>
-                <div class="admin-button t-right " >
-                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="知道了"/>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
-
 
 <!--弹窗星评-->
 <div class="layer-grade-star-box" id="starRate">
