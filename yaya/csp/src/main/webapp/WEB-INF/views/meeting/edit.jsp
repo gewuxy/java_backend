@@ -24,7 +24,7 @@
     </style>
 
 </head>
-<body onbeforeunload=" if (!success) return '' ">
+<body onbeforeunload=" if (success == false) return '' ">
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
@@ -1199,7 +1199,6 @@
 
         $("#submitCPStar").click(function () {
             var length = $(".grade").length
-            alert(length);
             if (length >5){
                 $("#submitOption").hide();
             }else{
@@ -1207,8 +1206,6 @@
             }
         })
 
-        //var optionId ;
-        //alert(optionId)
         $("#btnStar").click(function () {
             var starOption;
              if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
@@ -1232,7 +1229,6 @@
                             '</span><span class="null"></span><span class="null"></span><span class="null">' +
                             '</span><span class="null"></span></div><div class="grade ">'+'<fmt:message key="page.meeting.star.rate.none"/>'+'</div></div></div><div class="title"><span class="star-remove-button"></span> '+data.data.title+'</div></div>').insertBefore($("#submitOption"));
                             optionId = data.data.id;
-                        alert(optionId)
                         $(".star-remove-button").click(function () {
                             ajaxGet('${ctx}/mgr/meet/star/del/'+optionId, {}, function(data){
                                 if (data.code == 0){
@@ -1601,7 +1597,6 @@
                     if(data.code=="0"){
                         //var checkOpen = $("#starRateFlag").val();
                         var isStarCheck = $("#switchCPStar").is(":checked")
-                        alert("11"+isStarCheck);
                         $(".icon-tips-blue").show();
                         if(${size < 5}){
                             $("#submitOption").show();
