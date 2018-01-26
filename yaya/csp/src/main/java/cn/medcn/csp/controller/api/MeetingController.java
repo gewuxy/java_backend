@@ -1369,7 +1369,7 @@ public class MeetingController extends CspBaseController {
      * 小程序循环接收图片，创建课件
      * @param file
      * @param courseId 课件的id
-     * @param sort 图片的排序号
+     * @param sort 图片的排序号,第一张图sort=0
      * @return
      */
     @RequestMapping("/upload/picture")
