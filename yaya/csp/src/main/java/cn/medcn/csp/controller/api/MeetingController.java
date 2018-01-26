@@ -1234,13 +1234,16 @@ public class MeetingController extends CspBaseController {
         if (course.getPassword() != null && course.getPassword().length() > 4) {
             return error(local("page.meeting.tips.watch.password.holder"));
         }
+        String password = type == Constants.NUMBER_ONE ? course.getPassword() : null;
         //判断用户操作的是否是自己的会议
         Principal principal = SecurityUtils.get();
-        if (!principal.getId().equalsIgnoreCase(update.getCspUserId())){
+        if (!principal.getId().equalsIgnoreCase(update.getCspUserId())) {
             return error(local("meet.notmine"));
         }
-        audioService.doModifyPassword(update, type == Constants.NUMBER_ONE? course.getPassword():null);
-        return success();
+        audioService.doModifyPassword(update, password);
+        Map<String,Object> map = new HashMap<>();
+        map.put("password",password);
+        return success(map);
     }
 
 
