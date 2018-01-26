@@ -192,12 +192,15 @@ public class MeetingController extends CspBaseController {
                 return localeView("/meeting/share_error");
             }
 
-            if (course.getDeleted() != null && course.getDeleted() == true) {
-                model.addAttribute("error", local("source.has.deleted"));
-                return localeView("/meeting/share_error");
-            }
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
+            }
+
+            if (course.getDeleted() != null
+                    && course.getDeleted() == true
+                    && course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+                model.addAttribute("error", local("source.has.deleted"));
+                return localeView("/meeting/share_error");
             }
 
             //查询出星评信息
@@ -1385,9 +1388,9 @@ public class MeetingController extends CspBaseController {
 
         //创建课件或者添加课件图片
         courseId = audioService.createAudioOrAddDetail(file, course,sort);
-        Map<String,Integer> map = new HashMap<>();
-        map.put("courseId",courseId);
-        return success(map);
+        AudioCourseDTO dto = new AudioCourseDTO();
+        dto.setId(courseId);
+        return success(dto);
     }
 
 
