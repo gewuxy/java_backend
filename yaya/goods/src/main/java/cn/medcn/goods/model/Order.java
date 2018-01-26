@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**订单实体类
@@ -74,7 +75,14 @@ public class Order {
     //话费的象数值
     private Integer cost;
 
+    // 商品名称
+    @Transient
+    protected String name;
+    @Transient
+    protected String statusName;
 
-
+    public String getStatusName(){
+        return Order.Status.values()[this.status].getLabel();
+    }
 
 }

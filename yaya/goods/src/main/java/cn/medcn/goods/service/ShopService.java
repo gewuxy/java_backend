@@ -9,6 +9,7 @@ import cn.medcn.goods.dto.OrderDTO;
 import cn.medcn.goods.model.Goods;
 import cn.medcn.goods.model.Order;
 import cn.medcn.goods.model.TradeDetail;
+import com.github.pagehelper.Page;
 
 import java.util.List;
 
@@ -20,12 +21,10 @@ public interface ShopService extends BaseService<Goods> {
 
     MyPage<OrderDTO> findMyOrder(Pageable pageable);
 
-
-
     void doBuy( Order order) throws Exception;
 
-
-
-
     MyPage<GoodsDTO> findGoodsList(Pageable pageable);
+
+    MyPage<Goods> findShopGoodsList(Pageable pageable);
+
 }
