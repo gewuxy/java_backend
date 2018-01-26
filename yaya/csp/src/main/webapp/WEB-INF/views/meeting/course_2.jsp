@@ -722,11 +722,17 @@
             } else if (current.parents('.swiper-container-horizontal').find(".swiper-slide-active")) {
                 swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             }
-            var dataSrc = swiperCurrent.attr('audio-src');
-            popupPalyer.load(dataSrc);
+            if(swiperCurrent.find("video").length > 0){
+                $(".boxAudio").addClass("none");
+                $(".boxAudio-loading").addClass("none");
+            } else {
+                var dataSrc = swiperCurrent.attr('audio-src');
+                popupPalyer.load(dataSrc);
 
-            popupPalyer.play();
-            playOver = false;
+                popupPalyer.play();
+                playOver = false;
+            }
+
         }
 
         //点击切换状态
@@ -1009,6 +1015,10 @@
                             $(".boxAudio-loading").removeClass("none");
                             galleryTop.slideTo(totalPages);
                         } else {
+                            $(".boxAudio-loading").addClass("none");
+                        }
+
+                        if(data.videoUrl != undefined && data.videoUrl != ''){
                             $(".boxAudio-loading").addClass("none");
                         }
                     }
