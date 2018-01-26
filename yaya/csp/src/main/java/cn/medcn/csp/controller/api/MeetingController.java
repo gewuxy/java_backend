@@ -1550,10 +1550,6 @@ public class MeetingController extends CspBaseController {
          }
     }
 
-    private enum ImageMusic{
-        IMAGE,
-        MUSIC;
-    }
 
     /**
      * 用户评分
