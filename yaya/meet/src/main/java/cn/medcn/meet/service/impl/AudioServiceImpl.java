@@ -295,6 +295,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         reprintCourse.setInfo(course.getInfo());
         reprintCourse.setLocked(false);
         reprintCourse.setGuide(course.getGuide());
+        reprintCourse.setStarRateFlag(course.getStarRateFlag());
         audioCourseDAO.insert(reprintCourse);
         //复制微课明细
         doCopyDetails(details, reprintCourse.getId());
@@ -960,6 +961,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             copyCourse.setCreateTime(new Date());
             copyCourse.setPlayType(AudioCourse.PlayType.normal.getType());//设置成录播模式
 
+
             audioCourseDAO.insert(copyCourse);
 
             //生成明细
@@ -1218,7 +1220,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         cond.setSourceType(AudioCourse.SourceType.csp.ordinal());
         cond.setCspUserId(cspUserId);
         cond.setGuide(true);
-
+        cond.setStarRateFlag(false);
         return selectCount(cond) > 0;
     }
 
