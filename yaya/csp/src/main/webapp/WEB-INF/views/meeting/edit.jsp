@@ -244,7 +244,7 @@
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
                                     <span class="subject"><fmt:message key="page.meeting.tab.category"/>&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? (isZh ? courseCategory.parent.nameCn:courseCategory.parent.nameEn) : (isZh ? rootList[0].nameCn:rootList[0].nameEn)}</i></span><span class="office" id="subCategory">${empty course.category ? (isZh ? subList[0].nameCn : subList[0].nameEn) : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
-                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZH ? subList[0].nameCn : subList[0].nameEn)}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZh ? subList[0].nameCn : subList[0].nameEn)}">
                                 </div>
                                 <c:if test="${ not empty course.details && packageId > 1}">
                                     <div class="cells-block meeting-watermark">
