@@ -99,6 +99,7 @@
                                             <input type="file" name="file" class="none" id="uploadFile">
                                             <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt="" id="cover"></p>
                                             <p id="uploadTipView"><fmt:message key="page.meeting.drag.upload"/></p>
+                                            <p class="error" id="sugest"><fmt:message key="page.meeting.upload.sugest"/></p>
                                         </label>
                                     </div>
                                 </c:otherwise>
@@ -600,6 +601,7 @@
         $("#cover").attr("src", data.coverUrl);
         $(".upload-ppt-area").addClass("upload-ppt-area upload-ppt-area-finish logo-watermark");
         $("#uploadTipView").addClass("none");
+        $("#sugest").addClass("none");
 
         $("#uploadFile").replaceWith('<input type="file" id="uploadFile" name="file" class="none">');
         $("#reUploadFile").replaceWith('<input type="file" id="reUploadFile" name="file" class="none">');
