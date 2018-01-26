@@ -15,6 +15,7 @@ import java.util.Map;
  */
 public interface OrderDAO extends Mapper<Order> {
 
-
     List<OrderDTO> findMyOrder(Map<String, Object> params);
+
+    List<Order> findOrderList(Map<String, Object> params);
 }

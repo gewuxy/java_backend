@@ -94,4 +94,12 @@ public class ShopServiceImpl extends BaseServiceImpl<Goods> implements ShopServi
     }
 
 
+    @Override
+    public MyPage<Goods> findShopGoodsList(Pageable pageable) {
+        startPage(pageable, Pageable.countPage);
+        Page<Goods> page = (Page<Goods>) goodsDAO.findGoodsList(pageable.getParams());
+        return MyPage.page2Mypage(page);
+    }
+
+
 }
