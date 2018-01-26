@@ -135,8 +135,8 @@
                         </div>
 
                         <%--456星评功能--%>
-                        <div class="upload-metting-star">
-                            <div class="upload-metting-star-head" id="dataFlash">
+                        <div class="upload-metting-star" id="dataFlash">
+                            <div class="upload-metting-star-head" >
                                 <div class="fr upload-metting-star-switch">
                                     <div class="weui-cell__ft">
                                         <label for="switchCPStar" class="mui-switch-box">
@@ -1094,22 +1094,57 @@
                 var size = ${size}
                 var published = ${course.published}
                 var count = ${count}
-                if(published == false){
+                if(published == false || starFlag == false){
                     if (isStarCheck){
                         starTips();
                     }else {
                         $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                         $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
                         $("#insertOption").show();
-                        $(".star-remove-button").show();
+                        $(".star-remove-button").removeClass("none");
                     }
                 }else {
                     if ((size == 0||size >0 ) && isStarCheck && starFlag==true){
-                        delTips();
+                        if(count>0){
+                            delTips();
+                        }else{
+                            $("#switchCPStar").prop("checked", true);
+                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                            $("#insertOption").hide();
+                            $("#submitOption").hide();
+                            $(".half").attr("null");
+                            $(".full").attr("null");
+                            $(".star-remove-button").addClass("none");
+                            $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
+                        }
                     }else if ((size == 0||size >0 ) && starFlag==false && isStarCheck){
+                        if (count>0){
                             starTips();
+                        }else{
+                            $("#switchCPStar").prop("checked", true);
+                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                            $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +0+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
+                            $("#insertOption").hide();
+                            var isStarCheck = $("#switchCPStar").is(":checked");
+                            $("#switchCPStar").val(isStarCheck);
+                            var starRateFlag=$("#switchCPStar").val();
+                            $("#starRateFlag").val(starRateFlag)
+                            $("#submitOption").hide();
+                            $(".star-remove-button").addClass("none");
+                        }
+
                     }else {
-                        closeTips();
+                        if (count>0){
+                            closeTips();
+                        }else{
+                            $("#switchCPStar").removeAttr("checked");
+                            $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                            if (${size>0}){
+                                $(".star-remove-button").removeClass("none");
+                            }
+                            $("#insertOption").show();
+                        }
+
                     }
                 }
             })
@@ -1133,12 +1168,12 @@
                                 $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +score+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
                                 $("#insertOption").hide();
                                 $("#submitOption").hide();
-                                $(".star-remove-button").hide();
+                                $(".star-remove-button").addClass("none");
                             }else{
                                 $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                                 $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
                                 $("#insertOption").show();
-                                $(".star-remove-button").show();
+                                $(".star-remove-button").removeClass("none");
                             }
                             var avgScore =data.data.multipleResult.avgScore;
                             var optionId = data.data.multipleResult.optionId;
@@ -1161,9 +1196,12 @@
                                 html += '</div>';
                                 $("#starDiv").html(html);
                                 if (${course.starRateFlag ==true}){
-                                    $(".star-remove-button").hide();
+                                    $(".star-remove-button").addClass("none");
                                 }else{
-                                    $(".star-remove-button").show();
+                                    $(".star-remove-button").removeClass("none");
+                                }
+                                if(score == 0){
+                                    $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
                                 }
                                 $(".star-remove-button").click(function () {
                                     var oid = $(this).attr("optionId");
@@ -1229,11 +1267,11 @@
                  $("#limitOptionUs").val("");
              }
             var starLength = starOption.length;
-            var reg = /^[\u4e00-\u9fa5]{1,6}$|^[a-zA-Z]{1,12}$/;
-            var  regStarOption= reg.test(starOption);
+            //var reg = /^[\u4e00-\u9fa5^%&',;=?$\x22]{1,6}$|^[a-zA-Z^%&',;=?$\x22]{1,12}$/;
+           // var  regStarOption= reg.test(starOption);
             //regStarOption = spaceReg.test(starOption);
             var optionId ;
-            if (starOption != "" && regStarOption){
+            if (starOption != "" ){
                 ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
@@ -1298,9 +1336,10 @@
                         $("#switchCPStar").removeAttr("checked");
                         $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                         if (${size>0}){
-                            $(".star-remove-button").show();
+                            $(".star-remove-button").removeClass("none");
                         }
                         $("#insertOption").show();
+                        $("#submitOption").hide();
 
                         layer.closeAll();
                     },
@@ -1334,9 +1373,9 @@
                     $("#switchCPStar").prop("checked", true);
                     $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
                     if (${size>0}){
-                        $(".star-remove-button").hide();
+                        $(".star-remove-button").addClass("none");
                     }
-                    $.get('${ctx}/mgr/meet/starDetail/del/'+${course.id}, {}, function(data){
+                    /*$.get('${ctx}/mgr/meet/starDetail/del/'+${course.id}, {}, function(data){
                         if(data.code==0){
                             $("#switchCPStar").prop("checked", true);
                             $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
@@ -1345,14 +1384,33 @@
                         }else{
                             layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
                         }
-                    },'json')
+                    },'json')*/
+                   $.ajax({
+                        type:'GET',
+                        url:'${ctx}/mgr/meet/starDetail/del/'+${course.id},
+                        dataType:'json',
+                        async: false,
+                        success:function(data){
+                            if(data.code==0){
+                                $("#switchCPStar").prop("checked", true);
+                                $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                                $("#insertOption").hide();
+                                $("#submitOption").hide();
+                                $(".half").attr("null");
+                                $(".full").attr("null");
+                                $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
+                            }else{
+                                layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
+                            }
+                        },
+                    });
                     layer.closeAll();
                 },
                 btn2 :function(){
                     $("#switchCPStar").removeAttr("checked");
                     $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                     if (${size>0}){
-                        $(".star-remove-button").show();
+                        $(".star-remove-button").removeClass("none");
                     }
                     $("#insertOption").show();
                     $("#submitOption").show();
@@ -1362,7 +1420,7 @@
                     $("#switchCPStar").removeAttr("checked");
                     $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                     if (${size>0}){
-                        $(".star-remove-button").show();
+                        $(".star-remove-button").removeClass("none");
                     }
                     $("#insertOption").show();
                     $("#submitOption").show();
@@ -1394,7 +1452,7 @@
                                 var starRateFlag=$("#switchCPStar").val();
                                 $("#starRateFlag").val(starRateFlag)
                                 $("#submitOption").hide();
-                                $(".star-remove-button").hide();
+                                $(".star-remove-button").addClass("none");
                                 layer.closeAll()
                 },
                 btn2: function(index, layero){
@@ -1407,7 +1465,7 @@
                     var starRateFlag=$("#switchCPStar").val();
                     $("#starRateFlag").val(starRateFlag)
                     $("#submitOption").show();
-                    $(".star-remove-button").show();
+                    $(".star-remove-button").removeClass("none");
                     layer.close(layer.index-1);
                 },
                 cancel: function(index,layero){ //按右上角“X”按钮
@@ -1419,7 +1477,7 @@
                     $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
                     $("#submitOption").show();
-                    $(".star-remove-button").show();
+                    $(".star-remove-button").removeClass("none");
                     layer.close(layer.index-1);
                 },
             });
@@ -1623,15 +1681,15 @@
                         //var checkOpen = $("#starRateFlag").val();
                         var isStarCheck = $("#switchCPStar").is(":checked")
                         $(".icon-tips-blue").show();
-                        if(${size < 5}){
+                        /*if(${size < 5}){
                             $("#submitOption").show();
-                        }
+                        }*/
                         if (isStarCheck == false){
-                            $(".star-remove-button").show();
+                            $(".star-remove-button").removeClass("none");
                             $("#insertOption").show();
-                            $("#submitOption").show();
+                           // $("#submitOption").show();
                         }else{
-                            $(".star-remove-button").hide();
+                            $(".star-remove-button").addClass("none");
                             $("#insertOption").hide();
                             $("#submitOption").hide();
                         }

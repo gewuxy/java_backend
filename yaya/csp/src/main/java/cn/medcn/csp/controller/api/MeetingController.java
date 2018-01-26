@@ -32,12 +32,14 @@ import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import cn.medcn.weixin.config.WeixinConfig;
 import cn.medcn.weixin.service.WXTokenService;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -1237,18 +1239,41 @@ public class MeetingController extends CspBaseController {
         if (course.getPassword() != null && course.getPassword().length() > 4) {
             return error(local("page.meeting.tips.watch.password.holder"));
         }
-        String password = type == Constants.NUMBER_ONE ? course.getPassword() : null;
         //判断用户操作的是否是自己的会议
         Principal principal = SecurityUtils.get();
         if (!principal.getId().equalsIgnoreCase(update.getCspUserId())) {
             return error(local("meet.notmine"));
         }
-        audioService.doModifyPassword(update, password);
-        Map<String,Object> map = new HashMap<>();
-        map.put("password",password);
-        return success(map);
+        audioService.doModifyPassword(update, type == Constants.NUMBER_ONE ? course.getPassword() : null);
+        return success();
     }
 
+    /**
+     * 获取课件密码
+     *
+     * @param course
+     * @return
+     */
+    @RequestMapping(value = "/get/password")
+    @ResponseBody
+    public String getPassword(AudioCourse course) {
+        if (course.getId() == null) {
+            return error(local("user.param.empty"));
+        }
+        //判断会议是否存在
+        AudioCourse update = audioService.selectByPrimaryKey(course.getId());
+        if (update == null) {
+            return error(local("source.not.exists"));
+        }
+        Principal principal = SecurityUtils.get();
+        if (!principal.getId().equalsIgnoreCase(update.getCspUserId())) {
+            return error(local("meet.notmine"));
+        }
+        String password = update.getPassword() == null ? "" : update.getPassword();
+        Map<String, Object> map = new HashMap<>();
+        map.put("password", password);
+        return success(map);
+    }
 
     /**
      * 获取星评状态和星评二维码
@@ -1341,49 +1366,109 @@ public class MeetingController extends CspBaseController {
 
 
     /**
-     * 小程序创建课件或者更新课件
+     * 小程序循环接收图片，创建课件
+     * @param file
+     * @param courseId 课件的id
+     * @param sort 图片的排序号
+     * @return
+     */
+    @RequestMapping("/upload/picture")
+    @ResponseBody
+    public String savePicture(@RequestParam(required = false) MultipartFile file,Integer courseId,Integer sort) throws SystemException {
+        if(file == null){
+            return error(local("upload.error.null"));
+        }
+        if(sort == null){
+            return error(local("user.param.empty"));
+        }
+
+        AudioCourse course = new AudioCourse();
+        course.setCspUserId(SecurityUtils.get().getId());
+        course.setId(courseId);
+
+        //创建课件或者添加课件图片
+        courseId = audioService.createAudioOrAddDetail(file, course,sort);
+        AudioCourseDTO dto = new AudioCourseDTO();
+        dto.setId(courseId);
+        return success(dto);
+    }
+
+
+    /**
+     * 完善或修改课件标题，主题，背景音乐
      * @param courseId
-     * @param files
      * @param title
      * @param imgId
      * @param musicId
      * @return
      * @throws SystemException
      */
-    @RequestMapping("/mini/create/update")
+    @RequestMapping(value = "/mini/update", method = RequestMethod.POST)
     @ResponseBody
-    public String createOrUpdateAudio(Integer courseId, @RequestParam("files") MultipartFile[] files, String title, Integer imgId,Integer musicId) throws SystemException {
-
-        String userId = SecurityUtils.get().getId();
+    public String updateAudio(Integer courseId,String title, Integer imgId,Integer musicId) throws SystemException {
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
+        //更新课件标题不能为空，为null表示不更新标题
+        if(title == ""){
+            return error(local("meeting.title.not.none"));
+        }
         AudioCourse course = new AudioCourse();
         course.setId(courseId);
         course.setTitle(title);
-        course.setUserId(userId);
-        course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
 
         AudioCourseTheme theme = new AudioCourseTheme();
-        theme.setMusicId(musicId);
+        theme.setCourseId(courseId);
         theme.setImageId(imgId);
-
-        //新建课件
-        if(courseId == null){
-            if(files == null){
-                return error(local("upload.error.null"));
-            }
-            if(StringUtils.isEmpty(title)){
-                return error(local("meeting.title.not.none"));
-            }
-            courseId = audioService.createAudioAndDetail(files, course, theme);
-            Map<String,Integer> map = new HashMap<>();
-            map.put("courseId",courseId);
-            return success(map);
-
-        }else{  //修改课件
-            theme.setCourseId(courseId);
-            audioService.updateMiniCourse(course,theme);
-            return success();
-        }
+        theme.setMusicId(musicId);
+        audioService.updateMiniCourse(course,theme);
+        return success();
     }
+
+
+//    /**
+//     * 创建课件或者更新课件
+//     * @param courseId
+//     * @param files
+//     * @param title
+//     * @param imgId
+//     * @param musicId
+//     * @return
+//     * @throws SystemException
+//     */
+//    @RequestMapping("/create/update")
+//    @ResponseBody
+//    public String createOrUpdateAudio(Integer courseId, @RequestParam(required = false) MultipartFile[] files , String title, Integer imgId,Integer musicId) throws SystemException {
+//        String userId = SecurityUtils.get().getId();
+//        AudioCourse course = new AudioCourse();
+//        course.setId(courseId);
+//        course.setTitle(title);
+//        course.setCspUserId(userId);
+//        course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
+//
+//        AudioCourseTheme theme = new AudioCourseTheme();
+//        theme.setMusicId(musicId);
+//        theme.setImageId(imgId);
+//
+//        //新建课件
+//        if(courseId == null){
+//            if(files == null){
+//                return error(local("upload.error.null"));
+//            }
+//            if(StringUtils.isEmpty(title)){
+//                return error(local("meeting.title.not.none"));
+//            }
+//            courseId = audioService.createAudioAndDetail(files, course, theme);
+//            Map<String,Integer> map = new HashMap<>();
+//            map.put("courseId",courseId);
+//            return success(map);
+//
+//        }else{  //修改课件
+//            theme.setCourseId(courseId);
+//            audioService.updateMiniCourse(course,theme);
+//            return success();
+//        }
+//    }
 
     /**
      * 小程序活动贺卡模板列表
