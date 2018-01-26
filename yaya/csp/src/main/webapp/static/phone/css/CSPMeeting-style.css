@@ -250,6 +250,10 @@ textarea { -webkit-appearance: none;}
 .meeting-star-main .star-box .star-item{ margin-right:0; }
 .meeting-star-main .star-box .star-item span { margin-right:.1rem;}
 
+.meeting-star-main .meeting-star-getStarNum { position: relative;}
+.meeting-star-main .meeting-star-getStarNum .fixed-box-item{    width: 100%; height: 100%; position: absolute; top: 0; left: 0; z-index: 20;}
+
+
 .meeting-star-button { margin-top:1rem;}
 .meeting-star-row .grade { display: inline-block; position: relative; top:-.05rem; width:.7rem; text-align: right;}
 .meeting-star-row { margin:.1rem 0;}
@@ -389,7 +393,7 @@ textarea { -webkit-appearance: none;}
 .CSPmeeting-ad-item .logo-title { font-size:.3rem; line-height: 1.2; margin-top:.05rem;}
 .CSPmeeting-ad-item { font-size:.22rem;}
 
-    /*双屏切换*/
+/*双屏切换*/
 .popup-fullStatus {}
 .popup-volume {}
 .warp .popup-fullStatus .popup-min-screen .viedoItem,
@@ -402,7 +406,7 @@ textarea { -webkit-appearance: none;}
 .warp .popup-fullStatus .popup-min-screen .boxAudio{ display: none;}
 .warp .popup-fullStatus .popup-min-screen .logo-watermark { display: none;}
 
-    /*水印*/
+/*水印*/
 .logo-watermark { position: absolute; z-index: 100;}
 .logo-watermark-item {
     display: inline-block;
@@ -469,7 +473,7 @@ textarea { -webkit-appearance: none;}
 .fixed-row { padding:0 10%;}
 
 
-    /*weui*/
+/*weui*/
 .weui-mask {
     position: fixed;
     z-index: 1000;
@@ -571,7 +575,7 @@ textarea { -webkit-appearance: none;}
     transform-origin: 0 100%;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
- }
+}
 .weui-actionsheet__title-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -692,7 +696,7 @@ textarea { -webkit-appearance: none;}
     .fixed-full-screen-min-main .fixed-text { margin:.3rem 0;}
     .fixed-error { top:-0.15rem;  }
 
-     .CSPMeeting-bottom, .CSPMeeting-bottom ,
-     .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
+    .CSPMeeting-bottom, .CSPMeeting-bottom ,
+    .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
 
 }

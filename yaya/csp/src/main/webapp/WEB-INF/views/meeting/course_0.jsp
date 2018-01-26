@@ -203,7 +203,7 @@
         <a  class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
     </div>
 </div>
-
+<c:set var="rated" scope="page" value="${not empty rateHistory}"/>
 <!--星評彈出層-->
 <div class="CSPMeeting-meeting-star-popup meeting-star-popup">
     <div class="meeting-star-popup-main ">
@@ -225,10 +225,10 @@
         <div class="meeting-star-main clearfix">
 
             <!--==========================选择分数小版-->
-            <c:set var="rated" scope="page" value="${not empty rateHistory}"/>
             <form id="dataForm" name="dataForm">
                 <input type="hidden" name="courseId" value="${course.id}">
             <div class="meeting-star-getStarNum">
+                <div class="fixed-box-item ${rated ? '' :'none'}"></div>
                 <c:choose>
                     <c:when test="${empty rateOptions}">
                         <div class="meeting-star-row clearfix getShowNum-min">
@@ -848,7 +848,7 @@
                     $("#submitBtn").addClass("none");
                     $("#ratedBtn").removeClass("none");
 
-                    $("input[type='radio']").attr("disabled", "true");
+                    $(".fixed-box-item").removeClass("none");
                 }
             }, 'json');
         }

@@ -245,6 +245,7 @@
             <form id="dataForm" name="dataForm">
                 <input type="hidden" name="courseId" value="${course.id}">
                 <div class="meeting-star-getStarNum">
+                    <div class="fixed-box-item ${rated ? '' :'none'}"></div>
                     <c:choose>
                         <c:when test="${empty rateOptions}">
                             <div class="meeting-star-row clearfix getShowNum-min">
@@ -1034,13 +1035,15 @@
     });
 
     //提交评分操作
-    function doRate() {
-        if (!$("#submitBtn").hasClass("disabled")) {
+    function doRate(){
+        if(!$("#submitBtn").hasClass("disabled")){
             var data = $("#dataForm").serialize();
             $.post('${ctx}/api/meeting/share/rate', data, function (result) {
-                if (result.code == 0) {
+                if(result.code == 0){
                     $("#submitBtn").addClass("none");
                     $("#ratedBtn").removeClass("none");
+
+                    $(".fixed-box-item").removeClass("none");
                 }
             }, 'json');
         }
