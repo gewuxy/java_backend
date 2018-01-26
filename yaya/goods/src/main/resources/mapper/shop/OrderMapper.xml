@@ -2,7 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.medcn.goods.dao.OrderDAO" >
 
-
+    <select id="findOrderList" resultType="cn.medcn.goods.model.Order">
+        SELECT o.*,g.name FROM t_goods_order o LEFT JOIN t_goods g ON g.id = o.goods_id
+        <if test="searchKey != null">
+            AND (
+                o.order_no = #{searchKey}
+                OR o.phone LIKE CONCAT('%',#{searchKey}, '%')
+                OR o.post_no = #{searchKey}
+            )
+        </if>
+        <if test="status != null">
+            AND o.status = #{status}
+        </if>
+        ORDER BY o.id DESC
+    </select>
 
     <select id="findMyOrder" resultType="cn.medcn.goods.dto.OrderDTO">
 
