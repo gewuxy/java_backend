@@ -575,7 +575,7 @@
 
     var uploadOver = false;
 
-    var success = true;
+    var success = false;
 
     $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
         var id = $(this).attr("id");
@@ -950,7 +950,7 @@
                 closeBtn:0,
                 content: $('.meeting-classify-popup-box'),
                 success:function(layero){
-
+                    success = true;
                     //弹出层高度 - （标题 + 标题到内容的间距 + 弹出层的内边距)
                     var popupHeight = layero.height() - 85;
                     //触发滚动条控件
@@ -1090,6 +1090,7 @@
 
         $(function(){
             $("#switchCPStar").click(function () {
+                success = true;
                 var isStarCheck = $("#switchCPStar").is(":checked");
                 $("#starRateFlag").val(isStarCheck);
                 var starFlag = ${course.starRateFlag};
@@ -1260,6 +1261,7 @@
         })
 
         $("#btnStar").click(function () {
+            success = true;
             var starOption;
              if (${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}){
                  starOption =  $("#limitOptionCn").val();
@@ -1640,7 +1642,7 @@
         $(function () {
             $("#limitFive").addClass("none");
             $("#saveSubmit").click(function () {
-                success = false;
+
                 var submitFormState=  ${course.published};
                     var $courseInfo = $("#courseInfo");
                     var startTime = $("#liveStartTime").val();
@@ -1718,6 +1720,14 @@
                 })
             }
 
+        })
+
+
+        /*监听改变*/
+        $(function () {
+            $("#courseForm").change(function () {
+                success = true;
+            })
         })
 
 
