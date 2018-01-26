@@ -215,11 +215,11 @@
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
                             <input type="hidden" name="watermark.name" id="name" value="${appName}">
-                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="">
+                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="${course.starRateFlag}">
                             <script>
                                 $(function () {
-                                    var checkOpen = $("#switchCPStar").val()
-                                    $("#starRateFlag").val(checkOpen);
+                                    var isStarCheck = $("#switchCPStar").is(":checked");
+                                    $("#starRateFlag").val(isStarCheck);
                                 })
                             </script>
                             <div class="meeting-form-item login-form-item">
