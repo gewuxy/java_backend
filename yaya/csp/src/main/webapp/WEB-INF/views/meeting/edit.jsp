@@ -985,7 +985,7 @@
             //弹出观看密码成功
             layer.open({
                 type: 1,
-                area: ['609px', '300px'],
+                area: ['609px', '320px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
@@ -1047,7 +1047,7 @@
             //弹出观看密码成功
                 layer.open({
                     type: 1,
-                    area: ['609px', '400px'],
+                    area: ['609px', '420px'],
                     fix: false, //不固定
                     title:false,
                     closeBtn:0,
@@ -1368,7 +1368,7 @@
         function starTips() {
             layer.open({
                 type: 1,
-                area: ['440px', '250px'],
+                area: ['440px', '270px'],
                 fix: false, //不固定
                 title:false,
                 closeBtn:0,
