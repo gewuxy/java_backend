@@ -1385,9 +1385,9 @@ public class MeetingController extends CspBaseController {
 
         //创建课件或者添加课件图片
         courseId = audioService.createAudioOrAddDetail(file, course,sort);
-        Map<String,Integer> map = new HashMap<>();
-        map.put("courseId",courseId);
-        return success(map);
+        AudioCourseDTO dto = new AudioCourseDTO();
+        dto.setId(courseId);
+        return success(dto);
     }
 
 

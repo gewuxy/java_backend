@@ -1482,10 +1482,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if(result != null){
             theme.setId(result.getId());
             audioCourseThemeDAO.updateByPrimaryKeySelective(theme);
-        }else{
-            if(theme.getMusicId() == null || theme.getImageId() == null){
-                throw new SystemException(local("course.imgId.musicId.none"));
-            }
+        }else if(theme.getImageId() != null || theme.getMusicId() != null){
             //新建主题和背景音乐操作
             audioCourseThemeDAO.insertSelective(theme);
         }
