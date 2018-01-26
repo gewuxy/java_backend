@@ -1344,7 +1344,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public Integer createAudioAndDetail(MultipartFile[] files, AudioCourse course, AudioCourseTheme theme) throws SystemException {
         //生成课件
           course.setCreateTime(new Date());
-          course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+          course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
           course.setPlayType(AudioCourse.PlayType.normal.getType());
           course.setPublished(true);
           course.setShared(false);
@@ -1526,7 +1526,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if(course.getId() == null){
             //生成课件
             course.setCreateTime(new Date());
-            course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+            course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
             course.setPlayType(AudioCourse.PlayType.normal.getType());
             course.setPublished(false);
             course.setShared(false);
@@ -1562,7 +1562,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioCourseDetail detail = new AudioCourseDetail();
         detail.setCourseId(courseId);
         detail.setImgUrl(imgUrl);
-        detail.setSort(sort);
+        //小程序传过来的排序号是从0开始
+        detail.setSort(sort + 1);
         addDetail(detail);
 
         return courseId;

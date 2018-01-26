@@ -24,7 +24,7 @@
     </style>
 
 </head>
-<body onbeforeunload=" if (success == false) return '' ">
+<body onbeforeunload=" if(success == true) return '' ">
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
@@ -575,7 +575,7 @@
 
     var uploadOver = false;
 
-    var success = false;
+    var success = true;
 
     $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
         var id = $(this).attr("id");
@@ -1638,17 +1638,28 @@
 
         /*页面提交*/
         $(function () {
-            success = true;
             $("#limitFive").addClass("none");
-
             $("#saveSubmit").click(function () {
+                success = false;
                 var submitFormState=  ${course.published};
                     var $courseInfo = $("#courseInfo");
+                    var startTime = $("#liveStartTime").val();
+                    var $timedate = $(".timedate-input");
+                    var playType =  $("#coursePlayType").val();
                     if ($.trim($courseInfo.val()) == ''){
                         $courseInfo.focus();
                         $courseInfo.parent().next(".error").removeClass("none");
                         return;
-                    } else {
+                    } else if(playType >= 1){
+                        if(startTime == ""  || startTime == null){
+                            $timedate.focus();
+                            $timedate.parent().parent().next(".error").removeClass("none");
+                            return;
+                        }else{
+                            $timedate.parent().parent().next(".error").addClass("none");
+                        }
+                    }else {
+                        $courseInfo.parent().next(".error").addClass("none");
                         if(submitFormState == false){
                             saveFormNoPublished();
 
