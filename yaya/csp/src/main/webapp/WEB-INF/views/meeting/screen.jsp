@@ -12,7 +12,6 @@
     <title><fmt:message key="page.meeting.button.scan_screen"/> - <fmt:message key="page.common.appName"/></title>
 
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
-    <link rel="stylesheet" href="${ctxStatic}/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/css/audio.css">
     <style>
         html,body,
