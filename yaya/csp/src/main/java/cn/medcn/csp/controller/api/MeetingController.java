@@ -32,6 +32,7 @@ import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import cn.medcn.weixin.config.WeixinConfig;
 import cn.medcn.weixin.service.WXTokenService;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -1234,18 +1235,41 @@ public class MeetingController extends CspBaseController {
         if (course.getPassword() != null && course.getPassword().length() > 4) {
             return error(local("page.meeting.tips.watch.password.holder"));
         }
-        String password = type == Constants.NUMBER_ONE ? course.getPassword() : null;
         //判断用户操作的是否是自己的会议
         Principal principal = SecurityUtils.get();
         if (!principal.getId().equalsIgnoreCase(update.getCspUserId())) {
             return error(local("meet.notmine"));
         }
-        audioService.doModifyPassword(update, password);
-        Map<String,Object> map = new HashMap<>();
-        map.put("password",password);
-        return success(map);
+        audioService.doModifyPassword(update, type == Constants.NUMBER_ONE ? course.getPassword() : null);
+        return success();
     }
 
+    /**
+     * 获取课件密码
+     *
+     * @param course
+     * @return
+     */
+    @RequestMapping(value = "/get/password")
+    @ResponseBody
+    public String getPassword(AudioCourse course) {
+        if (course.getId() == null) {
+            return error(local("user.param.empty"));
+        }
+        //判断会议是否存在
+        AudioCourse update = audioService.selectByPrimaryKey(course.getId());
+        if (update == null) {
+            return error(local("source.not.exists"));
+        }
+        Principal principal = SecurityUtils.get();
+        if (!principal.getId().equalsIgnoreCase(update.getCspUserId())) {
+            return error(local("meet.notmine"));
+        }
+        String password = update.getPassword() == null ? "" : update.getPassword();
+        Map<String, Object> map = new HashMap<>();
+        map.put("password", password);
+        return success(map);
+    }
 
     /**
      * 获取星评状态和星评二维码
