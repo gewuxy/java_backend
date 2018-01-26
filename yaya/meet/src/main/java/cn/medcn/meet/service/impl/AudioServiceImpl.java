@@ -560,15 +560,17 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     @CacheEvict(value = DEFAULT_CACHE, key = "'audio_course_'+#courseId")
     public void updateAllDetails(Integer courseId, List<String> pptImageList) {
-        deleteAllDetails(courseId);
-        int sort = 1;
-        for(String pptImage : pptImageList){
-            AudioCourseDetail courseDetail = new AudioCourseDetail();
-            courseDetail.setCourseId(courseId);
-            courseDetail.setSort(sort);
-            courseDetail.setImgUrl(pptImage);
-            audioCourseDetailDAO.insert(courseDetail);
-            sort++;
+        if(pptImageList != null && pptImageList.size() != 0){
+            deleteAllDetails(courseId);
+            int sort = 1;
+            for(String pptImage : pptImageList){
+                AudioCourseDetail courseDetail = new AudioCourseDetail();
+                courseDetail.setCourseId(courseId);
+                courseDetail.setSort(sort);
+                courseDetail.setImgUrl(pptImage);
+                audioCourseDetailDAO.insert(courseDetail);
+                sort++;
+            }
         }
     }
 
@@ -1341,6 +1343,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         //生成课件
           course.setCreateTime(new Date());
           course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+          course.setPlayType(AudioCourse.PlayType.normal.getType());
+          course.setPublished(true);
+          course.setShared(false);
+          course.setDeleted(false);
+          course.setLocked(false);
+          course.setGuide(false);
+          course.setStarRateFlag(false);
           insert(course);
           Integer courseId = course.getId();
 
@@ -1375,6 +1384,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             imgList.add(relativePath + fileName);
         }
             updateAllDetails(courseId,imgList);
+
 
         return courseId;
     }
@@ -1452,26 +1462,30 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
 
     /**
-     * 更新小程序课件信息
+     * 更新小程序课件信息,包括创建课件主题和背景音乐
      * @param course
      * @param theme
      * @return
      */
     @Override
     public void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException {
-        int count1 = updateByPrimaryKeySelective(course);
-        if(count1 != 1){
-            throw new SystemException(local("page.words.update.fail"));
-        }
+        //修改课件标题,课件状态
+        course.setPublished(true);
+        updateByPrimaryKeySelective(course);
+
         AudioCourseTheme condition = new AudioCourseTheme();
         condition.setCourseId(course.getId());
         AudioCourseTheme result = audioCourseThemeDAO.selectOne(condition);
+        //更新主题和背景音乐操作
         if(result != null){
             theme.setId(result.getId());
-            int count2 = audioCourseThemeDAO.updateByPrimaryKeySelective(theme);
-            if(count2 != 1){
-                throw new SystemException(local("page.words.update.fail"));
+            audioCourseThemeDAO.updateByPrimaryKeySelective(theme);
+        }else{
+            if(theme.getMusicId() == null || theme.getImageId() == null){
+                throw new SystemException(local("course.imgId.musicId.none"));
             }
+            //新建主题和背景音乐操作
+            audioCourseThemeDAO.insertSelective(theme);
         }
     }
 
@@ -1497,5 +1511,61 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     public MyPage<CourseDeliveryDTO> findMiniMeetingListByType(Pageable pageable) {
         PageHelper.startPage(pageable.getPageNum(), pageable.getPageSize(), true);
         return MyPage.page2Mypage((Page) audioCourseDAO.findMiniMeetingListByType(pageable.getParams()));
+    }
+
+
+    /**
+     * 创建课件或者添加课件图片
+     * @param file
+     * @param course
+     * @param sort
+     * @return
+     */
+    @Override
+    public Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort) throws SystemException {
+        //创建课件
+        if(course.getId() == null){
+            //生成课件
+            course.setCreateTime(new Date());
+            course.setSourceType(AudioCourse.SourceType.csp.ordinal());
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+            course.setPublished(false);
+            course.setShared(false);
+            course.setDeleted(false);
+            course.setLocked(false);
+            course.setGuide(false);
+            course.setStarRateFlag(false);
+            insert(course);
+        }
+        Integer courseId = course.getId();
+        //添加课件图片
+
+        //相对路径
+        String relativePath = FilePath.COURSE.path + "/" + courseId + "/ppt/";
+        //文件保存路径
+        String savePath = appFileUploadBase + relativePath;
+        File dir = new File(savePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+        String fileName = null;
+        //文件绝对路径
+        String absoluteName = null;
+        fileName = UUIDUtil.getNowStringID() + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        absoluteName = savePath + fileName;
+        File saveFile = new File(absoluteName);
+        try {
+            file.transferTo(saveFile);
+        } catch (IOException e) {
+            throw new SystemException(local("upload.error"));
+        }
+        String imgUrl = relativePath + fileName;
+        AudioCourseDetail detail = new AudioCourseDetail();
+        detail.setCourseId(courseId);
+        detail.setImgUrl(imgUrl);
+        detail.setSort(sort);
+        addDetail(detail);
+
+        return courseId;
     }
 }
