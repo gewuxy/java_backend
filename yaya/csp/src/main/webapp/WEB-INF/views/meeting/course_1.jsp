@@ -1028,7 +1028,7 @@
         });
 
         //评分阶段直接弹出评分
-        if ("${live.liveState == 3}" == "true") {
+        if ("${live.liveState == 3 && course.starRateFlag}" == "true") {
             openStarRate();
         }
     });

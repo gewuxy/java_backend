@@ -835,7 +835,7 @@
             }
         });
 
-        if("${play.playState == 3}" == "true"){
+        if("${play.playState == 3 && course.starRateFlag}" == "true"){
             openStarRate();
         }
     });
