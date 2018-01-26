@@ -1642,11 +1642,19 @@
             $("#saveSubmit").click(function () {
                 var submitFormState=  ${course.published};
                     var $courseInfo = $("#courseInfo");
+                    var startTime = $("#liveStartTime").val();
+                    var $timedate = $(".timedate-input");
                     if ($.trim($courseInfo.val()) == ''){
                         $courseInfo.focus();
                         $courseInfo.parent().next(".error").removeClass("none");
                         return;
-                    } else {
+                    } else if(startTime == ""  || startTime == null){
+                        $timedate.focus();
+                        $timedate.parent().parent().next(".error").removeClass("none");
+                        return;
+                    }else {
+                        $courseInfo.parent().next(".error").addClass("none");
+                        $timedate.parent().parent().next(".error").addClass("none");
                         if(submitFormState == false){
                             saveFormNoPublished();
 
