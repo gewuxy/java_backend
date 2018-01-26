@@ -99,6 +99,7 @@
                                             <input type="file" name="file" class="none" id="uploadFile">
                                             <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt="" id="cover"></p>
                                             <p id="uploadTipView"><fmt:message key="page.meeting.drag.upload"/></p>
+                                            <p class="error" id="sugest"><fmt:message key="page.meeting.upload.sugest"/></p>
                                         </label>
                                     </div>
                                 </c:otherwise>
@@ -600,6 +601,7 @@
         $("#cover").attr("src", data.coverUrl);
         $(".upload-ppt-area").addClass("upload-ppt-area upload-ppt-area-finish logo-watermark");
         $("#uploadTipView").addClass("none");
+        $("#sugest").addClass("none");
 
         $("#uploadFile").replaceWith('<input type="file" id="uploadFile" name="file" class="none">');
         $("#reUploadFile").replaceWith('<input type="file" id="reUploadFile" name="file" class="none">');
@@ -1112,8 +1114,8 @@
                             $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
                             $("#insertOption").hide();
                             $("#submitOption").hide();
-                            $(".half").attr("null");
-                            $(".full").attr("null");
+                            $(".half").removeClass("half").addClass("null");
+                            $(".full").removeClass("half").addClass("null");
                             $(".star-remove-button").addClass("none");
                             $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
                         }
@@ -1375,16 +1377,6 @@
                     if (${size>0}){
                         $(".star-remove-button").addClass("none");
                     }
-                    /*$.get('${ctx}/mgr/meet/starDetail/del/'+${course.id}, {}, function(data){
-                        if(data.code==0){
-                            $("#switchCPStar").prop("checked", true);
-                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
-                            $("#insertOption").hide();
-                            $("#submitOption").hide();
-                        }else{
-                            layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
-                        }
-                    },'json')*/
                    $.ajax({
                         type:'GET',
                         url:'${ctx}/mgr/meet/starDetail/del/'+${course.id},
@@ -1396,8 +1388,8 @@
                                 $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
                                 $("#insertOption").hide();
                                 $("#submitOption").hide();
-                                $(".half").attr("null");
-                                $(".full").attr("null");
+                                $(".half").removeClass("half").addClass("null");
+                                $(".full").removeClass("half").addClass("null");
                                 $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
                             }else{
                                 layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
@@ -1413,7 +1405,7 @@
                         $(".star-remove-button").removeClass("none");
                     }
                     $("#insertOption").show();
-                    $("#submitOption").show();
+                    $("#submitOption").hide();
                     layer.closeAll();
                 },
                 cancel :function(){
@@ -1423,7 +1415,7 @@
                         $(".star-remove-button").removeClass("none");
                     }
                     $("#insertOption").show();
-                    $("#submitOption").show();
+                    $("#submitOption").hide();
                     layer.closeAll();
                 },
             });
@@ -1464,7 +1456,7 @@
                     $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
                     $("#starRateFlag").val(starRateFlag)
-                    $("#submitOption").show();
+                    $("#submitOption").hide();
                     $(".star-remove-button").removeClass("none");
                     layer.close(layer.index-1);
                 },
@@ -1476,7 +1468,7 @@
                     var isStarCheck = $("#switchCPStar").is(":checked");
                     $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
-                    $("#submitOption").show();
+                    $("#submitOption").hide();
                     $(".star-remove-button").removeClass("none");
                     layer.close(layer.index-1);
                 },
@@ -1678,16 +1670,11 @@
                     dataType:"JSON",
                     success: function(data) {
                     if(data.code=="0"){
-                        //var checkOpen = $("#starRateFlag").val();
                         var isStarCheck = $("#switchCPStar").is(":checked")
                         $(".icon-tips-blue").show();
-                        /*if(${size < 5}){
-                            $("#submitOption").show();
-                        }*/
                         if (isStarCheck == false){
                             $(".star-remove-button").removeClass("none");
                             $("#insertOption").show();
-                           // $("#submitOption").show();
                         }else{
                             $(".star-remove-button").addClass("none");
                             $("#insertOption").hide();

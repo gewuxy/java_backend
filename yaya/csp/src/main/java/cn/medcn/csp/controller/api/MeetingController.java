@@ -192,12 +192,15 @@ public class MeetingController extends CspBaseController {
                 return localeView("/meeting/share_error");
             }
 
-            if (course.getDeleted() != null && course.getDeleted() == true) {
-                model.addAttribute("error", local("source.has.deleted"));
-                return localeView("/meeting/share_error");
-            }
             if (course.getPlayType() == null) {
                 course.setPlayType(0);
+            }
+
+            if (course.getDeleted() != null
+                    && course.getDeleted() == true
+                    && course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
+                model.addAttribute("error", local("source.has.deleted"));
+                return localeView("/meeting/share_error");
             }
 
             //查询出星评信息
