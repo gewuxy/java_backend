@@ -24,7 +24,7 @@
     </style>
 
 </head>
-<body onbeforeunload=" if (success == false) return '' ">
+<body onbeforeunload=" if(success == true) return '' ">
 <div id="wrapper">
     <%@include file="../include/header.jsp" %>
     <div class="admin-content bg-gray" >
@@ -244,7 +244,7 @@
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
                                     <span class="subject"><fmt:message key="page.meeting.tab.category"/>&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? (isZh ? courseCategory.parent.nameCn:courseCategory.parent.nameEn) : (isZh ? rootList[0].nameCn:rootList[0].nameEn)}</i></span><span class="office" id="subCategory">${empty course.category ? (isZh ? subList[0].nameCn : subList[0].nameEn) : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
-                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZH ? subList[0].nameCn : subList[0].nameEn)}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZh ? subList[0].nameCn : subList[0].nameEn)}">
                                 </div>
                                 <c:if test="${ not empty course.details && packageId > 1}">
                                     <div class="cells-block meeting-watermark">
@@ -575,7 +575,7 @@
 
     var uploadOver = false;
 
-    var success = false;
+    var success = true;
 
     $("#uploadFile, #reUploadFile, #reUploadFile2").change(function(){
         var id = $(this).attr("id");
@@ -1638,17 +1638,28 @@
 
         /*页面提交*/
         $(function () {
-            success = true;
             $("#limitFive").addClass("none");
-
             $("#saveSubmit").click(function () {
+                success = false;
                 var submitFormState=  ${course.published};
                     var $courseInfo = $("#courseInfo");
+                    var startTime = $("#liveStartTime").val();
+                    var $timedate = $(".timedate-input");
+                    var playType =  $("#coursePlayType").val();
                     if ($.trim($courseInfo.val()) == ''){
                         $courseInfo.focus();
                         $courseInfo.parent().next(".error").removeClass("none");
                         return;
-                    } else {
+                    } else if(playType >= 1){
+                        if(startTime == ""  || startTime == null){
+                            $timedate.focus();
+                            $timedate.parent().parent().next(".error").removeClass("none");
+                            return;
+                        }else{
+                            $timedate.parent().parent().next(".error").addClass("none");
+                        }
+                    }else {
+                        $courseInfo.parent().next(".error").addClass("none");
                         if(submitFormState == false){
                             saveFormNoPublished();
 

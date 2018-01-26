@@ -25,7 +25,7 @@
 <div id="wrapper" >
 
     <%-- 投屏 --%>
-    <div class="full-qrcode ${record.playState < 3 ? '':'none'}" id="screen">
+    <div class="full-qrcode" id="screen">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode" ><img src="${fileBase}${qrCodeUrl}" alt=""></div>
@@ -35,7 +35,7 @@
     </div>
 
     <%-- 星评 --%>
-    <div class="full-qrcode ${record.playState == 3 ? '':'none'}" id="star">
+    <div class="full-qrcode none" id="star">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <div class="qrcode" ><img src="${fileBase}${starQrCodeUrl}" alt=""></div>
@@ -45,7 +45,7 @@
     </div>
 
     <%-- 结束 --%>
-    <div class="full-qrcode ${record.playState == 4 ? '':'none'}" id="cspmake">
+    <div class="full-qrcode none" id="cspmake">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <img src="${ctxStatic}/images/full-end-logo.png" alt="">
@@ -53,8 +53,6 @@
         </div>
     </div>
     
-<c:choose>
- <c:when test="${record.playState <3}">
     <div class="swiper-fullPage">
         <div class="metting-swiper">
             <!-- Swiper -->
@@ -89,8 +87,6 @@
         </div>
 
     </div>
- </c:when>
-</c:choose>
 </div>
 <script src="${ctxStatic}/js/audio.js"></script>
 <script src="${ctxStatic}/js/swiper.jquery.js"></script>
