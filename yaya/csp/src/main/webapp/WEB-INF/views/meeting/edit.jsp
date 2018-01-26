@@ -219,7 +219,14 @@
                             <script>
                                 $(function () {
                                     var isStarCheck = $("#switchCPStar").is(":checked");
+                                    var starRateFlag = ${course.starRateFlag};
+                                    //var checkOpen = $("#switchCPStar").val();
                                     $("#starRateFlag").val(isStarCheck);
+                                    if (isStarCheck){
+                                        $("#starRateFlag").val(isStarCheck);
+                                    }else{
+                                        $("#starRateFlag").val(starRateFlag);
+                                    }
                                 })
                             </script>
                             <div class="meeting-form-item login-form-item">
@@ -1082,6 +1089,7 @@
         $(function(){
             $("#switchCPStar").click(function () {
                 var isStarCheck = $("#switchCPStar").is(":checked");
+                $("#starRateFlag").val(isStarCheck);
                 var starFlag = ${course.starRateFlag};
                 var size = ${size}
                 var published = ${course.published}
