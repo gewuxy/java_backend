@@ -440,4 +440,13 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     MyPage<CourseDeliveryDTO> findMiniMeetingListByType(Pageable pageable);
+
+    /**
+     * 创建课件或者添加课件图片
+     * @param file
+     * @param course
+     * @param sort
+     * @return
+     */
+    Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort) throws SystemException;
 }

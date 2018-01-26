@@ -215,7 +215,7 @@
     <div class="fixed-full-screen-box ${live.liveState == 0 ? '' : 'none'}" id="liveStartView">
         <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
-            <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${course.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
+            <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
         </div>
     </div>
 
@@ -287,9 +287,9 @@
 <!--弹出选择框-->
 <div class="listItme-popup">
     <div class="listItme-popup-main">
-        <a href="javscript:;" class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
-        <c:if test="${course.starRateFlag}"><a href="javscript:;" class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
-        <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
+        <a class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
+        <c:if test="${course.starRateFlag}"><a class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
+        <a class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
     </div>
 </div>
 
@@ -1213,7 +1213,8 @@
             }
         });
 
-        if ("${live.liveState == 3}" == "true") {
+        //评分阶段直接弹出评分
+        if ("${live.liveState == 3 && course.starRateFlag}" == "true") {
             openStarRate();
         }
     });

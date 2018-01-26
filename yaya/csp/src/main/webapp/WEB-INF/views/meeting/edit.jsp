@@ -99,6 +99,7 @@
                                             <input type="file" name="file" class="none" id="uploadFile">
                                             <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt="" id="cover"></p>
                                             <p id="uploadTipView"><fmt:message key="page.meeting.drag.upload"/></p>
+                                            <p class="error" id="sugest"><fmt:message key="page.meeting.upload.sugest"/></p>
                                         </label>
                                     </div>
                                 </c:otherwise>
@@ -135,8 +136,8 @@
                         </div>
 
                         <%--456星评功能--%>
-                        <div class="upload-metting-star">
-                            <div class="upload-metting-star-head" id="dataFlash">
+                        <div class="upload-metting-star" id="dataFlash">
+                            <div class="upload-metting-star-head" >
                                 <div class="fr upload-metting-star-switch">
                                     <div class="weui-cell__ft">
                                         <label for="switchCPStar" class="mui-switch-box">
@@ -215,11 +216,18 @@
                             <input type="hidden" name="watermark.direction" id="direction" value="2">
                             <input type="hidden" name="watermark.state" id="state" value="1">
                             <input type="hidden" name="watermark.name" id="name" value="${appName}">
-                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="">
+                            <input type="hidden" name="starRateFlag" id="starRateFlag" value="${course.starRateFlag}">
                             <script>
                                 $(function () {
-                                    var checkOpen = $("#switchCPStar").val()
-                                    $("#starRateFlag").val(checkOpen);
+                                    var isStarCheck = $("#switchCPStar").is(":checked");
+                                    var starRateFlag = ${course.starRateFlag};
+                                    //var checkOpen = $("#switchCPStar").val();
+                                    $("#starRateFlag").val(isStarCheck);
+                                    if (isStarCheck){
+                                        $("#starRateFlag").val(isStarCheck);
+                                    }else{
+                                        $("#starRateFlag").val(starRateFlag);
+                                    }
                                 })
                             </script>
                             <div class="meeting-form-item login-form-item">
@@ -236,7 +244,7 @@
                                 <div class="cells-block clearfix meeting-classify meeting-classify-hook">
                                     <span class="subject"><fmt:message key="page.meeting.tab.category"/>&nbsp;&nbsp;|<i id="rootCategory">${not empty courseCategory ? (isZh ? courseCategory.parent.nameCn:courseCategory.parent.nameEn) : (isZh ? rootList[0].nameCn:rootList[0].nameEn)}</i></span><span class="office" id="subCategory">${empty course.category ? (isZh ? subList[0].nameCn : subList[0].nameEn) : course.category}</span>
                                     <input type="hidden" id="courseCategoryId" name="course.categoryId" value="${not empty course.categoryId ? course.categoryId : subList[0].id}">
-                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZH ? subList[0].nameCn : subList[0].nameEn)}">
+                                    <input type="hidden" id="courseCategoryName" name="course.category" value="${not empty course.category ? course.category : (isZh ? subList[0].nameCn : subList[0].nameEn)}">
                                 </div>
                                 <c:if test="${ not empty course.details && packageId > 1}">
                                     <div class="cells-block meeting-watermark">
@@ -593,6 +601,7 @@
         $("#cover").attr("src", data.coverUrl);
         $(".upload-ppt-area").addClass("upload-ppt-area upload-ppt-area-finish logo-watermark");
         $("#uploadTipView").addClass("none");
+        $("#sugest").addClass("none");
 
         $("#uploadFile").replaceWith('<input type="file" id="uploadFile" name="file" class="none">');
         $("#reUploadFile").replaceWith('<input type="file" id="reUploadFile" name="file" class="none">');
@@ -1082,26 +1091,62 @@
         $(function(){
             $("#switchCPStar").click(function () {
                 var isStarCheck = $("#switchCPStar").is(":checked");
+                $("#starRateFlag").val(isStarCheck);
                 var starFlag = ${course.starRateFlag};
                 var size = ${size}
                 var published = ${course.published}
                 var count = ${count}
-                if(published == false){
+                if(published == false || starFlag == false){
                     if (isStarCheck){
                         starTips();
                     }else {
                         $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                         $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
                         $("#insertOption").show();
-                        $(".star-remove-button").show();
+                        $(".star-remove-button").removeClass("none");
                     }
                 }else {
                     if ((size == 0||size >0 ) && isStarCheck && starFlag==true){
-                        delTips();
+                        if(count>0){
+                            delTips();
+                        }else{
+                            $("#switchCPStar").prop("checked", true);
+                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                            $("#insertOption").hide();
+                            $("#submitOption").hide();
+                            $(".half").removeClass("half").addClass("null");
+                            $(".full").removeClass("half").addClass("null");
+                            $(".star-remove-button").addClass("none");
+                            $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
+                        }
                     }else if ((size == 0||size >0 ) && starFlag==false && isStarCheck){
+                        if (count>0){
                             starTips();
+                        }else{
+                            $("#switchCPStar").prop("checked", true);
+                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                            $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +0+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
+                            $("#insertOption").hide();
+                            var isStarCheck = $("#switchCPStar").is(":checked");
+                            $("#switchCPStar").val(isStarCheck);
+                            var starRateFlag=$("#switchCPStar").val();
+                            $("#starRateFlag").val(starRateFlag)
+                            $("#submitOption").hide();
+                            $(".star-remove-button").addClass("none");
+                        }
+
                     }else {
-                        closeTips();
+                        if (count>0){
+                            closeTips();
+                        }else{
+                            $("#switchCPStar").removeAttr("checked");
+                            $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
+                            if (${size>0}){
+                                $(".star-remove-button").removeClass("none");
+                            }
+                            $("#insertOption").show();
+                        }
+
                     }
                 }
             })
@@ -1125,12 +1170,12 @@
                                 $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +score+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
                                 $("#insertOption").hide();
                                 $("#submitOption").hide();
-                                $(".star-remove-button").hide();
+                                $(".star-remove-button").addClass("none");
                             }else{
                                 $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                                 $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
                                 $("#insertOption").show();
-                                $(".star-remove-button").show();
+                                $(".star-remove-button").removeClass("none");
                             }
                             var avgScore =data.data.multipleResult.avgScore;
                             var optionId = data.data.multipleResult.optionId;
@@ -1153,9 +1198,12 @@
                                 html += '</div>';
                                 $("#starDiv").html(html);
                                 if (${course.starRateFlag ==true}){
-                                    $(".star-remove-button").hide();
+                                    $(".star-remove-button").addClass("none");
                                 }else{
-                                    $(".star-remove-button").show();
+                                    $(".star-remove-button").removeClass("none");
+                                }
+                                if(score == 0){
+                                    $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
                                 }
                                 $(".star-remove-button").click(function () {
                                     var oid = $(this).attr("optionId");
@@ -1221,11 +1269,11 @@
                  $("#limitOptionUs").val("");
              }
             var starLength = starOption.length;
-            var reg = /^[\u4e00-\u9fa5]{1,6}$|^[a-zA-Z]{1,12}$/;
-            var  regStarOption= reg.test(starOption);
+            //var reg = /^[\u4e00-\u9fa5^%&',;=?$\x22]{1,6}$|^[a-zA-Z^%&',;=?$\x22]{1,12}$/;
+           // var  regStarOption= reg.test(starOption);
             //regStarOption = spaceReg.test(starOption);
             var optionId ;
-            if (starOption != "" && regStarOption){
+            if (starOption != "" ){
                 ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
@@ -1290,9 +1338,10 @@
                         $("#switchCPStar").removeAttr("checked");
                         $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                         if (${size>0}){
-                            $(".star-remove-button").show();
+                            $(".star-remove-button").removeClass("none");
                         }
                         $("#insertOption").show();
+                        $("#submitOption").hide();
 
                         layer.closeAll();
                     },
@@ -1326,38 +1375,47 @@
                     $("#switchCPStar").prop("checked", true);
                     $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
                     if (${size>0}){
-                        $(".star-remove-button").hide();
+                        $(".star-remove-button").addClass("none");
                     }
-                    $.get('${ctx}/mgr/meet/starDetail/del/'+${course.id}, {}, function(data){
-                        if(data.code==0){
-                            $("#switchCPStar").prop("checked", true);
-                            $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
-                            $("#insertOption").hide();
-                            $("#submitOption").hide();
-                        }else{
-                            layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
-                        }
-                    },'json')
+                   $.ajax({
+                        type:'GET',
+                        url:'${ctx}/mgr/meet/starDetail/del/'+${course.id},
+                        dataType:'json',
+                        async: false,
+                        success:function(data){
+                            if(data.code==0){
+                                $("#switchCPStar").prop("checked", true);
+                                $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
+                                $("#insertOption").hide();
+                                $("#submitOption").hide();
+                                $(".half").removeClass("half").addClass("null");
+                                $(".full").removeClass("half").addClass("null");
+                                $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
+                            }else{
+                                layer.msg("<fmt:message key="page.meeting.star.on.fail"/>");
+                            }
+                        },
+                    });
                     layer.closeAll();
                 },
                 btn2 :function(){
                     $("#switchCPStar").removeAttr("checked");
                     $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                     if (${size>0}){
-                        $(".star-remove-button").show();
+                        $(".star-remove-button").removeClass("none");
                     }
                     $("#insertOption").show();
-                    $("#submitOption").show();
+                    $("#submitOption").hide();
                     layer.closeAll();
                 },
                 cancel :function(){
                     $("#switchCPStar").removeAttr("checked");
                     $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                     if (${size>0}){
-                        $(".star-remove-button").show();
+                        $(".star-remove-button").removeClass("none");
                     }
                     $("#insertOption").show();
-                    $("#submitOption").show();
+                    $("#submitOption").hide();
                     layer.closeAll();
                 },
             });
@@ -1386,7 +1444,7 @@
                                 var starRateFlag=$("#switchCPStar").val();
                                 $("#starRateFlag").val(starRateFlag)
                                 $("#submitOption").hide();
-                                $(".star-remove-button").hide();
+                                $(".star-remove-button").addClass("none");
                                 layer.closeAll()
                 },
                 btn2: function(index, layero){
@@ -1398,8 +1456,8 @@
                     $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
                     $("#starRateFlag").val(starRateFlag)
-                    $("#submitOption").show();
-                    $(".star-remove-button").show();
+                    $("#submitOption").hide();
+                    $(".star-remove-button").removeClass("none");
                     layer.close(layer.index-1);
                 },
                 cancel: function(index,layero){ //按右上角“X”按钮
@@ -1410,8 +1468,8 @@
                     var isStarCheck = $("#switchCPStar").is(":checked");
                     $("#switchCPStar").val(isStarCheck);
                     var starRateFlag=$("#switchCPStar").val();
-                    $("#submitOption").show();
-                    $(".star-remove-button").show();
+                    $("#submitOption").hide();
+                    $(".star-remove-button").removeClass("none");
                     layer.close(layer.index-1);
                 },
             });
@@ -1612,18 +1670,13 @@
                     dataType:"JSON",
                     success: function(data) {
                     if(data.code=="0"){
-                        //var checkOpen = $("#starRateFlag").val();
                         var isStarCheck = $("#switchCPStar").is(":checked")
                         $(".icon-tips-blue").show();
-                        if(${size < 5}){
-                            $("#submitOption").show();
-                        }
                         if (isStarCheck == false){
-                            $(".star-remove-button").show();
+                            $(".star-remove-button").removeClass("none");
                             $("#insertOption").show();
-                            $("#submitOption").show();
                         }else{
-                            $(".star-remove-button").hide();
+                            $(".star-remove-button").addClass("none");
                             $("#insertOption").hide();
                             $("#submitOption").hide();
                         }

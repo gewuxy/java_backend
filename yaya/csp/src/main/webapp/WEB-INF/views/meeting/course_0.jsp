@@ -198,9 +198,9 @@
 <!--弹出选择框-->
 <div class="listItme-popup">
     <div class="listItme-popup-main">
-        <a href="javscript:;" class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
-        <c:if test="${course.starRateFlag}"><a href="javscript:;" class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
-        <a href="javscript:;" class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
+        <a  class="listItme-popup-button  info-popup-hook"><fmt:message key="page.common.info"/></a>
+        <c:if test="${course.starRateFlag}"><a class="listItme-popup-button star-popup-hook "><fmt:message key="page.meeting.tips.rate"/> </a></c:if>
+        <a  class="listItme-popup-button report-popup-button-hook"><fmt:message key="page.meeting.tips.report"/> </a>
     </div>
 </div>
 
@@ -835,7 +835,7 @@
             }
         });
 
-        if("${play.playState == 3}" == "true"){
+        if("${play.playState == 3 && course.starRateFlag}" == "true"){
             openStarRate();
         }
     });

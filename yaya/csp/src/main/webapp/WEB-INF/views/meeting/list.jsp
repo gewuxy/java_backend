@@ -658,8 +658,8 @@
                                 <div class="resource-list-item item-radius clearfix">
                                     <a href="${ctx}/mgr/meet/edit" class="resource-NowButton">
                                         <div class="resource-NowButton-box">
+                                            <div class="main"><img src="${ctxStatic}/images/icon-metting-add.png" alt=""></div>
                                             <div class="title"><fmt:message key="page.meeting.button.create"/></div>
-                                            <div class="main"><img src="${ctxStatic}/images/icon-succeed.png" alt=""></div>
                                         </div>
                                     </a>
                                 </div>
