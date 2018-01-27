@@ -167,10 +167,12 @@
     });
 
     function closeVideo(){
-        var video = $('.swiper-slide-active').find('video');
+        var video = $('video');
         if (video.length > 0){
-            video.get(0).load();
-            video.get(0).pause();
+            for(var i =0 ; i < video.length; i++){
+                video.get(i).load();
+                video.get(i).pause();
+            }
         }
     }
 
