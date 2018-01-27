@@ -1099,9 +1099,14 @@
                 var size = ${size}
                 var published = ${course.published}
                 var count = ${count}
+                var avgScore = ${avgScore}
                 if(published == false || starFlag == false){
                     if (isStarCheck){
-                        starTips();
+                        if(avgScore == 0){
+                            starTips();
+                        }else{
+                            delTips();
+                        }
                     }else {
                         $("#starOpen").text("<fmt:message key="page.meeting.star.off"/>");
                         $("#starTitle").html("<fmt:message key="page.meeting.star.rate"/>");
@@ -1110,7 +1115,7 @@
                     }
                 }else {
                     if ((size == 0||size >0 ) && isStarCheck && starFlag==true){
-                        if(count>0){
+                        if(avgScore>0){
                             delTips();
                         }else{
                             $("#switchCPStar").prop("checked", true);
@@ -1123,7 +1128,7 @@
                             $(".grade").html("<fmt:message key="page.meeting.star.rate.none"/>")
                         }
                     }else if ((size == 0||size >0 ) && starFlag==false && isStarCheck){
-                        if (count>0){
+                        if (avgScore>0){
                             starTips();
                         }else{
                             $("#switchCPStar").prop("checked", true);
@@ -1643,12 +1648,13 @@
         }
 
         /*页面提交*/
-        //var clickNum = 0;
         $(function () {
             $("#limitFive").addClass("none");
+            if(${size>=5}){
+                $("#limitFive").removeClass("none");
+                $("#limitInsert").text("<fmt:message key='page.meeting.star.allow'/>")
+            }
             $("#saveSubmit").click(function () {
-                //alert("点击数:"+clickNum);
-                //clickNum++;
                 success = false;
                 var submitFormState=  ${course.published};
                     var $courseInfo = $("#courseInfo");

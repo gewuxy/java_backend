@@ -360,6 +360,7 @@ public class MeetingMgrController extends CspBaseController {
         List<CspStarRateOption> options = cspStarRateService.findRateOptions(course.getId());
         StarRateResultDTO result = cspStarRateService.findRateResultExcludeDetails(course.getId());
         model.addAttribute("count",result.getScoreCount());
+        model.addAttribute("avgScore",result.getAvgScore());
         model.addAttribute("size",options.size());
         model.addAttribute("options",options);
 
