@@ -1642,7 +1642,7 @@
         $(function () {
             $("#limitFive").addClass("none");
             $("#saveSubmit").click(function () {
-
+                success = false;
                 var submitFormState=  ${course.published};
                     var $courseInfo = $("#courseInfo");
                     var startTime = $("#liveStartTime").val();
@@ -1652,7 +1652,10 @@
                         $courseInfo.focus();
                         $courseInfo.parent().next(".error").removeClass("none");
                         return;
-                    } else if(playType >= 1){
+                    }else{
+                        $courseInfo.parent().next(".error").addClass("none");
+                    }
+                     if(playType >= 1){
                         if(startTime == ""  || startTime == null){
                             $timedate.focus();
                             $timedate.parent().parent().next(".error").removeClass("none");
@@ -1660,8 +1663,8 @@
                         }else{
                             $timedate.parent().parent().next(".error").addClass("none");
                         }
-                    }else {
-                        $courseInfo.parent().next(".error").addClass("none");
+                    }
+
                         if(submitFormState == false){
                             saveFormNoPublished();
 
@@ -1669,7 +1672,7 @@
                             registPost();
                         }
                         $courseInfo.parent().next(".error").addClass("none");
-                    }
+
 
 
 
