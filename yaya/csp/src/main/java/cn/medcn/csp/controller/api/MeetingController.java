@@ -1313,8 +1313,6 @@ public class MeetingController extends CspBaseController {
             dto.setStartCodeUrl(fileBase + qrCodePath);
             //将会议设置为星评阶段
             openStarRate(course);
-        } else {
-            liveOver(courseId);
         }
         return success(dto);
     }
