@@ -1626,4 +1626,19 @@ public class MeetingController extends CspBaseController {
         return success(result);
     }
 
+
+    /**
+     * 逻辑删除音频
+     * @param detailId
+     * @return
+     */
+    @RequestMapping("/delete/audio")
+    @ResponseBody
+    public String deleteAudio(Integer detailId){
+        AudioCourseDetail detail = new AudioCourseDetail();
+        detail.setId(detailId);
+        detail.setAudioUrl("");
+        audioService.updateDetail(detail);
+        return success();
+    }
 }
