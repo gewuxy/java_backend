@@ -253,7 +253,9 @@ public class HttpUtils {
         try {
             result = httpClient.execute(method);
             // 请求结束，返回结果
-            result.getEntity().writeTo(new FileOutputStream(outputPath));
+            FileOutputStream outputStream = new FileOutputStream(outputPath);
+            result.getEntity().writeTo(outputStream);
+            outputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }

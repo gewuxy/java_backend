@@ -1301,7 +1301,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      */
     @Override
     public String getMiniQRCode(Integer id, String page, String accessToken) throws IOException {
-        String path = appFileBase + "/mini/qrcode";
+        String path = appFileUploadBase + "/mini/qrcode";
         //创建文件夹
         File dir = new File(path);
         if (!dir.exists()){
@@ -1309,15 +1309,17 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         }
         //如果文件存在，直接返回
         String codeUrl =  path + "/" +  id + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        String showUrl = appFileBase + "/mini/qrcode/" +  id + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
         File file = new File(codeUrl);
         if(file.exists()){
-            return codeUrl;
+            return showUrl;
         }
 
         //获取小程序码
         Map<String,Object> map = new HashMap<>();
         map.put(SCENE_STR,id + "");
-        map.put(PAGE_STR,page);
+        //TODO 小程序发布后，需打开注释
+//        map.put(PAGE_STR,page);
         map.put(CODE_WIDTH_STR,430);
         map.put(CODE_AUTO_COLOR_STR,false);
         Map<String,String> colorMap = new HashMap<>();
@@ -1328,7 +1330,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         String url = MINI_CODE_URL + "?" + ACCESS_TOKEN_STR + "=" + accessToken;
         JSONObject params = JSONObject.parseObject(JSON.toJSONString(map));
         HttpUtils.postJsonResponseStream(url,params,codeUrl);
-        return codeUrl;
+        showUrl = appFileBase + "/mini/qrcode/" +  id + "." + FileTypeSuffix.IMAGE_SUFFIX_PNG.suffix;
+        return showUrl;
     }
 
 
