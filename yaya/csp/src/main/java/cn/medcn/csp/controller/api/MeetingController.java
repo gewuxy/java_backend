@@ -124,6 +124,9 @@ public class MeetingController extends CspBaseController {
     @Autowired
     protected CspStarRateService cspStarRateService;
 
+    @Autowired
+    protected MeetService meetService;
+
     /**
      * 会议阅览
      *
@@ -1059,6 +1062,9 @@ public class MeetingController extends CspBaseController {
 
         sendSyncOrder(courseId, imgUrl, videoUrl, pageNum);
 
+        //同步yaya医师的会议状态
+        meetService.doStartMeet(courseId);
+
         return success();
     }
 
@@ -1076,6 +1082,9 @@ public class MeetingController extends CspBaseController {
             order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
             liveService.publish(order);
         }
+
+        //同步yaya医师会议状态
+        meetService.doEndMeet(courseId);
 
         return success();
     }
@@ -1128,6 +1137,8 @@ public class MeetingController extends CspBaseController {
             pushUrl = getPushUrl(courseId);
             result.put("pushUrl", pushUrl);
         }
+
+        meetService.doStartMeet(courseId);
 
         return success(result);
     }
@@ -1305,10 +1316,9 @@ public class MeetingController extends CspBaseController {
                 QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
+            //将会议设置为星评阶段
+            openStarRate(course);
         }
-        //将会议设置为星评阶段
-        openStarRate(course);
-
         return success(dto);
     }
 

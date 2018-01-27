@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/4/20.
@@ -2135,4 +2136,47 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
         return page;
     }
 
+
+    @Override
+    public void doStartMeet(Integer courseId) {
+        MeetAudio cond = new MeetAudio();
+        cond.setCourseId(courseId);
+        List<MeetAudio> list = meetAudioDAO.select(cond);
+        if (!CheckUtils.isEmpty(list)){
+            Meet meet;
+            MeetProperty property;
+            for (MeetAudio meetAudio : list) {
+                meet = new Meet();
+                meet.setId(meetAudio.getMeetId());
+                meet.setState(Meet.MeetType.IN_USE.getState());
+                meetDAO.updateByPrimaryKeySelective(meet);
+
+                property = meetPropertyDAO.findProperty(meetAudio.getMeetId());
+                property.setStartTime(new Date());
+                property.setEndTime(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(1)));
+                meetPropertyDAO.updateByPrimaryKey(property);
+            }
+        }
+    }
+
+    @Override
+    public void doEndMeet(Integer courseId) {
+        MeetAudio cond = new MeetAudio();
+        cond.setCourseId(courseId);
+        List<MeetAudio> list = meetAudioDAO.select(cond);
+        if (!CheckUtils.isEmpty(list)){
+            Meet meet;
+            MeetProperty property;
+            for (MeetAudio meetAudio : list) {
+                meet = new Meet();
+                meet.setId(meetAudio.getMeetId());
+                meet.setState(Meet.MeetType.OVER.getState());
+                meetDAO.updateByPrimaryKeySelective(meet);
+
+                property = meetPropertyDAO.findProperty(meetAudio.getMeetId());
+                property.setEndTime(new Date());
+                meetPropertyDAO.updateByPrimaryKey(property);
+            }
+        }
+    }
 }

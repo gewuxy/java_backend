@@ -58,7 +58,8 @@ public class Live {
         init(0),//初始状态
         usable(1),//可用的直播状态
         pause(2),//中断
-        closed(3);//关闭
+        rating(3),//星评
+        closed(4);//关闭
 
         private Integer type;
 

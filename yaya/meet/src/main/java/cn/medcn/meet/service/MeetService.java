@@ -451,6 +451,10 @@ public interface MeetService extends BaseService<Meet> {
 
     MyPage<Meet> selectMeetList(Pageable pageable);
 
+    void doStartMeet(Integer courseId);
+
+    void doEndMeet(Integer courseId);
+
 }
 
 
