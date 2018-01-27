@@ -231,7 +231,7 @@ textarea { -webkit-appearance: none;}
 
 .CSPMeeting-meeting-star-popup,
 .CSPMeeting-meeting-info-popup { display: none;}
-.CSPMeeting-meeting-info-popup .meeting-info-popup-main { padding:.56rem;}
+.CSPMeeting-meeting-info-popup .meeting-info-popup-main { padding:.56rem;  -ms-word-break: break-all;  word-break: break-all; }
 .CSPMeeting-meeting-info-popup .meeting-info-popup-main .title h3 { font-size:.3rem; }
 .CSPMeeting-meeting-info-popup .meeting-info-popup-main .title { border-bottom:1px solid #dbdbdb; padding-bottom:.2rem; margin-bottom:.2rem; text-align: center; }
 .CSPMeeting-meeting-info-popup .meeting-info-popup-main .text { color:#666; font-size:.28rem;}

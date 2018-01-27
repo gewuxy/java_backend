@@ -213,7 +213,7 @@
 
     <!--开始界面-->
     <div class="fixed-full-screen-box ${live.liveState == 0 ? '' : 'none'}" id="liveStartView">
-        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
+        <div class="fixed-full-screen-logo"><div class="img"><a href="${appStoreUrl}"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></a></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
         </div>
