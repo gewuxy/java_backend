@@ -1644,6 +1644,7 @@ public class MeetingController extends CspBaseController {
                 return error(local("course.error.author"));
             }
             detail.setAudioUrl("");
+            detail.setDuration(0);
             audioService.updateDetail(detail);
         }
         return success();
