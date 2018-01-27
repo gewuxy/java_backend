@@ -1291,14 +1291,21 @@
     $(function(){
 
         $("#openPasswordBtn").click(function(){
-            var pwd = $("#courseView_" + courseId).attr("pwd");
-            var hasOldPwd = pwd != '';
-            if(!hasOldPwd){
-                openPasswordView();
-            } else {
-                $('.lock-popup-showRandomNum').text(pwd);
-                openCancelPasswordView();
-            }
+            ajaxGet('${ctx}/mgr/meet/editable/' + courseId, {}, function(data){
+                if(data.code == 0){
+                    var pwd = $("#courseView_" + courseId).attr("pwd");
+                    var hasOldPwd = pwd != '';
+                    if(!hasOldPwd){
+                        openPasswordView();
+                    } else {
+                        $('.lock-popup-showRandomNum').text(pwd);
+                        openCancelPasswordView();
+                    }
+                } else {
+                    layer.msg(data.err);
+                }
+            });
+
         });
 
         function handleMultipleResult(result){

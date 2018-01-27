@@ -624,7 +624,8 @@
                 $(".icon-tips-blue").hide();
             },
             yes:function(){
-                layer.closeAll();
+                success = false;
+                window.location.reload();
             },
             cancel :function(){
 

@@ -606,6 +606,8 @@ public class MeetingController extends CspBaseController {
             String wsUrl = genWsUrl(request, courseId);
             wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
             result.put("wsUrl", wsUrl);
+            result.put("courseId", courseId);
+            result.put("playType", course.getPlayType() == null ? 0 : course.getPlayType());
             result.put("duplicate", "1");
             return success(result);
         } else {
@@ -615,16 +617,6 @@ public class MeetingController extends CspBaseController {
             result.put("duplicate", "0");
             result.put("title", course.getTitle());
             result.put("coverUrl", !CheckUtils.isEmpty(course.getDetails()) ? course.getDetails().get(0).getImgUrl() : "");
-
-            if (course.getPlayType() != null && course.getPlayType() > AudioCourse.PlayType.normal.getType()) {
-                Live live = liveService.findByCourseId(courseId);
-                if (live != null) {
-                    if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {//直播已经结束
-                        return error(local("share.live.over"));
-                    }
-                    result.put("startTime", live.getStartTime());
-                }
-            }
 
             //发送ws同步指令
             LiveOrderDTO order = new LiveOrderDTO();
@@ -1318,6 +1310,8 @@ public class MeetingController extends CspBaseController {
             dto.setStartCodeUrl(fileBase + qrCodePath);
             //将会议设置为星评阶段
             openStarRate(course);
+        } else {
+            liveOver(courseId);
         }
         return success(dto);
     }
