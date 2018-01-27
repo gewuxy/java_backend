@@ -172,6 +172,7 @@
                                             var oid = $(this).attr("optionId");
                                             ajaxGet('${ctx}/mgr/meet/star/del/'+oid, {}, function(data){
                                                 if (data.code == 0){
+                                                    success = true;
                                                     layer.msg("<fmt:message key="page.meeting.star.rate.del" />");
                                                     $(".star-remove-button[optionId='"+oid+"']").parent().parent().remove();
                                                     $("#limitFive").addClass("none");
@@ -620,7 +621,7 @@
             btn: ["<fmt:message key='page.button.sure'/>"],
             content: $('#uploadSuccess'),
             success:function(){
-
+                $(".icon-tips-blue").hide();
             },
             yes:function(){
                 layer.closeAll();
@@ -1210,9 +1211,11 @@
                                     var oid = $(this).attr("optionId");
                                     ajaxGet('${ctx}/mgr/meet/star/del/'+oid, {}, function(data){
                                         if (data.code == 0){
+                                            success = true;
                                             layer.msg("<fmt:message key="page.meeting.star.rate.del"/>");
                                             $(".star-remove-button[optionId='"+oid+"']").parent().parent().remove();
                                             $("#limitFive").addClass("none");
+                                            $(".icon-tips-blue").hide();
                                             $("#limitInsert").text("<fmt:message key="page.meeting.star.rate.Add"/>");
                                         } else {
                                             layer.msg(data.err);
@@ -1287,6 +1290,8 @@
                         $(".star-remove-button").click(function () {
                             ajaxGet('${ctx}/mgr/meet/star/del/'+optionId, {}, function(data){
                                 if (data.code == 0){
+                                    success = true;
+                                    $(".icon-tips-blue").hide();
                                     layer.msg("<fmt:message key="page.meeting.star.rate.del"/>");
                                 } else {
                                     layer.msg(data.err);
