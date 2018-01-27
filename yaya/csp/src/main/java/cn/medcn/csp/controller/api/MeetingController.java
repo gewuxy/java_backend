@@ -1316,10 +1316,9 @@ public class MeetingController extends CspBaseController {
                 QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
+            //将会议设置为星评阶段
+            openStarRate(course);
         }
-        //将会议设置为星评阶段
-        openStarRate(course);
-
         return success(dto);
     }
 
