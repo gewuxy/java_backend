@@ -690,6 +690,12 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/editable/{courseId}")
     @ResponseBody
     public String editAble(@PathVariable Integer courseId){
+
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        if (course == null || (course.getDeleted() != null && course.getDeleted())) {
+            return error(local("source.has.deleted"));
+        }
+
         boolean editAble = audioService.editAble(courseId);
         if (editAble) {
             return success();

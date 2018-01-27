@@ -140,7 +140,8 @@
         });
 
 
-
+        var prev ;
+        var next ;
         //幻灯片轮播
         swiper = new Swiper('.swiper-container-metting-full', {
             //分页
@@ -159,11 +160,23 @@
                 console.log("send sync order ");
                 sendOrder(swiper.activeIndex);
             },
+            onSlideChangeStart:function(swiper){
+                closeVideo();
+            }
         });
     });
 
+    function closeVideo(){
+        var video = $('.swiper-slide-active').find('video');
+        if (video.length > 0){
+            video.get(0).load();
+            video.get(0).pause();
+        }
+    }
+
 
     function skip(pageNo){
+        closeVideo();
         swiper.slideTo(pageNo, 100, false);
     }
 
