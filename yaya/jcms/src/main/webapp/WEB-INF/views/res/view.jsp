@@ -25,7 +25,7 @@
     </style>
 </head>
 <body>
-<div class="layer-hospital-popup layer-black  layer-hospital-popup-hook" style="height: 800px;">
+<div class="layer-hospital-popup layer-black  layer-hospital-popup-hook" style="height: 813px;">
     <div class="swiperBox mettingSwiperBox clearfix"  style="height: 760px;">
         <!--预览弹出层-->
         <div class="metting-swiper">
@@ -50,7 +50,7 @@
                 </div>
                 <!-- Add Pagination -->
 
-                <div class="metting-btn-item clearfix" style="z-index: 12">
+                <div class="metting-btn-item clearfix" style="z-index: 12;margin-top:12px;">
                     <span class="swiper-button-prev swiper-popup-button-prev-hook metting-button swiper-button-disabled"></span>
                     <div class="swiper-pagination swiper-pagination-fraction"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                     <span class="swiper-button-next swiper-popup-button-next-hook metting-button"></span>
