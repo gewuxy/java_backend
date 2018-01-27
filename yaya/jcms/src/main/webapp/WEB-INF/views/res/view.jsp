@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/slide.js"></script>
-    <script src="${ctxStatic}/js/swiper.jquery.js"></script>
+    <script src="${ctxStatic}/js/swiper.jquery.min.js"></script>
     <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/layer/layer.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
