@@ -104,7 +104,7 @@
             var courseId = $(this).attr("courseId");
             top.layer.open({
                 type: 2,
-                area: ['670px', '800px'],
+                area: ['670px', '85%'],
                 fix: false, //不固定
                 fixed: true,
                 offset: '100px',

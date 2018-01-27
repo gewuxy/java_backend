@@ -14,13 +14,15 @@
     <link rel="stylesheet" href="${ctxStatic}/css/audio-black.css">
     <script src="${ctxStatic}/js/jquery.min.js"></script>
     <script src="${ctxStatic}/js/slide.js"></script>
-    <script src="${ctxStatic}/js/swiper.jquery.min.js"></script>
+    <script src="${ctxStatic}/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/js/audio.js"></script>
     <script src="${ctxStatic}/js/layer/layer.js"></script>
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
     <script src="${ctxStatic}/js/screenfull.min.js"></script>
     <script src="${ctxStatic}/js/popupAudioPalyer.js"></script>
-
+    <style>
+        video::-webkit-media-controls-fullscreen-button {display: none;}
+    </style>
 </head>
 <body>
 <div class="layer-hospital-popup layer-black  layer-hospital-popup-hook" style="height: 800px;">
@@ -32,18 +34,19 @@
                 <!--根据ID 切换 PPT列表-->
                 <div class="swiper-wrapper" >
                     <c:forEach items="${course.details}" var="detail" varStatus="status">
-                        <div class="swiper-slide ${status.index == 0 ? 'swiper-slide-active' : ''}" data-num="0" audio-src="${appFileBase}${detail.audioUrl}">
                             <c:choose>
                                 <c:when test="${not empty detail.videoUrl}">
-                                    <video src="${appFileBase}${detail.videoUrl}" width="auto" height="264" controls="" autobuffer=""></video>
+                                <div class="swiper-slide ${status.index == 0 ? 'swiper-slide-active' : ''}" data-num="0">
+                                    <video src="${appFileBase}${detail.videoUrl}" width="auto" height="264" controls="" style="height: 608px !important;" autobuffer="true" ></video>
+                                </div>
                                 </c:when>
                                 <c:otherwise>
-                                    <div class="swiper-picture" style=" background-image:url('${appFileBase}${detail.imgUrl}')"></div>
+                                    <div class="swiper-slide ${status.index == 0 ? 'swiper-slide-active' : ''}" data-num="0"  audio-src="${appFileBase}${detail.audioUrl}">
+                                        <div class="swiper-picture" style=" background-image:url('${appFileBase}${detail.imgUrl}')"></div>
+                                    </div>
                                 </c:otherwise>
                             </c:choose>
-                        </div>
                     </c:forEach>
-
                 </div>
                 <!-- Add Pagination -->
 
@@ -127,6 +130,7 @@
             },
             onInit: function(swiper){
                 swiper.wrapper.attr('style','transform: translate3d(0, 0, 0);transition-duration: 0ms;');
+
             }
         });
 

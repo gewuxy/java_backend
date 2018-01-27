@@ -60,7 +60,7 @@
                         </td>
                         <td class="table-td-4 tb-popupBox-img">
 							<span class="img">
-								<img src="${ctxStatic}/img/hz-detail-img-info.jpg" class="img-radius" width="32" height="32" alt="">
+								<img src="${d.avatar}" class="img-radius" width="32" height="32" alt="">
 							</span>
                             <span class="text">${d.name}</span>
                         </td>
