@@ -770,14 +770,14 @@
                     //popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height(0);
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
                     }
                 },
                 end:function(){
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                 }
             })
@@ -898,7 +898,7 @@
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
-                activeItemIsVideo.height(0);
+                activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             weui.actionSheet([
                {
@@ -921,7 +921,7 @@
                         console.log('取消');
                         //关闭时还原高度。
                         if(browser.isAndroid || activeItemIsVideo.length > 0){
-                            activeItemIsVideo.height('auto');
+                            activeItemIsVideo.attr('style', 'margin-top:0px');
                         }
                     }
                 }
@@ -931,7 +931,7 @@
                     console.log('关闭');
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                 }
             });
@@ -954,7 +954,7 @@
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                activeItemIsVideo.height(0);
+                activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             layer.open({
                 type: 1,
@@ -971,7 +971,7 @@
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                 }
             })
@@ -996,14 +996,14 @@
 //                    popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.height(0);
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
                     }
                 },
                 end: function () {
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                     layer.closeAll();
                 }
