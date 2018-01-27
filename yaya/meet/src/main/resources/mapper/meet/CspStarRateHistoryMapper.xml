@@ -22,4 +22,9 @@
         DELETE FROM t_csp_star_rate_history WHERE course_id = #{courseId}
     </delete>
 
+
+    <select id="findMyHistoryDetail">
+
+    </select>
+
 </mapper>

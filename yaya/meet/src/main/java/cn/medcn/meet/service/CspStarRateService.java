@@ -4,6 +4,7 @@ import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.StarRateInfoDTO;
 import cn.medcn.meet.dto.StarRateResultDTO;
 import cn.medcn.meet.model.CspStarRateHistory;
+import cn.medcn.meet.model.CspStarRateHistoryDetail;
 import cn.medcn.meet.model.CspStarRateOption;
 
 import java.util.List;

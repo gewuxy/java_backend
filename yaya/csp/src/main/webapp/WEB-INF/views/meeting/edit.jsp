@@ -590,26 +590,6 @@
     }
 
     function fleshPage(data){
-        detailsLength = 1;
-        $(".metting-progreesItem").addClass("none");
-        $("#editBtn").removeClass("none");
-
-        $("#limitView").addClass("none");
-        var reloadText = '<fmt:message key="page.meeting.button.reload"/>';
-        $("#uploadTextView").text(reloadText);
-        $("#courseTitle").val(data.title);
-        $("#cover").attr("src", data.coverUrl);
-        $(".upload-ppt-area").addClass("upload-ppt-area upload-ppt-area-finish logo-watermark");
-        $("#uploadTipView").addClass("none");
-        $("#sugest").addClass("none");
-
-        $("#uploadFile").replaceWith('<input type="file" id="uploadFile" name="file" class="none">');
-        $("#reUploadFile").replaceWith('<input type="file" id="reUploadFile" name="file" class="none">');
-        $("#uploadFile, #reUploadFile").change(function(){
-            var id = $(this).attr("id");
-            uploadFile(document.getElementById(id));
-        });
-
 
         layer.open({
             type: 1,
@@ -759,7 +739,7 @@
                 return false;
             }
 
-            var filesize = Math.floor((f.size)/1024);
+            var filesize = f.size;
             if(filesize>file_size_limit){
                 layer.msg("<fmt:message key='page.meeting.upload.limit100'/>");
                 return false;

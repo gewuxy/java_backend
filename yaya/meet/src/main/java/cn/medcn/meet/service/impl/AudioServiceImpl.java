@@ -996,6 +996,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         CspStarRateHistory historyCond = new CspStarRateHistory();
         historyCond.setCourseId(srcCourseId);
         List<CspStarRateHistory> historyList = cspStarRateHistoryDAO.select(historyCond);
+        List<Integer> historyIds = new ArrayList<>();
         if (!CheckUtils.isEmpty(historyList)) {
             for (CspStarRateHistory history : historyList) {
                 CspStarRateHistory h = new CspStarRateHistory();
@@ -1004,6 +1005,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 h.setScore(history.getScore());
                 h.setTicket(history.getTicket());
                 cspStarRateHistoryDAO.insert(h);
+                historyIds.add(h.getId());
             }
         }
 

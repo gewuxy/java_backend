@@ -249,12 +249,8 @@ public class MeetingController extends CspBaseController {
                 wsUrl += "&liveType=" + LiveOrderDTO.LIVE_TYPE_PPT;
                 model.addAttribute("wsUrl", wsUrl);
 
-                boolean ios = isIOSDevice(request);
-                if(ios){
-                    model.addAttribute("appStoreUrl", Constants.CSP_APP_STORE_ANDROID_URL);
-                } else {
-                    model.addAttribute("appStoreUrl", Constants.CSP_APP_STORE_IOS_URL);
-                }
+                model.addAttribute("appStoreUrl", Constants.CSP_APP_STORE_ANDROID_URL);
+
                 //TODO 缺少星评页面
                 Live live = liveService.findByCourseId(courseId);
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
@@ -1077,6 +1073,7 @@ public class MeetingController extends CspBaseController {
         if (live != null) {
             liveService.doModifyLiveState(live);
             LiveOrderDTO order = new LiveOrderDTO();
+            order.setCourseId(String.valueOf(courseId));
             order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
             liveService.publish(order);
         }

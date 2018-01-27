@@ -918,7 +918,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .layer-grade-popup .layer-hospital-popup-main .main { color:#78889b; font-size:18px; line-height:1.8; padding:0 5px;  }
 
 .layer-grade-popup .layer-hospital-popup-main .metting-grade-info  { }
-.layer-grade-popup .layer-hospital-popup-main .metting-grade-info .main { min-height: 230px;   overflow: hidden;  position: relative;}
+.layer-grade-popup .layer-hospital-popup-main .metting-grade-info .main { min-height: 210px;   overflow: hidden;  position: relative; padding-bottom:20px; -ms-word-break: break-all;  word-break: break-all; }
 
 .layer-grade-popup .layer-hospital-popup-main .metting-star  { font-size:18px; color:#78889b;  border-top: 1px solid #edf3f9;}
 .layer-grade-popup .layer-hospital-popup-main .metting-star .star-title { font-size:18px; margin:15px 0 10px; font-weight:bold;}
