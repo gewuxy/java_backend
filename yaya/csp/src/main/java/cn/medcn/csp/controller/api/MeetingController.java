@@ -1630,10 +1630,18 @@ public class MeetingController extends CspBaseController {
     @RequestMapping("/delete/audio")
     @ResponseBody
     public String deleteAudio(Integer detailId){
-        AudioCourseDetail detail = new AudioCourseDetail();
-        detail.setId(detailId);
-        detail.setAudioUrl("");
-        audioService.updateDetail(detail);
+        AudioCourseDetail detail = audioService.findDetail(detailId);
+        if(detail != null){
+            Integer courseId = detail.getCourseId();
+            AudioCourse course = audioService.findAudioCourse(courseId);
+            String userId = SecurityUtils.get().getId();
+            if(!userId.equals(course.getCspUserId())){
+                return error(local("course.error.author"));
+            }
+            detail.setAudioUrl("");
+            detail.setDuration(0);
+            audioService.updateDetail(detail);
+        }
         return success();
     }
 }
