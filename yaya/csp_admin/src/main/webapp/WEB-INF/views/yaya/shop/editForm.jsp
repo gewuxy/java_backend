@@ -131,21 +131,27 @@
         <div class="control-group">
             <label class="control-label">商品类型:</label>
             <div class="controls">
-                <select id="gtype" name="gtype" style="width: 100px;">${s.gtype == 0 ? "礼品" : "电子书"}
-                    <option value="${goods.gtype}"/>${goods.gtype == 0 ? "礼品" : "电子书"}
+                <select id="gtype" name="gtype" style="width: 100px;">
+                    <option value=""/>选择类型
                     <option value="0"/>礼品
                     <option value="1"/>电子书
                 </select>
+                <script>
+                    document.getElementById("gtype").value="${goods.gtype}";
+                </script>
             </div>
         </div>
         <div class="control-group">
             <label class="control-label">上下架:</label>
             <div class="controls">
                 <select id="status" name="status" style="width: 100px;">
-                    <option value="${goods.status}"/>${goods.status == 0 ? "下架" : "上架"}
+                    <option value=""/>是否上架
                     <option value="1"/>上架
                     <option value="0"/>下架
                 </select>
+                <script>
+                    document.getElementById("status").value="${goods.status}";
+                </script>
             </div>
         </div>
         <div class="control-group">
