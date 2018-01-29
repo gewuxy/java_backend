@@ -45,7 +45,7 @@
                     <td>${s.buyLimit}</td>
                     <td>
                         <shiro:hasPermission name="yaya:shop:edit">
-                            <a href="${ctx}/yaya/shop/edit?id=${user.id}">修改</a>&nbsp;&nbsp;
+                            <a href="${ctx}/yaya/shop/edit?id=${s.id}">修改</a>&nbsp;&nbsp;
                         </shiro:hasPermission>
                     </td>
                 </tr>
