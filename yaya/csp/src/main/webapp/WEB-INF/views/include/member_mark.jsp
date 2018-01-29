@@ -279,6 +279,10 @@
                                         <input type="radio" name="payMode" class="none" value="2" id="id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
+                                    <label for="id41" class="item item-radius">
+                                        <input type="radio" name="payMode" class="none" value="3" id="id41">
+                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                    </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook ${isCN ? 'none' : ''}">
                                     <label for="id31" class="item item-radius  pay-on">
@@ -344,10 +348,14 @@
                                         <input type="radio" name="hgPayMode" class="none" value="wx_pub_qr" id="2id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
                                     </label>
+                                    <label for="2id41" class="item item-radius">
+                                        <input type="radio" name="hgPayMode" class="none" value="upacp_pc" id="2id41">
+                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
+                                    </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook ${isCN ? 'none' : ''}">
                                     <label for="2id31" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="2id31">
+                                        <input type="radio" name="hgPayMode" class="none" value="paypal" id="2id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -420,6 +428,10 @@
                                     <label for="3id21" class="item item-radius">
                                         <input type="radio" name="pfPayMode" class="none" value="wx_pub_qr" id="3id21">
                                         <img src="${ctxStatic}/images/img/user-icon-wechat.png" alt="">
+                                    </label>
+                                    <label for="3id41" class="item item-radius">
+                                        <input type="radio" name="pfPayMode" class="none" value="upacp_pc" id="3id41">
+                                        <img src="${ctxStatic}/images/img/user-icon-unionpay.png" alt="">
                                     </label>
                                 </div>
                                 <div class="pay-mode-list EN-hook  ${isCN ? 'none' : ''}">
