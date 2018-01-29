@@ -61,6 +61,7 @@
                                         window.location.href = '${ctx}/mgr/meet/list';
                                     }
                                 });
+                                layer.closeAll();
                                 return false;
                             }
                             layer.open({
@@ -1061,6 +1062,25 @@
     </div>
 </div>
 
+<!--弹出 提示-->
+<div class="cancel-popup-box" id="pkSuccessMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close clearMsg"><img src="${ctxStatic}/images/popup-close.png" alt=""></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form action="">
+                <div class="cancel-popup-main">
+                    <p id="backMsg"></p>
+                </div>
+                <div class="admin-button t-right " >
+                    <input type="button" class="button buttonBlue item-radius min-btn layui-layer-close clearMsg" value="<fmt:message key='page.button.pay.tips'/>"/>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <!--弹窗星评-->
 <div class="layer-grade-star-box" id="starRate">
@@ -1144,6 +1164,27 @@
                     </div>
                 </div>
 
+            </form>
+        </div>
+    </div>
+</div>
+
+<!--弹出 充值-->
+<div class="cancel-popup-box" id="pkBuyMsg">
+    <div class="layer-hospital-popup">
+        <div class="layer-hospital-popup-title">
+            <strong>&nbsp;</strong>
+            <div class="layui-layer-close"><a href="${ctx}/mgr/meet/list"><img src="${ctxStatic}/images/popup-close.png" alt=""></a></div>
+        </div>
+        <div class="layer-hospital-popup-main ">
+            <form >
+                <div class="cancel-popup-main">
+                    <p><fmt:message key="page.words.charge.tips"/></p>
+                    <div class="admin-button t-right">
+                        <a href="${ctx}/mgr/meeting/list"  class="button color-blue min-btn layui-layer-close" ><fmt:message key="page.words.charge.problem"/></a>
+                        <input type="submit"  type="reLoad" class="button buttonBlue item-radius min-btn"  value="<fmt:message key='page.words.charge.success'/>"/>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
