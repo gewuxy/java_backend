@@ -49,8 +49,8 @@ public class StartUpListener extends ContextLoaderListener {
         LogUtils.info(log, "初始化极光推送持久化线程成功.");
 
         // 启动更新新闻列表定时任务
-        NewsService newsService = ctx.getBean(NewsService.class);
-        newsService.runUpdateNewsTimer();
+       /* NewsService newsService = ctx.getBean(NewsService.class);
+        newsService.runUpdateNewsTimer();*/
 
         LogUtils.info(log, "init context successed ! ");
     }

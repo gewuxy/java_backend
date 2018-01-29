@@ -27,11 +27,11 @@ public class News extends Article implements Serializable {
      * @param basePath
      */
     public void replaceJSPTAG(String basePath){
-        if(!StringUtils.isBlank(articleImg)){
-            articleImg = (basePath+articleImg);
-            if (!StringUtils.isBlank(content)){
+        if (!StringUtils.isBlank(articleImg)) {
+            articleImg = (basePath + articleImg);
+            if (!StringUtils.isBlank(content)) {
                 String basePath2 = articleImg.substring(0, articleImg.lastIndexOf("/"));
-                content = content.replaceAll("<%=strFullImageDir %>",basePath2);
+                content = content.replaceAll("<%=strFullImageDir %>", basePath2);
             }
         }
     }

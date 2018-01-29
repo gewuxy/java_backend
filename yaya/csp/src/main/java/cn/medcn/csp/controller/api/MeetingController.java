@@ -183,7 +183,7 @@ public class MeetingController extends CspBaseController {
             if (!AddressUtils.isLan(request.getRemoteHost())) {
                 address = AddressUtils.parseAddress(request.getRemoteHost());
             }
-            if (address != null && address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
+            if (address != null && isAbroad && !address.isAbroad()) {
                 model.addAttribute("error", abroadError);
                 return localeView("/meeting/share_error");
             }

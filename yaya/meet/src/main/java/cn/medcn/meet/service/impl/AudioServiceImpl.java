@@ -101,6 +101,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Value("${app.file.base}")
     private String appFileBase;
 
+    //是否是正式线包
+    @Value("${app.is.pro}")
+    private Integer appPro;
+
 
     @Autowired
     protected AudioCoursePlayDAO audioCoursePlayDAO;
@@ -1314,8 +1318,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         //获取小程序码
         Map<String,Object> map = new HashMap<>();
         map.put(SCENE_STR,id + "");
-        //TODO 小程序发布后，需打开注释
-//        map.put(PAGE_STR,page);
+        //正式包才提交page参数。小程序发布需要提交page参数，如果小程序没有发布，提交此参数获取的图片无法打开
+        if(appPro.intValue() == Constants.NUMBER_ONE){
+            map.put(PAGE_STR,page);
+        }
         map.put(CODE_WIDTH_STR,430);
         map.put(CODE_AUTO_COLOR_STR,false);
         Map<String,String> colorMap = new HashMap<>();
