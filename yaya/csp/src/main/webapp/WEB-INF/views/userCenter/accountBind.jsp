@@ -170,7 +170,9 @@
         </div>
     </div>
     <%@include file="../include/footer.jsp"%>
-    <%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
+    <c:if test="${csp_locale != 'zh_CN'}">
+        <%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
+    </c:if>
 </div>
 
 <!--弹出绑定手机-->

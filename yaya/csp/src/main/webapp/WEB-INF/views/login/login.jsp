@@ -16,7 +16,10 @@
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
 </head>
 <body>
-<%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
+
+<c:if test="${csp_locale != 'zh_CN'}">
+    <%@include file="/WEB-INF/include/twitter_fb_form.jsp" %>
+</c:if>
 <div id="wrapper">
     <div class="login login-banner" >
         <div class="page-width pr">
