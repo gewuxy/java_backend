@@ -84,7 +84,7 @@
         SELECT mtp.*,ml.module_name FROM (
             SELECT m.id,m.meet_name,m.state,m.publish_time,m.create_time
             FROM t_meet m,t_meet_prop mp
-            WHERE m.id = mp.meet_id
+            WHERE m.id = mp.meet_id AND m.state BETWEEN 1 AND 3
             AND m.owner_id = #{userId}
         ) mtp LEFT JOIN t_meet_module ml ON mtp.id = ml.meet_id
         GROUP BY ml.meet_id
