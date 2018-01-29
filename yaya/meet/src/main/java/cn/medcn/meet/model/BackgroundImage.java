@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import java.util.List;
 
 /**
  * Created by Liuchangling on 2018/1/19.
@@ -23,5 +24,13 @@ public class BackgroundImage {
     protected Integer imgSize;
     // 图片地址
     protected String imgUrl;
+
+    public static void HandelImgUrl(List<BackgroundImage> list, String fileBase){
+        if(list != null){
+            for(BackgroundImage image : list){
+                image.setImgUrl(fileBase + image.getImgUrl());
+            }
+        }
+    }
 
 }

@@ -4,9 +4,11 @@ import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.CourseThemeDTO;
 import cn.medcn.meet.model.*;
+import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseThemeService;
 import com.github.abel533.mapper.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,12 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
 
     @Autowired
     protected AudioCourseDetailDAO audioCourseDetailDAO;
+
+    @Autowired
+    protected AudioService audioService;
+
+    @Value("${app.file.base}")
+    protected String fileBase;
 
 
     @Override
@@ -49,11 +57,13 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
 
             // 查询课程明细
             List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
-            themeDTO.setDetails(details);
+            audioCourse.setDetails(details);
+            audioService.handleHttpUrl(fileBase,audioCourse);
 
             // 查询课程主题
             AudioCourseTheme courseTheme = courseThemeDAO.findCourseThemeByCourseId(courseId);
             if (courseTheme != null) {
+                AudioCourseTheme.handleUrl(courseTheme,fileBase);
                 themeDTO.setCourseTheme(courseTheme);
             }
         }

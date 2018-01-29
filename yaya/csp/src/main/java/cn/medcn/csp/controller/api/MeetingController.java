@@ -140,6 +140,7 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
         CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
+
         return success(themeDTO);
     }
 
@@ -1545,11 +1546,13 @@ public class MeetingController extends CspBaseController {
         //获取主题
          if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
             List<BackgroundImage> imageList = courseThemeService.findImageList();
+            BackgroundImage.HandelImgUrl(imageList,fileBase);
             map.put("imageList",imageList);
              return success(map);
          }else{
              //获取背景音乐
              List<BackgroundMusic> musicList = courseThemeService.findMusicList();
+             BackgroundMusic.HandelMusicUrl(musicList,fileBase);
              map.put("musicList",musicList);
              return success(map);
          }
