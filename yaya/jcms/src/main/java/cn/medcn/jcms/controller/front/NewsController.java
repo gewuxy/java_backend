@@ -28,6 +28,9 @@ public class NewsController extends BaseController {
     @Value("${editor_media_path}")
     private String editorMediaPath;
 
+    @Value("${app.file.base}")
+    private String fileBasePath;
+
     /**
      * AJAX获取
      * 公司动态
@@ -40,7 +43,7 @@ public class NewsController extends BaseController {
         pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         return APIUtils.success(page);
     }
@@ -56,7 +59,7 @@ public class NewsController extends BaseController {
         pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         model.addAttribute("page", page);
         return "/news/trends";
@@ -73,7 +76,7 @@ public class NewsController extends BaseController {
         //pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_YYXW.categoryId);
         MyPage<News> page = newsService.findAllNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         return APIUtils.success(page);
     }
@@ -87,7 +90,7 @@ public class NewsController extends BaseController {
         if (news == null){
             throw new Exception("您查看的新闻id=["+nid+"] 不存在");
         }
-        news.replaceJSPTAG(editorMediaPath);
+        news.replaceJSPTAG(fileBasePath);
         model.addAttribute(news);
         return "/news/view";
     }
@@ -101,7 +104,7 @@ public class NewsController extends BaseController {
         if (news == null){
             throw new Exception("您查看的新闻id=["+nid+"] 不存在");
         }
-        news.replaceJSPTAG(editorMediaPath);
+        news.replaceJSPTAG(fileBasePath);
         model.addAttribute(news);
         return "/news/view_trend";
     }
