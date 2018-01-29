@@ -37,7 +37,7 @@
                             <c:choose>
                                 <c:when test="${not empty detail.videoUrl}">
                                 <div class="swiper-slide ${status.index == 0 ? 'swiper-slide-active' : ''}" data-num="0">
-                                    <video src="${appFileBase}${detail.videoUrl}" width="auto" height="264" controls="" style="height: 608px !important;" autobuffer="true" ></video>
+                                    <video src="${appFileBase}${detail.videoUrl}" width="auto" height="264" controls="" style="height: 608px !important;width: 811px;" autobuffer="true" ></video>
                                 </div>
                                 </c:when>
                                 <c:otherwise>

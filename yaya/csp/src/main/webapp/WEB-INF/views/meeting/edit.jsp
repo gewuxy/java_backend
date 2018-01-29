@@ -1264,7 +1264,7 @@
             //regStarOption = spaceReg.test(starOption);
             var optionId ;
             if (starOption != "" ){
-                ajaxGet('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
+                ajaxPost('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
                         $("#submitOption").hide();
