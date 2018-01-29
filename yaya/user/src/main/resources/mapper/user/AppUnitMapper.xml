@@ -8,10 +8,9 @@
 
 
     <select id="findUnitAccounts" resultType="cn.medcn.user.dto.UnitAccountDTO">
-        SELECT u.*, a.store AS active_store, count(att.id) AS fans FROM t_app_user u LEFT JOIN
+        SELECT u.*, a.store AS active_store FROM t_app_user u LEFT JOIN
         t_active_store a ON a.id = u.id
-        LEFT JOIN t_app_attention att ON u.id = att.master_id
-        WHERE role_id = 1 AND authed = true
+        WHERE u.role_id = 1 AND u.authed = true
         <if test="rcd!=null">
             AND u.tuijian = #{rcd}
         </if>
@@ -20,12 +19,12 @@
         </if>
         <if test="keyword!=null">
             AND (
-            username like CONCAT('%',#{keyword}, '%') OR
-            nickname like CONCAT('%',#{keyword}, '%')
+            u.username like CONCAT('%',#{keyword}, '%') OR
+            u.nickname like CONCAT('%',#{keyword}, '%')
             )
         </if>
         GROUP BY u.id
-        ORDER BY regist_date DESC
+        ORDER BY u.regist_date DESC
     </select>
 
     <select id="findDoctorAccounts" resultType="cn.medcn.user.dto.AppUserDTO">
