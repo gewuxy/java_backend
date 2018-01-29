@@ -1340,7 +1340,6 @@
                 $('.lock-popup-showRandomNum').text(pwd);
                 openCancelPasswordView();
             }
-            });
 
         });
 
