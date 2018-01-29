@@ -15,8 +15,7 @@ import java.util.List;
 public class CourseThemeDTO implements Serializable {
     // 课程
     protected AudioCourse audioCourse;
-    // 课程明细
-    protected List<AudioCourseDetail> details;
+
     // 课程主题背景
     protected AudioCourseTheme courseTheme;
 

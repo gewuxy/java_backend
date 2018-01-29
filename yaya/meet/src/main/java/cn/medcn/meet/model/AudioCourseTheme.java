@@ -56,4 +56,16 @@ public class AudioCourseTheme {
     }
 
 
+    /**
+     * 拼接完整的主题和背景音乐地址
+     * @param theme
+     * @param fileBase
+     */
+    public static void handleUrl(AudioCourseTheme theme, String fileBase){
+        if(theme != null){
+            theme.setImgUrl(fileBase + theme.getImgUrl());
+            theme.setUrl(fileBase + theme.getUrl());
+        }
+    }
+
 }
