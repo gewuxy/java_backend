@@ -525,8 +525,17 @@
             console.log("load audio source error ...");
             isVideo = $('.swiper-slide-active').find('video');
             clearTimeout(slideTimer);
+            if(isVideo.length > 1){
+                $(".boxAudio-loading").addClass("none");
+                $(".boxAudio").addClass("none");
+            } else {
+                $(".boxAudio-loading").removeClass("none");
+                $(".boxAudio").addClass("none");
+            }
             if (playing){
+                alert(123);
                 if (isVideo.length == 0){
+
                     slideToNext();
                 }
             } else {
