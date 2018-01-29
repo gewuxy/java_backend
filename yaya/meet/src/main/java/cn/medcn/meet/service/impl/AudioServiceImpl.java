@@ -15,6 +15,7 @@ import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.CspStarRateService;
 import cn.medcn.meet.service.LiveService;
 import cn.medcn.user.dao.CspPackageDAO;
 import cn.medcn.user.dao.CspUserInfoDAO;
@@ -89,6 +90,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
     @Autowired
     protected CspStarRateHistoryDetailDAO cspStarRateHistoryDetailDAO;
+
+    @Autowired
+    protected CspStarRateService cspStarRateService;
 
 
     @Value("${app.file.upload.base}")
@@ -953,6 +957,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
             if (CheckUtils.isEmpty(details)) {
                 details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
+            } else {
+                for (AudioCourseDetail detail : details) {
+                    detail.setSort(detail.getSort() + 1);//直播记录sort是从0开始的 所以加1
+                }
             }
 
             AudioCourse copyCourse = new AudioCourse();
@@ -993,10 +1001,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     protected void doCopyStarRateHistory(Integer srcCourseId, Integer copyCourseId){
 
         //处理综合评分
-        CspStarRateHistory historyCond = new CspStarRateHistory();
-        historyCond.setCourseId(srcCourseId);
-        List<CspStarRateHistory> historyList = cspStarRateHistoryDAO.select(historyCond);
-        List<Integer> historyIds = new ArrayList<>();
+        List<CspStarRateOption> options = cspStarRateService.findOptionsByCourseId(srcCourseId);
+        List<Integer> newOptionIds = new ArrayList<>();
+        for (CspStarRateOption option : options) {
+            CspStarRateOption o = new CspStarRateOption();
+            o.setCourseId(copyCourseId);
+            o.setTitle(option.getTitle());
+            cspStarRateOptionDAO.insert(o);
+            newOptionIds.add(o.getId());
+        }
+
+        List<CspStarRateHistory> historyList = cspStarRateService.findHistoriesByCourseId(srcCourseId);
+
         if (!CheckUtils.isEmpty(historyList)) {
             for (CspStarRateHistory history : historyList) {
                 CspStarRateHistory h = new CspStarRateHistory();
@@ -1005,43 +1021,21 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
                 h.setScore(history.getScore());
                 h.setTicket(history.getTicket());
                 cspStarRateHistoryDAO.insert(h);
-                historyIds.add(h.getId());
-            }
-        }
 
-        //处理评分项明细
-        CspStarRateOption cond = new CspStarRateOption();
-        cond.setCourseId(srcCourseId);
-        List<CspStarRateOption> options = cspStarRateOptionDAO.select(cond);
-
-        CspStarRateHistoryDetail detailCond = new CspStarRateHistoryDetail();
-        detailCond.setCourseId(srcCourseId);
-
-        if (!CheckUtils.isEmpty(options)) {
-            for (CspStarRateOption option : options) {
-                CspStarRateOption o = new CspStarRateOption();
-                o.setCourseId(copyCourseId);
-                o.setTitle(option.getTitle());
-                cspStarRateOptionDAO.insert(o);
-
-                detailCond.setOptionId(option.getId());
-
-                List<CspStarRateHistoryDetail> detailList = cspStarRateHistoryDetailDAO.select(detailCond);
-                if (!CheckUtils.isEmpty(detailList)) {
-                    for (CspStarRateHistoryDetail detail : detailList) {
+                //查询出评分历史明细
+                List<CspStarRateHistoryDetail> oldDetails = cspStarRateService.findDetailsByHistoryId(history.getId());
+                if (!CheckUtils.isEmpty(oldDetails)) {
+                    for (int i = 0; i < oldDetails.size(); i ++) {
                         CspStarRateHistoryDetail d = new CspStarRateHistoryDetail();
-                        d.setOptionId(o.getId());
+                        d.setOptionId(newOptionIds.get(i));
                         d.setCourseId(copyCourseId);
-                        d.setScore(detail.getScore());
-                        d.setHistoryId(detail.getHistoryId());
+                        d.setScore(oldDetails.get(i).getScore());
+                        d.setHistoryId(h.getId());
                         cspStarRateHistoryDetailDAO.insert(d);
                     }
                 }
-
             }
         }
-
-
     }
 
 

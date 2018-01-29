@@ -212,4 +212,42 @@ public class CspStarRateServiceImpl extends BaseServiceImpl<CspStarRateOption> i
         return cspStarRateHistoryDAO.findRateResultExcludeDetails(id);
     }
 
+    /**
+     * 根据课件ID获取评分项
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public List<CspStarRateOption> findOptionsByCourseId(Integer courseId) {
+        CspStarRateOption cond = new CspStarRateOption();
+        cond.setCourseId(courseId);
+        return cspStarRateOptionDAO.select(cond);
+    }
+
+    /**
+     * 根据课件ID获取评分历史
+     *
+     * @param courseId
+     * @return
+     */
+    @Override
+    public List<CspStarRateHistory> findHistoriesByCourseId(Integer courseId) {
+        CspStarRateHistory cond = new CspStarRateHistory();
+        cond.setCourseId(courseId);
+        return cspStarRateHistoryDAO.select(cond);
+    }
+
+    /**
+     * 根据评分历史ID获取评分明细
+     *
+     * @param historyId
+     * @return
+     */
+    @Override
+    public List<CspStarRateHistoryDetail> findDetailsByHistoryId(Integer historyId) {
+        CspStarRateHistoryDetail cond = new CspStarRateHistoryDetail();
+        cond.setHistoryId(historyId);
+        return cspStarRateHistoryDetailDAO.select(cond);
+    }
 }

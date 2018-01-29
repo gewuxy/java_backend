@@ -69,4 +69,25 @@ public interface CspStarRateService extends BaseService<CspStarRateOption> {
     int deleteHistoryByCourseId(Integer courseId);
 
     StarRateResultDTO findRateResultExcludeDetails(Integer id);
+
+    /**
+     * 根据课件ID获取评分项
+     * @param courseId
+     * @return
+     */
+    List<CspStarRateOption> findOptionsByCourseId(Integer courseId);
+
+    /**
+     * 根据课件ID获取评分历史
+     * @param courseId
+     * @return
+     */
+    List<CspStarRateHistory> findHistoriesByCourseId(Integer courseId);
+
+    /**
+     * 根据评分历史ID获取评分明细
+     * @param historyId
+     * @return
+     */
+    List<CspStarRateHistoryDetail> findDetailsByHistoryId(Integer historyId);
 }
