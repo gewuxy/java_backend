@@ -95,19 +95,19 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
         //将用户ID置空 意图是让录播投稿生成的副本不占该用户会议个数
         course.setCspUserId(null);
 
+        Live live = liveService.findByCourseId(courseId);
+        if(live != null){
+            if (live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                throw new SystemException(local("page.delivery.tips.live.going"));
+            }
+        }
+
         for(Integer acceptId:acceptIds){
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {//录播投稿需要复制副本
                 //复制副本
                 courseId = audioService.doCopyCourse(course, null, null);
             }else{  //直播，检查会议是否已结束，如果会议已结束，将直播复制成录播会议
-                Live live = liveService.findByCourseId(courseId);
-                if(live != null){
-                    if (live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
-                        throw new SystemException(local("page.delivery.tips.live.going"));
-                    } else {
-                        courseId = audioService.doCopyLiveToRecord(courseId);
-                    }
-                }
+                courseId = audioService.doCopyLiveToRecord(courseId);
             }
 
             //生成投稿记录
