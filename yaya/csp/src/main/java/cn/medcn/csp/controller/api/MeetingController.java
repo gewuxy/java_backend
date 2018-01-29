@@ -183,7 +183,7 @@ public class MeetingController extends CspBaseController {
             if (!AddressUtils.isLan(request.getRemoteHost())) {
                 address = AddressUtils.parseAddress(request.getRemoteHost());
             }
-            if (address != null && address.isAbroad() && !isAbroad || isAbroad && !address.isAbroad()) {
+            if (address != null && isAbroad && !address.isAbroad()) {
                 model.addAttribute("error", abroadError);
                 return localeView("/meeting/share_error");
             }
@@ -621,16 +621,24 @@ public class MeetingController extends CspBaseController {
             result.put("title", course.getTitle());
             result.put("coverUrl", !CheckUtils.isEmpty(course.getDetails()) ? course.getDetails().get(0).getImgUrl() : "");
 
-            //发送ws同步指令
-            LiveOrderDTO order = new LiveOrderDTO();
-            order.setCourseId(String.valueOf(courseId));
-            order.setLiveType(LiveOrderDTO.LIVE_TYPE_PPT);
-            order.setOrder(LiveOrderDTO.ORDER_SCAN_SUCCESS);
-            order.setPageNum(0);
-            liveService.publish(order);
+            sendScreenOrder(courseId);
             return success(result);
         }
 
+    }
+
+    /**
+     * 发送扫码投屏指令
+     * @param courseId
+     */
+    protected void sendScreenOrder(Integer courseId){
+
+        LiveOrderDTO order = new LiveOrderDTO();
+        order.setCourseId(String.valueOf(courseId));
+        order.setLiveType(LiveOrderDTO.LIVE_TYPE_PPT);
+        order.setOrder(LiveOrderDTO.ORDER_SCAN_SUCCESS);
+        order.setPageNum(0);
+        liveService.publish(order);
     }
 
 
@@ -682,6 +690,9 @@ public class MeetingController extends CspBaseController {
             }
             dto.setRecord(play);
         }
+
+        //发送扫码投屏指令
+        sendScreenOrder(courseId);
 
         return success(dto);
     }
