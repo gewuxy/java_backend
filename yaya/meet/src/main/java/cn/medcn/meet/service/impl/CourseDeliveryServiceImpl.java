@@ -101,9 +101,12 @@ public class CourseDeliveryServiceImpl extends BaseServiceImpl<CourseDelivery> i
                 courseId = audioService.doCopyCourse(course, null, null);
             }else{  //直播，检查会议是否已结束，如果会议已结束，将直播复制成录播会议
                 Live live = liveService.findByCourseId(courseId);
-                if(live != null && live.getEndTime() != null && new Date().getTime() > live.getEndTime().getTime()
-                        || live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()){  //会议已结束
-                    courseId = audioService.doCopyLiveToRecord(courseId);
+                if(live != null){
+                    if (live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                        throw new SystemException(local("page.delivery.tips.live.going"));
+                    } else {
+                        courseId = audioService.doCopyLiveToRecord(courseId);
+                    }
                 }
             }
 
