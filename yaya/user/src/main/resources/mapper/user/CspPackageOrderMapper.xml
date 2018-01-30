@@ -49,10 +49,10 @@
             date_format(temp.create_time,'%Y')as createTime,
         </if>
         SUM(CASE WHEN temp.plat_form='alipay_wap' or temp.plat_form = 'alipay_pc_direct' or temp.plat_form = 'alipay'
-        or temp.plat_form = 'alipay_wap' THEN temp.should_pay END) AS
+            THEN temp.should_pay END) AS
         alipayWap,
         SUM(CASE WHEN temp.plat_form='wx_pub_qr' or temp.plat_form='wx' THEN temp.should_pay END) AS wxPubQr,
-        SUM(CASE WHEN temp.plat_form='upacp_wap' or temp.plat_form = 'upacp_pc' THEN temp.should_pay END) AS upacpWap,
+        SUM(CASE WHEN temp.plat_form='upacp_wap' or temp.plat_form = 'upacp_pc' or temp.plat_form = 'upacp' THEN temp.should_pay END) AS upacpWap,
         SUM(CASE WHEN temp.plat_form='paypal' THEN temp.should_pay END) AS paypal,
         SUM(temp.should_pay) AS money
         FROM (<include refid="unionOrderAndFlux"/>) as temp where 1=1
@@ -85,7 +85,7 @@
             AND buy_time BETWEEN #{startTime} AND #{endTime}
         </if>
         <if test="abroad ==  0"><!-- rnb-->
-            AND platform in ('alipay_pc_direct','upacp_pc','wx','alipay','wx_pub_qr')
+            AND platform in ('alipay_pc_direct','alipay_wap','alipay','upacp_pc','upacp','upacp_wap','wx','wx_pub_qr')
         </if>
         <if test="abroad ==  1"><!-- rnb-->
             AND platform in ('paypal')
