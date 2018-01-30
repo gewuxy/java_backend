@@ -16,13 +16,13 @@
         <div class="row-span span6 hot">
             <a href="#" onclick="changeAbroad(this,0);">
                 <h4 class="title">人民币</h4>
-                <p><strong class="price">${rmb}</strong></p>
+                <p><strong class="price">${empty rmb ? "0.00":rmb}</strong></p>
             </a>
         </div>
         <div class="row-span span6">
             <a href="#" onclick="changeAbroad(this,1);">
                 <h4 class="title">美元</h4>
-                <p><strong class="price">${usd}</strong></p>
+                <p><strong class="price">${empty usd ? "0.00":usd}</strong></p>
             </a>
         </div>
     </div>

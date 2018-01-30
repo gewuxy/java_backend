@@ -15,7 +15,7 @@
 <body>
     <ul class="nav nav-tabs">
         <li class="active"><a href="${ctx}/yaya/shop/order/list">订单列表</a></li>
-        <li><a href="${ctx}/yaya/shop/order/edit">编辑订单</a></li>
+        <%--<li><a href="${ctx}/yaya/shop/order/edit">编辑订单</a></li>--%>
     </ul>
 
     <%@include file="/WEB-INF/include/message.jsp"%>
