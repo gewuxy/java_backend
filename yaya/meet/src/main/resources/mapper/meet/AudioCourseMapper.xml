@@ -67,15 +67,17 @@
 
     <!-- csp method sql for web-->
     <select id="findCspMeetingList" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
-        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,
-        cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
-        p.play_page,p.play_state, c.info,c.category_id
+        SELECT c.* , count(h.id) AS score_count, avg(h.score) AS avg_score FROM
+        (SELECT c.id, c.title, c.play_type, l.start_time, c.create_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,c.star_rate_flag,
+        fcd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
+        p.play_page,p.play_state, c.info,c.category_id, c.password, c.source_type
         FROM t_audio_course c
         LEFT JOIN t_csp_live l ON l.course_id = c.id
         LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_audio_course_detail fcd ON c.id = fcd.course_id and fcd .sort = 1
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
-        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
-        AND c.deleted != 1
+
+        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1 AND c.deleted = 0
         <if test="playType != null">
             <choose>
                 <when test="playType == 0">
@@ -89,18 +91,27 @@
         <if test="keyword != null">
             AND c.title LIKE CONCAT('%',#{keyword}, '%')
         </if>
+        GROUP BY c.id) as c LEFT JOIN t_csp_star_rate_history h ON h.course_id = c.id
         GROUP BY c.id
     </select>
     <!-- for api -->
     <select id="findCspMeetingListForApp" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
         SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,
-        cd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
-        p.play_page,p.play_state, c.info,c.category_id
+        fcd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
+        p.play_page,p.play_state, c.info,c.category_id,c.star_rate_flag, c.password,c.source_type
         FROM t_audio_course c
         LEFT JOIN t_csp_live l ON l.course_id = c.id
         LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_audio_course_detail fcd ON c.id = fcd.course_id and fcd .sort = 1
         LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
-        WHERE c.csp_user_id = #{cspUserId} AND c.published = 1
+        WHERE 1=1
+        <if test="cspUserId != null">
+            AND c.csp_user_id = #{cspUserId}
+        </if>
+        <if test="id != null">
+            AND c.id = #{id}
+        </if>
+        AND c.published = 1
         AND c.deleted != 1 AND locked != 1
         <if test="playType != null">
             <choose>
@@ -159,8 +170,9 @@
 
     <select id="findAudioCourseList" resultType="cn.medcn.meet.model.AudioCourse">
         SELECT * from t_audio_course where source_type = 1
-        and deleted != 1 AND locked != 1 AND publish =1 AND guide != 1 AND csp_user_id = #{cspUserId}
+        and deleted != 1 AND locked != 1 AND published =1 AND guide != 1 AND csp_user_id = #{cspUserId}
         ORDER BY create_time asc
+
     </select>
     
     <select id="findEarliestCourse" resultType="cn.medcn.meet.model.AudioCourse">
@@ -182,4 +194,51 @@
         UPDATE t_audio_course SET locked = 0 WHERE csp_user_id = #{cspUserId} AND source_type = 1
         and deleted != 1 AND guide != 1 AND published = 1 ORDER BY create_time asc;
     </update>
+
+    <select id="findMiniTemplate" resultType="cn.medcn.meet.dto.AudioCourseDTO">
+        SELECT c.id,c.title,c.category,d.img_url as cover_url
+        FROM t_audio_course c
+        LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
+        WHERE c.source_type = 2 and c.deleted != 1 AND c.locked != 1 AND c.published =1 AND c.guide != 1
+        ORDER BY c.create_time asc
+    </select>
+
+    <select id="findMiniTemplateByIdOrRand" resultType="cn.medcn.meet.dto.AudioCourseDTO">
+        SELECT c.id,c.title,c.category,d.img_url as cover_url
+        FROM t_audio_course c
+        LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
+        WHERE c.source_type = 2 and c.deleted != 1 AND c.locked != 1
+        AND c.published =1 AND c.guide != 1
+        <if test="id != null and id != 0">
+            AND c.id = #{id}
+        </if>
+        <if test="id == 0">
+            ORDER BY RAND() limit 1
+        </if>
+    </select>
+
+    <select id="findMiniMeetingListByType" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">
+        SELECT c.id, c.title, c.play_type, l.start_time, l.end_time, l.live_state, l.live_page,c.locked,c.guide,
+        fcd.img_url as cover_url, count(cd.id) as page_count,SUM(cd.duration) as duration,
+        p.play_page,p.play_state, c.info,c.category_id,c.star_rate_flag, c.password,c.source_type
+        FROM t_audio_course c
+        LEFT JOIN t_csp_live l ON l.course_id = c.id
+        LEFT JOIN t_audio_course_detail cd ON c.id = cd.course_id
+        LEFT JOIN t_audio_course_detail fcd ON c.id = fcd.course_id and fcd .sort = 1
+        LEFT JOIN t_csp_audio_course_play p ON p.course_id = c.id
+        WHERE 1=1 AND c.published = 1 AND c.deleted != 1 AND locked != 1
+        <if test="cspUserId != null">
+            AND c.csp_user_id = #{cspUserId}
+        </if>
+        <if test="playType != null">
+            AND  c.play_type = #{playType}
+        </if>
+        <if test="sourceType != null">
+            AND  c.source_type = #{sourceType}
+        </if>
+        <if test="keyword != null">
+            AND c.title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
+        GROUP BY c.id ORDER BY c.create_time DESC
+    </select>
 </mapper>

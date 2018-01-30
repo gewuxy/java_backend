@@ -19,8 +19,9 @@
 <script src="${ctxStatic}/js/oauth.twitter.js"></script>
 <script src="//adodson.com/hello.js/dist/hello.all.js"></script>
 <script>
-    $(function () {
 
+
+    $(function () {
 
     });
 

@@ -9,12 +9,10 @@ import cn.medcn.common.excptions.PasswordErrorException;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.service.PushService;
 import cn.medcn.common.utils.*;
-import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.controller.CspBaseController;
-import cn.medcn.sys.service.SysNotifyService;
-import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.sys.service.SysNotifyService;
 import cn.medcn.user.dto.Captcha;
 import cn.medcn.user.dto.CspUserInfoDTO;
 import cn.medcn.user.model.*;
@@ -22,7 +20,10 @@ import cn.medcn.user.service.CspPackageService;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
+import cn.medcn.weixin.util.EmojiFilterUtil;
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Sets;
+import org.bouncycastle.jce.provider.BouncyCastleProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -32,11 +33,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.crypto.Cipher;
+import javax.crypto.spec.IvParameterSpec;
+import javax.crypto.spec.SecretKeySpec;
 import javax.servlet.http.HttpServletRequest;
+import java.security.AlgorithmParameters;
+import java.security.Security;
 import java.text.ParseException;
 import java.util.*;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.weixin.config.MiniProgramConfig.*;
+
 
 /**
  * Created by Liuchangling on 2017/9/27.
@@ -57,12 +65,19 @@ public class CspUserController extends CspBaseController {
     @Autowired
     protected EmailTempService tempService;
 
+
     @Value("${app.file.upload.base}")
     protected String uploadBase;
 
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Value("${mini.appid}")
+    private String appId;
+
+    @Value("${mini.secret}")
+    private String secret;
 
     @Autowired
     protected CspPackageService packageService;
@@ -110,6 +125,8 @@ public class CspUserController extends CspBaseController {
             return error(local("user.linkman.notnull"));
         }
 
+        //去除昵称中的非法字符，表情
+        userInfo.setNickName(EmojiFilterUtil.filterName(userInfo.getNickName()));
         // 获取邮箱模板
         EmailTemplate template = tempService.getTemplate(LocalUtils.getLocalStr(), EmailTemplate.Type.REGISTER.getLabelId(), EmailTemplate.UseType.CSP.getLabelId());
         try {
@@ -230,6 +247,9 @@ public class CspUserController extends CspBaseController {
             return error(local("user.empty.ThirdPartyId"));
         }
 
+        //去除昵称中的非法字符
+        userInfoDTO.setNickName(EmojiFilterUtil.filterName(userInfoDTO.getNickName()));
+
         // 获取app header中是否海外登录
         Boolean abroad = LocalUtils.isAbroad();
         userInfoDTO.setAbroad(abroad);
@@ -251,8 +271,9 @@ public class CspUserController extends CspBaseController {
                 userInfo = loginByThirdParty(userInfoDTO);
             }
 
-            Boolean active = userInfo.getActive();
-            if (active != null && !active) {
+            Boolean frozen = userInfo.getFrozenState();
+            // 账号已经被冻结
+            if (frozen != null && frozen) {
                 return accountFrozenError();
             }
 
@@ -277,19 +298,23 @@ public class CspUserController extends CspBaseController {
 
             CspUserPackage cspUserPackage = cspUserPackageService.selectByPrimaryKey(userInfo.getId());
             if (cspUserPackage == null){
-                if(userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
+                // YaYa账号登录
+                if (userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())) {
+                    // 设置YaYa账号套餐版本信息
                     cspUserService.yayaBindUpdate(userInfo.getId());
-                    if(userInfo.getState() == true){
+                    // 判断是否新用户
+                    if (userInfo.getState()) {
                         userInfo.setState(true);
                         cspUserService.updateByPrimaryKey(userInfo);
                     }
-                }else if(userInfo.getState() == true && !userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())){
+                } else if (userInfo.getState() && !userInfoDTO.getThirdPartyId().equals(BindInfo.Type.YaYa.getTypeId())) {
                     modifyOldUser(userInfo);
-                }else{
+                } else {
                     //app端用户默认给标准版
                     cspUserPackageService.addStanardInfo(userInfo.getId());
                 }
             }
+
             // 缓存用户信息
             Principal principal = cachePrincipal(userInfo);
 
@@ -414,9 +439,10 @@ public class CspUserController extends CspBaseController {
             throw new SystemException(local("user.notexisted"));
         }
         // 邮箱未激活
-        if (userInfo.getActive() == false) {
+        if (!userInfo.getActive()) {
             throw new SystemException(local("user.unActive.email"));
         }
+
         // 用户输入密码是否正确
         if (!MD5Utils.md5(password).equals(userInfo.getPassword())) {
             throw new PasswordErrorException((local("user.password.error")));
@@ -779,4 +805,112 @@ public class CspUserController extends CspBaseController {
         }
 
     }
+
+
+    /**
+     * 小程序接口，获取unionid
+     * @param code
+     * @return
+     */
+    @RequestMapping("/mini/unionid")
+    @ResponseBody
+    public String getUnionId(String code){
+        if(StringUtils.isEmpty(code)){
+            return error("code不能为空");
+        }
+        Map<String,Object> map = new HashMap<>();
+        map.put(MINI_APPID_KEY,appId);
+        map.put(MINI_SECRET_KEY,secret);
+        map.put(JS_CODE_KEY,code);
+        map.put(GRANT_TYPE_KEY,UNION_ID_GRANT_TYPE_VALUE);
+        String result = HttpUtils.get(UNIONID_URL,map);
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        String errCode = jsonObject.getString(ERR_CODE_STR);
+        //如果获取数据没有出错，将session_key存到缓存，判断用户是否已注册
+        if(StringUtils.isEmpty(errCode)){
+            //将session_key存到缓存
+            String sessionKey = jsonObject.getString(SESSION_KEY_STR);
+            String key = UUIDUtil.getUUID();
+            //TODO 存储的时长
+            redisCacheUtils.setCacheObject(key,sessionKey, Constants.TOKEN_EXPIRE_TIME);
+            //uuid的值作为对外的sessionKey
+            jsonObject.put(SESSION_KEY_STR,key);
+
+            //判断是否注册过
+            String unionId = jsonObject.getString(UNION_ID_STR);
+            if(StringUtils.isNotEmpty(unionId)){
+                CspUserInfo info = cspUserService.findBindUserByUniqueId(unionId);
+                jsonObject.put("has_user",info == null ? "false": "true");
+            }
+
+            return success(jsonObject);
+        }
+        return success(jsonObject);
+    }
+
+    /**
+     *微信小程序接口，获取用户信息
+     * @param encryptedData
+     * @param sessionKey uuid值
+     * @param iv
+     * @return
+     */
+    @RequestMapping("/mini/info")
+    @ResponseBody
+    public String getInfo(String encryptedData,String sessionKey,String iv){
+        if(StringUtils.isEmpty(encryptedData)){
+            return error("encryptedData不能为空");
+        }
+        if(StringUtils.isEmpty(sessionKey)){
+            return error("sessionKey不能为空");
+        }
+        if(StringUtils.isEmpty(iv)){
+            return error("iv不能为空");
+        }
+
+        //获取存储的session_key
+        String realSessionKey = redisCacheUtils.getCacheObject(sessionKey);
+        if(StringUtils.isEmpty(realSessionKey)){
+            return error("sessionKey失效或错误");
+        }
+
+        // 被加密的数据
+        byte[] dataByte = org.codehaus.xfire.util.Base64.decode(encryptedData);
+        // 加密秘钥
+        byte[] keyByte = org.codehaus.xfire.util.Base64.decode(realSessionKey);
+        // 偏移量
+        byte[] ivByte = org.codehaus.xfire.util.Base64.decode(iv);
+        try {
+            // 如果密钥不足16位，那么就补足.  这个if 中的内容很重要
+            int base = 16;
+            if (keyByte.length % base != 0) {
+                int groups = keyByte.length / base + (keyByte.length % base != 0 ? 1 : 0);
+                byte[] temp = new byte[groups * base];
+                Arrays.fill(temp, (byte) 0);
+                System.arraycopy(keyByte, 0, temp, 0, keyByte.length);
+                keyByte = temp;
+            }
+            // 初始化
+            Security.addProvider(new BouncyCastleProvider());
+            Cipher cipher = Cipher.getInstance("AES/CBC/PKCS7Padding","BC");
+            SecretKeySpec spec = new SecretKeySpec(keyByte, "AES");
+            AlgorithmParameters parameters = AlgorithmParameters.getInstance("AES");
+            parameters.init(new IvParameterSpec(ivByte));
+            cipher.init(Cipher.DECRYPT_MODE, spec, parameters);// 初始化
+            byte[] resultByte = cipher.doFinal(dataByte);
+            if (null != resultByte && resultByte.length > 0) {
+                String result = new String(resultByte, "UTF-8");
+                JSONObject jsonObject = JSONObject.parseObject(result);
+                return success(jsonObject);
+            }
+        }catch (Exception e) {
+            e.printStackTrace();
+            return error("获取失败");
+        }
+        return null;
+    }
+
+
+
+
 }

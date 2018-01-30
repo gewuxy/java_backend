@@ -10,6 +10,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.pdfbox.pdmodel.PDDocument;
 
+import org.apache.pdfbox.printing.PDFPageable;
 import org.apache.pdfbox.rendering.PDFRenderer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import java.awt.image.BufferedImage;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -98,10 +100,12 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
             String imageFilePath;
             BufferedImage image = null;
             for (int i = 0; i < pageCount; i++) {
-                image = renderer.renderImage(i, 1.0f);
+                image = renderer.renderImage(i, 2f);
                 imageFilePath = imgDirPath + UUIDUtil.getNowStringID() + "." + suffix;
                 ImageIO.write(image, suffix, new File(appFileUploadBase + imageFilePath));
-                request.getSession().setAttribute(Constants.OFFICE_CONVERT_PROGRESS, new OfficeConvertProgress(pageCount, i + 1, courseId));
+                if (request != null) {
+                    request.getSession().setAttribute(Constants.OFFICE_CONVERT_PROGRESS, new OfficeConvertProgress(pageCount, i + 1, courseId));
+                }
                 imageNameList.add(imageFilePath);
                 image.flush();
                 image = null;
@@ -125,6 +129,29 @@ public class OpenOfficeServiceImpl implements OpenOfficeService {
         return null;
     }
 
+
+    /**
+     * 打印PDF 然后转换成图片
+     *
+     * @param padFilePath
+     * @param imageDir
+     * @param courseId
+     * @param request
+     * @return
+     */
+    @Override
+    public List<String> pdfPrintAndToImages(String padFilePath, String imageDir, int courseId, HttpServletRequest request) {
+        PDDocument document = null;
+        try {
+            document = PDDocument.load(new File(padFilePath));
+            PrinterJob job = PrinterJob.getPrinterJob();
+            job.setPageable(new PDFPageable(document));
+            job.print();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return pdf2Images(padFilePath, imageDir, courseId, request);
+    }
 
     @Override
     public void convert2Html(String sourceFilePath, String destFilePath) {

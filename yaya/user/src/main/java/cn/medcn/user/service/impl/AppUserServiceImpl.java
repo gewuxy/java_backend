@@ -27,10 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -399,7 +396,7 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
      * @param user
      */
     @Override
-    public void updateDoctor(AppUser user)  throws Exception{
+    public void updateDoctor(AppUser user)  {
         user.setAuthed(true);  //防止user所有字段为null导致抛出异常
         if(!StringUtils.isEmpty(user.getProvince()) && !StringUtils.isEmpty(user.getCity())){ //防止zone为空没有更新
             if(user.getZone() == null){
@@ -962,5 +959,86 @@ public class AppUserServiceImpl extends BaseServiceImpl<AppUser> implements AppU
             list.addAll(findAllAttation(userId, groupId));
         }
         return list;
+    }
+
+
+    @Override
+    public MyPage<UnitAccountDTO> findUnitAccounts(Pageable pageable) {
+        startPage(pageable, true);
+        MyPage<UnitAccountDTO> page = MyPage.page2Mypage((Page) appUnitDAO.findUnitAccounts(pageable.getParams()));
+        return page;
+    }
+
+    /**
+     * 注册单位号用户
+     *
+     * @param appUser
+     * @param activeStore
+     */
+    @Override
+    public void executeRegisterUnitAccount(AppUser appUser, Integer activeStore) {
+        appUser.setRegistDate(new Date());
+        appUser.setRoleId(AppRole.AppRoleType.PUB_USER.getId());
+        appUser.setPubFlag(true);
+        appUser.setAuthed(true);
+        appUser.setPassword(MD5Utils.MD5Encode(Constants.RESET_PASSWORD));
+
+        appUserDAO.insert(appUser);
+
+        AppUnit appUnit = new AppUnit();
+        appUnit.setUserId(appUser.getId());
+        appUnitDAO.insert(appUnit);
+
+        ActiveStore store = new ActiveStore();
+        store.setId(appUser.getId());
+        store.setStore(activeStore == null ? 0 : activeStore);
+        activeStoreDAO.insert(store);
+    }
+
+    @Override
+    public void updateUnitAccount(AppUser appUser, Integer activeStore) {
+        appUserDAO.updateByPrimaryKeySelective(appUser);
+        if (activeStore != null) {
+
+            ActiveStore store = activeStoreDAO.selectByPrimaryKey(appUser.getId());
+            if (store == null) {
+                store = new ActiveStore();
+                store.setId(appUser.getId());
+                store.setStore(activeStore);
+                activeStoreDAO.insert(store);
+            } else {
+                store.setStore(activeStore);
+                activeStoreDAO.updateByPrimaryKeySelective(store);
+            }
+        }
+    }
+
+
+    /**
+     * 医生账号列表
+     * @param pageable
+     * @return
+     */
+    @Override
+    public MyPage<AppUserDTO> findDoctorAccounts(Pageable pageable) {
+        startPage(pageable, true);
+        MyPage<AppUserDTO> page = MyPage.page2Mypage((Page) appUnitDAO.findDoctorAccounts(pageable.getParams()));
+        return page;
+    }
+
+    /**
+     * 为选定的单位号导入指定数量的粉丝
+     *
+     * @param unitIds
+     * @param fans
+     */
+    @Override
+    public void doImportFans(Integer[] unitIds, Integer fans) {
+        Map<String, Object> params = new HashMap<>();
+        params.put("fans", fans);
+        for (Integer unitId : unitIds) {
+            params.put("unitId", unitId);
+            appUnitDAO.importFans(params);
+        }
     }
 }

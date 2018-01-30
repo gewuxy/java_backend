@@ -4,11 +4,14 @@ import cn.medcn.common.Constants;
 import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.CookieUtils;
 import cn.medcn.common.utils.LocalUtils;
+import cn.medcn.common.utils.SpringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.util.Locale;
 
 import static cn.medcn.common.Constants.*;
 
@@ -34,6 +37,9 @@ public class LocalInterceptor implements HandlerInterceptor {
 
         LocalUtils.setLocalStr(local);
         LocalUtils.set(LocalUtils.getByKey(local));
+        httpServletRequest.setAttribute("csp_locale", local);
+        //將appName放入到上下文中
+        httpServletRequest.setAttribute("appName", SpringUtils.getMessage("page.common.appName"));
 
         String osType = httpServletRequest.getHeader(Constants.APP_OS_TYPE_KEY);
         LocalUtils.setOsTypeLocal(CheckUtils.isEmpty(osType) ? Constants.OS_TYPE_ANDROID : osType);

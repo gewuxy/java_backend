@@ -1,25 +1,19 @@
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.utils.APIUtils;
-import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.CheckUtils;
-import cn.medcn.common.utils.StringUtils;
-import cn.medcn.jcms.security.Principal;
+import cn.medcn.meet.dao.AudioHistoryDAO;
+import cn.medcn.meet.dao.MeetLearningRecordDAO;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
-import cn.medcn.meet.service.AudioService;
-import cn.medcn.meet.service.CourseDeliveryService;
-import cn.medcn.meet.service.ExamService;
-import cn.medcn.meet.service.MeetService;
+import cn.medcn.meet.service.*;
 import com.alibaba.fastjson.JSON;
-import org.apache.shiro.SecurityUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -40,6 +34,12 @@ public class MeetTest {
 
     @Autowired
     protected AudioService audioService;
+
+    @Autowired
+    protected MeetLearningRecordDAO meetLearningRecordDAO;
+
+    @Autowired
+    protected AudioHistoryDAO audioHistoryDAO;
 
     @Test
     public void testUpdateMeet(){
@@ -160,5 +160,37 @@ public class MeetTest {
     public void testFindLiveDetails(){
         List<AudioCourseDetail> details = audioService.findLiveDetails(14471);
         System.out.println(JSON.toJSONString(details));
+    }
+
+    /**
+     * 将之前的t_audio_history表中的数据统计一下 赋值到t_meet_learning_record表的记录当中
+     */
+    @Test
+    public void testUserLearningRecord() {
+        // 查询所以用户ppt学习记录
+        MeetLearningRecord condition = new MeetLearningRecord();
+        condition.setFunctionId(1);
+        List<MeetLearningRecord> recordList = meetLearningRecordDAO.select(condition);
+        if (recordList != null && recordList.size() != 0) {
+            for (MeetLearningRecord record : recordList) {
+                String meetId = record.getMeetId();
+                int userId = record.getUserId();
+                // 根据会议id和用户id 查询用户的ppt学习记录 并更新记录
+                AudioHistory userHistory = new AudioHistory();
+                userHistory.setMeetId(meetId);
+                userHistory.setUserId(userId);
+                List<AudioHistory> historyList = audioHistoryDAO.select(userHistory);
+                if (historyList != null && historyList.size() != 0) {
+                    int totalTime = 0;
+                    for (AudioHistory history : historyList) {
+                        totalTime = totalTime + history.getUsedtime();
+                    }
+                    record.setUsedTime(new Long(totalTime));
+                    System.out.println("--更新用户id="+userId+"= 学习总时长为="+totalTime);
+                    // 更新记录
+                    meetLearningRecordDAO.updateByPrimaryKey(record);
+                }
+            }
+        }
     }
 }

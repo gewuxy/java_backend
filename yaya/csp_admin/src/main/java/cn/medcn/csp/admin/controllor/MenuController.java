@@ -91,6 +91,9 @@ public class MenuController extends BaseController{
         if(menu.getHide() == null){
             menu.setHide(false);
         }
+        if (menu.getPreid() == null) {
+            menu.setPreid(0);
+        }
         if(menu.getId() == null){
             sysMenuService.insert(menu);
         }else{

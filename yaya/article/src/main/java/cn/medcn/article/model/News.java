@@ -6,6 +6,7 @@ import org.apache.commons.lang.StringUtils;
 
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.io.Serializable;
 
 /**
@@ -16,17 +17,21 @@ import java.io.Serializable;
 @Entity
 @Table(name = "t_article")
 public class News extends Article implements Serializable {
+    @Transient
+    protected String categoryId;
+    @Transient
+    protected String categoryName;
 
     /**
      * 替换掉jsp标签
      * @param basePath
      */
     public void replaceJSPTAG(String basePath){
-        if(!StringUtils.isBlank(articleImg)){
-            articleImg = (basePath+articleImg);
-            if (!StringUtils.isBlank(content)){
+        if (!StringUtils.isBlank(articleImg)) {
+            articleImg = (basePath + articleImg);
+            if (!StringUtils.isBlank(content)) {
                 String basePath2 = articleImg.substring(0, articleImg.lastIndexOf("/"));
-                content = content.replaceAll("<%=strFullImageDir %>",basePath2);
+                content = content.replaceAll("<%=strFullImageDir %>", basePath2);
             }
         }
     }
@@ -69,7 +74,8 @@ public class News extends Article implements Serializable {
 
     public enum NEWS_CATEGORY{
         CATEGORY_YYXW("医药新闻", "170510101223456"),
-        CATEGORY_ZYZX("专业资讯","170510121548925"),
+        CATEGORY_YXZH("医学综合","170510121548925"),
+        CATEGORY_ZYZX("药品资讯","170510121522684"),
         CATEGORY_AQYY("安全用药","170510121523528"),
         CATEGORY_YYDT("医药动态", "170510121548956"),
         CATEGORY_GSDT("公司动态", "17051016434243959379"),

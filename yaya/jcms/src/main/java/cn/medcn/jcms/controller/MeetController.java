@@ -41,6 +41,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Created by lixuan on 2017/5/16.
@@ -482,7 +483,11 @@ public class MeetController extends BaseController {
             if(live.getLiveState() != Live.LiveState.closed.getType()){
                 SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
                 model.addAttribute("liveStartTime",format.format(live.getStartTime()));
-                model.addAttribute("liveEndTime",format.format(live.getEndTime()));
+                if (live.getEndTime() != null){
+                    model.addAttribute("liveEndTime",format.format(live.getEndTime()));
+                } else {
+                    model.addAttribute("liveEndTime", format.format(new Date(live.getStartTime().getTime() + TimeUnit.DAYS.toMillis(1))));
+                }
             }
         }
         model.addAttribute("course", course);

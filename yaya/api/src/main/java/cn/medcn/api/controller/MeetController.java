@@ -471,11 +471,14 @@ public class MeetController extends BaseController {
     @ResponseBody
     public String pptRecord(PPTAudioDTO pptAudioDTO) {
         Integer userId = SecurityUtils.getCurrentUserInfo().getId();
+
         AudioHistory history = new AudioHistory();
         history.setUserId(userId);
         history.setMeetId(pptAudioDTO.getMeetId());
         history.setCourseId(pptAudioDTO.getCourseId());
         history.setModuleId(pptAudioDTO.getModuleId());
+
+        int totalTime = 0 ; // 累积学习总时长
         JSONArray jsonArray = JSON.parseArray(pptAudioDTO.getDetails());
         for (int i = 0; i < jsonArray.size(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
@@ -486,14 +489,20 @@ public class MeetController extends BaseController {
             history.setUsedtime(usedtime);
             history.setFinished(finished);
             audioService.insertHistory(history);
+            totalTime = totalTime + usedtime;
         }
+
         String meetId = history.getMeetId();
+        // 计算学习进度百分比
         Integer completeCount = calculatePPTProgress(meetId, userId);
+
         // 添加或修改学习进度记录
         Integer funcId = MeetModule.ModuleFunction.PPT.getFunId();
         MeetLearningRecord learningRecord = assignDataToLearning(userId, meetId, funcId);
         learningRecord.setCompleteProgress(completeCount);
-        learningRecord.setUsedTime(new Long(history.getUsedtime()));
+        // 1、这里需要累计学习记录的用时
+        // 2、需要将之前的t_audio_history表中的数据统计一下 赋值到t_meet_learning_record表的记录当中
+        learningRecord.setUsedTime(new Long(totalTime));
         meetService.saveOrUpdateLearnRecord(learningRecord);
         return APIUtils.success();
     }

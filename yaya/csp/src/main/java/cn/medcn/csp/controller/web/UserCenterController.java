@@ -33,8 +33,10 @@ import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 /**
  * Created by LiuLP on 2017/10/11/011.
@@ -80,6 +82,12 @@ public class UserCenterController extends CspBaseController {
 
     @Value("${app.file.base}")
     protected String fileBase;
+
+    @Value("${Twitter.app_key}")
+    protected String twitterKey;
+
+    @Value("${FaceBook.app_key}")
+    protected String fbKey;
 
 
     /**
@@ -354,7 +362,7 @@ public class UserCenterController extends CspBaseController {
         model.addAttribute("flux", flux);
         //直播视频记录
         MyPage<VideoLiveRecordDTO> myPage = cspUserService.findVideoLiveRecord(pageable);
-//        VideoLiveRecordDTO.transExpireDay(myPage.getDataList());
+//        VideoLiveRecordDTO.transExpireDay(myPage.getDataList());cd
         model.addAttribute("page", myPage);
         return localeView("/userCenter/toFlux");
     }
@@ -397,7 +405,7 @@ public class UserCenterController extends CspBaseController {
             throw new SystemException(local("download.fail"));
         }
         //打开下载框
-        DownloadUtils.openDownloadBox(meetName, response, live.getReplayUrl());
+        DownloadUtils.openDownloadBox(meetName, response, fileBase + live.getReplayUrl());
 
     }
 
@@ -451,20 +459,36 @@ public class UserCenterController extends CspBaseController {
         if (cspPackage == null){
             return localeView("/meeting/list");
         }
-        //英文版，格式化日期
-        if (cspUserPackage.getPackageStart() != null && cspUserPackage.getPackageEnd()!= null){
-            if(LocalUtils.Local.en_US.name().equals(LocalUtils.getLocalStr())){
-                DateFormat format = new SimpleDateFormat("MMM d yyyy", Locale.ENGLISH);
-                model.addAttribute("startTime",format.format(cspUserPackage.getPackageStart()));
-                model.addAttribute("endTime",format.format(cspUserPackage.getPackageEnd()));
-            }
+        //日期格式化
+        if (cspPackage.getPackageStart() != null && cspPackage.getPackageEnd() != null) {
+            String dateFormat = local("page.date.format");
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, LocalUtils.get());
+            String expireDateFormat = sdf.format(cspUserPackage.getPackageStart()) + local("page.date.separator") + sdf.format(cspUserPackage.getPackageEnd());
+            model.addAttribute("dateFormat", expireDateFormat);
         }
 
+        String local = local("page.remind.limit.meet", new Object[]{cspPackage.getLimitMeets()});
         List<CspPackageInfo> cspPackageInfos = cspPackageInfoService.selectByPackageId(cspPackage.getId());
+
+        model.addAttribute("limitMeets",local);
         model.addAttribute("cspPackageInfos", cspPackageInfos);
         model.addAttribute("cspUserPackage",cspUserPackage);
         model.addAttribute("cspPackage", cspPackage);
         model.addAttribute("successMsg",principal.getPkChangeMsg());
-        return localeView("/userCenter/memberManage");
+        return "/userCenter/memberManage";
+    }
+
+
+    /**
+     * 获取twitter和facebook的key
+     * @return
+     */
+    @RequestMapping("/twitter/facebook")
+    @ResponseBody
+    public String getTwitterAndFBKey(){
+        Map<String,String> map = new HashMap<>();
+        map.put("twitter",twitterKey);
+        map.put("fb",fbKey);
+        return success(map);
     }
 }

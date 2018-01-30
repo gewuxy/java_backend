@@ -43,7 +43,7 @@ public class AudioCourse implements Serializable {
     protected Integer playType;
     //csp投稿人ID
     protected String cspUserId;
-    //课件来源 0或者空为YaYa 1表示csp
+    //课件来源 0或者空为YaYa 1表示csp 2表示贺卡
     protected Integer sourceType;
     //课件描述
     protected String info;
@@ -55,6 +55,10 @@ public class AudioCourse implements Serializable {
     protected Boolean locked;
     //是否是引导课件
     protected Boolean guide;
+    //课件密码
+    protected String password;
+
+    protected Boolean starRateFlag;
 
     @Transient
     @JsonIgnore
@@ -92,6 +96,9 @@ public class AudioCourse implements Serializable {
 
     public enum SourceType{
         YaYa,
-        csp;
+        csp,
+        template,//制作模板
+        redPacket,//有声红包
+        QuickMeet;//快捷讲本
     }
 }

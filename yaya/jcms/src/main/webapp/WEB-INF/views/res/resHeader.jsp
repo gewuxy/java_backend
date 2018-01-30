@@ -20,29 +20,107 @@
     </div>
 </header>
 <!-- header end -->
-
 <div class="tab-hd">
-
     <ul class="tab-list clearfix" id="menu">
-        <li >
+        <li>
             <a href="${ctx}/func/res/list">CSP投屏<i></i></a>
         </li>
-        <li >
+        <li>
             <a href="${ctx}/func/res/share/list">共享资源<i></i></a>
         </li>
     </ul>
 </div>
-
 <script>
-    $(function(){
+    $(function () {
         var urlstr = location.href;
         $("#menu>li").removeClass("cur");
         $("#menu>li").each(function () {
             if (urlstr.indexOf($(this).find("a").attr('href')) > -1) {
                 $(this).addClass('cur');
-            }else if (urlstr.indexOf('/acquired/list') > -1){
+            } else if (urlstr.indexOf('/acquired/list') > -1) {
                 $(this).addClass("cur").siblings().removeClass("cur");
             }
         });
+
+        //提示
+        $(".question-tipsHover-hook").mouseenter(function(){
+            layer.tips('CSPmeeting是全球领先的云同步回放会议系统，开通该功能可接收来自全球各地用户的学术会议投稿。', '.question-tipsHover-hook', {
+                tips: [3, '#333'],
+                time:2000
+            });
+        });
+
+        //开启或者关闭csp投稿
+        $("#popup_checkbox_2").click(function () {
+            var flag = 0;
+            if ($('#popup_checkbox_2').is(':checked')) {
+                flag = 1;
+            }
+            $.ajax({
+                //服务器的地址
+                url: "${ctx}/func/res/change?flag=" + flag + "&viewType=" + '${viewType}',
+                dataType: 'json', //返回数据类型
+                type: 'POST', //请求类型
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    if (data.code == 0) {
+                        if (flag == 0) {
+                            //关闭投稿
+                            $("#deliveryList").empty();
+                            $(".page-box").empty();
+                        } else {
+                            window.location.href = '${ctx}/func/res/list?isOpen=' + flag + "&viewType=" + '${viewType}';
+                        }
+                    }
+                }
+            });
+        });
+
+        // 点击切换卡片列表
+        $(".changeListButton").click(function () {
+            if ($("#pages").val() <= 1) {
+                $("#pageForm").find("input[name='pageNum']").val(1);
+            }
+            $("#viewType").val() == 0 ? $("#viewType").val(1) : $("#viewType").val(0);
+            $("#pageForm").submit();
+        });
+
+        //点击预览
+        $(".popup-player-hook").click(function () {
+            var courseId = $(this).attr("courseId");
+            top.layer.open({
+                type: 2,
+                area: ['860px', '85%'],
+                fix: false, //不固定
+                fixed: true,
+                offset: '100px',
+                title: false,
+                content: '${ctx}/func/res/view?courseId=' + courseId
+            });
+        });
+
+        //简介和星评
+        $(".grade-state,.star-hook,.star-info").click(function () {
+            var courseId = $(this).attr("courseId");
+            top.layer.open({
+                type: 2,
+                area: ['670px', '85%'],
+                fix: false, //不固定
+                fixed: true,
+                offset: '100px',
+                title: false,
+                content: '${ctx}/func/res/rate/view?courseId=' + courseId
+            });
+        });
+
+        //导出按钮
+        $("#exportBtn").click(function () {
+            window.location.href = "${ctx}/func/res/export";
+        });
     });
+
+    //点击搜索
+    function submit() {
+        $("#searchForm").submit();
+    }
 </script>

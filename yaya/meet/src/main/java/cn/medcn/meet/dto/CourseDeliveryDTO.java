@@ -1,5 +1,6 @@
 package cn.medcn.meet.dto;
 
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.SpringUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.model.AudioCourse;
@@ -9,6 +10,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.text.DecimalFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -32,7 +34,9 @@ public class CourseDeliveryDTO implements Serializable {
 
     protected String coverUrl;//封面
 
-    // 直播状态 0表示未开始 1表示正在直播 2表示已关闭
+    /**
+     * @see cn.medcn.meet.model.AudioCoursePlay.PlayState
+     */
     protected Integer liveState;
 
     // ppt总页数
@@ -48,7 +52,9 @@ public class CourseDeliveryDTO implements Serializable {
     // 录播 正在播放的页码
     protected Integer playPage;
 
-    // 录播状态 0表示未开始 1表示录播中 2表示录播结束
+    /**
+     * @see cn.medcn.meet.model.AudioCoursePlay.PlayState
+     */
     protected Integer playState;
 
 
@@ -60,7 +66,12 @@ public class CourseDeliveryDTO implements Serializable {
 
     //投稿者邮箱
     private String email;
-
+    //分类
+    private String category;
+    //投稿者手机
+    private String mobile;
+    //投稿时间
+    private String deliveryTime;
     //录播ppt总时长
     private Integer duration;
 
@@ -74,12 +85,33 @@ public class CourseDeliveryDTO implements Serializable {
     //是否可编辑
     protected Boolean editAble;
 
-    protected Date serverTime;
+    protected Date serverTime = new Date();
 
     //会议是否被锁定
     protected Boolean locked;
     //是否是引导会议
     protected Boolean guide;
+
+    //星评开关
+    protected Boolean starRateFlag;
+
+    //星评人数
+    protected Integer scoreCount;
+    //综合评分
+    protected float avgScore;
+    //观看密码
+    protected String password;
+    /**
+     * @see cn.medcn.meet.model.AudioCourse.SourceType
+     */
+    protected Integer sourceType;
+
+    public float getAvgScore(){
+        DecimalFormat format = new DecimalFormat( "#0.0");
+        String avgStr = format.format(this.avgScore);
+        return Float.valueOf(avgStr);
+    }
+
 
     public static void splitCoverUrl(List<CourseDeliveryDTO> list,String baseUrl){
         if(list != null){
@@ -127,15 +159,19 @@ public class CourseDeliveryDTO implements Serializable {
 
 
     public String getPlayTime(){
-        int pt = getDuration();
-        if (pt == 0) {
-            return  "00'00\"";
+        long pt = 0;
+        if (playType == AudioCourse.PlayType.normal.getType()) {
+            pt = getDuration();
         } else {
-            StringBuffer buffer = new StringBuffer();
-            buffer.append(pt / 60);
-            buffer.append("'").append(pt % 60).append("\"");
-            return buffer.toString();
+            if (this.liveState == 0)  {
+                pt = 0;
+            } else if (endTime != null) {
+                pt = (endTime.getTime() - startTime.getTime()) / 1000;
+            } else {
+                pt = (System.currentTimeMillis() - startTime.getTime()) / 1000;
+            }
         }
+        return CalendarUtils.formatTimesDiff(pt);
     }
 
     public Integer getDuration(){

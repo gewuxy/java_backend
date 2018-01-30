@@ -7,7 +7,10 @@ import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -356,8 +359,94 @@ public interface AudioService extends BaseService<AudioCourse>  {
     boolean checkGuideExists(String cspUserId);
 
     /**
-     * 解锁用户最好的会议
+     * 解锁用户最早的会议
      * @param cspUserId
      */
     void doUnlockEarliestCourse(String cspUserId);
+
+    /**
+     * 檢測用戶是否有已經上傳了ppt但是沒有完成發佈的課件
+     * @param cspUserId
+     * @return
+     */
+    boolean hasUndoneCourse(String cspUserId);
+
+    List<AudioCourseDetail> findDetailsByCourseId(Integer id);
+
+    String getMeetShareUrl(String appCspBase ,String local,Integer courseId,boolean abroad);
+
+    /**
+     * 获取小程序二维码
+     * @param id
+     * @param page
+     * @return
+     */
+    String getMiniQRCode(Integer id, String page, String accessToken) throws IOException;
+
+    /**
+     * 根据图片和标题创建课件和明细
+     * @param files
+     * @param course
+     * @param theme
+     * @return
+     * @throws SystemException
+     */
+    Integer createAudioAndDetail(MultipartFile[] files, AudioCourse course, AudioCourseTheme theme) throws SystemException;
+
+    /**
+     * 小程序活动贺卡模板列表
+     * @return
+     */
+    List<AudioCourseDTO> findMiniTemplate();
+
+    /**
+     * 通过小程序二维码（固定）或者搜索小程序（随机） 返回贺卡模板
+     * @return
+     */
+    AudioCourseDTO findMiniTemplateByIdOrRand(Integer id);
+
+    /**
+     * 小程序 选择贺卡模板 制作有声贺卡
+     * @param id 模板id
+     * @param cspUserId
+     * @return
+     */
+    Integer doCopyCourseTemplate(Integer id, String cspUserId);
+
+
+    /**
+     * 复制讲本主题 （背景图片、背景音乐）
+     * @param courseTheme
+     */
+    void doCopyCourseTheme(AudioCourseTheme courseTheme, Integer courseId);
+    /**
+     * 更新小程序课件的信息
+     * @param course
+     * @param theme
+     * @return
+     */
+    void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException;
+
+    /**
+     * 修改课件密码
+     * @param course
+     * @param password
+     */
+    void doModifyPassword(AudioCourse course, String password);
+
+    /**
+     * 根据会议来源和会议类型筛选出会议列表
+     * @param pageable
+     * @return
+     */
+    MyPage<CourseDeliveryDTO> findMiniMeetingListByType(Pageable pageable);
+
+    /**
+     * 创建课件或者添加课件图片
+     * @param file
+     * @param course
+     * @param sort
+     * @return
+     */
+    Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort) throws SystemException;
 }

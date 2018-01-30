@@ -66,7 +66,7 @@
                                 <li><a href="#" onclick="changePackages(2,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'),'${user.unlimited}')">降级</a></li>
                                 <li><a href="#" onclick="changePackages(3,'${user.uid}','${user.packageId}',dateToStrings('${user.packageEnd}'),'${user.unlimited}')">时间修改</a></li>
                             </shiro:hasPermission>
-                            <shiro:hasPermission name="csp:user:active">
+                            <shiro:hasPermission name="csp:user:frozen">
                                 <li><a href="#" onclick="active(4,'${user.uid}')">账号冻结</a></li>
                             </shiro:hasPermission>
                         </ul>

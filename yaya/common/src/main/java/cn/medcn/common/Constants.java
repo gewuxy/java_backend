@@ -221,6 +221,12 @@ public class Constants {
     public static final String VIDEO_DOWNLOAD_URL = "video_download_";
     public static final String RESET_PASSWORD = "123456";
 
+    //将access_token存储在redis时使用的key
+    public static final String CSP_MINI_ACCESS_TOKEN_KEY = "csp_mini_access_token";
+
+    public static final String CSP_APP_STORE_ANDROID_URL = "http://android.myapp.com/myapp/detail.htm?apkName=jx.csp.app";
+
+    public static final String CSP_APP_STORE_IOS_URL = "https://itunes.apple.com/cn/app/%E4%BC%9A%E8%AE%B2-%E7%94%A8%E6%89%8B%E6%9C%BA%E8%AE%B2ppt/id1298984097?mt=8";
 
     /********** 合理用药 *************/
 

@@ -100,7 +100,7 @@ public interface AppUserService extends BaseService<AppUser> {
      * 更新用户信息
      * @param user
      */
-    void updateDoctor(AppUser user) throws Exception;
+    void updateDoctor(AppUser user);
 
     UnitInfoDTO findUnitInfo(Pageable pageable);
 
@@ -291,4 +291,28 @@ public interface AppUserService extends BaseService<AppUser> {
      * @return
      */
     List<AppUser> selectByPub(Integer pubFlag);
+
+    MyPage<UnitAccountDTO> findUnitAccounts(Pageable pageable);
+
+    /**
+     * 注册单位号用户
+     * @param appUser
+     * @param activeStore
+     */
+    void executeRegisterUnitAccount(AppUser appUser, Integer activeStore);
+
+    void updateUnitAccount(AppUser appUser, Integer activeStore);
+
+    /**
+     * 医生账号列表
+     * @param pageable
+     * @return
+     */
+    MyPage<AppUserDTO> findDoctorAccounts(Pageable pageable);
+
+    /**
+     * 为选定的单位号导入指定数量的粉丝
+     * @param unitIds
+     */
+    void doImportFans(Integer[] unitIds, Integer fans);
 }

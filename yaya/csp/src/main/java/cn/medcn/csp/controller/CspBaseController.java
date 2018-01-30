@@ -307,13 +307,18 @@ public class CspBaseController extends BaseController {
      * @return
      */
     protected Principal updatePackagePrincipal(String userId) {
+        // 获取最新的用户信息
         CspUserInfo userInfo = cspUserService.selectByPrimaryKey(userId);
+        // 用户token
         String token = userInfo.getToken();
+        // 将用户最新信息设置到缓存
         Principal principal = Principal.build(userInfo);
+        // 获取用户最新套餐信息
         CspPackage cspPackage = cspPackageService.findUserPackageById(userId);
         principal.setPackageId(cspPackage == null ? null : cspPackage.getId());
         principal.setCspPackage(cspPackage);
         principal.setNewUser(cspPackage == null);
+
         redisCacheUtils.setCacheObject(Constants.TOKEN +"_" + token, principal, Constants.TOKEN_EXPIRE_TIME);
         return principal;
     }
@@ -355,7 +360,7 @@ public class CspBaseController extends BaseController {
     }
 
     protected String accountFrozenError(){
-        return error(local("user.unActive.email"));
+        return error(APIUtils.ERROR_CODE_FROZEN, local("user.frozen.account"));
     }
 
     /**

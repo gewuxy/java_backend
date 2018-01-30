@@ -6,15 +6,28 @@ import javazoom.jl.decoder.Bitstream;
 import javazoom.jl.decoder.BitstreamException;
 import javazoom.jl.decoder.Header;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
+
 import javax.sound.sampled.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import net.coobird.thumbnailator.Thumbnails;
 
 /**
  * Created by lixuan on 2017/1/5.
  */
 public class FileUtils {
+
+    // 生成新闻缩略图路径
+    public static String realUploadPath = "Z:\\news\\images\\";
+
+    // 缩略图片宽
+    public static int thumbWidth = 120;
+
+    // 缩略图片高
+    public static int thumbHeight = 120;
+
 
     public static String readFromInputStream(InputStream inputStream){
         InputStreamReader isr = null;
@@ -314,12 +327,67 @@ public class FileUtils {
         return size / Constants.BYTE_UNIT_G + "G";
     }
 
+    /**
+     * 根据文件全路径获取文件名称
+     * @param filePath
+     * @return
+     */
+    public static String getFileName(String filePath){
+        if (CheckUtils.isNotEmpty(filePath)) {
+            return filePath.substring(filePath.lastIndexOf("/") + 1);
+        }
+        return filePath;
+    }
+
+    /**
+     * 获取文件后缀名
+     * @param filePath
+     * @param hasDot 是否包含点号
+     * @return
+     */
+    public static String getSuffix(String filePath, boolean hasDot){
+        if (CheckUtils.isNotEmpty(filePath)) {
+            if (hasDot) {
+                return filePath.substring(filePath.lastIndexOf("."));
+            } else {
+                return filePath.substring(filePath.lastIndexOf(".") + 1);
+            }
+        }
+        return null;
+    }
+
+
+    /**
+     * 上传图片 生成缩略图
+     * @param file
+     * @param width
+     * @param height
+     * @param uploadPath 缩略图实际存储路径
+     * @param realUploadPath 原图实际路径
+     * @return
+     */
+    public static String thumbnailUploadImage(File file, int width, int height, String uploadPath, String realUploadPath){
+         String des = realUploadPath + uploadPath;
+        try {
+
+            Thumbnails.of(file).size(width, height).toFile(new File(des));
+            //Thumbnails.of(file.getInputStream()).size(width, height).toFile(des);
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return des;
+    }
+
 
     public static void main(String[] args) {
-        String filePath = "D:/lixuan/test/test.mp4";
-        MediaInfo mediaInfo = parseAudioMediaInfo(filePath);
-        if(mediaInfo != null){
-            System.out.println("duration = "+mediaInfo.getDuration()+" - bitrate = "+mediaInfo.getBitRate());
-        }
+        //缩略图实际存储路径
+        String dateFolderPath = CalendarUtils.getCurrentDate();
+        String filePath = realUploadPath + dateFolderPath + "\\";
+        System.out.println(filePath);
+
+        File file = new File(filePath + "18011816525170399094.png");
+
+        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));
     }
 }

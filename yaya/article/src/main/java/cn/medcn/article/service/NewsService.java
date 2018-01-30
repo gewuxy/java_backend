@@ -1,7 +1,7 @@
 package cn.medcn.article.service;
 
+import cn.medcn.article.model.ArticleCategory;
 import cn.medcn.article.model.News;
-import cn.medcn.article.model.NewsReadOnly;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
@@ -9,6 +9,7 @@ import org.jdom.JDOMException;
 
 import java.io.IOException;
 import java.text.ParseException;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/2/13.
@@ -45,4 +46,18 @@ public interface NewsService extends BaseService<News> {
     Integer getMaxId(String categoryId);
 
     MyPage<News> findAllNews(Pageable pageable);
+
+
+    /**
+     * 官网查询新闻列表 根据分类或者关键字查找
+     */
+    MyPage<News> findNewsList(Pageable pageable);
+
+    /**
+     * 查询新闻类别列表
+     * @return
+     */
+    List<ArticleCategory> findCategoryList();
+
+
 }

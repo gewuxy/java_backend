@@ -2,6 +2,7 @@ package cn.medcn.meet.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -32,7 +33,8 @@ public class Live {
 
     protected String picUrl;//视频截图地址
 
-    protected Date startTime;//直播开始时间
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    protected Date startTime;//直播预计开始时间 在直播开始之后变成视频真正开始时间
 
     protected Date endTime;//直播结束时间
 
@@ -56,7 +58,8 @@ public class Live {
         init(0),//初始状态
         usable(1),//可用的直播状态
         pause(2),//中断
-        closed(3);//关闭
+        rating(3),//星评
+        closed(4);//关闭
 
         private Integer type;
 
