@@ -9,10 +9,17 @@
 <html>
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <script src="${ctxStatic}/js/util.js"></script>
+    <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
     <title>${empty goods.id ? '添加':'修改'}商品</title>
     <script>
         $(document).ready(function() {
             $("#name").focus();
+            var goodsUrl = "${goods.picture}";
+            if (goodsUrl == null || goodsUrl=="") {
+                $("#pictureView").attr("src", "");
+            }
+
             $("#inputForm").validate({
                 submitHandler: function (form) {
                     layer.msg('正在提交，请稍等...', {
