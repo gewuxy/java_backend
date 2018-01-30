@@ -40,6 +40,8 @@ public class DownloadUtils {
             response.setContentType(CONTENT_TYPE);
             fileName = URLEncoder.encode(fileName, Constants.CHARSET);
             response.setHeader(CONTENT_DISPOSITION, FILE_NAME_PREFIX + fileName + FILE_NAME_SUFFIX);
+            //如果下载地址是https,可能会有证书不信任错误
+            downloadUrl = downloadUrl.replaceFirst("https","http");
             URL url=new URL(downloadUrl);
             HttpURLConnection conn = (HttpURLConnection)url.openConnection();
             conn.connect();
@@ -49,6 +51,7 @@ public class DownloadUtils {
             int i = ins.read();
             while(i!=-1){
                 response.getOutputStream().write(i);
+                i = ins.read();
             }
             ins.close();
             response.getOutputStream().close();

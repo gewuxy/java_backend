@@ -340,13 +340,16 @@ public class MeetingMgrController extends CspBaseController {
             }
 
             boolean editAble = audioService.editAble(courseId);
+
+            if (course.getSourceType().intValue() == AudioCourse.SourceType.QuickMeet.ordinal()){
+                throw new SystemException(local("page.common.error"));
+            }
             if (!editAble) {
                 throw new SystemException(courseNonEditAbleError());
             }
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
             model.addAttribute("watermark",watermark);
-            //TODO 星评详情 evaluate
             //星评信息
             StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
             model.addAttribute("dto",dto);
@@ -354,7 +357,6 @@ public class MeetingMgrController extends CspBaseController {
             course = audioService.findLastDraft(principal.getId());
             if (course == null) {
                 course = audioService.createNewCspCourse(principal.getId());
-
             }
         }
         List<CspStarRateOption> options = cspStarRateService.findRateOptions(course.getId());
@@ -743,7 +745,8 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String infoAndRateResult(@PathVariable Integer courseId){
         StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
-
+        //处理简介文字的回车键替换成br
+        dto.setInfo(dto.getInfo().replace("\n", "<br>"));
         return success(dto);
     }
 

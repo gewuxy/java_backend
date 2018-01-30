@@ -1413,7 +1413,7 @@
             var id = $(this).attr("courseId");
             ajaxGet('${ctx}/mgr/meet/course_info/' + id, {}, function(data){
                 $(".metting-grade-info").find(".title").text(data.data.title);
-                $(".metting-grade-info").find(".main").text(data.data.info);
+                $(".metting-grade-info").find(".main").html(data.data.info);
                 handleMultipleResult(data.data.multipleResult);
 
                 handleDetailResult(data.data.detailList);
