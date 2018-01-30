@@ -10,7 +10,6 @@
     <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <link rel="stylesheet" href="${ctxStatic}/css/animate.min.css" type="text/css" />
     <script src="${ctxStatic}/js/perfect-scrollbar.jquery.min.js"></script>
-
 </head>
 
 
@@ -36,8 +35,9 @@
                             </div>
                             <div class="formrow">
                                 <div class="formTitle"><fmt:message key="page.words.info"/> </div>
-                                <div class="formControls">
+                                <div class="textarea" id="wordCount">
                                     <textarea name="" id="info" cols="30" rows="10" class="textInput" placeholder="" maxlength="300">${dto.info}</textarea>
+                                    <p class="t-right"><var class="word">300</var></p>
                                 </div>
                             </div>
                             <div class="formrow">
@@ -78,7 +78,43 @@
             });
 
         });
+
+        //可输入字数统计
+        var wordCount = $("#wordCount"),
+            textArea = wordCount.find("textarea"),
+            word = wordCount.find(".word");
+        //调用
+        statInputNum(textArea,word);
     });
+
+    /*
+
+     * 剩余字数统计
+
+     * 注意 最大字数只需要在放数字的节点哪里直接写好即可 如：<var class="word">200</var>
+
+     */
+
+    function statInputNum(textArea,numItem) {
+
+        var max = numItem.text(),
+
+            curLength;
+
+        textArea[0].setAttribute("maxlength", max);
+
+        curLength = textArea.val().length;
+
+        numItem.text(max - curLength);
+
+        textArea.on('input propertychange', function () {
+
+            numItem.text(max - $(this).val().length);
+
+        });
+
+    }
+
 </script>
 
 </body>
