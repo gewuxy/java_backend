@@ -875,9 +875,7 @@ public class MeetingController extends CspBaseController {
             return error(local("course.error.author"));
         }
 
-        if (!audioService.editAble(id)) {
-            return error(courseNonDeleteAble());
-        }
+
         //逻辑删除
         audioService.deleteCspCourse(id);
         AudioCourse course = audioService.selectByPrimaryKey(id);
@@ -1656,6 +1654,28 @@ public class MeetingController extends CspBaseController {
             detail.setDuration(0);
             audioService.updateDetail(detail);
         }
+        return success();
+    }
+
+
+    /**
+     * 逻辑删除小程序的快捷会议
+     * @param courseId
+     * @return
+     */
+    @RequestMapping("/mini/delete")
+    @ResponseBody
+    public String deleteMiniCourse(Integer courseId){
+        AudioCourse course = audioService.findAudioCourse(courseId);
+        if(course != null){
+            String userId = SecurityUtils.get().getId();
+            if(!userId.equals(course.getCspUserId())){
+                return error(local("course.error.author"));
+            }
+            course.setDeleted(true);
+            audioService.updateByPrimaryKeySelective(course);
+        }
+
         return success();
     }
 }
