@@ -191,12 +191,12 @@
                                     </div>
                                     <c:if test="${csp_locale eq 'zh_CN' || csp_locale eq 'zh_TW'}">
                                     <div class="oh">
-                                        <div class="star-input"><input type="text" placeholder="<fmt:message key="page.meeting.star.rate.characters.allowed"/>" maxlength="6" id="limitOptionCn" name="title" onkeyup="this.value=this.value.replace(/\s+/g,'')"></div>
+                                        <div class="star-input"><input type="text" placeholder="<fmt:message key="page.meeting.star.rate.characters.allowed"/>" maxlength="6" id="limitOptionCn" name="title"></div>
                                     </div>
                                     </c:if>
                                     <c:if test="${csp_locale eq 'en_US'}">
                                         <div class="oh">
-                                            <div class="star-input"><input type="text" placeholder="<fmt:message key="page.meeting.star.rate.characters.allowed" />" maxlength="12" id="limitOptionUs" onkeyup="this.value=this.value.replace(/\s+/g,'')"></div>
+                                            <div class="star-input"><input type="text" placeholder="<fmt:message key="page.meeting.star.rate.characters.allowed" />" maxlength="12" id="limitOptionUs"></div>
                                         </div>
                                     </c:if>
                                 </div>
@@ -1260,10 +1260,12 @@
              }
             var starLength = starOption.length;
             //var reg = /^[\u4e00-\u9fa5^%&',;=?$\x22]{1,6}$|^[a-zA-Z^%&',;=?$\x22]{1,12}$/;
-           // var  regStarOption= reg.test(starOption);
+          //  var reg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
+            //var  regStarOption= reg.test(starOption);
             //regStarOption = spaceReg.test(starOption);
+            var spaceOption =  starOption.substring(0,1);
             var optionId ;
-            if (starOption != "" ){
+            if ( $.trim(starOption)!=""){
                 ajaxPost('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
                     console.log(data)
                     if (data.code == 0){
@@ -1295,6 +1297,7 @@
 
             }else{
                 layer.msg("<fmt:message key="page.meeting.star.rate.not.none"/>");
+                return;
             }
 
             var length = $(".grade").length;

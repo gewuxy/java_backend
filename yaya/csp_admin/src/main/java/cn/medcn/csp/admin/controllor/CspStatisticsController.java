@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -159,7 +160,7 @@ public class CspStatisticsController extends BaseController {
         String fileName = "资金统计" + StringUtils.nowStr() + ".xls";
         List<Object> dataList = Lists.newArrayList();
         float total = getTotalMoney(abroad, startTime, endTime, grain);
-        bulidExcel(list.getDataList(), total, abroad, dataList);
+        buildExcel(list.getDataList(), total, abroad, dataList);
         if(abroad == Constants.NUMBER_ZERO){ //国内
             exportExcel(fileName, dataList, response, MoneyStatisticsExcel.class);
         }else{
@@ -173,7 +174,7 @@ public class CspStatisticsController extends BaseController {
         List<Map<String, Object>> list = cspPackageOrderService.renewStats(getDate(startTime, Constants.NUMBER_ZERO, Constants.NUMBER_ZERO), getDate(endTime, Constants.NUMBER_ZERO, Constants.NUMBER_ONE));
         String fileName = "续费率" + StringUtils.nowStr() + ".xls";
         List<Object> dataList = Lists.newArrayList();
-        bulidExcel(list, dataList);
+        buildExcel(list, dataList);
         exportExcel(fileName, dataList, response, PackageRenewExcel.class);
     }
 
@@ -207,13 +208,14 @@ public class CspStatisticsController extends BaseController {
      * @param abroad
      * @param dataList
      */
-    public void bulidExcel(List<Map<String, Object>> list, float total, Integer abroad, List<Object> dataList) {
+    public void buildExcel(List<Map<String, Object>> list, float total, Integer abroad, List<Object> dataList) {
         if(abroad == Constants.NUMBER_ZERO){
             for (int i = 0; i < list.size(); i++) {
                 MoneyStatisticsExcel data = new MoneyStatisticsExcel();
                 data.setCreateTime(list.get(i).get("createTime").toString());
                 data.setWechat(getStringValue(list.get(i).get("wxPubQr")));
                 data.setAlipay(getStringValue(list.get(i).get("alipayWap")));
+                data.setUpacpPay(getStringValue(list.get(i).get("upacpWap")));
                 data.setSum(getStringValue(list.get(i).get("money")));
                 dataList.add(data);
             }
@@ -241,7 +243,7 @@ public class CspStatisticsController extends BaseController {
      * @param list
      * @param dataList
      */
-    public void bulidExcel(List<Map<String, Object>> list, List<Object> dataList) {
+    public void buildExcel(List<Map<String, Object>> list, List<Object> dataList) {
         for (int i = 0; i < list.size(); i++) {
             PackageRenewExcel data = new PackageRenewExcel();
             data.setCreateTime(list.get(i).get("create_time").toString());
@@ -256,7 +258,8 @@ public class CspStatisticsController extends BaseController {
         if (data == null) {
             return "0.00";
         } else {
-            return String.valueOf(Float.parseFloat(data.toString()));
+            DecimalFormat decimalFormat=new DecimalFormat(".00");
+            return decimalFormat.format(Float.parseFloat(data.toString()));
         }
     }
 

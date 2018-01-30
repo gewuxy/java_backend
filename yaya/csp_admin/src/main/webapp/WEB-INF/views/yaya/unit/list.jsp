@@ -42,7 +42,7 @@
     <input type="hidden" name="fans" id="fans" value="0">
     <input type="hidden" name="codeNum" id="codeNum" value="0">
     <table id="contentTable" class="table table-striped table-bordered table-condensed">
-        <thead><tr><th width="50" valign="top"><input type="checkbox" id="checkAll"></th><th>账号</th><th>单位号</th><th>注册日期</th><th>粉丝数量</th><th>激活码数量</th><th>是否推荐</th><th>账号类型</th><th>操作</th></tr></thead>
+        <thead><tr><th width="50" valign="top"><input type="checkbox" id="checkAll"></th><th>账号</th><th>单位号</th><th>注册日期</th><th>激活码数量</th><th>是否推荐</th><th>账号类型</th><th>操作</th></tr></thead>
         <tbody>
         <c:if test="${not empty page.dataList}">
             <c:forEach items="${page.dataList}" var="user">
@@ -51,7 +51,6 @@
                     <td>${user.username}</td>
                     <td>${user.nickname}</td>
                     <td><fmt:formatDate value="${user.registDate}" pattern="yyyy/MM/dd"/></td>
-                    <td>${user.fans}</td>
                     <td>${empty user.activeStore ? '0': user.activeStore}</td>
                     <td>${user.tuijian ? '<span style="color:green">已推荐</span>':'<span style="color:blue">未推荐</span>'}</td>
                     <td>${user.testFlag ? '<span style="color:blue">测试账号</span>' : '<span style="color:green">正式账号</span>'}</td>
