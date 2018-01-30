@@ -37,7 +37,7 @@
                                 <div class="formTitle"><fmt:message key="page.words.info"/> </div>
                                 <div class="textarea" id="wordCount">
                                     <textarea name="" id="info" cols="30" rows="10" class="textInput" placeholder="" maxlength="300">${dto.info}</textarea>
-                                    <p class="t-right"><var class="word">300</var></p>
+                                    <span class="t-right"><var class="word">300</var></span>
                                 </div>
                             </div>
                             <div class="formrow">
