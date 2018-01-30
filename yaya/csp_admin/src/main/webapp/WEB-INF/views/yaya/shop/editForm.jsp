@@ -15,6 +15,11 @@
     <script>
         $(document).ready(function() {
             $("#name").focus();
+            var goodsUrl = "${goods.picture}";
+            if (goodsUrl == null || goodsUrl=="") {
+                $("#pictureView").attr("src", "");
+            }
+
             $("#inputForm").validate({
                 submitHandler: function (form) {
                     layer.msg('正在提交，请稍等...', {
