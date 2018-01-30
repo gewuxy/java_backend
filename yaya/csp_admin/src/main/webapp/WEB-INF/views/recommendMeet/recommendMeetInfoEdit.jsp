@@ -158,7 +158,7 @@
     <div class="control-group">
         <label class="control-label">排序序号:</label>
         <div class="controls">
-            <input  type="search" name="sort" id="sort" value="${recommend.sort}" maxlength="50" class="required input-xlarge" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+            <input readonly type="search" name="sort" id="sort" value="${recommend.sort}" maxlength="50" class="required input-xlarge" onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
             <span class="help-inline"><font color="#a9a9a9">只允许输入1~10之间的数字*</font> </span>
             <script type="text/jscript" language="javascript">
                 //                onafterpaste = "this.value=this.value.replace(/\D/g,'')"
