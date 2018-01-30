@@ -9,6 +9,8 @@
 <html>
 <head>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <script src="${ctxStatic}/js/util.js"></script>
+    <script src="${ctxStatic}/js/ajaxfileupload.js"></script>
     <title>${empty goods.id ? '添加':'修改'}商品</title>
     <script>
         $(document).ready(function() {
