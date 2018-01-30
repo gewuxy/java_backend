@@ -875,9 +875,7 @@ public class MeetingController extends CspBaseController {
             return error(local("course.error.author"));
         }
 
-        if (!audioService.editAble(id)) {
-            return error(courseNonDeleteAble());
-        }
+
         //逻辑删除
         audioService.deleteCspCourse(id);
         AudioCourse course = audioService.selectByPrimaryKey(id);
@@ -1658,4 +1656,6 @@ public class MeetingController extends CspBaseController {
         }
         return success();
     }
+
+
 }

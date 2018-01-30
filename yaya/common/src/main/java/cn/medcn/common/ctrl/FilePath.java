@@ -15,6 +15,7 @@ public enum FilePath{
     DATA("data"),//数据中心文件
     ARTICLE("article"),//新闻 内容
     COURSE("course"),//ppt图片语音
+    GOODS("goods"),// 象城礼品图片存放路径
     OTHERS("others");
 
     public String path;

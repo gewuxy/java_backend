@@ -10,7 +10,29 @@
 <head>
     <title>编辑订单</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
-
+    <script type="text/javascript">
+    $(document).ready(function () {
+        $("#name").focus();
+        $("#inputForm").validate({
+            submitHandler: function(form){
+                layer.msg('正在提交，请稍等...',{
+                    icon: 16,
+                    shade: 0.01
+                });
+                form.submit();
+            },
+            errorContainer: "#messageBox",
+            errorPlacement: function(error, element) {
+                $("#messageBox").text("输入有误，请先更正。");
+                if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+    })
+    </script>
 </head>
 <body>
     <ul class="nav nav-tabs">
@@ -20,6 +42,9 @@
 
     <form id="inputForm" action="${ctx}/yaya/shop/order/save" method="post" class="form-horizontal">
         <input type="hidden" name="id" value="${order.id}"/>
+        <input type="hidden" name="goodsId" value="${order.goodsId}"/>
+        <input type="hidden" name="userId" value="${order.userId}"/>
+        <input type="hidden" name="cost" value="${order.cost}"/>
         <div class="control-group">
             <label class="control-label">订单号:</label>
             <div class="controls">
@@ -44,7 +69,7 @@
         <div class="control-group">
             <label class="control-label">邮政编码:</label>
             <div class="controls">
-                <input type="search" name="postCode" value="${order.postCode}" maxlength="50" class="required input-xlarge"/>
+                <input type="search" name="zoneCode" value="${order.zoneCode}" maxlength="50" class="required input-xlarge"/>
             </div>
         </div>
         <div class="control-group">
@@ -53,7 +78,7 @@
                 <select id="status" name="status" style="width: 100px;">
                     <option value="${order.status}"/>${order.statusName}
                     <option value="0"/>待处理
-                    <option value="1"}/>已接受订单
+                    <option value="1"/>已接受订单
                     <option value="2"/>已发货
                     <option value="3"/>已签收
                 </select>
@@ -62,7 +87,7 @@
         <div class="control-group">
             <label class="control-label">物流单号:</label>
             <div class="controls">
-                <input type="search" name="postNO" value="${order.postNO}" maxlength="50" class="input-xlarge"/>
+                <input type="search" name="postNo" value="${order.postNo}" maxlength="50" class="input-xlarge"/>
             </div>
         </div>
         <div class="control-group">
@@ -86,7 +111,7 @@
         <div class="control-group">
             <label class="control-label">地址:</label>
             <div class="controls">
-                <input type="search" name="address" value="${order.address}" />
+                <input type="search" name="address" value="${order.address}" class="input-xlarge"/>
             </div>
         </div>
 
