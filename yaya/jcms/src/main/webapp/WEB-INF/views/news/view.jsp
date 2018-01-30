@@ -27,7 +27,7 @@
                 </div>
                 <div class="v2-news-detail-item">
 
-                    <p style="text-align: center;"><img src="${news.articleImg}" alt=""></p>
+                    <p style="text-align: center;"><img src="${news.articleImg}" width="330px" height="220px" alt=""></p>
 
                     ${news.content}
                 </div>

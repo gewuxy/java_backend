@@ -98,7 +98,7 @@
             </div>
 
             <!--水印位置-->
-            <div class="logo-watermark ">
+            <div class="logo-watermark ${watermark != null && watermark.state ? '' : 'none'}">
                 <div class="logo-watermark-item">${watermark.name}</div>
             </div>
 
@@ -1060,6 +1060,9 @@
                     }
 
                     CKobject.getObjectById('ck-video').videoClear();
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:9999px');
+                    }
                     getLiveDuration();
                     $("#liveOverView").removeClass("none");
                 }

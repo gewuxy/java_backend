@@ -21,6 +21,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -103,6 +104,7 @@ public class ShopController extends BaseController {
     }
 
     @RequestMapping(value = "/upload/picture")
+    @ResponseBody
     @Log(name = "上传商品图片")
     public String uploadPicture(@RequestParam MultipartFile file) {
         FileUploadResult result;

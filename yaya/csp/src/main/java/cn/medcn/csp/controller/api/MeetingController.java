@@ -207,6 +207,9 @@ public class MeetingController extends CspBaseController {
                 return localeView("/meeting/share_error");
             }
 
+            //处理简介文字的回车键替换成br
+            course.setInfo(course.getInfo().replace("\n", "<br>"));
+
             //查询出星评信息
             if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
                 StarRateInfoDTO rateResult = cspStarRateService.findFinalRateResult(courseId);

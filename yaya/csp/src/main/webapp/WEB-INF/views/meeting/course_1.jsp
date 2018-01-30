@@ -90,7 +90,7 @@
             </div>
 
             <!--水印位置-->
-            <div class="logo-watermark ">
+            <div class="logo-watermark ${watermark != null && watermark.state ? '' : 'none'}">
                 <div class="logo-watermark-item">${watermark.name}</div>
             </div>
         </div>
