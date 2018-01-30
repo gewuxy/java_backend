@@ -975,6 +975,7 @@
                     $(".num").text(data.onLines);
                 }
                 if (data.order == 0) {//直播指令
+                    $("#liveStartView").addClass("none");
                     var currentPageNo = parseInt(data.pageNum) + 1;
                     console.log("data.audioUrl = " + data.audioUrl);
                     if (data.audioUrl != undefined) {
@@ -993,6 +994,7 @@
                     }, 5000);
 
                 } else if (data.order == 1) {//同步指令
+                    $("#liveStartView").addClass("none");
                     var lastPage = $(".swiper-slide:last");
                     var temp = lastPage.attr("istemp");
                     console.log("last page is temp = " + lastPage.attr("istemp"));

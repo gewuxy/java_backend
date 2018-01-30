@@ -398,7 +398,7 @@
                     $(".num").text(data.onLines);
                 }
                 if (data.order == 0){//直播指令
-
+                    $("#liveStartView").addClass("none");
                     var currentPageNo = parseInt(data.pageNum) + 1;
                     console.log("current page num = " +currentPageNo);
                     if(data.audioUrl != undefined) {
@@ -411,6 +411,7 @@
                     }
 
                 } else if(data.order == 1){
+                    $("#liveStartView").addClass("none");
                     console.log("current page num = " +totalPages);
                     var $currentPage = $(".swiper-slide:last");
                     console.log("current page is temp = " + $currentPage.attr("istemp"));
