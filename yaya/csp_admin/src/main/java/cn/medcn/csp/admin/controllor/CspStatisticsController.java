@@ -65,8 +65,13 @@ public class CspStatisticsController extends BaseController {
         model.addAttribute("endTime", endTime);
         //获取资金总额
         List<Map<String, Object>> total = cspPackageOrderService.totalMoney();
-        model.addAttribute("rmb", Float.parseFloat(total.get(0).get("should_pay").toString()));
-        model.addAttribute("usd", Float.parseFloat(total.get(1).get("should_pay").toString()));
+        for(Map<String, Object> map:total){
+            if(map.get("currency_type").toString().equals("0")){
+                model.addAttribute("rmb",Float.parseFloat(map.get("should_pay").toString()));
+            }else {
+                model.addAttribute("usd",Float.parseFloat(map.get("should_pay").toString()));
+            }
+        }
         model.addAttribute("abroad", 0);
         if (type == 0) { // 资金统计
             return "/statistics/moneyStats";
