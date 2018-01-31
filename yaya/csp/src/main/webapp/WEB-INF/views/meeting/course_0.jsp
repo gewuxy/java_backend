@@ -697,7 +697,6 @@
 
         function report(type){
             $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
-                alert(data.err);
                 if (data.code == 0){
                     layer.msg('<fmt:message key="page.meeting.report.success"/>');
                 } else {
