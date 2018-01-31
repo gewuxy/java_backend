@@ -35,9 +35,9 @@
                             </div>
                             <div class="formrow">
                                 <div class="formTitle"><fmt:message key="page.words.info"/> </div>
-                                <div class="textarea" id="wordCount">
+                                <div class="formControls pr" id="wordCount">
                                     <textarea name="" id="info" cols="30" rows="10" class="textInput" placeholder="" maxlength="300">${dto.info}</textarea>
-                                    <span class="t-right"><var class="word">300</var></span>
+                                    <span class="textInputNumber"><var class="word">300</var>&nbsp;/&nbsp;300</span>
                                 </div>
                             </div>
                             <div class="formrow">
