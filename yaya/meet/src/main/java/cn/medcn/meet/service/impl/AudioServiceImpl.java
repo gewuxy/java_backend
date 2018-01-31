@@ -833,12 +833,12 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     @Override
-    public boolean editAble(Integer courseId) {
+    public void editAble(Integer courseId) throws SystemException{
 
         // 判断是否有录播或者直播记录
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
         if (course == null) {
-            return false;
+            throw new SystemException(local("source.not.exists"));
         }
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
@@ -846,7 +846,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
         // 判断 如果是快捷会议 不允许编辑
         if (course.getSourceType() != null && course.getSourceType() == AudioCourse.SourceType.QuickMeet.ordinal()) {
-            return false;
+            throw new SystemException(local("page.common.error"));
         }
 
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
@@ -855,11 +855,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             cond.setSourceId(courseId);
             List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
             if (!CheckUtils.isEmpty(deliveries)){
-                return false;
+                throw new SystemException(local("course.error.delivery.editable"));
             }
         }
-
-        return true;
     }
 
     @Override
