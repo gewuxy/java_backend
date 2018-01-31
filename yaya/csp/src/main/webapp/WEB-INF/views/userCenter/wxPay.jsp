@@ -85,7 +85,7 @@
 
         var amount = (charge.amount)/100;
         money = amount;
-        $("#title").append('<fmt:message key="page.words.weiXin.tips9"/>' + '<strong class="price color-blue">' + amount +'</strong>&nbsp;' + '<fmt:message key="page.words.weiXin.tips10"/>');
+        $("#title").append( '<strong class="price color-blue">' + amount  +'</strong>&nbsp;' +'<fmt:message key="page.words.weiXin.tips9"/>'+ '<fmt:message key="page.words.weiXin.tips10"/>');
 
 
         $("#time").text(curCount);

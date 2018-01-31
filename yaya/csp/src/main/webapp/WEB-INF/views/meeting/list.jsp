@@ -901,12 +901,12 @@
                             <p><fmt:message key="page.meeting.button.copy_link"/></p>
                         </a>
                     </li>
-                    <%--<li id="copyLi">--%>
-                        <%--<a href="javascript:;" class="copy-hook">--%>
-                            <%--<img src="${ctxStatic}/images/_copy-icon.png" alt="">--%>
-                            <%--<p><fmt:message key="page.meeting.button.duplicate"/></p>--%>
-                        <%--</a>--%>
-                    <%--</li>--%>
+                    <li id="copyLi">
+                        <a href="javascript:;" class="copy-hook">
+                            <img src="${ctxStatic}/images/_copy-icon.png" alt="">
+                            <p><fmt:message key="page.meeting.button.duplicate"/></p>
+                        </a>
+                    </li>
                     <li>
                         <a href="javascript:;" class="lock-hook" id="openPasswordBtn" >
                             <img src="${ctxStatic}/images/_lock-icon.png" alt="">
