@@ -1393,11 +1393,12 @@ public class MeetingController extends CspBaseController {
      * @param file
      * @param courseId 课件的id
      * @param sort 图片的排序号,第一张图sort=0
+     * @param type 课件类型，为空或者0表示录播，1表示ppt直播，2表示视频直播
      * @return
      */
     @RequestMapping("/upload/picture")
     @ResponseBody
-    public String savePicture(@RequestParam(required = false) MultipartFile file,Integer courseId,Integer sort) throws SystemException {
+    public String savePicture(@RequestParam(required = false) MultipartFile file,Integer courseId,Integer sort,Integer type) throws SystemException {
         if(file == null){
             return error(local("upload.error.null"));
         }
@@ -1405,12 +1406,19 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
 
+        if(type == null ){
+            type = AudioCourse.PlayType.normal.ordinal();
+        }else if(type < AudioCourse.PlayType.normal.ordinal() || type > AudioCourse.PlayType.live_video.ordinal() ){
+            return error(local("meet.store.param.error"));
+        }
+
         AudioCourse course = new AudioCourse();
         course.setCspUserId(SecurityUtils.get().getId());
         course.setId(courseId);
 
+
         //创建课件或者添加课件图片
-        courseId = audioService.createAudioOrAddDetail(file, course,sort);
+        courseId = audioService.createAudioOrAddDetail(file, course,sort,type);
         AudioCourseDTO dto = new AudioCourseDTO();
         dto.setId(courseId);
         return success(dto);

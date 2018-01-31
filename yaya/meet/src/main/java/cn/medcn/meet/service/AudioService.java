@@ -448,5 +448,5 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param sort
      * @return
      */
-    Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort) throws SystemException;
+    Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort,Integer type) throws SystemException;
 }
