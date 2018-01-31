@@ -883,7 +883,7 @@ public class MeetingController extends CspBaseController {
             return error(local("course.error.author"));
         }
         try {
-            audioService.editAble(id);
+            audioService.deleteAble(id);
         } catch (SystemException e) {
             return error(e.getMessage());
         }

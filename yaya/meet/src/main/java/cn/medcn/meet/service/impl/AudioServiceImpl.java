@@ -862,6 +862,31 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
     @Override
+    public void deleteAble(Integer courseId) throws SystemException {
+        AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
+        if (course == null) {
+            throw new SystemException(local("source.not.exists"));
+        }
+        if (course.getPlayType() == null) {
+            course.setPlayType(AudioCourse.PlayType.normal.getType());
+        }
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(courseId);
+            if (live != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                throw new SystemException(local("course.error.delete"));
+            }
+
+            //判断是否有投稿历史
+            CourseDelivery cond = new CourseDelivery();
+            cond.setSourceId(courseId);
+            List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
+            if (!CheckUtils.isEmpty(deliveries)){
+                throw new SystemException(local("page.meeting.delete.error.delivery"));
+            }
+        }
+    }
+
+    @Override
     public Integer countLiveDetails(Integer courseId) {
         List<AudioCourseDetail> details = liveDetailDAO.findByCourseId(courseId);
         return CheckUtils.isEmpty(details) ? 0 : details.size();

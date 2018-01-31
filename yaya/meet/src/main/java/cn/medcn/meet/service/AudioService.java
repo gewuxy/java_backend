@@ -284,6 +284,8 @@ public interface AudioService extends BaseService<AudioCourse>  {
      */
     void editAble(Integer courseId) throws SystemException;
 
+    void deleteAble(Integer courseId) throws SystemException;
+
     Integer countLiveDetails(Integer courseId);
 
     /**
