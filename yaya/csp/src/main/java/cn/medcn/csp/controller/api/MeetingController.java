@@ -1169,7 +1169,12 @@ public class MeetingController extends CspBaseController {
 
     @RequestMapping(value = "/report")
     @ResponseBody
-    public String report(Integer type, Integer courseId, String shareUrl) {
+    public String report(Integer type, Integer courseId, String shareUrl, HttpServletRequest request, HttpServletResponse response) {
+        String reportCookieKey = "report_" + courseId;
+        if (CheckUtils.isNotEmpty(CookieUtils.getCookieValue(request, reportCookieKey))) {
+            return success();
+        }
+
         if (CheckUtils.isEmpty(shareUrl)) {
             shareUrl = audioService.getMeetShareUrl(appCspBase, LocalUtils.Local.zh_CN.name(), courseId, false);
         }
@@ -1189,6 +1194,8 @@ public class MeetingController extends CspBaseController {
             mailBean.setContext(content);
 
             cspEmailService.send(mailBean);
+            //设置cookie 判断用户已经举报过该讲本
+            CookieUtils.setCookie(response, reportCookieKey, "true");
         }
 
         return success();
