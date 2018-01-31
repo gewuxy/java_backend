@@ -339,13 +339,10 @@ public class MeetingMgrController extends CspBaseController {
                 throw new SystemException(local("course.error.locked"));
             }
 
-            boolean editAble = audioService.editAble(courseId);
+            audioService.editAble(courseId);
 
             if (course.getSourceType().intValue() == AudioCourse.SourceType.QuickMeet.ordinal()){
                 throw new SystemException(local("page.common.error"));
-            }
-            if (!editAble) {
-                throw new SystemException(courseNonEditAbleError());
             }
             //水印信息
             MeetWatermark watermark = watermarkService.findWatermarkByCourseId(courseId);
@@ -408,8 +405,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/upload")
     @ResponseBody
     public String upload(@RequestParam(value = "file") MultipartFile file, Integer courseId, HttpServletRequest request) {
-        if (!audioService.editAble(courseId)) {
-            return error(courseNonEditAbleError());
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
 
         String fileName = file.getOriginalFilename();
@@ -479,8 +478,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/detail/add/{position}")
     @ResponseBody
     public String add(@RequestParam(value = "file") MultipartFile file, Integer courseId, Integer index, @PathVariable Integer position) {
-        if (!audioService.editAble(courseId)) {
-            return error(courseNonEditAbleError());
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
 
         boolean isPicture = isPicture(file.getOriginalFilename());
@@ -520,10 +521,7 @@ public class MeetingMgrController extends CspBaseController {
 
     @RequestMapping(value = "/detail/del/{courseId}/{detailId}")
     public String del(@PathVariable Integer courseId, @PathVariable Integer detailId) throws SystemException {
-        if (!audioService.editAble(courseId)) {
-            throw new SystemException(courseNonEditAbleError());
-        }
-
+        audioService.editAble(courseId);
         AudioCourseDetail detail = audioService.findDetail(detailId);
         Integer sort = 1;
         if (detail != null) {
@@ -541,8 +539,10 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/del/{courseId}")
     @ResponseBody
     public String del(@PathVariable Integer courseId) {
-        if (!audioService.editAble(courseId)) {
-            return error(courseNonDeleteAble());
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
 
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
@@ -621,14 +621,16 @@ public class MeetingMgrController extends CspBaseController {
 
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, RedirectAttributes redirectAttributes) throws SystemException {
+    public String save(CspAudioCourseDTO course,boolean starRateFlag,Integer openLive, RedirectAttributes redirectAttributes) {
         AudioCourse ac = course.getCourse();
         ac.setStarRateFlag(starRateFlag);
         MeetWatermark newWatermark = course.getWatermark();
         //编辑操作需要判断是否可以进行修改
         if (ac.getId() != null && ac.getId() != 0) {
-            if (!audioService.editAble(ac.getId())) {
-                throw new SystemException(courseNonEditAbleError());
+            try {
+                audioService.editAble(ac.getId());
+            } catch (SystemException e) {
+                return error(e.getMessage());
             }
         }
 
@@ -637,7 +639,7 @@ public class MeetingMgrController extends CspBaseController {
             //判断是否有足够的流量
             UserFlux flux = userFluxService.selectByPrimaryKey(getWebPrincipal().getId());
             if (flux == null || flux.getFlux() < MIN_FLUX_LIMIT * Constants.BYTE_UNIT_K) {
-                throw new SystemException(local("user.flux.not.enough"));
+                return error(local("user.flux.not.enough"));
             }
         }
         //更新操作，包括更新或生成水印
@@ -698,24 +700,27 @@ public class MeetingMgrController extends CspBaseController {
         if (course == null || (course.getDeleted() != null && course.getDeleted())) {
             return error(local("source.has.deleted"));
         }
-
-        boolean editAble = audioService.editAble(courseId);
-        if (editAble) {
-            return success();
-        } else {
-            return error(courseNonEditAbleError());
+        // 判断 如果是快捷会议 不允许编辑
+        if (course.getSourceType() != null && course.getSourceType() == AudioCourse.SourceType.QuickMeet.ordinal()) {
+            return error(local("page.common.error"));
         }
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
+        return success();
     }
 
     @RequestMapping(value = "/delete/able/{courseId}")
     @ResponseBody
     public String deleteAble(@PathVariable Integer courseId){
-        boolean editAble = audioService.editAble(courseId);
-        if (editAble) {
-            return success();
-        } else {
-            return error(courseNonDeleteAble());
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
+        return success();
     }
 
     @RequestMapping(value = "/tips/close")

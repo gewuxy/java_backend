@@ -282,7 +282,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param courseId
      * @return
      */
-    boolean editAble(Integer courseId);
+    void editAble(Integer courseId) throws SystemException;
 
     Integer countLiveDetails(Integer courseId);
 

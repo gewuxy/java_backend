@@ -52,12 +52,10 @@ public class FlowMonitorTask implements Runnable {
                     LiveOrderHandler.sendToSpeaker(courseId, LiveOrderDTO.buildFluxAmpleOrder(courseId));
                 }
 
-                int onlineUsers = LiveOrderHandler.onlineFluxUsers(courseId);
+                int onlineUsers = LiveOrderHandler.onlineFluxUsers(courseId) + 1;//这里的+1表示加上讲着产生的上行流量
 
-                if (onlineUsers > 0) {
-                    float usedFlux =  onlineUsers * CspConstants.FLUX_USAGE_PER_SECOND * CspConstants.FLUX_MONITOR_SPACE;
-                    userFluxService.doDeduct(courseId, (int)usedFlux + 1);
-                }
+                float usedFlux =  onlineUsers * CspConstants.FLUX_USAGE_PER_SECOND * CspConstants.FLUX_MONITOR_SPACE;
+                userFluxService.doDeduct(courseId, (int)usedFlux + 1);
             }
         }
     }
