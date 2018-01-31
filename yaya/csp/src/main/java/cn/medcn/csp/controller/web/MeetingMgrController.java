@@ -307,7 +307,7 @@ public class MeetingMgrController extends CspBaseController {
     protected String genScanUrl(HttpServletRequest request, Integer courseId) {
         StringBuffer buffer = new StringBuffer();
         buffer.append(appCspBase);
-        buffer.append("/api/meeting/scan/callback?courseId=");
+        buffer.append("api/meeting/scan/callback?courseId=");
         buffer.append(courseId);
         return buffer.toString();
     }
