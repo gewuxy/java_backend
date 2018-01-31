@@ -1172,7 +1172,7 @@ public class MeetingController extends CspBaseController {
     public String report(Integer type, Integer courseId, String shareUrl, HttpServletRequest request, HttpServletResponse response) {
         String reportCookieKey = "report_" + courseId;
         if (CheckUtils.isNotEmpty(CookieUtils.getCookieValue(request, reportCookieKey))) {
-            return success();
+            return error(local("page.meeting.report.repeat"));
         }
 
         if (CheckUtils.isEmpty(shareUrl)) {
