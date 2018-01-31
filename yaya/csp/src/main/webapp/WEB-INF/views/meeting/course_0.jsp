@@ -696,7 +696,6 @@
 //        }, false);
 
         function report(type){
-            alert(123);
             $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
                 alert(data.err);
                 if (data.code == 0){
