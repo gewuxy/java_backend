@@ -882,7 +882,11 @@ public class MeetingController extends CspBaseController {
         if (!isMine) {
             return error(local("course.error.author"));
         }
-
+        try {
+            audioService.editAble(id);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
 
         //逻辑删除
         audioService.deleteCspCourse(id);
@@ -895,7 +899,6 @@ public class MeetingController extends CspBaseController {
                 audioService.doUnlockEarliestCourse(principal.getId());
             }
         }
-
         updatePackagePrincipal(principal.getId());
         return success();
 
