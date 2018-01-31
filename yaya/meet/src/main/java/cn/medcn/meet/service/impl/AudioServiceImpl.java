@@ -1218,10 +1218,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public boolean checkGuideExists(String cspUserId) {
         AudioCourse cond = new AudioCourse();
-        cond.setSourceType(AudioCourse.SourceType.csp.ordinal());
         cond.setCspUserId(cspUserId);
         cond.setGuide(true);
-        cond.setStarRateFlag(false);
         return selectCount(cond) > 0;
     }
 
