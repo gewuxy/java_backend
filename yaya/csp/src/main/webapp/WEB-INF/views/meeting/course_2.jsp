@@ -1080,7 +1080,11 @@
                 "shareUrl": window.location.href,
                 "courseId": "${course.id}"
             }, function (data) {
-                layer.msg('<fmt:message key="page.meeting.report.success"/>');
+                if (data.code == 0){
+                    layer.msg('<fmt:message key="page.meeting.report.success"/>');
+                } else {
+                    layer.msg(data.err);
+                }
             }, 'json');
         }
 
