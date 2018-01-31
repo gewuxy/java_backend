@@ -121,6 +121,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected AudioCourseThemeDAO courseThemeDAO;
 
+
+
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
         return audioCourseDAO;
@@ -1526,13 +1528,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     @Override
-    public Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort) throws SystemException {
+    public Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort,Integer type) throws SystemException {
         //创建课件
         if(course.getId() == null){
             //生成课件
             course.setCreateTime(new Date());
             course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
-            course.setPlayType(AudioCourse.PlayType.normal.getType());
+            course.setPlayType(type);
             course.setPublished(false);
             course.setShared(false);
             course.setDeleted(false);
@@ -1540,6 +1542,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             course.setGuide(false);
             course.setStarRateFlag(false);
             insert(course);
+
+            if(type == AudioCourse.PlayType.normal.ordinal()){
+                AudioCoursePlay play = new AudioCoursePlay();
+                play.setCourseId(course.getId());
+                play.setPlayPage(0);
+                play.setPlayState(0);
+                audioCoursePlayDAO.insertSelective(play);
+            }
+
         }
         Integer courseId = course.getId();
         //添加课件图片
