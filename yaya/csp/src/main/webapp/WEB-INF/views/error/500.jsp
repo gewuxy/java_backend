@@ -29,7 +29,16 @@
                 <div class="login-form-item login-error-page">
                     <div class="login-message-text" >
                         <p class="t-center"><img src="${ctxStatic}/images/error-img.png" alt="" style="margin-top:10px; margin-bottom:20px;"></p>
-                        <p class=" t-center">${empty exception.message ? "未知异常 (Unknown Exception)" : exception.message}</p>
+                        <p class=" t-center">
+                            <c:choose>
+                                <c:when test="${empty exption.messaeg}">
+                                    <fmt:message key="page.common.error"/>
+                                </c:when>
+                                <c:otherwise>
+                                    ${exception.message}
+                                </c:otherwise>
+                            </c:choose>
+                        </p>
                     </div>
                     <p class="t-center"><a onclick="history.back();" class="button" >&nbsp;</a></p>
                 </div>

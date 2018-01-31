@@ -98,7 +98,7 @@
             </div>
 
             <!--水印位置-->
-            <div class="logo-watermark ">
+            <div class="logo-watermark ${watermark != null && watermark.state ? '' : 'none'}">
                 <div class="logo-watermark-item">${watermark.name}</div>
             </div>
 
@@ -975,6 +975,7 @@
                     $(".num").text(data.onLines);
                 }
                 if (data.order == 0) {//直播指令
+                    $("#liveStartView").addClass("none");
                     var currentPageNo = parseInt(data.pageNum) + 1;
                     console.log("data.audioUrl = " + data.audioUrl);
                     if (data.audioUrl != undefined) {
@@ -993,6 +994,7 @@
                     }, 5000);
 
                 } else if (data.order == 1) {//同步指令
+                    $("#liveStartView").addClass("none");
                     var lastPage = $(".swiper-slide:last");
                     var temp = lastPage.attr("istemp");
                     console.log("last page is temp = " + lastPage.attr("istemp"));
@@ -1060,6 +1062,9 @@
                     }
 
                     CKobject.getObjectById('ck-video').videoClear();
+                    if (isAndroid) {
+                        $("#ck-video").attr('style', 'margin-top:9999px');
+                    }
                     getLiveDuration();
                     $("#liveOverView").removeClass("none");
                 }

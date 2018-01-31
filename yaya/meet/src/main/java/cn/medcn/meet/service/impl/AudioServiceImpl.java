@@ -121,6 +121,8 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Autowired
     protected AudioCourseThemeDAO courseThemeDAO;
 
+
+
     @Override
     public Mapper<AudioCourse> getBaseMapper() {
         return audioCourseDAO;
@@ -833,33 +835,30 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     @Override
-    public boolean editAble(Integer courseId) {
+    public void editAble(Integer courseId) throws SystemException{
 
         // 判断是否有录播或者直播记录
         AudioCourse course = audioCourseDAO.selectByPrimaryKey(courseId);
         if (course == null) {
-            return false;
+            throw new SystemException(local("source.not.exists"));
         }
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
-
-        // 判断 如果是快捷会议 不允许编辑
-        if (course.getSourceType() != null && course.getSourceType() == AudioCourse.SourceType.QuickMeet.ordinal()) {
-            return false;
-        }
-
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(courseId);
+            if (live != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                throw new SystemException(local("course.error.editable"));
+            }
+
             //判断是否有投稿历史
             CourseDelivery cond = new CourseDelivery();
             cond.setSourceId(courseId);
             List<CourseDelivery> deliveries = courseDeliveryDAO.select(cond);
             if (!CheckUtils.isEmpty(deliveries)){
-                return false;
+                throw new SystemException(local("course.error.delivery.editable"));
             }
         }
-
-        return true;
     }
 
     @Override
@@ -1526,13 +1525,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
      * @return
      */
     @Override
-    public Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort) throws SystemException {
+    public Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort,Integer type) throws SystemException {
         //创建课件
         if(course.getId() == null){
             //生成课件
             course.setCreateTime(new Date());
             course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
-            course.setPlayType(AudioCourse.PlayType.normal.getType());
+            course.setPlayType(type);
             course.setPublished(false);
             course.setShared(false);
             course.setDeleted(false);
@@ -1540,6 +1539,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             course.setGuide(false);
             course.setStarRateFlag(false);
             insert(course);
+
+            if(type == AudioCourse.PlayType.normal.ordinal()){
+                AudioCoursePlay play = new AudioCoursePlay();
+                play.setCourseId(course.getId());
+                play.setPlayPage(0);
+                play.setPlayState(0);
+                audioCoursePlayDAO.insertSelective(play);
+            }
+
         }
         Integer courseId = course.getId();
         //添加课件图片

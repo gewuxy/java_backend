@@ -49,7 +49,7 @@
                     <p style="text-align: center;">
                         <c:choose>
                             <c:when test="${news.articleImg != null}">
-                                <img src="${news.articleImg}" alt=""></a>
+                                <img src="${news.articleImg}"  width="330px" height="220px" alt=""></a>
                             </c:when>
                         </c:choose>
                     </p>
