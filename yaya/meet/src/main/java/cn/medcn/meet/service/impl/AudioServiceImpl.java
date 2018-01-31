@@ -845,13 +845,12 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
-
-        // 判断 如果是快捷会议 不允许编辑
-        if (course.getSourceType() != null && course.getSourceType() == AudioCourse.SourceType.QuickMeet.ordinal()) {
-            throw new SystemException(local("page.common.error"));
-        }
-
         if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(courseId);
+            if (live != null && live.getLiveState().intValue() > AudioCoursePlay.PlayState.init.ordinal()) {
+                throw new SystemException(local("course.error.editable"));
+            }
+
             //判断是否有投稿历史
             CourseDelivery cond = new CourseDelivery();
             cond.setSourceId(courseId);

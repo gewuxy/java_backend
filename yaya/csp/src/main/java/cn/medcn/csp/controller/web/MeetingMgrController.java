@@ -700,7 +700,10 @@ public class MeetingMgrController extends CspBaseController {
         if (course == null || (course.getDeleted() != null && course.getDeleted())) {
             return error(local("source.has.deleted"));
         }
-
+        // 判断 如果是快捷会议 不允许编辑
+        if (course.getSourceType() != null && course.getSourceType() == AudioCourse.SourceType.QuickMeet.ordinal()) {
+            return error(local("page.common.error"));
+        }
         try {
             audioService.editAble(courseId);
         } catch (SystemException e) {
