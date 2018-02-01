@@ -434,7 +434,8 @@ public class MeetingController extends CspBaseController {
         if (file == null) {
             return error(local("upload.error.null"));
         }
-        if(record.getCourseId() == null || record.getDetailId() == null || record.getHasNext() == null || record.getHasNext() == null){
+        if(record.getCourseId() == null || record.getDetailId() == null ||
+                record.getPageNum() == null || record.getHasNext() == null || record.getAudioNum() == null){
             return error(local("user.param.empty"));
         }
 
