@@ -42,7 +42,7 @@ public class LocalInterceptor implements HandlerInterceptor {
         httpServletRequest.setAttribute("appName", SpringUtils.getMessage("page.common.appName"));
 
         String osType = httpServletRequest.getHeader(Constants.APP_OS_TYPE_KEY);
-        LocalUtils.setOsTypeLocal(CheckUtils.isEmpty(osType) ? Constants.OS_TYPE_ANDROID : osType);
+        LocalUtils.setOsTypeLocal(osType);
 
         String appVersion = httpServletRequest.getHeader(Constants.APP_VERSION_KEY);
         LocalUtils.setAppVersion(appVersion);
