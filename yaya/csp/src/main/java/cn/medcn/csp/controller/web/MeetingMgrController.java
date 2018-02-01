@@ -540,7 +540,7 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String del(@PathVariable Integer courseId) {
         try {
-            audioService.editAble(courseId);
+            audioService.deleteAble(courseId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -716,7 +716,7 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String deleteAble(@PathVariable Integer courseId){
         try {
-            audioService.editAble(courseId);
+            audioService.deleteAble(courseId);
         } catch (SystemException e) {
             return error(e.getMessage());
         }
