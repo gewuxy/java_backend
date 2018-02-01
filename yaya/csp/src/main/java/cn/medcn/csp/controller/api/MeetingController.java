@@ -416,7 +416,7 @@ public class MeetingController extends CspBaseController {
         handleLiveOrRecord(record.getCourseId(), record.getPlayType(), record.getPageNum(), detail);
 
         Map<String, String> result = new HashMap<>();
-        result.put("audioUrl", fileBase + relativePath + saveFileName + "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        result.put("audioUrl", fileBase + relativePath + saveFileName);
         return success(result);
     }
 
@@ -444,7 +444,7 @@ public class MeetingController extends CspBaseController {
         String suffix = null;
         //小程序上传音频，格式为MP3
         if(StringUtils.isEmpty(osType)){
-            suffix = FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
+            suffix = "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
         }else{
             suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
         }
@@ -477,14 +477,12 @@ public class MeetingController extends CspBaseController {
             List<String> list = FileUtils.getSubsectionAudioList(fileUploadBase + relativePath);
             //整合音频
             String saveName;
-            String relativeSavePath;
             try {
-                relativeSavePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
-                saveName = mergeUploadAudio(list, relativeSavePath);
+                saveName = mergeUploadAudio(list, relativePath);
             } catch (SystemException e) {
                 return error(e.getMessage());
             }
-            return handleUploadResult(record, relativeSavePath, saveName);
+            return handleUploadResult(record, relativePath, saveName);
         }
         return success();
     }
@@ -560,7 +558,7 @@ public class MeetingController extends CspBaseController {
             saveFileName = FileUtils.getFileName(firstAudioPath);
         } else {//多个音频文件需要合并成一个文件
             String mergePath = fileUploadBase + relativePath + saveFileName;
-            FFMpegUtils.concatMp3(mergePath, true, filePathQueue.toArray(new String[filePathQueue.size()]));
+            FFMpegUtils.concatMp3(mergePath, false, filePathQueue.toArray(new String[filePathQueue.size()]));
         }
         return saveFileName;
     }
