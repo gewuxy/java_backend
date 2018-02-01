@@ -422,6 +422,75 @@ public class MeetingController extends CspBaseController {
 
 
     /**
+     * 录播音频续传，合并
+     * @param file
+     * @param record
+     * @param request
+     * @return
+     */
+    @RequestMapping("/subsection/upload")
+    @ResponseBody
+    public String uploadAudio(@RequestParam(value = "file", required = false) MultipartFile file, RecordUploadDTO record, HttpServletRequest request){
+        if (file == null) {
+            return error(local("upload.error.null"));
+        }
+        if(record.getCourseId() == null || record.getDetailId() == null || record.getHasNext() == null){
+            return error(local("user.param.empty"));
+        }
+
+        String osType = LocalUtils.getOSType();
+        String suffix = null;
+        //小程序上传音频，格式为MP3
+        if(StringUtils.isEmpty(osType)){
+            suffix = FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
+        }else{
+            suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
+        }
+
+        //未合并的音频存放路径
+        String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/" + record.getDetailId() + "/";
+        File dir = new File(fileUploadBase + relativePath);
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        String saveFileName = UUIDUtil.getNowStringID();
+        String sourcePath = fileUploadBase + relativePath + saveFileName + suffix;
+        File saveFile = new File(sourcePath);
+        try {
+            file.transferTo(saveFile);
+        } catch (IOException e) {
+            return error(local("upload.error"));
+        }
+
+        if(!StringUtils.isEmpty(osType)){
+            //将音频转为MP3格式，并删除源文件
+            FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
+            FileUtils.deleteTargetFile(sourcePath);
+        }
+
+        //没有下一个音频，开始合并音频
+        if(!record.getHasNext()){
+            //获取所有分段音频的路径
+            List<String> list = FileUtils.getSubsectionAudioList(fileUploadBase + relativePath);
+            //整合音频
+            String saveName;
+            String relativeSavePath;
+            try {
+                relativeSavePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
+                saveName = mergeUploadAudio(list, relativeSavePath);
+            } catch (SystemException e) {
+                return error(e.getMessage());
+            }
+            return handleUploadResult(record, relativeSavePath, saveName);
+        }
+        return success();
+    }
+
+
+
+
+    /**
      * 录音上传 上传多个文件
      * 用于处理小程序续传的问题
      *
@@ -465,6 +534,9 @@ public class MeetingController extends CspBaseController {
 
         return handleUploadResult(record, relativePath, saveFileName);
     }
+
+
+
 
     /**
      * 处理MP3合并
