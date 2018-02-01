@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.Date;
 
 /**商品实体类
@@ -46,6 +47,28 @@ public class Goods {
     //限购数
     private Integer buyLimit;
 
+    public enum Status{
+        down(0,"下架"),
+        up(1,"上架");
 
+        private Integer type;
+        private String label;
+        public Integer getType() {
+            return type;
+        }
+        public String getLabel() {
+            return label;
+        }
+        Status(Integer type,String label){
+            this.type = type;
+            this.label = label;
+        }
+    }
 
+    @Transient
+    protected String statusName;
+
+    public String getStatusName(){
+        return Goods.Status.values()[this.status].getLabel();
+    }
 }

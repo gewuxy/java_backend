@@ -10,6 +10,26 @@
 <head>
     <title>商品订单列表</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <script>
+        function changeStatus(id) {
+            var status = $('#mySelect_'+id).find('option:selected').val();
+
+            $.ajax({
+                url:'${ctx}/yaya/shop/change/status',
+                data:{"id":id,"status":status,"type":"order"},
+                dataType:"json",
+                type:"post",
+                success:function (data) {
+                    if(data.code == "0"){
+                        layer.msg("更新成功");
+                    }else{
+                        layer.msg("修改订单状态失败，请重试");
+                    }
+                }
+            });
+
+        }
+    </script>
 </head>
 
 <body>
@@ -23,6 +43,7 @@
         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
         <input  name="searchKey" type="hidden" value="${searchKey}"/>
+        <input  name="status" type="hidden" value="${status}"/>
     </form>
 
     <form id="searchForm" method="post" action="${ctx}/yaya/shop/order/list" class="breadcrumb form-search">
@@ -30,10 +51,10 @@
         &nbsp;&nbsp;
         <select name="status" style="width: 150px;">
             <option value="">订单状态</option>
-            <option value="0" ${not empty status && status==0 ? 'selected':''}>待处理</option>
-            <option value="1" ${not empty status && status==1 ? 'selected':''}>已接受订单</option>
-            <option value="2" ${not empty status && status==2 ? 'selected':''}>已发货</option>
-            <option value="3" ${not empty status && status==3 ? 'selected':''}>已签收</option>
+            <option value="0" ${status==0 ? 'selected':''}>待处理</option>
+            <option value="1" ${status==1 ? 'selected':''}>已接受</option>
+            <option value="2" ${status==2 ? 'selected':''}>已发货</option>
+            <option value="3" ${status==3 ? 'selected':''}>已签收</option>
         </select>
         &nbsp;&nbsp;
         <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
@@ -51,13 +72,13 @@
                     <td>${o.postNo}</td>
                     <td>${o.postUnit}</td>
                     <td>
-                        <select id="status">
-                            <option value="${o.status}" selected>${o.statusName}</option>
-                            <option value="0" ${not empty status && status==0 ? 'selected':''}>待处理</option>
-                            <option value="1" ${not empty status && status==1 ? 'selected':''}>已接受订单</option>
-                            <option value="2" ${not empty status && status==2 ? 'selected':''}>已发货</option>
-                            <option value="3" ${not empty status && status==3 ? 'selected':''}>已签收</option>
+                        <select id="mySelect_${o.id}" onchange="changeStatus(${o.id})">
+                            <option value="0" ${o.status==0 ? 'selected':''}>待处理</option>
+                            <option value="1" ${o.status==1 ? 'selected':''}>已接受</option>
+                            <option value="2" ${o.status==2 ? 'selected':''}>已发货</option>
+                            <option value="3" ${o.status==3 ? 'selected':''}>已签收</option>
                         </select>
+
                     </td>
                     <td>${o.receiver}</td>
                     <td>
