@@ -23,7 +23,7 @@
                     if(data.code == "0"){
                         layer.msg("更新成功");
                     }else{
-                        layer.msg("修改订单状态失败，请重试");
+                        layer.msg("修改状态失败，请重试");
                     }
                 }
             });
