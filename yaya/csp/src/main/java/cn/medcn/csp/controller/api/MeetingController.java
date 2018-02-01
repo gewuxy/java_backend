@@ -455,7 +455,7 @@ public class MeetingController extends CspBaseController {
             dir.mkdirs();
         }
 
-        String saveFileName = UUIDUtil.getNowStringID();
+        String saveFileName = record.getAudioNum() + "";
         String sourcePath = fileUploadBase + relativePath + saveFileName + suffix;
         File saveFile = new File(sourcePath);
         try {
