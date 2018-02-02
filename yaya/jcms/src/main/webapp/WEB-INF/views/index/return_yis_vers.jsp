@@ -10,7 +10,7 @@ if(userAgent!=null && (userAgent.contains("iPhone")|| userAgent.contains("iPod")
 	if(userAgent.indexOf("MicroMessenger")>=0){//如果是微信扫描
 		request.getRequestDispatcher("wx_android.jsp").forward(request, response);
 	}else{
-		response.sendRedirect("http://139.199.170.178/apkfile/YaYa_v7.1.3.apk");
+		response.sendRedirect("http://139.199.170.178/apkfile/YaYa_v7.1.70.apk");
 	}
 }
 
