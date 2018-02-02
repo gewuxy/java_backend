@@ -13,6 +13,8 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * Created by lixuan on 2017/4/17.
  */
@@ -102,4 +104,36 @@ public class BaseController {
         return view;
     }
 
+    /**
+     * 判断是否是微信访问
+     *
+     * @param request
+     * @return
+     */
+    protected boolean isWeChat(HttpServletRequest request) {
+        String userAgent = request.getHeader("user-agent").toLowerCase();
+        if (userAgent == null || userAgent.indexOf("micromessenger") == -1) {
+            return false ;
+        }
+        return true;
+    }
+
+    /**
+     * 判断是否为IOS系统访问
+     *
+     * @param request
+     * @return
+     */
+    protected boolean isIOSDevice(HttpServletRequest request) {
+        boolean isMobile = false;
+        final String[] ios_sys = { "iPhone", "iPad", "iPod" };
+        String userAgent = request.getHeader("user-agent");
+        for (int i = 0; !isMobile && userAgent != null && !userAgent.trim().equals("") && i < ios_sys.length; i++) {
+            if (userAgent.contains(ios_sys[i])) {
+                isMobile = true;
+                break;
+            }
+        }
+        return isMobile;
+    }
 }
