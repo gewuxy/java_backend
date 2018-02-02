@@ -407,7 +407,7 @@ public class MeetingController extends CspBaseController {
     protected String handleUploadResult(RecordUploadDTO record, String relativePath, String saveFileName) {
         AudioCourseDetail detail = audioService.findDetail(record.getDetailId());
 
-        detail.setAudioUrl(relativePath + saveFileName + "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        detail.setAudioUrl(relativePath + saveFileName);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
         if (record.getPlayType() == AudioCourse.PlayType.normal.getType()) {
             audioService.updateDetail(detail);
@@ -442,9 +442,9 @@ public class MeetingController extends CspBaseController {
 
         String osType = LocalUtils.getOSType();
         String suffix = null;
-        //小程序上传音频，格式为MP3
+        //小程序上传音频，格式为aac
         if(StringUtils.isEmpty(osType)){
-            suffix = "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
+            suffix = "." + FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix;
         }else{
             suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
         }
@@ -458,18 +458,27 @@ public class MeetingController extends CspBaseController {
 
         String saveFileName = record.getAudioNum() + "";
         String sourcePath = fileUploadBase + relativePath + saveFileName + suffix;
+        //aac文件对应的MP3文件
+        String mp3SourcePath = fileUploadBase + relativePath + saveFileName +  "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
         File saveFile = new File(sourcePath);
+        File mp3File = new File(mp3SourcePath);
         try {
+            if(mp3File.exists()){
+                //如果aac文件对应的MP3文件存在，删除原来的MP3文件，防止后面aac转MP3时出错
+                mp3File.delete();
+            }
             file.transferTo(saveFile);
         } catch (IOException e) {
             return error(local("upload.error"));
         }
 
-        if(!StringUtils.isEmpty(osType)){
+
+
+
             //将音频转为MP3格式，并删除源文件
             FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
             FileUtils.deleteTargetFile(sourcePath);
-        }
+
 
         //没有下一个音频，开始合并音频
         if(!record.getHasNext()){
