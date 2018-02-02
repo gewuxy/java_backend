@@ -116,9 +116,6 @@ public class CspRealm extends AuthorizingRealm {
         //添加用户信息缓存
         redisCacheUtils.setCacheObject(Constants.TOKEN + "_" + userToken, principal, Constants.TOKEN_EXPIRE_TIME);
 
-        //判断用户是否存在新手引导课件 不存在则添加
-        audioService.doCopyGuideCourse(principal.getId());
-
         if (CheckUtils.isEmpty(principal.getAvatar())) {
             principal.setAvatar(fileBase + FilePath.PORTRAIT.path + "/admin-userImg.png");
         } else if (!principal.getAvatar().startsWith("http")){
