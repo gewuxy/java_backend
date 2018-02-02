@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.KeyValuePair;
 import cn.medcn.common.utils.LetterUtils;
 import com.alibaba.fastjson.JSON;
@@ -45,8 +46,11 @@ public class SurveyQuestion implements Serializable{
     @Transient
     private String[] optionArr;
 
-    public void optionArrToJSON(){
+    public void optionArrToJSON() throws SystemException {
         if(optionArr != null && optionArr.length > 0){
+            if (optionArr.length > 26) {
+                throw new SystemException("选项不能多于26个");
+            }
             optionList = Lists.newArrayList();
             for(int i =0 ; i < optionArr.length ; i++){
                 KeyValuePair pair = new KeyValuePair(LetterUtils.numberToLetter(i+1), optionArr[i]);
