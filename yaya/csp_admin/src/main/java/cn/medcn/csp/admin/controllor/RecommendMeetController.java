@@ -155,7 +155,8 @@ public class RecommendMeetController extends BaseController {
     @Log(name = "新建推荐会议")
     public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO dto,Short state,String meetId,String headimg,RedirectAttributes redirectAttributes){
         Recommend recommend1 = recommendMeetService.selectByMeetId(meetId);
-        if (recommend1==null) {
+        Lecturer lecturer1 = meetLecturerService.selectByMeetId(meetId);
+        if (recommend1==null && lecturer1 ==null ) {
             Meet meet = meetService.selectByPrimaryKey(meetId);
             recommend.setResourceId(meetId);
             Lecturer lecturer = new Lecturer();
