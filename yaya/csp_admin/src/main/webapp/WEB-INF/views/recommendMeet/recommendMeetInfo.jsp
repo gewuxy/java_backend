@@ -85,13 +85,13 @@
     <div class="control-group">
         <label class="control-label">主讲者姓名:</label>
         <div class="controls">
-            <input type="search" name="lecturer" id="lecturer" maxlength="50" class="required input-xlarge" value="${lecturer.name}">
+            <input type="search" name="name" id="lecturer" maxlength="50" class="required input-xlarge" value="${lecturer.name}">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者职位:</label>
         <div class="controls">
-            <input type="search" name="lecturerTile" id="lecturerTile" maxlength="50" class="required input-xlarge" value="${lecturer.title}">
+            <input type="search" name="title" id="lecturerTile" maxlength="50" class="required input-xlarge" value="${lecturer.title}">
         </div>
     </div>
 
@@ -118,13 +118,13 @@
     <div class="control-group">
         <label class="control-label">主讲者所属医院:</label>
         <div class="controls">
-                <input type="search" name="lecturerHos" id="lecturerHos" maxlength="50" class="required input-xlarge" value="${lecturer.hospital}">
+                <input type="search" name="hospital" id="lecturerHos" maxlength="50" class="required input-xlarge" value="${lecturer.hospital}">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者所属科室:</label>
         <div class="controls">
-            <select id="lecturerDepart" name="lecturerDepart" style="width: 150px;">
+            <select id="lecturerDepart" name="depart" style="width: 150px;">
                 <option value="">科室</option>
                 <c:forEach items="${departments}" var="d">
                     <option value="${d}"}>${d}</option>
