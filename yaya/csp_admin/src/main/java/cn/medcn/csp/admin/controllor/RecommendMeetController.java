@@ -147,34 +147,47 @@ public class RecommendMeetController extends BaseController {
     /**
      * 新建推荐会议
      * @param recommend
-     * @param dto
      * @param state 会议状态
      * @return
      */
     @RequestMapping(value = "/insert")
     @Log(name = "新建推荐会议")
-    public String insertRecommendMeet(Recommend recommend, MeetTuijianDTO dto,Short state,String meetId,String headimg,RedirectAttributes redirectAttributes){
+    public String insertRecommendMeet(Recommend recommend, Lecturer lecturer,Short state,String meetId,RedirectAttributes redirectAttributes){
         Recommend recommend1 = recommendMeetService.selectByMeetId(meetId);
         Lecturer lecturer1 = meetLecturerService.selectByMeetId(meetId);
-        if (recommend1==null && lecturer1 ==null ) {
-            Meet meet = meetService.selectByPrimaryKey(meetId);
-            recommend.setResourceId(meetId);
-            Lecturer lecturer = new Lecturer();
-            lecturer.setMeetId(meetId);
-            lecturer.setHeadimg(headimg);
-            lecturer.setDepart(dto.getLecturerDepart());
-            lecturer.setHospital(dto.getLecturerHos());
-            lecturer.setName(dto.getLecturer());
-            lecturer.setTitle(dto.getLecturerTile());
-            int lecturerCount = meetLecturerService.insert(lecturer);
+        Meet meet = meetService.selectByPrimaryKey(meetId);
+        if (recommend1==null) {
+            int lecturerCount = 0;
+            if (lecturer1 == null){
+                //lecturer.setMeetId(meetId);
+                //lecturer.setHeadimg(headimg);
+                //lecturer = new Lecturer();
+                /*lecturer.setMeetId(meetId);
+                lecturer.setHeadimg(headimg);
+                lecturer.setDepart(dto.getLecturerDepart());
+                lecturer.setHospital(dto.getLecturerHos());
+                lecturer.setName(dto.getLecturer());
+                lecturer.setTitle(dto.getLecturerTile());*/
+                lecturerCount = meetLecturerService.insert(lecturer);
+            }else {
+                lecturer1.setHeadimg(lecturer.getHeadimg());
+                lecturer1.setDepart(lecturer.getDepart());
+                lecturer1.setTitle(lecturer.getTitle());
+                lecturer1.setName(lecturer.getName());
+                lecturer1.setHospital(lecturer.getHospital());
+                lecturer1.setMeetId(lecturer.getMeetId());
+                lecturerCount = meetLecturerService.updateByPrimaryKey(lecturer1);
+            }
             if (lecturerCount != 1){
                 addFlashMessage(redirectAttributes,"添加讲师失败");
+                return "redirect:/yaya/recommendMeet/list";
             }
-            meet.setLecturerId(lecturer.getId());
+            recommend.setResourceId(meetId);
             int recommendMeetCount = recommendMeetService.insert(recommend);
             if (recommendMeetCount != 1){
                 addFlashMessage(redirectAttributes,"添加推荐会议失败");
             }
+            meet.setLecturerId(lecturer.getId());
             meet.setLecturerId(lecturer.getId());
             meet.setState(state);
             meet.setTuijian(recommend.getRecFlag());
@@ -184,7 +197,7 @@ public class RecommendMeetController extends BaseController {
             }
             addFlashMessage(redirectAttributes,"添加成功");
         }else {
-          addErrorFlashMessage(redirectAttributes,"推荐会议重复");
+          addErrorFlashMessage(redirectAttributes,"会议已推荐");
         }
         return "redirect:/yaya/recommendMeet/list";
 
@@ -317,4 +330,25 @@ public class RecommendMeetController extends BaseController {
         }
 
     }
+
+    /*private void insertLecturer(Lecturer lecturer,String meetId,String headimg,MeetTuijianDTO dto,int lecturerCount){
+        if (lecturer == null){
+            lecturer = new Lecturer();
+            lecturer.setMeetId(meetId);
+            lecturer.setHeadimg(headimg);
+            lecturer.setDepart(dto.getLecturerDepart());
+            lecturer.setHospital(dto.getLecturerHos());
+            lecturer.setName(dto.getLecturer());
+            lecturer.setTitle(dto.getLecturerTile());
+            lecturerCount = meetLecturerService.insert(lecturer);
+        }else {
+            lecturer.setMeetId(meetId);
+            lecturer.setHeadimg(headimg);
+            lecturer.setDepart(dto.getLecturerDepart());
+            lecturer.setHospital(dto.getLecturerHos());
+            lecturer.setName(dto.getLecturer());
+            lecturer.setTitle(dto.getLecturerTile());
+            lecturerCount = meetLecturerService.updateByPrimaryKey(lecturer);
+        }
+    }*/
 }
