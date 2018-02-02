@@ -5,6 +5,9 @@ import cn.medcn.article.service.NewsService;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.LocalUtils;
+import cn.medcn.user.model.AppVersion;
+import cn.medcn.user.service.AppVersionService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,6 +15,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Created by lixuan on 2017/3/6.
@@ -23,6 +30,12 @@ public class IndexController extends BaseController {
 
     @Value("${editor_media_path}")
     private String editorMediaPath;
+
+    @Autowired
+    protected AppVersionService appVersionService;
+
+    @Value("${csp.file.base}")
+    protected String appFileBase;
 
     @RequestMapping(value="/")
     public String index(){
@@ -63,5 +76,35 @@ public class IndexController extends BaseController {
         }
         model.addAttribute("type", type);
         return "/index/mc_"+type;
+    }
+
+
+    /**
+     * yaya医师
+     * @return
+     */
+    @RequestMapping(value = "/scan/qrcode")
+    public String downloadApp(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (isWeChat(request)){
+            // 微信扫描
+            return localeView("/index/download");
+        } else {
+            AppVersion appVersion = null;
+            // 手机浏览器扫描 再判断ios或安卓手机
+            if (isIOSDevice(request) ) { // ios系统
+                 appVersion = appVersionService.findNewly(AppVersion.APP_TYPE.YAYA_YISHI.type, AppVersion.DRIVE_TAG.IOS.type);
+
+                if (appVersion != null ) {
+                    response.sendRedirect(appVersion.getDownLoadUrl());
+                }
+
+            } else { // 安卓系统
+                appVersion = appVersionService.findNewly(AppVersion.APP_TYPE.YAYA_YISHI.type, AppVersion.DRIVE_TAG.ANDROID.type);
+                if (appVersion != null ) {
+                    response.sendRedirect(appFileBase + appVersion.getDownLoadUrl());
+                }
+            }
+        }
+        return null;
     }
 }
