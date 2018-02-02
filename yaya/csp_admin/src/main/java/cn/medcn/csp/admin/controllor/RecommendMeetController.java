@@ -170,7 +170,7 @@ public class RecommendMeetController extends BaseController {
                 lecturerCount = meetLecturerService.updateByPrimaryKey(lecturer1);
             }
             if (lecturerCount != 1){
-                addFlashMessage(redirectAttributes,"添加讲师失败");
+                addErrorFlashMessage(redirectAttributes,"添加讲师失败");
                 return "redirect:/yaya/recommendMeet/list";
             }
             recommend.setResourceId(meetId);
