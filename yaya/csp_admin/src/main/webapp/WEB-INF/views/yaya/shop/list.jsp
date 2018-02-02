@@ -10,6 +10,26 @@
 <head>
     <title>商品列表</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <script>
+        function changeStatus(id) {
+            var status = $('#mySelect_'+id).find('option:selected').val();
+
+            $.ajax({
+                url:'${ctx}/yaya/shop/change/status',
+                data:{"id":id,"status":status,"type":"shop"},
+                dataType:"json",
+                type:"post",
+                success:function (data) {
+                    if(data.code == "0"){
+                        layer.msg("更新成功");
+                    }else{
+                        layer.msg("修改状态失败，请重试");
+                    }
+                }
+            });
+
+        }
+    </script>
 </head>
 
 <body>
@@ -23,10 +43,25 @@
         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
         <input  name="name" type="hidden" value="${name}"/>
+        <input  name="status" type="hidden" value="${status}"/>
+        <input  name="gtype" type="hidden" value="${gtype}"/>
     </form>
 
     <form id="searchForm" method="post" action="${ctx}/yaya/shop/list" class="breadcrumb form-search">
         <input placeholder="商品名称" value="${name}" size="40"  type="search" name="name" maxlength="50" class="required"/>
+        &nbsp;&nbsp;
+        <select name="status" >
+            <option value="">状态</option>
+            <option value="0" ${status==0 ? 'selected':''}>下架</option>
+            <option value="1" ${status==1 ? 'selected':''}>上架</option>
+        </select>
+        &nbsp;&nbsp;
+        <select name="gtype" style="width:80px;">
+            <option value="">类型</option>
+            <option value="0" ${gtype==0 ? 'selected':''}>礼品</option>
+            <option value="1" ${gtype==1 ? 'selected':''}>电子书</option>
+        </select>
+        &nbsp;&nbsp;
         <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
     </form>
 
@@ -40,7 +75,12 @@
                     <td>${s.price}</td>
                     <td>${s.stock}</td>
                     <td>${s.gtype == 0 ? "礼品" : "电子书"}</td>
-                    <td>${s.status == 0 ? "下架" : "上架"}</td>
+                    <td>
+                        <select id="mySelect_${s.id}" onchange="changeStatus(${s.id})">
+                            <option value="0" ${s.status==0 ? 'selected':''}>下架</option>
+                            <option value="1" ${s.status==1 ? 'selected':''}>上架</option>
+                        </select>
+                    </td>
                     <td>${s.refund}</td>
                     <td>${s.buyLimit}</td>
                     <td>
