@@ -1,5 +1,7 @@
 package cn.medcn.meet.service;
 
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.BaseService;
 import cn.medcn.meet.dto.CourseThemeDTO;
 import cn.medcn.meet.model.AudioCourseTheme;
@@ -20,4 +22,12 @@ public interface CourseThemeService extends BaseService<AudioCourseTheme> {
 
     List<BackgroundMusic> findMusicList();
 
+    MyPage<BackgroundImage> findImagePageList(Pageable pageable);
+
+    MyPage<BackgroundMusic> findMusicPageList(Pageable pageable);
+
+
+    void addBackgroundImage(BackgroundImage image);
+
+    void addBackgroundMusic(BackgroundMusic music);
 }
