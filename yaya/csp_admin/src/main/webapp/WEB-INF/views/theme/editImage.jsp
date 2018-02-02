@@ -59,10 +59,9 @@
                     shade: [0.1,'#fff'] //0.1透明度的白色背景
                 });
                 $.ajaxFileUpload({
-                    url: "${ctx}/csp/course/theme/upload", //用于文件上传的服务器端请求地址
+                    url: "${ctx}/csp/course/theme/upload?type=0", //用于文件上传的服务器端请求地址
                     secureuri: false, //是否需要安全协议，一般设置为false
                     fileElementId: f.id, //文件上传域的ID
-                    data:{"type":0},// 后台传0 代表上传图片
                     dataType: 'json', //返回值类型 一般设置为json
                     success: function (data)  //服务器成功响应处理函数
                     {
@@ -125,7 +124,7 @@
         <div class="control-group">
             <label class="control-label">图片url:</label>
             <div class="controls">
-                <input type="search" name="imgUrl"  id="imgUrl" value="${image.imgUrl}" maxlength="100" class="required input-xlarge"/>
+                <input type="search" name="imgUrl"  id="imgUrl" value="${image.imgUrl}" maxlength="100" class="required input-xlarge" readonly/>
             </div>
         </div>
 
@@ -140,7 +139,7 @@
         <div class="control-group">
             <label class="control-label">图片大小:</label>
             <div class="controls">
-                <input type="search" name="imgSize" id="imgSize" value="${image.imgSize}" maxlength="50" class="required input-xlarge"/>KB
+                <input type="search" name="imgSize" id="imgSize" value="${image.imgSize}" maxlength="50" class="required input-xlarge" readonly/>KB
             </div>
         </div>
 

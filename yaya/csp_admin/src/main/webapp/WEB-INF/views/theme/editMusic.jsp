@@ -55,10 +55,9 @@
                     shade: [0.1,'#fff'] //0.1透明度的白色背景
                 });
                 $.ajaxFileUpload({
-                    url: "${ctx}/csp/course/theme/upload", //用于文件上传的服务器端请求地址
+                    url: "${ctx}/csp/course/theme/upload?type=1", //用于文件上传的服务器端请求地址
                     secureuri: false, //是否需要安全协议，一般设置为false
                     fileElementId: f.id, //文件上传域的ID
-                    data:{"type":1},// 后台传0 代表上传图片
                     dataType: 'json', //返回值类型 一般设置为json
                     success: function (data)  //服务器成功响应处理函数
                     {
@@ -117,7 +116,7 @@
     <div class="control-group">
         <label class="control-label">音乐Url:</label>
         <div class="controls">
-            <input type="search" name="url" id="musicUrl" value="${music.url}" maxlength="100" class="required input-xlarge"/>
+            <input type="search" name="url" id="musicUrl" value="${music.url}" maxlength="100" class="required input-xlarge" readonly/>
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
@@ -132,7 +131,7 @@
     <div class="control-group">
         <label class="control-label">音乐大小:</label>
         <div class="controls">
-            <input type="search" name="size" id="musicSize" value="${music.size}" maxlength="50" class="required input-xlarge"/>KB
+            <input type="search" name="size" id="musicSize" value="${music.size}" maxlength="50" class="required input-xlarge" readonly/>KB
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
@@ -140,7 +139,7 @@
     <div class="control-group">
         <label class="control-label">音乐时长:</label>
         <div class="controls">
-            <input type="search" name="duration" id="musicDuration" value="${music.duration}" maxlength="50" class="required input-xlarge"/>秒
+            <input type="search" name="duration" id="musicDuration" value="${music.duration}" maxlength="50" class="required input-xlarge" readonly/>秒
             <span class="help-inline"><font color="red">*</font> </span>
         </div>
     </div>
