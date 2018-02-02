@@ -159,15 +159,6 @@ public class RecommendMeetController extends BaseController {
         if (recommend1==null) {
             int lecturerCount = 0;
             if (lecturer1 == null){
-                //lecturer.setMeetId(meetId);
-                //lecturer.setHeadimg(headimg);
-                //lecturer = new Lecturer();
-                /*lecturer.setMeetId(meetId);
-                lecturer.setHeadimg(headimg);
-                lecturer.setDepart(dto.getLecturerDepart());
-                lecturer.setHospital(dto.getLecturerHos());
-                lecturer.setName(dto.getLecturer());
-                lecturer.setTitle(dto.getLecturerTile());*/
                 lecturerCount = meetLecturerService.insert(lecturer);
             }else {
                 lecturer1.setHeadimg(lecturer.getHeadimg());
@@ -331,24 +322,4 @@ public class RecommendMeetController extends BaseController {
 
     }
 
-    /*private void insertLecturer(Lecturer lecturer,String meetId,String headimg,MeetTuijianDTO dto,int lecturerCount){
-        if (lecturer == null){
-            lecturer = new Lecturer();
-            lecturer.setMeetId(meetId);
-            lecturer.setHeadimg(headimg);
-            lecturer.setDepart(dto.getLecturerDepart());
-            lecturer.setHospital(dto.getLecturerHos());
-            lecturer.setName(dto.getLecturer());
-            lecturer.setTitle(dto.getLecturerTile());
-            lecturerCount = meetLecturerService.insert(lecturer);
-        }else {
-            lecturer.setMeetId(meetId);
-            lecturer.setHeadimg(headimg);
-            lecturer.setDepart(dto.getLecturerDepart());
-            lecturer.setHospital(dto.getLecturerHos());
-            lecturer.setName(dto.getLecturer());
-            lecturer.setTitle(dto.getLecturerTile());
-            lecturerCount = meetLecturerService.updateByPrimaryKey(lecturer);
-        }
-    }*/
 }
