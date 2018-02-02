@@ -95,7 +95,11 @@ public class SurveyController extends BaseController {
     @ResponseBody
     public String save(SurveyQuestion question) {
         boolean isAdd = question.getId() == null || question.getId() == 0;
-        question.optionArrToJSON();
+        try {
+            question.optionArrToJSON();
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
         if (isAdd) {
             question.setSort(surveyService.countQuestions(question.getPaperId()) + 1);
             surveyService.addQuestion(question);

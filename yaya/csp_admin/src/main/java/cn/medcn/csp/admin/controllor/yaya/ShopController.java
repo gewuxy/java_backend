@@ -54,10 +54,18 @@ public class ShopController extends BaseController {
      * @return
      */
     @RequestMapping(value = "/list")
-    public String findShopList(Pageable pageable, String name, Model model) {
+    public String findShopList(Pageable pageable, String name, Integer status, Integer gtype, Model model) {
         if (CheckUtils.isNotEmpty(name)) {
             pageable.put("name", name);
             model.addAttribute("name", name);
+        }
+        if (status != null) {
+            pageable.put("status", status);
+            model.addAttribute("status", status);
+        }
+        if (gtype != null) {
+            pageable.put("gtype", gtype);
+            model.addAttribute("gtype", gtype);
         }
         MyPage<Goods> page = shopService.findShopGoodsList(pageable);
         model.addAttribute("page", page);
@@ -169,5 +177,32 @@ public class ShopController extends BaseController {
         orderService.updateByPrimaryKey(order);
         addFlashMessage(redirectAttributes, "修改订单信息成功");
         return "redirect:/yaya/shop/order/list";
+    }
+
+
+    @RequestMapping(value = "/change/status")
+    @ResponseBody
+    @Log(name = "修改商品或订单状态")
+    public String updateOrderStatus(Integer id, Integer status, String type) {
+        int result = 0;
+        if (id != null) {
+            if (type != null && type.equals("shop")) {
+                // 修改商品状态
+                Goods goods = new Goods();
+                goods.setId(id);
+                goods.setStatus(status);
+                result = shopService.updateByPrimaryKeySelective(goods);
+            } else if (type != null && type.equals("order")) {
+                Order order = new Order();
+                order.setId(id);
+                order.setStatus(status);
+                result = orderService.updateByPrimaryKeySelective(order);
+
+            }
+        }
+        if (result == 0) {
+            return error();
+        }
+        return success();
     }
 }

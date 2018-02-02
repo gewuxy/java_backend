@@ -12,6 +12,9 @@ import javax.sound.sampled.*;
 import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.coobird.thumbnailator.Thumbnails;
 
 /**
@@ -379,6 +382,31 @@ public class FileUtils {
         return des;
     }
 
+
+    /**
+     * 获取文件夹下所有文件的绝对路径
+     * @param directoryPath 文件夹路径
+     * @return
+     */
+    public static List<String> getSubsectionAudioList(String directoryPath){
+        List<String> list = new ArrayList<>();
+        File directory = new File(directoryPath);
+        if (directory.exists()) {
+            File[] files = directory.listFiles();
+            if (files.length == 0) {
+                return null;
+            } else {
+                for (File file : files) {
+                    if (!file.isDirectory()) {
+                        list.add(directoryPath + file.getName());
+                    }
+                }
+                return list;
+            }
+        } else {
+            return null;
+        }
+    }
 
     public static void main(String[] args) {
         //缩略图实际存储路径
