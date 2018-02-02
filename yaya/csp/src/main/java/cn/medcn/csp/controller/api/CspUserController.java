@@ -321,9 +321,6 @@ public class CspUserController extends CspBaseController {
             // 返回给前端的用户数据
             CspUserInfoDTO dto = buildCspUserInfoDTO(principal, userInfo);
 
-            //判断用户是否已经存在新手引导会议
-            audioService.doCopyGuideCourse(principal.getId());
-
             return success(dto);
 
         } catch (SystemException e) {

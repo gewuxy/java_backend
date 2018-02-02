@@ -160,10 +160,10 @@
             showTopbar: false,
             startOfWeek: 'monday',
             separator : ' ~ ',
-            format: 'YYYY/MM/DD HH:mm',
+            format: 'YYYY/MM/DD',
             autoClose: false,
             time: {
-                enabled: true
+                enabled: false
             }
         }).bind('datepicker-first-date-selected', function(event, obj){
             /*首次点击的时间*/

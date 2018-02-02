@@ -1,5 +1,7 @@
 package cn.medcn.meet.service.impl;
 
+import cn.medcn.common.pagination.MyPage;
+import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.CourseThemeDTO;
@@ -7,6 +9,7 @@ import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
 import cn.medcn.meet.service.CourseThemeService;
 import com.github.abel533.mapper.Mapper;
+import com.github.pagehelper.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
@@ -31,6 +34,12 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
 
     @Autowired
     protected AudioService audioService;
+
+    @Autowired
+    protected BackgroundImageDAO backgroundImageDAO;
+
+    @Autowired
+    protected BackgroundMusicDAO backgroundMusicDAO;
 
     @Value("${app.file.base}")
     protected String fileBase;
@@ -81,4 +90,30 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
         List<BackgroundMusic> list = courseThemeDAO.findMusicList();
         return list;
     }
+
+    @Override
+    public MyPage<BackgroundImage> findImagePageList(Pageable pageable) {
+        startPage(pageable,Pageable.countPage);
+        Page<BackgroundImage> page = (Page<BackgroundImage>) backgroundImageDAO.findImagePageList(pageable.getParams());
+        return MyPage.page2Mypage(page);
+    }
+
+    @Override
+    public MyPage<BackgroundMusic> findMusicPageList(Pageable pageable) {
+        startPage(pageable,Pageable.countPage);
+        Page<BackgroundMusic> page = (Page<BackgroundMusic>) backgroundMusicDAO.findMusicPageList(pageable.getParams());
+        return MyPage.page2Mypage(page);
+    }
+
+    @Override
+    public void addBackgroundImage(BackgroundImage image) {
+        backgroundImageDAO.insert(image);
+    }
+
+    @Override
+    public void addBackgroundMusic(BackgroundMusic music) {
+        backgroundMusicDAO.insert(music);
+    }
+
+
 }

@@ -127,7 +127,7 @@
             o.currency_type=#{type}
         </if>
         <if test="startTime != null and endTime != null">
-            AND create_time BETWEEN #{startTime} AND #{endTime}
+            AND create_time BETWEEN #{startTime} AND date_sub(#{endTime},interval -1 day)
         </if>
         <if test="id != null">
             o.id = #{id}

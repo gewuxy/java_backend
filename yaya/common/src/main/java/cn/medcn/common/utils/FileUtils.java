@@ -31,6 +31,9 @@ public class FileUtils {
     // 缩略图片高
     public static int thumbHeight = 120;
 
+    // 背景音乐存放路径
+    public static String backgroundMusicPath = "";
+
 
     public static String readFromInputStream(InputStream inputStream){
         InputStreamReader isr = null;
@@ -410,12 +413,14 @@ public class FileUtils {
 
     public static void main(String[] args) {
         //缩略图实际存储路径
-        String dateFolderPath = CalendarUtils.getCurrentDate();
+       /* String dateFolderPath = CalendarUtils.getCurrentDate();
         String filePath = realUploadPath + dateFolderPath + "\\";
         System.out.println(filePath);
 
         File file = new File(filePath + "18011816525170399094.png");
 
-        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));
+        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));*/
+        MediaInfo info = parseAudioMediaInfo("Z:\\background\\music\\18020118324028387248.mp3");
+        System.out.println("时长："+ info.getDuration());
     }
 }
