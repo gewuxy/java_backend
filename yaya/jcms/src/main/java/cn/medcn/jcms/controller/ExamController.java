@@ -146,7 +146,11 @@ public class ExamController extends BaseController {
     @ResponseBody
     public String save(ExamQuestion question, Integer paperId) {
         boolean isAdd = question.getId() == null || question.getId() == 0;
-        question.optionArrToJSON();
+        try {
+            question.optionArrToJSON();
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
         question.rightKeyArrToRightKey();
         if (isAdd) {
             examService.addQuestion(paperId, question);

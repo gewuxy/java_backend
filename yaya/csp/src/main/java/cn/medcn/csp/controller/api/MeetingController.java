@@ -18,22 +18,19 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
-import cn.medcn.meet.dto.*;
-import cn.medcn.meet.service.*;
-import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
+import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
+import cn.medcn.meet.service.*;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
+import cn.medcn.user.model.Principal;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import cn.medcn.weixin.config.WeixinConfig;
 import cn.medcn.weixin.service.WXTokenService;
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -44,24 +41,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static cn.medcn.common.Constants.*;
-import static cn.medcn.csp.CspConstants.COURSE_RATE_TICKET_KEY;
-import static cn.medcn.csp.CspConstants.MEET_AFTER_START_EXPIRE_HOURS;
-import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
+import static cn.medcn.csp.CspConstants.*;
 
 /**
  * 会议控制器
@@ -544,9 +533,6 @@ public class MeetingController extends CspBaseController {
         return handleUploadResult(record, relativePath, saveFileName);
     }
 
-
-
-
     /**
      * 处理MP3合并
      *
@@ -567,7 +553,7 @@ public class MeetingController extends CspBaseController {
             saveFileName = FileUtils.getFileName(firstAudioPath);
         } else {//多个音频文件需要合并成一个文件
             String mergePath = fileUploadBase + relativePath + saveFileName;
-            FFMpegUtils.concatMp3(mergePath, false, filePathQueue.toArray(new String[filePathQueue.size()]));
+            FFMpegUtils.concatMp3(mergePath, true, filePathQueue.toArray(new String[filePathQueue.size()]));
         }
         return saveFileName;
     }
@@ -1660,18 +1646,18 @@ public class MeetingController extends CspBaseController {
         }
         Map<String,Object> map = new HashMap<>();
         //获取主题
-         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
+        if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
             List<BackgroundImage> imageList = courseThemeService.findImageList();
             BackgroundImage.HandelImgUrl(imageList,fileBase);
             map.put("imageList",imageList);
-             return success(map);
-         }else{
-             //获取背景音乐
-             List<BackgroundMusic> musicList = courseThemeService.findMusicList();
-             BackgroundMusic.HandelMusicUrl(musicList,fileBase);
-             map.put("musicList",musicList);
-             return success(map);
-         }
+            return success(map);
+        }else{
+            //获取背景音乐
+            List<BackgroundMusic> musicList = courseThemeService.findMusicList();
+            BackgroundMusic.HandelMusicUrl(musicList,fileBase);
+            map.put("musicList",musicList);
+            return success(map);
+        }
     }
 
 
@@ -1764,5 +1750,23 @@ public class MeetingController extends CspBaseController {
         return success();
     }
 
+
+    /**
+     * 访问新手引导讲本
+     * @since csp1.2.0
+     * @return
+     */
+    @RequestMapping("/guide")
+    @ResponseBody
+    public String guide(){
+        Integer guideId;
+        if (LocalUtils.getLocalStr().equalsIgnoreCase(LocalUtils.Local.zh_CN.name())) {
+            guideId = AudioService.GUIDE_SOURCE_ID;
+        } else {
+            guideId = AudioService.ABROAD_GUIDE_SOURCE_ID;
+        }
+        AudioCourse course = audioService.findAudioCourse(guideId);
+        return success(course);
+    }
 
 }

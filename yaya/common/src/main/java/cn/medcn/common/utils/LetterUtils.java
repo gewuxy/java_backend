@@ -10,10 +10,30 @@ import java.util.Arrays;
  */
 public class LetterUtils {
 
-    public static String[] LETTER_ARRAY = {"A","B","C","D","E","F","G","H","I","J","K","L","M","N"};
+    public static String[] LETTER_ARRAY = {
+            "A",
+            "B",
+            "C",
+            "D",
+            "E",
+            "F",
+            "G",
+            "H",
+            "I",
+            "J",
+            "K",
+            "L",
+            "M",
+            "N",
+            "O",
+            "P",
+            "Q",
+            "R",
+            "S",
+            "T", "U", "V", "W", "X", "Y", "Z"};
 
     public static String numberToLetter(int number){
-        Assert.isTrue(number>0 && number< 15);
+        Assert.isTrue(number>0 && number<= 26);
         return LETTER_ARRAY[number-1];
     }
 
