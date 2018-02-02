@@ -147,7 +147,10 @@ public class RecommendMeetController extends BaseController {
     /**
      * 新建推荐会议
      * @param recommend
-     * @param state 会议状态
+     * @param lecturer
+     * @param state
+     * @param meetId
+     * @param redirectAttributes
      * @return
      */
     @RequestMapping(value = "/insert")
@@ -171,20 +174,18 @@ public class RecommendMeetController extends BaseController {
             }
             if (lecturerCount != 1){
                 addErrorFlashMessage(redirectAttributes,"添加讲师失败");
-                return "redirect:/yaya/recommendMeet/list";
             }
             recommend.setResourceId(meetId);
             int recommendMeetCount = recommendMeetService.insert(recommend);
             if (recommendMeetCount != 1){
-                addFlashMessage(redirectAttributes,"添加推荐会议失败");
+                addErrorFlashMessage(redirectAttributes,"添加推荐会议失败");
             }
-            meet.setLecturerId(lecturer.getId());
             meet.setLecturerId(lecturer.getId());
             meet.setState(state);
             meet.setTuijian(recommend.getRecFlag());
             int meetCount = meetService.updateByPrimaryKeySelective(meet);
             if (meetCount != 1){
-                addFlashMessage(redirectAttributes,"会议更改失败");
+                addErrorFlashMessage(redirectAttributes,"会议更改失败");
             }
             addFlashMessage(redirectAttributes,"添加成功");
         }else {
