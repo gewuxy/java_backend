@@ -241,4 +241,13 @@
         </if>
         GROUP BY c.id ORDER BY c.create_time DESC
     </select>
+
+    <select id="activityGuide" resultType="cn.medcn.meet.dto.ActivityGuideDTO">
+        SELECT c.id, c.title, fd.img_url AS cover_url, sum(d.duration) AS duration, count(d.id) AS ppt_size
+        FROM t_audio_course c
+        LEFT JOIN t_audio_course_detail d ON c.id = d.course_id
+        LEFT JOIN t_audio_course_detail fd ON c.id = fd.course_id AND fd.sort = 1
+        WHERE c.id = #{courseId}
+        GROUP BY c.id
+    </select>
 </mapper>
