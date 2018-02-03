@@ -25,4 +25,6 @@ public interface AppVersionDAO extends Mapper<AppVersion> {
      */
     List<AppVersion> findappManageListByPage();
 
+    List<AppVersion> findAppDownloadUrl(@Param("appType")String appType);
+
 }

@@ -54,4 +54,14 @@ public class AppVersionServiceImpl extends BaseServiceImpl<AppVersion> implement
         page.setDataList(appVersionList);
         return page;
     }
+
+    /**
+     * 根据type查询最新的app下载地址
+     * @param appType
+     * @return
+     */
+    @Override
+    public List<AppVersion> findAppDownloadUrl(String appType){
+        return appVersionDAO.findAppDownloadUrl(appType);
+    }
 }

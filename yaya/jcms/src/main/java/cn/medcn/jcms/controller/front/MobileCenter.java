@@ -6,7 +6,7 @@ package cn.medcn.jcms.controller.front;
 public enum MobileCenter {
 
     HLYY("hlyy","合理用药"),
-    YYYIS("yis","合理用药"),
+    YYYIS("yis","YaYa医师"),
     YYYAOS("yaos","合理用药"),
     YYZS("yyzs","YaYa助手");
 
