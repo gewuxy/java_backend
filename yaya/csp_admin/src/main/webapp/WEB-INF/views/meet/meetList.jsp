@@ -43,13 +43,13 @@
                 <td>
                     <shiro:hasPermission name="csp:meet:view">
                         <a href="${ctx}/csp/meet/info?id=${meet.id}">查看</a>
-                    </shiro:hasPermission>
+                    </shiro:hasPermission>&nbsp;&nbsp;&nbsp;
                     <shiro:hasPermission name="csp:meet:close">
                         <c:if test="${meet.deleted == false}">
-                            <a data-href="${ctx}/csp/meet/delete?id=${meet.id}"  onclick="layerConfirm('确认要关闭该会议吗？', this)">关闭</a>
+                            <a data-href="${ctx}/csp/meet/delete?id=${meet.id}&status=1"  onclick="layerConfirm('确认要关闭该会议吗？', this)">关闭</a>
                         </c:if>
                         <c:if test="${meet.deleted != false}">
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            <a data-href="${ctx}/csp/meet/delete?id=${meet.id}&status=0"  onclick="layerConfirm('确认撤销关闭该会议吗？', this)">撤销关闭</a>
                         </c:if>
                     </shiro:hasPermission>
                     <c:if test="${not empty meet.startTime && meet.playType == 2}">
