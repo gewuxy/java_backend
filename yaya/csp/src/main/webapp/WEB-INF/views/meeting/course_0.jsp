@@ -575,6 +575,7 @@
 
             //如果有视频
             if(activeItemIsVideo.length > 0){
+                activeItemIsVideo[0].load()
                 changePlayerStete(true);
             } else {
                 dataSrc = swiperCurrent.attr('audio-src');
