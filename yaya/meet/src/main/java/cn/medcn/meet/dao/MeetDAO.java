@@ -112,4 +112,5 @@ public interface MeetDAO extends Mapper<Meet> {
 
     List<Meet> selectMeetList(Map<String, Object> params);
 
+    Meet selectById(String id);
 }
