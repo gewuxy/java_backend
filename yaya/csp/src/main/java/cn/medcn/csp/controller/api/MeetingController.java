@@ -465,7 +465,7 @@ public class MeetingController extends CspBaseController {
 
         //将音频转为MP3格式，并删除源文件
         FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath + "/");
-        //FileUtils.deleteTargetFile(sourcePath);
+        FileUtils.deleteTargetFile(sourcePath);
 
         //没有下一个音频，开始合并音频
         if(!record.getHasNext()){

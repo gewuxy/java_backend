@@ -234,6 +234,6 @@ public class FFMpegUtils {
 //
 //        String[] targetFiles = new String[]{"C:/Users/Administrator/Desktop/test/01.mp3","C:/Users/Administrator/Desktop/test/02.mp3", "C:/Users/Administrator/Desktop/test/03.mp3", "C:/Users/Administrator/Desktop/test/04.mp3"};
 //        concatMp3(filePath, true, targetFiles);
-        wavToMp3("Z:/course/17166/audio/418044/0.aac", "Z:/course/17166/audio/418044/");
+        wavToMp3("Z:/course/17166/audio/418043/0.aac", "Z:/course/17166/audio/418043/");
     }
 }
