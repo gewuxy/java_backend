@@ -75,6 +75,32 @@ public class Meet implements Serializable{
     @Transient
     private String folderId;
 
+    //appUser id
+    @Transient
+    private Integer userId;
+
+    //appUser nickName
+    @Transient
+    private String nickName;
+
+    @Transient
+    private String lecturerName;
+
+    @Transient
+    private String headimg;
+
+    @Transient
+    private String title;
+
+    @Transient
+    private String hospital;
+
+    @Transient
+    private String depart;
+
+    @Transient
+    private String imgPath;
+
     public String getDuration(){
         if(meetProperty != null && meetProperty.getEndTime() != null && meetProperty.getStartTime() != null){
             long time = (meetProperty.getEndTime().getTime() - meetProperty.getStartTime().getTime())/1000;

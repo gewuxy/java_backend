@@ -39,7 +39,7 @@
             AND p.trade_id = #{tradeId}
         </if>
         <if test="startTime != null and endTime != null">
-            AND p.buy_time BETWEEN  DATE(#{startTime}) AND DATE(#{endTime})
+            AND buy_time &gt;= #{startTime} and buy_time &lt;= #{endTime}
         </if>
         ORDER BY p.buy_time DESC
 
@@ -47,12 +47,12 @@
 
     <select id="findOrderListByTime" resultType="Float">
         SELECT sum(money) FROM t_csp_user_flux_purchase WHERE
-        state = '1' AND platform NOT IN ('paypal') AND buy_time BETWEEN #{startTime} AND #{endTime}
+        state = '1' AND platform NOT IN ('paypal') AND buy_time &gt;= #{startTime} and buy_time &lt;= #{endTime}
     </select>
 
     <select id="findOrderListByTimeUs" resultType="Float">
         SELECT sum(money) FROM t_csp_user_flux_purchase WHERE
-        state = '1' AND platform = 'paypal' AND buy_time BETWEEN #{startTime} AND #{endTime}
+        state = '1' AND platform = 'paypal' AND buy_time &gt;= #{startTime} and buy_time &lt;= #{endTime}
     </select>
 
 </mapper>

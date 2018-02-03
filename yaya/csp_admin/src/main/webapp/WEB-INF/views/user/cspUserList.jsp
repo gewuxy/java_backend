@@ -84,17 +84,6 @@
                         </ul>
                     </div>
                 </th>
-                <%--<td>--%>
-                    <%--<shiro:hasPermission name="csp:user:edit">--%>
-                        <%--<a href="${ctx}/csp/user/viewOrRegister?id=${user.id}&actionType=3&listType=${listType}">修改</a>--%>
-                        <%--<c:if test="${user.active eq true}">--%>
-                            <%--<a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=1&listType=${listType}"  onclick="layerConfirm('确认要冻结该用户帐号吗？', this)">冻结</a>--%>
-                        <%--</c:if>--%>
-                    <%--</shiro:hasPermission>--%>
-                    <%--<shiro:hasPermission name="csp:user:del">--%>
-                         <%--<a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=2&listType=${listType}"  onclick="layerConfirm('确认要删除该用户帐号吗？', this)">删除</a>--%>
-                    <%--</shiro:hasPermission>--%>
-                <%--</td>--%>
             </tr>
         </c:forEach>
     </c:if>
@@ -161,6 +150,7 @@
         </div>
     </div>
 </div>
+<!-- 第三方绑定信息窗口-->
 <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -216,15 +206,14 @@
     </div>
 </div>
 <script>
-
     $(function () {
         var active = '${listType}';
-        $(".nav-tabs li:eq(" + active +")").addClass("active");
+        $(".nav-tabs li:eq(" + active + ")").addClass("active");
         initDateRangePicker("packageEnd");
     })
 
     //初始化冻结表单
-    function active(actionType,userId){
+    function active(actionType, userId) {
         $("#packageChange").hide();
         $("#dongjie").show();
         $("#actionType").val(actionType);
@@ -235,10 +224,10 @@
     }
 
     //初始化升级降级修改时间列表
-    function changePackages(actionType,userId,packageId,packageEnd,unlimited){
+    function changePackages(actionType, userId, packageId, packageEnd, unlimited) {
         $("#packageChange").show();
         $("#dongjie").hide();
-        if(packageId != undefined){
+        if (packageId != undefined) {
             $("#packageId").select2().val(packageId).trigger("change");
         }
         $("#packageEnd").val(packageEnd);
@@ -247,16 +236,16 @@
         $("#actionType").val(actionType);
         $("#oldId").val(packageId);
         $("#unlimited").val(unlimited);
-        if(actionType == 1){ //升级
+        if (actionType == 1) { //升级
             $("#title").html("升级");
             $(".packageLable").html("升级为：");
             $(".timeLable").html("有效期至：");
-        }else if(actionType == 2){
+        } else if (actionType == 2) {
             $("#title").html("降级");
             $(".packageLable").html("降级为：");
             $(".timeLable").html("有效期至：");
-        }else{
-            if(isEmpty(packageId) || packageId == 1){
+        } else {
+            if (isEmpty(packageId) || packageId == 1) {
                 layer.msg("该版本不能修改时间");
                 return false;
             }
@@ -269,109 +258,107 @@
     }
 
     function submitBtn() {
-        top.layer.confirm("确认提交吗", function(){
+        top.layer.confirm("确认提交吗", function () {
             top.layer.closeAll('dialog');
             var actionType = $("#actionType").val();
             var oldId = $("#oldId").val();
             var packageId = $("#packageId").val();
             var unlimited = $("#unlimited").val();
-            if(actionType == 1 || actionType == 2) {
-                if(actionType == 1){  // 升级
+            if (actionType == 1 || actionType == 2) {
+                if (actionType == 1) {  // 升级
                     if (packageId == "" || packageId <= oldId) {
                         layer.msg("请选择比当前高的套餐后进行升级");
                         return false;
                     }
-                }else{
-                    if(packageId >= oldId){
+                } else {
+                    if (packageId >= oldId) {
                         layer.msg("请选择比当前低的套餐后进行降级");
                         return false;
                     }
-                    if(packageId == ""){
+                    if (packageId == "") {
                         layer.msg("降级最低版本为标准版");
                         return false;
                     }
                 }
-                if(packageId != 1){
-                    if(isEmpty($("#packageEnd").val())){
+                if (packageId != 1) {
+                    if (isEmpty($("#packageEnd").val())) {
                         layer.msg("有效期时间不能为空");
                         return false;
                     }
                 }
             }
             //數字平臺不能操作
-            if (oldId == 3 && unlimited == "true"){
+            if (oldId == 3 && unlimited == "true") {
                 layer.msg("不能对敬信数字平台用户进行操作");
                 return false;
             }
             $("#packageEnd").val($("#packageEnd").val() + " 23:59:59");
             $("#packageId").prop("disabled", false);
-           $("#modalForm").submit();
+            $("#modalForm").submit();
         });
     }
 
     //初始化时间时间空间
-    function initDateRangePicker(id){
+    function initDateRangePicker(id) {
         $('#updateTimes').dateRangePicker({
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
             format: 'YYYY-MM-DD',
             autoClose: false,
-            singleDate:true,
+            singleDate: true,
             startDate: nextDay(),
             time: {
                 enabled: true
             }
-        }).bind('datepicker-change',function(event,obj){
-            //console.log(obj.value)
+        }).bind('datepicker-change', function (event, obj) {
             $(this).find("input").val(obj.value);
             $("#" + id).val(obj.value);
         });
     }
 
     //修改备注
-    function remark(obj,userId){
+    function remark(obj, userId) {
         var remark = $(obj).parent().find("input").val();
         $.ajax({
-            url:'${ctx}/csp/user/remark',
-            data:{"id":userId,"remark":remark},
-            dataType:"json",
-            type:"post",
-            success:function (data) {
-                if(data.code == "0"){
+            url: '${ctx}/csp/user/remark',
+            data: {"id": userId, "remark": remark},
+            dataType: "json",
+            type: "post",
+            success: function (data) {
+                if (data.code == "0") {
                     layer.msg("更新成功");
-                }else{
+                } else {
                     layer.msg("修改备注失败，请重试");
                 }
             }
         });
     }
 
-    //初始化冻结表单
-    function view(userId,abroad,mobile,email){
-        if(abroad == "false"){
+    //查看第三方登录
+    function view(userId, abroad, mobile, email) {
+        if (abroad == "false") {
             $("#bindTitle").html("第三方登录(国内版)");
-        }else{
+        } else {
             $("#bindTitle").html("第三方登录(海外版)");
         }
-        if(!isEmpty(mobile)){
+        if (!isEmpty(mobile)) {
             $("#mobile").text(mobile);
             addBindStyle("mobile");
         }
-        if(!isEmpty(email)){
+        if (!isEmpty(email)) {
             $("#email").text(email);
             addBindStyle("email");
         }
         $.ajax({
-            url:'${ctx}/csp/user/bind/view',
-            data:{"userId":userId},
-            dataType:"json",
-            type:"post",
-            success:function (data) {
-                if(data.code == "0"){
+            url: '${ctx}/csp/user/bind/view',
+            data: {"userId": userId},
+            dataType: "json",
+            type: "post",
+            success: function (data) {
+                if (data.code == "0") {
                     initView(data.data);
-                    console.log(data);
-                }else{
+                } else {
                     layer.msg("获取用户绑定信息失败");
                 }
             }
@@ -379,36 +366,37 @@
         $("#viewModal").modal("show");
     }
 
-    function initView(data){
-        for(var i = 0;i < data.length;i++){
+    //加载绑定信息
+    function initView(data) {
+        for (var i = 0; i < data.length; i++) {
             var nickName = data[i].nickName;
-            switch(data[i].thirdPartyId){
+            switch (data[i].thirdPartyId) {
                 case 1:
-                    addBindInfo("wechat",nickName);
+                    addBindInfo("wechat", nickName);
                     break;
                 case 2:
-                    addBindInfo("weibo",nickName);
+                    addBindInfo("weibo", nickName);
                     break;
                 case 3:
-                    addBindInfo("facebook",nickName);
+                    addBindInfo("facebook", nickName);
                     break;
                 case 4:
-                    addBindInfo("twitter",nickName);
+                    addBindInfo("twitter", nickName);
                     break;
                 case 5:
-                    addBindInfo("medcn",nickName);
+                    addBindInfo("medcn", nickName);
                     break;
             }
         }
     }
 
-    function addBindInfo(name,nickName){
+    function addBindInfo(name, nickName) {
         $("#" + name).text(nickName);
         addBindStyle(name);
     }
 
-    function addBindStyle(name){
-        $("#" + name).next().text("绑定").css("color","#167afe");
+    function addBindStyle(name) {
+        $("#" + name).next().text("绑定").css("color", "#167afe");
     }
 </script>
 </body>

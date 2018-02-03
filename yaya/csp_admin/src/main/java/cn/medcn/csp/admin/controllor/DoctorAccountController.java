@@ -127,6 +127,8 @@ public class DoctorAccountController extends BaseController {
             return "/yaya/doctor/editForm";
         }
 
+        String nickName = appUserDTO.getNickname();
+        appUserDTO.setLinkman(nickName);
         AppUser appUser = AppUserDTO.rebuildToDoctor(appUserDTO);
         AppUser emailAccount = null;
         if(!StringUtils.isEmpty(username)){

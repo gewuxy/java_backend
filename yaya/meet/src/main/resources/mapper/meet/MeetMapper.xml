@@ -283,10 +283,18 @@
     </select>
 
     <select id="selectMeetList" resultType="cn.medcn.meet.model.Meet">
-        SELECT t.id,t.meet_name FROM t_meet t
-        WHERE 1 = 1
-        <if test="meetName != null">
-            AND t.meet_name LIKE  CONCAT('%',#{meetName},'%')
+        SELECT m.*,l.*,u.id AS userId,u.nickname FROM t_meet m LEFT JOIN t_app_user u ON m.owner_id = u.id
+        LEFT JOIN t_meet_lecturer l ON l.meet_id = m.id WHERE u.pub_flag = '1'
+        <if test="keyword != null">
+          AND
+            (
+            m.meet_name like CONCAT('%',#{keyword}, '%') OR
+            u.nickname like CONCAT('%',#{keyword}, '%')
+            )
         </if>
+    </select>
+
+    <select id="selectById" resultType="cn.medcn.meet.model.Meet">
+        SELECT m.*,l.`name` AS lecturerName,l.headimg,l.hospital,l.depart,l.title FROM t_meet m LEFT JOIN t_meet_lecturer l ON l.meet_id = m.id WHERE m.id = #{id}
     </select>
 </mapper>
