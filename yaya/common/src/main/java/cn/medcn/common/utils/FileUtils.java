@@ -411,6 +411,17 @@ public class FileUtils {
         }
     }
 
+
+    public static void move(String sourcePath, String targetPath, String targetName){
+        File source = new File(sourcePath);
+        File targetDir = new File(targetPath);
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        source.renameTo(new File(targetPath + "/" + targetName));
+    }
+
     public static void main(String[] args) {
         //缩略图实际存储路径
        /* String dateFolderPath = CalendarUtils.getCurrentDate();
@@ -420,7 +431,10 @@ public class FileUtils {
         File file = new File(filePath + "18011816525170399094.png");
 
         System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));*/
-        MediaInfo info = parseAudioMediaInfo("Z:\\background\\music\\18020118324028387248.mp3");
-        System.out.println("时长："+ info.getDuration());
+
+       String sourcePath = "Z:/course/17166/audio/418043/0.mp3";
+       String targetPath = "Z:/course/17166/audio/";
+       String fileName = cn.medcn.common.utils.StringUtils.nowStr() + ".mp3";
+       move(sourcePath, targetPath, fileName);
     }
 }
