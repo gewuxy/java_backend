@@ -202,6 +202,14 @@ public class CspUserController extends BaseController {
         return success();
     }
 
+    @RequestMapping(value = "/bind/view")
+    @ResponseBody
+    @Log(name="查询用户绑定信息")
+    public String bindView(String userId) {
+        List<BindInfo> bindInfoList = cspUserService.findBindListByUserId(userId);
+        return success(bindInfoList);
+    }
+
     /**
      * 根据上级名称获取到子级列表
      * @param name
