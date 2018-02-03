@@ -119,4 +119,6 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
     AudioCourseDTO findMiniTemplateByIdOrRand(@Param("id") Integer id);
 
     List<CourseDeliveryDTO> findMiniMeetingListByType(Map<String, Object> params);
+
+    ActivityGuideDTO findActivityCourse(@Param("courseId") Integer courseId);
 }

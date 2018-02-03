@@ -1604,4 +1604,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
         return courseId;
     }
+
+    @Override
+    public ActivityGuideDTO findActivityCourse(Integer courseId) {
+        return audioCourseDAO.findActivityCourse(courseId);
+    }
 }
