@@ -5,6 +5,7 @@ import cn.medcn.article.service.NewsService;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.LocalUtils;
 import cn.medcn.user.model.AppVersion;
 import cn.medcn.user.service.AppVersionService;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * Created by lixuan on 2017/3/6.
@@ -34,7 +36,7 @@ public class IndexController extends BaseController {
     @Autowired
     protected AppVersionService appVersionService;
 
-    @Value("${csp.file.base}")
+    @Value("${app.file.base}")
     protected String appFileBase;
 
     @RequestMapping(value="/")
@@ -73,6 +75,17 @@ public class IndexController extends BaseController {
     public String mc(@PathVariable String type, Model model){
         if(StringUtils.isBlank(type)){
             type = MobileCenter.HLYY.title;
+        }
+        // 获取yaya医师下载路径
+        if (type.equals(MobileCenter.YYYIS.title)) {
+            List<AppVersion> appVersionList = appVersionService.findAppDownloadUrl(AppVersion.APP_TYPE.YAYA_YISHI.type);
+            for (AppVersion app : appVersionList) {
+                if (app.getDriveTag().equals(AppVersion.DRIVE_TAG.IOS.type)){
+                    model.addAttribute("iosUrl", app.getDownLoadUrl());
+                } else if (app.getDriveTag().equals(AppVersion.DRIVE_TAG.ANDROID.type)){
+                    model.addAttribute("androidUrl", app.getDownLoadUrl());
+                }
+            }
         }
         model.addAttribute("type", type);
         return "/index/mc_"+type;

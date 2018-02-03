@@ -230,9 +230,10 @@ public class FFMpegUtils {
     public static void main(String[] args) {
         //concatMp4("D:/lixuan/test/concat/concat.mp4", false, "D:/lixuan/test/clip.mp4", "D:/lixuan/test/clip2.mp4");
 
-        String filePath = "C:/Users/Administrator/Desktop/test/merge.mp3";
-
-        String[] targetFiles = new String[]{"C:/Users/Administrator/Desktop/test/01.mp3","C:/Users/Administrator/Desktop/test/02.mp3", "C:/Users/Administrator/Desktop/test/03.mp3", "C:/Users/Administrator/Desktop/test/04.mp3"};
-        concatMp3(filePath, true, targetFiles);
+//        String filePath = "C:/Users/Administrator/Desktop/test/merge.mp3";
+//
+//        String[] targetFiles = new String[]{"C:/Users/Administrator/Desktop/test/01.mp3","C:/Users/Administrator/Desktop/test/02.mp3", "C:/Users/Administrator/Desktop/test/03.mp3", "C:/Users/Administrator/Desktop/test/04.mp3"};
+//        concatMp3(filePath, true, targetFiles);
+        wavToMp3("Z:/course/17166/audio/418044/0.aac", "Z:/course/17166/audio/418044/");
     }
 }

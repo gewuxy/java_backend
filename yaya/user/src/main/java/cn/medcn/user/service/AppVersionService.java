@@ -6,6 +6,8 @@ import cn.medcn.common.service.BaseService;
 import cn.medcn.user.model.AppVersion;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Created by lixuan on 2017/6/8.
  */
@@ -24,4 +26,6 @@ public interface AppVersionService extends BaseService<AppVersion> {
      * @return
      */
     MyPage<AppVersion> findappManageListByPage(Pageable pageable);
+
+    List<AppVersion> findAppDownloadUrl(String appType);
 }
