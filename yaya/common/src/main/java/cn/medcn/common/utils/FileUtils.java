@@ -411,6 +411,17 @@ public class FileUtils {
         }
     }
 
+
+    public static void move(String sourcePath, String targetPath, String targetName){
+        File source = new File(sourcePath);
+        File targetDir = new File(targetPath);
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        source.renameTo(new File(targetPath + "/" + targetName));
+    }
+
     public static void main(String[] args) {
         //缩略图实际存储路径
        /* String dateFolderPath = CalendarUtils.getCurrentDate();
