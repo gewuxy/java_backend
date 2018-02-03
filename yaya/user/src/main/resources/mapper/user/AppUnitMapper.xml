@@ -28,9 +28,11 @@
     </select>
 
     <select id="findDoctorAccounts" resultType="cn.medcn.user.dto.AppUserDTO">
-      SELECT u.id,u.username,u.nickname,u.mobile,u.regist_date AS registerDate,u.province,u.city,u.zone,d.unit_name AS hospital,d.sub_unit_name AS department,u.headimg FROM t_app_user u LEFT JOIN t_app_user_detail d ON u.id = d.user_id
+      SELECT u.id,u.username,u.nickname,u.mobile,u.regist_date AS registerDate,u.province,u.city,u.zone,
+             d.unit_name AS hospital,d.sub_unit_name AS department,u.headimg
+      FROM t_app_user u LEFT JOIN t_app_user_detail d ON u.id = d.user_id
         <if test="id == null">
-            WHERE u.pub_flag!=1 AND  u.authed = TRUE
+            WHERE u.role_id=2 AND  u.authed = TRUE
             <if test="keyword!=null">
                 AND (
                 u.username LIKE CONCAT('%',#{keyword}, '%') OR
