@@ -154,6 +154,8 @@ public class DoctorAccountController extends BaseController {
                 }
                 appUser.setPassword(Constants.RESET_PASSWORD);
                 appUser.setRegistDate(new Date());
+                appUser.setAuthed(true);
+                appUser.setPubFlag(false);
                 appUserService.executeRegist(appUser,null,null);
                 addFlashMessage(redirectAttributes, "添加医生成功,初始密码为123456");
                 return "redirect:/yaya/doctor/list";
