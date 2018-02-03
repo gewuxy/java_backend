@@ -18,7 +18,7 @@
     <input  name="listType" type="hidden" value="${listType}"/>
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/user/list" class="breadcrumb form-search">
-    <input placeholder="昵称/用户名/电话" value="${keyWord}" size="40"  type="search" name="keyWord" maxlength="50" class="required"/>
+    <input placeholder="昵称/电话/邮箱" value="${keyWord}" size="40"  type="search" name="keyWord" maxlength="50" class="required"/>
     <input  name="listType" type="hidden" value="${listType}"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form>
@@ -27,6 +27,8 @@
     <tr>
         <th>ID</th>
         <th>昵称</th>
+        <th>手机</th>
+        <th>邮箱</th>
         <th>冻结日期</th>
         <th>冻结原因</th>
         <th>备注</th>
@@ -38,7 +40,16 @@
         <c:forEach items="${page.dataList}" var="user">
             <tr>
                 <td>${user.uid}</td>
-                <td>${user.nickName}</td>
+                <td>
+                    <c:if test="${fn:length(user.nickName)>8 }">
+                        ${fn:substring(user.nickName, 0, 8)}...
+                    </c:if>
+                    <c:if test="${fn:length(user.nickName)<=8 }">
+                        ${user.nickName}
+                    </c:if>
+                </td>
+                <td>${user.mobile}</td>
+                <td>${user.email}</td>
                 <td><fmt:formatDate value="${user.updateTime}" pattern="yyyyMMdd"/></td>
                 <td>${user.frozenReason}</td>
                 <td><input type="text" style="width: 70px;height: auto;" maxlength="10" value="${user.remark}"> &nbsp;<a href="#" onclick="remark(this,'${user.uid}')">备注</a></td>

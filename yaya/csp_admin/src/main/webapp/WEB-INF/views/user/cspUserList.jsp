@@ -19,14 +19,14 @@
     <input  name="listType" type="hidden" value="${listType}"/>
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/user/list" class="breadcrumb form-search">
-    <input placeholder="昵称/用户名/电话" value="${keyWord}" size="40"  type="search" name="keyWord" maxlength="50" class="required"/>
+    <input placeholder="昵称/电话/邮箱" value="${keyWord}" size="40"  type="search" name="keyWord" maxlength="50" class="required"/>
     <input  name="listType" type="hidden" value="${listType}"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
-    <tr><th>ID</th><th>昵称</th><th>注册日期</th><th>套餐等级</th><th>套餐日期</th><th>付费次数</th>
-        <th>付费总额(CNY)</th><th>付费总额(USD)</th><th>会议数</th><th>备注</th><th>操作</th>
+    <tr><th>ID</th><th>昵称</th><th>注册日期</th><th>电话</th><th>邮箱</th><th>套餐等级</th><th>套餐日期</th><th>付费次数</th>
+        <th>总额 ￥</th><th>总额 $</th><th>会议数</th><th>备注</th><th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -34,8 +34,17 @@
         <c:forEach items="${page.dataList}" var="user">
             <tr>
                 <td>${user.uid}</td>
-                <td>${user.nickName}</td>
+                <td>
+                    <c:if test="${fn:length(user.nickName)>8 }">
+                        ${fn:substring(user.nickName, 0, 8)}...
+                    </c:if>
+                    <c:if test="${fn:length(user.nickName)<=8 }">
+                        ${user.nickName}
+                    </c:if>
+                </td>
                 <td><fmt:formatDate value="${user.registerTime}" pattern="yyyyMMdd"/></td>
+                <td>${user.mobile}</td>
+                <td>${user.email}</td>
                 <td>${user.packageId eq 1 ? "标准版": user.packageId eq 2 ? "高级版": user.packageId eq 3 ? "专业版":"<span style='color: #9c0001'>未登录</span>"}</td>
                 <td>
                     <c:choose>
@@ -69,6 +78,9 @@
                             <shiro:hasPermission name="csp:user:frozen">
                                 <li><a href="#" onclick="active(4,'${user.uid}')">账号冻结</a></li>
                             </shiro:hasPermission>
+                            <shiro:hasPermission name="csp:user:edit">
+                                <li><a href="#" onclick="view('${user.uid}','${user.abroad}','${user.mobile}','${user.email}')">第三方登录</a></li>
+                            </shiro:hasPermission>
                         </ul>
                     </div>
                 </th>
@@ -94,14 +106,14 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
-<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title" style="text-align: center">升级</h4>
+                <h4 class="modal-title" style="text-align: center" id="title">升级</h4>
             </div>
             <form class="form-horizontal form-bordered form-row-strippe" id="modalForm" action="${ctx}/csp/user/package" method="post">
                 <div class="modal-body">
@@ -149,6 +161,60 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="bindTitle">第三方登录</h4>
+            </div>
+            <form class="form-horizontal form-bordered form-row-strippe" action="">
+                <div class="modal-body">
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-phone.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="mobile"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-wechat.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="wechat"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-weibo.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="weibo"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-facebook.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="facebook"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-twitter.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="twitter"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-email.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="email"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-medcn.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="medcn"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                </div>
+                <div class="modal-footer bg-info">
+                    <button type="button" class="btn green" data-dismiss="modal">返回</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
 
     $(function () {
@@ -164,7 +230,7 @@
         $("#actionType").val(actionType);
         $("#packageEnd").val(dateToStrings(""));
         $("#userId").val(userId);
-        $(".modal-title").html("冻结");
+        $("#title").html("冻结");
         $("#myModal").modal("show");
     }
 
@@ -182,11 +248,11 @@
         $("#oldId").val(packageId);
         $("#unlimited").val(unlimited);
         if(actionType == 1){ //升级
-            $(".modal-title").html("升级");
+            $("#title").html("升级");
             $(".packageLable").html("升级为：");
             $(".timeLable").html("有效期至：");
         }else if(actionType == 2){
-            $(".modal-title").html("降级");
+            $("#title").html("降级");
             $(".packageLable").html("降级为：");
             $(".timeLable").html("有效期至：");
         }else{
@@ -195,7 +261,7 @@
                 return false;
             }
             $("#packageId").prop("disabled", true);
-            $(".modal-title").html("修改时间");
+            $("#title").html("修改时间");
             $(".packageLable").html("当前为：");
             $(".timeLable").html("修改时间至：");
         }
@@ -279,6 +345,70 @@
                 }
             }
         });
+    }
+
+    //初始化冻结表单
+    function view(userId,abroad,mobile,email){
+        if(abroad == "false"){
+            $("#bindTitle").html("第三方登录(国内版)");
+        }else{
+            $("#bindTitle").html("第三方登录(海外版)");
+        }
+        if(!isEmpty(mobile)){
+            $("#mobile").text(mobile);
+            addBindStyle("mobile");
+        }
+        if(!isEmpty(email)){
+            $("#email").text(email);
+            addBindStyle("email");
+        }
+        $.ajax({
+            url:'${ctx}/csp/user/bind/view',
+            data:{"userId":userId},
+            dataType:"json",
+            type:"post",
+            success:function (data) {
+                if(data.code == "0"){
+                    initView(data.data);
+                    console.log(data);
+                }else{
+                    layer.msg("获取用户绑定信息失败");
+                }
+            }
+        });
+        $("#viewModal").modal("show");
+    }
+
+    function initView(data){
+        for(var i = 0;i < data.length;i++){
+            var nickName = data[i].nickName;
+            switch(data[i].thirdPartyId){
+                case 1:
+                    addBindInfo("wechat",nickName);
+                    break;
+                case 2:
+                    addBindInfo("weibo",nickName);
+                    break;
+                case 3:
+                    addBindInfo("facebook",nickName);
+                    break;
+                case 4:
+                    addBindInfo("twitter",nickName);
+                    break;
+                case 5:
+                    addBindInfo("medcn",nickName);
+                    break;
+            }
+        }
+    }
+
+    function addBindInfo(name,nickName){
+        $("#" + name).text(nickName);
+        addBindStyle(name);
+    }
+
+    function addBindStyle(name){
+        $("#" + name).next().text("绑定").css("color","#167afe");
     }
 </script>
 </body>

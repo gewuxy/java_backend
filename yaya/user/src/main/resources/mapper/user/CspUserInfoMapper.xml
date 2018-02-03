@@ -40,7 +40,7 @@
 
     <select id="findCspUserList" resultType="cn.medcn.user.dto.CspUserInfoDTO">
         SELECT cui.id as uid,cui.`abroad`,cui.`frozen_reason`,cui.frozen_state,cui.`nick_name`,cui.`remark`,
-        cui.`register_time`,cui.`state`,cup.`package_start`,cup.`package_end`,cup.`unlimited`,cui.`active`,
+        cui.`register_time`,cui.`state`,cup.`package_start`,cup.`package_end`,cup.`unlimited`,cui.`active`,cui.`mobile`,cui.`email`,
         cup.`package_id`,temp.payTimes,temp.payMoneyCn,temp.payMoneyUs,meet.meets
         FROM t_csp_user_info cui
         LEFT JOIN t_csp_user_package cup
@@ -63,10 +63,11 @@
         </if>
         <if test="keyWord != null">
             AND (cui.nick_name like CONCAT(#{keyWord}, '%') OR
-            cui.user_name like CONCAT(#{keyWord}, '%') OR
+            cui.email like CONCAT(#{keyWord}, '%') OR
             cui.mobile like CONCAT(#{keyWord}, '%')
             )
         </if>
+        ORDER by cui.register_time DESC
     </select>
 
     <select id="selectByUserName" resultType="cn.medcn.user.model.CspUserInfo">
