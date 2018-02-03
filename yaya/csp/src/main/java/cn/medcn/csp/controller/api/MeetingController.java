@@ -461,13 +461,9 @@ public class MeetingController extends CspBaseController {
             return error(local("upload.error"));
         }
 
-
-
-
-            //将音频转为MP3格式，并删除源文件
-            FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
-            FileUtils.deleteTargetFile(sourcePath);
-
+        //将音频转为MP3格式，并删除源文件
+        FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
+        FileUtils.deleteTargetFile(sourcePath);
 
         //没有下一个音频，开始合并音频
         if(!record.getHasNext()){
@@ -1738,7 +1734,7 @@ public class MeetingController extends CspBaseController {
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if(detail != null){
             Integer courseId = detail.getCourseId();
-            AudioCourse course = audioService.findAudioCourse(courseId);
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
             String userId = SecurityUtils.get().getId();
             if(!userId.equals(course.getCspUserId())){
                 return error(local("course.error.author"));
