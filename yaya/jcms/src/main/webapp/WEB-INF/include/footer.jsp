@@ -57,7 +57,7 @@
 <div class="v2-footer">
     <div class="page-width clearfix">
         <p class="t-center"> <a target="_blank" href="http://www.beian.gov.cn/"><img src="${statics}/images/icp.png" align="absmiddle"/> 粤公网安备 44010602003210号</a> <a href="http://www.miibeian.gov.cn/" target="_blank">粤ICP备12087993号</a> <a target="_blank"
-                                                                                                        href="${base}/upload/temp/service_certificate.pdf">互联网药品信息经营资格证：（粤）—经营性—2013—0001</a>    © 2012-2017  敬信科技 版权所有 | <a
+                                                                                                        href="${base}/upload/temp/service_certificate.pdf">互联网药品信息经营资格证：（粤）—经营性—2013—0001</a>    © 2012-2018  敬信科技 版权所有 | <a
                 href="${base}/help/disclaimer">免责声明</a> | <a href="${base}/help/updatelog">更新日志</a>
             <!--&nbsp;&nbsp;联系电话 : 020-38601688-->
         </p>
