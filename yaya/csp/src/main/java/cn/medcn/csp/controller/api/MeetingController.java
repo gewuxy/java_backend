@@ -548,7 +548,7 @@ public class MeetingController extends CspBaseController {
         //只有单个文件的处理 不需要合并 直接返回第一个音频名称
         if (filePathQueue.size() == 1) {
             String firstAudioPath = filePathQueue.get(0);
-            FileUtils.move(fileUploadBase + relativePath + detailId + "/" + firstAudioPath, fileUploadBase + relativePath, saveFileName);
+            FileUtils.move(firstAudioPath, fileUploadBase + relativePath, saveFileName);
         } else {//多个音频文件需要合并成一个文件
             String mergePath = fileUploadBase + relativePath + saveFileName;
             FFMpegUtils.concatMp3(mergePath, true, filePathQueue.toArray(new String[filePathQueue.size()]));
