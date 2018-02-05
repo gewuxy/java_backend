@@ -455,6 +455,7 @@ public interface MeetService extends BaseService<Meet> {
 
     void doEndMeet(Integer courseId);
 
+    Meet selectById(String id);
 }
 
 

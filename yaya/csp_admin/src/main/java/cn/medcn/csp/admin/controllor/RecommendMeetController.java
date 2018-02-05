@@ -114,14 +114,14 @@ public class RecommendMeetController extends BaseController {
      * 弹窗页面
      * @param model
      * @param pageable
-     * @param meetName
+     * @param keyword
      * @return
      */
     @RequestMapping(value = "/queryMeet")
-    public String queryMeet(Model model,Pageable pageable,String meetName){
-        if (!StringUtils.isEmpty(meetName)) {
-            pageable.getParams().put("meetName", meetName);
-            model.addAttribute("meetName", meetName);
+    public String queryMeet(Model model,Pageable pageable,String keyword){
+        if (!StringUtils.isEmpty(keyword)) {
+            pageable.getParams().put("keyword", keyword);
+            model.addAttribute("keyword", keyword);
         }
         MyPage<Meet> myPage = meetService.selectMeetList(pageable);
         model.addAttribute("page", myPage);
@@ -137,7 +137,8 @@ public class RecommendMeetController extends BaseController {
     @RequestMapping(value = "/selectOne")
     @ResponseBody
     public String selectOne(@RequestParam(value = "id", required = true) String id,Model model){
-        Meet meet = meetService.selectByPrimaryKey(id);
+        Meet meet = meetService.selectById(id);
+        meet.setImgPath(appFileBase + meet.getHeadimg());
         model.addAttribute("meet",meet);
         String json = JSON.toJSONString(meet);
         model.addAttribute("json",json);

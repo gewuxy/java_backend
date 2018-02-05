@@ -7,6 +7,7 @@ import cn.medcn.meet.dto.ActivityGuideDTO;
 import cn.medcn.meet.service.AudioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -21,6 +22,7 @@ import java.util.Map;
  * @Description: 活动接口
  */
 @RequestMapping(value = "/api/activity")
+@Controller
 public class ActivityController extends CspBaseController {
 
     @Autowired

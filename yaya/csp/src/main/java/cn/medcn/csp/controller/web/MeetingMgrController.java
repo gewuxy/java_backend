@@ -589,6 +589,11 @@ public class MeetingMgrController extends CspBaseController {
     @ResponseBody
     public String copy(@PathVariable Integer courseId, String title) {
         AudioCourse course = audioService.selectByPrimaryKey(courseId);
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
+        }
         Principal principal = getWebPrincipal();
         if (!principal.getId().equals(course.getCspUserId())) {
             return error(local("meeting.error.not_mine"));

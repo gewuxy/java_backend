@@ -2179,4 +2179,9 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
             }
         }
     }
+
+    @Override
+    public Meet selectById(String id) {
+        return meetDAO.selectById(id);
+    }
 }
