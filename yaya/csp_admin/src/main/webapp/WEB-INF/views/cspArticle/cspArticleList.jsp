@@ -56,8 +56,8 @@
                 </c:if>
                 </td>
                 <td>
-                    <shiro:hasPermission name="csp:article:view"><a href="${ctx}/csp/article/check?id=${data.id}&listType=${listType}">查看(check)</a></shiro:hasPermission>&nbsp;&nbsp;&nbsp;&nbsp;
-                    <shiro:hasPermission name="csp:article:edit"><a href="${ctx}/csp/article/edit?id=${data.id}&listType=${listType}">修改(update)</a></shiro:hasPermission>
+                    <shiro:hasPermission name="csp:article:view"><a href="${ctx}/csp/article/check?id=${data.id}&listType=${listType}">修改(check)</a></shiro:hasPermission>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <%--<shiro:hasPermission name="csp:article:edit"><a href="${ctx}/csp/article/edit?id=${data.id}&listType=${listType}">修改(update)</a></shiro:hasPermission>--%>
                 </td>
             </tr>
         </c:forEach>

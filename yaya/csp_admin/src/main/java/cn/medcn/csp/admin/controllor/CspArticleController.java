@@ -70,7 +70,7 @@ public class CspArticleController extends BaseController {
         String imgUrl = cspArticle.getImgUrl();
         model.addAttribute("imgURL",appFileBase+imgUrl);
         model.addAttribute("article", cspArticle);
-        return "/cspArticle/cspArticleInfo";
+        return "/cspArticle/cspArticleInfoEdit";
     }
 
     /**
