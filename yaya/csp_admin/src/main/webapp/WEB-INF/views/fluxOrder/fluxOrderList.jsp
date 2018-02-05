@@ -49,7 +49,7 @@
 <div class="clearfix breadcrumb">
 <div class="pull-right clearfix">
 <form id="search" method="post" class="breadcrumb form-search">
-    <input placeholder="订单号" value="${tradeId}" type="search" name="tradeId" maxlength="50" class="required"/>
+    <input placeholder="订单号" value="${tradeId}" type="search" name="tradeId" maxlength="50" class="required" id="tradeId"/>
     <shiro:hasPermission name="csp:order:view">
         <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
     </shiro:hasPermission>
@@ -128,9 +128,9 @@
 
     $(function(){
 
-        $("#btnSubmit").click(function () {
+       /* $("#btnSubmit").click(function () {
             $("#selectMoney").hide()
-        })
+        })*/
 
         //$("#startTime").val('${startTime}');
         //$("#endTime").val('${endTime}');
@@ -174,8 +174,8 @@
         });
 
 
-        $("#search").click(function () {
-            var id = $("#id").val();
+        $("#btnSubmit").click(function () {
+            var id = $("#tradeId").val();
             if(id == '' || id == undefined){
                 layer.msg("请输入订单号");
             }else{
