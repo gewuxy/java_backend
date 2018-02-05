@@ -843,7 +843,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             throw new SystemException(local("source.not.exists"));
         }
         if (course.getDeleted() != null && course.getDeleted()) {
-            throw new SystemException(local("course.error.api.deleted"));
+            throw new SystemException(local("source.has.deleted"));
         }
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
@@ -1339,7 +1339,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if(file.exists()){
             return showUrl;
         }
-
         //获取小程序码
         Map<String,Object> map = new HashMap<>();
         Integer start = page.indexOf("?") ;
