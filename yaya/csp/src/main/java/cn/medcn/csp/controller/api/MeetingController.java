@@ -197,7 +197,9 @@ public class MeetingController extends CspBaseController {
             }
 
             //处理简介文字的回车键替换成br
-            course.setInfo(course.getInfo().replace("\n", "<br>"));
+            if(course.getInfo() != null) {
+                course.setInfo(course.getInfo().replace("\n", "<br>"));
+            }
 
             //查询出星评信息
             if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
