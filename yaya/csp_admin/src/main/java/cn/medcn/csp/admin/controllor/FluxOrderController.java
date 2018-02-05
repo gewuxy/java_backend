@@ -91,6 +91,8 @@ public class FluxOrderController extends BaseController{
             model.addAttribute("queryMoney",queryMoney == null ? 0:queryMoney);
             model.addAttribute("page",page);
             model.addAttribute("flag",flag);
+            model.addAttribute("startTime",startTime);
+            model.addAttribute("endTime",endTime);
         } catch (ParseException e) {
             e.printStackTrace();
         }

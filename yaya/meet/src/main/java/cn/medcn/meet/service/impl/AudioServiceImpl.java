@@ -1339,7 +1339,6 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if(file.exists()){
             return showUrl;
         }
-
         //获取小程序码
         Map<String,Object> map = new HashMap<>();
         Integer start = page.indexOf("?") ;

@@ -41,8 +41,8 @@
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="pageForm" name="pageForm" action="${ctx}/csp/order/list" method="post">
     <input  name="type" type="hidden" value="${type}"/>
-    <input type="hidden" name="startTime" id="startTime" value="">
-    <input type="hidden" name="endTime" id="endTime" value="">
+    <input type="hidden" name="startTime" id="startTime" value="${startTime}">
+    <input type="hidden" name="endTime" id="endTime" value="${endTime}">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
 </form>
