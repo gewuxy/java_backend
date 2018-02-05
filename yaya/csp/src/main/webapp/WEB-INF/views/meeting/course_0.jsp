@@ -37,9 +37,11 @@
     </style>
 
 </head>
-<body>
+<body style="background:url(${theme.imgUrl}) " >
 <div class="warp">
-
+    <c:if test="${not empty theme && not empty theme.url}">
+        <audio id="bgMusicAudio" autoplay="autoplay" src="${theme.url}" hidden/>
+    </c:if>
     <div class="CSPMeeting-gallery details-gallery
     <c:if test="${watermark != null && watermark.state}">
         <c:choose>
@@ -672,6 +674,9 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
+                if($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").play();
+                }
                 $(this).hide();
                 started = true;
                 playing = true;

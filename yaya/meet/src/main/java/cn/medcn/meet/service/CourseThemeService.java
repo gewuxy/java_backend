@@ -26,6 +26,7 @@ public interface CourseThemeService extends BaseService<AudioCourseTheme> {
 
     MyPage<BackgroundMusic> findMusicPageList(Pageable pageable);
 
+    AudioCourseTheme findByCourseId(Integer courseId);
 
     void addBackgroundImage(BackgroundImage image);
 

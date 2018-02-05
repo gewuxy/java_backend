@@ -106,6 +106,11 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
     }
 
     @Override
+    public AudioCourseTheme findByCourseId(Integer courseId) {
+        return courseThemeDAO.findByCourseId(courseId);
+    }
+
+    @Override
     public void addBackgroundImage(BackgroundImage image) {
         backgroundImageDAO.insert(image);
     }
