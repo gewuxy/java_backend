@@ -1735,10 +1735,7 @@ public class MeetingController extends CspBaseController {
     public String deleteAudio(Integer detailId){
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if(detail != null){
-            Integer courseId = detail.getCourseId();
-            AudioCourse course = audioService.selectByPrimaryKey(courseId);
-            String userId = SecurityUtils.get().getId();
-            if(!userId.equals(course.getCspUserId())){
+            if(!audioService.checkCourseIsMine(SecurityUtils.get().getId(), detail.getCourseId())){
                 return error(local("course.error.author"));
             }
             detail.setAudioUrl("");
