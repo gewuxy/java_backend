@@ -1295,9 +1295,9 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/tourist/list")
     @ResponseBody
-    public String getGuideCourse(Integer sourceId) {
+    public String getGuideCourse(Integer courseId) {
         Pageable pageable = new Pageable();
-        pageable.put("id", sourceId == null ? Constants.NUMBER_ONE : sourceId);
+        pageable.put("id", courseId == null ? Constants.NUMBER_ONE : courseId);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
         if (!CheckUtils.isEmpty(page.getDataList())) {
             CourseDeliveryDTO.splitCoverUrl(page.getDataList(), fileBase);
