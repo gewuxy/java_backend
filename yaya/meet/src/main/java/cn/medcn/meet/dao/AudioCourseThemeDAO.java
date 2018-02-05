@@ -32,5 +32,6 @@ public interface AudioCourseThemeDAO extends Mapper<AudioCourseTheme> {
      */
     List<BackgroundMusic> findMusicList(@Param("showType") Integer showType);
 
+    AudioCourseTheme findByCourseId(@Param("courseId") Integer courseId);
 
 }

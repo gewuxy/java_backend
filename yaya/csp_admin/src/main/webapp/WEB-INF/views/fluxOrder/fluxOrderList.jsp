@@ -41,15 +41,15 @@
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="pageForm" name="pageForm" action="${ctx}/csp/order/list" method="post">
     <input  name="type" type="hidden" value="${type}"/>
-    <input type="hidden" name="startTime" id="startTime" value="">
-    <input type="hidden" name="endTime" id="endTime" value="">
+    <input type="hidden" name="startTime" id="startTime" value="${startTime}">
+    <input type="hidden" name="endTime" id="endTime" value="${endTime}">
     <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
     <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
 </form>
 <div class="clearfix breadcrumb">
 <div class="pull-right clearfix">
 <form id="search" method="post" class="breadcrumb form-search">
-    <input placeholder="订单号" value="${tradeId}" type="search" name="tradeId" maxlength="50" class="required"/>
+    <input placeholder="订单号" value="${tradeId}" type="search" name="tradeId" maxlength="50" class="required" id="tradeId"/>
     <shiro:hasPermission name="csp:order:view">
         <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
     </shiro:hasPermission>
@@ -128,9 +128,9 @@
 
     $(function(){
 
-        $("#btnSubmit").click(function () {
+       /* $("#btnSubmit").click(function () {
             $("#selectMoney").hide()
-        })
+        })*/
 
         //$("#startTime").val('${startTime}');
         //$("#endTime").val('${endTime}');
@@ -174,8 +174,8 @@
         });
 
 
-        $("#search").click(function () {
-            var id = $("#id").val();
+        $("#btnSubmit").click(function () {
+            var id = $("#tradeId").val();
             if(id == '' || id == undefined){
                 layer.msg("请输入订单号");
             }else{

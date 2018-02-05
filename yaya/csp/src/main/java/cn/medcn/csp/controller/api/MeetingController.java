@@ -129,7 +129,6 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
         CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
-
         return success(themeDTO);
     }
 
@@ -197,7 +196,9 @@ public class MeetingController extends CspBaseController {
             }
 
             //处理简介文字的回车键替换成br
-            course.setInfo(course.getInfo().replace("\n", "<br>"));
+            if (course.getInfo() != null) {
+                course.setInfo(course.getInfo().replace("\n", "<br>"));
+            }
 
             //查询出星评信息
             if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
@@ -244,7 +245,6 @@ public class MeetingController extends CspBaseController {
 
                 model.addAttribute("appStoreUrl", Constants.CSP_APP_STORE_ANDROID_URL);
 
-                //TODO 缺少星评页面
                 Live live = liveService.findByCourseId(courseId);
                 if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
                     model.addAttribute("totalLiveTime", CalendarUtils.formatTimesDiff(live.getStartTime(), live.getEndTime(), 0));
@@ -254,6 +254,12 @@ public class MeetingController extends CspBaseController {
                 course.setDetails(audioService.findDetailsByCourseId(courseId));
                 AudioCoursePlay play = audioService.findPlayState(courseId);
                 model.addAttribute("play", play);
+                //查询出讲本的背景音乐和皮肤
+                AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+                if (theme != null) {
+                    AudioCourseTheme.handleUrl(theme, fileBase);
+                    model.addAttribute("theme", theme);
+                }
             }
 
             audioService.handleHttpUrl(fileBase, course);
@@ -389,7 +395,7 @@ public class MeetingController extends CspBaseController {
         //删除源文件
         FileUtils.deleteTargetFile(sourcePath);
 
-        return handleUploadResult(record, relativePath, saveFileName);
+        return handleUploadResult(record, relativePath, saveFileName + "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
     }
 
 
@@ -1295,9 +1301,9 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/tourist/list")
     @ResponseBody
-    public String getGuideCourse(Integer sourceId) {
+    public String getGuideCourse(Integer courseId) {
         Pageable pageable = new Pageable();
-        pageable.put("id", sourceId == null ? Constants.NUMBER_ONE : sourceId);
+        pageable.put("id", courseId == null ? Constants.NUMBER_ONE : courseId);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
         if (!CheckUtils.isEmpty(page.getDataList())) {
             CourseDeliveryDTO.splitCoverUrl(page.getDataList(), fileBase);
@@ -1494,9 +1500,9 @@ public class MeetingController extends CspBaseController {
 
         //创建课件或者添加课件图片
         courseId = audioService.createAudioOrAddDetail(file, course,sort,type);
-        AudioCourseDTO dto = new AudioCourseDTO();
-        dto.setId(courseId);
-        return success(dto);
+        Map<String,Integer> map = new HashMap<>();
+        map.put("id",courseId);
+        return success(map);
     }
 
 
@@ -1742,10 +1748,7 @@ public class MeetingController extends CspBaseController {
     public String deleteAudio(Integer detailId){
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if(detail != null){
-            Integer courseId = detail.getCourseId();
-            AudioCourse course = audioService.selectByPrimaryKey(courseId);
-            String userId = SecurityUtils.get().getId();
-            if(!userId.equals(course.getCspUserId())){
+            if(!audioService.checkCourseIsMine(SecurityUtils.get().getId(), detail.getCourseId())){
                 return error(local("course.error.author"));
             }
             detail.setAudioUrl("");

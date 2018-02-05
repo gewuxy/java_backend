@@ -43,9 +43,12 @@
 
 <div class="clearfix breadcrumb">
     <div class="pull-right clearfix">
-        <form id="searchForm" method="post" class=" form-search" style="margin-bottom:0;">
+        <form id="searchForm" method="post" action="${ctx}/sys/package/stats/search" class=" form-search" style="margin-bottom:0;">
             <input placeholder="订单号" value="" size="40"  type="search" id="id" name="id" maxlength="50" class="required"/>
-            <input id="search" class="btn btn-primary" type="button" value="查询"/>
+            <input type="hidden" name="rmb" value="${rmb}">
+            <input type="hidden" name="usd" value="${usd}">
+            <input type="hidden" name="type" value="${type}">
+            <input id="search" class="btn btn-primary" type="submit" value="查询"/>
         </form>
     </div>
 
@@ -187,14 +190,10 @@
         });
 
 
-        $("#search").click(function () {
-            var id = $("#id").val();
-            if(id == '' || id == undefined){
-                layer.msg("请输入订单号");
-            }else{
-                window.location.href="${ctx}/sys/package/stats/search?id=" + id + "&rmb=" + '${rmb}' + "&usd=" + '${usd}' + "&type=" + ${type};
-            }
-        });
+
+
+
+
 
         $("#export").click(function () {
             window.location.href = "${ctx}/sys/package/stats/export?type=" + '${type}' + "&startTime=" + '${startTime}' + "&endTime=" + '${endTime}';

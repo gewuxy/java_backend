@@ -19,4 +19,10 @@ public class CourseThemeDTO implements Serializable {
     // 课程主题背景
     protected AudioCourseTheme courseTheme;
 
+    //课件总时长
+    protected Integer duration;
+
+    //课件是否有密码
+    protected Boolean hasPassword;
+
 }

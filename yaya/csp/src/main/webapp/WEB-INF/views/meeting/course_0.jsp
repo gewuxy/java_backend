@@ -37,9 +37,11 @@
     </style>
 
 </head>
-<body>
+<body style="background:url(${theme.imgUrl}) " >
 <div class="warp">
-
+    <c:if test="${not empty theme && not empty theme.url}">
+        <audio id="bgMusicAudio" autoplay="autoplay" src="${theme.url}" hidden/>
+    </c:if>
     <div class="CSPMeeting-gallery details-gallery
     <c:if test="${watermark != null && watermark.state}">
         <c:choose>
@@ -334,11 +336,13 @@
 
         var prevAudioSrc;
         $("#audioPlayer")[0].addEventListener("ended", function(){
-            console.log("audio play over ...");
-            if($("#audioPlayer")[0].src != prevAudioSrc){
-                galleryTop.slideNext();
+            if(activeItemIsVideo.length == 0){
+                console.log("audio play over ...");
+                if($("#audioPlayer")[0].src != prevAudioSrc){
+                    galleryTop.slideNext();
+                }
+                prevAudioSrc = $("#audioPlayer")[0].src;
             }
-            prevAudioSrc = $("#audioPlayer")[0].src;
         });
 //
         $("#audioPlayer")[0].addEventListener("error", function(){
@@ -411,16 +415,17 @@
                     //判断是否Iphone 的 Safari 浏览器
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
+                        activeItemIsVideo.get(0).play();
                         //判断是否已经播放完成
                         activeItemIsVideo.get(0).addEventListener('canplay',function(){
                             $('.isIphoneSafari').hide();
                             $('.boxAudio').addClass('none');
                         }, {once: true});
+                    } else {
+                        activeItemIsVideo.get(0).play();
                     }
-                    activeItemIsVideo.get(0).addEventListener('ended', function () {
-                        console.log("video play end ...");
-                        galleryTop.slideNext();
-                    }, {once: true});
+                    activeItemIsVideo.get(0).removeEventListener('ended', videoToNextAtOnce);
+                    activeItemIsVideo.get(0).addEventListener('ended', videoToNextAtOnce, {once: true});
 
                 }
             },
@@ -463,10 +468,7 @@
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
                     }
-                    activeItemIsVideo.get(0).addEventListener('ended', function () {
-                        console.log("video play end ...");
-                        galleryTop.slideNext();
-                    }, {once: true});
+                    activeItemIsVideo.get(0).addEventListener('ended', videoToNextAtOnce, {once: true});
 
                 }
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
@@ -477,6 +479,10 @@
         });
 
 
+        function videoToNextAtOnce(){
+            console.log("video play end ...");
+            galleryTop.slideNext();
+        }
 
 
         //启动全屏
@@ -515,6 +521,10 @@
 
         //弹出简介
         $('.info-popup-hook').click(function(){
+            clickOthers = true;
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
             layer.open({
                 type: 1,
                 area: ['95%','85%'],
@@ -536,6 +546,7 @@
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.height('auto');
                     }
+                    clickOthers = false;
                 }
             })
         });
@@ -663,6 +674,9 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
+                if($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").play();
+                }
                 $(this).hide();
                 started = true;
                 playing = true;
@@ -709,6 +723,7 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
+            clickOthers = true;
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
@@ -737,6 +752,7 @@
                         if(browser.isAndroid || activeItemIsVideo.length > 0){
                             activeItemIsVideo.attr('style','margin-top:0');
                         }
+                        clickOthers = false;
                     }
                 }
             ], {
@@ -747,6 +763,7 @@
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.attr('style','margin-top:0');
                     }
+                    clickOthers = false;
                 }
             });
         });
@@ -764,6 +781,7 @@
 
         });
 
+        var clickOthers = false;
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
@@ -784,8 +802,10 @@
                 end: function () {
                     //popupPalyer.play();
                     //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.height('auto');
+                    if (!clickOthers){
+                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                            activeItemIsVideo.height('auto');
+                        }
                     }
                 }
             })
@@ -793,7 +813,11 @@
 
         //星评弹出
         function openStarRate(){
+            clickOthers = true;
             $(".html5ShadePlay").hide();
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
             layer.open({
                 type: 1,
                 area: ['90%','85%'],
@@ -819,6 +843,7 @@
                         activeItemIsVideo.height('auto');
                     }
                     layer.closeAll();
+                    clickOthers = false;
                 }
             })
         }

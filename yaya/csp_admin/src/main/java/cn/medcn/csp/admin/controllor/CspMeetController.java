@@ -115,7 +115,9 @@ public class CspMeetController extends BaseController{
         }
         audioService.updateByPrimaryKeySelective(course);
         //更新缓存
-        cspUserService.updatePackagePrincipal(course.getCspUserId());
+        if (course.getCspUserId() != null){
+            cspUserService.updatePackagePrincipal(course.getCspUserId());
+        }
         return "redirect:/csp/meet/list";
     }
 
