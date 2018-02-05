@@ -21,7 +21,7 @@ public class BackgroundImage {
     // 图片名称
     protected String imgName;
     // 图片大小
-    protected Integer imgSize;
+    protected Float imgSize;
     // 图片地址
     protected String imgUrl;
 

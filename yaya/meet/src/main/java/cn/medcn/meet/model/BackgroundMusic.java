@@ -23,7 +23,7 @@ public class BackgroundMusic {
     // 音乐时长
     protected Integer duration;
     // 音乐大小
-    protected Integer size;
+    protected Float size;
     // 音乐地址
     protected String url;
 

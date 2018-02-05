@@ -171,7 +171,7 @@ public class SkipController extends CspBaseController {
     public String downloadApp(String local, HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (isWeChat(request)){
             // 微信扫描
-            return local + "/index/download";
+            return localeView("/index/download");
         } else {
             AppVersion appVersion = null;
             // 手机浏览器扫描 再判断ios或安卓手机

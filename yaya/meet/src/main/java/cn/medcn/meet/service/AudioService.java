@@ -451,4 +451,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @return
      */
     Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort,Integer type) throws SystemException;
+
+    ActivityGuideDTO findActivityCourse(Integer courseId);
 }

@@ -64,17 +64,32 @@
                         area: ['1000px', '90%'],
                         content: '${ctx}/yaya/recommendMeet/queryMeet',
                          success: function(layero, index){
-                             var body = layer.getChildFrame('body', index);
-                             var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-                            var data = body.html()//得到iframe页的body内容
+                           var body = layer.getChildFrame('body', index);
+                           var iframeWin = window[layero.find('iframe')[0]['name']]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                           var data = body.html()//得到iframe页的body内容
                              console.log(data);
-                           var name = JSON.parse(data);
-                           var val =  name.meetName;
-                             console.log(val);
-                            var id =  name.id;
-                             console.log(id);
+                           var meetData = JSON.parse(data);
+                           var val =  meetData.meetName;
+                           var depart =   meetData.depart;
+                           var imgPath =  meetData.imgPath;
+                           var hospital =  meetData.hospital;
+                           var lecturerName =  meetData.lecturerName;
+                           var title = meetData.title;
+                           var id =  meetData.id;
                              $("#meetName").val(val);
                              $("#meetId").val(id);
+                             $("#lecturer").val(lecturerName);
+                             $("#lecturerTile").val(title);
+                             $("#imgId").attr("src",imgPath);
+                             $("#lecturerHos").val(hospital);
+                            var all_select=$("#lecturerDepart > option");
+                             for(var i=0;i<all_select.length;i++){
+                                 var svalue=all_select[i].text;
+                                 if(depart == svalue){
+                                     $("#lecturerDepart").select2().val(depart).trigger("change");
+                                     break;
+                                 }
+                             }
                          }
                     });
                 }
@@ -85,13 +100,13 @@
     <div class="control-group">
         <label class="control-label">主讲者姓名:</label>
         <div class="controls">
-            <input type="search" name="lecturer" id="lecturer" maxlength="50" class="required input-xlarge" value="${lecturer.name}">
+            <input type="search" name="name" id="lecturer" maxlength="50" class="required input-xlarge" value="${lecturer.name}">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者职位:</label>
         <div class="controls">
-            <input type="search" name="lecturerTile" id="lecturerTile" maxlength="50" class="required input-xlarge" value="${lecturer.title}">
+            <input type="search" name="title" id="lecturerTile" maxlength="50" class="required input-xlarge" value="${lecturer.title}">
         </div>
     </div>
 
@@ -118,19 +133,19 @@
     <div class="control-group">
         <label class="control-label">主讲者所属医院:</label>
         <div class="controls">
-                <input type="search" name="lecturerHos" id="lecturerHos" maxlength="50" class="required input-xlarge" value="${lecturer.hospital}">
+                <input type="search" name="hospital" id="lecturerHos" maxlength="50" class="required input-xlarge" value="${lecturer.hospital}">
         </div>
     </div>
     <div class="control-group">
         <label class="control-label">主讲者所属科室:</label>
         <div class="controls">
-            <select id="lecturerDepart" name="lecturerDepart" style="width: 150px;">
-                <option value="">科室</option>
+            <select id="lecturerDepart" name="depart" style="width: 150px;">
+                <option value="" >科室</option>
                 <c:forEach items="${departments}" var="d">
                     <option value="${d}"}>${d}</option>
                 </c:forEach>
                 <script>
-                    document.getElementById("lecturerDepart").value="${lecturer.depart}";
+
                 </script>
             </select>&nbsp;&nbsp;
         </div>

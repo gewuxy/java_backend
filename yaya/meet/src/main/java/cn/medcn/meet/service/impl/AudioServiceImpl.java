@@ -842,6 +842,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course == null) {
             throw new SystemException(local("source.not.exists"));
         }
+        if (course.getDeleted() != null && course.getDeleted()) {
+            throw new SystemException(local("course.error.api.deleted"));
+        }
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
@@ -1566,9 +1569,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             if(type == AudioCourse.PlayType.normal.ordinal()){
                 AudioCoursePlay play = new AudioCoursePlay();
                 play.setCourseId(course.getId());
+                play.setId(StringUtils.nowStr());
                 play.setPlayPage(0);
                 play.setPlayState(0);
-                audioCoursePlayDAO.insertSelective(play);
+                audioCoursePlayDAO.insert(play);
             }
 
         }
@@ -1603,5 +1607,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         addDetail(detail);
 
         return courseId;
+    }
+
+    @Override
+    public ActivityGuideDTO findActivityCourse(Integer courseId) {
+        return audioCourseDAO.findActivityCourse(courseId);
     }
 }

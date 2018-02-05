@@ -22,7 +22,7 @@
 </form>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="searchForm" method="post" class="breadcrumb form-search">
-    <input placeholder="会议名称" value="${meetName}" size="40"  type="search" name="meetName" maxlength="50" class="required"/>&nbsp;&nbsp;
+    <input placeholder="会议名称/单位号名称" value="${keyword}" size="40"  type="search" name="keyword" maxlength="50" class="required"/>&nbsp;&nbsp;
 <shiro:hasPermission name = "yaya:recommendMeet:view">
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询" onclick="return page();"/>
 </shiro:hasPermission>
@@ -32,6 +32,7 @@
     <thead><tr>
         <th>ID</th>
         <th>会议名称</th>
+        <th>所属单位号</th>
         <th>操作</th>
     </tr></thead>
     <tbody>
@@ -40,6 +41,7 @@
             <tr>
                 <td id="meetId">${meet.id}</td>
                 <td id="name">${meet.meetName}</td>
+                <td id="nickName">${meet.nickName}</td>
                 <td>
                     <a href="${ctx}/yaya/recommendMeet/selectOne?id=${meet.id}" onclick="selectOneOut()">选中</a>
                 </td>

@@ -69,6 +69,7 @@ public class CspMeetController extends BaseController{
     @Autowired
     protected RedisCacheUtils<String> redisCacheUtils;
 
+
     @RequestMapping(value="/list")
     @Log(name = "获取会议列表")
     public String searchMeetList(Pageable pageable, Integer deleted,String keyword, Model model){
@@ -103,13 +104,18 @@ public class CspMeetController extends BaseController{
 
     @RequestMapping(value="/delete")
     @Log(name = "关闭会议")
-    public String delete(Integer id,RedirectAttributes redirectAttributes){
+    public String delete(Integer id, Integer status, RedirectAttributes redirectAttributes){
         AudioCourse course = audioService.selectByPrimaryKey(id);
-        course.setDeleted(true);
+        if (status == 1) { // 关闭会议
+            course.setDeleted(true);
+            addFlashMessage(redirectAttributes, "关闭成功");
+        } else { // 撤销关闭会议
+            course.setDeleted(false);
+            addFlashMessage(redirectAttributes, "撤销关闭成功");
+        }
         audioService.updateByPrimaryKeySelective(course);
         //更新缓存
         cspUserService.updatePackagePrincipal(course.getCspUserId());
-        addFlashMessage(redirectAttributes, "关闭成功");
         return "redirect:/csp/meet/list";
     }
 

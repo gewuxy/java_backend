@@ -31,6 +31,9 @@ public class FileUtils {
     // 缩略图片高
     public static int thumbHeight = 120;
 
+    // 背景音乐存放路径
+    public static String backgroundMusicPath = "";
+
 
     public static String readFromInputStream(InputStream inputStream){
         InputStreamReader isr = null;
@@ -408,14 +411,30 @@ public class FileUtils {
         }
     }
 
+
+    public static void move(String sourcePath, String targetPath, String targetName){
+        File source = new File(sourcePath);
+        File targetDir = new File(targetPath);
+        if (!targetDir.exists()) {
+            targetDir.mkdirs();
+        }
+
+        source.renameTo(new File(targetPath + "/" + targetName));
+    }
+
     public static void main(String[] args) {
         //缩略图实际存储路径
-        String dateFolderPath = CalendarUtils.getCurrentDate();
+       /* String dateFolderPath = CalendarUtils.getCurrentDate();
         String filePath = realUploadPath + dateFolderPath + "\\";
         System.out.println(filePath);
 
         File file = new File(filePath + "18011816525170399094.png");
 
-        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));
+        System.out.println("缩略图："+thumbnailUploadImage(file, thumbWidth, thumbHeight, filePath, filePath));*/
+
+       String sourcePath = "Z:/course/17166/audio/418043/0.mp3";
+       String targetPath = "Z:/course/17166/audio/";
+       String fileName = cn.medcn.common.utils.StringUtils.nowStr() + ".mp3";
+       move(sourcePath, targetPath, fileName);
     }
 }

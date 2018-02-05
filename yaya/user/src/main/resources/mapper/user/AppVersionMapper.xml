@@ -10,4 +10,11 @@
     <select id="findappManageListByPage" resultType="cn.medcn.user.model.AppVersion">
         SELECT * FROM t_app_version ORDER BY update_time DESC
     </select>
+
+
+    <select id="findAppDownloadUrl" resultType="cn.medcn.user.model.AppVersion">
+        SELECT * FROM t_app_version where app_type=#{appType}
+        AND (drive_tag = 'ios' or drive_tag='android') ORDER BY version desc LIMIT 2
+    </select>
+
 </mapper>

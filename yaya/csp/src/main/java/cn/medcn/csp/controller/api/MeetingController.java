@@ -18,22 +18,19 @@ import cn.medcn.csp.dto.RecordUploadDTO;
 import cn.medcn.csp.dto.ReportType;
 import cn.medcn.csp.dto.ZeGoCallBack;
 import cn.medcn.csp.live.LiveOrderHandler;
-import cn.medcn.meet.dto.*;
-import cn.medcn.meet.service.*;
-import cn.medcn.user.model.Principal;
 import cn.medcn.csp.security.SecurityUtils;
 import cn.medcn.csp.utils.TXLiveUtils;
+import cn.medcn.meet.dto.*;
 import cn.medcn.meet.model.*;
+import cn.medcn.meet.service.*;
 import cn.medcn.user.model.CspPackage;
 import cn.medcn.user.model.CspUserInfo;
-import cn.medcn.user.model.CspUserPackage;
 import cn.medcn.user.model.EmailTemplate;
+import cn.medcn.user.model.Principal;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.EmailTempService;
 import cn.medcn.weixin.config.WeixinConfig;
 import cn.medcn.weixin.service.WXTokenService;
-import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -44,24 +41,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import static cn.medcn.common.Constants.*;
-import static cn.medcn.csp.CspConstants.COURSE_RATE_TICKET_KEY;
-import static cn.medcn.csp.CspConstants.MEET_AFTER_START_EXPIRE_HOURS;
-import static cn.medcn.csp.CspConstants.ZEGO_SUCCESS_CODE;
+import static cn.medcn.csp.CspConstants.*;
 
 /**
  * 会议控制器
@@ -407,7 +396,7 @@ public class MeetingController extends CspBaseController {
     protected String handleUploadResult(RecordUploadDTO record, String relativePath, String saveFileName) {
         AudioCourseDetail detail = audioService.findDetail(record.getDetailId());
 
-        detail.setAudioUrl(relativePath + saveFileName + "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix);
+        detail.setAudioUrl(relativePath + saveFileName);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
         if (record.getPlayType() == AudioCourse.PlayType.normal.getType()) {
             audioService.updateDetail(detail);
@@ -415,8 +404,9 @@ public class MeetingController extends CspBaseController {
 
         handleLiveOrRecord(record.getCourseId(), record.getPlayType(), record.getPageNum(), detail);
 
-        Map<String, String> result = new HashMap<>();
+        Map<String, Object> result = new HashMap<>();
         result.put("audioUrl", fileBase + relativePath + saveFileName);
+        result.put("duration", detail.getDuration());
         return success(result);
     }
 
@@ -442,15 +432,16 @@ public class MeetingController extends CspBaseController {
 
         String osType = LocalUtils.getOSType();
         String suffix = null;
-        //小程序上传音频，格式为MP3
+        //小程序上传音频，格式为aac
         if(StringUtils.isEmpty(osType)){
-            suffix = "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
+            suffix = "." + FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix;
         }else{
             suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
         }
 
         //未合并的音频存放路径
-        String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/" + record.getDetailId() + "/";
+        String parentRelativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
+        String relativePath = parentRelativePath + record.getDetailId() + "/";
         File dir = new File(fileUploadBase + relativePath);
         if (!dir.exists()) {
             dir.mkdirs();
@@ -458,18 +449,23 @@ public class MeetingController extends CspBaseController {
 
         String saveFileName = record.getAudioNum() + "";
         String sourcePath = fileUploadBase + relativePath + saveFileName + suffix;
+        //aac文件对应的MP3文件
+        String mp3SourcePath = fileUploadBase + relativePath + saveFileName +  "." + FileTypeSuffix.AUDIO_SUFFIX_MP3.suffix;
         File saveFile = new File(sourcePath);
+        File mp3File = new File(mp3SourcePath);
         try {
+            if(mp3File.exists()){
+                //如果aac文件对应的MP3文件存在，删除原来的MP3文件，防止后面aac转MP3时出错
+                mp3File.delete();
+            }
             file.transferTo(saveFile);
         } catch (IOException e) {
             return error(local("upload.error"));
         }
 
-        if(!StringUtils.isEmpty(osType)){
-            //将音频转为MP3格式，并删除源文件
-            FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath);
-            FileUtils.deleteTargetFile(sourcePath);
-        }
+        //将音频转为MP3格式，并删除源文件
+        FFMpegUtils.wavToMp3(sourcePath, fileUploadBase + relativePath + "/");
+        FileUtils.deleteTargetFile(sourcePath);
 
         //没有下一个音频，开始合并音频
         if(!record.getHasNext()){
@@ -478,11 +474,11 @@ public class MeetingController extends CspBaseController {
             //整合音频
             String saveName;
             try {
-                saveName = mergeUploadAudio(list, relativePath);
+                saveName = mergeUploadAudio(list, parentRelativePath, record.getDetailId());
             } catch (SystemException e) {
                 return error(e.getMessage());
             }
-            return handleUploadResult(record, relativePath, saveName);
+            return handleUploadResult(record, parentRelativePath, saveName);
         }
         return success();
     }
@@ -524,7 +520,7 @@ public class MeetingController extends CspBaseController {
         //整合音频
         String saveFileName;
         try {
-            saveFileName = mergeUploadAudio(filePathQueue, relativePath);
+            saveFileName = mergeUploadAudio(filePathQueue, relativePath, record.getDetailId());
         } catch (SystemException e) {
             return error(e.getMessage());
         }
@@ -535,9 +531,6 @@ public class MeetingController extends CspBaseController {
         return handleUploadResult(record, relativePath, saveFileName);
     }
 
-
-
-
     /**
      * 处理MP3合并
      *
@@ -546,7 +539,7 @@ public class MeetingController extends CspBaseController {
      * @return
      * @throws SystemException
      */
-    protected String mergeUploadAudio(List<String> filePathQueue, String relativePath) throws SystemException {
+    protected String mergeUploadAudio(List<String> filePathQueue, String relativePath, Integer detailId) throws SystemException {
         String saveFileName = StringUtils.nowStr() + MINI_PROGRAM_UPLOAD_AUDIO_FORMAT;
 
         if (CheckUtils.isEmpty(filePathQueue)) {
@@ -555,10 +548,10 @@ public class MeetingController extends CspBaseController {
         //只有单个文件的处理 不需要合并 直接返回第一个音频名称
         if (filePathQueue.size() == 1) {
             String firstAudioPath = filePathQueue.get(0);
-            saveFileName = FileUtils.getFileName(firstAudioPath);
+            FileUtils.move(firstAudioPath, fileUploadBase + relativePath, saveFileName);
         } else {//多个音频文件需要合并成一个文件
             String mergePath = fileUploadBase + relativePath + saveFileName;
-            FFMpegUtils.concatMp3(mergePath, false, filePathQueue.toArray(new String[filePathQueue.size()]));
+            FFMpegUtils.concatMp3(mergePath, true, filePathQueue.toArray(new String[filePathQueue.size()]));
         }
         return saveFileName;
     }
@@ -1501,9 +1494,9 @@ public class MeetingController extends CspBaseController {
 
         //创建课件或者添加课件图片
         courseId = audioService.createAudioOrAddDetail(file, course,sort,type);
-        AudioCourseDTO dto = new AudioCourseDTO();
-        dto.setId(courseId);
-        return success(dto);
+        Map<String,Integer> map = new HashMap<>();
+        map.put("id",courseId);
+        return success(map);
     }
 
 
@@ -1651,18 +1644,18 @@ public class MeetingController extends CspBaseController {
         }
         Map<String,Object> map = new HashMap<>();
         //获取主题
-         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
+        if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
             List<BackgroundImage> imageList = courseThemeService.findImageList();
             BackgroundImage.HandelImgUrl(imageList,fileBase);
             map.put("imageList",imageList);
-             return success(map);
-         }else{
-             //获取背景音乐
-             List<BackgroundMusic> musicList = courseThemeService.findMusicList();
-             BackgroundMusic.HandelMusicUrl(musicList,fileBase);
-             map.put("musicList",musicList);
-             return success(map);
-         }
+            return success(map);
+        }else{
+            //获取背景音乐
+            List<BackgroundMusic> musicList = courseThemeService.findMusicList();
+            BackgroundMusic.HandelMusicUrl(musicList,fileBase);
+            map.put("musicList",musicList);
+            return success(map);
+        }
     }
 
 
@@ -1742,10 +1735,7 @@ public class MeetingController extends CspBaseController {
     public String deleteAudio(Integer detailId){
         AudioCourseDetail detail = audioService.findDetail(detailId);
         if(detail != null){
-            Integer courseId = detail.getCourseId();
-            AudioCourse course = audioService.findAudioCourse(courseId);
-            String userId = SecurityUtils.get().getId();
-            if(!userId.equals(course.getCspUserId())){
+            if(!audioService.checkCourseIsMine(SecurityUtils.get().getId(), detail.getCourseId())){
                 return error(local("course.error.author"));
             }
             detail.setAudioUrl("");
@@ -1755,5 +1745,23 @@ public class MeetingController extends CspBaseController {
         return success();
     }
 
+
+    /**
+     * 访问新手引导讲本
+     * @since csp1.2.0
+     * @return
+     */
+    @RequestMapping("/guide")
+    @ResponseBody
+    public String guide(){
+        Integer guideId;
+        if (LocalUtils.getLocalStr().equalsIgnoreCase(LocalUtils.Local.zh_CN.name())) {
+            guideId = AudioService.GUIDE_SOURCE_ID;
+        } else {
+            guideId = AudioService.ABROAD_GUIDE_SOURCE_ID;
+        }
+        AudioCourse course = audioService.findAudioCourse(guideId);
+        return success(course);
+    }
 
 }

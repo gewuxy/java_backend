@@ -127,6 +127,8 @@ public class DoctorAccountController extends BaseController {
             return "/yaya/doctor/editForm";
         }
 
+        String nickName = appUserDTO.getNickname();
+        appUserDTO.setLinkman(nickName);
         AppUser appUser = AppUserDTO.rebuildToDoctor(appUserDTO);
         AppUser emailAccount = null;
         if(!StringUtils.isEmpty(username)){
@@ -154,6 +156,8 @@ public class DoctorAccountController extends BaseController {
                 }
                 appUser.setPassword(Constants.RESET_PASSWORD);
                 appUser.setRegistDate(new Date());
+                appUser.setAuthed(true);
+                appUser.setPubFlag(false);
                 appUserService.executeRegist(appUser,null,null);
                 addFlashMessage(redirectAttributes, "添加医生成功,初始密码为123456");
                 return "redirect:/yaya/doctor/list";

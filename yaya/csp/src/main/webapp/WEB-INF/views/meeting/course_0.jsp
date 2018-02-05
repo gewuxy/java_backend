@@ -414,6 +414,7 @@
                         //判断是否已经播放完成
                         activeItemIsVideo.get(0).addEventListener('canplay',function(){
                             $('.isIphoneSafari').hide();
+                            $('.boxAudio').addClass('none');
                         }, {once: true});
                     }
                     activeItemIsVideo.get(0).addEventListener('ended', function () {
@@ -575,25 +576,26 @@
             }else if(current.parents('.swiper-container-horizontal').find(".swiper-slide-active")){
                 swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             }
-            dataSrc = swiperCurrent.attr('audio-src');
-            //如果有音频，才进行播放
-            if(dataSrc.length > 0){
-                $('.boxAudio').removeClass('none');
-                popupPalyer.load(dataSrc);
-                popupPalyer.play();
-                changePlayerStete(true);
-            } else {
-                popupPalyer.load('isNotSrc');
-                console.log('没加载音频');
-                $('.boxAudio').addClass('none');
-                changePlayerStete(true);
-                slideToNext();
-            }
+
             //如果有视频
             if(activeItemIsVideo.length > 0){
+                activeItemIsVideo[0].load()
                 changePlayerStete(true);
             } else {
-                return false;
+                dataSrc = swiperCurrent.attr('audio-src');
+                //如果有音频，才进行播放
+                if(dataSrc.length > 0){
+                    $('.boxAudio').removeClass('none');
+                    popupPalyer.load(dataSrc);
+                    popupPalyer.play();
+                    changePlayerStete(true);
+                } else {
+                    popupPalyer.load('isNotSrc');
+                    console.log('没加载音频');
+                    $('.boxAudio').addClass('none');
+                    changePlayerStete(true);
+                    slideToNext();
+                }
             }
 
 
@@ -609,13 +611,13 @@
         })
 
         var changePlayerStete = function(state){
-
             if(playerState || state == true){
-
                 playerState = false;
                 started = true;
+                popupPalyer.play();
                 //有video文件
                 if(activeItemIsVideo.length > 0){
+                    $('.boxAudio').addClass('none');
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();

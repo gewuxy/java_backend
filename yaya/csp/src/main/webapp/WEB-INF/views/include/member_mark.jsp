@@ -341,7 +341,7 @@
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook ${!isCN ? 'none' : ''}">
                                     <label for="2id11" class="item item-radius  pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" checked="checked" value="alipay_pc_direct" id="2id11">
+                                        <input type="radio" name="hgPayMode" class="none" checked="${isCN ? 'checked' : ''}" value="alipay_pc_direct" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="2id21" class="item item-radius">
@@ -355,7 +355,7 @@
                                 </div>
                                 <div class="pay-mode-list EN-hook ${isCN ? 'none' : ''}">
                                     <label for="2id31" class="item item-radius pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" value="paypal" id="2id31">
+                                        <input type="radio" name="hgPayMode" class="none" checked="${!isCN ? 'checked' : ''}" value="paypal" id="2id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -422,7 +422,7 @@
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook  ${!isCN ? 'none' : ''}">
                                     <label for="3id11" class="item item-radius  pay-on">
-                                        <input type="radio" name="pfPayMode" class="none"  checked="checked" value="alipay_pc_direct" id="3id11">
+                                        <input type="radio" name="pfPayMode" class="none"  checked="${isCN ? 'checked' : ''}" value="alipay_pc_direct" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="3id21" class="item item-radius">
@@ -436,7 +436,7 @@
                                 </div>
                                 <div class="pay-mode-list EN-hook  ${isCN ? 'none' : ''}">
                                     <label for="3id31" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" value="paypal" id="3id31">
+                                        <input type="radio" name="pfPayMode" class="none" checked="${!isCN ? 'checked' : ''}" value="paypal" id="3id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>

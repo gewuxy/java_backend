@@ -19,14 +19,14 @@
     <input  name="listType" type="hidden" value="${listType}"/>
 </form>
 <form id="searchForm" method="post" action="${ctx}/csp/user/list" class="breadcrumb form-search">
-    <input placeholder="昵称/用户名/电话" value="${keyWord}" size="40"  type="search" name="keyWord" maxlength="50" class="required"/>
+    <input placeholder="昵称/电话/邮箱" value="${keyWord}" size="40"  type="search" name="keyWord" maxlength="50" class="required"/>
     <input  name="listType" type="hidden" value="${listType}"/>
     <input id="btnSubmit" class="btn btn-primary" type="submit" value="查询"/>
 </form>
 <table id="contentTable" class="table table-striped table-bordered table-condensed">
     <thead>
-    <tr><th>ID</th><th>昵称</th><th>注册日期</th><th>套餐等级</th><th>套餐日期</th><th>付费次数</th>
-        <th>付费总额(CNY)</th><th>付费总额(USD)</th><th>会议数</th><th>备注</th><th>操作</th>
+    <tr><th>ID</th><th>昵称</th><th>注册日期</th><th>电话</th><th>邮箱</th><th>套餐等级</th><th>套餐日期</th><th>付费次数</th>
+        <th>总额 ￥</th><th>总额 $</th><th>会议数</th><th>备注</th><th>操作</th>
     </tr>
     </thead>
     <tbody>
@@ -34,8 +34,17 @@
         <c:forEach items="${page.dataList}" var="user">
             <tr>
                 <td>${user.uid}</td>
-                <td>${user.nickName}</td>
+                <td>
+                    <c:if test="${fn:length(user.nickName)>8 }">
+                        ${fn:substring(user.nickName, 0, 8)}...
+                    </c:if>
+                    <c:if test="${fn:length(user.nickName)<=8 }">
+                        ${user.nickName}
+                    </c:if>
+                </td>
                 <td><fmt:formatDate value="${user.registerTime}" pattern="yyyyMMdd"/></td>
+                <td>${user.mobile}</td>
+                <td>${user.email}</td>
                 <td>${user.packageId eq 1 ? "标准版": user.packageId eq 2 ? "高级版": user.packageId eq 3 ? "专业版":"<span style='color: #9c0001'>未登录</span>"}</td>
                 <td>
                     <c:choose>
@@ -69,20 +78,12 @@
                             <shiro:hasPermission name="csp:user:frozen">
                                 <li><a href="#" onclick="active(4,'${user.uid}')">账号冻结</a></li>
                             </shiro:hasPermission>
+                            <shiro:hasPermission name="csp:user:edit">
+                                <li><a href="#" onclick="view('${user.uid}','${user.abroad}','${user.mobile}','${user.email}')">第三方登录</a></li>
+                            </shiro:hasPermission>
                         </ul>
                     </div>
                 </th>
-                <%--<td>--%>
-                    <%--<shiro:hasPermission name="csp:user:edit">--%>
-                        <%--<a href="${ctx}/csp/user/viewOrRegister?id=${user.id}&actionType=3&listType=${listType}">修改</a>--%>
-                        <%--<c:if test="${user.active eq true}">--%>
-                            <%--<a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=1&listType=${listType}"  onclick="layerConfirm('确认要冻结该用户帐号吗？', this)">冻结</a>--%>
-                        <%--</c:if>--%>
-                    <%--</shiro:hasPermission>--%>
-                    <%--<shiro:hasPermission name="csp:user:del">--%>
-                         <%--<a data-href="${ctx}/csp/user/update?id=${user.id}&actionType=2&listType=${listType}"  onclick="layerConfirm('确认要删除该用户帐号吗？', this)">删除</a>--%>
-                    <%--</shiro:hasPermission>--%>
-                <%--</td>--%>
             </tr>
         </c:forEach>
     </c:if>
@@ -94,14 +95,14 @@
     </tbody>
 </table>
 <%@include file="/WEB-INF/include/pageable.jsp"%>
-<div class="modal fade hide" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                     &times;
                 </button>
-                <h4 class="modal-title" style="text-align: center">升级</h4>
+                <h4 class="modal-title" style="text-align: center" id="title">升级</h4>
             </div>
             <form class="form-horizontal form-bordered form-row-strippe" id="modalForm" action="${ctx}/csp/user/package" method="post">
                 <div class="modal-body">
@@ -149,30 +150,84 @@
         </div>
     </div>
 </div>
+<!-- 第三方绑定信息窗口-->
+<div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" style="display:none;">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="bindTitle">第三方登录</h4>
+            </div>
+            <form class="form-horizontal form-bordered form-row-strippe" action="">
+                <div class="modal-body">
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-phone.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="mobile"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-wechat.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="wechat"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-weibo.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="weibo"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-facebook.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="facebook"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-twitter.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="twitter"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-email.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="email"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                    <div style="margin-top: 2%;">
+                        <img src="${ctxStatic}/images/icon-user-medcn.png" alt="" style="width: 30px;">
+                        <span style="margin-left: 3%;position: relative;top:2px;" id="medcn"></span>
+                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    </div>
+                </div>
+                <div class="modal-footer bg-info">
+                    <button type="button" class="btn green" data-dismiss="modal">返回</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 <script>
-
     $(function () {
         var active = '${listType}';
-        $(".nav-tabs li:eq(" + active +")").addClass("active");
+        $(".nav-tabs li:eq(" + active + ")").addClass("active");
         initDateRangePicker("packageEnd");
     })
 
     //初始化冻结表单
-    function active(actionType,userId){
+    function active(actionType, userId) {
         $("#packageChange").hide();
         $("#dongjie").show();
         $("#actionType").val(actionType);
         $("#packageEnd").val(dateToStrings(""));
         $("#userId").val(userId);
-        $(".modal-title").html("冻结");
+        $("#title").html("冻结");
         $("#myModal").modal("show");
     }
 
     //初始化升级降级修改时间列表
-    function changePackages(actionType,userId,packageId,packageEnd,unlimited){
+    function changePackages(actionType, userId, packageId, packageEnd, unlimited) {
         $("#packageChange").show();
         $("#dongjie").hide();
-        if(packageId != undefined){
+        if (packageId != undefined) {
             $("#packageId").select2().val(packageId).trigger("change");
         }
         $("#packageEnd").val(packageEnd);
@@ -181,21 +236,21 @@
         $("#actionType").val(actionType);
         $("#oldId").val(packageId);
         $("#unlimited").val(unlimited);
-        if(actionType == 1){ //升级
-            $(".modal-title").html("升级");
+        if (actionType == 1) { //升级
+            $("#title").html("升级");
             $(".packageLable").html("升级为：");
             $(".timeLable").html("有效期至：");
-        }else if(actionType == 2){
-            $(".modal-title").html("降级");
+        } else if (actionType == 2) {
+            $("#title").html("降级");
             $(".packageLable").html("降级为：");
             $(".timeLable").html("有效期至：");
-        }else{
-            if(isEmpty(packageId) || packageId == 1){
+        } else {
+            if (isEmpty(packageId) || packageId == 1) {
                 layer.msg("该版本不能修改时间");
                 return false;
             }
             $("#packageId").prop("disabled", true);
-            $(".modal-title").html("修改时间");
+            $("#title").html("修改时间");
             $(".packageLable").html("当前为：");
             $(".timeLable").html("修改时间至：");
         }
@@ -203,82 +258,145 @@
     }
 
     function submitBtn() {
-        top.layer.confirm("确认提交吗", function(){
+        top.layer.confirm("确认提交吗", function () {
             top.layer.closeAll('dialog');
             var actionType = $("#actionType").val();
             var oldId = $("#oldId").val();
             var packageId = $("#packageId").val();
             var unlimited = $("#unlimited").val();
-            if(actionType == 1 || actionType == 2) {
-                if(actionType == 1){  // 升级
+            if (actionType == 1 || actionType == 2) {
+                if (actionType == 1) {  // 升级
                     if (packageId == "" || packageId <= oldId) {
                         layer.msg("请选择比当前高的套餐后进行升级");
                         return false;
                     }
-                }else{
-                    if(packageId >= oldId){
+                } else {
+                    if (packageId >= oldId) {
                         layer.msg("请选择比当前低的套餐后进行降级");
                         return false;
                     }
-                    if(packageId == ""){
+                    if (packageId == "") {
                         layer.msg("降级最低版本为标准版");
                         return false;
                     }
                 }
-                if(packageId != 1){
-                    if(isEmpty($("#packageEnd").val())){
+                if (packageId != 1) {
+                    if (isEmpty($("#packageEnd").val())) {
                         layer.msg("有效期时间不能为空");
                         return false;
                     }
                 }
             }
             //數字平臺不能操作
-            if (oldId == 3 && unlimited == "true"){
+            if (oldId == 3 && unlimited == "true") {
                 layer.msg("不能对敬信数字平台用户进行操作");
                 return false;
             }
             $("#packageEnd").val($("#packageEnd").val() + " 23:59:59");
             $("#packageId").prop("disabled", false);
-           $("#modalForm").submit();
+            $("#modalForm").submit();
         });
     }
 
     //初始化时间时间空间
-    function initDateRangePicker(id){
+    function initDateRangePicker(id) {
         $('#updateTimes').dateRangePicker({
             singleMonth: true,
             showShortcuts: false,
             showTopbar: false,
             format: 'YYYY-MM-DD',
             autoClose: false,
-            singleDate:true,
+            singleDate: true,
             startDate: nextDay(),
             time: {
                 enabled: true
             }
-        }).bind('datepicker-change',function(event,obj){
-            //console.log(obj.value)
+        }).bind('datepicker-change', function (event, obj) {
             $(this).find("input").val(obj.value);
             $("#" + id).val(obj.value);
         });
     }
 
     //修改备注
-    function remark(obj,userId){
+    function remark(obj, userId) {
         var remark = $(obj).parent().find("input").val();
         $.ajax({
-            url:'${ctx}/csp/user/remark',
-            data:{"id":userId,"remark":remark},
-            dataType:"json",
-            type:"post",
-            success:function (data) {
-                if(data.code == "0"){
+            url: '${ctx}/csp/user/remark',
+            data: {"id": userId, "remark": remark},
+            dataType: "json",
+            type: "post",
+            success: function (data) {
+                if (data.code == "0") {
                     layer.msg("更新成功");
-                }else{
+                } else {
                     layer.msg("修改备注失败，请重试");
                 }
             }
         });
+    }
+
+    //查看第三方登录
+    function view(userId, abroad, mobile, email) {
+        if (abroad == "false") {
+            $("#bindTitle").html("第三方登录(国内版)");
+        } else {
+            $("#bindTitle").html("第三方登录(海外版)");
+        }
+        if (!isEmpty(mobile)) {
+            $("#mobile").text(mobile);
+            addBindStyle("mobile");
+        }
+        if (!isEmpty(email)) {
+            $("#email").text(email);
+            addBindStyle("email");
+        }
+        $.ajax({
+            url: '${ctx}/csp/user/bind/view',
+            data: {"userId": userId},
+            dataType: "json",
+            type: "post",
+            success: function (data) {
+                if (data.code == "0") {
+                    initView(data.data);
+                } else {
+                    layer.msg("获取用户绑定信息失败");
+                }
+            }
+        });
+        $("#viewModal").modal("show");
+    }
+
+    //加载绑定信息
+    function initView(data) {
+        for (var i = 0; i < data.length; i++) {
+            var nickName = data[i].nickName;
+            switch (data[i].thirdPartyId) {
+                case 1:
+                    addBindInfo("wechat", nickName);
+                    break;
+                case 2:
+                    addBindInfo("weibo", nickName);
+                    break;
+                case 3:
+                    addBindInfo("facebook", nickName);
+                    break;
+                case 4:
+                    addBindInfo("twitter", nickName);
+                    break;
+                case 5:
+                    addBindInfo("medcn", nickName);
+                    break;
+            }
+        }
+    }
+
+    function addBindInfo(name, nickName) {
+        $("#" + name).text(nickName);
+        addBindStyle(name);
+    }
+
+    function addBindStyle(name) {
+        $("#" + name).next().text("绑定").css("color", "#167afe");
     }
 </script>
 </body>

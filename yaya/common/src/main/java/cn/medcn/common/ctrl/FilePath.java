@@ -16,6 +16,8 @@ public enum FilePath{
     ARTICLE("article"),//新闻 内容
     COURSE("course"),//ppt图片语音
     GOODS("goods"),// 象城礼品图片存放路径
+    BACKGROUND_IMAGE("background/image"),// 背景图片存放路径
+    BACKGROUND_MUSIC("background/music"),// 背景音乐存放路径
     OTHERS("others");
 
     public String path;

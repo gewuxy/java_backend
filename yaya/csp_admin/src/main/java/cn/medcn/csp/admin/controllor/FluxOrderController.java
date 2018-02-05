@@ -3,6 +3,7 @@ package cn.medcn.csp.admin.controllor;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.csp.admin.log.Log;
 import cn.medcn.user.model.CspUserInfo;
@@ -18,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -61,27 +65,35 @@ public class FluxOrderController extends BaseController{
         pageable.put("type",type);
         MyPage<FluxOrder> page = null;
         Float queryMoney = null;
-        if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)){
-            pageable.getParams().put("startTime",startTime);
-            pageable.getParams().put("endTime",endTime);
-            if (type == 0){
-                queryMoney = chargeService.findOrderListByTime(startTime,endTime);
-            }else {
-                queryMoney = chargeService.findOrderListByTimeUs(startTime,endTime);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        String flag = "1";
+        try {
+            if (StringUtils.isNotEmpty(startTime) && StringUtils.isNotEmpty(endTime)){
+                flag = "2";
+                Date fluxEndTime = sdf.parse(endTime);
+                Date calendarDay = CalendarUtils.calendarDay(fluxEndTime, 1);
+                String formatDay = sdf.format(calendarDay);
+                pageable.getParams().put("startTime",startTime);
+                pageable.getParams().put("endTime",formatDay);
+                if (type == 0){
+                    queryMoney = chargeService.findOrderListByTime(startTime,formatDay);
+                }else {
+                    queryMoney = chargeService.findOrderListByTimeUs(startTime,formatDay);
+                }
+
             }
 
+            if (type == 0){
+                page= chargeService.findFluxOrderList(pageable);
+            }else {
+                page= chargeService.findFluxOrderListByUs(pageable);
+            }
+            model.addAttribute("queryMoney",queryMoney == null ? 0:queryMoney);
+            model.addAttribute("page",page);
+            model.addAttribute("flag",flag);
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
-
-        if (type == 0){
-            page= chargeService.findFluxOrderList(pageable);
-        }else {
-            page= chargeService.findFluxOrderListByUs(pageable);
-        }
-        model.addAttribute("queryMoney",queryMoney == null ? 0:queryMoney);
-        model.addAttribute("page",page);
-        model.addAttribute("startTime",startTime);
-        model.addAttribute("endTime",endTime);
-
         return "/fluxOrder/fluxOrderList";
     }
 

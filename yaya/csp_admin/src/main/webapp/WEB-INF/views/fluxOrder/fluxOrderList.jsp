@@ -108,12 +108,12 @@
         <tr>
             <td>交易成功金额</td>
             <td colspan="8">
-                <c:if test="${startTime == null && endTime == null}">
+                <c:if test="${flag == '1'}">
                     <c:if test="${type == 0}"><fmt:formatNumber type="number" value="${rmb }" pattern="0.00" maxFractionDigits="2"/></c:if>
                     <c:if test="${type == 1}"><fmt:formatNumber type="number" value="${usd }" pattern="0.00" maxFractionDigits="2"/></c:if>
                 </c:if>
-                <c:if test="${not empty queryMoney && startTime != null && endTime != null}">
-                    <fmt:formatNumber type="number" value="${queryMoney }" pattern="0.00" maxFractionDigits="2"/>
+                <c:if test="${flag == '2'}">
+                    <fmt:formatNumber type="number" value="${queryMoney}" pattern="0.00" maxFractionDigits="2"/>
                 </c:if>
                 <c:if test="${type == 0}">CNY</c:if><c:if test="${type == 1}">USD</c:if>
             </td>
@@ -132,8 +132,8 @@
             $("#selectMoney").hide()
         })
 
-        $("#startTime").val('${startTime}');
-        $("#endTime").val('${endTime}');
+        //$("#startTime").val('${startTime}');
+        //$("#endTime").val('${endTime}');
 
 
 
@@ -147,10 +147,10 @@
             showTopbar: false,
             startOfWeek: 'monday',
             separator : ' ~ ',
-            format: 'YYYY/MM/DD HH:mm',
+            format: 'YYYY-MM-DD',
             autoClose: false,
             time: {
-                enabled: true
+                enabled: false
             }
         }).bind('datepicker-first-date-selected', function(event, obj){
             /*首次点击的时间*/
