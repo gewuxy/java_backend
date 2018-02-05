@@ -391,7 +391,7 @@ public class MeetingController extends CspBaseController {
         //删除源文件
         FileUtils.deleteTargetFile(sourcePath);
 
-        return handleUploadResult(record, relativePath, saveFileName);
+        return handleUploadResult(record, relativePath, saveFileName + suffix);
     }
 
 
