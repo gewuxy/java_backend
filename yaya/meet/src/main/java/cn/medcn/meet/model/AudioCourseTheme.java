@@ -35,6 +35,13 @@ public class AudioCourseTheme {
     // 图片地址
     @Transient
     protected String imgUrl;
+    @Transient
+    // 推荐列表排序
+    protected Integer imgRecomSort;
+    @Transient
+    // 更多列表排序
+    protected Integer imgSort;
+
 
     // 背景音乐
     @Transient
@@ -48,13 +55,23 @@ public class AudioCourseTheme {
     // 音乐地址
     @Transient
     protected String url;
-
+    @Transient
+    // 推荐列表排序
+    protected Integer recomSort;
+    @Transient
+    // 更多列表排序
+    protected Integer sort;
 
     public enum ImageMusic{
         IMAGE,
         MUSIC;
     }
 
+    // 显示类型
+    public enum ShowType {
+        RECOMList,// 推荐列表
+        MOREList;// 更多列表
+    }
 
     /**
      * 拼接完整的主题和背景音乐地址

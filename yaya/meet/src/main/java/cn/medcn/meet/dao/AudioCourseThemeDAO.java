@@ -24,13 +24,13 @@ public interface AudioCourseThemeDAO extends Mapper<AudioCourseTheme> {
      * 主题列表
      * @return
      */
-    List<BackgroundImage> findImageList();
+    List<BackgroundImage> findImageList(@Param("showType") Integer showType);
 
     /**
      * 背景音乐列表
      * @return
      */
-    List<BackgroundMusic> findMusicList();
+    List<BackgroundMusic> findMusicList(@Param("showType") Integer showType);
 
 
 }

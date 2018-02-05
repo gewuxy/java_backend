@@ -80,14 +80,14 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
     }
 
     @Override
-    public List<BackgroundImage> findImageList() {
-        List<BackgroundImage> list = courseThemeDAO.findImageList();
+    public List<BackgroundImage> findImageList(Integer showType) {
+        List<BackgroundImage> list = courseThemeDAO.findImageList(showType);
         return list;
     }
 
     @Override
-    public List<BackgroundMusic> findMusicList() {
-        List<BackgroundMusic> list = courseThemeDAO.findMusicList();
+    public List<BackgroundMusic> findMusicList(Integer showType) {
+        List<BackgroundMusic> list = courseThemeDAO.findMusicList(showType);
         return list;
     }
 
@@ -105,15 +105,6 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
         return MyPage.page2Mypage(page);
     }
 
-    @Override
-    public void addBackgroundImage(BackgroundImage image) {
-        backgroundImageDAO.insert(image);
-    }
-
-    @Override
-    public void addBackgroundMusic(BackgroundMusic music) {
-        backgroundMusicDAO.insert(music);
-    }
 
 
 }
