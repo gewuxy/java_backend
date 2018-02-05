@@ -26,6 +26,12 @@ public class BackgroundMusic {
     protected Float size;
     // 音乐地址
     protected String url;
+    // 推荐列表排序
+    protected Integer recomSort;
+    // 更多列表排序
+    protected Integer sort;
+    // 是否隐藏
+    protected Boolean hide;
 
     public static void HandelMusicUrl(List<BackgroundMusic> list, String fileBase){
         if(list != null){

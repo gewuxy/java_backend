@@ -144,6 +144,28 @@
         </div>
     </div>
 
+    <div class="control-group">
+        <label class="control-label">推荐排序:</label>
+        <div class="controls">
+            <input type="search" name="recomSort"  value="${music.recomSort}" maxlength="50" class="required input-xlarge" />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">更多列表排序:</label>
+        <div class="controls">
+            <input type="search" name="sort"  value="${music.sort}" maxlength="50" class="required input-xlarge" />
+        </div>
+    </div>
+
+    <div class="control-group">
+        <label class="control-label">是否隐藏:</label>
+        <div class="controls">
+            <input type="radio" name="hide" value="true" <c:if test="${music.hide}">checked</c:if> >隐藏&nbsp;&nbsp;&nbsp;
+            <input type="radio" name="hide" value="false" <c:if test="${empty music.hide || !music.hide}">checked</c:if>>显示                <span class="help-inline"></span>
+        </div>
+    </div>
+
     <div class="form-actions">
         <shiro:hasPermission name="theme:music:edit">
             <input id="btnSubmit" class="btn btn-primary" type="submit" value="保 存"/>&nbsp;

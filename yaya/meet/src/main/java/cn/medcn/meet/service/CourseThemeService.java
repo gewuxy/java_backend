@@ -18,9 +18,9 @@ public interface CourseThemeService extends BaseService<AudioCourseTheme> {
 
     CourseThemeDTO findCourseTheme(Integer courseId);
 
-    List<BackgroundImage> findImageList();
+    List<BackgroundImage> findImageList(Integer showType);
 
-    List<BackgroundMusic> findMusicList();
+    List<BackgroundMusic> findMusicList(Integer showType);
 
     MyPage<BackgroundImage> findImagePageList(Pageable pageable);
 
@@ -28,7 +28,4 @@ public interface CourseThemeService extends BaseService<AudioCourseTheme> {
 
     AudioCourseTheme findByCourseId(Integer courseId);
 
-    void addBackgroundImage(BackgroundImage image);
-
-    void addBackgroundMusic(BackgroundMusic music);
 }

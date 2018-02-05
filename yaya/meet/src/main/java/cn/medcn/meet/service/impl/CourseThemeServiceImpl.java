@@ -3,6 +3,7 @@ package cn.medcn.meet.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.CourseThemeDTO;
 import cn.medcn.meet.model.*;
@@ -63,11 +64,23 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
         if (audioCourse != null) {
             themeDTO = new CourseThemeDTO();
             themeDTO.setAudioCourse(audioCourse);
+            themeDTO.setHasPassword(StringUtils.isNotEmpty(audioCourse.getPassword()));
 
             // 查询课程明细
             List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
             audioCourse.setDetails(details);
             audioService.handleHttpUrl(fileBase,audioCourse);
+
+            //计算课件总时长
+            Integer duration = 0;
+            for(AudioCourseDetail detail : details){
+                if(detail.getDuration() != null){
+                    duration += detail.getDuration();
+                }
+            }
+            themeDTO.setDuration(duration);
+
+
 
             // 查询课程主题
             AudioCourseTheme courseTheme = courseThemeDAO.findCourseThemeByCourseId(courseId);
@@ -80,14 +93,14 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
     }
 
     @Override
-    public List<BackgroundImage> findImageList() {
-        List<BackgroundImage> list = courseThemeDAO.findImageList();
+    public List<BackgroundImage> findImageList(Integer showType) {
+        List<BackgroundImage> list = courseThemeDAO.findImageList(showType);
         return list;
     }
 
     @Override
-    public List<BackgroundMusic> findMusicList() {
-        List<BackgroundMusic> list = courseThemeDAO.findMusicList();
+    public List<BackgroundMusic> findMusicList(Integer showType) {
+        List<BackgroundMusic> list = courseThemeDAO.findMusicList(showType);
         return list;
     }
 
@@ -110,15 +123,6 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
         return courseThemeDAO.findByCourseId(courseId);
     }
 
-    @Override
-    public void addBackgroundImage(BackgroundImage image) {
-        backgroundImageDAO.insert(image);
-    }
-
-    @Override
-    public void addBackgroundMusic(BackgroundMusic music) {
-        backgroundMusicDAO.insert(music);
-    }
 
 
 }

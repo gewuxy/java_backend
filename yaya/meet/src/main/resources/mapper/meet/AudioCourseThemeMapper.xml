@@ -3,19 +3,33 @@
 <mapper namespace="cn.medcn.meet.dao.AudioCourseThemeDAO" >
 
     <select id="findCourseThemeByCourseId" resultType="cn.medcn.meet.model.AudioCourseTheme">
-        SELECT t.*, i.img_name,i.img_size,i.img_url,m.name,m.duration,m.size,m.url
+        SELECT t.*, i.img_name,i.img_size,i.img_url,i.sort as imgSort, i.recom_sort as imgRecomSort,
+               m.name,m.duration,m.size,m.url, m.sort, m.recom_sort
         FROM  t_audio_course_theme t
-        LEFT JOIN t_csp_background_image i ON i.id = t.image_id
-        LEFT JOIN t_csp_background_music m ON m.id = t.music_id
+        LEFT JOIN t_csp_background_image i ON i.id = t.image_id AND i.hide=0
+        LEFT JOIN t_csp_background_music m ON m.id = t.music_id AND m.hide=0
         WHERE t.course_id = #{courseId}
     </select>
 
     <select id="findImageList" resultType="cn.medcn.meet.model.BackgroundImage">
         select * FROM t_csp_background_image
+        <if test="showType == 0">
+            WHERE hide=0 AND recom_sort>0 ORDER BY recom_sort ASC
+        </if>
+        <if test="showType == 1">
+            WHERE hide=0 AND sort>0 ORDER BY sort ASC
+        </if>
+
     </select>
 
     <select id="findMusicList" resultType="cn.medcn.meet.model.BackgroundMusic">
         select * FROM t_csp_background_music
+        <if test="showType == 0">
+            WHERE hide=0 AND recom_sort>0 ORDER BY recom_sort ASC
+        </if>
+        <if test="showType == 1">
+            WHERE hide=0 AND sort>0 ORDER BY sort ASC
+        </if>
     </select>
 
     <select id="findByCourseId" resultType="cn.medcn.meet.model.AudioCourseTheme">

@@ -129,7 +129,6 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
         CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
-
         return success(themeDTO);
     }
 
@@ -1641,24 +1640,31 @@ public class MeetingController extends CspBaseController {
      * 小程序接口
      * 获取主题和背景音乐
      * @param type type为null或者0时，获取主题，为1时获取背景音乐
+     * @param showType {@link AudioCourseTheme.ShowType} showType=null或者0时，获取主题排序，为1时获取更多排序
      * @return
      */
     @RequestMapping("/mini/image/music")
     @ResponseBody
-    public String getImageAndMusic(Integer type){
+    public String getImageAndMusic(Integer type, Integer showType){
         if(type == null){
             type = AudioCourseTheme.ImageMusic.IMAGE.ordinal();
         }
+
+        if (showType == null) {
+            showType = AudioCourseTheme.ShowType.RECOMList.ordinal();
+        }
+
         Map<String,Object> map = new HashMap<>();
+
         //获取主题
         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
-            List<BackgroundImage> imageList = courseThemeService.findImageList();
+            List<BackgroundImage> imageList = courseThemeService.findImageList(showType);
             BackgroundImage.HandelImgUrl(imageList,fileBase);
             map.put("imageList",imageList);
             return success(map);
         }else{
             //获取背景音乐
-            List<BackgroundMusic> musicList = courseThemeService.findMusicList();
+            List<BackgroundMusic> musicList = courseThemeService.findMusicList(showType);
             BackgroundMusic.HandelMusicUrl(musicList,fileBase);
             map.put("musicList",musicList);
             return success(map);
