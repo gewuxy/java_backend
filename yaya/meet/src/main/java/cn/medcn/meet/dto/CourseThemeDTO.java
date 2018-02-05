@@ -22,4 +22,7 @@ public class CourseThemeDTO implements Serializable {
     //课件总时长
     protected Integer duration;
 
+    //课件是否有密码
+    protected Boolean hasPassword;
+
 }

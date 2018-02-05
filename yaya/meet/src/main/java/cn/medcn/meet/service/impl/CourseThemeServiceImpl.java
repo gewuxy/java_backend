@@ -3,6 +3,7 @@ package cn.medcn.meet.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.CourseThemeDTO;
 import cn.medcn.meet.model.*;
@@ -63,6 +64,7 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
         if (audioCourse != null) {
             themeDTO = new CourseThemeDTO();
             themeDTO.setAudioCourse(audioCourse);
+            themeDTO.setHasPassword(StringUtils.isNotEmpty(audioCourse.getPassword()));
 
             // 查询课程明细
             List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(courseId);
