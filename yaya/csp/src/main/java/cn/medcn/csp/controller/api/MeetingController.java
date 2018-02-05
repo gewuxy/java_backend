@@ -129,7 +129,6 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
         CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
-
         return success(themeDTO);
     }
 

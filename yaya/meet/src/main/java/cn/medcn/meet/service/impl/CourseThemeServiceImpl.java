@@ -69,6 +69,17 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
             audioCourse.setDetails(details);
             audioService.handleHttpUrl(fileBase,audioCourse);
 
+            //计算课件总时长
+            Integer duration = 0;
+            for(AudioCourseDetail detail : details){
+                if(detail.getDuration() != null){
+                    duration += detail.getDuration();
+                }
+            }
+            themeDTO.setDuration(duration);
+
+
+
             // 查询课程主题
             AudioCourseTheme courseTheme = courseThemeDAO.findCourseThemeByCourseId(courseId);
             if (courseTheme != null) {
