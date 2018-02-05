@@ -37,11 +37,9 @@
     </style>
 
 </head>
-<body style="background:url(${theme.imgUrl}) " >
+<body <c:if test="${not empty theme && not empty theme.imgUrl}">style="background: url('${theme.imgUrl}') no-repeat fixed;background-size: cover;"</c:if> >
 <div class="warp">
-    <c:if test="${not empty theme && not empty theme.url}">
-        <audio id="bgMusicAudio" autoplay="autoplay" src="${theme.url}" hidden/>
-    </c:if>
+
     <div class="CSPMeeting-gallery details-gallery
     <c:if test="${watermark != null && watermark.state}">
         <c:choose>
@@ -287,12 +285,14 @@
 
     </div>
 </div>
-
+<c:if test="${not empty theme && not empty theme.url}">
+    <audio id="bgMusicAudio" src="${theme.url}" loop/>
+</c:if>
 
 
 
 <script>
-    var asAllItem = audiojs.createAll();
+    var asAllItem = audiojs.create($("#audioPlayer").get(0));
     var playing = false;
     var started = false;
     var hasAudioUrl = true;
@@ -330,7 +330,7 @@
         var fullState = true;
         var playerState = true;
         var swiperFullSize;
-        var popupPalyer = asAllItem[asAllItem.length - 1];
+        var popupPalyer = asAllItem;
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var dataSrc ;
 
@@ -338,10 +338,11 @@
         $("#audioPlayer")[0].addEventListener("ended", function(){
             if(activeItemIsVideo.length == 0){
                 console.log("audio play over ...");
-                if($("#audioPlayer")[0].src != prevAudioSrc){
+                //if($("#audioPlayer")[0].src != prevAudioSrc){
                     galleryTop.slideNext();
-                }
+                //}
                 prevAudioSrc = $("#audioPlayer")[0].src;
+                changeBgMusicValue(true);
             }
         });
 //
@@ -353,6 +354,7 @@
             $(".boxAudio").addClass("none");
             console.log("playerState = " + playerState);
             hasAudioUrl = false;
+            changeBgMusicValue(true);
             clearTimeout(slideTimer);
             if (started){
                 if (isVideo.length == 0 && !playerState){
@@ -481,6 +483,7 @@
 
         function videoToNextAtOnce(){
             console.log("video play end ...");
+            changeBgMusicValue(true);
             galleryTop.slideNext();
         }
 
@@ -564,8 +567,22 @@
             activeItemIsVideo.get(0).networkState
         }
 
+        const maxBgVolume = 0.4;
+        const minBgVolume = 0.2;
+        var hasBgMusic = $("#bgMusicAudio").length > 0;
+        if (hasBgMusic) {
+            $("#bgMusicAudio").get(0).volume = maxBgVolume;
+        }
 
-
+        function changeBgMusicValue(maxVolumeFlag){
+            // if(hasBgMusic) {
+            //     if (maxVolumeFlag){
+            //         $("#bgMusicAudio").get(0).volume = maxBgVolume;
+            //     } else {
+            //         $("#bgMusicAudio").get(0).volume = minBgVolume;
+            //     }
+            // }
+        }
 
 
 
@@ -586,7 +603,8 @@
 
             //如果有视频
             if(activeItemIsVideo.length > 0){
-                activeItemIsVideo[0].load()
+                activeItemIsVideo[0].load();
+                popupPalyer.load('isNotSrc');
                 changePlayerStete(true);
             } else {
                 dataSrc = swiperCurrent.attr('audio-src');
@@ -632,6 +650,7 @@
                         slideToNext();
                     }
                 }
+                changeBgMusicValue(false);
             } else {
                 playerState = true;
                 //有video文件
@@ -640,6 +659,7 @@
                 } else {
                     popupPalyer.pause();
                 }
+                changeBgMusicValue(true);
 
             }
             if (!playerState){
@@ -675,7 +695,7 @@
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
                 if($("#bgMusicAudio").length > 0){
-                    $("#bgMusicAudio").play();
+                    $("#bgMusicAudio").get(0).play();
                 }
                 $(this).hide();
                 started = true;
