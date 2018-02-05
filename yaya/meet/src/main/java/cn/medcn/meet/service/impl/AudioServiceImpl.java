@@ -842,6 +842,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if (course == null) {
             throw new SystemException(local("source.not.exists"));
         }
+        if (course.getDeleted() != null && course.getDeleted()) {
+            throw new SystemException(local("course.error.api.deleted"));
+        }
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
         }
