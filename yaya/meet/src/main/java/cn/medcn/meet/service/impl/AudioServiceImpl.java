@@ -1342,11 +1342,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
         //获取小程序码
         Map<String,Object> map = new HashMap<>();
-        map.put(SCENE_STR,id + "");
-        //正式包才提交page参数。小程序发布需要提交page参数，如果小程序没有发布，提交此参数获取的图片无法打开
-        if(appPro.intValue() == Constants.NUMBER_ONE){
-            map.put(PAGE_STR,page);
-        }
+        Integer start = page.indexOf("?") ;
+        String scene = page.substring(start + 1);
+        //去掉page参数的第一个 / ，不然图片会生成出错
+        page = page.substring(1,start);
+        map.put(SCENE_STR,scene);
+        //小程序发布需要提交page参数，如果小程序没有发布，提交此参数获取的图片无法打开
+        map.put(PAGE_STR,page);
         map.put(CODE_WIDTH_STR,430);
         map.put(CODE_AUTO_COLOR_STR,false);
         Map<String,String> colorMap = new HashMap<>();
