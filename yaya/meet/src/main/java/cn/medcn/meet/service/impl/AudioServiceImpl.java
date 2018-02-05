@@ -1569,9 +1569,10 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             if(type == AudioCourse.PlayType.normal.ordinal()){
                 AudioCoursePlay play = new AudioCoursePlay();
                 play.setCourseId(course.getId());
+                play.setId(StringUtils.nowStr());
                 play.setPlayPage(0);
                 play.setPlayState(0);
-                audioCoursePlayDAO.insertSelective(play);
+                audioCoursePlayDAO.insert(play);
             }
 
         }
