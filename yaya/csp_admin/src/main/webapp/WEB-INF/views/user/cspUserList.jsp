@@ -4,6 +4,12 @@
 <head>
     <title>CSP用户管理</title>
     <%@include file="/WEB-INF/include/page_context.jsp"%>
+    <style>
+        .bindInfo {margin-left: 3%;position: relative;top:2px;}
+        .msgInfo {float:right;position: relative;top:3px;color: grey}
+        .modal-body div{margin-top: 2%;}
+        .modal-body img{width: 30px;}
+    </style>
 </head>
 <body>
 <ul class="nav nav-tabs">
@@ -163,39 +169,39 @@
             <form class="form-horizontal form-bordered form-row-strippe" action="">
                 <div class="modal-body">
                     <div>
-                        <img src="${ctxStatic}/images/icon-user-phone.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="mobile"></span>
-                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                        <img src="${ctxStatic}/images/icon-user-phone.png">
+                        <span class="bindInfo" id="mobile"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
-                    <div style="margin-top: 2%;">
-                        <img src="${ctxStatic}/images/icon-user-wechat.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="wechat"></span>
-                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-wechat.png">
+                        <span class="bindInfo" id="wechat"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
-                    <div style="margin-top: 2%;">
-                        <img src="${ctxStatic}/images/icon-user-weibo.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="weibo"></span>
-                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-weibo.png">
+                        <span class="bindInfo"  id="weibo"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
-                    <div style="margin-top: 2%;">
-                        <img src="${ctxStatic}/images/icon-user-facebook.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="facebook"></span>
-                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-facebook.png">
+                        <span class="bindInfo" id="facebook"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
-                    <div style="margin-top: 2%;">
-                        <img src="${ctxStatic}/images/icon-user-twitter.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="twitter"></span>
-                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-twitter.png">
+                        <span class="bindInfo" id="twitter"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
-                    <div style="margin-top: 2%;">
-                        <img src="${ctxStatic}/images/icon-user-email.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="email"></span>
-                        <span style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-email.png">
+                        <span class="bindInfo" id="email"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
-                    <div style="margin-top: 2%;">
-                        <img src="${ctxStatic}/images/icon-user-medcn.png" alt="" style="width: 30px;">
-                        <span class="bindInfo" style="margin-left: 3%;position: relative;top:2px;" id="medcn"></span>
-                        <span  style="float:right;position: relative;top:3px;color: grey">未绑定</span>
+                    <div>
+                        <img src="${ctxStatic}/images/icon-user-medcn.png">
+                        <span class="bindInfo" id="medcn"></span>
+                        <span class="msgInfo">未绑定</span>
                     </div>
                 </div>
                 <div class="modal-footer bg-info">
