@@ -1644,17 +1644,71 @@ public class MeetingController extends CspBaseController {
         return view(courseId);
     }
 
+    /**
+     * 进入讲本编辑页面
+     * @since csp1.2.0
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/edit")
+    @ResponseBody
+    public String edit(Integer courseId){
+        Map<String, Object> result = new HashMap<>();
+        if (courseId != null && courseId != 0) {
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            result.put("course", course);
+            result.put("theme", theme);
+        }
+        //查询出推荐的皮肤
+        List<BackgroundImage> imageList = courseThemeService.findImageList(0);
+        BackgroundImage.HandelImgUrl(imageList,fileBase);
+        result.put("imageList",imageList);
+        return success(result);
+    }
+
+    /**
+     * 查看更多皮肤
+     * @since csp1.2.0
+     * @return
+     */
+    @RequestMapping(value = "/theme/image/more")
+    @ResponseBody
+    public String moreImage(){
+        Map<String, Object> result = new HashMap<>();
+        List<BackgroundImage> imageList = courseThemeService.findImageList(1);
+        BackgroundImage.HandelImgUrl(imageList,fileBase);
+        result.put("list",imageList);
+        return success(result);
+    }
+
+    /**
+     * 查看更多背景音乐
+     * @since csp1.2.0
+     * @return
+     */
+    @RequestMapping(value = "/theme/music/more")
+    @ResponseBody
+    public String moreMusic(){
+        Map<String, Object> result = new HashMap<>();
+        List<BackgroundMusic> musicList = courseThemeService.findMusicList(1);
+        BackgroundMusic.HandelMusicUrl(musicList,fileBase);
+        result.put("list",musicList);
+        return success(result);
+    }
+
 
     /**
      * 小程序接口
      * 获取主题和背景音乐
+     * @param courseId
      * @param type type为null或者0时，获取主题，为1时获取背景音乐
      * @param showType {@link AudioCourseTheme.ShowType} showType=null或者0时，获取主题排序，为1时获取更多排序
      * @return
      */
     @RequestMapping("/mini/image/music")
     @ResponseBody
-    public String getImageAndMusic(Integer type, Integer showType){
+    public String getImageAndMusic(Integer type, Integer showType, Integer courseId){
         if(type == null){
             type = AudioCourseTheme.ImageMusic.IMAGE.ordinal();
         }
@@ -1662,9 +1716,14 @@ public class MeetingController extends CspBaseController {
         if (showType == null) {
             showType = AudioCourseTheme.ShowType.RECOMList.ordinal();
         }
-
         Map<String,Object> map = new HashMap<>();
 
+        if (courseId != null) {
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            map.put("course", course);
+            map.put("theme", theme);
+        }
         //获取主题
         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
             List<BackgroundImage> imageList = courseThemeService.findImageList(showType);
