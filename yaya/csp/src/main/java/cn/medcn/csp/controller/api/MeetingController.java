@@ -1531,7 +1531,6 @@ public class MeetingController extends CspBaseController {
             return error(local("meeting.title.not.none"));
         }
 
-
         AudioCourse course = new AudioCourse();
         course.setId(courseId);
         course.setTitle(title);
