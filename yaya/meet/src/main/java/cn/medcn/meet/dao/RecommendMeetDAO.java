@@ -14,4 +14,6 @@ public interface RecommendMeetDAO extends Mapper<Recommend>{
     List<Recommend> recommendMeetList(Map<String, Object> params);
 
     Recommend selectByMeetId(String meetId);
+
+    List<Recommend> selectByFixed();
 }
