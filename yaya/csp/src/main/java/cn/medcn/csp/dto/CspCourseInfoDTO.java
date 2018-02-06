@@ -21,6 +21,8 @@ public class CspCourseInfoDTO implements Serializable {
     protected Live live;
     //录播信息
     protected AudioCoursePlay record;
+    //背景图加背景音乐
+    protected AudioCourseTheme theme;
 
     protected Date serverTime = new Date();
 
