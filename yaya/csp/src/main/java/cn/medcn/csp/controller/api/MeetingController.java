@@ -51,6 +51,7 @@ import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
 import static cn.medcn.csp.CspConstants.*;
+import static cn.medcn.meet.dto.AudioCourseDTO.HandelCoverUrl;
 
 /**
  * 会议控制器
@@ -1592,6 +1593,7 @@ public class MeetingController extends CspBaseController {
     public String templateList() {
         Principal principal = SecurityUtils.get();
         List<AudioCourseDTO> templateList = audioService.findMiniTemplate();
+        AudioCourseDTO.HandelCoverUrl(templateList, null, fileBase);
         return success(templateList);
     }
 
@@ -1611,6 +1613,7 @@ public class MeetingController extends CspBaseController {
             id = 0;
         }
         AudioCourseDTO courseDTO = audioService.findMiniTemplateByIdOrRand(id);
+        HandelCoverUrl(null, courseDTO, fileBase);
         return success(courseDTO);
     }
 
