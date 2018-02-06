@@ -177,6 +177,13 @@ public class RecommendMeetController extends BaseController {
                 addErrorFlashMessage(redirectAttributes,"添加讲师失败");
             }
             recommend.setResourceId(meetId);
+            if (recommend.getFixed()==1 && recommend.getRecFlag() == true){
+                List<Recommend> recommendList = recommendMeetService.selectByFixed();
+                for (Recommend rec : recommendList ) {
+                    rec.setFixed(0);
+                    recommendMeetService.updateByPrimaryKey(rec);
+                }
+            }
             int recommendMeetCount = recommendMeetService.insert(recommend);
             if (recommendMeetCount != 1){
                 addErrorFlashMessage(redirectAttributes,"添加推荐会议失败");
@@ -249,6 +256,13 @@ public class RecommendMeetController extends BaseController {
         int lecturerCount = meetLecturerService.updateByPrimaryKey(lecturer);
         if (lecturerCount != 1){
             addErrorFlashMessage(redirectAttributes,"修改主讲者失败");
+        }
+        if (recommend.getFixed()==1 && recommend.getRecFlag() == true){
+            List<Recommend> recommendList = recommendMeetService.selectByFixed();
+            for (Recommend rec : recommendList ) {
+                rec.setFixed(0);
+                recommendMeetService.updateByPrimaryKey(rec);
+            }
         }
         int recommendMeetCount = recommendMeetService.updateByPrimaryKey(recommend);
         if (recommendMeetCount != 1){
