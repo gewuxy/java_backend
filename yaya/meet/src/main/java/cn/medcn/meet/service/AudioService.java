@@ -421,13 +421,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param courseTheme
      */
     void doCopyCourseTheme(AudioCourseTheme courseTheme, Integer courseId);
-    /**
-     * 更新小程序课件的信息
-     * @param course
-     * @param theme
-     * @return
-     */
-    void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException;
+
 
     /**
      * 修改课件密码
@@ -453,4 +447,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
     Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort,Integer type) throws SystemException;
 
     ActivityGuideDTO findActivityCourse(Integer courseId);
+
+    /**
+     * 完善课件标题，创建课件主题和背景音乐
+     * @param course
+     * @param imgId
+     * @param musicId
+     */
+    void updateCourseAndCreateTheme(AudioCourse course, Integer imgId, Integer musicId);
 }

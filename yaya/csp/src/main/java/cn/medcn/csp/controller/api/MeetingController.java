@@ -1514,33 +1514,92 @@ public class MeetingController extends CspBaseController {
 
 
     /**
-     * 完善或修改课件标题，主题，背景音乐
+     * 完善课件标题,主题，背景音乐
      * @param courseId
      * @param title
-     * @param imgId
-     * @param musicId
      * @return
      * @throws SystemException
      */
     @RequestMapping(value = "/mini/update", method = RequestMethod.POST)
     @ResponseBody
-    public String updateAudio(Integer courseId,String title, Integer imgId,Integer musicId) throws SystemException {
+    public String updateAudio(Integer courseId,String title, Integer imgId, Integer musicId) throws SystemException {
         if(courseId == null){
             return error(local("courseId.empty"));
         }
-        //更新课件标题不能为空，为null表示不更新标题
-        if(title == ""){
+
+        if(StringUtils.isEmpty(title)){
             return error(local("meeting.title.not.none"));
         }
+
+
         AudioCourse course = new AudioCourse();
         course.setId(courseId);
         course.setTitle(title);
+        course.setPublished(true);
+        //生成课件标题和主题，背景音乐
+        audioService.updateCourseAndCreateTheme(course,imgId,musicId);
+        return success();
+    }
 
+
+
+
+    /**
+     * 更新主题
+     * @param courseId
+     * @param imgId
+     * @return
+     */
+    @RequestMapping("/update/img")
+    @ResponseBody
+    public String updateImg(Integer courseId, Integer imgId){
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
-        theme.setImageId(imgId);
-        theme.setMusicId(musicId);
-        audioService.updateMiniCourse(course,theme);
+        theme = courseThemeService.selectOne(theme);
+        if(theme != null){
+            //删除主题
+            if(imgId == NUMBER_ZERO){
+                theme.setImageId(null);
+                courseThemeService.updateByPrimaryKey(theme);
+            }else{
+                theme.setImageId(imgId);
+                courseThemeService.updateByPrimaryKeySelective(theme);
+            }
+        }
+
+        return success();
+    }
+
+
+    /**
+     * 更新背景音乐
+     * @param courseId
+     * @param musicId
+     * @return
+     */
+    @RequestMapping("/update/music")
+    @ResponseBody
+    public String updateMusic(Integer courseId, Integer musicId){
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
+        AudioCourseTheme theme = new AudioCourseTheme();
+        theme.setCourseId(courseId);
+        theme = courseThemeService.selectOne(theme);
+        if(theme != null){
+            //删除主题
+            if(musicId == NUMBER_ZERO){
+                theme.setMusicId(null);
+                courseThemeService.updateByPrimaryKey(theme);
+            }else{
+                theme.setMusicId(musicId);
+                courseThemeService.updateByPrimaryKeySelective(theme);
+            }
+        }
+
         return success();
     }
 
