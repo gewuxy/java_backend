@@ -221,7 +221,7 @@
 
     <!--结束界面-->
     <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
-        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
+        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
             <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
