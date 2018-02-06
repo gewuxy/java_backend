@@ -1054,7 +1054,7 @@ public class MeetServiceImpl extends BaseServiceImpl<Meet> implements MeetServic
      */
     @Override
     public void updateMeetAttend(MeetAttend attend) {
-        meetAttendDAO.updateByPrimaryKeySelective(attend);
+        meetAttendDAO.updateByPrimaryKey(attend);
     }
 
 

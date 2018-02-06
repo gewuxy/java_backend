@@ -86,6 +86,16 @@ public class CspMeetController extends BaseController{
         return "/meet/meetList";
     }
 
+    @RequestMapping(value = "/save")
+    @Log(name = "编辑新增讲本信息")
+    public String editMeetInfo(AudioCourse course) {
+        if (course != null){
+
+        }
+        return "/meet/editMeetInfo";
+    }
+
+
     @RequestMapping(value="/info")
     @Log(name = "查询会议详情")
     public String searchMeetInfo(Integer id,Model model){

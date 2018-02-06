@@ -70,7 +70,7 @@
                     </div>
                 </c:forEach>
                 <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
-                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/logo-max-img.png')"></div>
+                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/meeting-blackBg.png');background-color:#3B3E46;"></div>
                 </div>
             </div>
             <!--音频文件-->

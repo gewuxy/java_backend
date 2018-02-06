@@ -27,13 +27,12 @@
     </select>
 
     <select id="findUserSurveyHis" resultType="cn.medcn.meet.dto.AttendSurveyUserDataDTO">
-        SELECT his.user_id,u.nickname,dt.unit_name,dt.sub_unit_name,h.`level`,dt.title,u.province,
-        u.city,grp.group_name,m.meet_name,his.submit_time
+        SELECT his.user_id,u.nickname,dt.unit_name,dt.sub_unit_name,dt.hos_level,dt.title,u.province,
+        u.city,u.zone,grp.group_name,m.meet_name,his.submit_time
         FROM t_survey_history his
         LEFT JOIN t_meet m ON m.id = his.meet_id
         INNER JOIN t_app_user u on u.id = his.user_id
         LEFT JOIN t_app_user_detail dt on dt.user_id = u.id
-        LEFT JOIN t_hospital h ON h.id = dt.hos_id
         LEFT JOIN (SELECT g.group_name,ug.doctor_id from t_user_group g
             LEFT JOIN t_user_doctor_group ug ON ug.pub_user_id = g.pub_user_id
             AND ug.group_id = g.id WHERE ug.pub_user_id = #{userId}) grp
