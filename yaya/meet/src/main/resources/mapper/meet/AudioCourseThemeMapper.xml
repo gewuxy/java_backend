@@ -25,7 +25,7 @@
     <select id="findMusicList" resultType="cn.medcn.meet.model.BackgroundMusic">
         select * FROM t_csp_background_music
         <if test="showType == 0">
-            WHERE hide=0 AND recom_sort>0 ORDER BY recom_sort ASC
+            WHERE hide=0 ORDER BY recom_sort ASC
         </if>
         <if test="showType == 1">
             WHERE hide=0 AND sort>0 ORDER BY sort ASC

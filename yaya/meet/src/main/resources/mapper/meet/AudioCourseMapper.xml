@@ -196,17 +196,15 @@
     </update>
 
     <select id="findMiniTemplate" resultType="cn.medcn.meet.dto.AudioCourseDTO">
-        SELECT c.id,c.title,c.category,d.img_url as cover_url
+        SELECT c.id,c.title,c.category,c.cover_url
         FROM t_audio_course c
-        LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
         WHERE c.source_type = 2 and c.deleted != 1 AND c.locked != 1 AND c.published =1 AND c.guide != 1
         ORDER BY c.create_time asc
     </select>
 
     <select id="findMiniTemplateByIdOrRand" resultType="cn.medcn.meet.dto.AudioCourseDTO">
-        SELECT c.id,c.title,c.category,d.img_url as cover_url
+        SELECT c.id,c.title,c.category,c.cover_url
         FROM t_audio_course c
-        LEFT JOIN t_audio_course_detail d ON d.course_id = c.id AND d.sort = 1
         WHERE c.source_type = 2 and c.deleted != 1 AND c.locked != 1
         AND c.published =1 AND c.guide != 1
         <if test="id != null and id != 0">
