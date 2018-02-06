@@ -33,7 +33,7 @@
     </select>
 
     <select id="findByCourseId" resultType="cn.medcn.meet.model.AudioCourseTheme">
-        SELECT t.id, course_id, image_id, music_id, i.img_url, m.url FROM t_audio_course_theme t
+        SELECT t.id, course_id, image_id, music_id, i.img_url, m.url, i.img_name, m.name, m.duration FROM t_audio_course_theme t
         LEFT JOIN t_csp_background_image i ON i.id = t.image_id
         LEFT JOIN t_csp_background_music m ON m.id = t.music_id
         WHERE t.course_id = #{courseId}
