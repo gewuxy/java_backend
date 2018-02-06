@@ -769,6 +769,12 @@ public class MeetingController extends CspBaseController {
                 audioService.updateAudioCoursePlay(play);
             }
             dto.setRecord(play);
+            //查询出讲本的背景音乐和皮肤
+            AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            if (theme != null) {
+                AudioCourseTheme.handleUrl(theme, fileBase);
+                dto.setTheme(theme);
+            }
         }
 
         //发送扫码投屏指令

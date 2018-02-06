@@ -76,7 +76,7 @@
             <div class="loaded"></div> \
           </div> \
           <div class="time"> \
-            <span><img src="'+ctxStatic+'/phone/images/viedo-icon.gif" alt=""></span><em class="played">00:00</em><strong class="duration">00:00</strong>\
+            <em class="played">00:00</em><strong class="duration">00:00</strong>\
           </div> \
           <div class="error-message"></div>',
         playPauseClass: 'play-pause',
