@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.utils.CheckUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -36,7 +37,9 @@ public class BackgroundMusic {
     public static void HandelMusicUrl(List<BackgroundMusic> list, String fileBase){
         if(list != null){
             for(BackgroundMusic music : list){
-                music.setUrl(fileBase + music.getUrl());
+                if (CheckUtils.isNotEmpty(music.getUrl())) {
+                    music.setUrl(fileBase + music.getUrl());
+                }
             }
         }
     }

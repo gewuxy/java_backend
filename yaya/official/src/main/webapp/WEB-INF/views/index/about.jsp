@@ -8,7 +8,7 @@
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
     <%@ include file="/WEB-INF/include/common_js.jsp" %>
     <script src="${ctxStatic}/js/v2/jquery.fancybox-1.3.4.pack.js"></script>
-    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=GKjUI6FiPXGlzBdieGKVM1RpH5Kh5m3O"></script>
     <script type="text/javascript">
         $(function () {
             // 百度地图API功能
