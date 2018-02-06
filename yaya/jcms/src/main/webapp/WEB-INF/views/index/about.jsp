@@ -125,7 +125,7 @@
     <%--initMap();//创建和初始化地图--%>
     <%--})--%>
     <%--</script>--%>
-    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj"></script>
+    <script type="text/javascript" src="//api.map.baidu.com/api?v=2.0&ak=GKjUI6FiPXGlzBdieGKVM1RpH5Kh5m3O"></script>
 
     <script type="text/javascript">
 

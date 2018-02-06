@@ -109,7 +109,7 @@
 
 
 </div>
-<script src="//api.map.baidu.com/api?v=2.0&ak=XlgUFkD2Gir0u83w725EiRkOK4FX3OQj" type="text/javascript"></script>
+<script src="//api.map.baidu.com/api?v=2.0&ak=GKjUI6FiPXGlzBdieGKVM1RpH5Kh5m3O" type="text/javascript"></script>
 <script type="text/javascript">
 
     var longitude = 0;
