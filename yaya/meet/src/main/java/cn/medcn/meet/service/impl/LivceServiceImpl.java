@@ -92,7 +92,7 @@ public class LivceServiceImpl extends BaseServiceImpl<Live> implements LiveServi
             order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
             publish(order);
 
-            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+            live.setLiveState(AudioCoursePlay.PlayState.deleted.ordinal());
             live.setEndTime(new Date());
             liveDAO.updateByPrimaryKey(live);
 

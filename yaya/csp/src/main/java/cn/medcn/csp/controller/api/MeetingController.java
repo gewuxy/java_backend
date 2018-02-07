@@ -50,6 +50,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.common.utils.APIUtils.ERROR_CODE_COURSE_DELETED;
 import static cn.medcn.csp.CspConstants.*;
 import static cn.medcn.meet.dto.AudioCourseDTO.HandelCoverUrl;
 
@@ -247,7 +248,7 @@ public class MeetingController extends CspBaseController {
                 model.addAttribute("appStoreUrl", Constants.CSP_APP_STORE_ANDROID_URL);
 
                 Live live = liveService.findByCourseId(courseId);
-                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.deleted.ordinal()) {
                     model.addAttribute("totalLiveTime", CalendarUtils.formatTimesDiff(live.getStartTime(), live.getEndTime(), 0));
                 }
                 model.addAttribute("live", live);
@@ -449,7 +450,7 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         if (course.getDeleted() != null && course.getDeleted()) {
-            return error(local("source.has.deleted"));
+            return error(ERROR_CODE_COURSE_DELETED, local("source.has.deleted"));
         }
         String osType = LocalUtils.getOSType();
         String suffix = null;
@@ -771,7 +772,7 @@ public class MeetingController extends CspBaseController {
 
             if (live != null) {
                 //已经结束 抛出异常 不再判断开始时间
-                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.deleted.ordinal()) {
                     return error(local("share.live.over"));
                 }
             }
@@ -1027,7 +1028,7 @@ public class MeetingController extends CspBaseController {
                         if(over == 1){
                             live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
                             live.setEndTime(new Date());
-                            liveService.publish(overOrder);
+                            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
                         } else {
                             if(live.getLiveState().intValue() == AudioCoursePlay.PlayState.playing.ordinal()){
                                 live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
@@ -1182,17 +1183,18 @@ public class MeetingController extends CspBaseController {
         //删除缓存中的同步指令
         redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
 
+        //这里不直接修改直播状态了 而是将直播的状态改为待结束状态 10分钟之后真正结束
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
-            liveService.doModifyLiveState(live);
-            LiveOrderDTO order = new LiveOrderDTO();
-            order.setCourseId(String.valueOf(courseId));
-            order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
-            liveService.publish(order);
+            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
+            liveService.updateByPrimaryKey(live);
         }
 
         //同步yaya医师会议状态
         meetService.doEndMeet(courseId);
+        Map<String, Object> result = new HashMap<>();
+
 
         return success();
     }
@@ -1231,7 +1233,7 @@ public class MeetingController extends CspBaseController {
         String pushUrl = null;
 
         if (live != null) {
-            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+            if (live.getLiveState().intValue() >= AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
             updateLiveState(live);

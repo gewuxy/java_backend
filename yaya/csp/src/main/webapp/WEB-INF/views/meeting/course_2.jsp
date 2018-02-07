@@ -220,7 +220,7 @@
     </div>
 
     <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
+    <div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
         <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
@@ -366,9 +366,9 @@
             </form>
         </div>
         <div class="meeting-star-button popup-star-button t-center">
-            <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+            <button class="button tips ${play.playState == 5 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
             <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
-            <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
+            <button class="button disabled ${!rated && play.playState != 5 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
         </div>
     </div>
 </div>
