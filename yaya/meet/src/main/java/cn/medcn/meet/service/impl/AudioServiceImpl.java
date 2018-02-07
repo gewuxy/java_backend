@@ -1594,13 +1594,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
 
     /**
-     * 完善课件标题，创建课件主题和背景音乐
+     * 生成或更新课件标题, 课件主题，背景音乐
      * @param course
      * @param imgId
      * @param musicId
      */
     @Override
-    public void updateCourseAndCreateTheme(AudioCourse course, Integer imgId, Integer musicId) {
+    public void createOrUpdateCourseAndTheme(AudioCourse course, Integer imgId, Integer musicId) {
 
         updateByPrimaryKeySelective(course);
         //创建课件主题，背景音乐
