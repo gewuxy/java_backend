@@ -1458,7 +1458,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             newCourse.setId(null);
             newCourse.setCspUserId(cspUserId);
             newCourse.setCreateTime(new Date());
-            newCourse.setSourceType(AudioCourse.SourceType.csp.ordinal()); // 生成csp讲本
+            newCourse.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal()); // 生成快捷讲本
             audioCourseDAO.insert(newCourse);
 
             courseId = newCourse.getId();
@@ -1612,6 +1612,11 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             theme.setImageId(imgId);
             theme.setMusicId(musicId);
             audioCourseThemeDAO.insert(theme);
+        //执行更新操作。删除操作传0，不更新也必须传原值过来，不然会将原来的字段清空
+        }else if(result != null){
+            theme.setImageId(imgId == Constants.NUMBER_ZERO ? null : imgId);
+            theme.setMusicId(musicId == Constants.NUMBER_ZERO ? null : musicId);
+            audioCourseThemeDAO.updateByPrimaryKey(theme);
         }
     }
 }
