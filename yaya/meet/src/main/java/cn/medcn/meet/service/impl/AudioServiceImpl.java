@@ -1494,30 +1494,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
 
-    /**
-     * 更新小程序课件信息,包括创建课件主题和背景音乐
-     * @param course
-     * @param theme
-     * @return
-     */
-    @Override
-    public void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException {
-        //修改课件标题,课件状态
-        course.setPublished(true);
-        updateByPrimaryKeySelective(course);
 
-        AudioCourseTheme condition = new AudioCourseTheme();
-        condition.setCourseId(course.getId());
-        AudioCourseTheme result = audioCourseThemeDAO.selectOne(condition);
-        //更新主题和背景音乐操作
-        if(result != null){
-            theme.setId(result.getId());
-            audioCourseThemeDAO.updateByPrimaryKey(theme);
-        }else if(theme.getImageId() != null || theme.getMusicId() != null){
-            //新建主题和背景音乐操作
-            audioCourseThemeDAO.insertSelective(theme);
-        }
-    }
 
     /**
      * 修改课件密码
@@ -1613,5 +1590,27 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public ActivityGuideDTO findActivityCourse(Integer courseId) {
         return audioCourseDAO.findActivityCourse(courseId);
+    }
+
+
+    /**
+     * 完善课件标题，创建课件主题和背景音乐
+     * @param course
+     * @param imgId
+     * @param musicId
+     */
+    @Override
+    public void updateCourseAndCreateTheme(AudioCourse course, Integer imgId, Integer musicId) {
+
+        updateByPrimaryKeySelective(course);
+        //创建课件主题，背景音乐
+        AudioCourseTheme theme = new AudioCourseTheme();
+        theme.setCourseId(course.getId());
+        AudioCourseTheme result = audioCourseThemeDAO.selectOne(theme);
+        if(result ==  null && (imgId != null || musicId != null)){
+            theme.setImageId(imgId);
+            theme.setMusicId(musicId);
+            audioCourseThemeDAO.insert(theme);
+        }
     }
 }
