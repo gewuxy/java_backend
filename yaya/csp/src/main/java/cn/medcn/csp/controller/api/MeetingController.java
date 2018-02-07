@@ -372,6 +372,14 @@ public class MeetingController extends CspBaseController {
             return error(local("upload.error.null"));
         }
 
+        AudioCourse course = audioService.selectByPrimaryKey(record.getCourseId());
+        if (course == null) {
+            return error(local("source.not.exists"));
+        }
+        if (course.getDeleted() != null && course.getDeleted()) {
+            return error(local("source.has.deleted"));
+        }
+
         String suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
 
         String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
@@ -436,7 +444,13 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
 
-
+        AudioCourse course = audioService.selectByPrimaryKey(record.getCourseId());
+        if (course == null) {
+            return error(local("source.not.exists"));
+        }
+        if (course.getDeleted() != null && course.getDeleted()) {
+            return error(local("source.has.deleted"));
+        }
         String osType = LocalUtils.getOSType();
         String suffix = null;
         //小程序上传音频，格式为aac
