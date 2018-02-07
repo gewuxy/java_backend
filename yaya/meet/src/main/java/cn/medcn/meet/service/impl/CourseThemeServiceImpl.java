@@ -57,7 +57,6 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
      * @return
      */
     @Override
-    @Cacheable(value = DEFAULT_CACHE, key = "'audio_course_'+#courseId")
     public CourseThemeDTO findCourseTheme(Integer courseId) {
         AudioCourse audioCourse = audioCourseDAO.selectByPrimaryKey(courseId);
         CourseThemeDTO themeDTO = null;
