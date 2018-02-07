@@ -38,6 +38,8 @@ public class APIUtils {
 
     // 导出excel文件出错
     public static final String ERROR_CODE_EXPORT_EXCEL = "300";
+    //课件已经被删除 不能再上传
+    public static final String ERROR_CODE_COURSE_DELETED = "401";
 
     public static String success(){
         JSONObject jsonObject = new JSONObject();

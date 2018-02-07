@@ -50,6 +50,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.common.utils.APIUtils.ERROR_CODE_COURSE_DELETED;
 import static cn.medcn.csp.CspConstants.*;
 import static cn.medcn.meet.dto.AudioCourseDTO.HandelCoverUrl;
 
@@ -449,7 +450,7 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         if (course.getDeleted() != null && course.getDeleted()) {
-            return error(local("source.has.deleted"));
+            return error(ERROR_CODE_COURSE_DELETED, local("source.has.deleted"));
         }
         String osType = LocalUtils.getOSType();
         String suffix = null;
@@ -1027,7 +1028,7 @@ public class MeetingController extends CspBaseController {
                         if(over == 1){
                             live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
                             live.setEndTime(new Date());
-                            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMicros(CspConstants.LIVE_OVER_DELAY)));
+                            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
                         } else {
                             if(live.getLiveState().intValue() == AudioCoursePlay.PlayState.playing.ordinal()){
                                 live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
@@ -1186,12 +1187,14 @@ public class MeetingController extends CspBaseController {
         Live live = liveService.findByCourseId(courseId);
         if (live != null) {
             live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
-            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMicros(CspConstants.LIVE_OVER_DELAY)));
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
             liveService.updateByPrimaryKey(live);
         }
 
         //同步yaya医师会议状态
         meetService.doEndMeet(courseId);
+        Map<String, Object> result = new HashMap<>();
+
 
         return success();
     }
