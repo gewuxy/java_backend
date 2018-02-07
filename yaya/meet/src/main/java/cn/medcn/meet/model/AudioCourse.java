@@ -73,10 +73,6 @@ public class AudioCourse implements Serializable {
     @Transient
     private Date startTime;
 
-    //封面地址
-    private String coverUrl;
-
-
     //该会议的持有者id
     @Transient
     private String userId;
