@@ -1458,7 +1458,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             newCourse.setId(null);
             newCourse.setCspUserId(cspUserId);
             newCourse.setCreateTime(new Date());
-            newCourse.setSourceType(AudioCourse.SourceType.csp.ordinal()); // 生成csp讲本
+            newCourse.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal()); // 生成csp讲本
             audioCourseDAO.insert(newCourse);
 
             courseId = newCourse.getId();
