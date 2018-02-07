@@ -378,7 +378,7 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         if (course.getDeleted() != null && course.getDeleted()) {
-            return error(local("source.has.deleted"));
+            return error(APIUtils.ERROR_CODE_COURSE_DELETED, local("source.has.deleted"));
         }
 
         String suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
