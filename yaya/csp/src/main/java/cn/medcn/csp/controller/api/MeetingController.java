@@ -1541,7 +1541,7 @@ public class MeetingController extends CspBaseController {
             return error(local("courseId.empty"));
         }
 
-        if(StringUtils.isEmpty(title) || "".equals(title.trim())){
+        if("".equals(title.trim())){
             return error(local("meeting.title.not.none"));
         }
 
