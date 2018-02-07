@@ -1555,7 +1555,7 @@ public class MeetingController extends CspBaseController {
         course.setTitle(title);
         course.setPublished(true);
         //生成或更新课件标题, 课件主题，背景音乐
-        audioService.updateCourseAndCreateTheme(course,imgId,musicId);
+        audioService.createOrUpdateCourseAndTheme(course,imgId,musicId);
         return success();
     }
 
