@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.CheckUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 import java.util.List;
 
 /**
@@ -34,11 +36,24 @@ public class BackgroundMusic {
     // 是否隐藏
     protected Boolean hide;
 
+    @Transient
+    protected String timeStr;
+
     public static void HandelMusicUrl(List<BackgroundMusic> list, String fileBase){
         if(list != null){
             for(BackgroundMusic music : list){
                 if (CheckUtils.isNotEmpty(music.getUrl())) {
                     music.setUrl(fileBase + music.getUrl());
+                }
+            }
+        }
+    }
+
+    public static void tranTimeStr(List<BackgroundMusic> list){
+        if(list != null){
+            for(BackgroundMusic music : list){
+                if(music.getDuration() != null){
+                    music.setTimeStr(CalendarUtils.secToTime(music.getDuration()));
                 }
             }
         }
