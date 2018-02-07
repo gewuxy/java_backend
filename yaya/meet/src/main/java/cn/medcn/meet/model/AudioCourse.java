@@ -60,6 +60,8 @@ public class AudioCourse implements Serializable {
 
     protected Boolean starRateFlag;
 
+    protected String coverUrl;
+
     @Transient
     @JsonIgnore
     private String userName;

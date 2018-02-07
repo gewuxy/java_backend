@@ -455,4 +455,6 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param musicId
      */
     void updateCourseAndCreateTheme(AudioCourse course, Integer imgId, Integer musicId);
+
+    String getCoverUrl(Integer courseId);
 }

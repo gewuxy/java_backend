@@ -1728,6 +1728,12 @@ public class MeetingController extends CspBaseController {
         Map<String, Object> result = new HashMap<>();
         if (courseId != null && courseId != 0) {
             AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            String coverUrl = audioService.getCoverUrl(courseId);
+            if (CheckUtils.isNotEmpty(coverUrl)){
+                coverUrl = fileBase + coverUrl;
+            }
+            course.setCoverUrl(coverUrl);
+
             AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
             AudioCourseTheme.handleUrl(theme, fileBase);
             result.put("course", course);
