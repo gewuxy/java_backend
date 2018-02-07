@@ -1619,4 +1619,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             audioCourseThemeDAO.updateByPrimaryKey(result);
         }
     }
+
+    @Override
+    public String getCoverUrl(Integer courseId) {
+        return audioCourseDetailDAO.getCoverUrl(courseId);
+    }
 }
