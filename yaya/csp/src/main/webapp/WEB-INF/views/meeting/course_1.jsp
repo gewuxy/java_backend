@@ -452,9 +452,8 @@
                 } else if(data.order == 14){//直播结束
                     if(activeItemIsVideo.length > 0){
                         activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
                     }
+                    popupPalyer.pause();
                     getLiveDuration();
                     $("#liveOverView").removeClass("none");
                 }
