@@ -149,7 +149,7 @@
     </div>
 
     <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
+    <div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
         <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
@@ -158,7 +158,7 @@
     </div>
 
     <!--输入密码界面-->
-    <div class="fixed-full-screen-box ${empty course.password || live.liveState ==4 ? 'none':''}" id="passwordView">
+    <div class="fixed-full-screen-box ${empty course.password || live.liveState ==5 ? 'none':''}" id="passwordView">
         <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
         <div class="fixed-full-screen-main fixed-full-screen-min-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>

@@ -34,7 +34,8 @@ public class AudioCoursePlay implements Serializable {
         playing,//进行中
         pause,//中单
         rating,//星评阶段
-        over;//结束
+        over,//结束缓冲期 10分钟
+        deleted;//真正结束并删除
     }
 
 }
