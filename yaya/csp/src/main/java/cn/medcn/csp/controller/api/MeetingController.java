@@ -225,10 +225,10 @@ public class MeetingController extends CspBaseController {
             }
             //查询出会议发布者信息
             CspUserInfo publisher = cspUserService.selectByPrimaryKey(course.getCspUserId());
-            if (CheckUtils.isNotEmpty(publisher.getAvatar()) && !publisher.getAvatar().toLowerCase().startsWith("http")){
+            if (publisher != null && CheckUtils.isNotEmpty(publisher.getAvatar()) && !publisher.getAvatar().toLowerCase().startsWith("http")){
                 publisher.setAvatar(fileBase + publisher.getAvatar());
+                model.addAttribute("publisher", publisher);
             }
-            model.addAttribute("publisher", publisher);
 
             //设置会议水印
             MeetWatermark watermark = meetWatermarkService.findWatermarkByCourseId(courseId);

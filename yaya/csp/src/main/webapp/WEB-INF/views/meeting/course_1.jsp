@@ -406,7 +406,7 @@
                     }
 
                     console.log("data.pageNum == galleryTop.activeIndex = " + (data.pageNum == galleryTop.activeIndex));
-                    if (data.pageNum == galleryTop.activeIndex){
+                    if (data.pageNum == galleryTop.activeIndex && playing){
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
 
@@ -442,9 +442,8 @@
                 } else if(data.order == 13){//开始星评
                     if(activeItemIsVideo.length > 0){
                         activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
                     }
+                    popupPalyer.pause();
                     openStarRate();
                 } else if(data.order == 11){//直播開始
                     console.log("直播开始");

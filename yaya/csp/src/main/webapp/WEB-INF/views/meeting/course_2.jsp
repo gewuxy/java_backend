@@ -981,7 +981,7 @@
                     if (data.audioUrl != undefined) {
                         $(".swiper-slide[data-num='" + currentPageNo + "']").attr("audio-src", data.audioUrl);
                     }
-                    if (data.pageNum == galleryTop.activeIndex) {
+                    if (data.pageNum == galleryTop.activeIndex && playing) {
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
 
@@ -1033,7 +1033,10 @@
                         }
                     }
                 } else if (data.order == 12) {//接收到推流
-                    $("#ck-video")[0].play();
+                    if (playing){
+                        $("#ck-video")[0].play();
+                    }
+
                     $(".video-play-live").removeClass("video-notPlay-item");
                     $(".video-notPlay-bg").addClass("none");
                     $(".video-notPlay").addClass("none");
