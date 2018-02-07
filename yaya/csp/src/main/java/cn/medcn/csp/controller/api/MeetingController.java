@@ -1541,6 +1541,11 @@ public class MeetingController extends CspBaseController {
             return error(local("courseId.empty"));
         }
 
+        boolean isMine = audioService.checkCourseIsMine(SecurityUtils.get().getId(),courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+
         if("".equals(title.trim())){
             return error(local("meeting.title.not.none"));
         }
@@ -1568,6 +1573,10 @@ public class MeetingController extends CspBaseController {
     public String updateImg(Integer courseId, Integer imgId){
         if(courseId == null){
             return error(local("courseId.empty"));
+        }
+        boolean isMine = audioService.checkCourseIsMine(SecurityUtils.get().getId(),courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
         }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
@@ -1598,6 +1607,10 @@ public class MeetingController extends CspBaseController {
     public String updateMusic(Integer courseId, Integer musicId){
         if(courseId == null){
             return error(local("courseId.empty"));
+        }
+        boolean isMine = audioService.checkCourseIsMine(SecurityUtils.get().getId(),courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
         }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
