@@ -1514,7 +1514,7 @@ public class MeetingController extends CspBaseController {
 
 
     /**
-     * 完善课件标题,主题，背景音乐
+     * 生成或更新课件标题, 生成课件主题，背景音乐
      * @param courseId
      * @param title
      * @return
@@ -1535,7 +1535,7 @@ public class MeetingController extends CspBaseController {
         course.setId(courseId);
         course.setTitle(title);
         course.setPublished(true);
-        //生成课件标题和主题，背景音乐
+        //生成或更新课件标题，如果相关课件有主题，背景音乐，不做生成主题，背景音乐操作
         audioService.updateCourseAndCreateTheme(course,imgId,musicId);
         return success();
     }
