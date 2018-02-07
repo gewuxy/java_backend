@@ -1787,6 +1787,7 @@ public class MeetingController extends CspBaseController {
         Map<String, Object> result = new HashMap<>();
         List<BackgroundMusic> musicList = courseThemeService.findMusicList(1);
         BackgroundMusic.HandelMusicUrl(musicList,fileBase);
+        BackgroundMusic.tranTimeStr(musicList);
         result.put("list",musicList);
         return success(result);
     }
