@@ -1607,6 +1607,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(course.getId());
         AudioCourseTheme result = audioCourseThemeDAO.selectOne(theme);
+        //没有相关记录并且imgId,musicId有不为null的值，执行插入操作
         if(result ==  null && (imgId != null || musicId != null)){
             theme.setImageId(imgId);
             theme.setMusicId(musicId);
