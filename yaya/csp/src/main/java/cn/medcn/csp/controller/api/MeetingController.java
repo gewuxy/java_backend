@@ -1657,6 +1657,7 @@ public class MeetingController extends CspBaseController {
         if (courseId != null && courseId != 0) {
             AudioCourse course = audioService.selectByPrimaryKey(courseId);
             AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            AudioCourseTheme.handleUrl(theme, fileBase);
             result.put("course", course);
             result.put("theme", theme);
         }

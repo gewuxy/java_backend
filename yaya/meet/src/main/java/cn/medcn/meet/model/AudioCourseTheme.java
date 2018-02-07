@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.utils.CheckUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -80,8 +81,12 @@ public class AudioCourseTheme {
      */
     public static void handleUrl(AudioCourseTheme theme, String fileBase){
         if(theme != null){
-            theme.setImgUrl(fileBase + theme.getImgUrl());
-            theme.setUrl(fileBase + theme.getUrl());
+            if (CheckUtils.isNotEmpty(theme.getUrl())){
+                theme.setUrl(fileBase + theme.getUrl());
+            }
+            if (CheckUtils.isNotEmpty(theme.getImgUrl())){
+                theme.setImgUrl(fileBase + theme.getImgUrl());
+            }
         }
     }
 
