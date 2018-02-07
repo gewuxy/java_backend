@@ -1614,9 +1614,9 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             audioCourseThemeDAO.insert(theme);
         //执行更新操作。删除操作传0，不更新也必须传原值过来，不然会将原来的字段清空
         }else if(result != null){
-            theme.setImageId(imgId == null || imgId == Constants.NUMBER_ZERO ?  null : imgId);
-            theme.setMusicId(musicId == null || musicId == Constants.NUMBER_ZERO ?  null : musicId);
-            audioCourseThemeDAO.updateByPrimaryKey(theme);
+            result.setImageId(imgId == null || imgId == Constants.NUMBER_ZERO ?  null : imgId);
+            result.setMusicId(musicId == null || musicId == Constants.NUMBER_ZERO ?  null : musicId);
+            audioCourseThemeDAO.updateByPrimaryKey(result);
         }
     }
 }
