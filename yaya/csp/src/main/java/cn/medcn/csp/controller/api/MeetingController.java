@@ -1185,18 +1185,17 @@ public class MeetingController extends CspBaseController {
 
         //这里不直接修改直播状态了 而是将直播的状态改为待结束状态 10分钟之后真正结束
         Live live = liveService.findByCourseId(courseId);
+        Map<String, Object> result = new HashMap<>();
         if (live != null) {
             live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
             live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
             liveService.updateByPrimaryKey(live);
+            result.put("expireDate", live.getExpireDate());
         }
-
         //同步yaya医师会议状态
         meetService.doEndMeet(courseId);
-        Map<String, Object> result = new HashMap<>();
-
-
-        return success();
+        result.put("serverTime", new Date());
+        return success(result);
     }
 
     protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl, Integer pageNum) {
