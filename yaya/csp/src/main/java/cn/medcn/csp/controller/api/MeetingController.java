@@ -1419,6 +1419,14 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         StarRateResultDTO dto = new StarRateResultDTO();
+        //设置
+        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
+            Live live = liveService.findByCourseId(courseId);
+            if (live != null && live.getExpireDate() != null) {
+                dto.setExpireDate(live.getExpireDate());
+            }
+        }
+
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
         if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
