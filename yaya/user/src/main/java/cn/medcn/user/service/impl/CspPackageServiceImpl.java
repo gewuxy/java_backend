@@ -62,13 +62,14 @@ public class CspPackageServiceImpl extends BaseServiceImpl<CspPackage> implement
             num = limitTime;
         }
         //高级版三个月6个月分别价格是50，100
-        if(packageId == CspPackage.TypeId.PREMIUM.getId() && num == Constants.NUMBER_THREE && currency == Constants.NUMBER_ZERO){
-            money = 50;
+        if (packageId == CspPackage.TypeId.PREMIUM.getId() && num == Constants.NUMBER_THREE && currency == Constants.NUMBER_ZERO) {
+            //money = 50;
+            money = 19.90f;  //活动价(20180108)
         }
-        if(packageId == CspPackage.TypeId.PREMIUM.getId() && num == 6 && currency == Constants.NUMBER_ZERO){
+        if (packageId == CspPackage.TypeId.PREMIUM.getId() && num == 6 && currency == Constants.NUMBER_ZERO) {
             money = 100;
         }
-        Map<String, Object> map = new HashMap<String, Object>();
+        Map<String, Object> map = new HashMap<>();
         map.put("money", (float) Math.round(money * 10000) / 10000);
         map.put("num", num);
         map.put("packageType", packageType);
