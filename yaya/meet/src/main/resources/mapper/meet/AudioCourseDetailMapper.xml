@@ -88,4 +88,8 @@
         GROUP BY his.user_id
     </select>
 
+    <select id="getCoverUrl" resultType="java.lang.String">
+        SELECT img_url FROM t_audio_course_detail WHERE course_id = #{courseId} ORDER BY `sort` limit 1
+    </select>
+
 </mapper>

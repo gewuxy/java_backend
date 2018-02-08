@@ -158,7 +158,7 @@
             },
             onSlideChangeEnd:function(swiper){
                 console.log("send sync order ");
-                sendOrder(swiper.activeIndex);
+                //sendOrder(swiper.activeIndex);
             },
             onSlideChangeStart:function(swiper){
                 closeVideo();

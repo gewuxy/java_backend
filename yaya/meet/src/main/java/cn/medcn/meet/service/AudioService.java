@@ -449,10 +449,12 @@ public interface AudioService extends BaseService<AudioCourse>  {
     ActivityGuideDTO findActivityCourse(Integer courseId);
 
     /**
-     * 完善课件标题，创建课件主题和背景音乐
+     * 生成或更新课件标题, 课件主题，背景音乐
      * @param course
      * @param imgId
      * @param musicId
      */
-    void updateCourseAndCreateTheme(AudioCourse course, Integer imgId, Integer musicId);
+    void createOrUpdateCourseAndTheme(AudioCourse course, Integer imgId, Integer musicId);
+
+    String getCoverUrl(Integer courseId);
 }

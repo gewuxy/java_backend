@@ -1458,7 +1458,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             newCourse.setId(null);
             newCourse.setCspUserId(cspUserId);
             newCourse.setCreateTime(new Date());
-            newCourse.setSourceType(AudioCourse.SourceType.csp.ordinal()); // 生成csp讲本
+            newCourse.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal()); // 生成快捷讲本
             audioCourseDAO.insert(newCourse);
 
             courseId = newCourse.getId();
@@ -1594,23 +1594,34 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
 
     /**
-     * 完善课件标题，创建课件主题和背景音乐
+     * 生成或更新课件标题, 课件主题，背景音乐
      * @param course
      * @param imgId
      * @param musicId
      */
     @Override
-    public void updateCourseAndCreateTheme(AudioCourse course, Integer imgId, Integer musicId) {
+    public void createOrUpdateCourseAndTheme(AudioCourse course, Integer imgId, Integer musicId) {
 
         updateByPrimaryKeySelective(course);
         //创建课件主题，背景音乐
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(course.getId());
         AudioCourseTheme result = audioCourseThemeDAO.selectOne(theme);
+        //没有相关记录并且imgId,musicId有不为null的值，执行插入操作
         if(result ==  null && (imgId != null || musicId != null)){
             theme.setImageId(imgId);
             theme.setMusicId(musicId);
             audioCourseThemeDAO.insert(theme);
+        //执行更新操作。删除操作传0，不更新也必须传原值过来，不然会将原来的字段清空
+        }else if(result != null){
+            result.setImageId(imgId == null || imgId == Constants.NUMBER_ZERO ?  null : imgId);
+            result.setMusicId(musicId == null || musicId == Constants.NUMBER_ZERO ?  null : musicId);
+            audioCourseThemeDAO.updateByPrimaryKey(result);
         }
+    }
+
+    @Override
+    public String getCoverUrl(Integer courseId) {
+        return audioCourseDetailDAO.getCoverUrl(courseId);
     }
 }

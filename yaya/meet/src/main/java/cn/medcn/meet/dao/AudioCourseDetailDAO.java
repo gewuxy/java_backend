@@ -63,4 +63,11 @@ public interface AudioCourseDetailDAO extends Mapper<AudioCourseDetail> {
 
     List<AudioRecordDTO> findFinishedPPtCount(Map<String,Object> params);
 
+    /**
+     * 根据讲本ID获取第一页的封面
+     * @param courseId
+     * @return
+     */
+    String getCoverUrl(@Param("courseId") Integer courseId);
+
 }

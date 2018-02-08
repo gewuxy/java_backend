@@ -43,7 +43,7 @@
     </div>
 
     <%-- 结束 --%>
-    <div class="full-qrcode ${live.liveState == 4 ? '':'none'}" id="cspmake">
+    <div class="full-qrcode ${live.liveState == 5 ? '':'none'}" id="cspmake">
         <div class="full-qrcode-item">
             <div class="full-qrcode-box">
                 <img src="${ctxStatic}/images/full-end-logo.png" alt="">

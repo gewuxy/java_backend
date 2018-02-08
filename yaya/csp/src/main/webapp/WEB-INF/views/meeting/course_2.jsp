@@ -220,7 +220,7 @@
     </div>
 
     <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
+    <div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
         <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
@@ -366,9 +366,9 @@
             </form>
         </div>
         <div class="meeting-star-button popup-star-button t-center">
-            <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+            <button class="button tips ${play.playState == 5 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
             <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
-            <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
+            <button class="button disabled ${!rated && play.playState != 5 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
         </div>
     </div>
 </div>
@@ -981,7 +981,7 @@
                     if (data.audioUrl != undefined) {
                         $(".swiper-slide[data-num='" + currentPageNo + "']").attr("audio-src", data.audioUrl);
                     }
-                    if (data.pageNum == galleryTop.activeIndex) {
+                    if (data.pageNum == galleryTop.activeIndex && playing) {
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
 
@@ -1033,7 +1033,10 @@
                         }
                     }
                 } else if (data.order == 12) {//接收到推流
-                    $("#ck-video")[0].play();
+                    if (playing){
+                        $("#ck-video")[0].play();
+                    }
+
                     $(".video-play-live").removeClass("video-notPlay-item");
                     $(".video-notPlay-bg").addClass("none");
                     $(".video-notPlay").addClass("none");
@@ -1057,9 +1060,8 @@
                 } else if (data.order == 14) {//直播结束
                     if (activeItemIsVideo.length > 0) {
                         activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
                     }
+                    popupPalyer.pause();
 
                     CKobject.getObjectById('ck-video').videoClear();
                     if (isAndroid) {

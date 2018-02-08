@@ -51,8 +51,8 @@ public class StartUpListener extends ContextLoaderListener {
         LiveService liveService = ctx.getBean(LiveService.class);
         //更改直播会议状态线程
         Runnable liveStateChangeTask = new LiveStateChangeTask(liveService);
-        //每十分钟执行一次直播状态监测
-        notifyService.scheduleWithFixedDelay(liveStateChangeTask, 20, 300, TimeUnit.SECONDS);
+        //每分钟执行一次直播状态监测
+        notifyService.scheduleWithFixedDelay(liveStateChangeTask, 20, 60, TimeUnit.SECONDS);
 
         // 启动更新CSP用户套餐版本定时任务
         CspUserPackageService userPackageService = ctx.getBean(CspUserPackageService.class);

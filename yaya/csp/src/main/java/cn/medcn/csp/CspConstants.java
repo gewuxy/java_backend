@@ -37,4 +37,6 @@ public class CspConstants {
     public static final int MEET_AFTER_START_EXPIRE_HOURS = 24;
 
     public static final String COURSE_RATE_TICKET_KEY = "rate_ticket";
+
+    public static final int LIVE_OVER_DELAY = 10;//会议结束延时 10分钟
 }

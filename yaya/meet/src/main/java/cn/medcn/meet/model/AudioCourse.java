@@ -60,6 +60,8 @@ public class AudioCourse implements Serializable {
 
     protected Boolean starRateFlag;
 
+    protected String coverUrl;
+
     @Transient
     @JsonIgnore
     private String userName;
@@ -70,7 +72,6 @@ public class AudioCourse implements Serializable {
     //直播开始时间
     @Transient
     private Date startTime;
-
 
     //该会议的持有者id
     @Transient

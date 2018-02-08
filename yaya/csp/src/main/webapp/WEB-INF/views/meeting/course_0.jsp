@@ -70,7 +70,7 @@
                     </div>
                 </c:forEach>
                 <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
-                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/meeting-blackBg.png');background-color:#3B3E46;"></div>
+                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/meeting-blackBg.png');"></div>
                 </div>
             </div>
             <!--音频文件-->
@@ -278,7 +278,7 @@
         </div>
 
         <div class="meeting-star-button popup-star-button t-center">
-                <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+                <button class="button tips ${play.playState >= 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
                 <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
                 <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
         </div>
