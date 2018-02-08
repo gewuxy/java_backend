@@ -1419,13 +1419,6 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         StarRateResultDTO dto = new StarRateResultDTO();
-        //设置
-        if (course.getPlayType().intValue() > AudioCourse.PlayType.normal.getType()) {
-            Live live = liveService.findByCourseId(courseId);
-            if (live != null && live.getExpireDate() != null) {
-                dto.setExpireDate(live.getExpireDate());
-            }
-        }
 
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
@@ -1441,7 +1434,7 @@ public class MeetingController extends CspBaseController {
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
             //将会议设置为星评阶段
-            openStarRate(course);
+            openStarRate(course, dto);
         }
         return success(dto);
     }
@@ -1451,7 +1444,7 @@ public class MeetingController extends CspBaseController {
      * 开启星评
      * @param course
      */
-    public void openStarRate(AudioCourse course) {
+    public void openStarRate(AudioCourse course, StarRateResultDTO dto) {
         if (course != null) {
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
                 AudioCoursePlay play = audioService.findPlayState(course.getId());
@@ -1460,11 +1453,18 @@ public class MeetingController extends CspBaseController {
             } else {
                 //修改直播状态为星评中状态
                 Live live = liveService.findByCourseId(course.getId());
-                live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                if (live.getLiveState().intValue() < AudioCoursePlay.PlayState.rating.ordinal()) {
+                    if (live.getLiveState() == AudioCoursePlay.PlayState.init.ordinal()) {
+                        live.setStartTime(new Date());
+                        live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expireDays)));
+                    }
+                    live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                } else if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()){
+                    dto.setExpireDate(live.getExpireDate());
+                }
                 liveService.updateByPrimaryKey(live);
             }
         }
-
         //发送开启星评指令
         LiveOrderDTO order = new LiveOrderDTO();
         order.setCourseId(String.valueOf(course.getId()));
