@@ -63,6 +63,11 @@ public class AudioCourseTheme {
     // 更多列表排序
     protected Integer sort;
 
+    //音乐时长
+    @Transient
+    protected String timeStr;
+
+
     public enum ImageMusic{
         IMAGE,
         MUSIC;
