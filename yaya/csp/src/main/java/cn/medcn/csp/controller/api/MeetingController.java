@@ -1749,6 +1749,8 @@ public class MeetingController extends CspBaseController {
             course.setCoverUrl(coverUrl);
 
             AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            Integer duration = theme.getDuration();
+            theme.setTimeStr(CalendarUtils.secToTime(duration == null ? 0 : duration));
             AudioCourseTheme.handleUrl(theme, fileBase);
             result.put("course", course);
             result.put("theme", theme);
