@@ -637,6 +637,9 @@
 
         var changePlayerStete = function(state){
             if(playerState || state == true){
+                if ($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").get(0).play();
+                }
                 playerState = false;
                 started = true;
                 popupPalyer.play();
@@ -652,6 +655,9 @@
                 }
                 changeBgMusicValue(false);
             } else {
+                if ($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").get(0).pause();
+                }
                 playerState = true;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
