@@ -86,7 +86,7 @@ public class LivceServiceImpl extends BaseServiceImpl<Live> implements LiveServi
      */
     @Override
     public void doModifyLiveState(Live live) {
-        if (live.getLiveState() != AudioCoursePlay.PlayState.over.ordinal()) {
+        if (live.getLiveState().intValue() < AudioCoursePlay.PlayState.deleted.ordinal()) {
             LiveOrderDTO order = new LiveOrderDTO();
             order.setCourseId(String.valueOf(live.getCourseId()));
             order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);

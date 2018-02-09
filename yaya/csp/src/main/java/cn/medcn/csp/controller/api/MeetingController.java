@@ -1419,6 +1419,7 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         StarRateResultDTO dto = new StarRateResultDTO();
+
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
         if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
@@ -1432,9 +1433,8 @@ public class MeetingController extends CspBaseController {
                 QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
-            //将会议设置为星评阶段
-            openStarRate(course);
         }
+        openStarRate(course, dto);
         return success(dto);
     }
 
@@ -1443,7 +1443,7 @@ public class MeetingController extends CspBaseController {
      * 开启星评
      * @param course
      */
-    public void openStarRate(AudioCourse course) {
+    public void openStarRate(AudioCourse course, StarRateResultDTO dto) {
         if (course != null) {
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
                 AudioCoursePlay play = audioService.findPlayState(course.getId());
@@ -1452,17 +1452,25 @@ public class MeetingController extends CspBaseController {
             } else {
                 //修改直播状态为星评中状态
                 Live live = liveService.findByCourseId(course.getId());
-                live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                if (live.getLiveState().intValue() < AudioCoursePlay.PlayState.rating.ordinal()) {
+                    if (live.getLiveState() == AudioCoursePlay.PlayState.init.ordinal()) {
+                        live.setStartTime(new Date());
+                        live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expireDays)));
+                    }
+                    live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                } else if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()){
+                    dto.setExpireDate(live.getExpireDate());
+                }
                 liveService.updateByPrimaryKey(live);
             }
         }
-
-        //发送开启星评指令
-        LiveOrderDTO order = new LiveOrderDTO();
-        order.setCourseId(String.valueOf(course.getId()));
-        order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
-        liveService.publish(order);
-
+        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
+            //发送开启星评指令
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setCourseId(String.valueOf(course.getId()));
+            order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
+            liveService.publish(order);
+        }
     }
 
 
@@ -1581,16 +1589,20 @@ public class MeetingController extends CspBaseController {
         }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
-        theme = courseThemeService.selectOne(theme);
-        if(theme != null){
+        AudioCourseTheme result = courseThemeService.selectOne(theme);
+        if(result != null){
             //删除主题
             if(imgId == NUMBER_ZERO){
-                theme.setImageId(null);
-                courseThemeService.updateByPrimaryKey(theme);
+                result.setImageId(null);
+                courseThemeService.updateByPrimaryKey(result);
             }else{
-                theme.setImageId(imgId);
-                courseThemeService.updateByPrimaryKeySelective(theme);
+                result.setImageId(imgId);
+                courseThemeService.updateByPrimaryKeySelective(result);
             }
+        }else{
+            //旧会议可能调用此接口添加主题，需要插入数据
+            theme.setImageId(imgId);
+            courseThemeService.insert(theme);
         }
 
         return success();
@@ -1615,16 +1627,20 @@ public class MeetingController extends CspBaseController {
         }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
-        theme = courseThemeService.selectOne(theme);
-        if(theme != null){
+        AudioCourseTheme result = courseThemeService.selectOne(theme);
+        if(result != null){
             //删除主题
             if(musicId == NUMBER_ZERO){
-                theme.setMusicId(null);
-                courseThemeService.updateByPrimaryKey(theme);
+                result.setMusicId(null);
+                courseThemeService.updateByPrimaryKey(result);
             }else{
-                theme.setMusicId(musicId);
-                courseThemeService.updateByPrimaryKeySelective(theme);
+                result.setMusicId(musicId);
+                courseThemeService.updateByPrimaryKeySelective(result);
             }
+        }else{
+            //旧会议可能调用此接口添加背景音乐，需要插入数据
+                theme.setMusicId(musicId);
+                courseThemeService.insert(theme);
         }
 
         return success();

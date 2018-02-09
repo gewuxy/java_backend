@@ -40,6 +40,8 @@ public class StarRateResultDTO implements Serializable {
 
     protected Date serverTime = new Date();
 
+    protected Date expireDate;
+
 
     public float getAvgScore(){
         if (this.avgScore == 0) {

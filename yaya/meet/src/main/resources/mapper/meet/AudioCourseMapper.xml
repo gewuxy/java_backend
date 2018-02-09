@@ -130,7 +130,7 @@
     </select>
 
     <select id="findLastDraft" resultType="cn.medcn.meet.model.AudioCourse">
-        SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND published = 0 limit 1
+        SELECT * FROM t_audio_course WHERE csp_user_id = #{cspUserId} AND published = 0 AND deleted != 1 AND source_type = 1 limit 1
     </select>
 
     <select id="findHistoryDeliveryByAcceptId" resultType="cn.medcn.meet.dto.CourseDeliveryDTO">

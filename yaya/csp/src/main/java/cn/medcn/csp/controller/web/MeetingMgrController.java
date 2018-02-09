@@ -756,7 +756,9 @@ public class MeetingMgrController extends CspBaseController {
     public String infoAndRateResult(@PathVariable Integer courseId){
         StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
         //处理简介文字的回车键替换成br
-        dto.setInfo(dto.getInfo().replace("\n", "<br>"));
+        if (CheckUtils.isNotEmpty(dto.getInfo())){
+            dto.setInfo(dto.getInfo().replace("\n", "<br>"));
+        }
         return success(dto);
     }
 

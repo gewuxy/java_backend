@@ -838,8 +838,11 @@ a.color-wathet-blue:hover{color:#146ee3}
 .member-buy-content  .user-content { box-shadow: none;}
 .member-buy-content .formrow .formTitle { font-size:16px;}
 .member-buy-content .user-content .pay-mode-list .item { padding:5px 10px; margin:0 10px; }
-.member-buy-content .user-content .time-mode-list .item { width:50px; }
+.member-buy-content .user-content .time-mode-list .item { width:50px; position: relative; }
 .member-buy-tabs-main .formrow .layui-layer-close { position:static; color:#167AFE; margin-right:20px;}
+.member-buy-popup-main .formrow .formControls { overflow: inherit;}
+.member-buy-content .user-content .time-mode-list .icon-hotTips { position:absolute; top:-14px; left:-8px; font-size:20px; background:no-repeat;
+    display: block; width:40px; height:30px; }
 
 .member-buy-disabled { color:#3B3A34 !important; position: relative;}
 .member-buy-disabled .member-buy-disabled-item { width:100%; height:100%; position: absolute;top: 0; left: 0; z-index: 2; background-color: rgba(255,255,255,0.5);  }
@@ -1256,6 +1259,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .user-content .money .formTitle { width:72px; line-height: 75px; text-align: right; }
 .pay-mode .formrow .login-button {  margin-left: 110px; padding:12px 35px;}
 .user-content .payNum { font-size: 36px; color: #3B3A34;}
+.user-content .payDefaultNum { margin-left:20px; text-decoration:line-through; }
 .user-content .last { margin-bottom:0;}
 .pay-mode .flow .textInput{ background:#EDF3F9 ; border-color:#edf3f9;}
 .pay-mode .flow .pr span { position: absolute; top: -7px; right:25px; font-size:22px; color:#a4b3c6;}

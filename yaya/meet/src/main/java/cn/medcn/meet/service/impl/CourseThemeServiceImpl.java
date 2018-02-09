@@ -3,6 +3,7 @@ package cn.medcn.meet.service.impl;
 import cn.medcn.common.pagination.MyPage;
 import cn.medcn.common.pagination.Pageable;
 import cn.medcn.common.service.impl.BaseServiceImpl;
+import cn.medcn.common.utils.CalendarUtils;
 import cn.medcn.common.utils.StringUtils;
 import cn.medcn.meet.dao.*;
 import cn.medcn.meet.dto.CourseThemeDTO;
@@ -85,6 +86,8 @@ public class CourseThemeServiceImpl extends BaseServiceImpl<AudioCourseTheme> im
             AudioCourseTheme courseTheme = courseThemeDAO.findCourseThemeByCourseId(courseId);
             if (courseTheme != null) {
                 AudioCourseTheme.handleUrl(courseTheme,fileBase);
+                Integer musicTime = courseTheme.getDuration() == null ? 0 :courseTheme.getDuration();
+                courseTheme.setTimeStr(CalendarUtils.secToTime(musicTime));
                 themeDTO.setCourseTheme(courseTheme);
             }
         }
