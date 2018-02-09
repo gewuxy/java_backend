@@ -1433,9 +1433,8 @@ public class MeetingController extends CspBaseController {
                 QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
-            //将会议设置为星评阶段
-            openStarRate(course, dto);
         }
+        openStarRate(course, dto);
         return success(dto);
     }
 
@@ -1465,12 +1464,13 @@ public class MeetingController extends CspBaseController {
                 liveService.updateByPrimaryKey(live);
             }
         }
-        //发送开启星评指令
-        LiveOrderDTO order = new LiveOrderDTO();
-        order.setCourseId(String.valueOf(course.getId()));
-        order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
-        liveService.publish(order);
-
+        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
+            //发送开启星评指令
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setCourseId(String.valueOf(course.getId()));
+            order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
+            liveService.publish(order);
+        }
     }
 
 
