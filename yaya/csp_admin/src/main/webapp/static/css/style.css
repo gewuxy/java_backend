@@ -552,7 +552,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .icon-pwdChange { position:absolute; right:20px; top:18px; display: inline-block; width:20px; height:10px; padding:0; }
 .pwdChange-off { background:url(../images/pwdChangeState-off.png) no-repeat center; }
 .pwdChange-on { background:url(../images/pwdChangeState-on.png) no-repeat center; }
-.meeting-form-item {padding-left:35px;padding-bottom: 25px}
+.meeting-form-item {padding-left:35px;padding-bottom: 45px}
 .login-formInput{ border:1px solid #dce3ea; background:transparent; width:493px;     -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;}
 .meeting-form-item .login-formInput{ border:1px solid #dce3ea; background:transparent; width:493px;     -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;}
 .meeting-form-item .textarea{ padding:13px 20px;  margin-bottom:25px;   border: 1px solid #dce3ea; -moz-border-radius: 10px;-webkit-border-radius: 10px; border-radius: 10px;  }

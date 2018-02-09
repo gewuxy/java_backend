@@ -248,4 +248,15 @@
         WHERE c.id = #{courseId}
         GROUP BY c.id
     </select>
+
+    <select id="findCourseByType" resultType="cn.medcn.meet.model.AudioCourse">
+        SELECT * FROM t_audio_course WHERE source_type BETWEEN 2 and 4
+        <if test="keyword != null">
+            AND title LIKE CONCAT('%',#{keyword}, '%')
+        </if>
+        <if test="sourceType != null">
+            AND source_type = #{sourceType}
+        </if>
+        ORDER BY id DESC
+    </select>
 </mapper>

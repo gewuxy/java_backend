@@ -14,23 +14,18 @@ import cn.medcn.common.supports.FileTypeSuffix;
 import cn.medcn.common.supports.upload.FileUploadProgress;
 import cn.medcn.common.utils.*;
 import cn.medcn.csp.admin.log.Log;
+import cn.medcn.meet.dao.BackgroundImageDAO;
+import cn.medcn.meet.dao.BackgroundMusicDAO;
 import cn.medcn.meet.dto.CourseDeliveryDTO;
-import cn.medcn.meet.dto.CourseReprintDTO;
-import cn.medcn.meet.dto.MeetInfoDTO;
 import cn.medcn.meet.dto.VideoDownloadDTO;
-import cn.medcn.meet.model.AudioCourse;
-import cn.medcn.meet.model.AudioCourseDetail;
-import cn.medcn.meet.model.Live;
-import cn.medcn.meet.model.Meet;
+import cn.medcn.meet.model.*;
 import cn.medcn.meet.service.AudioService;
+import cn.medcn.meet.service.CourseThemeService;
 import cn.medcn.meet.service.LiveService;
-import cn.medcn.meet.service.MeetService;
-import cn.medcn.user.model.CspUserPackage;
-import cn.medcn.user.model.FluxOrder;
-import cn.medcn.user.model.UserFluxUsage;
 import cn.medcn.user.service.CspUserPackageService;
 import cn.medcn.user.service.CspUserService;
 import cn.medcn.user.service.UserFluxService;
+import com.alibaba.fastjson.JSON;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -44,7 +39,6 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -88,6 +82,13 @@ public class CspMeetController extends BaseController{
     @Autowired
     protected OpenOfficeService openOfficeService;
 
+    @Autowired
+    protected CourseThemeService courseThemeService;
+    @Autowired
+    protected BackgroundMusicDAO backgroundMusicDAO;
+    @Autowired
+    protected BackgroundImageDAO backgroundImageDAO;
+
     @RequestMapping(value="/list")
     @Log(name = "获取会议列表")
     public String searchMeetList(Pageable pageable, Integer deleted,String keyword, Model model){
@@ -104,21 +105,77 @@ public class CspMeetController extends BaseController{
         return "/meet/meetList";
     }
 
-    @RequestMapping(value = "/edit")
-    @Log(name = "跳转编辑讲本页面")
-    public String toEditAudioCourse() {
-        return "/meet/editMeetInfo";
+    @RequestMapping(value = "/course/list")
+    @Log(name = "获取讲本模板列表")
+    public String courseList(Pageable pageable, String keyword, Integer sourceType, Model model) {
+        if (!StringUtils.isEmpty(keyword)) {
+            pageable.put("keyword", keyword);
+            model.addAttribute("keyword",keyword);
+        }
+        if (sourceType != null) {
+            pageable.put("sourceType", sourceType);
+            model.addAttribute("sourceType", sourceType);
+        }
+        MyPage<AudioCourse> page = audioService.findCourseByPage(pageable);
+        model.addAttribute("page",page);
+        model.addAttribute("fileBase", fileBase);
+        return "/meet/courseList";
     }
 
-    @RequestMapping(value = "/save")
-    @Log(name = "编辑讲本信息")
-    public String saveAudioCourseInfo(AudioCourse course,Model model,RedirectAttributes redirectAttributes) {
-        if (course != null){
-            audioService.updateByPrimaryKey(course);
-            addFlashMessage(redirectAttributes, "编辑讲本信息成功");
-            return "redirect:/csp/meet/list";
+    @RequestMapping(value = "/course/edit")
+    @Log(name = "跳转编辑讲本页面")
+    public String toEditAudioCourse(Integer courseId,Model model) {
+        if (courseId != null) {
+            AudioCourse course = audioService.findAudioCourse(courseId);
+            if (course != null) {
+                // 是否有背景主题
+                AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+                if (theme != null) {
+                    model.addAttribute("courseTheme", theme);
+                }
+                model.addAttribute("course",course);
+            }
         }
-        return null;
+        model.addAttribute("fileBase", fileBase);
+        return "/meet/editCourse";
+    }
+
+    @RequestMapping(value = "/course/save")
+    @Log(name = "编辑讲本信息")
+    public String saveAudioCourseInfo(AudioCourse course,Integer musicId, Integer imageId,
+                                      Model model, RedirectAttributes redirectAttributes) {
+        if (course != null && course.getId() != null){
+            AudioCourse course1 = audioService.selectByPrimaryKey(course.getId());
+            if (course1 != null) {
+                course1.setCoverUrl(course.getCoverUrl());
+                course1.setTitle(course.getTitle());
+                course1.setInfo(course.getInfo());
+                course1.setPublished(true);
+                audioService.updateByPrimaryKey(course1);
+            }
+
+            AudioCourseTheme cond = new AudioCourseTheme();
+            cond.setCourseId(course1.getId());
+            AudioCourseTheme theme = courseThemeService.selectOne(cond);
+
+            if (theme == null) {
+                cond.setMusicId(musicId);
+                cond.setImageId(imageId);
+                if (cond.getMusicId() != null || cond.getImageId()!= null) {
+                    courseThemeService.insert(cond);
+                }
+            } else {
+                // 修改背景音乐
+                theme.setMusicId(musicId);
+                theme.setImageId(imageId);
+                courseThemeService.updateByPrimaryKey(theme);
+            }
+            addFlashMessage(redirectAttributes, "编辑讲本信息成功");
+            return "redirect:/csp/meet/course/list";
+        } else {
+            model.addAttribute("error", "请上传讲本文档信息");
+            return "/meet/editCourse";
+        }
     }
 
 
@@ -256,7 +313,7 @@ public class CspMeetController extends BaseController{
         }
         audioService.updateAllDetails(courseId, imgList);
         Map<String, Object> map = new HashMap<>();
-        map.put("coverUrl", fileBase + imgList.get(0));
+        map.put("detailImgUrl", fileBase + imgList.get(0));
         map.put("title", course.getTitle());
         map.put("course",course);
         return success(map);
@@ -311,5 +368,57 @@ public class CspMeetController extends BaseController{
             return error(e.getMessage());
         }
         return success(result);
+    }
+
+
+    @RequestMapping(value = "/background/music")
+    @Log(name = "获取背景音乐")
+    public String backgroundMusic(Pageable pageable, String keyword, Model model) {
+        if (CheckUtils.isNotEmpty(keyword)) {
+            pageable.put("name", keyword);
+        }
+        MyPage<BackgroundMusic> page = courseThemeService.findMusicPageList(pageable);
+        BackgroundMusic.HandelMusicUrl(page.getDataList(), fileBase);
+        model.addAttribute("page", page);
+        return "/meet/musicList";
+    }
+
+
+    @RequestMapping(value = "/sel/music")
+    @ResponseBody
+    @Log(name = "选择背景音乐")
+    public String selectMusic(@RequestParam(value = "musicId", required = true) Integer musicId) {
+        if (musicId != null) {
+             BackgroundMusic music = backgroundMusicDAO.selectByPrimaryKey(musicId);
+             if (music != null) {
+                return success(music);
+             }
+        }
+        return null;
+    }
+
+    @RequestMapping(value = "/background/image")
+    @Log(name = "获取背景图片")
+    public String backgroundImage(Pageable pageable, String keyword, Model model){
+        if (CheckUtils.isNotEmpty(keyword)) {
+            pageable.put("keyword", keyword);
+        }
+        MyPage<BackgroundImage> page = courseThemeService.findImagePageList(pageable);
+        BackgroundImage.HandelImgUrl(page.getDataList(), fileBase);
+        model.addAttribute("page", page);
+        return "/meet/imageList";
+    }
+
+    @RequestMapping(value = "/sel/image")
+    @ResponseBody
+    @Log(name = "选择背景图片")
+    public String selectImage(@RequestParam(value = "imageId", required = true) Integer imageId) {
+        if (imageId != null) {
+            BackgroundImage image = backgroundImageDAO.selectByPrimaryKey(imageId);
+            if (image != null) {
+                return success(image);
+            }
+        }
+        return null;
     }
 }
