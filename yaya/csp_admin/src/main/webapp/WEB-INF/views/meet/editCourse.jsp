@@ -6,13 +6,43 @@
     <link href="${ctxStatic}/css/global.css" type="text/css" rel="stylesheet" />
     <link href="${ctxStatic}/css/style.css" type="text/css" rel="stylesheet" />
     <script src="${ctxStatic}/js/util.js"></script>
+    <script>
+        $(document).ready(function() {
+            var coverUrl = "${course.coverUrl}";
+            if (coverUrl == null || coverUrl=="") {
+                $("#coverView").attr("src", "");
+            }
 
-    <title>编辑讲本模板</title>
+            $("#courseForm").validate({
+                submitHandler: function (form) {
+                    layer.msg('正在提交，请稍等...', {
+                        icon: 16,
+                        shade: 0.01
+                    });
+                    form.submit();
+                },
+                errorContainer: "#messageBox",
+                errorPlacement: function (error, element) {
+                    $("#messageBox").text("输入有误，请先更正。");
+                    if (element.is(":checkbox") || element.is(":radio") || element.parent().is(".input-append")) {
+                        error.appendTo(element.parent().parent());
+                    } else {
+                        error.insertAfter(element);
+                    }
+                }
+            });
+
+            if("${error}"){
+                layer.msg("${error}");
+            }
+
+        });
+    </script>
 </head>
 <body>
     <ul class="nav nav-tabs">
-        <li><a href="${ctx}/csp/meet/list">会议列表</a></li>
-        <li class="active"><a href="#">编辑讲本模板</a></li>
+        <li><a href="${ctx}/csp/meet/course/list">讲本列表</a></li>
+        <li class="active"><a href="${ctx}/csp/meet/course/edit">编辑讲本</a></li>
     </ul>
     <div class="admin-module clearfix item-radius">
         <div class="col-lg-5">
@@ -20,14 +50,14 @@
                 <c:choose>
                     <c:when test="${fn:length(course.details) > 0}">
                         <div class="upload-ppt-area upload-ppt-area-finish">
-                            <img src="${fileBase}${course.details[0].imgUrl}" alt="" id="cover">
+                            <img src="${fileBase}${course.details[0].imgUrl}" alt="" id="detailImgUrl">
                         </div>
                     </c:when>
                     <c:otherwise>
                         <div class="upload-ppt-area">
                             <label for="uploadFile">
                                 <input type="file" name="file" class="none" id="uploadFile">
-                                <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt="" id="cover"></p>
+                                <p class="img"><img src="${ctxStatic}/images/upload-ppt-area-img.png" alt="" id="detailImgUrl"></p>
                                 <p id="uploadTipView">或拖动PDF／PPT到此区域上传</p>
                                 <p class="error" id="sugest">建议使用.pdf或.pptx文件效果更佳</p>
                             </label>
@@ -53,65 +83,103 @@
                                 <p class="color-gray-02 ${empty course.details ? '' : 'none'}" id="limitView">选择小于100M的文件</p>
                             </c:if>
                         </label>
-
-                        <a href="${ctx}/csp/meet/details/${course.id}" class="button color-blue min-btn ${not empty course.details?'':'none'}" id="editBtn">编辑</a>
                     </div>
                     <div class="metting-progreesItem clearfix t-left none">
                         <span id="uploadAlt">上传进度</span> <span class="color-blue" id="progressS">0%</span>
                         <p><span class="metting-progreesBar"><i style="width:0%" id="progressI"></i></span></p>
 
                     </div>
-                    <%--<c:if test="${empty course.details}">
-                        <p class="color-gray-02 ${empty course.details ? '' : 'none'}" id="limitView">选择小于100M的文件</p>
-                    </c:if>--%>
-
                     <span class="cells-block error none" id="detailsError"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;请上传演讲文档</span>
                 </div>
             </div>
-
             <div class="control-group"></div>
-            <div class="upload-metting-star" id="dataFlash">
-            <div class="control-group">
-                <label class="control-label">上传讲本封面:</label>
-                <div class="controls">
-                    <input type="hidden" name="coverUrl" id="coverUrl" value="${course.coverUrl}">
-                    <img width="200" height="200" id="coverView"
-                            <c:choose>
-                                <c:when test="${not empty course.coverUrl}">
-                                    src="${fileBase}${course.coverUrl}"
-                                </c:when>
-                                <c:otherwise>
-                                    src="${fileBase}${course.coverUrl}"
-                                </c:otherwise>
-                            </c:choose>
-                    />&nbsp;
-                    <input type="file" name="file" id="coverFile" style="width:180px">
-                    <span class="help-inline">图片格式为jpg、png、jpeg</span>
+
+            <div class="upload-metting-star" id="dataFlash" style="padding-top: 10px">
+                <div class="control-group">
+                    <div class="controls">
+                        上传讲本封面：
+                        <input type="hidden" name="coverUrl" id="coverUrl" value="${course.coverUrl}">
+                        <img width="200" height="200" id="coverView"
+                                <c:choose>
+                                    <c:when test="${not empty course.coverUrl}">
+                                        src="${fileBase}${course.coverUrl}"
+                                    </c:when>
+                                    <c:otherwise>
+                                        src=""
+                                    </c:otherwise>
+                                </c:choose>
+                        />&nbsp;
+                        <input type="file" name="file" id="coverFile" style="width:180px">
+                        <span class="help-inline">图片格式为jpg、png、jpeg</span>
+                    </div>
                 </div>
             </div>
-            </div>
-
         </div>
 
         <div class="col-lg-7">
-            <form action="${ctx}/csp/meet/save" method="post" id="courseForm" name="courseForm" onsubmit="return false;">
-                <input type="hidden" name="id" value="${course.id}"/>
-                <input type="hidden" name="coverUrl" id="coverUrl" value="">
+            <form action="${ctx}/csp/meet/course/save" method="post" id="courseForm" name="courseForm" onsubmit="return false;">
+                <input type="hidden" name="id" id="courseId" value="${course.id}"/>
+                <input type="hidden" name="coverUrl" id="cover_url" value="${course.coverUrl}">
+
                 <div class="meeting-form-item login-form-item">
-                    <label for="courseTitle" class="cells-block pr">
-                        <input id="courseTitle" type="text" class="login-formInput" style="height:40px" name="title" placeholder="输入讲本标题" value="">
-                    </label>
-                    <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入讲本标题</span>
-                    <div class="textarea" style="width: 500px">
-                        <textarea name="info" id="courseInfo" cols="10" maxlength="600" rows="10" placeholder="输入讲本简介"></textarea>
-                        <p class="t-right" id="leftInfoCount">600</p>
+                    <div class="control-group">
+                        <div class="controls">
+                            <font color="red">*</font>&nbsp;讲本标题：
+                            <input id="courseTitle" type="text" style="height:40px;width: 350px" class="required input-xlarge" name="title" value="${course.title}">
+                            <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入讲本标题</span>
+                        </div>
                     </div>
-                    <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入讲本简介</span>
-                    <input type="hidden" name="playType" id="coursePlayType" value="0">
+
+                    <div class="control-group" style="padding-top:10px;">
+                        <div class="controls">
+                            <font color="red">*</font>&nbsp;讲本简介：
+                            <textarea name="info" id="courseInfo" style="width: 450px" class="required input-xlarge" rows="5" maxlength="600">${course.info}</textarea>
+                            <span class="t-right" id="leftInfoCount">600字</span>
+                            <span class="cells-block error none"><img src="${ctxStatic}/images/login-error-icon.png" alt="">&nbsp;输入讲本简介</span>
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="padding-top:10px">
+                        <div class="controls">
+                            <font color="red">*</font>&nbsp;讲本类型：
+                            <select id="sourceType" name="sourceType" style="width: 130px;" class="required input-xlarge">
+                                <option value=""/>选择类型
+                                <option value="2"/>贺卡模板
+                                <option value="3"/>有声红包
+                                <option value="4"/>快捷讲本
+                            </select>
+                            <script>
+                                document.getElementById("sourceType").value="${course.sourceType}";
+                            </script>
+
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="padding-top:10px;">
+                        <div class="controls"  id="music">背景音乐：
+                            <input type="text" style="height:30px" id="musicName" name="musicName" value="${courseTheme.name}" readonly>
+                            <input type="hidden" name="musicId" id="musicId" value="${courseTheme.musicId}">&nbsp;
+                            <input type="button" class="btn btn-primary" value="选择音乐" onclick="selectMusic();">
+                            <input type="button" class="btn btn-primary" value="清除音乐" onclick="clearMusic();">
+                        </div>
+                    </div>
+
+                    <div class="control-group" style="padding-top:10px;">
+                        <div class="controls"  id="image">背景图片：
+                            <input type="text" style="height:30px" id="imageName" name="imageName" value="${courseTheme.imgName}" readonly>
+                            <input type="hidden" name="imageId" id="imageId" value="${courseTheme.imageId}">&nbsp;
+                            <input type="button" class="btn btn-primary" value="选择图片" onclick="selectImage();">
+                            <input type="button" class="btn btn-primary" value="清除图片" onclick="clearImage();">
+                        </div>
+                    </div>
                 </div>
-                <input id="saveSubmit" type="submit" class="button login-button buttonBlue" style="width: 100px;margin-left: 180px" value="确认提交">
+
+                <input id="saveSubmit" type="submit" class="btn btn-primary" style="margin-left: 250px" value=" 确认提交 ">
+                &nbsp;&nbsp;
+                <input id="btnCancel" class="btn" type="button" value="返 回" onclick="history.go(-1)">
             </form>
         </div>
+
     </div>
 
     <div class="cancel-popup-box" id="uploadSuccess">
@@ -141,13 +209,6 @@
         uploadFile(document.getElementById(id));
     });
 
-    function freshFlux(){
-        ajaxGet("${ctx}/csp/meet/flux/fresh", {}, function(data){
-            $("#myFlux").text(data.data);
-            layer.closeAll();
-        });
-    }
-
     function fleshPage(data){
         layer.open({
             type: 1,
@@ -164,11 +225,12 @@
             yes:function(){
                 success = false;
                 $(".upload-ppt-area").addClass(" upload-ppt-area-finish");
-                $("#cover").attr("src", data.coverUrl);
+                $("#detailImgUrl").attr("src", data.detailImgUrl);
                 $("#uploadTipView").remove();
                 $("#sugest").remove();
 
                 $("#courseTitle").val(data.course.title);
+                $("#courseId").val(data.course.id);
 
                 $("#uploadFile").replaceWith('<input type="file" name="file" class="none" id="uploadFile">');
                 $("#uploadFile").change(function(){
@@ -178,7 +240,7 @@
                 $("#reUploadFile").change(function(){
                     uploadFile($("#reUploadFile")[0]);
                 });
-                layer.close();
+                layer.closeAll();
             },
             cancel :function(){
 
@@ -325,29 +387,6 @@
 
     // 上传封面图片
     $(document).ready(function() {
-        var coverUrl = "${course.coverUrl}";
-        if (coverUrl == null || coverUrl=="") {
-            $("#coverView").attr("src", "");
-        }
-
-        $("#courseForm").validate({
-            submitHandler: function (form) {
-                layer.msg('正在提交，请稍等...', {
-                    icon: 16,
-                    shade: 0.01
-                });
-                form.submit();
-            },
-            errorContainer: "#messageBox",
-            errorPlacement: function (error, element) {
-                $("#messageBox").text("输入有误，请先更正。");
-            }
-        });
-
-        if("${error}"){
-            layer.msg("${error}");
-        }
-
         $("#coverFile").change(function(){
             coverFile($("#coverFile")[0]);
         });
@@ -387,6 +426,7 @@
         function fleshCover(data) {
             $("#coverView").attr("src", data.absolutePath);
             $("#coverUrl").val(data.relativePath);
+            $("#cover_url").val(data.relativePath);
             $("#coverFile").replaceWith('<input type="file" id="coverFile" name="file" style="width:180px">');
             $("#coverFile").change(function(){
                 coverFile($("#coverFile")[0]);
@@ -396,34 +436,41 @@
     });
 
 
+    // 选择背景音乐
+    function selectMusic() {
+        layer.open({
+            type: 2, //ifream窗口
+            title: '背景音乐',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['1000px', '90%'],
+            content: '${ctx}/csp/meet/background/music',
+        });
+    }
 
+    function clearMusic() {
+        $("#musicId").val("");
+        $("#musicName").val("");
+    }
 
-    /*$(".login-button").click(function(){
-        var $courseTitle = $("#courseTitle");
-        var $courseInfo = $("#courseInfo");
+    // 选择背景图片
+    function selectImage() {
+        layer.open({
+            type: 2, //ifream窗口
+            title: '背景图片',
+            shadeClose: true,
+            shade: 0.8,
+            area: ['1000px', '90%'],
+            content: '${ctx}/csp/meet/background/image',
+        });
+    }
 
-        if (detailsLength == 0){
-            $("#detailsError").removeClass("none");
-            return;
-        }
-        if ($.trim($courseTitle.val()) == ''){
-            $courseTitle.focus();
-            $courseTitle.parent().next(".error").removeClass("none");
-            return;
-        } else {
-            $courseTitle.parent().next(".error").addClass("none");
-        }
-
-        if ($.trim($courseInfo.val()) == ''){
-            $courseInfo.focus();
-            $courseInfo.parent().next(".error").removeClass("none");
-            return;
-        } else {
-            $courseInfo.parent().next(".error").addClass("none");
-        }
-        $("#courseForm").submit();
-    });*/
+    function clearImage() {
+        $("#imageId").val("");
+        $("#imageName").val("");
+    }
 </script>
+
 
 </body>
 </html>
