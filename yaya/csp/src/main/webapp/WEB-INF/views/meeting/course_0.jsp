@@ -567,7 +567,7 @@
             activeItemIsVideo.get(0).networkState
         }
 
-        const maxBgVolume = 0.4;
+        const maxBgVolume = 1;
         const minBgVolume = 0.2;
         var hasBgMusic = $("#bgMusicAudio").length > 0;
         if (hasBgMusic) {
