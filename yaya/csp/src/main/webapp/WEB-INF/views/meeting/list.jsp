@@ -329,7 +329,9 @@
                                 //赋值给插件
                                 swiper.snapGrid = newOffset;
                                 swiper.slidesGrid = newOffset;
-
+                                var dataSrc = $(".swiper-slide-active").attr('audio-src');
+                                asAllItem[0].load(dataSrc);
+                                asAllItem[0].play()
                             },
                             onSlideChangeEnd:function(swiper){
                                 var dataSrc = $(".swiper-slide-active").attr('audio-src');
