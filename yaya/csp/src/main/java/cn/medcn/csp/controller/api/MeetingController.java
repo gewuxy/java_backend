@@ -1589,16 +1589,20 @@ public class MeetingController extends CspBaseController {
         }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
-        theme = courseThemeService.selectOne(theme);
-        if(theme != null){
+        AudioCourseTheme result = courseThemeService.selectOne(theme);
+        if(result != null){
             //删除主题
             if(imgId == NUMBER_ZERO){
-                theme.setImageId(null);
-                courseThemeService.updateByPrimaryKey(theme);
+                result.setImageId(null);
+                courseThemeService.updateByPrimaryKey(result);
             }else{
-                theme.setImageId(imgId);
-                courseThemeService.updateByPrimaryKeySelective(theme);
+                result.setImageId(imgId);
+                courseThemeService.updateByPrimaryKeySelective(result);
             }
+        }else{
+            //旧会议可能调用此接口添加主题，需要插入数据
+            theme.setImageId(imgId);
+            courseThemeService.insert(theme);
         }
 
         return success();
@@ -1623,16 +1627,20 @@ public class MeetingController extends CspBaseController {
         }
         AudioCourseTheme theme = new AudioCourseTheme();
         theme.setCourseId(courseId);
-        theme = courseThemeService.selectOne(theme);
-        if(theme != null){
+        AudioCourseTheme result = courseThemeService.selectOne(theme);
+        if(result != null){
             //删除主题
             if(musicId == NUMBER_ZERO){
-                theme.setMusicId(null);
-                courseThemeService.updateByPrimaryKey(theme);
+                result.setMusicId(null);
+                courseThemeService.updateByPrimaryKey(result);
             }else{
-                theme.setMusicId(musicId);
-                courseThemeService.updateByPrimaryKeySelective(theme);
+                result.setMusicId(musicId);
+                courseThemeService.updateByPrimaryKeySelective(result);
             }
+        }else{
+            //旧会议可能调用此接口添加背景音乐，需要插入数据
+                theme.setMusicId(musicId);
+                courseThemeService.insert(theme);
         }
 
         return success();
