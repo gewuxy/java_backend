@@ -275,6 +275,8 @@ public interface AudioService extends BaseService<AudioCourse>  {
 
     MyPage<AudioCourse> findAllMeetForManage(Pageable pageable);
 
+    MyPage<AudioCourse> findCourseByPage(Pageable pageable);
+
     CourseDeliveryDTO findMeetDetail(Integer id);
 
     /**

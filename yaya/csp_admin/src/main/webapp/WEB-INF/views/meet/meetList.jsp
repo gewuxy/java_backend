@@ -7,7 +7,6 @@
 <body>
 <ul class="nav nav-tabs">
     <li class="active"><a href="${ctx}/csp/meet/list">会议列表</a></li>
-    <li><a href="${ctx}/csp/meet/edit">编辑讲本模板</a></li>
 </ul>
 <%@include file="/WEB-INF/include/message.jsp"%>
 <form id="pageForm" name="pageForm" action="${ctx}/csp/meet/list" method="post">

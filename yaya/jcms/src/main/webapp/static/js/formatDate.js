@@ -8,8 +8,8 @@ function format(shijianchuo) {
     var m = time.getMonth()+1;
     var d = time.getDate();
     var h = time.getHours();
-    var mm = time.getMinutes()+1;
-    var s = time.getSeconds()+1;
+    var mm = time.getMinutes();
+    var s = time.getSeconds();
     return y+'-'+add0(m)+'-'+add0(d)+' '+add0(h)+':'+add0(mm)+':'+add0(s);
 }
 
