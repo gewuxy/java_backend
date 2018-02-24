@@ -1651,7 +1651,8 @@
                     }else{
                         $courseInfo.parent().next(".error").addClass("none");
                     }
-                     if(playType >= 1){
+
+                    if(playType >= 1){
                         if(startTime == ""  || startTime == null){
                             $timedate.focus();
                             $timedate.parent().parent().next(".error").removeClass("none");
@@ -1665,7 +1666,6 @@
                             saveFormNoPublished();
 
                         }else {
-
                             registPost();
                         }
                         $courseInfo.parent().next(".error").addClass("none");
@@ -1695,7 +1695,14 @@
                         }
 
                     }else{
-                        layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
+                        var flux = $("#myFlux").text();
+                        var playType =  $("#coursePlayType").val();
+                        if (playType == 2){
+                            if(flux < 10){
+                                return ;
+                            }
+                        }
+                            layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
                     }
                 }
 
@@ -1713,6 +1720,13 @@
                         if(data.code=="0"){
                             location.href="${ctx}/mgr/meet/list"
                         }else{
+                            var flux = $("#myFlux").text();
+                            var playType =  $("#coursePlayType").val();
+                            if (playType == 2){
+                                if(flux < 10){
+                                    return ;
+                                }
+                            }
                             layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
                         }
                     }
