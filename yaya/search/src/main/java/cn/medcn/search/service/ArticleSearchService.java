@@ -8,8 +8,8 @@ import java.util.List;
 /**
  * Created by weilong on 2017/8/7.
  */
-public interface ArticleSearchService extends BaseSearchService {
-    public void update(Article article) throws SystemException;
-
-    public void updateList(List<Article> articleList) throws SystemException;
+public interface ArticleSearchService  {
+//    public void update(Article article) throws SystemException;
+//
+//    public void updateList(List<Article> articleList) throws SystemException;
 }

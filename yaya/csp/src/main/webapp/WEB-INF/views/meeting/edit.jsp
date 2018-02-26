@@ -221,7 +221,6 @@
                                 $(function () {
                                     var isStarCheck = $("#switchCPStar").is(":checked");
                                     var starRateFlag = ${course.starRateFlag};
-                                    //var checkOpen = $("#switchCPStar").val();
                                     $("#starRateFlag").val(isStarCheck);
                                     if (isStarCheck){
                                         $("#starRateFlag").val(isStarCheck);
@@ -816,12 +815,19 @@
             });
         });
 
+        $("#limitFive").addClass("none");
+        if(${size>=5}){
+            $("#limitFive").removeClass("none");
+            $("#limitInsert").text("<fmt:message key='page.meeting.star.allow'/>")
+        }
 
         $(".login-button").click(function(){
+            success = false;
             var $courseTitle = $("#courseTitle");
             var $courseInfo = $("#courseInfo");
             var $timedate = $(".timedate-input");
-
+            var startTime = $("#liveStartTime").val();
+            var submitFormState=  ${course.published};
             if (detailsLength == 0){
                 $("#detailsError").removeClass("none");
                 return;
@@ -857,8 +863,6 @@
 
             if (playType >= 1){
                 var startTime = $("#liveStartTime").val();
-                /*var endTime = $("#liveEndTime").val();*/
-                //var dateBeforeNow = new Date(Date.parse(startTime)).getTime() <= new Date().getTime();
                 if(startTime == ""  || startTime == null){
                     $timedate.focus();
                     $timedate.parent().parent().next(".error").removeClass("none");
@@ -869,6 +873,9 @@
             } else {
                 $timedate.parent().parent().next(".error").addClass("none");
             }
+
+            $courseInfo.parent().next(".error").addClass("none");
+
             //设置水印的位置,状态
             if(${packageId == 1}){  //标准版
                 if(${not empty watermark}){
@@ -896,7 +903,8 @@
                     $("#name").val($("#waterName").val() == '' ? "${appName}":$("#waterName").val());
                 }
             }
-            $("#courseForm").submit();
+            registPost();
+            //$("#courseForm").submit();
         });
 
         $("#rootList>li").click(function(){
@@ -1069,7 +1077,7 @@
         })
 
         /*123 星评功能*/
-
+        //星评开关对应的提示  隐藏和显示相应的标签
         $(function(){
             $("#switchCPStar").click(function () {
                 success = true;
@@ -1140,6 +1148,7 @@
             })
         })
 
+        //星评回显
         $(function () {
             var flag = ${course.starRateFlag};
             var state = ${course.published};
@@ -1173,7 +1182,6 @@
                             html = initStar(avgScore,html);
                             html +='</div><div class="grade ">' +avgScore+'<fmt:message key="page.meeting.tips.score.unit"/>'+'</div></div></div><div class="title"><fmt:message key="page.meeting.multiple.score"/></div></div>'
                             if (detailList != null) {
-                                //html += '<div class="star-list hidden-box clearfix">';
                                 for (var j = 0; j < detailList.length; j++) {
                                     html += '<div class="upload-metting-star-row">\n' +
                                         '                                        <div class="fr">\n' +
@@ -1234,7 +1242,7 @@
             }
         })
 
-
+        //星评项只能添加5项
         $("#submitCPStar").click(function () {
             var length = $(".grade").length
             if (length >5){
@@ -1244,10 +1252,12 @@
             }
         })
 
+        //取消星评项 隐藏输入框
         $("#cancelStar").click(function () {
             $("#submitOption").hide();
         })
 
+        //保存评价项
         $("#btnStar").click(function () {
             success = true;
             var starOption;
@@ -1258,12 +1268,6 @@
                  starOption =  $("#limitOptionUs").val();
                  $("#limitOptionUs").val("");
              }
-            var starLength = starOption.length;
-            //var reg = /^[\u4e00-\u9fa5^%&',;=?$\x22]{1,6}$|^[a-zA-Z^%&',;=?$\x22]{1,12}$/;
-          //  var reg = /^[\u4e00-\u9fa5_a-zA-Z0-9]+$/;
-            //var  regStarOption= reg.test(starOption);
-            //regStarOption = spaceReg.test(starOption);
-            var spaceOption =  starOption.substring(0,1);
             var optionId ;
             if ( $.trim(starOption)!=""){
                 ajaxPost('${ctx}/mgr/meet/star/save/'+${course.id}, {"title":starOption}, function(data){
@@ -1313,11 +1317,7 @@
             }
         })
 
-
-
-
         //星标提示语1
-        //投稿
             function closeTips() {
                 layer.open({
                     type: 1,
@@ -1353,8 +1353,8 @@
                 });
             }
 
-            //succeed-03-popup-box
 
+        //星评提示
         function delTips() {
             layer.open({
                 type: 1,
@@ -1416,7 +1416,7 @@
         }
 
 
-        /*创建会议的提示语  $('.succeed-02-hook').on('click',function(){*/
+        /*创建会议的提示语*/
         function starTips() {
             layer.open({
                 type: 1,
@@ -1428,7 +1428,6 @@
                 btn: ["<fmt:message key="page.common.confirm"/>","<fmt:message key="page.common.cancel"/>"],
                 content: $('.succeed-02-popup-box'),
                 yes: function(index, layero){
-                                //var score =data.data.multipleResult.scoreCount;
                                 $("#switchCPStar").prop("checked", true);
                                 $("#starOpen").text("<fmt:message key="page.meeting.open.star"/>");
                                 $("#starTitle").html("<fmt:message key="page.meeting.star.rate.attend"/>" +0+"<fmt:message key="page.meeting.tips.score.user.unit"/>");
@@ -1469,13 +1468,8 @@
             });
         }
 
-
-
-
-
-
         var beginTimeTake;
-        /*123*/
+        //时间控件
         $('#timeStart').daterangepicker({
             singleDatePicker: true,
             showDropDowns: true,
@@ -1630,96 +1624,44 @@
             $("#positionTopRight").parent().attr("class","watermark-radio watermark-radio-topRight radio-on ");
         }
 
-        /*页面提交*/
-        $(function () {
-            $("#limitFive").addClass("none");
-            if(${size>=5}){
-                $("#limitFive").removeClass("none");
-                $("#limitInsert").text("<fmt:message key='page.meeting.star.allow'/>")
-            }
-            $("#saveSubmit").click(function () {
-                success = false;
-                var submitFormState=  ${course.published};
-                    var $courseInfo = $("#courseInfo");
-                    var startTime = $("#liveStartTime").val();
-                    var $timedate = $(".timedate-input");
-                    var playType =  $("#coursePlayType").val();
-                    if ($.trim($courseInfo.val()) == ''){
-                        $courseInfo.focus();
-                        $courseInfo.parent().next(".error").removeClass("none");
-                        return;
-                    }else{
-                        $courseInfo.parent().next(".error").addClass("none");
-                    }
-                     if(playType >= 1){
-                        if(startTime == ""  || startTime == null){
-                            $timedate.focus();
-                            $timedate.parent().parent().next(".error").removeClass("none");
-                            return;
-                        }else{
-                            $timedate.parent().parent().next(".error").addClass("none");
-                        }
-                    }
-
-                        if(submitFormState == false){
-                            saveFormNoPublished();
-
-                        }else {
-
-                            registPost();
-                        }
-                        $courseInfo.parent().next(".error").addClass("none");
-
-
-
-
-            })
-
-            function registPost () {
-                $.ajax({
+        function registPost () {
+            $.ajax({
                     type: "post",
                     url: "${ctx}/mgr/meet/save",
                     data: $('#courseForm').serialize(),
                     dataType:"JSON",
                     success: function(data) {
+                     console.log(data)
+                     var submitFormState=  ${course.published};
                     if(data.code=="0"){
-                        var isStarCheck = $("#switchCPStar").is(":checked")
-                        $(".icon-tips-blue").show();
-                        if (isStarCheck == false){
-                            $(".star-remove-button").removeClass("none");
-                            $("#insertOption").show();
-                        }else{
-                            $(".star-remove-button").addClass("none");
-                            $("#insertOption").hide();
-                            $("#submitOption").hide();
-                        }
-
+                         if (submitFormState == false){
+                             location.href="${ctx}/mgr/meet/list";
+                         }else{
+                             var isStarCheck = $("#switchCPStar").is(":checked")
+                             $(".icon-tips-blue").show();
+                             if (isStarCheck == false){
+                                 $(".star-remove-button").removeClass("none");
+                                 $("#insertOption").show();
+                             }else{
+                                 $(".star-remove-button").addClass("none");
+                                 $("#insertOption").hide();
+                                 $("#submitOption").hide();
+                             }
+                         }
                     }else{
-                        layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
+                        var flux = $("#myFlux").text();
+                        var playType =  $("#coursePlayType").val();
+                        if (playType == 2){
+                            if(flux < 10){
+                                return ;
+                            }
+                        }
+                            layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
                     }
                 }
 
                 })
             }
-
-            function saveFormNoPublished () {
-                $.ajax({
-                    type: "post",
-                    url: "${ctx}/mgr/meet/save",
-                    data: $('#courseForm').serialize(),
-                    dataType:"JSON",
-                    success: function(data) {
-                        console.log(data.code)
-                        if(data.code=="0"){
-                            location.href="${ctx}/mgr/meet/list"
-                        }else{
-                            layer.msg("<fmt:message key='page.meeting.star.save.fail'/>")
-                        }
-                    }
-
-                })
-            }
-
         })
 
 
@@ -1732,10 +1674,6 @@
             $("#dataFlash").change(function () {
                 $(".icon-tips-blue").hide();
             })
-        })
-
-
-
     });
 </script>
 </body>

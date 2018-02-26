@@ -20,7 +20,7 @@
                             <div class="v2-subPage-serarch-content v2-helpPage-item">
                                     <span class="pr v2-helpPage-select-a">
                                         <i class="v2-helpPage-select-arrow"></i>
-                                        <select name="classify" id="classify" class="v2-helpPage-select">
+                                        <select name="classify" class="v2-helpPage-select">
                                             <option value="">分类查询</option>
                                             <c:if test="${not empty list}">
                                                 <c:forEach items="${list}" var="list">
@@ -59,7 +59,7 @@
                                     <c:forEach items="${page.dataList}" var="news">
                                         <div class="v2-news-graphic-item clearfix">
                                             <div class="fl v2-news-graphic-img">
-                                                <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
+                                                <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.article_img}" alt=""></a>
                                                 <i class="v2-news-graphic-classIcon"><a href="#">${fn:split(news.keywords, "，")[0]}</a></i>
                                             </div>
                                             <div class="oh">
@@ -73,7 +73,7 @@
                                                         </c:if>
                                                     </c:forEach>
                                                 </p>
-                                                <p><span class="time fr"><fmt:formatDate value="${news.createTime}" pattern="yyyy/MM/dd"/></span><span>来源：${news.xfrom}</span></p>
+                                                <p><span class="time fr"><fmt:formatDate value="${news.create_time}" pattern="yyyy/MM/dd"/></span><span>来源：${news.xfrom}</span></p>
                                             </div>
                                         </div>
                                     </c:forEach>
@@ -99,7 +99,7 @@
                         <input  name="pageNum" type="hidden" value="${page.pageNum}"/>
                         <input  name="pageSize" type="hidden" value="${page.pageSize}"/>
                         <input  name="searchType" type="hidden" value="${searchType}"/>
-                        <input  id="dataList" name="page" type="hidden" value="${page.dataList}"/>
+                        <input  name="classify" id="classify" type="hidden" value="${categoryId}"/>
                         <input  name="keyWord" type="hidden" value="${keyWord}"/>
                     </form>
                 </div>
@@ -120,6 +120,7 @@
     function page(pageNum){
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
         $("#keyWord").val($("#searchWord").val());
+        $("#classify").val($(".v2-helpPage-select").find("select[name='classify']").val());
         $("#pageForm").submit();
     }
 </script>

@@ -1,93 +1,83 @@
 package cn.medcn.search.dto;
 
+import lombok.Data;
+import org.apache.commons.lang.StringUtils;
 import org.apache.solr.client.solrj.beans.Field;
+
+import java.util.Date;
 
 /**
  * Created by LiuLP on 2017/12/6/006.
  */
-
+@Data
 public class ArticleDTO {
 
-    @Field
+    @Field("id")
     private String id;
 
-    @Field
-    private String history_id;
-
-    @Field
+    @Field("title")
     private String title;
 
-    @Field
-    private String author;
-    @Field
-    private String keywords;
+    @Field("category_id")
+    private String category_id;
 
-    @Field
-    private String summary;
+    @Field("create_time")
+    private Date create_time;
 
-    @Field
-    private String content;
-
-    @Field("id")
-    public void setId(String id) {
-        this.id = id;
-    }
-
-    @Field("history_id")
-    public void setHistory_id(String history_id) {
-        this.history_id = history_id;
-    }
-
-    @Field("title")
-    public void setTitle(String title) {
-        this.title = title;
-    }
+    @Field("xfrom")
+    private String xfrom;
 
     @Field("author")
-    public void setAuthor(String author) {
-        this.author = author;
-    }
-
-    @Field("keywords")
-    public void setKeywords(String keywords) {
-        this.keywords = keywords;
-    }
-
-    @Field("summary")
-    public void setSummary(String summary) {
-        this.summary = summary;
-    }
+    private String author;
 
     @Field("content")
-    public void setContent(String content) {
-        this.content = content;
-    }
+    private String content;
 
-    public String getId() {
-        return id;
-    }
+    @Field("summary")
+    private String summary;
 
-    public String getHistory_id() {
-        return history_id;
-    }
+    @Field("file_path")
+    private String file_path;
 
-    public String getTitle() {
-        return title;
-    }
+    @Field("article_img")
+    private String article_img;
 
-    public String getAuthor() {
-        return author;
-    }
+    @Field("creator")
+    private Integer creator;
 
-    public String getKeywords() {
-        return keywords;
-    }
+    @Field("keywords")
+    private String keywords;
 
-    public String getSummary() {
-        return summary;
-    }
+    @Field("authed")
+    private Integer authed;
 
-    public String getContent() {
-        return content;
+    @Field("hits")
+    private Integer hits;
+
+    @Field("out_link")
+    private String out_link;
+
+    @Field("article_img_s")
+    private String article_img_s;
+
+    @Field("weight")
+    private Integer weight;
+
+    @Field("old_id")
+    private Integer old_id;
+
+    @Field("history_id")
+    private String history_id;
+
+    public static void replaceJSPTAG(String basePath,ArticleDTO dto){
+        String articleImg = dto.getArticle_img();
+        if (!StringUtils.isBlank(articleImg)) {
+            String newArticleImg = basePath + articleImg;
+            dto.setArticle_img(newArticleImg);
+            if (!StringUtils.isBlank(dto.getContent())){
+                String basePath2 = newArticleImg.substring(0, newArticleImg.lastIndexOf("/"));
+                dto.setContent(dto.getContent().replaceAll("<%=strFullImageDir %>", basePath2));
+            }
+        }
     }
 }

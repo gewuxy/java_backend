@@ -1470,6 +1470,14 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
 
             courseId = newCourse.getId();
 
+            // 复制录播信息
+            AudioCoursePlay copy = new AudioCoursePlay();
+            copy.setId(StringUtils.nowStr());
+            copy.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
+            copy.setPlayPage(0);
+            copy.setCourseId(courseId);
+            audioCoursePlayDAO.insert(copy);
+
             // 复制课程明细
             List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(id);
             if (details != null) {

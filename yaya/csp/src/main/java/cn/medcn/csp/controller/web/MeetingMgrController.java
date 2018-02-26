@@ -654,7 +654,7 @@ public class MeetingMgrController extends CspBaseController {
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
-        return success();
+        return success(ac);
     }
 
 
