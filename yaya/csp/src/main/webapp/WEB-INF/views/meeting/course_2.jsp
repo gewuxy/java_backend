@@ -32,9 +32,9 @@
     <script src="${ctxStatic}/phone/js/weui.min.js"></script>
     <%--<script src="${ctxStatic}/phone/js/vconsole.min.js"></script>--%>
     <%--<script>--%>
-        <%--// init vConsole--%>
-        <%--var vConsole = new VConsole();--%>
-        <%--console.log('Hello world');--%>
+    <%--// init vConsole--%>
+    <%--var vConsole = new VConsole();--%>
+    <%--console.log('Hello world');--%>
     <%--</script>--%>
 
     <!-- 高清方案 -->
@@ -144,8 +144,8 @@
                     }
                     if(isAndroid){
                         //解决黑边与遮挡
-//                            $("#ck-video").attr('style','margin-top:9999px');
-                        $("#ck-video").attr('style','height:0');
+//                            $("#ck-video,#videoWrap").attr('style','margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style','height:0');
                     }
                 });
 
@@ -495,10 +495,16 @@
         $('.html5ShadePlay').on('touchstart', function () {
             $('.isIphoneSafari').hide();
             $(this).hide();
-            //播放音频
-            popupPalyer.play();
-            //音频文件静音
-            popupPalyer.element.muted = false;
+            activeItemIsVideo = $('.swiper-slide-active').find('video');
+            if (activeItemIsVideo.length > 0){
+                activeItemIsVideo.get(0).load();
+                activeItemIsVideo.get(0).play();
+            } else {
+                //播放音频
+                popupPalyer.play();
+                //音频文件静音
+                popupPalyer.element.muted = false;
+            }
 
             if ("${live.hlsUrl}") {
                 $("#ck-video")[0].play();
@@ -550,10 +556,10 @@
 
         $('.icon-added').on('click', function () {
             //点击跳转到最后一页
-            slideToPage(galleryTop.slides.length);
+            galleryTop.slideTo(galleryTop.slides.length);
             //选中的项是否有视频
             activeItemIsVideo = $('.swiper-slide-active').find('video');
-            clearTimeout(slideTimer);
+            //clearTimeout(slideTimer);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
@@ -573,7 +579,7 @@
         $(".quit-full-hook").click(function () {
             if (isAndroid) {
                 //解决黑边与遮挡
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                 weui.actionSheet([
                     {
                         label: '<fmt:message key="page.meeting.tab.change.mute"/>',
@@ -593,14 +599,14 @@
                         onClick: function () {
                             console.log('取消');
                             //还原设置
-                            $("#ck-video").attr('style', 'margin-top:0');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0');
                         }
                     }
                 ], {
                     className: 'custom-classname',
                     onClose: function () {
                         console.log('关闭');
-                        $("#ck-video").attr('style', 'margin-top:0');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:0');
                     }
                 });
             } else {
@@ -677,6 +683,15 @@
 //                    slideToNext();
 //                }
                 swiper.slideTo("${fn:length(course.details) - 1}");
+                if("${live.liveState == 5}" == "true"){
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if (isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
+                    }
+                    if (isAndroid) {
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
+                    }
+                }
             }
         });
         //点击屏幕后自动播放
@@ -729,6 +744,8 @@
             if(swiperCurrent.find("video").length > 0){
                 $(".boxAudio").addClass("none");
                 $(".boxAudio-loading").addClass("none");
+                activeItemIsVideo.get(0).load();
+                activeItemIsVideo.get(0).play();
             } else {
                 var dataSrc = swiperCurrent.attr('audio-src');
                 popupPalyer.load(dataSrc);
@@ -875,23 +892,23 @@
                 success: function (swiper) {
                     layer.close(layer.index-1);
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                    if (isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.attr('style', 'margin-top:9999px');
                     }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                     }
                 },
                 end: function (swiper) {
                     layer.close(layer.index-1);
                     if (needJianjieState){
                         //关闭时还原高度。
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        if (isAndroid || activeItemIsVideo.length > 0) {
                             activeItemIsVideo.attr('style', 'margin-top:0px');
                         }
                         //还原设置
                         if (isAndroid) {
-                            $("#ck-video").attr('style', 'margin-top:0px');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                         }
                     }
                     needState = true;
@@ -1045,7 +1062,7 @@
                     $(".video-notPlay").addClass("none");
                     if (isAndroid) {
                         //还原
-                        $("#ck-video").attr('style', 'height:auto');
+                        $("#ck-video,#videoWrap").attr('style', 'height:auto');
                     }
                 } else if (data.order == 13) {//开启星评指令
                     if (activeItemIsVideo.length > 0) {
@@ -1055,7 +1072,7 @@
                     }
 
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                     }
                     openStarRate();
                 } else if (data.order == 11) {//直播開始
@@ -1067,8 +1084,12 @@
                     popupPalyer.pause();
 
                     CKobject.getObjectById('ck-video').videoClear();
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if (isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
+                    }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                     }
                     getLiveDuration();
                     $("#liveOverView").removeClass("none");
@@ -1098,12 +1119,12 @@
             needState = false;
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if (isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             //解决黑边与遮挡
             if (isAndroid) {
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
             }
             weui.actionSheet([
                 {
@@ -1126,11 +1147,11 @@
                         needState = true;
                         console.log('取消');
                         //关闭时还原高度。
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        if (isAndroid || activeItemIsVideo.length > 0) {
                             activeItemIsVideo.attr('style', 'margin-top:0px');
                         }
                         if (isAndroid) {
-                            $("#ck-video").attr('style', 'margin-top:0px');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                         }
                     }
                 }
@@ -1140,11 +1161,11 @@
                     needState = true;
                     console.log('关闭');
                     //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                    if (isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:0');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:0');
                     }
                 }
             });
@@ -1168,11 +1189,11 @@
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if (isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             if (isAndroid) {
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
             }
             layer.open({
                 type: 1,
@@ -1189,12 +1210,12 @@
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(needState){
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        if (isAndroid || activeItemIsVideo.length > 0) {
                             activeItemIsVideo.attr('style', 'margin-top:0px');
                         }
 
                         if (isAndroid) {
-                            $("#ck-video").attr('style', 'margin-top:0px');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                         }
                     }
 
@@ -1206,11 +1227,11 @@
         function openStarRate() {
             needState = false;
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if (isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             if (isAndroid) {
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
             }
             //打开星评之前关闭遮盖层
             $(".html5ShadePlay").hide();
@@ -1235,11 +1256,11 @@
                     layer.closeAll();
                     //popupPalyer.play();
                     //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                    if (isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:0px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                     }
                 }
             })
