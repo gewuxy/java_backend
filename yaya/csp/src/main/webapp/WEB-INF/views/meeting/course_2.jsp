@@ -550,7 +550,10 @@
 
         $('.icon-added').on('click', function () {
             //点击跳转到最后一页
-            galleryTop.slideTo(galleryTop.slides.length);
+            slideToPage(galleryTop.slides.length);
+            //选中的项是否有视频
+            activeItemIsVideo = $('.swiper-slide-active').find('video');
+            clearTimeout(slideTimer);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
