@@ -24,8 +24,8 @@ public class SearchTest {
 //        searchable.and("history_id", "170510121523528");
         searchable.or("title", "药物");
         searchable.or("content", "药物");
-        SearchResult result = testServiceImpl.search(searchable);
-
-        System.out.println(result);
+//        SearchResult result = testServiceImpl.search(searchable);
+//
+//        System.out.println(result);
     }
 }
