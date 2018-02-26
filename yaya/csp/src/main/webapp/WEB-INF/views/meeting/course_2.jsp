@@ -734,13 +734,15 @@
         //播放器切换加载对应的路径
         var swiperChangeAduio = function (current) {
             var swiperCurrent;
-
-            popupPalyer.pause();
             if (current.find(".swiper-slide-active")) {
                 swiperCurrent = current.find(".swiper-slide-active");
             } else if (current.parents('.swiper-container-horizontal').find(".swiper-slide-active")) {
                 swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             }
+            popupPalyer.pause();
+            $(".swiper-slide>video").each(function(){
+                $(this)[0].pause();
+            });
             if(swiperCurrent.find("video").length > 0){
                 $(".boxAudio").addClass("none");
                 $(".boxAudio-loading").addClass("none");
