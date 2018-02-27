@@ -46,8 +46,7 @@
                             </c:when>
                         </c:choose>
                     </p>
-
-                    ${news.content}
+                    ${fn:replace(news.content, news.title, "")}
                 </div>
             </div>
         </div>
