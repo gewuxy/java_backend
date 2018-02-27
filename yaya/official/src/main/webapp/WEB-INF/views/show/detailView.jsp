@@ -21,7 +21,7 @@
                         </div>
                         <!--startprint-->
                         <div class="v2-news-detail-item">
-                            <p style="text-align: center;"><img src="${news.articleImg}" alt=""></p>
+                            <p style="text-align: center;"><img src="${fileBase}${news.articleImg}" alt=""></p>
                             ${fn:replace(news.content, news.title, "")}
                         </div>
                         <!--endprint-->

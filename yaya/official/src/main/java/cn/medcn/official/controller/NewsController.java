@@ -139,6 +139,7 @@ public class NewsController extends BaseController {
         News news = new News();
         news.setId(id);
         news = newsService.selectByPrimaryKey(news);
+        model.addAttribute("fileBase", fileBasePath);
         model.addAttribute("news",news);
         return "/show/detailView";
     }
