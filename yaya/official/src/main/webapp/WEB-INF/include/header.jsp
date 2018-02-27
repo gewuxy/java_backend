@@ -8,7 +8,7 @@
                 </a>
             </div><!-- end of logo -->
 
-            <div class="v2-top-item" >
+            <div class="v2-top-item" style="float: left">
                 <!-- S nav -->
                 <nav class="v2-nav">
                     <div class="main-nav clearfix" >

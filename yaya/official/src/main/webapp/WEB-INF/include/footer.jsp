@@ -28,12 +28,12 @@
                     <li><a href="https://www.medyaya.cn/prm">PRM患者管理系统</a></li>
                 </ul>
             </div>
-            <div class="col-lg-2">
-                <h4><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">数据中心</a></h4>
-                <ul>
-                    <li><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">医药数据</a></li>
-                </ul>
-            </div>
+            <%--<div class="col-lg-2">--%>
+                <%--<h4><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">数据中心</a></h4>--%>
+                <%--<ul>--%>
+                    <%--<li><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">医药数据</a></li>--%>
+                <%--</ul>--%>
+            <%--</div>--%>
             <div class="col-lg-2">
                 <h4><a href="${ctx}/help">帮助与反馈</a></h4>
                 <ul>
