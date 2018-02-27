@@ -35,7 +35,7 @@
     </bean>
 
     <bean id="sessionIdCookie" class="org.apache.shiro.web.servlet.SimpleCookie">
-        <constructor-arg name="name" value="csp.session.id"/>
+        <constructor-arg name="name" value="office.session.id"/>
     </bean>
 
 
