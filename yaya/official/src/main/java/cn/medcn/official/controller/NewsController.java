@@ -38,11 +38,12 @@ public class NewsController extends BaseController {
      */
     @RequestMapping(value="/ajaxTrends")
     @ResponseBody
-    public String ajaxTrends(Pageable pageable){
-        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
+    public String ajaxTrends(Pageable pageable,String type){
+        String category = "CATEGORY_" + type;
+        pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(fileBasePath);
+            news.replaceJSPTAG(editorMediaPath);
         }
         return APIUtils.success(page);
     }
