@@ -1,9 +1,16 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: lixuan
+  Date: 2017/3/3
+  Time: 18:59
+--%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <title>敬信药草园-国内首家关注合理用药的信息平台 | 敬信科技官网</title>
+    <meta name="description" content="敬信·药草园致力于指导安全合理用药，为社会公众提供健康资讯、专业用药指导；为医学、药学、医务工作者提供专业的医学文献及临床指南信息服务。"/>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
     <style type="text/css">
         .shenglue{
@@ -16,7 +23,8 @@
 </head>
 <body>
 <div id="wrapper" class="v2-medcnIndex">
-    <%@include file="/WEB-INF/include/header.jsp" %>
+    <%@include file="/WEB-INF/include/header.jsp"%>
+
     <div class="v2-banner bg-lightBlue">
         <div class="page-width clearfix">
             <div class="fr">
@@ -38,9 +46,7 @@
                     <div id="carousel-05">
                         <div class="carousel-item">
                             <div class="carousel-img">
-                                <a href="detail.html" target="_blank">
-                                    <img src="${ctxStatic}/images/upload/_banner_170228_1.jpg" alt="" />
-                                </a>
+                                <img src="${ctxStatic}/images/upload/_banner_170228_1.jpg" alt="" />
                             </div>
                         </div>
                     </div>
@@ -50,6 +56,7 @@
             </div>
         </div>
     </div>
+
     <div class="v2-main">
         <div class="page-width clearfix">
             <div class="clearfix " style="margin-bottom:20px;">
@@ -76,17 +83,36 @@
             </div>
         </div>
     </div>
-    <%@include file="/WEB-INF/include/footer.jsp" %>
+    <%@include file="/WEB-INF/include/footer.jsp"%>
 </div>
-    <!--弹出层-->
-    <%@include file="/WEB-INF/include/markWrap.jsp" %>
-    <div class="gotop-wrapper index-gotop">
-        <a class="gotop" href="javascript:;" >回到顶部</a>
-    </div>
+<div class="gotop-wrapper index-gotop">
+    <a class="gotop" href="javascript:" >回到顶部</a>
+</div>
 <%@include file="/WEB-INF/include/common_js.jsp"%>
-<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
-<script>
+<script src="${statics}/js/v2/stickUp.min.js"></script>
+<script type="text/javascript">
+    /*<!--轮播广告-->*/
+    $(window).bind("load resize",function(){
+        $("#carousel-05").carouFredSel({
+            width       : '100%',
+            items		: { visible	: 1 },
+            auto 	  	: { pauseOnHover: true, timeoutDuration:5000 },
+            swipe    	: { onTouch:true, onMouse:true },
+            pagination 	: "#carousel-page-05",
+            scroll 		: {	fx : "crossfade" }
+        });
+    });
+    /*固定栏*/
+    jQuery(function($) {
+        $(document).ready( function() {
+            $('.fixed-nav').stickUp({
+                marginTop: 'auto'
+            });
+        });
+    });
+
     $(function(){
+
         $(function(){
             $(".first").addClass("current");
         })
@@ -173,5 +199,6 @@
         }
     }
 </script>
+
 </body>
 </html>

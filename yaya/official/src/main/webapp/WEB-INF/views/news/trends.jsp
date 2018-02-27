@@ -42,7 +42,7 @@
                                 </div>
                                 <div class="oh">
                                     <h3><a href="${base}/news/viewtrend/${news.id}">${news.title}</a></h3>
-                                    <p class="v2-news-graphic-info">${news.summary}</p>
+                                    <p class="v2-news-graphic-info">${fn:replace(news.summary,news.title, "")}</p>
                                     <p><span class="time"><fmt:formatDate value="${news.createTime}" pattern="yyyy/MM/dd"/></span>&nbsp;&nbsp;&nbsp;&nbsp;<span>来源：${news.xfrom}</span></p>
                                 </div>
                             </div>

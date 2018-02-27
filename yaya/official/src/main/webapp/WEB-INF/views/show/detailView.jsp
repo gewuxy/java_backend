@@ -22,7 +22,7 @@
                         <!--startprint-->
                         <div class="v2-news-detail-item">
                             <p style="text-align: center;"><img src="${news.articleImg}" alt=""></p>
-                            ${news.content}
+                            ${fn:replace(news.content, news.title, "")}
                         </div>
                         <!--endprint-->
                         <div class="v2-news-detail-footerDesc">
