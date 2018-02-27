@@ -853,6 +853,13 @@
         $('.icon-added').on('click',function(){
             //点击跳转到最后一页
             slideToPage(galleryTop.slides.length);
+            //选中的项是否有视频
+            activeItemIsVideo = $('.swiper-slide-active').find('video');
+            popupPalyer.pause();
+            $(".swiper-slide>video").each(function(){
+                $(this)[0].pause();
+            });
+            clearTimeout(slideTimer);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 

@@ -646,6 +646,7 @@
                 //有video文件
                 if(activeItemIsVideo.length > 0){
                     $('.boxAudio').addClass('none');
+                    activeItemIsVideo.get(0).load();
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
