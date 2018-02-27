@@ -37,7 +37,7 @@
                     <div class="fl t-center"><img src="${ctxStatic}/images/upload/jk-erweima.png" alt="" style="width:90px; height:90px;"><p >扫描二维码下载</p></div>
                 </div>
                 <div class="oh v2-hover-shadow">
-                    <a href="https://www.medcn.com/login" style=" display:block; line-height: 1; margin:0; padding:0;"><img src="${ctxStatic}/images/upload/min-ad-01.jpg" alt=""></a>
+                    <a href="https://www.medyaya.cn/yyys/" style=" display:block; line-height: 1; margin:0; padding:0;"><img src="${ctxStatic}/images/upload/min-ad-01.jpg" alt=""></a>
                 </div>
             </div>
             <div class="fl">

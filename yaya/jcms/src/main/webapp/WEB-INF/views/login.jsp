@@ -273,7 +273,7 @@
                     <li><a href="http://yyks.medyaya.cn">PRM患者管理系统</a></li>
                 </ul>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 none">
                 <h4><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">数据中心</a></h4>
                 <ul>
                     <li><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">医药数据</a></li>

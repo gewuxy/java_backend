@@ -41,7 +41,7 @@ public class IndexController extends BaseController {
 
     @RequestMapping(value="/")
     public String index(){
-        return "/index/index1";
+        return "/login";
     }
 
     /**

@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
 <html lang="en">
 <head>
-    <title>首页</title>
+    <title>${news.title} - 敬信药草园</title>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
 </head>
 <body>
