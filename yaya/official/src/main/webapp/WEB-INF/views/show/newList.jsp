@@ -2,7 +2,8 @@
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
 <html lang="en">
 <head>
-    <title>首页</title>
+    <title>${title} - 敬信药草园</title>
+    <meta id="MetaDescription" name="DESCRIPTION" content="敬信药草园医药动态资讯平台，为医生和科研工作者提供最新的医药行业信息，内容覆盖社会政策、科研进展、新药上市、临床研究等方面。" />
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
 </head>
 <body>
@@ -19,7 +20,7 @@
                         <c:forEach items="${page.dataList}" var="news">
                             <div class="v2-news-graphic-item clearfix">
                                 <div class="fl v2-news-graphic-img">
-                                    <a href="${ctx}/news/detail/${news.id}"><img src="${ctx}${news.articleImg}" alt=""></a>
+                                    <a href="${ctx}/news/detail/${news.id}"><img src="${fileBase}${news.articleImg}" alt=""></a>
                                     <i class="v2-news-graphic-classIcon"><a href="${ctx}/news/detail/${news.id}">${fn:split(news.keywords, "，")[0]}</a></i>
                                 </div>
                                 <div class="oh">

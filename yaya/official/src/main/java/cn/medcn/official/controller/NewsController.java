@@ -43,7 +43,7 @@ public class NewsController extends BaseController {
         pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         return APIUtils.success(page);
     }
@@ -121,10 +121,11 @@ public class NewsController extends BaseController {
         pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         model.addAttribute("page", page);
         model.addAttribute("type",type);
+        model.addAttribute("fileBase", fileBasePath);
         model.addAttribute("title", News.NEWS_CATEGORY.valueOf(category).label);
         return "/show/newList";
     }
