@@ -17,13 +17,14 @@
                                 <a class="first-level" href="${ctx}/"><strong class="first-level-min">首页</strong></a><i></i>
                             </li>
                             <li class="second">
-                                <a class="first-level" target="_blank" style="cursor: pointer;"  href="javascript:;">
-                                    <strong class="first-level-min">健康动态</strong>
+                                <a class="first-level" style="cursor: pointer;" href="${ctx}/news/list?type=YYDT">
+                                    <strong class="first-level-min">医药动态</strong>
                                 </a><i></i>
-                                <ul>
-                                    <li><a href="${ctx}/news/list?type=YYDT">医药动态</a></li>
-                                    <li><a href="${ctx}/news/list?type=AQYY">安全用药</a></li>
-                                </ul>
+                            </li>
+                            <li class="three">
+                                <a class="first-level" style="cursor: pointer;" href="${ctx}/news/list?type=AQYY">
+                                    <strong class="first-level-min">安全用药</strong>
+                                </a><i></i>
                             </li>
                             <%--<li class="three">--%>
                                 <%--<a class="first-level" target="_blank" style="cursor: pointer;" href="javascript:;">--%>
