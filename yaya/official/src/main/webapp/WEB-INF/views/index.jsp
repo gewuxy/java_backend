@@ -89,7 +89,7 @@
     <a class="gotop" href="javascript:" >回到顶部</a>
 </div>
 <%@include file="/WEB-INF/include/common_js.jsp"%>
-<script src="${statics}/js/v2/stickUp.min.js"></script>
+<script src="${ctxStatic}/js/v2/stickUp.min.js"></script>
 <script type="text/javascript">
     /*<!--轮播广告-->*/
     $(window).bind("load resize",function(){
