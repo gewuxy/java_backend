@@ -1,4 +1,4 @@
-package cn.medcn.jcms.controller;
+package cn.medcn.official.controller;
 
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
