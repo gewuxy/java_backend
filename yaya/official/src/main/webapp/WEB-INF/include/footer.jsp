@@ -24,7 +24,7 @@
             <div class="col-lg-3">
                 <h4><a href="https://www.medcn.com">数字平台</a></h4>
                 <ul>
-                    <li><a href="https://www.medcn.com">专业医学会议数字化管理平台</a></li>
+                    <li><a href="https://www.medyaya.cn/yyys/">专业医学会议数字化管理平台</a></li>
                     <li><a href="https://www.medyaya.cn/prm">PRM患者管理系统</a></li>
                 </ul>
             </div>

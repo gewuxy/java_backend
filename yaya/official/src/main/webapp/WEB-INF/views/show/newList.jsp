@@ -20,7 +20,7 @@
                         <c:forEach items="${page.dataList}" var="news">
                             <div class="v2-news-graphic-item clearfix">
                                 <div class="fl v2-news-graphic-img">
-                                    <a href="${ctx}/news/detail/${news.id}"><img src="${fileBase}${news.articleImg}" alt=""></a>
+                                    <a href="${ctx}/news/detail/${news.id}"><img src="${news.articleImg}" alt=""></a>
                                     <i class="v2-news-graphic-classIcon"><a href="${ctx}/news/detail/${news.id}">${fn:split(news.keywords, "，")[0]}</a></i>
                                 </div>
                                 <div class="oh">
