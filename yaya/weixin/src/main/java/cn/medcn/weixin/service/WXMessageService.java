@@ -3,6 +3,7 @@ package cn.medcn.weixin.service;
 import cn.medcn.weixin.dto.TemplateMessageDTO;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * Created by lixuan on 2017/7/18.
@@ -51,6 +52,8 @@ public interface WXMessageService {
     void send(TemplateMessageDTO messageDTO);
 
     String formatMessageDate(Date date);
+
+    String passiveResponse(Map<String,String> data);
 
     enum TEMPLATE_MESSAGE{
         meet("您有一场会议即将开始！", "LltVhBQJT99pyRBwMXSFXFQXzcXWJZ4cQR7lPNPigT4"),

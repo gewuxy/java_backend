@@ -1,5 +1,6 @@
 package cn.medcn.api.wexin;
 
+import cn.medcn.api.utils.SecurityUtils;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.CheckUtils;
@@ -7,6 +8,7 @@ import cn.medcn.common.utils.FileUtils;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.XMLUtils;
 import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.Principal;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.weixin.config.WeixinConfig;
 import cn.medcn.weixin.config.WeixinEventType;
@@ -92,6 +94,7 @@ public class CallBackController extends BaseController {
         String postData = WeixinConfig.DEFAULT_REPLY_SUCESS;
         String responseXML;
         try {
+            request.setCharacterEncoding("utf-8");
             responseXML = FileUtils.readFromInputStream(request.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,7 +104,13 @@ public class CallBackController extends BaseController {
         try {
             map = WXPayUtil.xmlToMap(responseXML);
             String event = map.get(EVENT_KEY);
-            return handleEvent(event, map);
+            if (event != null){
+                return handleEvent(event, map);
+            }else{
+                //处理被动回复消息
+                return handleMessage(map);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return WeixinConfig.DEFAULT_REPLY_SUCESS;
@@ -227,4 +236,14 @@ public class CallBackController extends BaseController {
         wxUserInfoService.doUnSubscribe(openid);
         return WeixinConfig.DEFAULT_REPLY_SUCESS;
     }
+
+    /**
+     * 公众号被动回复
+     * @param data
+     * @return
+     */
+    protected String handleMessage(Map<String,String> data){
+        return wxMessageService.passiveResponse(data);
+    }
+
 }

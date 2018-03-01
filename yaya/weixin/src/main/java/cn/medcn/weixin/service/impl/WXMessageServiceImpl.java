@@ -4,21 +4,30 @@ import cn.medcn.common.utils.CheckUtils;
 import cn.medcn.common.utils.HttpUtils;
 import cn.medcn.common.utils.XMLUtils;
 import cn.medcn.weixin.config.WeixinConfig;
+import cn.medcn.weixin.config.WeixinEventType;
 import cn.medcn.weixin.dto.TemplateMessageDTO;
+import cn.medcn.weixin.model.PubWxReply;
 import cn.medcn.weixin.service.WXMessageService;
+import cn.medcn.weixin.service.WXReplyService;
 import cn.medcn.weixin.service.WXTokenService;
 import cn.medcn.weixin.service.WXUrlService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.github.abel533.mapper.Mapper;
+import io.netty.handler.codec.http2.Http2SecurityUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static cn.medcn.common.service.BaseService.DEFAULT_CACHE;
 
@@ -34,6 +43,9 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
 
     @Autowired
     protected WXTokenService wxTokenService;
+
+    @Autowired
+    private WXReplyService wxReplyService;
 
     @Value("${app.yaya.base}")
     protected String appBaseUrl;
@@ -74,7 +86,6 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         return XMLUtils.jsonToXML(jsonObject);
     }
 
-    @Cacheable(value = DEFAULT_CACHE, key = "'auto_reply_noScene'")
     private String autoReplyNoScene() {
         String content;
         try {
@@ -88,7 +99,6 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
 
     }
 
-    @Cacheable(value = DEFAULT_CACHE, key = "'auto_reply_hasScene'")
     private String autoReplyHasScene(String sceneId, String pubUserName) {
         String content;
         try {
@@ -148,6 +158,32 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     }
 
     @Override
+    public String passiveResponse(Map<String,String> data) {
+        String msgType = data.get(WeixinEventType.EVENT_MSG_TYPE);
+        String content = data.get(WeixinEventType.EVENT_CONTENT);
+        String serverName = data.get(WeixinEventType.EVENT_FROM_USERNAME);
+        String openid = data.get(WeixinEventType.EVENT_TO_USRENAME);
+        String message =null;
+        String questions = "";
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("ToUserName", serverName);
+        jsonObject.put("FromUserName", openid);
+        jsonObject.put("MsgType", msgType);
+        jsonObject.put("CreateTime", System.currentTimeMillis());
+        Integer num ;
+        if (isNumeric(content)){
+             num = Integer.valueOf(content).intValue();
+
+        }else{
+            num = 0;
+        }
+        message = noReply(num, message, questions, content);
+        message = hasReply(message,num);
+        jsonObject.put("Content", message);
+        return XMLUtils.jsonToXML(jsonObject);
+    }
+
+    @Override
     public void send(TEMPLATE_MESSAGE message, String openid, String url, String remark, String... values) {
         TemplateMessageDTO messageDTO = build(message, openid, url, remark, values);
         send(messageDTO);
@@ -157,5 +193,46 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     public void sendByMeetId(TEMPLATE_MESSAGE message, String openid, String meetId, String remark, String... values) {
         String meetClickUrl = appBaseUrl + "weixin/meet/info?meetId="+meetId;
         send(message, openid, meetClickUrl, remark, values);
+    }
+
+    public static boolean isNumeric(String str){
+        Pattern pattern = Pattern.compile("[0-9]*");
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
+    }
+
+    @Cacheable(value = DEFAULT_CACHE,key = "'auto_reply_question'")
+    public  String noReply(Integer num,String message,String questions,String content){
+        List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
+        if (pubWxReplyList.size()>0){
+            for (PubWxReply pubWxReply:pubWxReplyList) {
+                questions +=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n";
+                if (Integer.valueOf(content).intValue() == pubWxReply.getId()){
+                    message="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
+                    message+=questions;
+                }else {
+                    if (Integer.valueOf(content).intValue() == pubWxReply.getAnswerId()){
+                        message=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n"+pubWxReply.getAnswer();
+                    }
+                }
+            }
+        }
+        return message;
+    }
+
+    @Cacheable(value = DEFAULT_CACHE,key = "'auto_reply_parent_question'")
+    public String hasReply(String message,Integer num){
+        List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
+        if (pubWxReplyList.size() == 0){
+            List<PubWxReply> replyList = wxReplyService.selectAll();
+            message ="回复以下数字查找相关问题:\n";
+            for (PubWxReply pubWxReply:replyList) {
+                message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
+            }
+        }
+        return message;
     }
 }

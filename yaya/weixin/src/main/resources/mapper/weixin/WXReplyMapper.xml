@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.medcn.weixin.dao.WXReplyDAO" >
+
+    <select id="selectByContent" resultType="cn.medcn.weixin.model.PubWxReply">
+        SELECT r.*,a.id as answerId,a.question,a.answer,a.parent_id
+         FROM `t_pub_wx_reply` r LEFT JOIN t_pub_wx_answer a ON r.id = a.parent_id WHERE a.id = #{content} or r.id = #{content};
+    </select>
+
+    <select id="selectAll" resultType="cn.medcn.weixin.model.PubWxReply">
+        SELECT * FROM `t_pub_wx_reply`;
+    </select>
+</mapper>
