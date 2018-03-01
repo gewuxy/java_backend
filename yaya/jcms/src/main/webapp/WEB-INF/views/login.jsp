@@ -268,7 +268,7 @@
                 </ul>
             </div>
             <div class="col-lg-3">
-                <h4><a href="http://yyks.medyaya.cn">数字平台</a></h4>
+                <h4><a href="https://www.medyaya.cn/yyys/">数字平台</a></h4>
                 <ul>
                     <li><a href="https://www.medyaya.cn/yyys/">专业医学会议数字化管理平台</a></li>
                     <li><a href="https://www.medyaya.cn/prm">PRM患者管理系统</a></li>
@@ -281,7 +281,7 @@
                 </ul>
             </div>
             <div class="col-lg-2">
-                <h4><a href="http://www.medcn.com/help/">帮助与反馈</a></h4>
+                <h4><a href="http://www.medcn.com/help/solution">帮助与反馈</a></h4>
                 <ul>
                     <li><a href="http://www.medcn.com/help/solution">产品解答</a></li>
                     <li><a href="http://www.medcn.com/help/service">服务与收费</a></li>
