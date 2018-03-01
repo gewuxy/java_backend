@@ -86,7 +86,6 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         return XMLUtils.jsonToXML(jsonObject);
     }
 
-    @Cacheable(value = DEFAULT_CACHE, key = "'auto_reply_noScene'")
     private String autoReplyNoScene() {
         String content;
         try {
@@ -100,7 +99,6 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
 
     }
 
-    @Cacheable(value = DEFAULT_CACHE, key = "'auto_reply_hasScene'")
     private String autoReplyHasScene(String sceneId, String pubUserName) {
         String content;
         try {
