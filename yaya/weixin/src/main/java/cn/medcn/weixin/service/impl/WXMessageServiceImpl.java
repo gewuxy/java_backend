@@ -160,7 +160,6 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     }
 
     @Override
-    @Cacheable(value = DEFAULT_CACHE,key = "'auto_reply_question'")
     public String passiveResponse(Map<String,String> data) {
         String msgType = data.get(WeixinEventType.EVENT_MSG_TYPE);
         String content = data.get(WeixinEventType.EVENT_CONTENT);
@@ -180,26 +179,8 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         }else{
             num = 0;
         }
-        List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
-        if (pubWxReplyList.size()>0){
-            for (PubWxReply pubWxReply:pubWxReplyList) {
-                questions +=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n";
-                if (Integer.valueOf(content).intValue() == pubWxReply.getId()){
-                    message="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
-                    message+=questions;
-                }else {
-                    if (Integer.valueOf(content).intValue() == pubWxReply.getAnswerId()){
-                        message=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n"+pubWxReply.getAnswer();
-                    }
-                }
-            }
-        }else{
-            List<PubWxReply> replyList = wxReplyService.selectAll();
-            message ="回复以下数字查找相关问题:\n";
-            for (PubWxReply pubWxReply:replyList) {
-                message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
-            }
-        }
+        message = noReply(num, message, questions, content);
+        message = hasReply(message,num);
         jsonObject.put("Content", message);
         return XMLUtils.jsonToXML(jsonObject);
     }
@@ -223,5 +204,37 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
             return false;
         }
         return true;
+    }
+
+    @Cacheable(value = DEFAULT_CACHE,key = "'auto_reply_question'")
+    public  String noReply(Integer num,String message,String questions,String content){
+        List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
+        if (pubWxReplyList.size()>0){
+            for (PubWxReply pubWxReply:pubWxReplyList) {
+                questions +=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n";
+                if (Integer.valueOf(content).intValue() == pubWxReply.getId()){
+                    message="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
+                    message+=questions;
+                }else {
+                    if (Integer.valueOf(content).intValue() == pubWxReply.getAnswerId()){
+                        message=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n"+pubWxReply.getAnswer();
+                    }
+                }
+            }
+        }
+        return message;
+    }
+
+    @Cacheable(value = DEFAULT_CACHE,key = "'auto_reply_parent_question'")
+    public String hasReply(String message,Integer num){
+        List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
+        if (pubWxReplyList.size() == 0){
+            List<PubWxReply> replyList = wxReplyService.selectAll();
+            message ="回复以下数字查找相关问题:\n";
+            for (PubWxReply pubWxReply:replyList) {
+                message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
+            }
+        }
+        return message;
     }
 }
