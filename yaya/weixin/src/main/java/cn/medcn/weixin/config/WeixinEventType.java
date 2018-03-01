@@ -21,4 +21,8 @@ public class WeixinEventType {
 
     public final static String EVENT_FROM_USERNAME = "FromUserName";
 
+    public final static String EVENT_MSG_TYPE = "MsgType";
+
+    public final static String EVENT_CONTENT = "Content";
+
 }

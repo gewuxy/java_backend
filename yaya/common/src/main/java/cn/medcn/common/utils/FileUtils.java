@@ -39,7 +39,7 @@ public class FileUtils {
         InputStreamReader isr = null;
         BufferedReader br = null;
         try{
-            isr = new InputStreamReader(inputStream);
+            isr = new InputStreamReader(inputStream,"UTF-8");
             br = new BufferedReader(isr);
             String str ;
             StringBuilder sb = new StringBuilder();

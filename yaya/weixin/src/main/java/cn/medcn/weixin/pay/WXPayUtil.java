@@ -34,7 +34,7 @@ public class WXPayUtil {
      */
     public static Map<String, String> xmlToMap(String strXML) throws Exception {
         try {
-            Map<String, String> data = new HashMap<String, String>();
+             Map<String, String> data = new HashMap<String, String>();
             DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
             DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
             InputStream stream = new ByteArrayInputStream(strXML.getBytes("UTF-8"));
