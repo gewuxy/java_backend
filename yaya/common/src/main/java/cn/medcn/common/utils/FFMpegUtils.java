@@ -129,8 +129,9 @@ public class FFMpegUtils {
                 buffer.append("|");
             }
         }
-        buffer.append("\"  -c copy ").append(mergePath);
+        buffer.append("\"  -acodec copy ").append(mergePath);
         LogUtils.debug(log, "merge map command = " + buffer.toString());
+        System.out.println("merge command = " + buffer.toString());
         CommandUtils.CMD(buffer.toString());
 
     }
