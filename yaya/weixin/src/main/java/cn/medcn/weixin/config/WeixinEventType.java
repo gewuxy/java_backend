@@ -16,6 +16,8 @@ public class WeixinEventType {
     public final static String EVENT_TYPE_LOCATION = "LOCATION";
     //用户已经关注过后的扫描
     public final static String EVENT_TYPE_SCAN = "SCAN";
+    //公众号菜单点击事件
+    public final static String EVENT_TYPE_CLICK = "CLICK";
 
     public final static String EVENT_TO_USRENAME = "ToUserName";
 
@@ -24,5 +26,9 @@ public class WeixinEventType {
     public final static String EVENT_MSG_TYPE = "MsgType";
 
     public final static String EVENT_CONTENT = "Content";
+
+    public final static String EVENT_TYPE_EVENTKEY = "EventKey";
+    //系统客服 key
+    public final static String EVENT_MENU_KEY = "auto_reply";
 
 }

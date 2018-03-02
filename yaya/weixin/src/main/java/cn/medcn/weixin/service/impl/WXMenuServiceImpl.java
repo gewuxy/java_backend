@@ -14,6 +14,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.github.abel533.mapper.Mapper;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -97,7 +98,5 @@ public class WXMenuServiceImpl extends WXBaseServiceImpl<WXMenu> implements WXMe
         }
         return soredList;
     }
-
-
 
 }

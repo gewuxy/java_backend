@@ -15,6 +15,7 @@ import cn.medcn.weixin.config.WeixinEventType;
 import cn.medcn.weixin.dto.SignatureDTO;
 import cn.medcn.weixin.model.WXUserInfo;
 import cn.medcn.weixin.pay.WXPayUtil;
+import cn.medcn.weixin.service.WXMenuService;
 import cn.medcn.weixin.service.WXMessageService;
 import cn.medcn.weixin.service.WXOauthService;
 import cn.medcn.weixin.service.WXUserInfoService;
@@ -138,6 +139,9 @@ public class CallBackController extends BaseController {
             case WeixinEventType.EVENT_TYPE_SCAN : //已关注用户扫描事件
                 reply = handleScan(data);
                 break;
+            case WeixinEventType.EVENT_TYPE_CLICK ://公众号菜单点击事件
+                reply = handleClick(data);
+                break;
             default:
                 break;
         }
@@ -244,6 +248,18 @@ public class CallBackController extends BaseController {
      */
     protected String handleMessage(Map<String,String> data){
         return wxMessageService.passiveResponse(data);
+    }
+
+    /**
+     * 公众号菜单回复入口
+     * @param data
+     * @return
+     */
+    protected String handleClick(Map<String,String> data){
+        if (data.get(WeixinEventType.EVENT_TYPE_EVENTKEY).equals(WeixinEventType.EVENT_MENU_KEY)){
+            return wxMessageService.menuReply(data);
+        }
+        return null;
     }
 
 }

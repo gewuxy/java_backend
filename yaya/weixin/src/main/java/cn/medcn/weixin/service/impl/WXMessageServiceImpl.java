@@ -184,6 +184,27 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     }
 
     @Override
+    @Cacheable(value = DEFAULT_CACHE,key = "'menu_auto_reply'")
+    public String menuReply(Map<String, String> data) {
+        String msgType = "text";
+        String serverName = data.get(WeixinEventType.EVENT_FROM_USERNAME);
+        String openid = data.get(WeixinEventType.EVENT_TO_USRENAME);
+        String message =null;
+        List<PubWxReply> replyList = wxReplyService.selectAll();
+        message ="回复以下数字查找相关问题:\n";
+        for (PubWxReply pubWxReply:replyList) {
+            message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
+        }
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("ToUserName", serverName);
+        jsonObject.put("FromUserName", openid);
+        jsonObject.put("MsgType", msgType);
+        jsonObject.put("CreateTime", System.currentTimeMillis());
+        jsonObject.put("Content", message);
+        return XMLUtils.jsonToXML(jsonObject);
+    }
+
+    @Override
     public void send(TEMPLATE_MESSAGE message, String openid, String url, String remark, String... values) {
         TemplateMessageDTO messageDTO = build(message, openid, url, remark, values);
         send(messageDTO);

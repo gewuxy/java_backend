@@ -31,6 +31,8 @@ public class WXMenu {
     /**view类型按钮的跳转url*/
     private String url;
     /**包含的子按钮集合*/
+
+    private String key;
     @Transient
     private List<WXMenu> sub_button = Lists.newArrayList();
 

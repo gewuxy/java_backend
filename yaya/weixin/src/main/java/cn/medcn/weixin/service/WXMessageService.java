@@ -55,6 +55,8 @@ public interface WXMessageService {
 
     String passiveResponse(Map<String,String> data);
 
+    String menuReply(Map<String, String> data);
+
     enum TEMPLATE_MESSAGE{
         meet("您有一场会议即将开始！", "LltVhBQJT99pyRBwMXSFXFQXzcXWJZ4cQR7lPNPigT4"),
         exam("您有一场考试即将开始！", "PyCj0CUBtXT40TTNRWkq6L1Wx60U8vRmnGaipIQY4LI"),
