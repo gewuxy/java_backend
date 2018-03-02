@@ -69,7 +69,14 @@
 <%@ include file="/WEB-INF/include/common_js.jsp" %>
 <script>
     $(function(){
-        $(".second").addClass("current");
+        var type = "${type}";
+        if(type == "YYDT"){
+            $(".second").addClass("current");
+            $(".three").removeClass("current");
+        } else if (type == "AQYY") {
+            $(".second").removeClass("current");
+            $(".three").addClass("current");
+        }
     })
     function page(pageNum){
         $("#pageForm").find("input[name='pageNum']").val(pageNum);
