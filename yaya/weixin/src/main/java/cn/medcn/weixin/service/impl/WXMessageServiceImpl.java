@@ -184,7 +184,6 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     }
 
     @Override
-    @Cacheable(value = DEFAULT_CACHE,key = "'menu_auto_reply'")
     public String menuReply(Map<String, String> data) {
         String msgType = "text";
         String serverName = data.get(WeixinEventType.EVENT_FROM_USERNAME);
