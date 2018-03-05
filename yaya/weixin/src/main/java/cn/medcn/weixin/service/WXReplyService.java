@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * @Author：jianliang
- * @Date: Creat in 16:40 2018/2/28
+ * @Date: Create in 16:40 2018/2/28
  */
 public interface WXReplyService extends BaseService<PubWxReply>{
     List<PubWxReply> selectByContent(Integer content);
