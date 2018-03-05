@@ -37,6 +37,8 @@ public class AudioCourseDetail implements Serializable{
     private Integer duration;
     /**所属课程ID*/
     private Integer courseId;
+    /**视频是否有更新 */
+    private Boolean modified;
 
     @Transient
     @JsonIgnore

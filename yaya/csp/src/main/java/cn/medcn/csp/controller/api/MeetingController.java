@@ -415,6 +415,8 @@ public class MeetingController extends CspBaseController {
         detail.setAudioUrl(relativePath + saveFileName);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
         if (record.getPlayType() == AudioCourse.PlayType.normal.getType()) {
+            //设置音频的状态为已修改
+            detail.setModified(detail.getModified() == null ? false : true);
             audioService.updateDetail(detail);
         }
 
@@ -518,6 +520,7 @@ public class MeetingController extends CspBaseController {
      * @return
      * @since csp1.1.5
      */
+    @Deprecated
     @RequestMapping(value = "/upload/multiple")
     @ResponseBody
     public String upload(@RequestParam(value = "file", required = false) MultipartFile[] files, RecordUploadDTO record, HttpServletRequest request) {
@@ -740,23 +743,21 @@ public class MeetingController extends CspBaseController {
     protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException {
         Principal principal = SecurityUtils.get();
         AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
-        audioCourse.setDetails(audioService.findDetailsByCourseId(courseId));
         if (audioCourse == null) {
             throw new SystemException(local("source.not.exists"));
         }
-
         if (audioCourse.getDeleted()) {
             throw new SystemException(local("course.error.api.deleted"));
         }
         if (audioCourse.getLocked() != null && audioCourse.getLocked()) {
             throw new SystemException(local("course.error.api.locked"));
         }
-
-        audioService.handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             throw new SystemException(local("course.error.author"));
         }
+        audioCourse.setDetails(audioService.findDetailsByCourseId(courseId));
+        audioService.handleHttpUrl(fileBase, audioCourse);
 
         String wsUrl = genWsUrl(request, courseId);
         wsUrl = UrlConverter.newInstance(wsUrl).put("liveType", LiveOrderDTO.LIVE_TYPE_PPT).convert();
@@ -1646,50 +1647,6 @@ public class MeetingController extends CspBaseController {
         return success();
     }
 
-
-//    /**
-//     * 创建课件或者更新课件
-//     * @param courseId
-//     * @param files
-//     * @param title
-//     * @param imgId
-//     * @param musicId
-//     * @return
-//     * @throws SystemException
-//     */
-//    @RequestMapping("/create/update")
-//    @ResponseBody
-//    public String createOrUpdateAudio(Integer courseId, @RequestParam(required = false) MultipartFile[] files , String title, Integer imgId,Integer musicId) throws SystemException {
-//        String userId = SecurityUtils.get().getId();
-//        AudioCourse course = new AudioCourse();
-//        course.setId(courseId);
-//        course.setTitle(title);
-//        course.setCspUserId(userId);
-//        course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
-//
-//        AudioCourseTheme theme = new AudioCourseTheme();
-//        theme.setMusicId(musicId);
-//        theme.setImageId(imgId);
-//
-//        //新建课件
-//        if(courseId == null){
-//            if(files == null){
-//                return error(local("upload.error.null"));
-//            }
-//            if(StringUtils.isEmpty(title)){
-//                return error(local("meeting.title.not.none"));
-//            }
-//            courseId = audioService.createAudioAndDetail(files, course, theme);
-//            Map<String,Integer> map = new HashMap<>();
-//            map.put("courseId",courseId);
-//            return success(map);
-//
-//        }else{  //修改课件
-//            theme.setCourseId(courseId);
-//            audioService.updateMiniCourse(course,theme);
-//            return success();
-//        }
-//    }
 
     /**
      * 小程序活动贺卡模板列表
