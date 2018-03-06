@@ -21,6 +21,8 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.swing.*;
+import java.awt.*;
 import java.security.Principal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -171,13 +173,15 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         jsonObject.put("MsgType", msgType);
         jsonObject.put("CreateTime", System.currentTimeMillis());
         Integer num ;
+        String reContent = null;
         if (isNumeric(content)){
-             num = Integer.valueOf(content).intValue();
+           reContent = content.replaceAll("\\.","");
+           num = Integer.valueOf(reContent).intValue();
 
         }else{
             num = 0;
         }
-        message = noReply(num, message, questions, content);
+        message = noReply(num, message, questions, content,reContent);
         message = hasReply(message,num);
         jsonObject.put("Content", message);
         return XMLUtils.jsonToXML(jsonObject);
@@ -190,7 +194,7 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         String openid = data.get(WeixinEventType.EVENT_TO_USRENAME);
         String message =null;
         List<PubWxReply> replyList = wxReplyService.selectAll();
-        message ="回复以下数字查找相关问题:\n";
+        message ="感谢使用YaYa医师!\n遇到问题,可通过回复以下数字查找相关问题及解答喔:\n";
         for (PubWxReply pubWxReply:replyList) {
             message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
         }
@@ -199,7 +203,7 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         jsonObject.put("FromUserName", openid);
         jsonObject.put("MsgType", msgType);
         jsonObject.put("CreateTime", System.currentTimeMillis());
-        jsonObject.put("Content", message);
+        jsonObject.put("Content",message );
         return XMLUtils.jsonToXML(jsonObject);
     }
 
@@ -224,19 +228,27 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     }
 
     @Cacheable(value = DEFAULT_CACHE,key = "'auto_reply_question'")
-    public  String noReply(Integer num,String message,String questions,String content){
+    public  String noReply(Integer num,String message,String questions,String content,String reContent){
         List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
         if (pubWxReplyList.size()>0){
             for (PubWxReply pubWxReply:pubWxReplyList) {
-                questions +=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n";
-                if (Integer.valueOf(content).intValue() == pubWxReply.getId()){
-                    message="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
-                    message+=questions;
-                }else {
-                    if (Integer.valueOf(content).intValue() == pubWxReply.getAnswerId()){
-                        message=pubWxReply.getAnswerId()+"、"+pubWxReply.getQuestion()+"\n"+pubWxReply.getAnswer();
+                String strId=pubWxReply.getAnswerId().toString();
+                strId = strId.substring(0,1)+"."+strId.substring(1,2);
+                questions +=strId+"、"+pubWxReply.getQuestion()+"\n";
+                if (content.equals(strId) || Integer.valueOf(content)<=7){
+                    if (Integer.valueOf(reContent).intValue() == pubWxReply.getId()){
+                        message="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
+                        message+=questions;
+                    }else {
+                        if (Integer.valueOf(reContent).intValue() == pubWxReply.getAnswerId()){
+                            message=strId+"、"+pubWxReply.getQuestion()+"\n"+pubWxReply.getAnswer();
+                        }
                     }
+                }else {
+                    num = 0;
+                    message = hasReply(message,num);
                 }
+
             }
         }
         return message;
@@ -247,7 +259,7 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
         if (pubWxReplyList.size() == 0){
             List<PubWxReply> replyList = wxReplyService.selectAll();
-            message ="回复以下数字查找相关问题:\n";
+            message ="感谢使用YaYa医师!\n遇到问题,可通过回复以下数字查找相关问题及解答喔:\n";
             for (PubWxReply pubWxReply:replyList) {
                 message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
             }
