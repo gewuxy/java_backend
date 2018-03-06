@@ -216,8 +216,7 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
     }
 
     public static boolean isNumeric(String str){
-        Pattern pattern = Pattern.compile("[0-9]*");
-        Matcher isNum = pattern.matcher(str);
+        Matcher isNum = Pattern.compile("[0-9]*").matcher(str);
         if( !isNum.matches() ){
             return false;
         }

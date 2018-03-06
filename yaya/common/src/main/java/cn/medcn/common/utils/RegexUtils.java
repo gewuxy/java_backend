@@ -21,8 +21,7 @@ public class RegexUtils {
         }
 //        String reg = "^[1]([3][0-9]{1}|59|58|88|89)[0-9]{8}$";
         String reg = "^1[3|4|5|7|8][0-9]{9}$";
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(mobile);
+        Matcher matcher = Pattern.compile(reg).matcher(mobile);
         return matcher.matches();
     }
 
@@ -32,8 +31,7 @@ public class RegexUtils {
             return false;
         }
         String regex = "^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\\.[a-zA-Z0-9_-]+)+$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(email);
+        Matcher matcher = Pattern.compile(regex).matcher(email);
         return matcher.matches();
     }
 

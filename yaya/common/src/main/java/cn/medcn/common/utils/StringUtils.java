@@ -47,8 +47,7 @@ public class StringUtils {
         if (isEmpty(src)) {
             return false;
         }
-        Pattern pattern = Pattern.compile(reg);
-        Matcher matcher = pattern.matcher(src);
+        Matcher matcher = Pattern.compile(reg).matcher(src);
         return matcher.matches();
     }
 

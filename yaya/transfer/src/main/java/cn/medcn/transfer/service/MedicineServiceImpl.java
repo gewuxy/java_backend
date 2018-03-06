@@ -121,8 +121,7 @@ public class MedicineServiceImpl extends DataServiceImpl {
     protected String getApprovalNumber(String title){
         String approval = null;
         if (!StringUtils.isEmpty(title)){
-            Pattern pattern = Pattern.compile("_?[A-Z|0-9][0-9]{5}[0-9]+");
-            Matcher matcher = pattern.matcher(title);
+            Matcher matcher = Pattern.compile("_?[A-Z|0-9][0-9]{5}[0-9]+").matcher(title);
             if (matcher.find()){
                 approval = matcher.group();
             }

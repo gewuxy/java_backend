@@ -107,8 +107,7 @@ public class BeanValidator implements Validator {
                     return false;
                 }
                 if (!CheckUtils.isEmpty(validate.pattern())) {
-                    Pattern pattern = Pattern.compile(validate.pattern());
-                    Matcher matcher = pattern.matcher(value);
+                    Matcher matcher = Pattern.compile(validate.pattern()).matcher(value);
                     if (!matcher.matches()) {
                         errors.rejectValue(fieldName, null, String.format("%s格式不符合规范"));
                         return false;
