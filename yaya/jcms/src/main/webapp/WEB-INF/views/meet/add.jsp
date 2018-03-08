@@ -12,6 +12,7 @@
     <link rel="stylesheet" href="${ctxStatic}/css/iconfont.css">
     <link href="${ctxStatic}/css/daterangepicker.css" rel="stylesheet">
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/wangEditor/css/wangEditor.min.css">
+    <link rel="stylesheet" href="${ctxStatic}/css/perfect-scrollbar.min.css">
     <style type="text/css">
         .container {
             width: 750px;
@@ -21,7 +22,14 @@
             height: 300px;
         }
     </style>
-
+    <script>
+        $(function(){
+            //适配下拉
+            if($(".hidden-box").length ){
+                $(".hidden-box").perfectScrollbar();
+            };
+        })
+    </script>
 </head>
 <body>
 <!-- main -->
@@ -522,7 +530,7 @@
                 <span class="close-btn-fx"><img src="${ctxStatic}/images/cha.png"></span>
             </div>
             <div class="clearfix hidden-box">
-                <div class="formrow popup-checkbox">
+                <div class="formrow popup-checkbox fx-module-list">
 
                     <form action="" id="groupForm" name="groupForm">
                         <ul class="fx-li-box" >
@@ -833,6 +841,7 @@
                 $(this).val("");
             }
         });
+
 
         $("#submitBtn").click(function(){
             if(checkForm()){
