@@ -428,7 +428,11 @@
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();
 //                }
-
+                if(swiper.isEnd == true){
+                    $(".boxAudio").addClass("none");
+                } else {
+                    $(".boxAudio").removeClass("none");
+                }
 
             },
             onSlideNextEnd:function(){
@@ -438,6 +442,7 @@
                     //重新加载视频
                     prevItemIsVideo.get(0).load();
                 }
+
             },
             onSlidePrevEnd:function(){
                 nextItemIsVideo = $('.swiper-slide-next').find('video');
