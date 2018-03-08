@@ -194,7 +194,7 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         String openid = data.get(WeixinEventType.EVENT_TO_USRENAME);
         String message =null;
         List<PubWxReply> replyList = wxReplyService.selectAll();
-        message ="感谢使用YaYa医师!\n遇到问题,可通过回复以下数字查找相关问题及解答喔:\n";
+        message ="感谢使用YaYa医师！\n遇到问题，可通过回复以下数字查找相关问题及解答喔\n";
         for (PubWxReply pubWxReply:replyList) {
             message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
         }
@@ -259,7 +259,7 @@ public class WXMessageServiceImpl extends WXBaseServiceImpl implements WXMessage
         List<PubWxReply> pubWxReplyList = wxReplyService.selectByContent(num);
         if (pubWxReplyList.size() == 0){
             List<PubWxReply> replyList = wxReplyService.selectAll();
-            message ="感谢使用YaYa医师!\n遇到问题,可通过回复以下数字查找相关问题及解答喔:\n";
+            message ="感谢使用YaYa医师！\n遇到问题，可通过回复以下数字查找相关问题及解答喔\n";
             for (PubWxReply pubWxReply:replyList) {
                 message+="【"+pubWxReply.getId()+"】"+pubWxReply.getContent()+"\n";
             }
