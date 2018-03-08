@@ -17,10 +17,10 @@
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/CSPMeeting-style.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/perfect-scrollbar.min.css">
-    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black.css">
+    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black-2.css">
 
     <script src="${ctxStatic}/phone/js/screenfull.min.js"></script>
-    <script src="${ctxStatic}/phone/js/audio-countDown.js"></script>
+    <script src="${ctxStatic}/phone/js/audio.js"></script>
     <script src="${ctxStatic}/phone/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
@@ -39,7 +39,6 @@
 </head>
 <body <c:if test="${not empty theme && not empty theme.imgUrl}">style="background: url('${theme.imgUrl}') no-repeat fixed;background-size: cover;"</c:if> >
 <div class="warp">
-
     <div class="CSPMeeting-gallery details-gallery
     <c:if test="${watermark != null && watermark.state}">
         <c:choose>
@@ -50,7 +49,9 @@
         </c:choose>
     </c:if>
     " >
-
+        <div class="CSPMeeting-recorded-title overflowText">
+            <span class="icon ">${course.title}</span>
+        </div>
         <!-- Swiper -->
         <div class="swiper-container gallery-top video-countDown ">
             <!--根据ID 切换 PPT列表-->
@@ -73,12 +74,31 @@
                     <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/meeting-blackBg.png');"></div>
                 </div>
             </div>
-            <!--音频文件-->
-            <div class="clearfix boxAudio t-center " >
-                <div class="audio-meeting-box" style="">
-                    <audio controls=true id="audioPlayer" src="${course.details[0].audioUrl}"></audio>
+
+            <div class="flex cspMeeting-playerItem">
+                <div class="flex-item">
+                    <!--音频文件-->
+                    <div class="clearfix boxAudio t-center " >
+                        <!--发光层-->
+                        <div class="cspMeeting-black-button">
+                            <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
+
+                        </div>
+                        <div class="cspMeeting-black-blueButton"><div class="icon"></div></div>
+                        <div class="audio-meeting-box" style="">
+                            <audio controls=true id="audioPlayer" src="${course.details[0].audioUrl}"></audio>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="cspMeeting-notice-button">
+                    <!--新的更多按钮-->
+                    <div class="button button-icon-info star-popup-button-hook">
+                        <i></i>
+                    </div>
                 </div>
             </div>
+
             <!--录播中音频-->
             <div class="boxAudio-loading none">
                 <div class="time">
@@ -99,41 +119,6 @@
             </div>
         </div>
 
-        <!--buttonBottom-->
-        <div class="CSPMeeting-bottom">
-            <div class="flex">
-                <c:choose>
-                    <c:when test="${course.starRateFlag}">
-                        <div class="flex-item">
-                            <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
-                                <c:choose>
-                                    <c:when test="${empty rateResult.multipleResult || rateResult.multipleResult.avgScore <= 0}">
-                                        <span class="off "><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="flex-item">
-                            <div class="button button-icon-info star-popup-button-hook">
-                                <i></i>
-                            </div>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-                <div class="flex-item">
-                    <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
-                </div>
-
-                <div class="flex-item">
-                    <div class="button button-icon-onFull changeFull-hook"><i></i></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!--自动播放层-->
@@ -161,9 +146,9 @@
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
-        <c:if test="${course.starRateFlag}">
-            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
             <div class="star-showScore ">
+                <c:if test="${course.starRateFlag}">
+                <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
                 <div class="star-showScore-main clearfix">
                     <div class="fr">
                         <div class="star-box star-min">
@@ -187,11 +172,12 @@
                     </div>
                     <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
                 </div>
+                </c:if>
                 <div class="star-showScore-button popup-star-button t-center">
-                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
+                    <c:if test="${course.starRateFlag}"><button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button></c:if>
+                    <a href="#" class="report-button report-popup-button-hook">举报</a>
                 </div>
             </div>
-        </c:if>
     </div>
 </div>
 
@@ -351,7 +337,7 @@
             console.log("load audio source error ...");
             console.log("is playing = " + playing);
             console.log("isVideo.length == " + isVideo.length);
-            $(".boxAudio").addClass("none");
+            //$(".boxAudio").addClass("none");
             console.log("playerState = " + playerState);
             hasAudioUrl = false;
             changeBgMusicValue(true);
@@ -421,7 +407,7 @@
                         //判断是否已经播放完成
                         activeItemIsVideo.get(0).addEventListener('canplay',function(){
                             $('.isIphoneSafari').hide();
-                            $('.boxAudio').addClass('none');
+                            //$('.boxAudio').addClass('none');
                         }, {once: true});
                     } else {
                         activeItemIsVideo.get(0).play();
@@ -523,7 +509,7 @@
         $(".hidden-box").perfectScrollbar();
 
         //弹出简介
-        $('.info-popup-hook').click(function(){
+        function openInfo(){
             clickOthers = true;
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
@@ -540,18 +526,26 @@
                     //popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height(0);
+                        activeItemIsVideo.attr('style','margin-top:99999px;');
                     }
                 },
                 end:function(){
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        if (clickOthers){
+                            activeItemIsVideo.attr('style','margin-top:99999px;');
+                        } else {
+                            activeItemIsVideo.attr('style','margin-top:0px;');
+                        }
                     }
                     clickOthers = false;
                 }
             })
+        }
+
+        $('.info-popup-hook').click(function(){
+
         });
 
 
@@ -617,7 +611,7 @@
                 } else {
                     popupPalyer.load('isNotSrc');
                     console.log('没加载音频');
-                    $('.boxAudio').addClass('none');
+                    //$('.boxAudio').addClass('none');
                     changePlayerStete(true);
                     slideToNext();
                 }
@@ -645,8 +639,8 @@
                 popupPalyer.play();
                 //有video文件
                 if(activeItemIsVideo.length > 0){
-                    $('.boxAudio').addClass('none');
-                    activeItemIsVideo.get(0).load();
+                    //$('.boxAudio').addClass('none');
+                    //activeItemIsVideo.get(0).load();
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
@@ -754,7 +748,7 @@
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
-                activeItemIsVideo.attr('style','margin-top:300rem');
+                activeItemIsVideo.attr('style','margin-top:99999px;');
             }
             weui.actionSheet([
                 {
@@ -812,30 +806,10 @@
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                activeItemIsVideo.height(0);
+            if(browser.isAndroid || activeItemIsVideo.length > 0){
+                activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
-            layer.open({
-                type: 1,
-                anim: 5,
-                area: ['90%', 'auto'],
-                fix: false, //不固定
-                title: false,
-                shadeClose: true,
-                content: $('.listItme-popup'),
-                success: function () {
-                    //popupPalyer.play();
-                },
-                end: function () {
-                    //popupPalyer.play();
-                    //关闭时还原高度。
-                    if (!clickOthers){
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                            activeItemIsVideo.height('auto');
-                        }
-                    }
-                }
-            })
+            openInfo();
         });
 
         //星评弹出
@@ -860,14 +834,14 @@
 //                    popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height(0);
+                        activeItemIsVideo.attr('style','margin-top:99999px;');
                     }
                 },
                 end:function(){
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style','margin-top:0');
                     }
                     layer.closeAll();
                     clickOthers = false;
