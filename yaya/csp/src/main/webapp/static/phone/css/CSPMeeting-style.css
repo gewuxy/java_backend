@@ -129,7 +129,7 @@ video { object-fit: contain;
     top:0;
 }
 .gallery-top .cspMeeting-notice-button{ width:.44rem; height:1rem; line-height: 1rem; margin-right:.2rem; }
-.gallery-top .cspMeeting-notice-button .button-icon-info i { width:.44rem; height:.44rem; background:url(../images/cspMeeting-icon-notice.png) no-repeat; background-size:.44rem; }
+.gallery-top .cspMeeting-notice-button .button-icon-info i { width:.44rem; height:.44rem; background:url(../images/cspMeeting-icon-notice.png) no-repeat; background-size:.44rem; -webkit-border-radius:50%; -moz-border-radius:50%; border-radius:50%; }
 .gallery-top .boxAudio { position: relative; width:92%; left:.5rem; z-index: 999; }
 .gallery-top .boxAudio  .cspMeeting-black-blueButton {    width: 2rem; height: 2rem; position: absolute; left: -.46rem; top: -.46rem;}
 .gallery-top .boxAudio  .cspMeeting-black-blueButton .icon{ width:2rem; height:2rem; background:url(../images/cspMeeting-black-playButton-BlueBg.png) center center no-repeat;
@@ -447,7 +447,7 @@ video { object-fit: contain;
 .CSPmeeting-ad-item .logo-title { font-size:.3rem; line-height: 1.2; margin-top:.05rem;}
 .CSPmeeting-ad-item { font-size:.22rem;}
 
-/*双屏切换*/
+    /*双屏切换*/
 .popup-fullStatus {}
 .popup-volume { }
 .warp .popup-fullStatus .popup-min-screen .viedoItem,
@@ -460,7 +460,7 @@ video { object-fit: contain;
 .warp .popup-fullStatus .popup-min-screen .boxAudio{ display: none;}
 .warp .popup-fullStatus .popup-min-screen .logo-watermark { display: none;}
 
-/*水印*/
+    /*水印*/
 .logo-watermark { position: absolute; z-index: 100;}
 .logo-watermark-item {
     display: inline-block;
@@ -534,7 +534,7 @@ video { object-fit: contain;
 .cspMeeting-peopleNum-main .icon { width:.26rem; height:.34rem; background:url(../images/icon-cspMeeting-peopleNum.png) no-repeat; background-size:.26rem .34rem; margin:0 auto;}
 .cspMeeting-peopleNum .num { font-size:.18rem; line-height: 1.4em;}
 
-/*weui*/
+    /*weui*/
 .weui-mask {
     position: fixed;
     z-index: 1000;
@@ -636,7 +636,7 @@ video { object-fit: contain;
     transform-origin: 0 100%;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
-}
+ }
 .weui-actionsheet__title-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -758,7 +758,7 @@ video { object-fit: contain;
     .fixed-full-screen-min-main .fixed-text { margin:.3rem 0;}
     .fixed-error { top:-0.15rem;  }
 
-    .CSPMeeting-bottom, .CSPMeeting-bottom ,
-    .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
+     .CSPMeeting-bottom, .CSPMeeting-bottom ,
+     .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
 
 }

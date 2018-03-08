@@ -670,8 +670,10 @@
             }
             if (!playerState){
                 $('.button-icon-play').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').removeClass('none');
             } else {
                 $('.button-icon-stop').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').addClass('none');
             }
         }
 
@@ -724,18 +726,27 @@
         });
 
 
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+            if (window.orientation === 180 || window.orientation === 0) {
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    console.log('进入了');
+                    CSPMeetingGallery.height(ch);
 
-//            window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
-//            if (window.orientation === 180 || window.orientation === 0) {
-//                alert('竖屏状态！');
-//            }
-//            if (window.orientation === 90 || window.orientation === -90 ){
-//                alert('横屏状态！');
-////                CSPMeetingGallery.height($(window).height()*2);
-////                CSPMeetingGallery.height($(window).height());
-////                CSPMeetingGallery.height($(window).height());
-//            }
-//        }, false);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },400);
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    CSPMeetingGallery.height(ch);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },200);
+            }
+        }, false);
 
         function report(type){
             $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {

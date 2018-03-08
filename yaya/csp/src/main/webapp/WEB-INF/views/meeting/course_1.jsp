@@ -887,6 +887,7 @@
             if(ismuted == false){
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').removeClass('none');
                 ismuted = true
             } else {
                 if($('.swiper-slide-active').attr("audio-src") != ''){
@@ -895,6 +896,7 @@
                     activeItemIsVideo.get(0).muted = false;
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').addClass('none');
                 ismuted = false
             }
         }
@@ -980,6 +982,29 @@
             }
             openInfo();
         });
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+            if (window.orientation === 180 || window.orientation === 0) {
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    console.log('进入了');
+                    CSPMeetingGallery.height(ch);
+
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },400);
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    CSPMeetingGallery.height(ch);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },200);
+            }
+        }, false);
+
+
 
         //星评弹出
         function openStarRate() {

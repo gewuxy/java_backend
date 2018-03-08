@@ -811,6 +811,7 @@
             if (ismuted == true) {
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').addClass('none');
                 ismuted = false
             } else {
                 if ($('.popup-volume').find('audio').length > 0) {
@@ -823,6 +824,7 @@
 
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').removeClass('none');
                 ismuted = true
             }
         }
@@ -1256,6 +1258,33 @@
         if ("${live.liveState == 3 && course.starRateFlag}" == "true") {
             openStarRate();
         }
+
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+
+            if (window.orientation === 180 || window.orientation === 0) {
+                setTimeout(function () {
+                    console.log('竖屏状态！');
+                    cH = window.innerHeight ;
+                    $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
+
+                    CSPMeetingGallery.height(cH);
+
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },400);
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                console.log('横屏状态！');
+                cH = window.innerHeight ;
+                setTimeout(function () {
+                    $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
+                    CSPMeetingGallery.height(cH);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },200);
+            }
+        }, false);
     });
 
     //提交评分
