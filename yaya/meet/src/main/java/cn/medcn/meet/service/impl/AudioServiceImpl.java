@@ -925,7 +925,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         cond.setCourseId(courseId);
         cond.setSort(1);
         AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
-        firstDetail.setVideoUrl(null);
+        //firstDetail.setVideoUrl(null);
         firstDetail.setTemp(true);
         return firstDetail;
     }

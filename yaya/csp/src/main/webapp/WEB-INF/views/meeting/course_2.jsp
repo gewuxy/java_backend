@@ -52,7 +52,7 @@
 
     <div class="CSPMeeting-gallery CSPMeeting-gallery-live video-countDown " id="CSPMeeting-gallery-live">
         <!-- Swiper -->
-        <div class="swiper-container gallery-top popup-volume <c:if test="${watermark != null && watermark.state}">
+        <div class="swiper-container gallery-top popup-volume clearfix <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
             <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
@@ -374,7 +374,7 @@
     var playOver = false;
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-
+    var activeItemIsVideo, prevItemIsVideo, nextItemIsVideo;
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password) == '') {
@@ -387,6 +387,13 @@
         }, function (data) {
             if (data.code == 0) {
                 $("#passwordView").addClass("none");
+                //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                if (isAndroid || activeItemIsVideo.length > 0) {
+                    activeItemIsVideo.attr('style', 'margin-top:0px');
+                }
+                if (isAndroid) {
+                    $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
+                }
             } else {
                 $("#passwordError").removeClass("none");
             }
@@ -423,13 +430,18 @@
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
 
-        var activeItemIsVideo, prevItemIsVideo, nextItemIsVideo;
+
         var cH = window.innerHeight;
         var phoneDpi = window.devicePixelRatio;
 
         var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
         var isVideo = $('.swiper-slide-active').find('video');
 
+
+        //直播标题点击缩放、调用的JS
+        $('.live-title-hook').find('.icon').on('click',function(){
+            $(this).addClass('none').siblings().removeClass('none');
+        });
 
 //        $("#audioPlayer")[0].addEventListener("ended", function(){
 //
@@ -472,7 +484,15 @@
         });
 
         $("#audioPlayer")[0].addEventListener("error", function () {
-            $(".boxAudio-loading").removeClass("none");
+            var isVideo = $('.swiper-slide-active').find('video');
+            clearTimeout(slideTimer);
+            if(isVideo.length > 0){
+                $(".boxAudio-loading").addClass("none");
+                //$(".boxAudio").addClass("none");
+            } else {
+                $(".boxAudio-loading").removeClass("none");
+                //$(".boxAudio").addClass("none");
+            }
             //$(".boxAudio").addClass("none");
         });
 
@@ -531,7 +551,13 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart', function () {
                 $(this).hide();
-                popupPalyer.play();
+                if (activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).play();
+                } else {
+                    //播放音频
+                    popupPalyer.play();
+                }
                 playing = true;
             });
 
@@ -675,7 +701,7 @@
 //                    slideToNext();
 //                }
                 swiper.slideTo("${fn:length(course.details) - 1}");
-                if("${live.liveState == 5}" == "true"){
+                if("${live.liveState == 5}" == "true" || "${not empty course.password}" == "true"){
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if (isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.attr('style', 'margin-top:9999px');
@@ -844,6 +870,7 @@
                 area: ['100%', '100%'],
                 fix: false, //不固定
                 title: false,
+                shadeClose:true,
                 content: $('.faq-popup-hook'),
                 success: function () {
 
@@ -859,6 +886,7 @@
                 area: ['100%', '4rem'],
                 offset: 'b',
                 title: false,
+                shadeClose:true,
                 content: $('.meeting-faq-popup-keyboard'),
                 success: function (swiper) {
                     swiper.find('textarea').focus();
@@ -1021,11 +1049,11 @@
                         $("#ck-video,#videoWrap").attr('style', 'height:auto');
                     }
                 } else if (data.order == 13) {//开启星评指令
-                    if (activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
-                    }
+                    // if (activeItemIsVideo.length > 0) {
+                    //     activeItemIsVideo.get(0).pause();
+                    // } else {
+                    //     popupPalyer.pause();
+                    // }
 
                     if (isAndroid) {
                         $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
@@ -1163,6 +1191,7 @@
                 area: ['85%', '65%'],
                 fix: false, //不固定
                 title: false,
+                shadeClose:true,
                 skin: 'info-popup',
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {

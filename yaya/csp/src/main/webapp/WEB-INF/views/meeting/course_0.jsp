@@ -39,7 +39,7 @@
 </head>
 <body <c:if test="${not empty theme && not empty theme.imgUrl}">style="background: url('${theme.imgUrl}') no-repeat fixed;background-size: cover;"</c:if> >
 <div class="warp">
-    <div class="CSPMeeting-gallery details-gallery
+    <div class="CSPMeeting-gallery details-gallery clearfix
     <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
@@ -431,6 +431,9 @@
 //                }
                 if(swiper.isEnd == true){
                     $(".boxAudio").addClass("none");
+                    if("${course.starRateFlag && !rated}" == "true"){
+                        openStarRate();
+                    }
                 } else {
                     $(".boxAudio").removeClass("none");
                 }
@@ -526,6 +529,7 @@
                 fix: false, //不固定
                 title:false,
                 skin: 'info-popup',
+                shadeClose:true,
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
                     layer.close(layer.index-1);

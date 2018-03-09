@@ -41,7 +41,7 @@
 <body>
 <div class="warp cspMeeting-details-notVideo">
 
-    <div class="CSPMeeting-gallery details-gallery <c:if test="${watermark != null && watermark.state}">
+    <div class="CSPMeeting-gallery details-gallery clearfix <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
             <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
@@ -135,32 +135,32 @@
     <!--开始界面-->
     <div class="fixed-full-screen-box ${live.liveState == 0 ? '' : 'none'}" id="liveStartView">
         <div class="fixed-full-screen-logo"><a href="${appStoreUrl}"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></a></div></div>
-        <div class="fixed-full-screen-main">
-            <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
-        </div>
+    <div class="fixed-full-screen-main">
+        <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
     </div>
+</div>
 
-    <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
-        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
-        <div class="fixed-full-screen-main">
-            <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
-            <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
-        </div>
+<!--结束界面-->
+<div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
+    <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
+    <div class="fixed-full-screen-main">
+        <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
+        <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
     </div>
+</div>
 
-    <!--输入密码界面-->
-    <div class="fixed-full-screen-box ${empty course.password || live.liveState ==5 ? 'none':''}" id="passwordView">
-        <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
-        <div class="fixed-full-screen-main fixed-full-screen-min-main">
-            <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
-            <div class="fixed-row t-center pr">
-                <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
-            </div>
-            <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
-            <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
+<!--输入密码界面-->
+<div class="fixed-full-screen-box ${empty course.password || live.liveState ==5 ? 'none':''}" id="passwordView">
+    <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
+    <div class="fixed-full-screen-main fixed-full-screen-min-main">
+        <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
+        <div class="fixed-row t-center pr">
+            <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
         </div>
+        <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
+        <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
     </div>
+</div>
 </div>
 
 <!--弹出的简介-->
@@ -170,9 +170,9 @@
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
-            <div class="star-showScore ">
-        <c:if test="${course.starRateFlag}">
-            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
+        <div class="star-showScore ">
+            <c:if test="${course.starRateFlag}">
+                <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
                 <div class="star-showScore-main clearfix">
                     <div class="fr">
                         <div class="star-box star-min">
@@ -196,12 +196,12 @@
                     </div>
                     <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
                 </div>
-        </c:if>
-                <div class="star-showScore-button popup-star-button t-center">
-                    <c:if test="${course.starRateFlag}"><button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button></c:if>
-                    <a href="#" class="report-button report-popup-button-hook">举报</a>
-                </div>
+            </c:if>
+            <div class="star-showScore-button popup-star-button t-center">
+                <c:if test="${course.starRateFlag}"><button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button></c:if>
+                <a href="#" class="report-button report-popup-button-hook">举报</a>
             </div>
+        </div>
     </div>
 </div>
 
@@ -409,10 +409,13 @@
                     var $currentPage = $(".swiper-slide:last");
                     console.log("current page is temp = " + $currentPage.attr("istemp"));
                     if ($currentPage.attr("istemp") == '1'){
+                        $currentPage.html("");
                         if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
-                            $currentPage.find("video").attr("src", data.videoUrl);
+                            $currentPage.html('<video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div>');
                         } else {
-                            $currentPage.find("div").find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                            $currentPage.html('<div class="swiper-zoom-container pinch-zoom" style="height:100%;">' +
+                                '<div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div>' +
+                                '</div>');
                         }
                         $currentPage.attr("istemp", "0");
                     } else {
@@ -436,7 +439,7 @@
                     if(activeItemIsVideo.length > 0){
                         activeItemIsVideo.get(0).pause();
                     }
-                    popupPalyer.pause();
+                    //popupPalyer.pause();
                     openStarRate();
                 } else if(data.order == 11){//直播開始
                     console.log("直播开始");
@@ -475,6 +478,7 @@
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
+                    popupPalyer.load("isNotSrc");
                     activeItemIsVideo.get(0).muted = ismuted;
                     activeItemIsVideo.get(0).play();
                 } else {
@@ -518,7 +522,7 @@
             console.log("load audio source error ...");
             isVideo = $('.swiper-slide-active').find('video');
             clearTimeout(slideTimer);
-            if(isVideo.length > 1){
+            if(isVideo.length > 0){
                 $(".boxAudio-loading").addClass("none");
                 //$(".boxAudio").addClass("none");
             } else {
@@ -605,7 +609,6 @@
             speed:150,//解决滑动过快的BUG
             onSlideChangeStart:function(swiper){
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
-
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).load();
                     //判断是否Iphone 的 Safari 浏览器
@@ -722,6 +725,7 @@
                 area: ['100%','100%'],
                 fix: false, //不固定
                 title: false,
+                shadeClose:true,
                 content: $('.faq-popup-hook'),
                 success: function () {
                     popupPalyer.play();
@@ -740,6 +744,7 @@
                 area: ['100%','4rem'],
                 offset:'b',
                 title:false,
+                shadeClose:true,
                 content: $('.meeting-faq-popup-keyboard'),
                 success: function (swiper) {
                     popupPalyer.play();
@@ -772,6 +777,7 @@
                 fix: false, //不固定
                 title:false,
                 skin: 'info-popup',
+                shadeClose:true,
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
                     layer.close(layer.index-1);
@@ -843,7 +849,12 @@
                 $('.isIphoneSafari').hide();
                 $(this).hide();
                 galleryTop.slideTo("${fn:length(course.details) - 1}");
-                popupPalyer.play();
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).play();
+                } else {
+                    popupPalyer.play();
+                }
                 playing = true;
             });
         }
@@ -926,7 +937,7 @@
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             weui.actionSheet([
-               {
+                {
                     label: '<fmt:message key="page.meeting.report.type.crime"/>',
                     onClick: function () {
                         report(1);
@@ -969,6 +980,7 @@
 
         //手机端 点击任何一个地方  自动播放音频
         $('.isIphoneSafari').on('touchstart',function(){
+            alert("play started");
             $(this).hide();
             activeItemIsVideo.get(0).load();
             activeItemIsVideo.get(0).play();
