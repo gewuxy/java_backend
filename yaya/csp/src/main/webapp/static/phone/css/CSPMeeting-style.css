@@ -9,8 +9,7 @@ html,body { overflow-x:hidden; background-color:#242C46;}
 input[type="button"], input[type="submit"], input[type="reset"] { -webkit-appearance: none; }
 textarea { -webkit-appearance: none;}
 
-video { object-fit: contain;
-    object-position: center;  }
+video { object-fit:  contain; object-position: center;  }
 
 .overflowText {
     max-width: 100%;
@@ -93,7 +92,7 @@ video { object-fit: contain;
     background-color:#1F263C;
 }
 .gallery-top {
-    height: 48.2%;
+    height: 37.6%;
     width: 100%;
 }
 
@@ -169,7 +168,7 @@ video { object-fit: contain;
 .cspMeeting-details-notVideo .swiper-btn-item .swiper-pagination-current { color:#fff; font-size:.26rem;}
 
 
-.video-play-live { position: relative; width:72.5% !important; height:32.1% !important; margin:6% auto 0; }
+.video-play-live { position: relative; width:72.5% !important; height:32.1% !important; /*margin:6% auto 0;*/ margin:12% auto 0; }
 .video-play-live .video-play-wrapper { background:#101010; width:100%  }
 .CSPMeeting-gallery-live .video-play-live .viedoItem {  background-color:transparent !important; width:100% !important; height:100% !important; margin:0 auto;}
 .popup-fullStatus .video-play-live.popup-volume .viedoItem { background-color:#000 !important;}
@@ -447,7 +446,7 @@ video { object-fit: contain;
 .CSPmeeting-ad-item .logo-title { font-size:.3rem; line-height: 1.2; margin-top:.05rem;}
 .CSPmeeting-ad-item { font-size:.22rem;}
 
-    /*双屏切换*/
+/*双屏切换*/
 .popup-fullStatus {}
 .popup-volume { }
 .warp .popup-fullStatus .popup-min-screen .viedoItem,
@@ -460,7 +459,7 @@ video { object-fit: contain;
 .warp .popup-fullStatus .popup-min-screen .boxAudio{ display: none;}
 .warp .popup-fullStatus .popup-min-screen .logo-watermark { display: none;}
 
-    /*水印*/
+/*水印*/
 .logo-watermark { position: absolute; z-index: 100;}
 .logo-watermark-item {
     display: inline-block;
@@ -534,7 +533,7 @@ video { object-fit: contain;
 .cspMeeting-peopleNum-main .icon { width:.26rem; height:.34rem; background:url(../images/icon-cspMeeting-peopleNum.png) no-repeat; background-size:.26rem .34rem; margin:0 auto;}
 .cspMeeting-peopleNum .num { font-size:.18rem; line-height: 1.4em;}
 
-    /*weui*/
+/*weui*/
 .weui-mask {
     position: fixed;
     z-index: 1000;
@@ -636,7 +635,7 @@ video { object-fit: contain;
     transform-origin: 0 100%;
     -webkit-transform: scaleY(0.5);
     transform: scaleY(0.5);
- }
+}
 .weui-actionsheet__title-text {
     overflow: hidden;
     text-overflow: ellipsis;
@@ -689,7 +688,7 @@ video { object-fit: contain;
     .warp .popup-fullStatus .popup-min-screen { height:15% !important;   }
     .CSPMeeting-recorded-title { margin-top:10%; margin-bottom:10%;}
     .details-gallery {}
-    .details-gallery .gallery-top { height:48.2%; }
+    .details-gallery .gallery-top { /*height:48.2%;*/ height:37.6%; }
     .details-gallery  .swiper-btn-item { padding:12% 0 0; }
     .layer-hospital-popup .meetingSwiperBox  .swiper-picture { }
     /*竖屏*/
@@ -758,7 +757,7 @@ video { object-fit: contain;
     .fixed-full-screen-min-main .fixed-text { margin:.3rem 0;}
     .fixed-error { top:-0.15rem;  }
 
-     .CSPMeeting-bottom, .CSPMeeting-bottom ,
-     .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
+    .CSPMeeting-bottom, .CSPMeeting-bottom ,
+    .CSPMeeting-bottom,  .CSPMeeting-bottom { bottom:0;}
 
 }

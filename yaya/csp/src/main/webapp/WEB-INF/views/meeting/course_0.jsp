@@ -395,6 +395,7 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            speed:150,//解决滑动过快的BUG
             onSlideChangeStart:function(swiper){
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
