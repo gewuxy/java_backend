@@ -17,10 +17,10 @@
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/CSPMeeting-style.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/perfect-scrollbar.min.css">
-    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black.css">
+    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black-2.css">
 
     <script src="${ctxStatic}/phone/js/screenfull.min.js"></script>
-    <script src="${ctxStatic}/phone/js/audio-countDown.js"></script>
+    <script src="${ctxStatic}/phone/js/audio.js"></script>
     <script src="${ctxStatic}/phone/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
@@ -39,9 +39,9 @@
 
 </head>
 <body>
-<div class="warp">
+<div class="warp cspMeeting-details-notVideo">
 
-    <div class="CSPMeeting-gallery details-gallery <c:if test="${watermark != null && watermark.state}">
+    <div class="CSPMeeting-gallery details-gallery clearfix <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
             <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
@@ -49,6 +49,9 @@
             <c:when test="${watermark.direction == 3}">logo-watermark-position-bottom-right</c:when>
         </c:choose>
     </c:if>" >
+        <div class="CSPMeeting-recorded-title overflowText">
+            <span class="icon ">${course.title}</span>
+        </div>
         <!-- Swiper -->
         <div class="swiper-container gallery-top video-countDown ">
             <!--根据ID 切换 PPT列表-->
@@ -69,18 +72,42 @@
                     </div>
                 </c:forEach>
             </div>
-            <!--音频文件-->
-            <div class="clearfix boxAudio t-center " >
-                <div class="audio-meeting-box" style="">
-                    <audio controls=true id="audioPlayer" src="${course.details[0].temp ? '' : course.details[0].audioUrl}"></audio>
+            <div class="flex cspMeeting-playerItem">
+                <div class="flex-item">
+                    <!--音频文件-->
+                    <div class="clearfix boxAudio t-center " >
+                        <!--发光层-->
+                        <div class="cspMeeting-black-button">
+                            <!--<div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>-->
+                            <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
+                        </div>
+                        <div class="cspMeeting-black-blueButton"><div class="icon"></div></div>
+                        <div class="audio-meeting-box" style="">
+                            <audio controls=true id="audioPlayer" src="${course.details[0].temp ? '' : course.details[0].audioUrl}"></audio>
+                        </div>
+                        <!--录播中音频-->
+                        <div class="boxAudio-loading">
+                            <div class="time">
+                                <span class="text"><fmt:message key="page.meeting.tips.recoding"/>...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
+                <div class="cspMeeting-notice-button">
+                    <!--新的更多按钮-->
+                    <div class="button button-icon-info star-popup-button-hook">
+                        <i></i>
+                    </div>
+                </div>
+
             </div>
-            <!--录播中音频-->
-            <div class="boxAudio-loading none">
-                <div class="time">
-                    <span><img src="${ctxStatic}/phone/images/viedo-icon.gif" alt=""></span>
-                    <span class="text"><fmt:message key="page.meeting.tips.recoding"/></span>
+            <!--人数显示-->
+            <div class="cspMeeting-peopleNum">
+                <div class="cspMeeting-peopleNum-main">
+                    <div class="icon"></div>
+                    <div class="num">0</div>
                 </div>
+
             </div>
             <!--切换菜单-->
             <div class="swiper-btn-item clearfix">
@@ -96,42 +123,7 @@
         </div>
 
         <!--buttonBottom-->
-        <div class="CSPMeeting-bottom">
-            <div class="flex">
-                <c:choose>
-                    <c:when test="${course.starRateFlag}">
-                        <div class="flex-item">
-                            <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
-                                <c:choose>
-                                    <c:when test="${empty rateResult.multipleResult || rateResult.multipleResult.avgScore == 0.0}">
-                                        <span class="off "><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="flex-item">
-                            <div class="button button-icon-info star-popup-button-hook">
-                                <i></i>
-                            </div>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-                <div class="flex-item">
-                    <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
-                </div>
-                <div class="flex-item">
-                    <div class="button button-icon-onFull changeFull-hook"><i></i></div>
-                </div>
-            </div>
-        </div>
+
     </div>
 
     <!--新加载提示-->
@@ -142,33 +134,33 @@
 
     <!--开始界面-->
     <div class="fixed-full-screen-box ${live.liveState == 0 ? '' : 'none'}" id="liveStartView">
-        <div class="fixed-full-screen-logo"><a href="${appStoreUrl}"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></a></div></div>
-        <div class="fixed-full-screen-main">
-            <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
-        </div>
+        <div class="fixed-full-screen-logo"><a href="${appStoreUrl}"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></a></div></div>
+    <div class="fixed-full-screen-main">
+        <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
     </div>
+</div>
 
-    <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
-        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
-        <div class="fixed-full-screen-main">
-            <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
-            <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
-        </div>
+<!--结束界面-->
+<div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
+    <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
+    <div class="fixed-full-screen-main">
+        <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
+        <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
     </div>
+</div>
 
-    <!--输入密码界面-->
-    <div class="fixed-full-screen-box ${empty course.password || live.liveState ==4 ? 'none':''}" id="passwordView">
-        <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
-        <div class="fixed-full-screen-main fixed-full-screen-min-main">
-            <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
-            <div class="fixed-row t-center pr">
-                <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
-            </div>
-            <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
-            <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
+<!--输入密码界面-->
+<div class="fixed-full-screen-box ${empty course.password || live.liveState ==5 ? 'none':''}" id="passwordView">
+    <div class="fixed-full-screen-min-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-min-img.png" alt=""></div></div>
+    <div class="fixed-full-screen-main fixed-full-screen-min-main">
+        <p class="t-center"><fmt:message key="page.meeting.tips.watch.locked"/></p>
+        <div class="fixed-row t-center pr">
+            <input type="tel" class="fixed-text" id="password" placeholder="<fmt:message key='page.meeting.tips.watch.password.holder'/>" maxlength=4>
         </div>
+        <div class="fixed-row fixed-error error none" id="passwordError"><fmt:message key="page.meeting.tips.password.error"/></div>
+        <div class="fixed-row t-center"><input type="button" onclick="checkPwd()" class="fixed-button" value="<fmt:message key='page.meeting.tips.password.confirm'/>"></div>
     </div>
+</div>
 </div>
 
 <!--弹出的简介-->
@@ -178,9 +170,9 @@
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
-        <c:if test="${course.starRateFlag}">
-            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
-            <div class="star-showScore ">
+        <div class="star-showScore ">
+            <c:if test="${course.starRateFlag}">
+                <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
                 <div class="star-showScore-main clearfix">
                     <div class="fr">
                         <div class="star-box star-min">
@@ -204,11 +196,12 @@
                     </div>
                     <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
                 </div>
-                <div class="star-showScore-button popup-star-button t-center">
-                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
-                </div>
+            </c:if>
+            <div class="star-showScore-button popup-star-button t-center">
+                <c:if test="${course.starRateFlag}"><button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button></c:if>
+                <a href="#" class="report-button report-popup-button-hook">举报</a>
             </div>
-        </c:if>
+        </div>
     </div>
 </div>
 
@@ -406,7 +399,7 @@
                     }
 
                     console.log("data.pageNum == galleryTop.activeIndex = " + (data.pageNum == galleryTop.activeIndex));
-                    if (data.pageNum == galleryTop.activeIndex){
+                    if (data.pageNum == galleryTop.activeIndex && playing){
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
 
@@ -416,10 +409,13 @@
                     var $currentPage = $(".swiper-slide:last");
                     console.log("current page is temp = " + $currentPage.attr("istemp"));
                     if ($currentPage.attr("istemp") == '1'){
+                        $currentPage.html("");
                         if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
-                            $currentPage.find("video").attr("src", data.videoUrl);
+                            $currentPage.html('<video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div>');
                         } else {
-                            $currentPage.find("div").find(".swiper-picture").css("background-image", "url('"+data.imgUrl+"')");
+                            $currentPage.html('<div class="swiper-zoom-container pinch-zoom" style="height:100%;">' +
+                                '<div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div>' +
+                                '</div>');
                         }
                         $currentPage.attr("istemp", "0");
                     } else {
@@ -442,9 +438,8 @@
                 } else if(data.order == 13){//开始星评
                     if(activeItemIsVideo.length > 0){
                         activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
                     }
+                    //popupPalyer.pause();
                     openStarRate();
                 } else if(data.order == 11){//直播開始
                     console.log("直播开始");
@@ -452,9 +447,8 @@
                 } else if(data.order == 14){//直播结束
                     if(activeItemIsVideo.length > 0){
                         activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
                     }
+                    popupPalyer.pause();
                     getLiveDuration();
                     $("#liveOverView").removeClass("none");
                 }
@@ -477,12 +471,14 @@
         var popupPalyer = asAllItem[asAllItem.length - 1];
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var dataSrc ;
+        var clickOthers = false;
 
         var changePlayerStete = function(state){
             if(playerState || state == true){
                 playerState = false;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
+                    popupPalyer.load("isNotSrc");
                     activeItemIsVideo.get(0).muted = ismuted;
                     activeItemIsVideo.get(0).play();
                 } else {
@@ -526,12 +522,12 @@
             console.log("load audio source error ...");
             isVideo = $('.swiper-slide-active').find('video');
             clearTimeout(slideTimer);
-            if(isVideo.length > 1){
+            if(isVideo.length > 0){
                 $(".boxAudio-loading").addClass("none");
-                $(".boxAudio").addClass("none");
+                //$(".boxAudio").addClass("none");
             } else {
                 $(".boxAudio-loading").removeClass("none");
-                $(".boxAudio").addClass("none");
+                //$(".boxAudio").addClass("none");
             }
             if (playing){
                 if (isVideo.length == 0){
@@ -581,13 +577,13 @@
             playOver = false;
             //如果有视频
             if(activeItemIsVideo.length > 0){
-                $('.boxAudio').addClass('none');
+                //$('.boxAudio').addClass('none');
                 changePlayerStete(true);
             } else {
                 dataSrc = swiperCurrent.attr('audio-src');
                 //如果有音频，才进行播放
                 if(dataSrc.length > 0){
-                    $('.boxAudio').removeClass('none');
+                    //$('.boxAudio').removeClass('none');
                     $(".boxAudio-loading").addClass("none");
                     popupPalyer.load(dataSrc);
                     changePlayerStete(true);
@@ -595,7 +591,7 @@
                     popupPalyer.load('isNotSrc');
                     $(".boxAudio-loading").removeClass("none");
                     console.log('没加载音频');
-                    $('.boxAudio').addClass('none');
+                    //$('.boxAudio').addClass('none');
                     changePlayerStete(false);
                 }
             }
@@ -610,9 +606,9 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            speed:150,//解决滑动过快的BUG
             onSlideChangeStart:function(swiper){
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
-
                 if(activeItemIsVideo.length > 0){
                     activeItemIsVideo.get(0).load();
                     //判断是否Iphone 的 Safari 浏览器
@@ -729,6 +725,7 @@
                 area: ['100%','100%'],
                 fix: false, //不固定
                 title: false,
+                shadeClose:true,
                 content: $('.faq-popup-hook'),
                 success: function () {
                     popupPalyer.play();
@@ -747,6 +744,7 @@
                 area: ['100%','4rem'],
                 offset:'b',
                 title:false,
+                shadeClose:true,
                 content: $('.meeting-faq-popup-keyboard'),
                 success: function (swiper) {
                     popupPalyer.play();
@@ -765,33 +763,44 @@
             })
         });
 
+
+
         //弹出简介
-        $('.info-popup-hook').click(function(){
+        function openInfo(){
+            clickOthers = true;
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
             layer.open({
                 type: 1,
-                area: ['85%','65%'],
+                area: ['95%','85%'],
                 fix: false, //不固定
                 title:false,
                 skin: 'info-popup',
+                shadeClose:true,
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
                     layer.close(layer.index-1);
                     //popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.attr('style', 'margin-top:9999px');
+                        activeItemIsVideo.attr('style','margin-top:99999px;');
                     }
                 },
                 end:function(){
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.attr('style', 'margin-top:0px');
+                        if (clickOthers){
+                            activeItemIsVideo.attr('style','margin-top:99999px;');
+                        } else {
+                            activeItemIsVideo.attr('style','margin-top:0px;');
+                        }
                     }
+                    clickOthers = false;
                 }
             })
-        });
-
+        }
 
         //视频播放是否已结束
         var isEnded = function () {
@@ -840,7 +849,12 @@
                 $('.isIphoneSafari').hide();
                 $(this).hide();
                 galleryTop.slideTo("${fn:length(course.details) - 1}");
-                popupPalyer.play();
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).play();
+                } else {
+                    popupPalyer.play();
+                }
                 playing = true;
             });
         }
@@ -855,6 +869,13 @@
         $('.icon-added').on('click',function(){
             //点击跳转到最后一页
             slideToPage(galleryTop.slides.length);
+            //选中的项是否有视频
+            activeItemIsVideo = $('.swiper-slide-active').find('video');
+            popupPalyer.pause();
+            $(".swiper-slide>video").each(function(){
+                $(this)[0].pause();
+            });
+            clearTimeout(slideTimer);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
@@ -878,6 +899,7 @@
             if(ismuted == false){
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').removeClass('none');
                 ismuted = true
             } else {
                 if($('.swiper-slide-active').attr("audio-src") != ''){
@@ -886,6 +908,7 @@
                     activeItemIsVideo.get(0).muted = false;
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').addClass('none');
                 ismuted = false
             }
         }
@@ -914,7 +937,7 @@
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             weui.actionSheet([
-               {
+                {
                     label: '<fmt:message key="page.meeting.report.type.crime"/>',
                     onClick: function () {
                         report(1);
@@ -957,6 +980,7 @@
 
         //手机端 点击任何一个地方  自动播放音频
         $('.isIphoneSafari').on('touchstart',function(){
+            alert("play started");
             $(this).hide();
             activeItemIsVideo.get(0).load();
             activeItemIsVideo.get(0).play();
@@ -966,29 +990,34 @@
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if(browser.isAndroid || activeItemIsVideo.length > 0){
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
-            layer.open({
-                type: 1,
-                anim: 5,
-                area: ['90%', 'auto'],
-                fix: false, //不固定
-                title: false,
-                shadeClose: true,
-                content: $('.listItme-popup'),
-                success: function () {
-                    //popupPalyer.play();
-                },
-                end: function () {
-                    //popupPalyer.play();
-                    //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.attr('style', 'margin-top:0px');
-                    }
-                }
-            })
+            openInfo();
         });
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+            if (window.orientation === 180 || window.orientation === 0) {
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    console.log('进入了');
+                    CSPMeetingGallery.height(ch);
+
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },400);
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    CSPMeetingGallery.height(ch);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },200);
+            }
+        }, false);
+
+
 
         //星评弹出
         function openStarRate() {

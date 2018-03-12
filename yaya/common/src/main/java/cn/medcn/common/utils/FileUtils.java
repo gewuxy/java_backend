@@ -13,6 +13,7 @@ import java.io.*;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import net.coobird.thumbnailator.Thumbnails;
@@ -39,7 +40,7 @@ public class FileUtils {
         InputStreamReader isr = null;
         BufferedReader br = null;
         try{
-            isr = new InputStreamReader(inputStream);
+            isr = new InputStreamReader(inputStream,"UTF-8");
             br = new BufferedReader(isr);
             String str ;
             StringBuilder sb = new StringBuilder();
@@ -404,6 +405,7 @@ public class FileUtils {
                         list.add(directoryPath + file.getName());
                     }
                 }
+                Collections.sort(list);
                 return list;
             }
         } else {

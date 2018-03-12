@@ -87,8 +87,7 @@ public class FFMpegUtils {
 
             //从视频信息中解析时长
             String regexDuration = "Duration: (.*?), start: (.*?), bitrate: (\\d*) kb\\/s";
-            Pattern pattern = Pattern.compile(regexDuration);
-            Matcher m = pattern.matcher(sb.toString());
+            Matcher m = Pattern.compile(regexDuration).matcher(sb.toString());
             if (m.find()) {
                 int time = getTime(m.group(1));
                 return time;
@@ -129,8 +128,9 @@ public class FFMpegUtils {
                 buffer.append("|");
             }
         }
-        buffer.append("\"  -c copy ").append(mergePath);
+        buffer.append("\"  -acodec copy ").append(mergePath);
         LogUtils.debug(log, "merge map command = " + buffer.toString());
+        System.out.println("merge command = " + buffer.toString());
         CommandUtils.CMD(buffer.toString());
 
     }

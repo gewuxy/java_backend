@@ -17,10 +17,10 @@
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/CSPMeeting-style.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/perfect-scrollbar.min.css">
-    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black.css">
+    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black-2.css">
 
     <script src="${ctxStatic}/phone/js/screenfull.min.js"></script>
-    <script src="${ctxStatic}/phone/js/audio-countDown.js"></script>
+    <script src="${ctxStatic}/phone/js/audio.js"></script>
     <script src="${ctxStatic}/phone/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
@@ -37,10 +37,9 @@
     </style>
 
 </head>
-<body>
+<body <c:if test="${not empty theme && not empty theme.imgUrl}">style="background: url('${theme.imgUrl}') no-repeat fixed;background-size: cover;"</c:if> >
 <div class="warp">
-
-    <div class="CSPMeeting-gallery details-gallery
+    <div class="CSPMeeting-gallery details-gallery clearfix
     <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
@@ -50,7 +49,9 @@
         </c:choose>
     </c:if>
     " >
-
+        <div class="CSPMeeting-recorded-title overflowText">
+            <span class="icon ">${course.title}</span>
+        </div>
         <!-- Swiper -->
         <div class="swiper-container gallery-top video-countDown ">
             <!--根据ID 切换 PPT列表-->
@@ -70,15 +71,34 @@
                     </div>
                 </c:forEach>
                 <div class="swiper-slide swiper-slide-active" data-num="0" audio-src="">
-                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/logo-max-img.png')"></div>
+                    <div class="swiper-picture meeting-last-img" style="display:block; background-image:url('${ctxStatic}/phone/images/meeting-blackBg.png');"></div>
                 </div>
             </div>
-            <!--音频文件-->
-            <div class="clearfix boxAudio t-center " >
-                <div class="audio-meeting-box" style="">
-                    <audio controls=true id="audioPlayer" src="${course.details[0].audioUrl}"></audio>
+
+            <div class="flex cspMeeting-playerItem">
+                <div class="flex-item">
+                    <!--音频文件-->
+                    <div class="clearfix boxAudio t-center " >
+                        <!--发光层-->
+                        <div class="cspMeeting-black-button">
+                            <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
+
+                        </div>
+                        <div class="cspMeeting-black-blueButton"><div class="icon"></div></div>
+                        <div class="audio-meeting-box" style="">
+                            <audio controls=true id="audioPlayer" src="${course.details[0].audioUrl}"></audio>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="cspMeeting-notice-button">
+                    <!--新的更多按钮-->
+                    <div class="button button-icon-info star-popup-button-hook">
+                        <i></i>
+                    </div>
                 </div>
             </div>
+
             <!--录播中音频-->
             <div class="boxAudio-loading none">
                 <div class="time">
@@ -99,41 +119,6 @@
             </div>
         </div>
 
-        <!--buttonBottom-->
-        <div class="CSPMeeting-bottom">
-            <div class="flex">
-                <c:choose>
-                    <c:when test="${course.starRateFlag}">
-                        <div class="flex-item">
-                            <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
-                                <c:choose>
-                                    <c:when test="${empty rateResult.multipleResult || rateResult.multipleResult.avgScore <= 0}">
-                                        <span class="off "><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
-                                    </c:otherwise>
-                                </c:choose>
-                            </div>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <div class="flex-item">
-                            <div class="button button-icon-info star-popup-button-hook">
-                                <i></i>
-                            </div>
-                        </div>
-                    </c:otherwise>
-                </c:choose>
-                <div class="flex-item">
-                    <div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>
-                </div>
-
-                <div class="flex-item">
-                    <div class="button button-icon-onFull changeFull-hook"><i></i></div>
-                </div>
-            </div>
-        </div>
     </div>
 
     <!--自动播放层-->
@@ -161,9 +146,9 @@
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
-        <c:if test="${course.starRateFlag}">
-            <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
             <div class="star-showScore ">
+                <c:if test="${course.starRateFlag}">
+                <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
                 <div class="star-showScore-main clearfix">
                     <div class="fr">
                         <div class="star-box star-min">
@@ -187,11 +172,12 @@
                     </div>
                     <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
                 </div>
+                </c:if>
                 <div class="star-showScore-button popup-star-button t-center">
-                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
+                    <c:if test="${course.starRateFlag}"><button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button></c:if>
+                    <a href="#" class="report-button report-popup-button-hook">举报</a>
                 </div>
             </div>
-        </c:if>
     </div>
 </div>
 
@@ -278,19 +264,21 @@
         </div>
 
         <div class="meeting-star-button popup-star-button t-center">
-                <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+                <button class="button tips ${play.playState >= 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
                 <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
                 <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
         </div>
 
     </div>
 </div>
-
+<c:if test="${not empty theme && not empty theme.url}">
+    <audio id="bgMusicAudio" src="${theme.url}" loop/>
+</c:if>
 
 
 
 <script>
-    var asAllItem = audiojs.createAll();
+    var asAllItem = audiojs.create($("#audioPlayer").get(0));
     var playing = false;
     var started = false;
     var hasAudioUrl = true;
@@ -328,17 +316,20 @@
         var fullState = true;
         var playerState = true;
         var swiperFullSize;
-        var popupPalyer = asAllItem[asAllItem.length - 1];
+        var popupPalyer = asAllItem;
         var activeItemIsVideo,prevItemIsVideo,nextItemIsVideo;
         var dataSrc ;
 
         var prevAudioSrc;
         $("#audioPlayer")[0].addEventListener("ended", function(){
-            console.log("audio play over ...");
-            if($("#audioPlayer")[0].src != prevAudioSrc){
-                galleryTop.slideNext();
+            if(activeItemIsVideo.length == 0){
+                console.log("audio play over ...");
+                //if($("#audioPlayer")[0].src != prevAudioSrc){
+                    galleryTop.slideNext();
+                //}
+                prevAudioSrc = $("#audioPlayer")[0].src;
+                changeBgMusicValue(true);
             }
-            prevAudioSrc = $("#audioPlayer")[0].src;
         });
 //
         $("#audioPlayer")[0].addEventListener("error", function(){
@@ -346,9 +337,10 @@
             console.log("load audio source error ...");
             console.log("is playing = " + playing);
             console.log("isVideo.length == " + isVideo.length);
-            $(".boxAudio").addClass("none");
+            //$(".boxAudio").addClass("none");
             console.log("playerState = " + playerState);
             hasAudioUrl = false;
+            changeBgMusicValue(true);
             clearTimeout(slideTimer);
             if (started){
                 if (isVideo.length == 0 && !playerState){
@@ -403,6 +395,7 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            speed:150,//解决滑动过快的BUG
             onSlideChangeStart:function(swiper){
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
@@ -411,16 +404,17 @@
                     //判断是否Iphone 的 Safari 浏览器
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
+                        activeItemIsVideo.get(0).play();
                         //判断是否已经播放完成
                         activeItemIsVideo.get(0).addEventListener('canplay',function(){
                             $('.isIphoneSafari').hide();
-                            $('.boxAudio').addClass('none');
+                            //$('.boxAudio').addClass('none');
                         }, {once: true});
+                    } else {
+                        activeItemIsVideo.get(0).play();
                     }
-                    activeItemIsVideo.get(0).addEventListener('ended', function () {
-                        console.log("video play end ...");
-                        galleryTop.slideNext();
-                    }, {once: true});
+                    activeItemIsVideo.get(0).removeEventListener('ended', videoToNextAtOnce);
+                    activeItemIsVideo.get(0).addEventListener('ended', videoToNextAtOnce, {once: true});
 
                 }
             },
@@ -435,7 +429,14 @@
 //                if (!dataSrc.length && !activeItemIsVideo.length){
 //                    slideToNext();
 //                }
-
+                if(swiper.isEnd == true){
+                    $(".boxAudio").addClass("none");
+                    if("${course.starRateFlag && !rated}" == "true"){
+                        openStarRate();
+                    }
+                } else {
+                    $(".boxAudio").removeClass("none");
+                }
 
             },
             onSlideNextEnd:function(){
@@ -445,6 +446,7 @@
                     //重新加载视频
                     prevItemIsVideo.get(0).load();
                 }
+
             },
             onSlidePrevEnd:function(){
                 nextItemIsVideo = $('.swiper-slide-next').find('video');
@@ -467,10 +469,7 @@
                             $('.isIphoneSafari').hide();
                         }, {once: true});
                     }
-                    activeItemIsVideo.get(0).addEventListener('ended', function () {
-                        console.log("video play end ...");
-                        galleryTop.slideNext();
-                    }, {once: true});
+                    activeItemIsVideo.get(0).addEventListener('ended', videoToNextAtOnce, {once: true});
 
                 }
                 dataSrc = $('.swiper-slide-active').attr("audio-src");
@@ -481,6 +480,11 @@
         });
 
 
+        function videoToNextAtOnce(){
+            console.log("video play end ...");
+            changeBgMusicValue(true);
+            galleryTop.slideNext();
+        }
 
 
         //启动全屏
@@ -518,30 +522,44 @@
         $(".hidden-box").perfectScrollbar();
 
         //弹出简介
-        $('.info-popup-hook').click(function(){
+        function openInfo(){
+            clickOthers = true;
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
             layer.open({
                 type: 1,
                 area: ['95%','85%'],
                 fix: false, //不固定
                 title:false,
                 skin: 'info-popup',
+                shadeClose:true,
                 content: $('.CSPMeeting-meeting-info-popup'),
                 success: function (swiper) {
                     layer.close(layer.index-1);
                     //popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height(0);
+                        activeItemIsVideo.attr('style','margin-top:99999px;');
                     }
                 },
                 end:function(){
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        if (clickOthers){
+                            activeItemIsVideo.attr('style','margin-top:99999px;');
+                        } else {
+                            activeItemIsVideo.attr('style','margin-top:0px;');
+                        }
                     }
+                    clickOthers = false;
                 }
             })
+        }
+
+        $('.info-popup-hook').click(function(){
+
         });
 
 
@@ -557,8 +575,22 @@
             activeItemIsVideo.get(0).networkState
         }
 
+        const maxBgVolume = 1;
+        const minBgVolume = 0.2;
+        var hasBgMusic = $("#bgMusicAudio").length > 0;
+        if (hasBgMusic) {
+            $("#bgMusicAudio").get(0).volume = maxBgVolume;
+        }
 
-
+        function changeBgMusicValue(maxVolumeFlag){
+            // if(hasBgMusic) {
+            //     if (maxVolumeFlag){
+            //         $("#bgMusicAudio").get(0).volume = maxBgVolume;
+            //     } else {
+            //         $("#bgMusicAudio").get(0).volume = minBgVolume;
+            //     }
+            // }
+        }
 
 
 
@@ -579,7 +611,8 @@
 
             //如果有视频
             if(activeItemIsVideo.length > 0){
-                activeItemIsVideo[0].load()
+                activeItemIsVideo[0].load();
+                popupPalyer.load('isNotSrc');
                 changePlayerStete(true);
             } else {
                 dataSrc = swiperCurrent.attr('audio-src');
@@ -592,7 +625,7 @@
                 } else {
                     popupPalyer.load('isNotSrc');
                     console.log('没加载音频');
-                    $('.boxAudio').addClass('none');
+                    //$('.boxAudio').addClass('none');
                     changePlayerStete(true);
                     slideToNext();
                 }
@@ -612,12 +645,16 @@
 
         var changePlayerStete = function(state){
             if(playerState || state == true){
+                if ($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").get(0).play();
+                }
                 playerState = false;
                 started = true;
                 popupPalyer.play();
                 //有video文件
                 if(activeItemIsVideo.length > 0){
-                    $('.boxAudio').addClass('none');
+                    //$('.boxAudio').addClass('none');
+                    //activeItemIsVideo.get(0).load();
                     activeItemIsVideo.get(0).play();
                 } else {
                     popupPalyer.play();
@@ -625,7 +662,11 @@
                         slideToNext();
                     }
                 }
+                changeBgMusicValue(false);
             } else {
+                if ($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").get(0).pause();
+                }
                 playerState = true;
                 //有video文件
                 if(activeItemIsVideo.length > 0){
@@ -633,12 +674,15 @@
                 } else {
                     popupPalyer.pause();
                 }
+                changeBgMusicValue(true);
 
             }
             if (!playerState){
                 $('.button-icon-play').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').removeClass('none');
             } else {
                 $('.button-icon-stop').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').addClass('none');
             }
         }
 
@@ -667,6 +711,9 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart',function(){
                 $('.isIphoneSafari').hide();
+                if($("#bgMusicAudio").length > 0){
+                    $("#bgMusicAudio").get(0).play();
+                }
                 $(this).hide();
                 started = true;
                 playing = true;
@@ -688,18 +735,27 @@
         });
 
 
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+            if (window.orientation === 180 || window.orientation === 0) {
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    console.log('进入了');
+                    CSPMeetingGallery.height(ch);
 
-//            window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
-//            if (window.orientation === 180 || window.orientation === 0) {
-//                alert('竖屏状态！');
-//            }
-//            if (window.orientation === 90 || window.orientation === -90 ){
-//                alert('横屏状态！');
-////                CSPMeetingGallery.height($(window).height()*2);
-////                CSPMeetingGallery.height($(window).height());
-////                CSPMeetingGallery.height($(window).height());
-//            }
-//        }, false);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },400);
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                setTimeout(function () {
+                    ch = window.innerHeight;
+                    CSPMeetingGallery.height(ch);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },200);
+            }
+        }, false);
 
         function report(type){
             $.get("${ctx}/api/meeting/report", {"type":type, "shareUrl":window.location.href, "courseId" : "${course.id}"},function (data) {
@@ -713,10 +769,11 @@
 
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
+            clickOthers = true;
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
-                activeItemIsVideo.attr('style','margin-top:300rem');
+                activeItemIsVideo.attr('style','margin-top:99999px;');
             }
             weui.actionSheet([
                 {
@@ -741,6 +798,7 @@
                         if(browser.isAndroid || activeItemIsVideo.length > 0){
                             activeItemIsVideo.attr('style','margin-top:0');
                         }
+                        clickOthers = false;
                     }
                 }
             ], {
@@ -751,6 +809,7 @@
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
                         activeItemIsVideo.attr('style','margin-top:0');
                     }
+                    clickOthers = false;
                 }
             });
         });
@@ -768,36 +827,23 @@
 
         });
 
+        var clickOthers = false;
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                activeItemIsVideo.height(0);
+            if(browser.isAndroid || activeItemIsVideo.length > 0){
+                activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
-            layer.open({
-                type: 1,
-                anim: 5,
-                area: ['90%', 'auto'],
-                fix: false, //不固定
-                title: false,
-                shadeClose: true,
-                content: $('.listItme-popup'),
-                success: function () {
-                    //popupPalyer.play();
-                },
-                end: function () {
-                    //popupPalyer.play();
-                    //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.height('auto');
-                    }
-                }
-            })
+            openInfo();
         });
 
         //星评弹出
         function openStarRate(){
+            clickOthers = true;
             $(".html5ShadePlay").hide();
+            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                activeItemIsVideo.height(0);
+            }
             layer.open({
                 type: 1,
                 area: ['90%','85%'],
@@ -813,16 +859,17 @@
 //                    popupPalyer.play();
                     //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height(0);
+                        activeItemIsVideo.attr('style','margin-top:99999px;');
                     }
                 },
                 end:function(){
                     //popupPalyer.play();
                     //关闭时还原高度。
                     if(browser.isAndroid || activeItemIsVideo.length > 0){
-                        activeItemIsVideo.height('auto');
+                        activeItemIsVideo.attr('style','margin-top:0');
                     }
                     layer.closeAll();
+                    clickOthers = false;
                 }
             })
         }

@@ -1,0 +1,92 @@
+
+.audiojs { }
+h2 { font-family: 'bpreplay', sans-serif; font-weight: normal; font-size: 0.48rem; margin-bottom: 0.2; line-height: 1.6; }
+
+.download { background: url('../images/divider.png') top center no-repeat, url('../images/divider.png') bottom center no-repeat; margin: 30px 0px; padding: 20px 0px; text-align: center; }
+.download a em { color: rgba(255, 255, 255, 0.8); font-style: normal; }
+.download a em:before { content: '⬇ '; font-size: 0.8em; padding: 0px 4px 0px 0px; }
+.download a { display: block; color: #f6f6f0; width: 190px; margin: 5px auto; padding: 8px 2px 8px 0px; font-size: 0.28rem; border-bottom: 0px; }
+
+.audiojs audio { position: absolute; left: 0; top:2px; z-index:-1; width:1%;
+    opacity:0; }
+.audiojs { width: 100%; height: 1rem;/* background: #242c46;*/ /*overflow: hidden;*/ font-family: monospace; font-size: 0.26rem; text-align:center; }
+.audiojs .play-pause { width: 1rem; height:  1rem; float:left; /*overflow: hidden;*/ background:url(../images/cspMeeting-black-playButton.png) center center no-repeat; position: relative; z-index: 3; display: none;}
+.audiojs p { display: none; width:  100%; height:  0.5rem; margin: 0px; cursor: pointer; }
+.audiojs .play { display: block; }
+.audiojs .scrubber-err,
+.audiojs .scrubber { position: relative; /*float: left;*/ width: 100%; background: url(../images/cspMeeting-black-playBg.png) center center repeat-x ; background-size:0.04rem; height: 1rem; margin:0 0 0 0.15rem; border-left: 0px; border-bottom: 0px;   }
+.audiojs .scrubber-err { }
+.audiojs .progress-err,
+.audiojs .progress { position: absolute; top: 50%; left: 0px; margin-top:-.02rem; height: .04rem; width: 0px; background: #ACE400 ;  z-index: 1; }
+.audiojs .progressDot { cursor:pointer; position:absolute; top:-6px; right:-8px; height: 0.32rem; width: 0.32rem; background-color: #3fa9f5; border-radius: 8px; pointer-events: all; box-shadow: 0px 1px 1px 0px rgba(0, 0, 0, 0.32);}
+.audiojs .loaded-err,
+.audiojs .loaded { position: absolute; top: 50%; left: 0px; margin-top:-.02rem; height: .04rem; width: 0px; background: #0E121F; }
+.audiojs .time-err,
+.audiojs .time { /*float: left;*/ height: 1rem; line-height: 1rem;  margin: 0px 0px 0px 0.12rem; /*padding-right:4%;*/ border-left: 0; color: #f8f8f8;  user-select:none; -ms-user-select:none;
+-moz-user-select:none; -webkit-user-select:none; text-align: right; }
+.error .error-message .played-err,
+.audiojs .time em { padding: 0px 0 0px 0px; color: #9699A2; font-style: normal; font-size:.22rem; letter-spacing: 0;}
+.audiojs .time strong { padding: 0px 0px 0px 2px; font-weight: normal; }
+.audiojs .default-player,
+.audiojs .error-message { float: left; display: none; margin: 0 0 0 0; height: 1rem; /*overflow: hidden;*/ line-height: 1rem; white-space: nowrap; color: #fff;  text-overflow: ellipsis; -o-text-overflow: ellipsis; -icab-text-overflow: ellipsis; -khtml-text-overflow: ellipsis; -moz-text-overflow: ellipsis; -webkit-text-overflow: ellipsis; width: 77%; }
+.audiojs .default-player { display: block; display: flex;}
+.error .error-message .scrubber-err {  }
+.audiojs .error-message a { color: #eee; text-decoration: none; padding-bottom: 1px; border-bottom: 1px solid #999; white-space: wrap; }
+.play-pause p {  margin:0 auto;  background-repeat:no-repeat; height: 1rem; background-size:cover; }
+.audiojs .play { background: url(../images/cspMeeting-black-play.png) center center no-repeat; background-size:.28rem .36rem; }
+.audiojs .loading { width:.76rem; height:.76rem;   background-image: url(../images/icon-audio-loading.png);  animation: spin 0.4s linear infinite; }
+.audiojs .error { background: url(../images/cspMeeting-black-pause.png) center center no-repeat; background-size:.76rem; }
+.audiojs .pause { background: url(../images/cspMeeting-black-pause.png) center center no-repeat; background-size:.24rem .28rem; }
+
+/*@media only screen and (-webkit-min-device-pixel-ratio: 2),*/
+    /*only screen and (min--moz-device-pixel-ratio: 2),*/
+    /*only screen and (min-moz-device-pixel-ratio: 2),*/
+    /*only screen and (-o-min-device-pixel-ratio: 2/1),*/
+    /*only screen and (min-device-pixel-ratio: 2) {*/
+    /*.audiojs .play, .audiojs .loading, .audiojs .error, .audiojs .pause {*/
+    /*background-image: url("$2");*/
+    /*-webkit-background-size: 30px 120px;*/
+    /*-moz-background-size: 30px 120px;*/
+    /*-o-background-size: 30px 120px;*/
+    /*background-size: 30px 120px;*/
+    /*}*/
+/*}*/
+
+.playing .play, .playing .loading, .playing .error { display: none; }
+.playing .pause { display: block; }
+
+.loading .play, .loading .pause, .loading .error { display: none; }
+.loading .loading { display: block; }
+
+.error .time, .error .play, .error .pause, .error .scrubber, .error .loadin,.error .default-player { display: none; }
+.error .error { display: none; }
+.error .play-pause p { cursor: auto; }
+.error .error-message { display: flex; }
+.error .error-message .time, .error .error-message .scrubber { display: block;}
+
+@keyframes spin {
+    from {
+        transform: rotateZ(0);
+    }
+    to {
+        transform: rotateZ(1turn);
+    }
+}
+
+@-webkit-keyframes scaleout {
+    0%,100% {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}
+
+@keyframes scaleout {
+    0%,100%  {
+        opacity: 0.2;
+    }
+    50% {
+        opacity: 0.6;
+    }
+}

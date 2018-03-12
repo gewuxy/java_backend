@@ -65,7 +65,7 @@ function doAjax(url, params, method, async, onSuccess, onError){
         success : function(data){
             if (data.code == "100"){
                 layer.msg(data.err || '登录已超时，请重新登录', {'time':1000}, function () {
-                    window.location.href = "/";
+                    window.location.href = ctx;
                 });
             } else {
 

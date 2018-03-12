@@ -11,7 +11,8 @@
     <meta charset="utf-8" />
     <%@include file="/WEB-INF/include/page_context.jsp"%>
     <meta name="keywords" content="社交，社交平台，医生，论坛，专属医生社交平台，专业医师，专业药师，执业医师，执业药师，执业资格证，医疗工具，实用，药草园">
-    <title>YaYa_首个医生移动学术交流平台_药草园</title>
+    <meta name="description" content="YaYa医师，致力于为医疗单位提供线上会议、培训考核、医生管理、数据建设等功能在内的一站式数字化解决方案。产品以创新的“培训+互联网”设计模式，为医生职业再培训尤其是基层医生的培训提供了优异的技术平台，积极配合了国家分级诊疗战略的落地，获得近千家医疗单位认可。">
+    <title>专业的医学教育管理平台-YaYa医师 | 敬信科技</title>
     <link rel="shortcut icon" href="http://www.medcn.cn/favicon.ico">
     <link rel="icon" type="image/ico" href="http://www.medcn.cn/favicon.ico" >
     <link rel="stylesheet" type="text/css" href="${ctxStatic}/login/css/common.css" />
@@ -267,20 +268,20 @@
                 </ul>
             </div>
             <div class="col-lg-3">
-                <h4><a href="http://yyks.medyaya.cn">数字平台</a></h4>
+                <h4><a href="https://www.medyaya.cn/yyys/">数字平台</a></h4>
                 <ul>
-                    <li><a href="http://www.medcn.cn/zy_login.jsp">专业医学会议数字化管理平台</a></li>
-                    <li><a href="http://yyks.medyaya.cn">PRM患者管理系统</a></li>
+                    <li><a href="https://www.medyaya.cn/yyys/">专业医学会议数字化管理平台</a></li>
+                    <li><a href="https://www.medyaya.cn/prm">PRM患者管理系统</a></li>
                 </ul>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-2 none">
                 <h4><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">数据中心</a></h4>
                 <ul>
                     <li><a href="http://www.medcn.cn/jx_ycy/jsp/integration/home.jsp">医药数据</a></li>
                 </ul>
             </div>
             <div class="col-lg-2">
-                <h4><a href="http://www.medcn.com/help/">帮助与反馈</a></h4>
+                <h4><a href="http://www.medcn.com/help/solution">帮助与反馈</a></h4>
                 <ul>
                     <li><a href="http://www.medcn.com/help/solution">产品解答</a></li>
                     <li><a href="http://www.medcn.com/help/service">服务与收费</a></li>

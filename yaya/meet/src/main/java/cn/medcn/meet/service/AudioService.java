@@ -275,6 +275,8 @@ public interface AudioService extends BaseService<AudioCourse>  {
 
     MyPage<AudioCourse> findAllMeetForManage(Pageable pageable);
 
+    MyPage<AudioCourse> findCourseByPage(Pageable pageable);
+
     CourseDeliveryDTO findMeetDetail(Integer id);
 
     /**
@@ -421,13 +423,7 @@ public interface AudioService extends BaseService<AudioCourse>  {
      * @param courseTheme
      */
     void doCopyCourseTheme(AudioCourseTheme courseTheme, Integer courseId);
-    /**
-     * 更新小程序课件的信息
-     * @param course
-     * @param theme
-     * @return
-     */
-    void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException;
+
 
     /**
      * 修改课件密码
@@ -453,4 +449,14 @@ public interface AudioService extends BaseService<AudioCourse>  {
     Integer createAudioOrAddDetail(MultipartFile file, AudioCourse course, Integer sort,Integer type) throws SystemException;
 
     ActivityGuideDTO findActivityCourse(Integer courseId);
+
+    /**
+     * 生成或更新课件标题, 课件主题，背景音乐
+     * @param course
+     * @param imgId
+     * @param musicId
+     */
+    void createOrUpdateCourseAndTheme(AudioCourse course, Integer imgId, Integer musicId);
+
+    String getCoverUrl(Integer courseId);
 }

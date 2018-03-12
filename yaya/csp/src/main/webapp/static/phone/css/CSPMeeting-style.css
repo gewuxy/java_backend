@@ -2,12 +2,21 @@
     create xingjie
 */
 /*防止移动*/
-html,body { overflow-x:hidden; background-color:#fff;}
+html,body { overflow-x:hidden; background-color:#242C46;}
 
 
 /*ios默认按钮去除*/
 input[type="button"], input[type="submit"], input[type="reset"] { -webkit-appearance: none; }
 textarea { -webkit-appearance: none;}
+
+video { object-fit:  contain; object-position: center;  }
+
+.overflowText {
+    max-width: 100%;
+    overflow: hidden;/*超出部分隐藏*/
+    white-space: nowrap;/*不换行*/
+    text-overflow:ellipsis;/*超出部分文字以...显示*/
+}
 
 
 /*button*/
@@ -22,11 +31,16 @@ textarea { -webkit-appearance: none;}
 .button-icon-report i{ width:.4rem; height:.4rem; background:url(../images/button-icon-report.png) no-repeat; -webkit-background-size:.4rem .4rem; background-size:.4rem .4rem;}
 
 .button-icon-state .button-icon-play,
+.cspMeeting-black-button .button-icon-volume,
 .button-icon-onFull-off i,
 .button-icon-discuss i,
 .button-icon-info i,
 .button-icon-star i,
+.cspMeeting-black-button .button-icon-volume-close,
+.cspMeeting-black-button .button-icon-volume-open,
 .button-icon-state .button-icon-stop { vertical-align: middle; }
+
+.button-icon-state {}
 
 .button-icon-star { vertical-align: top;}
 .button-icon-star i{ width:.40rem; height:.40rem; background:url(../images/icon-star-null.png) no-repeat; -webkit-background-size:.40rem .40rem; background-size:.40rem .40rem; position: relative; top:-0.04rem; margin-right:.1rem;}
@@ -46,13 +60,18 @@ textarea { -webkit-appearance: none;}
 .pr { position: relative !important;}
 
 .CSPMeeting-gallery { position: relative; height:900px; }
-.CSPMeeting-bottom { position: absolute; width:100%; bottom:8%; left:0; z-index: 10; /*min-height:.81rem;*/ padding:.15rem 0; background: rgba(255,255,255,0.80);}
+.CSPMeeting-bottom { position: absolute; width:100%; bottom:18%; left:0; z-index: 10; /*min-height:.81rem;*/ padding:.15rem 0; }
 
 .CSPMeeting-bottom .flex-item {text-align: center;     line-height: 0;}
 .CSPMeeting-bottom .flex {padding:0 10%;}
 
-.icon-added { position: fixed; top:1.7%; right:3.6%; z-index: 19891015;}
-.icon-added {}
+.cspMeeting-live-title { position: fixed; top:1.7%; left:0; z-index: 19891015; color:#fff; font-size:.24rem; padding-left:0.18rem; background:rgba(36,44,70,0.4) url(../images/CSPMeeting-recorded-title-bg.png) left .08rem  no-repeat; line-height: .3rem; padding: .16rem .24rem .16rem .24rem;  max-width: 64%; -webkit-border-radius:0 .32rem .32rem 0; -moz-border-radius:0 .32rem .32rem 0; border-radius:0 .32rem .32rem 0; }
+
+.cspMeeting-live-title .live-title-icon { display: block; width:.22rem; height:.3rem; background:url(../images/icon-cspMeeting-fixed-closeButton.png) no-repeat;}
+
+
+.icon-added { position: fixed; top:2.5%; right:3.6%; z-index: 19891015;}
+.cspMeeting-details-notVideo .icon-added { top:17.5%;}
 .icon-added span {/* display: block; width:.46rem; height:.4rem; background:url(../images/icon-added.png) no-repeat; background-size:.46rem .4rem;*/}
 .icon-added span { display: block; background:#FF5656 ; padding:.02rem .16rem; color:#fff; font-size:.20rem; border-radius: .2rem;  position: relative;}
 .icon-added .arrows { width:0.06rem; height:0.24rem; background:url(../images/icon-added.png) no-repeat right; position: absolute; right: -0.04rem; top: 0.08rem;}
@@ -70,10 +89,10 @@ textarea { -webkit-appearance: none;}
     background-size: contain;
     background-position: center;
     background-repeat:no-repeat;
-    background-color:#fff;
+    background-color:#1F263C;
 }
 .gallery-top {
-    height: 36.5%;
+    height: 37.6%;
     width: 100%;
 }
 
@@ -102,22 +121,56 @@ textarea { -webkit-appearance: none;}
     height:100%;
     background-color:#101010;
 }
+.cspMeeting-playerItem { margin-top:.5rem; position: fixed; width: 100%; bottom: .4rem; left: 0;}
 .gallery-thumbs .swiper-slide-active {
     height: 100%;
     opacity: 1;
     top:0;
 }
-.gallery-top .boxAudio { position: absolute;right:.2rem; bottom:.3rem;  }
-.swiper-btn-item { position: absolute;  width:100%; padding: 0.4% 0; text-align: center; }
+.gallery-top .cspMeeting-notice-button{ width:.44rem; height:1rem; line-height: 1rem; margin-right:.2rem; }
+.gallery-top .cspMeeting-notice-button .button-icon-info i { width:.44rem; height:.44rem; background:url(../images/cspMeeting-icon-notice.png) no-repeat; background-size:.44rem; -webkit-border-radius:50%; -moz-border-radius:50%; border-radius:50%; }
+.gallery-top .boxAudio { position: relative; width:92%; left:.5rem; z-index: 999; }
+.gallery-top .boxAudio  .cspMeeting-black-blueButton {    width: 2rem; height: 2rem; position: absolute; left: -.46rem; top: -.46rem;}
+.gallery-top .boxAudio  .cspMeeting-black-blueButton .icon{ width:2rem; height:2rem; background:url(../images/cspMeeting-black-playButton-BlueBg.png) center center no-repeat;
+    background-size:2rem;
+    border-radius: 100%;
+    -webkit-animation: scaleout 4.0s infinite ease-in-out;
+    animation: scaleout 4.0s infinite ease-in-out;
+}
+.cspMeeting-black-button {
+    width: 1rem;
+    height: 1rem;
+    float: left;
+    /* overflow: hidden; */
+    background: url(../images/cspMeeting-black-playButton.png) center center no-repeat;
+    background-size:1rem;
+    position: relative;
+    z-index: 3;
+}
+.cspMeeting-black-button .button-icon-volume,
+.cspMeeting-black-button .button-icon-state { line-height: .9rem; }
+.cspMeeting-black-button .button-icon-play { width:.48rem; height:.48rem; background: url(../images/cspMeeting-black-play.png) center center no-repeat; background-size:.48rem .48rem;}
+.cspMeeting-black-button .button-icon-stop { width:.48rem; height:.48rem; background: url(../images/cspMeeting-black-pause.png) center center no-repeat; background-size:.48rem .48rem;}
+.cspMeeting-black-button .button-icon-volume-close { width:.48rem; height:.48rem; background: url(../images/cspMeeting-black-notVoice.png) center center no-repeat; background-size:.48rem .48rem;}
+.cspMeeting-black-button .button-icon-volume-open { width:.48rem; height:.48rem; background: url(../images/cspMeeting-black-voice.png) center center no-repeat; background-size:.48rem .48rem;}
+.swiper-btn-item { position: absolute;  width:100%; padding: 0.4% 0; text-align: right; }
 .swiper-btn-item  .swiper-button-prev,.swiper-btn-item .swiper-pagination ,.swiper-btn-item  .swiper-button-next { display: inline-block; position: static;}
-.swiper-btn-item .swiper-pagination-fraction { width:auto;  padding-top:1%;   vertical-align: top; font-size:.32rem; color:#b3b3b3;}
-.swiper-btn-item  .swiper-button-next { background:url(../images/swiper-button-next.png) no-repeat center right;}
+.CSPMeeting-gallery-live .swiper-btn-item { text-align: center; padding:0; bottom:.12rem; z-index: 101;}
+.CSPMeeting-gallery-live .swiper-btn-item .swiper-pagination-fraction { padding: .12rem .35rem; -webkit-border-radius:30rem; -moz-border-radius:30rem; border-radius:30rem; background:rgba(36,44,70,0.4); color:#fff;  }
+.CSPMeeting-gallery-live .swiper-btn-item .swiper-pagination-current { color:#fff; font-size:.26rem;}
+.swiper-btn-item .swiper-pagination-fraction { width:auto;  line-height: 1;   vertical-align: top; font-size:.26rem; color:#9699A2; background-color:#1F263C;     padding: .14rem .1rem .14rem .35rem; -webkit-border-radius:.32rem 0 0 .32rem; -moz-border-radius:.32rem 0 0 .32rem; border-radius:.32rem 0 0 .32rem;}
+.swiper-btn-item  .swiper-button-next {  background:url(../images/swiper-button-next.png) no-repeat center right;}
 .swiper-btn-item  .swiper-button-prev { background:url(../images/swiper-button-prev.png) no-repeat center left;}
-.swiper-btn-item .swiper-pagination-current { color:#333333; }
+.swiper-btn-item  .swiper-button-next,.swiper-btn-item  .swiper-button-prev { display: none;}
+.swiper-btn-item .swiper-pagination-current { color:#ACE400; font-size:.28rem;}
+.cspMeeting-details-notVideo .swiper-btn-item { text-align: center; padding:0; bottom:.12rem; z-index: 101;}
+.cspMeeting-details-notVideo .swiper-btn-item .swiper-pagination-fraction { padding: .12rem .35rem; -webkit-border-radius:30rem; -moz-border-radius:30rem; border-radius:30rem; background:rgba(36,44,70,0.4); color:#fff;  }
+.cspMeeting-details-notVideo .swiper-btn-item .swiper-pagination-current { color:#fff; font-size:.26rem;}
 
-.video-play-live { margin-top: 11%; width:100%; position: relative;  }
+
+.video-play-live { position: relative; width:72.5% !important; height:32.1% !important; /*margin:6% auto 0;*/ margin:12% auto 0; }
 .video-play-live .video-play-wrapper { background:#101010; width:100%  }
-.CSPMeeting-gallery-live .video-play-live .viedoItem { height:100% !important; background-color:transparent !important;}
+.CSPMeeting-gallery-live .video-play-live .viedoItem {  background-color:transparent !important; width:100% !important; height:100% !important; margin:0 auto;}
 .popup-fullStatus .video-play-live.popup-volume .viedoItem { background-color:#000 !important;}
 .popup-fullStatus .popup-min-screen .video-notPlay-bg,
 .popup-fullStatus .popup-min-screen .video-notPlay-load,
@@ -129,7 +182,7 @@ textarea { -webkit-appearance: none;}
 .popup-volume-icon { position: absolute; top:.2rem; left:.2rem; z-index: 5;}
 .popup-volume-icon i{ display:inline-block; width:.52rem; height:.52rem; background:url(../images/icon-popup-volume.png) no-repeat; background-size:.52rem .52rem; }
 .swiper-picture { display: inline-block; vertical-align: middle; background-repeat: no-repeat; background-position: 50% 50%; background-size: contain;  cursor: pointer; margin: 0; padding: 0; position: absolute; top: 0; right: 0; bottom: 0; left: 0; height: 100%;}
-.meeting-last-img { background-size:2.94rem 2.34rem;}
+.meeting-last-img { background-size:3.05rem 3.05rem;}
 .meeting-last-img-EN { background-size:3.9rem 1.42rem; }
 
 .video-notPlay-bg { position: absolute; left:50%; top:50%; margin-left:-1.08rem; margin-top:-.56rem; z-index: 12; color:#fff; text-align: center; font-size:.24rem;}
@@ -258,12 +311,12 @@ textarea { -webkit-appearance: none;}
 .meeting-star-row .grade { display: inline-block; position: relative; top:-.05rem; width:.7rem; text-align: right;}
 .meeting-star-row { margin:.1rem 0;}
 .meeting-star-button .tips { border-color:#fff !important; color:#9699a2 !important; font-size:.3rem !important;}
-.meeting-star-button .disabled { color:#9699a2 !important; border-color:#9699a2 !important; }
+.meeting-star-button .disabled { color:#fff !important; }
 
 .star-showScore { border-top:1px solid #dbdbdb; margin-top:.2rem; padding-top:.2rem;}
-.star-showScore-button { margin-top:.46rem;}
-.popup-star-button .button { font-size:.26rem; padding:.14rem .3rem;
-    color: #167afe; background:none; border:0.02rem solid #167AFE; -webkit-border-radius:.46rem; -moz-border-radius:.46rem; border-radius:.46rem;}
+.star-showScore-button { margin-top:.46rem; position: relative;}
+.star-showScore-button .report-button{ position: absolute; color: #9699A2; font-size: .26rem; right: 0; top: 50%; margin-top: -.22rem; }
+.popup-star-button .button { font-size:.26rem; padding:.14rem .4rem;  color: #fff; background:url('../images/cspMeeting-black-minButtonBg.png') #242C46 repeat-x; -webkit-border-radius:.46rem; -moz-border-radius:.46rem; border-radius:.46rem;}
 .star-showScore-title { position: relative; top:.06rem;}
 
 .star-box > div { display:inline-block; }
@@ -362,8 +415,8 @@ textarea { -webkit-appearance: none;}
 
 
 .info-popup { border-radius: 4px !important;}
-.info-popup .layui-layer-setwin { width:.68rem; height:.68rem; right:-.2rem; top:-.26rem;  }
-.info-popup .layui-layer-setwin .layui-layer-close{ display: inline-block; width:.50rem; height:.50rem; background: url(../images/icon-info-close.png) no-repeat; background-size:.50rem;}
+.info-popup .layui-layer-setwin { width:.8rem; height:.8rem; right:0; top:0;  }
+.info-popup .layui-layer-setwin .layui-layer-close{ display: inline-block; width:.50rem; height:.50rem; background: url(../images/cspMeeting-info-close.png) no-repeat; background-size:.50rem;}
 
 
 
@@ -378,10 +431,10 @@ textarea { -webkit-appearance: none;}
 
 
 /*加载中loading*/
-.boxAudio-loading { position: absolute; right: .2rem; bottom: .3rem; z-index: 10;}
-.boxAudio-loading .time {background: rgba(0,0,0,.5); padding: .05rem .2rem; border-radius: .3rem;}
+.boxAudio-loading { position: absolute; right: .2rem; bottom: .25rem; z-index: 10;}
+.boxAudio-loading .time {background: rgb(36, 44, 70); padding: .05rem .2rem; }
 .boxAudio-loading .time span img{ width:.24rem; height:.20rem;}
-.boxAudio-loading .time .text {    padding: 0px 0 0px .05rem; color: #fff; font-style: normal; font-size: .23rem; font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;}
+.boxAudio-loading .time .text {    padding: 0px 0 0px .05rem; color: #a0d307; font-style: normal; font-size: .23rem; font-family: "Microsoft YaHei","Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","\5FAE\8F6F\96C5\9ED1",Arial,sans-serif;}
 
 /*兼容判断*/
 .isIphoneSafari { display: none; position: absolute; top:0; left:0; width:100%; height:100%;background:rgba(0,0,0,1) url(../images/button-icon-play-01.png) no-repeat center; background-size:1rem 1rem;}
@@ -395,7 +448,7 @@ textarea { -webkit-appearance: none;}
 
 /*双屏切换*/
 .popup-fullStatus {}
-.popup-volume {}
+.popup-volume { }
 .warp .popup-fullStatus .popup-min-screen .viedoItem,
 .warp .popup-fullStatus .popup-volume .viedoItem,
 .warp .popup-fullStatus .popup-volume { width:100% !important; height:100% !important;  margin:0; padding:0; }
@@ -454,24 +507,31 @@ textarea { -webkit-appearance: none;}
     height: 100%;
     _height: expression(document.body.offsetHeight+"px");
     z-index: 19891020;
-    background: center rgba(255,255,255,1);
+    background: center #242C46;
     background-size: 1.12rem 1.92rem;}
 .fixed-full-screen-box input{ font-family: "Microsoft YaHei", "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "\5FAE\8F6F\96C5\9ED1", Arial, sans-serif;}
-.fixed-full-screen-box .img img { width:2.94rem; height:2.34rem;  }
+.fixed-full-screen-box .img img { width:3.04rem; height:3.04rem;  }
 .fixed-full-screen-logo { text-align: center; padding-top:40%; margin-bottom:40%;}
-.fixed-full-screen-main { color:#666; font-size:0.28rem;}
-.fixed-full-screen-main .live-end-icon img{ width:1.43rem; height:0.6rem; }
+.fixed-full-screen-main { color:#9699A2 ; font-size:0.28rem;}
+.fixed-full-screen-main .live-end-icon { color:#fff; }
 
 .fixed-full-screen-min-logo { text-align: center; margin:20% 0;}
 .fixed-full-screen-min-logo .img img { width:1.2rem; height:1.2rem;}
 
-.fixed-full-screen-min-main { font-size:0.26rem;}
+.fixed-full-screen-min-main { font-size:0.28rem; background:#fff; margin:0 0.32rem; padding:.8rem 0; color:#AFAFAF; -webkit-border-radius:0.16rem; -moz-border-radius:0.16rem; border-radius:0.16rem;}
+.fixed-full-screen-main .fixed-full-screen-title { background:url(../images/fixed-full-screen-title.png) bottom center no-repeat; padding-bottom:.22rem; margin-bottom:.24rem;}
 .fixed-full-screen-min-main input { width: 100%; font-size:0.32rem;}
-.fixed-full-screen-min-main .fixed-text { background: #F3F6F8; border-radius: 4px; margin-top:.42rem; margin-bottom:.54rem;  border: none;   padding: .20rem .40rem; }
-.fixed-full-screen-min-main .fixed-button {background: #167AFE; border-radius: 4px; padding:.2rem .4rem; border:none; color:#fff; }
+.fixed-full-screen-min-main .fixed-text { background: #F3F6F8; border-radius: 42rem; margin-top:.84rem; margin-bottom:.54rem;  border: none;   padding: .20rem .40rem; }
+.fixed-full-screen-min-main .fixed-button {background:url(../images/cspMeeting-black-maxButtonBg.png) repeat-x #242C46; border-radius: 42rem; padding:.2rem .4rem; border:none; color:#fff; margin-bottom:.8rem; }
 .fixed-error {  position: relative; top:-0.24rem; left:.4rem; }
 .fixed-row { padding:0 10%;}
 
+.CSPMeeting-recorded-title { color:#fff; font-size:.36rem; padding-left:0.18rem; background:url(../images/CSPMeeting-recorded-title-bg.png) left top no-repeat; line-height: 1.1;  }
+
+.cspMeeting-peopleNum { position: fixed; right:0; bottom:16%; color:#fff; }
+.cspMeeting-peopleNum-main { padding: .18rem .26rem .1rem; background: #1F263C; text-align: center; }
+.cspMeeting-peopleNum-main .icon { width:.26rem; height:.34rem; background:url(../images/icon-cspMeeting-peopleNum.png) no-repeat; background-size:.26rem .34rem; margin:0 auto;}
+.cspMeeting-peopleNum .num { font-size:.18rem; line-height: 1.4em;}
 
 /*weui*/
 .weui-mask {
@@ -626,15 +686,16 @@ textarea { -webkit-appearance: none;}
 @media (orientation: portrait ){
     /*竖屏CSS*/
     .warp .popup-fullStatus .popup-min-screen { height:15% !important;   }
-    .details-gallery { padding-top:30%;}
-    .details-gallery .gallery-top { height:55%; }
+    .CSPMeeting-recorded-title { margin-top:10%; margin-bottom:10%;}
+    .details-gallery {}
+    .details-gallery .gallery-top { /*height:48.2%;*/ height:37.6%; }
     .details-gallery  .swiper-btn-item { padding:12% 0 0; }
     .layer-hospital-popup .meetingSwiperBox  .swiper-picture { }
     /*竖屏*/
     .popup-fullStatus .popup-volume .boxAudio-loading,
     .popup-fullStatus .popup-volume .boxAudio { right: auto; left: .2rem; bottom: 1.8rem;}
 
-    .video-play-live { min-height:40%; /*background-color:#000;*/ }
+    .video-play-live { /*min-height:40%; background-color:#000;*/  }
     .warp .popup-fullStatus .video-play-live { min-height: 0;}
     .popup-fullStatus .popup-min-screen .boxAudio-loading{ display: none;  }
 

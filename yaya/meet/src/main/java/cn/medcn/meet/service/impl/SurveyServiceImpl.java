@@ -194,8 +194,22 @@ public class SurveyServiceImpl extends BaseServiceImpl<MeetSurvey> implements Su
     public void executeSubmit(SurveyHistory history) {
         history.initItems();
         history.setSubmitTime(new Date());
-        surveyHistoryDAO.insert(history);
-        Integer historyId = history.getId();
+        SurveyHistory cond = new SurveyHistory();
+        cond.setPaperId(history.getPaperId());
+        cond.setMeetId(history.getMeetId());
+        cond.setUserId(history.getUserId());
+        SurveyHistory existHistory = surveyHistoryDAO.selectOne(cond);
+        Integer historyId;
+        if (existHistory == null) {
+            surveyHistoryDAO.insert(history);
+            historyId = history.getId();
+        } else {
+            historyId = existHistory.getId();
+            //删除已经存在的答题明细
+            SurveyHistoryItem deleteCond = new SurveyHistoryItem();
+            deleteCond.setHistoryId(historyId);
+            surveyHistoryItemDAO.delete(deleteCond);
+        }
         Map<Integer, SurveyHistoryItem> itemMap = Maps.newHashMap();
         if(history.getItems() != null){
             for(SurveyHistoryItem item:history.getItems()){

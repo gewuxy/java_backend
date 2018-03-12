@@ -1,5 +1,6 @@
 package cn.medcn.api.wexin;
 
+import cn.medcn.api.utils.SecurityUtils;
 import cn.medcn.common.ctrl.BaseController;
 import cn.medcn.common.excptions.SystemException;
 import cn.medcn.common.utils.CheckUtils;
@@ -7,12 +8,14 @@ import cn.medcn.common.utils.FileUtils;
 import cn.medcn.common.utils.LogUtils;
 import cn.medcn.common.utils.XMLUtils;
 import cn.medcn.user.model.AppUser;
+import cn.medcn.user.model.Principal;
 import cn.medcn.user.service.AppUserService;
 import cn.medcn.weixin.config.WeixinConfig;
 import cn.medcn.weixin.config.WeixinEventType;
 import cn.medcn.weixin.dto.SignatureDTO;
 import cn.medcn.weixin.model.WXUserInfo;
 import cn.medcn.weixin.pay.WXPayUtil;
+import cn.medcn.weixin.service.WXMenuService;
 import cn.medcn.weixin.service.WXMessageService;
 import cn.medcn.weixin.service.WXOauthService;
 import cn.medcn.weixin.service.WXUserInfoService;
@@ -92,6 +95,7 @@ public class CallBackController extends BaseController {
         String postData = WeixinConfig.DEFAULT_REPLY_SUCESS;
         String responseXML;
         try {
+            request.setCharacterEncoding("utf-8");
             responseXML = FileUtils.readFromInputStream(request.getInputStream());
         } catch (IOException e) {
             e.printStackTrace();
@@ -101,7 +105,13 @@ public class CallBackController extends BaseController {
         try {
             map = WXPayUtil.xmlToMap(responseXML);
             String event = map.get(EVENT_KEY);
-            return handleEvent(event, map);
+            if (event != null){
+                return handleEvent(event, map);
+            }else{
+                //处理被动回复消息
+                return handleMessage(map);
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             return WeixinConfig.DEFAULT_REPLY_SUCESS;
@@ -128,6 +138,9 @@ public class CallBackController extends BaseController {
                 break;
             case WeixinEventType.EVENT_TYPE_SCAN : //已关注用户扫描事件
                 reply = handleScan(data);
+                break;
+            case WeixinEventType.EVENT_TYPE_CLICK ://公众号菜单点击事件
+                reply = handleClick(data);
                 break;
             default:
                 break;
@@ -227,4 +240,26 @@ public class CallBackController extends BaseController {
         wxUserInfoService.doUnSubscribe(openid);
         return WeixinConfig.DEFAULT_REPLY_SUCESS;
     }
+
+    /**
+     * 公众号被动回复
+     * @param data
+     * @return
+     */
+    protected String handleMessage(Map<String,String> data){
+        return wxMessageService.passiveResponse(data);
+    }
+
+    /**
+     * 公众号菜单回复入口
+     * @param data
+     * @return
+     */
+    protected String handleClick(Map<String,String> data){
+        if (data.get(WeixinEventType.EVENT_TYPE_EVENTKEY).equals(WeixinEventType.EVENT_MENU_KEY)){
+            return wxMessageService.menuReply(data);
+        }
+        return null;
+    }
+
 }

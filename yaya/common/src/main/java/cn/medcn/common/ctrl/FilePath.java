@@ -15,6 +15,7 @@ public enum FilePath{
     DATA("data"),//数据中心文件
     ARTICLE("article"),//新闻 内容
     COURSE("course"),//ppt图片语音
+    COURSE_COVER("course/template"),// 讲本封面
     GOODS("goods"),// 象城礼品图片存放路径
     BACKGROUND_IMAGE("background/image"),// 背景图片存放路径
     BACKGROUND_MUSIC("background/music"),// 背景音乐存放路径

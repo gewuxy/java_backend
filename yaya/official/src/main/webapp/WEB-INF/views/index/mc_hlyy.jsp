@@ -32,7 +32,7 @@
         <div class="intr">
             <div class="content">
                 <div class="heli">
-                    <img src="http://www.medcn.cn/aimages/heli.png"  />
+                    <img src="${ctxStatic}/images/heli.png"  />
                     <div class="hehu">
                         <p>合理用药</p>
                         <p>呵护您的用药健康</p>
@@ -48,7 +48,7 @@
                             <p>支持平台：</p>
                             <p>扫描二维码下载>></p>
                         </div>
-                        <a href="http://www.medcn.cn/return_jk_vers.jsp"><img src="http://www.medcn.cn/aimages/jk-erweima.png" width="130"/></a>
+                        <a href="http://www.medcn.cn/return_jk_vers.jsp"><img src="${ctxStatic}/images/jk-erweima.png" width="130"/></a>
                     </div>
 
                 </div>

@@ -824,6 +824,13 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
     @Override
+    public MyPage<AudioCourse> findCourseByPage(Pageable pageable) {
+        startPage(pageable, Pageable.countPage);
+        Page<AudioCourse> page = (Page<AudioCourse>) audioCourseDAO.findCourseByType(pageable.getParams());
+        return MyPage.page2Mypage(page);
+    }
+
+    @Override
     public CourseDeliveryDTO findMeetDetail(Integer id) {
         return audioCourseDAO.findMeetDetail(id);
     }
@@ -843,7 +850,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             throw new SystemException(local("source.not.exists"));
         }
         if (course.getDeleted() != null && course.getDeleted()) {
-            throw new SystemException(local("course.error.api.deleted"));
+            throw new SystemException(local("source.has.deleted"));
         }
         if (course.getPlayType() == null) {
             course.setPlayType(AudioCourse.PlayType.normal.getType());
@@ -918,7 +925,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         cond.setCourseId(courseId);
         cond.setSort(1);
         AudioCourseDetail firstDetail = audioCourseDetailDAO.selectOne(cond);
-        firstDetail.setVideoUrl(null);
+        //firstDetail.setVideoUrl(null);
         firstDetail.setTemp(true);
         return firstDetail;
     }
@@ -1339,14 +1346,15 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
         if(file.exists()){
             return showUrl;
         }
-
         //获取小程序码
         Map<String,Object> map = new HashMap<>();
-        map.put(SCENE_STR,id + "");
-        //正式包才提交page参数。小程序发布需要提交page参数，如果小程序没有发布，提交此参数获取的图片无法打开
-        if(appPro.intValue() == Constants.NUMBER_ONE){
-            map.put(PAGE_STR,page);
-        }
+        Integer start = page.indexOf("?") ;
+        String scene = page.substring(start + 1);
+        //去掉page参数的第一个 / ，不然图片会生成出错
+        page = page.substring(1,start);
+        map.put(SCENE_STR,scene);
+        //小程序发布需要提交page参数，如果小程序没有发布，提交此参数获取的图片无法打开
+        map.put(PAGE_STR,page);
         map.put(CODE_WIDTH_STR,430);
         map.put(CODE_AUTO_COLOR_STR,false);
         Map<String,String> colorMap = new HashMap<>();
@@ -1457,10 +1465,18 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
             newCourse.setId(null);
             newCourse.setCspUserId(cspUserId);
             newCourse.setCreateTime(new Date());
-            newCourse.setSourceType(AudioCourse.SourceType.csp.ordinal()); // 生成csp讲本
+            newCourse.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal()); // 生成快捷讲本
             audioCourseDAO.insert(newCourse);
 
             courseId = newCourse.getId();
+
+            // 复制录播信息
+            AudioCoursePlay copy = new AudioCoursePlay();
+            copy.setId(StringUtils.nowStr());
+            copy.setPlayState(AudioCoursePlay.PlayState.init.ordinal());
+            copy.setPlayPage(0);
+            copy.setCourseId(courseId);
+            audioCoursePlayDAO.insert(copy);
 
             // 复制课程明细
             List<AudioCourseDetail> details = audioCourseDetailDAO.findDetailsByCourseId(id);
@@ -1493,30 +1509,7 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     }
 
 
-    /**
-     * 更新小程序课件信息,包括创建课件主题和背景音乐
-     * @param course
-     * @param theme
-     * @return
-     */
-    @Override
-    public void updateMiniCourse(AudioCourse course, AudioCourseTheme theme) throws SystemException {
-        //修改课件标题,课件状态
-        course.setPublished(true);
-        updateByPrimaryKeySelective(course);
 
-        AudioCourseTheme condition = new AudioCourseTheme();
-        condition.setCourseId(course.getId());
-        AudioCourseTheme result = audioCourseThemeDAO.selectOne(condition);
-        //更新主题和背景音乐操作
-        if(result != null){
-            theme.setId(result.getId());
-            audioCourseThemeDAO.updateByPrimaryKeySelective(theme);
-        }else if(theme.getImageId() != null || theme.getMusicId() != null){
-            //新建主题和背景音乐操作
-            audioCourseThemeDAO.insertSelective(theme);
-        }
-    }
 
     /**
      * 修改课件密码
@@ -1612,5 +1605,38 @@ public class AudioServiceImpl extends BaseServiceImpl<AudioCourse> implements Au
     @Override
     public ActivityGuideDTO findActivityCourse(Integer courseId) {
         return audioCourseDAO.findActivityCourse(courseId);
+    }
+
+
+    /**
+     * 生成或更新课件标题, 课件主题，背景音乐
+     * @param course
+     * @param imgId
+     * @param musicId
+     */
+    @Override
+    public void createOrUpdateCourseAndTheme(AudioCourse course, Integer imgId, Integer musicId) {
+
+        updateByPrimaryKeySelective(course);
+        //创建课件主题，背景音乐
+        AudioCourseTheme theme = new AudioCourseTheme();
+        theme.setCourseId(course.getId());
+        AudioCourseTheme result = audioCourseThemeDAO.selectOne(theme);
+        //没有相关记录,执行插入操作
+        if(result == null){
+            theme.setImageId(imgId);
+            theme.setMusicId(musicId);
+            audioCourseThemeDAO.insert(theme);
+        //执行更新操作。删除操作传0，不更新也必须传原值过来，不然会将原来的字段清空
+        }else if(result != null){
+            result.setImageId(imgId == null || imgId == Constants.NUMBER_ZERO ?  null : imgId);
+            result.setMusicId(musicId == null || musicId == Constants.NUMBER_ZERO ?  null : musicId);
+            audioCourseThemeDAO.updateByPrimaryKey(result);
+        }
+    }
+
+    @Override
+    public String getCoverUrl(Integer courseId) {
+        return audioCourseDetailDAO.getCoverUrl(courseId);
     }
 }

@@ -23,9 +23,7 @@ public class EmojiFilterUtil {
             return "";
         }
 
-        Pattern patter = Pattern.compile("[a-zA-Z0-9\u4e00-\u9fa5]");
-        Matcher match = patter.matcher(name);
-
+        Matcher match = Pattern.compile("[a-zA-Z0-9\u4e00-\u9fa5]").matcher(name);
         StringBuffer buffer = new StringBuffer();
 
         while (match.find()) {

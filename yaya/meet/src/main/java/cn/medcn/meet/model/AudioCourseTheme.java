@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.utils.CheckUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -35,6 +36,13 @@ public class AudioCourseTheme {
     // 图片地址
     @Transient
     protected String imgUrl;
+    @Transient
+    // 推荐列表排序
+    protected Integer imgRecomSort;
+    @Transient
+    // 更多列表排序
+    protected Integer imgSort;
+
 
     // 背景音乐
     @Transient
@@ -48,6 +56,16 @@ public class AudioCourseTheme {
     // 音乐地址
     @Transient
     protected String url;
+    @Transient
+    // 推荐列表排序
+    protected Integer recomSort;
+    @Transient
+    // 更多列表排序
+    protected Integer sort;
+
+    //音乐时长
+    @Transient
+    protected String timeStr;
 
 
     public enum ImageMusic{
@@ -55,6 +73,11 @@ public class AudioCourseTheme {
         MUSIC;
     }
 
+    // 显示类型
+    public enum ShowType {
+        RECOMList,// 推荐列表
+        MOREList;// 更多列表
+    }
 
     /**
      * 拼接完整的主题和背景音乐地址
@@ -63,8 +86,12 @@ public class AudioCourseTheme {
      */
     public static void handleUrl(AudioCourseTheme theme, String fileBase){
         if(theme != null){
-            theme.setImgUrl(fileBase + theme.getImgUrl());
-            theme.setUrl(fileBase + theme.getUrl());
+            if (CheckUtils.isNotEmpty(theme.getUrl())){
+                theme.setUrl(fileBase + theme.getUrl());
+            }
+            if (CheckUtils.isNotEmpty(theme.getImgUrl())){
+                theme.setImgUrl(fileBase + theme.getImgUrl());
+            }
         }
     }
 

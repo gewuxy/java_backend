@@ -50,7 +50,9 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static cn.medcn.common.Constants.*;
+import static cn.medcn.common.utils.APIUtils.ERROR_CODE_COURSE_DELETED;
 import static cn.medcn.csp.CspConstants.*;
+import static cn.medcn.meet.dto.AudioCourseDTO.HandelCoverUrl;
 
 /**
  * 会议控制器
@@ -129,7 +131,6 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
         CourseThemeDTO themeDTO = courseThemeService.findCourseTheme(courseId);
-
         return success(themeDTO);
     }
 
@@ -197,7 +198,7 @@ public class MeetingController extends CspBaseController {
             }
 
             //处理简介文字的回车键替换成br
-            if(course.getInfo() != null) {
+            if (course.getInfo() != null) {
                 course.setInfo(course.getInfo().replace("\n", "<br>"));
             }
 
@@ -225,10 +226,10 @@ public class MeetingController extends CspBaseController {
             }
             //查询出会议发布者信息
             CspUserInfo publisher = cspUserService.selectByPrimaryKey(course.getCspUserId());
-            if (CheckUtils.isNotEmpty(publisher.getAvatar()) && !publisher.getAvatar().toLowerCase().startsWith("http")){
+            if (publisher != null && CheckUtils.isNotEmpty(publisher.getAvatar()) && !publisher.getAvatar().toLowerCase().startsWith("http")){
                 publisher.setAvatar(fileBase + publisher.getAvatar());
+                model.addAttribute("publisher", publisher);
             }
-            model.addAttribute("publisher", publisher);
 
             //设置会议水印
             MeetWatermark watermark = meetWatermarkService.findWatermarkByCourseId(courseId);
@@ -246,9 +247,8 @@ public class MeetingController extends CspBaseController {
 
                 model.addAttribute("appStoreUrl", Constants.CSP_APP_STORE_ANDROID_URL);
 
-                //TODO 缺少星评页面
                 Live live = liveService.findByCourseId(courseId);
-                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.deleted.ordinal()) {
                     model.addAttribute("totalLiveTime", CalendarUtils.formatTimesDiff(live.getStartTime(), live.getEndTime(), 0));
                 }
                 model.addAttribute("live", live);
@@ -256,6 +256,12 @@ public class MeetingController extends CspBaseController {
                 course.setDetails(audioService.findDetailsByCourseId(courseId));
                 AudioCoursePlay play = audioService.findPlayState(courseId);
                 model.addAttribute("play", play);
+                //查询出讲本的背景音乐和皮肤
+                AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+                if (theme != null) {
+                    AudioCourseTheme.handleUrl(theme, fileBase);
+                    model.addAttribute("theme", theme);
+                }
             }
 
             audioService.handleHttpUrl(fileBase, course);
@@ -367,6 +373,14 @@ public class MeetingController extends CspBaseController {
             return error(local("upload.error.null"));
         }
 
+        AudioCourse course = audioService.selectByPrimaryKey(record.getCourseId());
+        if (course == null) {
+            return error(local("source.not.exists"));
+        }
+        if (course.getDeleted() != null && course.getDeleted()) {
+            return error(APIUtils.ERROR_CODE_COURSE_DELETED, local("source.has.deleted"));
+        }
+
         String suffix = "." + (OS_TYPE_ANDROID.equals(osType) ? FileTypeSuffix.AUDIO_SUFFIX_AMR.suffix : FileTypeSuffix.AUDIO_SUFFIX_AAC.suffix);
 
         String relativePath = FilePath.COURSE.path + "/" + record.getCourseId() + "/audio/";
@@ -401,6 +415,8 @@ public class MeetingController extends CspBaseController {
         detail.setAudioUrl(relativePath + saveFileName);
         detail.setDuration(FFMpegUtils.duration(fileUploadBase + detail.getAudioUrl()));
         if (record.getPlayType() == AudioCourse.PlayType.normal.getType()) {
+            //设置音频的状态为已修改
+            detail.setModified(detail.getModified() == null ? false : true);
             audioService.updateDetail(detail);
         }
 
@@ -431,7 +447,13 @@ public class MeetingController extends CspBaseController {
             return error(local("user.param.empty"));
         }
 
-
+        AudioCourse course = audioService.selectByPrimaryKey(record.getCourseId());
+        if (course == null) {
+            return error(local("source.not.exists"));
+        }
+        if (course.getDeleted() != null && course.getDeleted()) {
+            return error(ERROR_CODE_COURSE_DELETED, local("source.has.deleted"));
+        }
         String osType = LocalUtils.getOSType();
         String suffix = null;
         //小程序上传音频，格式为aac
@@ -498,6 +520,7 @@ public class MeetingController extends CspBaseController {
      * @return
      * @since csp1.1.5
      */
+    @Deprecated
     @RequestMapping(value = "/upload/multiple")
     @ResponseBody
     public String upload(@RequestParam(value = "file", required = false) MultipartFile[] files, RecordUploadDTO record, HttpServletRequest request) {
@@ -720,23 +743,21 @@ public class MeetingController extends CspBaseController {
     protected String courseInfo(Integer courseId, HttpServletRequest request) throws SystemException {
         Principal principal = SecurityUtils.get();
         AudioCourse audioCourse = audioService.selectByPrimaryKey(courseId);
-        audioCourse.setDetails(audioService.findDetailsByCourseId(courseId));
         if (audioCourse == null) {
             throw new SystemException(local("source.not.exists"));
         }
-
         if (audioCourse.getDeleted()) {
             throw new SystemException(local("course.error.api.deleted"));
         }
         if (audioCourse.getLocked() != null && audioCourse.getLocked()) {
             throw new SystemException(local("course.error.api.locked"));
         }
-
-        audioService.handleHttpUrl(fileBase, audioCourse);
         //判断用户是否有权限使用此课件
         if (!principal.getId().equals(audioCourse.getCspUserId())) {
             throw new SystemException(local("course.error.author"));
         }
+        audioCourse.setDetails(audioService.findDetailsByCourseId(courseId));
+        audioService.handleHttpUrl(fileBase, audioCourse);
 
         String wsUrl = genWsUrl(request, courseId);
         wsUrl = UrlConverter.newInstance(wsUrl).put("liveType", LiveOrderDTO.LIVE_TYPE_PPT).convert();
@@ -752,7 +773,7 @@ public class MeetingController extends CspBaseController {
 
             if (live != null) {
                 //已经结束 抛出异常 不再判断开始时间
-                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+                if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.deleted.ordinal()) {
                     return error(local("share.live.over"));
                 }
             }
@@ -764,6 +785,12 @@ public class MeetingController extends CspBaseController {
                 audioService.updateAudioCoursePlay(play);
             }
             dto.setRecord(play);
+            //查询出讲本的背景音乐和皮肤
+            AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            if (theme != null) {
+                AudioCourseTheme.handleUrl(theme, fileBase);
+                dto.setTheme(theme);
+            }
         }
 
         //发送扫码投屏指令
@@ -1002,7 +1029,7 @@ public class MeetingController extends CspBaseController {
                         if(over == 1){
                             live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
                             live.setEndTime(new Date());
-                            liveService.publish(overOrder);
+                            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
                         } else {
                             if(live.getLiveState().intValue() == AudioCoursePlay.PlayState.playing.ordinal()){
                                 live.setLiveState(AudioCoursePlay.PlayState.pause.ordinal());
@@ -1157,19 +1184,19 @@ public class MeetingController extends CspBaseController {
         //删除缓存中的同步指令
         redisCacheUtils.delete(LiveService.SYNC_CACHE_PREFIX + courseId);
 
+        //这里不直接修改直播状态了 而是将直播的状态改为待结束状态 10分钟之后真正结束
         Live live = liveService.findByCourseId(courseId);
+        Map<String, Object> result = new HashMap<>();
         if (live != null) {
-            liveService.doModifyLiveState(live);
-            LiveOrderDTO order = new LiveOrderDTO();
-            order.setCourseId(String.valueOf(courseId));
-            order.setOrder(LiveOrderDTO.ORDER_LIVE_OVER);
-            liveService.publish(order);
+            live.setLiveState(AudioCoursePlay.PlayState.over.ordinal());
+            live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(CspConstants.LIVE_OVER_DELAY)));
+            liveService.updateByPrimaryKey(live);
+            result.put("expireDate", live.getExpireDate());
         }
-
         //同步yaya医师会议状态
         meetService.doEndMeet(courseId);
-
-        return success();
+        result.put("serverTime", new Date());
+        return success(result);
     }
 
     protected void sendSyncOrder(Integer courseId, String imgUrl, String videoUrl, Integer pageNum) {
@@ -1206,7 +1233,7 @@ public class MeetingController extends CspBaseController {
         String pushUrl = null;
 
         if (live != null) {
-            if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()) {
+            if (live.getLiveState().intValue() >= AudioCoursePlay.PlayState.over.ordinal()) {
                 return error(local("share.live.over"));
             }
             updateLiveState(live);
@@ -1297,9 +1324,9 @@ public class MeetingController extends CspBaseController {
      */
     @RequestMapping(value = "/tourist/list")
     @ResponseBody
-    public String getGuideCourse(Integer sourceId) {
+    public String getGuideCourse(Integer courseId) {
         Pageable pageable = new Pageable();
-        pageable.put("id", sourceId == null ? Constants.NUMBER_ONE : sourceId);
+        pageable.put("id", courseId == null ? Constants.NUMBER_ONE : courseId);
         MyPage<CourseDeliveryDTO> page = audioService.findCspMeetingListForApp(pageable);
         if (!CheckUtils.isEmpty(page.getDataList())) {
             CourseDeliveryDTO.splitCoverUrl(page.getDataList(), fileBase);
@@ -1393,6 +1420,7 @@ public class MeetingController extends CspBaseController {
             return error(local("source.not.exists"));
         }
         StarRateResultDTO dto = new StarRateResultDTO();
+
         dto.setStarStatus(course.getStarRateFlag());
         //开启了星评，生成二维码
         if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
@@ -1406,9 +1434,8 @@ public class MeetingController extends CspBaseController {
                 QRCodeUtils.createQRCode(shareUrl, fileUploadBase + qrCodePath);
             }
             dto.setStartCodeUrl(fileBase + qrCodePath);
-            //将会议设置为星评阶段
-            openStarRate(course);
         }
+        openStarRate(course, dto);
         return success(dto);
     }
 
@@ -1417,7 +1444,7 @@ public class MeetingController extends CspBaseController {
      * 开启星评
      * @param course
      */
-    public void openStarRate(AudioCourse course) {
+    public void openStarRate(AudioCourse course, StarRateResultDTO dto) {
         if (course != null) {
             if (course.getPlayType().intValue() == AudioCourse.PlayType.normal.getType()) {
                 AudioCoursePlay play = audioService.findPlayState(course.getId());
@@ -1426,17 +1453,25 @@ public class MeetingController extends CspBaseController {
             } else {
                 //修改直播状态为星评中状态
                 Live live = liveService.findByCourseId(course.getId());
-                live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                if (live.getLiveState().intValue() < AudioCoursePlay.PlayState.rating.ordinal()) {
+                    if (live.getLiveState() == AudioCoursePlay.PlayState.init.ordinal()) {
+                        live.setStartTime(new Date());
+                        live.setExpireDate(new Date(System.currentTimeMillis() + TimeUnit.DAYS.toMillis(expireDays)));
+                    }
+                    live.setLiveState(AudioCoursePlay.PlayState.rating.ordinal());
+                } else if (live.getLiveState().intValue() == AudioCoursePlay.PlayState.over.ordinal()){
+                    dto.setExpireDate(live.getExpireDate());
+                }
                 liveService.updateByPrimaryKey(live);
             }
         }
-
-        //发送开启星评指令
-        LiveOrderDTO order = new LiveOrderDTO();
-        order.setCourseId(String.valueOf(course.getId()));
-        order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
-        liveService.publish(order);
-
+        if (course.getStarRateFlag() != null && course.getStarRateFlag()) {
+            //发送开启星评指令
+            LiveOrderDTO order = new LiveOrderDTO();
+            order.setCourseId(String.valueOf(course.getId()));
+            order.setOrder(LiveOrderDTO.ORDER_STAR_RATE_START);
+            liveService.publish(order);
+        }
     }
 
 
@@ -1503,80 +1538,115 @@ public class MeetingController extends CspBaseController {
 
 
     /**
-     * 完善或修改课件标题，主题，背景音乐
+     * 生成或更新课件标题, 课件主题，背景音乐
      * @param courseId
      * @param title
-     * @param imgId
-     * @param musicId
      * @return
      * @throws SystemException
      */
     @RequestMapping(value = "/mini/update", method = RequestMethod.POST)
     @ResponseBody
-    public String updateAudio(Integer courseId,String title, Integer imgId,Integer musicId) throws SystemException {
+    public String updateAudio(Integer courseId,String title, Integer imgId, Integer musicId) throws SystemException {
         if(courseId == null){
             return error(local("courseId.empty"));
         }
-        //更新课件标题不能为空，为null表示不更新标题
-        if(title == ""){
+
+        boolean isMine = audioService.checkCourseIsMine(SecurityUtils.get().getId(),courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+
+        if("".equals(title.trim())){
             return error(local("meeting.title.not.none"));
         }
+
         AudioCourse course = new AudioCourse();
         course.setId(courseId);
         course.setTitle(title);
-
-        AudioCourseTheme theme = new AudioCourseTheme();
-        theme.setCourseId(courseId);
-        theme.setImageId(imgId);
-        theme.setMusicId(musicId);
-        audioService.updateMiniCourse(course,theme);
+        course.setPublished(true);
+        //生成或更新课件标题, 课件主题，背景音乐
+        audioService.createOrUpdateCourseAndTheme(course,imgId,musicId);
         return success();
     }
 
 
-//    /**
-//     * 创建课件或者更新课件
-//     * @param courseId
-//     * @param files
-//     * @param title
-//     * @param imgId
-//     * @param musicId
-//     * @return
-//     * @throws SystemException
-//     */
-//    @RequestMapping("/create/update")
-//    @ResponseBody
-//    public String createOrUpdateAudio(Integer courseId, @RequestParam(required = false) MultipartFile[] files , String title, Integer imgId,Integer musicId) throws SystemException {
-//        String userId = SecurityUtils.get().getId();
-//        AudioCourse course = new AudioCourse();
-//        course.setId(courseId);
-//        course.setTitle(title);
-//        course.setCspUserId(userId);
-//        course.setSourceType(AudioCourse.SourceType.QuickMeet.ordinal());
-//
-//        AudioCourseTheme theme = new AudioCourseTheme();
-//        theme.setMusicId(musicId);
-//        theme.setImageId(imgId);
-//
-//        //新建课件
-//        if(courseId == null){
-//            if(files == null){
-//                return error(local("upload.error.null"));
-//            }
-//            if(StringUtils.isEmpty(title)){
-//                return error(local("meeting.title.not.none"));
-//            }
-//            courseId = audioService.createAudioAndDetail(files, course, theme);
-//            Map<String,Integer> map = new HashMap<>();
-//            map.put("courseId",courseId);
-//            return success(map);
-//
-//        }else{  //修改课件
-//            theme.setCourseId(courseId);
-//            audioService.updateMiniCourse(course,theme);
-//            return success();
-//        }
-//    }
+
+
+    /**
+     * 更新主题
+     * @param courseId
+     * @param imgId
+     * @return
+     */
+    @RequestMapping("/update/img")
+    @ResponseBody
+    public String updateImg(Integer courseId, Integer imgId){
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
+        boolean isMine = audioService.checkCourseIsMine(SecurityUtils.get().getId(),courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+        AudioCourseTheme theme = new AudioCourseTheme();
+        theme.setCourseId(courseId);
+        AudioCourseTheme result = courseThemeService.selectOne(theme);
+        if(result != null){
+            //删除主题
+            if(imgId == NUMBER_ZERO){
+                result.setImageId(null);
+                courseThemeService.updateByPrimaryKey(result);
+            }else{
+                result.setImageId(imgId);
+                courseThemeService.updateByPrimaryKeySelective(result);
+            }
+        }else{
+            //旧会议可能调用此接口添加主题，需要插入数据
+            theme.setImageId(imgId);
+            courseThemeService.insert(theme);
+        }
+
+        return success();
+    }
+
+
+    /**
+     * 更新背景音乐
+     * @param courseId
+     * @param musicId
+     * @return
+     */
+    @RequestMapping("/update/music")
+    @ResponseBody
+    public String updateMusic(Integer courseId, Integer musicId){
+        if(courseId == null){
+            return error(local("courseId.empty"));
+        }
+        boolean isMine = audioService.checkCourseIsMine(SecurityUtils.get().getId(),courseId);
+        if (!isMine) {
+            return error(local("course.error.author"));
+        }
+        AudioCourseTheme theme = new AudioCourseTheme();
+        theme.setCourseId(courseId);
+        AudioCourseTheme result = courseThemeService.selectOne(theme);
+        if(result != null){
+            //删除主题
+            if(musicId == NUMBER_ZERO){
+                result.setMusicId(null);
+                courseThemeService.updateByPrimaryKey(result);
+            }else{
+                result.setMusicId(musicId);
+                courseThemeService.updateByPrimaryKeySelective(result);
+            }
+        }else{
+            //旧会议可能调用此接口添加背景音乐，需要插入数据
+                theme.setMusicId(musicId);
+                courseThemeService.insert(theme);
+        }
+
+        return success();
+    }
+
 
     /**
      * 小程序活动贺卡模板列表
@@ -1588,6 +1658,7 @@ public class MeetingController extends CspBaseController {
     public String templateList() {
         Principal principal = SecurityUtils.get();
         List<AudioCourseDTO> templateList = audioService.findMiniTemplate();
+        AudioCourseDTO.HandelCoverUrl(templateList, null, fileBase);
         return success(templateList);
     }
 
@@ -1607,6 +1678,7 @@ public class MeetingController extends CspBaseController {
             id = 0;
         }
         AudioCourseDTO courseDTO = audioService.findMiniTemplateByIdOrRand(id);
+        HandelCoverUrl(null, courseDTO, fileBase);
         return success(courseDTO);
     }
 
@@ -1631,29 +1703,107 @@ public class MeetingController extends CspBaseController {
         return view(courseId);
     }
 
+    /**
+     * 进入讲本编辑页面
+     * @since csp1.2.0
+     * @param courseId
+     * @return
+     */
+    @RequestMapping(value = "/edit")
+    @ResponseBody
+    public String edit(Integer courseId){
+        Map<String, Object> result = new HashMap<>();
+        if (courseId != null && courseId != 0) {
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            String coverUrl = audioService.getCoverUrl(courseId);
+            if (CheckUtils.isNotEmpty(coverUrl)){
+                coverUrl = fileBase + coverUrl;
+            }
+            course.setCoverUrl(coverUrl);
+
+            AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            if(theme != null){
+                Integer duration = theme.getDuration();
+                theme.setTimeStr(CalendarUtils.secToTime(duration == null ? 0 : duration));
+            }
+            AudioCourseTheme.handleUrl(theme, fileBase);
+            result.put("course", course);
+            result.put("theme", theme);
+        }
+        //查询出推荐的皮肤
+        List<BackgroundImage> imageList = courseThemeService.findImageList(0);
+        BackgroundImage.HandelImgUrl(imageList,fileBase);
+        result.put("imageList",imageList);
+        return success(result);
+    }
+
+    /**
+     * 查看更多皮肤
+     * @since csp1.2.0
+     * @return
+     */
+    @RequestMapping(value = "/theme/image/more")
+    @ResponseBody
+    public String moreImage(){
+        Map<String, Object> result = new HashMap<>();
+        List<BackgroundImage> imageList = courseThemeService.findImageList(1);
+        BackgroundImage.HandelImgUrl(imageList,fileBase);
+        result.put("list",imageList);
+        return success(result);
+    }
+
+    /**
+     * 查看更多背景音乐
+     * @since csp1.2.0
+     * @return
+     */
+    @RequestMapping(value = "/theme/music/more")
+    @ResponseBody
+    public String moreMusic(){
+        Map<String, Object> result = new HashMap<>();
+        List<BackgroundMusic> musicList = courseThemeService.findMusicList(1);
+        BackgroundMusic.HandelMusicUrl(musicList,fileBase);
+        BackgroundMusic.tranTimeStr(musicList);
+        result.put("list",musicList);
+        return success(result);
+    }
+
 
     /**
      * 小程序接口
      * 获取主题和背景音乐
+     * @param courseId
      * @param type type为null或者0时，获取主题，为1时获取背景音乐
+     * @param showType {@link AudioCourseTheme.ShowType} showType=null或者0时，获取主题排序，为1时获取更多排序
      * @return
      */
     @RequestMapping("/mini/image/music")
     @ResponseBody
-    public String getImageAndMusic(Integer type){
+    public String getImageAndMusic(Integer type, Integer showType, Integer courseId){
         if(type == null){
             type = AudioCourseTheme.ImageMusic.IMAGE.ordinal();
         }
+
+        if (showType == null) {
+            showType = AudioCourseTheme.ShowType.RECOMList.ordinal();
+        }
         Map<String,Object> map = new HashMap<>();
+
+        if (courseId != null) {
+            AudioCourse course = audioService.selectByPrimaryKey(courseId);
+            AudioCourseTheme theme = courseThemeService.findByCourseId(courseId);
+            map.put("course", course);
+            map.put("theme", theme);
+        }
         //获取主题
         if(type == AudioCourseTheme.ImageMusic.IMAGE.ordinal()){
-            List<BackgroundImage> imageList = courseThemeService.findImageList();
+            List<BackgroundImage> imageList = courseThemeService.findImageList(showType);
             BackgroundImage.HandelImgUrl(imageList,fileBase);
             map.put("imageList",imageList);
             return success(map);
         }else{
             //获取背景音乐
-            List<BackgroundMusic> musicList = courseThemeService.findMusicList();
+            List<BackgroundMusic> musicList = courseThemeService.findMusicList(showType);
             BackgroundMusic.HandelMusicUrl(musicList,fileBase);
             map.put("musicList",musicList);
             return success(map);

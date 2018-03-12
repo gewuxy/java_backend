@@ -1,5 +1,6 @@
 package cn.medcn.meet.model;
 
+import cn.medcn.common.utils.CheckUtils;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -24,11 +25,19 @@ public class BackgroundImage {
     protected Float imgSize;
     // 图片地址
     protected String imgUrl;
+    // 推荐列表排序
+    protected Integer recomSort;
+    // 更多列表排序
+    protected Integer sort;
+    // 是否隐藏
+    protected Boolean hide;
 
     public static void HandelImgUrl(List<BackgroundImage> list, String fileBase){
         if(list != null){
             for(BackgroundImage image : list){
-                image.setImgUrl(fileBase + image.getImgUrl());
+                if (CheckUtils.isNotEmpty(image.getImgUrl())){
+                    image.setImgUrl(fileBase + image.getImgUrl());
+                }
             }
         }
     }

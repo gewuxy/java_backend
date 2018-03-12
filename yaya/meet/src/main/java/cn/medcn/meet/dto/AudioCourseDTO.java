@@ -39,4 +39,16 @@ public class AudioCourseDTO implements Serializable{
         }
         return dto;
     }
+
+
+    public static void HandelCoverUrl(List<AudioCourseDTO> list, AudioCourseDTO courseDTO, String fileBase){
+        if(list != null){
+            for(AudioCourseDTO image : list){
+                image.setCoverUrl(fileBase + image.getCoverUrl());
+            }
+        }
+        if (courseDTO != null) {
+            courseDTO.setCoverUrl(fileBase + courseDTO.getCoverUrl());
+        }
+    }
 }

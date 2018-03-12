@@ -19,7 +19,7 @@ public class SearchUtil {
     /**
      * solr http服务地址
      */
-    @Value("${solr.SOLR_URL}")
+    @Value("${solr.url}")
     private String SOLR_URL;
 
     public void setSOLR_URL(String SOLR_URL) {

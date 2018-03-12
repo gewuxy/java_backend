@@ -10,6 +10,7 @@
     <li class="active"><a href="#">会议信息</a></li>
 </ul><br/>
 <form id="inputForm" action="${ctx}/csp/meet/delete" method="post" class="form-horizontal">
+    <input type="hidden" name="status" value="" id="status">
     <div class="control-group">
         <label class="control-label">标题:</label>
         <div class="controls">
@@ -147,6 +148,10 @@
         });
         return course;
     }
+
+    $("#btnSubmit").click(function () {
+        $("#status").val(1);
+    })
 </script>
 </body>
 </html>

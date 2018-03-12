@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/include/taglib.jsp" %>
 <html lang="en">
 <head>
-    <title>首页</title>
+    <title>${news.title} - 敬信药草园</title>
     <%@ include file="/WEB-INF/include/common_css.jsp" %>
 </head>
 <body>
@@ -21,8 +21,8 @@
                         </div>
                         <!--startprint-->
                         <div class="v2-news-detail-item">
-                            <p style="text-align: center;"><img src="${news.articleImg}" alt=""></p>
-                            ${news.content}
+                            <p style="text-align: center;"><img src="${fileBase}${news.articleImg}" alt=""></p>
+                            ${fn:replace(news.content, news.title, "")}
                         </div>
                         <!--endprint-->
                         <div class="v2-news-detail-footerDesc">

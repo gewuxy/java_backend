@@ -552,7 +552,8 @@ a.color-wathet-blue:hover{color:#146ee3}
 .icon-pwdChange { position:absolute; right:20px; top:18px; display: inline-block; width:20px; height:10px; padding:0; }
 .pwdChange-off { background:url(../images/pwdChangeState-off.png) no-repeat center; }
 .pwdChange-on { background:url(../images/pwdChangeState-on.png) no-repeat center; }
-.meeting-form-item {padding-left:35px;}
+.meeting-form-item {padding-left:35px;padding-bottom: 45px}
+.login-formInput{ border:1px solid #dce3ea; background:transparent; width:493px;     -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;}
 .meeting-form-item .login-formInput{ border:1px solid #dce3ea; background:transparent; width:493px;     -moz-border-radius: 10px; -webkit-border-radius: 10px; border-radius: 10px;}
 .meeting-form-item .textarea{ padding:13px 20px;  margin-bottom:25px;   border: 1px solid #dce3ea; -moz-border-radius: 10px;-webkit-border-radius: 10px; border-radius: 10px;  }
 .meeting-form-item .error { margin:15px 0 25px;}
@@ -850,13 +851,13 @@ a.color-wathet-blue:hover{color:#146ee3}
 .cancel-popup-box .admin-button .layui-layer-close { position: static;}
 
 .upload-ppt-box { padding-right:45px;}
-.upload-ppt-area { border:4px dashed #EDF3F9; text-align: center; color:#A4B3C6; margin-bottom:43px;}
+.upload-ppt-area { border:4px dashed #EDF3F9; text-align: center; color:#A4B3C6; margin-bottom:10px;}
 .upload-ppt-area label { display: block; padding:45px 0; cursor: pointer;}
 .upload-ppt-area .img { margin-bottom:30px;}
 .upload-ppt-area-finish { border:0; }
 .upload-ppt-area-finish img{ width: 100%; max-height:270px; }
 .upload-main { text-align: center; }
-.upload-main .admin-button { margin-bottom:20px;}
+.upload-main .admin-button { margin-bottom:10px;}
 .upload-main .admin-button .min-btn{ padding:4px 20px; border:1px solid #7A8B9F; -moz-border-radius: 27px; -webkit-border-radius:27px;  border-radius: 27px;}
 .upload-main .admin-button a:hover,
 .upload-main .admin-button .color-blue { border-color:#167AFE; color:#167AFE;}
@@ -1011,7 +1012,7 @@ a.color-wathet-blue:hover{color:#146ee3}
 .admin-history-list .resource-list-item .resource-title { cursor: pointer;}
 
 
-.admin-module { padding:75px 65px; background:#fff;}
+.admin-module { padding:35px 25px; background:#fff;}
 .admin-metting-player { padding:100px 0; overflow: hidden;}
 .admin-metting-player  .swiper-slide { text-align: center; font-size: 18px; widtH:546px; height:392px; margin-top:65px;
     /* Center slide text vertically */

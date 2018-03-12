@@ -21,12 +21,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 @RequestMapping(value="/news")
 public class NewsController extends BaseController {
-
     @Autowired
     private NewsService newsService;
 
     @Value("${editor_media_path}")
     private String editorMediaPath;
+
+    @Value("${app.file.base}")
+    private String fileBasePath;
 
     /**
      * AJAX获取
@@ -41,7 +43,7 @@ public class NewsController extends BaseController {
         pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         return APIUtils.success(page);
     }
@@ -54,10 +56,10 @@ public class NewsController extends BaseController {
     @RequestMapping(value="/trends")
     public String trends(Pageable pageable, Model model){
         pageable.setPageSize(10);
-        pageable.put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
+        pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_GSDT.categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         model.addAttribute("page", page);
         return "/news/trends";
@@ -71,11 +73,40 @@ public class NewsController extends BaseController {
     @RequestMapping(value="/pagenews")
     @ResponseBody
     public String pagenews(Pageable pageable){
+        //pageable.getParams().put("categoryId", News.NEWS_CATEGORY.CATEGORY_YYXW.categoryId);
         MyPage<News> page = newsService.findAllNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         return APIUtils.success(page);
+    }
+
+    @RequestMapping(value="/view/{nid}")
+    public String view(@PathVariable String nid, Model model) throws Exception{
+        if (StringUtils.isEmpty(nid)){
+            throw new Exception("参数不正确");
+        }
+        News news = newsService.selectByPrimaryKey(nid);
+        if (news == null){
+            throw new Exception("您查看的新闻id=["+nid+"] 不存在");
+        }
+        news.replaceJSPTAG(fileBasePath);
+        model.addAttribute(news);
+        return "/news/view";
+    }
+
+    @RequestMapping(value="/viewtrend/{nid}")
+    public String viewtrend(@PathVariable String nid, Model model) throws Exception {
+        if (StringUtils.isEmpty(nid)){
+            throw new Exception("参数不正确");
+        }
+        News news = newsService.selectByPrimaryKey(nid);
+        if (news == null){
+            throw new Exception("您查看的新闻id=["+nid+"] 不存在");
+        }
+        news.replaceJSPTAG(fileBasePath);
+        model.addAttribute(news);
+        return "/news/view_trend";
     }
 
     /**
@@ -90,10 +121,11 @@ public class NewsController extends BaseController {
         pageable.put("categoryId", News.NEWS_CATEGORY.valueOf(category).categoryId);
         MyPage<News> page = newsService.pageNews(pageable);
         for(News news:page.getDataList()){
-            news.replaceJSPTAG(editorMediaPath);
+            news.replaceJSPTAG(fileBasePath);
         }
         model.addAttribute("page", page);
         model.addAttribute("type",type);
+        model.addAttribute("fileBase", fileBasePath);
         model.addAttribute("title", News.NEWS_CATEGORY.valueOf(category).label);
         return "/show/newList";
     }
@@ -109,28 +141,9 @@ public class NewsController extends BaseController {
         News news = new News();
         news.setId(id);
         news = newsService.selectByPrimaryKey(news);
+        model.addAttribute("fileBase", fileBasePath);
         model.addAttribute("news",news);
         return "/show/detailView";
     }
 
-    /**
-     * 公司新闻动态
-     * @param nid
-     * @param model
-     * @return
-     * @throws Exception
-     */
-    @RequestMapping(value="/viewtrend/{nid}")
-    public String viewtrend(@PathVariable String nid, Model model) throws Exception {
-        if (StringUtils.isEmpty(nid)){
-            throw new Exception("参数不正确");
-        }
-        News news = newsService.selectByPrimaryKey(nid);
-        if (news == null){
-            throw new Exception("您查看的新闻id=["+nid+"] 不存在");
-        }
-        news.replaceJSPTAG(editorMediaPath);
-        model.addAttribute(news);
-        return "/news/view_trend";
-    }
 }

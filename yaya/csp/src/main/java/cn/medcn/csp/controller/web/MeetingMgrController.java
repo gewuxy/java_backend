@@ -654,7 +654,7 @@ public class MeetingMgrController extends CspBaseController {
 
         updatePackagePrincipal(getWebPrincipal().getId());
 
-        return success();
+        return success(ac);
     }
 
 
@@ -756,19 +756,22 @@ public class MeetingMgrController extends CspBaseController {
     public String infoAndRateResult(@PathVariable Integer courseId){
         StarRateInfoDTO dto = cspStarRateService.findFinalRateResult(courseId);
         //处理简介文字的回车键替换成br
-        dto.setInfo(dto.getInfo().replace("\n", "<br>"));
+        if (CheckUtils.isNotEmpty(dto.getInfo())){
+            dto.setInfo(dto.getInfo().replace("\n", "<br>"));
+        }
         return success(dto);
     }
 
     @RequestMapping(value = "/password/modify/{courseId}")
     @ResponseBody
     public String modifyPassword(@PathVariable Integer courseId, String password){
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-
-        if (course == null) {
-            return error(local("source.not.exists"));
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
 
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
         if (CheckUtils.isEmpty(password) || password.length() > 4) {
             return error(local("page.meeting.tips.watch.password.holder"));
         }
@@ -784,12 +787,12 @@ public class MeetingMgrController extends CspBaseController {
     @RequestMapping(value = "/password/del/{courseId}")
     @ResponseBody
     public String delPassword(@PathVariable Integer courseId){
-
-        AudioCourse course = audioService.selectByPrimaryKey(courseId);
-        if (course == null) {
-            return error(local("source.not.exists"));
+        try {
+            audioService.editAble(courseId);
+        } catch (SystemException e) {
+            return error(e.getMessage());
         }
-
+        AudioCourse course = audioService.selectByPrimaryKey(courseId);
         Principal principal = getWebPrincipal();
         if (!principal.getId().equalsIgnoreCase(course.getCspUserId())){
             return error(local("meet.notmine"));

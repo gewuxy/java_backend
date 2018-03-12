@@ -37,7 +37,7 @@
             var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
             ajaxSyncPost('${ctx}/mgr/pay/money ', {
                 'version': selectPk,
-                "limitTimes": limitTimes,
+                "limitTimes": $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val(),
                 "currency": currency
             }, function (data) {
                 if (data.code == 0) {
@@ -67,6 +67,16 @@
                 $(".layui-layer-close").remove();
             }
             $("#disabledItem1").addClass("member-buy-disabled-item");
+        }
+
+        function activity(){
+            var currency = $("#" + flag + "View").find('input[name=' + flag + 'Currency]:checked').val();
+            var times = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val()
+            if(times == 3 && selectPk == 1 && currency == 0){
+                $(".payDefaultNum").removeClass("none");
+            }else{
+                $(".payDefaultNum").addClass("none");
+            }
         }
 
         $(function () {
@@ -111,12 +121,14 @@
             $(".time-mode-list label").click(function () {
                 $(this).addClass('pay-on').siblings().removeClass('pay-on');
                 limitTimes = $(this).children().eq(0).val();
+                activity();
                 sumMoney();
             });
 
             //支付方式
             $(".pay-mode-list label").click(function () {
                 $(this).addClass('pay-on').siblings().removeClass('pay-on');
+                activity();
             });
 
             //货币切换
@@ -130,6 +142,7 @@
                     $("#" + flag + "View").find('input[name=' + flag + 'PayMode][value=alipay_pc_direct]').attr("checked",true);
                     $(this).parents('.pay-mode').find('.EN-hook').removeClass('none').siblings().addClass('none');
                 }
+                activity();
                 sumMoney();
             });
 
@@ -141,6 +154,7 @@
                 limitTimes = $("#" + flag + "View").find('input[name=' + flag + 'TimeMode]:checked').val();
                 tabsMainNum.eq(index).removeClass('none').siblings().addClass('none');
                 $(this).addClass('index-buy-item-current').siblings().removeClass('index-buy-item-current');
+                activity();
                 sumMoney();
             })
         })
@@ -160,12 +174,16 @@
                 if (packageId == 2) {
                     $("#price" + packageId).html(money + danwei);
                     $("#hgTotal").html(money);
+                    if("${isCN}" == "true"){
+                        $("#hgTotal").html("19.9");
+                    }
                 }
                 if (packageId == 3) {
                     $("#price" + packageId).html(money + "/" + money_year + danwei);
                     $("#pfTotal").html(money);
                 }
                 $("#meets" + packageId).html(package[i].limitMeets == 0 ? "<fmt:message key='page.package.unlimit.meets'/>" : package[i].limitMeets + "<fmt:message key='page.package.meet.unit'/>");
+                activity();
             }
             var info = course.infos;
             for (var j = 0; j < info.length; j++) {
@@ -321,13 +339,19 @@
                             <div class="formTitle color-black"><fmt:message key="page.package.buy.time"/></div>
                             <div class="formControls">
                                 <div class="time-mode-list">
-                                    <label for="2tid1" class="item item-radius pay-on">
-                                        <input type="radio" name="hgTimeMode" class="none" checked="checked" value="1" id="2tid1">
+                                    <label for="2tid1" class="item item-radius">
+                                        <input type="radio" name="hgTimeMode" class="none" value="1" id="2tid1">
                                         1<fmt:message key="page.package.validity.unit.month"/>
                                     </label>
-                                    <label for="2tid2" class="item item-radius">
-                                        <input type="radio" name="hgTimeMode" class="none" value="3" id="2tid2">
+                                    <label for="2tid2" class="item item-radius pay-on">
+                                        <input type="radio" name="hgTimeMode" class="none" checked="checked" value="3" id="2tid2">
                                         3<fmt:message key="page.package.validity.unit.month"/>
+                                        <c:if test="${csp_locale eq 'zh_CN'}">
+                                            <span class="icon-hotTips" style="background-image:url(${ctxStatic}/images/hosTips.png)"></span>
+                                        </c:if>
+                                        <c:if test="${csp_locale eq 'zh_TW'}">
+                                            <span class="icon-hotTips" style="background-image:url(${ctxStatic}/images/hosTips-complex.png)"></span>
+                                        </c:if>
                                     </label>
                                     <label for="2tid3" class="item item-radius">
                                         <input type="radio" name="hgTimeMode" class="none" value="6" id="2tid3">
@@ -341,7 +365,7 @@
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook ${!isCN ? 'none' : ''}">
                                     <label for="2id11" class="item item-radius  pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" checked="${isCN ? 'checked' : ''}" value="alipay_pc_direct" id="2id11">
+                                        <input type="radio" name="hgPayMode" class="none" ${isCN ? 'checked' : ''} value="alipay_pc_direct" id="2id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="2id21" class="item item-radius">
@@ -355,7 +379,7 @@
                                 </div>
                                 <div class="pay-mode-list EN-hook ${isCN ? 'none' : ''}">
                                     <label for="2id31" class="item item-radius pay-on">
-                                        <input type="radio" name="hgPayMode" class="none" checked="${!isCN ? 'checked' : ''}" value="paypal" id="2id31">
+                                        <input type="radio" name="hgPayMode" class="none" ${!isCN ? 'checked' : ''} value="paypal" id="2id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>
@@ -365,6 +389,7 @@
                             <div class="formTitle color-black"><fmt:message key="page.package.pay.money"/></div>
                             <div class="formControls">
                                 <span class="payNum" id="hgTotal"></span>
+                                <span class="payDefaultNum">&nbsp;原价：¥&nbsp;50.00&nbsp;</span>
                                 <span class="money-state">
                                         <label for="currency-cn2" class="cn ${isCN ? 'on':''}">
                                             <input type="radio" name="hgCurrency" id="currency-cn2" ${isCN ? 'checked':''} class="none" value="0">
@@ -422,7 +447,7 @@
                             <div class="formControls">
                                 <div class="pay-mode-list CN-hook  ${!isCN ? 'none' : ''}">
                                     <label for="3id11" class="item item-radius  pay-on">
-                                        <input type="radio" name="pfPayMode" class="none"  checked="${isCN ? 'checked' : ''}" value="alipay_pc_direct" id="3id11">
+                                        <input type="radio" name="pfPayMode" class="none"  ${isCN ? 'checked' : ''} value="alipay_pc_direct" id="3id11">
                                         <img src="${ctxStatic}/images/img/user-icon-alipay.png" alt="">
                                     </label>
                                     <label for="3id21" class="item item-radius">
@@ -436,7 +461,7 @@
                                 </div>
                                 <div class="pay-mode-list EN-hook  ${isCN ? 'none' : ''}">
                                     <label for="3id31" class="item item-radius pay-on">
-                                        <input type="radio" name="pfPayMode" class="none" checked="${!isCN ? 'checked' : ''}" value="paypal" id="3id31">
+                                        <input type="radio" name="pfPayMode" class="none" ${!isCN ? 'checked' : ''} value="paypal" id="3id31">
                                         <img src="${ctxStatic}/images/img/user-icon-paypal.png" alt="">
                                     </label>
                                 </div>

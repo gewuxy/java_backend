@@ -65,18 +65,20 @@
       // The default markup and classes for creating the player:
       createPlayer: {
         markup: '\
-          <div class="play-pause"> \
+          <div class="play-pause button-icon-state"> \
             <p class="play"></p> \
             <p class="pause"></p> \
             <p class="loading"></p> \
             <p class="error"></p> \
           </div> \
-          <div class="scrubber"> \
-            <div class="progress"></div> \
-            <div class="loaded"></div> \
-          </div> \
-          <div class="time"> \
-            <em class="played">00:00</em>/<strong class="duration">00:00</strong> \
+          <div class="default-player"> \
+            <div class="scrubber"> \
+              <div class="progress"></div> \
+              <div class="loaded"></div> \
+            </div> \
+            <div class="time"> \
+              <em class="played">00:00</em><strong class="duration none" >00:00</strong> \
+            </div> \
           </div> \
           <div class="error-message"></div>',
         playPauseClass: 'play-pause',
@@ -106,10 +108,13 @@
       },
       loadError: function(e) {
         var player = this.settings.createPlayer,
-            errorMessage = getByClass(player.errorMessageClass, this.wrapper);
+            errorMessage = getByClass(player.errorMessageClass, this.wrapper),
+            html = '<div class="scrubber-err"><div class="progress-err"></div><div class="loaded-err"></div></div><div class="time-err"><em class="played-err">00:00</em></div>';
+            // html = '';
         container[audiojs].helpers.removeClass(this.wrapper, player.loadingClass);
         container[audiojs].helpers.addClass(this.wrapper, player.errorClass);
-        errorMessage.innerHTML = '请滑到下一页 ';
+        errorMessage.innerHTML = html;
+
       },
       init: function() {
         var player = this.settings.createPlayer;

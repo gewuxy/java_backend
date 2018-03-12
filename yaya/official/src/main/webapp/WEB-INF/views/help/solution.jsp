@@ -62,7 +62,7 @@
                     </div>
                     <div class="v2-helpPage-item">
                         <h4>Q:如何管理病历？</h4>
-                        <p class="v2-fq-text">A:您可以通过移动终端或者登录<a href="http://www.medcn.cn/jiankangjsp/home.jsp" class="color-blue">www.medcn.cn</a>管理您的病历。</p>
+                        <p class="v2-fq-text">A:您可以通过移动终端或者登录<a href="https://www.medcn.com" class="color-blue">www.medcn.com</a>管理您的病历。</p>
                     </div>
                     <div class="v2-helpPage-item">
                         <h4>Q:在移动终端的保存的病历如何同步到网站的个人中心？</h4>

@@ -17,10 +17,10 @@
     <link rel="stylesheet" href="${ctxStatic}/phone/css/swiper.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/CSPMeeting-style.css">
     <link rel="stylesheet" href="${ctxStatic}/phone/css/perfect-scrollbar.min.css">
-    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black.css">
+    <link rel="stylesheet" href="${ctxStatic}/phone/css/audio-black-2.css">
 
     <script src="${ctxStatic}/phone/js/screenfull.min.js"></script>
-    <script src="${ctxStatic}/phone/js/audio-countDown.js"></script>
+    <script src="${ctxStatic}/phone/js/audio.js"></script>
     <script src="${ctxStatic}/phone/js/swiper.jquery.js"></script>
     <script src="${ctxStatic}/phone/js/flexible.min.js"></script>
     <script src="${ctxStatic}/phone/js/perfect-scrollbar.jquery.min.js"></script>
@@ -32,9 +32,9 @@
     <script src="${ctxStatic}/phone/js/weui.min.js"></script>
     <%--<script src="${ctxStatic}/phone/js/vconsole.min.js"></script>--%>
     <%--<script>--%>
-        <%--// init vConsole--%>
-        <%--var vConsole = new VConsole();--%>
-        <%--console.log('Hello world');--%>
+    <%--// init vConsole--%>
+    <%--var vConsole = new VConsole();--%>
+    <%--console.log('Hello world');--%>
     <%--</script>--%>
 
     <!-- 高清方案 -->
@@ -52,7 +52,7 @@
 
     <div class="CSPMeeting-gallery CSPMeeting-gallery-live video-countDown " id="CSPMeeting-gallery-live">
         <!-- Swiper -->
-        <div class="swiper-container gallery-top popup-volume <c:if test="${watermark != null && watermark.state}">
+        <div class="swiper-container gallery-top popup-volume clearfix <c:if test="${watermark != null && watermark.state}">
         <c:choose>
             <c:when test="${watermark.direction == 0}">logo-watermark-position-top-left</c:when>
             <c:when test="${watermark.direction == 1}">logo-watermark-position-bottom-left</c:when>
@@ -77,26 +77,51 @@
                     </div>
                 </c:forEach>
             </div>
-            <!--音频文件-->
-            <div class="clearfix boxAudio t-center " >
-                <div class="audio-meeting-box" style="">
-                    <audio controls=true id="audioPlayer" src="${course.details[0].temp ? '':course.details[0].audioUrl}"></audio>
+            <div class="flex cspMeeting-playerItem">
+                <div class="flex-item">
+                    <!--音频文件-->
+                    <div class="clearfix boxAudio t-center " >
+                        <!--发光层-->
+                        <div class="cspMeeting-black-button">
+                            <!--<div class="button button-icon-state"><i class="button-icon-play"></i><i class="button-icon-stop none"></i></div>-->
+                            <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
+                        </div>
+                        <div class="cspMeeting-black-blueButton"><div class="icon"></div></div>
+                        <div class="audio-meeting-box" style="">
+                            <!--./upload/audio/30179313.mp3-->
+                            <audio controls=true id="audioPlayer" src="${course.details[0].temp ? '':course.details[0].audioUrl}"></audio>
+                        </div>
+                        <!--录播中音频-->
+                        <div class="boxAudio-loading">
+                            <div class="time">
+                                <span class="text"><fmt:message key="page.meeting.tips.recoding"/>...</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            </div>
-            <!--录播中音频-->
-            <div class="boxAudio-loading none">
-                <div class="time">
-                    <span><img src="${ctxStatic}/phone/images/viedo-icon.gif" alt=""></span>
-                    <span class="text"><fmt:message key="page.meeting.tips.recoding"/></span>
+                <div class="cspMeeting-notice-button">
+                    <!--新的更多按钮-->
+                    <div class="button button-icon-info star-popup-button-hook">
+                        <i></i>
+                    </div>
                 </div>
+
             </div>
-            <!--切换菜单-->
+
             <div class="swiper-btn-item clearfix">
                 <span class="swiper-button-prev swiper-button-disabled"></span>
                 <div class="swiper-pagination"><span class="swiper-pagination-current">1</span> / <span class="swiper-pagination-total">${fn:length(course.details)}</span></div>
                 <span class="swiper-button-next "></span>
             </div>
 
+            <!--人数显示-->
+            <div class="cspMeeting-peopleNum">
+                <div class="cspMeeting-peopleNum-main">
+                    <div class="icon"></div>
+                    <div class="num">0</div>
+                </div>
+
+            </div>
             <!--水印位置-->
             <div class="logo-watermark ${watermark != null && watermark.state ? '' : 'none'}">
                 <div class="logo-watermark-item">${watermark.name}</div>
@@ -144,8 +169,8 @@
                     }
                     if(isAndroid){
                         //解决黑边与遮挡
-//                            $("#ck-video").attr('style','margin-top:9999px');
-                        $("#ck-video").attr('style','height:0');
+//                            $("#ck-video,#videoWrap").attr('style','margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style','height:0');
                     }
                 });
 
@@ -166,62 +191,26 @@
         </script>
     </div>
 
-    <!--buttonBottom-->
-    <div class="CSPMeeting-bottom">
-        <div class="flex">
-            <c:choose>
-                <c:when test="${course.starRateFlag}">
-                    <div class="flex-item">
-                        <div class="button button-icon-star star-popup-button-hook ${course.starRateFlag ? '' : 'none'}">
-                            <c:choose>
-                                <c:when test="${empty rateResult.multipleResult || rateResult.multipleResult.avgScore == 0.0}">
-                                    <span class="off "><i ></i><fmt:message key="page.meeting.tips.unrate"/> </span>
-                                </c:when>
-                                <c:otherwise>
-                                    <span class="on "><i ></i>${rateResult.multipleResult.avgScore}<fmt:message key="page.meeting.tips.score.unit"/> </span>
-                                </c:otherwise>
-                            </c:choose>
-                        </div>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <div class="flex-item">
-                        <div class="button button-icon-info star-popup-button-hook">
-                            <i></i>
-                        </div>
-                    </div>
-                </c:otherwise>
-            </c:choose>
-            <div class="flex-item">
-                <div class="button button-icon-volume quit-full-hook"><i class="button-icon-volume-close none"></i><i class="button-icon-volume-open "></i></div>
-            </div>
-            <div class="flex-item">
-                <div class="button button-icon-onlineUser"><i></i><span class="num">0</span></div>
-            </div>
-            <div class="flex-item">
-                <div class="button button-icon-onFull changeFull-hook"><i></i></div>
-            </div>
-        </div>
-    </div>
-
-
     <!--新加载提示-->
     <div class="icon-added" style="display: none;"><span id="newLivePage">P&nbsp;1</span><span class="arrows"></span></div>
-
+    <div class="cspMeeting-live-title live-title-hook">
+        <div class="icon live-showTitle overflowText ">${course.title}</div>
+        <div class="icon live-hideTitle none"><span class="live-title-icon"></span></div>
+    </div>
     <!--自动播放层-->
     <div class="html5ShadePlay"></div>
 
     <!--开始界面-->
     <div class="fixed-full-screen-box ${live.liveState == 0 ? '' : 'none'}" id="liveStartView">
-        <div class="fixed-full-screen-logo"><div class="img"><a href="${appStoreUrl}"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></a></div></div>
+        <div class="fixed-full-screen-logo"><div class="img"><a href="${appStoreUrl}"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></a></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center"><fmt:message key="page.meeting.tips.live.this"/> <fmt:formatDate value="${live.startTime}" pattern="yyyy年 MM月 dd日 HH:mm"/> <fmt:message key="page.meeting.tips.start"/></p>
         </div>
     </div>
 
     <!--结束界面-->
-    <div class="fixed-full-screen-box ${live.liveState == 4 ? '' : 'none'}" id="liveOverView">
-        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/logo-max-img.png" alt=""></div></div>
+    <div class="fixed-full-screen-box ${live.liveState == 5 ? '' : 'none'}" id="liveOverView">
+        <div class="fixed-full-screen-logo"><div class="img"><img src="${ctxStatic}/phone/images/meeting-blackBg.png" alt=""></div></div>
         <div class="fixed-full-screen-main">
             <p class="t-center live-end-icon"><img src="${ctxStatic}/phone/images/live-end-icon.png" alt=""></p>
             <p class="t-center"><fmt:message key="page.meeting.tips.total.time"/> <span id="liveDuration">${totalLiveTime}</span></p>
@@ -250,9 +239,9 @@
         <div class="text hidden-box">
             <p>${course.info}</p>
         </div>
+            <div class="star-showScore ">
         <c:if test="${course.starRateFlag}">
             <c:set var="avgScore" scope="page" value="${rateResult.multipleResult.avgScore}"/>
-            <div class="star-showScore ">
                 <div class="star-showScore-main clearfix">
                     <div class="fr">
                         <div class="star-box star-min">
@@ -276,11 +265,13 @@
                     </div>
                     <div class="star-showScore-title"><fmt:message key="page.meeting.multiple.score"/> </div>
                 </div>
+
+        </c:if>
                 <div class="star-showScore-button popup-star-button t-center">
-                    <button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button>
+                    <c:if test="${course.starRateFlag}"><button class="button star-popup-hook"><fmt:message key="page.meeting.rate.me.want"/> </button></c:if>
+                    <a href="#" class="report-button report-popup-button-hook">举报</a>
                 </div>
             </div>
-        </c:if>
     </div>
 </div>
 
@@ -366,9 +357,9 @@
             </form>
         </div>
         <div class="meeting-star-button popup-star-button t-center">
-            <button class="button tips ${play.playState == 4 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
+            <button class="button tips ${play.playState == 5 ? '' : 'none'}" id="overBtn"><fmt:message key="page.meeting.rate.over"/></button>
             <button class="button tips ${rated ? '' : 'none'}"  id="ratedBtn"><fmt:message key="page.meeting.rate.rated"/></button>
-            <button class="button disabled ${!rated && play.playState != 4 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
+            <button class="button disabled ${!rated && play.playState != 5 ? '' : 'none'}" onclick="doRate()" id="submitBtn"><fmt:message key="page.meeting.rate.submit"/></button>
         </div>
     </div>
 </div>
@@ -383,7 +374,7 @@
     var playOver = false;
     var u = navigator.userAgent;
     var isAndroid = u.indexOf('Android') > -1 || u.indexOf('Adr') > -1; //android终端
-
+    var activeItemIsVideo, prevItemIsVideo, nextItemIsVideo;
     function checkPwd() {
         var password = $("#password").val();
         if ($.trim(password) == '') {
@@ -396,10 +387,17 @@
         }, function (data) {
             if (data.code == 0) {
                 $("#passwordView").addClass("none");
+                //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                if (isAndroid || activeItemIsVideo.length > 0) {
+                    activeItemIsVideo.attr('style', 'margin-top:0px');
+                }
+                if (isAndroid) {
+                    $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
+                }
             } else {
-                $("#passwordError").removeClass("none");
-            }
-        }, 'json');
+                $("#passwordError").removeClass("none");}
+        }
+            , 'json');
     }
 
     //判断手机终端类型
@@ -432,13 +430,18 @@
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
 
-        var activeItemIsVideo, prevItemIsVideo, nextItemIsVideo;
+
         var cH = window.innerHeight;
         var phoneDpi = window.devicePixelRatio;
 
         var isiOS = !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
         var isVideo = $('.swiper-slide-active').find('video');
 
+
+        //直播标题点击缩放、调用的JS
+        $('.live-title-hook').find('.icon').on('click',function(){
+            $(this).addClass('none').siblings().removeClass('none');
+        });
 
 //        $("#audioPlayer")[0].addEventListener("ended", function(){
 //
@@ -481,12 +484,20 @@
         });
 
         $("#audioPlayer")[0].addEventListener("error", function () {
-            $(".boxAudio-loading").removeClass("none");
-            $(".boxAudio").addClass("none");
+            var isVideo = $('.swiper-slide-active').find('video');
+            clearTimeout(slideTimer);
+            if(isVideo.length > 0){
+                $(".boxAudio-loading").addClass("none");
+                //$(".boxAudio").addClass("none");
+            } else {
+                $(".boxAudio-loading").removeClass("none");
+                //$(".boxAudio").addClass("none");
+            }
+            //$(".boxAudio").addClass("none");
         });
 
         $("#audioPlayer")[0].addEventListener("loadedmetadata", function () {
-            $(".boxAudio").removeClass("none");
+            //$(".boxAudio").removeClass("none");
             $(".boxAudio-loading").addClass("none");
         });
 
@@ -495,10 +506,16 @@
         $('.html5ShadePlay').on('touchstart', function () {
             $('.isIphoneSafari').hide();
             $(this).hide();
-            //播放音频
-            popupPalyer.play();
-            //音频文件静音
-            popupPalyer.element.muted = false;
+            activeItemIsVideo = $('.swiper-slide-active').find('video');
+            if (activeItemIsVideo.length > 0){
+                activeItemIsVideo.get(0).load();
+                activeItemIsVideo.get(0).play();
+            } else {
+                //播放音频
+                popupPalyer.play();
+                //音频文件静音
+                popupPalyer.element.muted = false;
+            }
 
             if ("${live.hlsUrl}") {
                 $("#ck-video")[0].play();
@@ -534,7 +551,13 @@
             //手机端 点击任何一个地方  自动播放音频
             $('.html5ShadePlay').on('touchstart', function () {
                 $(this).hide();
-                popupPalyer.play();
+                if (activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).play();
+                } else {
+                    //播放音频
+                    popupPalyer.play();
+                }
                 playing = true;
             });
 
@@ -551,6 +574,9 @@
         $('.icon-added').on('click', function () {
             //点击跳转到最后一页
             galleryTop.slideTo(galleryTop.slides.length);
+            //选中的项是否有视频
+            activeItemIsVideo = $('.swiper-slide-active').find('video');
+            //clearTimeout(slideTimer);
             swiperChangeAduio(galleryTop.wrapper.prevObject);
         });
 
@@ -570,7 +596,7 @@
         $(".quit-full-hook").click(function () {
             if (isAndroid) {
                 //解决黑边与遮挡
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                 weui.actionSheet([
                     {
                         label: '<fmt:message key="page.meeting.tab.change.mute"/>',
@@ -590,14 +616,14 @@
                         onClick: function () {
                             console.log('取消');
                             //还原设置
-                            $("#ck-video").attr('style', 'margin-top:0');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0');
                         }
                     }
                 ], {
                     className: 'custom-classname',
                     onClose: function () {
                         console.log('关闭');
-                        $("#ck-video").attr('style', 'margin-top:0');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:0');
                     }
                 });
             } else {
@@ -619,6 +645,7 @@
             nextButton: '.swiper-button-next',
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
+            speed:150,//解决滑动过快的BUG
             onSlideChangeStart: function (swiper) {
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
@@ -674,6 +701,15 @@
 //                    slideToNext();
 //                }
                 swiper.slideTo("${fn:length(course.details) - 1}");
+                if("${live.liveState == 5}" == "true" || "${not empty course.password}" == "true"){
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if (isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
+                    }
+                    if (isAndroid) {
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
+                    }
+                }
             }
         });
         //点击屏幕后自动播放
@@ -716,16 +752,21 @@
         //播放器切换加载对应的路径
         var swiperChangeAduio = function (current) {
             var swiperCurrent;
-
-            popupPalyer.pause();
             if (current.find(".swiper-slide-active")) {
                 swiperCurrent = current.find(".swiper-slide-active");
             } else if (current.parents('.swiper-container-horizontal').find(".swiper-slide-active")) {
                 swiperCurrent = current.parents('.swiper-container-horizontal').find(".swiper-slide-active");
             }
+            popupPalyer.pause();
+            $(".swiper-slide>video").each(function(){
+                $(this)[0].pause();
+            });
             if(swiperCurrent.find("video").length > 0){
-                $(".boxAudio").addClass("none");
+                //$(".boxAudio").addClass("none");
                 $(".boxAudio-loading").addClass("none");
+                activeItemIsVideo.get(0).load();
+                activeItemIsVideo.get(0).play();
+                popupPalyer.load("isNotSrc");
             } else {
                 var dataSrc = swiperCurrent.attr('audio-src');
                 popupPalyer.load(dataSrc);
@@ -798,6 +839,7 @@
             if (ismuted == true) {
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').addClass('none');
                 ismuted = false
             } else {
                 if ($('.popup-volume').find('audio').length > 0) {
@@ -810,6 +852,7 @@
 
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
+                $('.cspMeeting-black-blueButton').removeClass('none');
                 ismuted = true
             }
         }
@@ -828,6 +871,7 @@
                 area: ['100%', '100%'],
                 fix: false, //不固定
                 title: false,
+                shadeClose:true,
                 content: $('.faq-popup-hook'),
                 success: function () {
 
@@ -843,6 +887,7 @@
                 area: ['100%', '4rem'],
                 offset: 'b',
                 title: false,
+                shadeClose:true,
                 content: $('.meeting-faq-popup-keyboard'),
                 success: function (swiper) {
                     swiper.find('textarea').focus();
@@ -858,46 +903,6 @@
         });
 
         var needJianjieState = true;
-        //弹出简介
-        $('.info-popup-hook').click(function () {
-            needState = false;
-            layer.open({
-                type: 1,
-                shadeClose: true,
-                area: ['85%', '65%'],
-                fix: false, //不固定
-                title: false,
-                skin: 'info-popup',
-                content: $('.CSPMeeting-meeting-info-popup'),
-                success: function (swiper) {
-                    layer.close(layer.index-1);
-                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.attr('style', 'margin-top:9999px');
-                    }
-                    if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:9999px');
-                    }
-                },
-                end: function (swiper) {
-                    layer.close(layer.index-1);
-                    if (needJianjieState){
-                        //关闭时还原高度。
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
-                            activeItemIsVideo.attr('style', 'margin-top:0px');
-                        }
-                        //还原设置
-                        if (isAndroid) {
-                            $("#ck-video").attr('style', 'margin-top:0px');
-                        }
-                    }
-                    needState = true;
-
-                }
-
-            })
-        });
-
 
         //切换屏幕状态
         window.addEventListener("onorientationchange" in window ? "orientationchange" : "resize", function () {
@@ -981,7 +986,7 @@
                     if (data.audioUrl != undefined) {
                         $(".swiper-slide[data-num='" + currentPageNo + "']").attr("audio-src", data.audioUrl);
                     }
-                    if (data.pageNum == galleryTop.activeIndex) {
+                    if (data.pageNum == galleryTop.activeIndex && playing) {
                         swiperChangeAduio($(".swiper-wrapper"));
                     }
 
@@ -1033,23 +1038,26 @@
                         }
                     }
                 } else if (data.order == 12) {//接收到推流
-                    $("#ck-video")[0].play();
+                    if (playing){
+                        $("#ck-video")[0].play();
+                    }
+
                     $(".video-play-live").removeClass("video-notPlay-item");
                     $(".video-notPlay-bg").addClass("none");
                     $(".video-notPlay").addClass("none");
                     if (isAndroid) {
                         //还原
-                        $("#ck-video").attr('style', 'height:auto');
+                        $("#ck-video,#videoWrap").attr('style', 'height:auto');
                     }
                 } else if (data.order == 13) {//开启星评指令
-                    if (activeItemIsVideo.length > 0) {
-                        activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
-                    }
+                    // if (activeItemIsVideo.length > 0) {
+                    //     activeItemIsVideo.get(0).pause();
+                    // } else {
+                    //     popupPalyer.pause();
+                    // }
 
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                     }
                     openStarRate();
                 } else if (data.order == 11) {//直播開始
@@ -1057,13 +1065,16 @@
                 } else if (data.order == 14) {//直播结束
                     if (activeItemIsVideo.length > 0) {
                         activeItemIsVideo.get(0).pause();
-                    } else {
-                        popupPalyer.pause();
                     }
+                    popupPalyer.pause();
 
                     CKobject.getObjectById('ck-video').videoClear();
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if (isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
+                    }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:9999px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
                     }
                     getLiveDuration();
                     $("#liveOverView").removeClass("none");
@@ -1093,12 +1104,12 @@
             needState = false;
             layer.closeAll();
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if (isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             //解决黑边与遮挡
             if (isAndroid) {
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
             }
             weui.actionSheet([
                 {
@@ -1121,11 +1132,11 @@
                         needState = true;
                         console.log('取消');
                         //关闭时还原高度。
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                        if (isAndroid || activeItemIsVideo.length > 0) {
                             activeItemIsVideo.attr('style', 'margin-top:0px');
                         }
                         if (isAndroid) {
-                            $("#ck-video").attr('style', 'margin-top:0px');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                         }
                     }
                 }
@@ -1135,11 +1146,11 @@
                     needState = true;
                     console.log('关闭');
                     //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                    if (isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:0');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:0');
                     }
                 }
             });
@@ -1163,49 +1174,64 @@
         //弹出功能选项
         $('.star-popup-button-hook').on('click',function() {
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if (isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             if (isAndroid) {
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
             }
+            openInfo();
+        });
+        var clickOthers = true;
+        //弹出简介
+        function openInfo(){
+            needState = false;
             layer.open({
                 type: 1,
-                anim: 5,
-                area: ['90%', 'auto'],
+                shadeClose: true,
+                area: ['85%', '65%'],
                 fix: false, //不固定
                 title: false,
-                shadeClose: true,
-                content: $('.listItme-popup'),
-                success: function () {
-                    //popupPalyer.play();
+                shadeClose:true,
+                skin: 'info-popup',
+                content: $('.CSPMeeting-meeting-info-popup'),
+                success: function (swiper) {
+                    layer.close(layer.index-1);
+                    //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                    if (isAndroid || activeItemIsVideo.length > 0) {
+                        activeItemIsVideo.attr('style', 'margin-top:9999px');
+                    }
+                    if (isAndroid) {
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
+                    }
                 },
-                end: function () {
-                    //popupPalyer.play();
-                    //关闭时还原高度。
-                    if(needState){
-                        if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                end: function (swiper) {
+                    layer.close(layer.index-1);
+                    if (needJianjieState){
+                        //关闭时还原高度。
+                        if (isAndroid || activeItemIsVideo.length > 0) {
                             activeItemIsVideo.attr('style', 'margin-top:0px');
                         }
-
+                        //还原设置
                         if (isAndroid) {
-                            $("#ck-video").attr('style', 'margin-top:0px');
+                            $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                         }
                     }
+                    needState = true;
 
                 }
-            })
-        });
 
+            })
+        }
         //星评弹出
         function openStarRate() {
             needState = false;
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-            if (browser.isAndroid || activeItemIsVideo.length > 0) {
+            if (isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
             }
             if (isAndroid) {
-                $("#ck-video").attr('style', 'margin-top:9999px');
+                $("#ck-video,#videoWrap").attr('style', 'margin-top:9999px');
             }
             //打开星评之前关闭遮盖层
             $(".html5ShadePlay").hide();
@@ -1230,11 +1256,11 @@
                     layer.closeAll();
                     //popupPalyer.play();
                     //关闭时还原高度。
-                    if (browser.isAndroid || activeItemIsVideo.length > 0) {
+                    if (isAndroid || activeItemIsVideo.length > 0) {
                         activeItemIsVideo.attr('style', 'margin-top:0px');
                     }
                     if (isAndroid) {
-                        $("#ck-video").attr('style', 'margin-top:0px');
+                        $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                     }
                 }
             })
@@ -1263,6 +1289,33 @@
         if ("${live.liveState == 3 && course.starRateFlag}" == "true") {
             openStarRate();
         }
+
+        //切换屏幕状态
+        window.addEventListener("onorientationchange" in window ? "orientationchange":"resize", function(){
+
+            if (window.orientation === 180 || window.orientation === 0) {
+                setTimeout(function () {
+                    console.log('竖屏状态！');
+                    cH = window.innerHeight ;
+                    $('.CSPMeeting-gallery-live').removeClass("popup-fullStatus");
+
+                    CSPMeetingGallery.height(cH);
+
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },400);
+            }
+            if (window.orientation === 90 || window.orientation === -90 ){
+                console.log('横屏状态！');
+                cH = window.innerHeight ;
+                setTimeout(function () {
+                    $('.CSPMeeting-gallery-live').addClass("popup-fullStatus");
+                    CSPMeetingGallery.height(cH);
+                    //重新渲染插件
+                    galleryTop.update(true);
+                },200);
+            }
+        }, false);
     });
 
     //提交评分

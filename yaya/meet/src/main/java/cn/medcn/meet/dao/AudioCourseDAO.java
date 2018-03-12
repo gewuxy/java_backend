@@ -84,6 +84,13 @@ public interface AudioCourseDAO extends Mapper<AudioCourse>{
     List<AudioCourse> findAllMeetForManage(Map<String, Object> params);
 
     /**
+     * csp后台获取讲本列表 (贺卡模板、有声红包、快捷会议)
+     * @param params
+     * @return
+     */
+    List<AudioCourse> findCourseByType(Map<String, Object> params);
+
+    /**
      * csp后台
      * @param id
      * @return

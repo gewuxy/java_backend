@@ -15,4 +15,7 @@ public interface RecommendMeetService extends BaseService<Recommend>{
     MyPage<Recommend> recommendMeetList(Pageable pageable);
 
     Recommend selectByMeetId(String meetId);
+
+    List<Recommend> selectByFixed();
+
 }
