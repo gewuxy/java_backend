@@ -395,9 +395,9 @@
                     $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                 }
             } else {
-                $("#passwordError").removeClass("none");
-            }
-        }, 'json');
+                $("#passwordError").removeClass("none");}
+        }
+            , 'json');
     }
 
     //判断手机终端类型
@@ -766,6 +766,7 @@
                 $(".boxAudio-loading").addClass("none");
                 activeItemIsVideo.get(0).load();
                 activeItemIsVideo.get(0).play();
+                popupPalyer.load("isNotSrc");
             } else {
                 var dataSrc = swiperCurrent.attr('audio-src');
                 popupPalyer.load(dataSrc);
