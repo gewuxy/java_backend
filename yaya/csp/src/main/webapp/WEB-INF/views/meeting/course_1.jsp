@@ -635,7 +635,7 @@
                 }
             },
             onSlideChangeEnd:function(swiper){
-                if(autoPlay){
+                //if(autoPlay){
                     //选中的项是否有视频
                     activeItemIsVideo = $('.swiper-slide-active').find('video');
                     //触发切换音频
@@ -643,7 +643,7 @@
     //                if (!dataSrc.length && !activeItemIsVideo.length){
     //                    slideToNext();
     //                }
-                }
+                //}
                 clearTimeout(slideTimer);
                 autoPlay = true;
             },
@@ -1031,6 +1031,7 @@
 
         //星评弹出
         function openStarRate() {
+            clickOthers = true;
             //打开星评之前关闭遮盖层
             $(".html5ShadePlay").hide();
             layer.open({

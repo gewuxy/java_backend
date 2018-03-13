@@ -520,7 +520,7 @@
 
         //弹出简介
         function openInfo(){
-            clickOthers = true;
+            clickOthers = false;
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
             }
