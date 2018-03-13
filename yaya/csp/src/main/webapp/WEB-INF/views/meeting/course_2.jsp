@@ -134,7 +134,7 @@
             <!--断开-->
             <div class="video-notPlay-bg none"><i></i><fmt:message key="page.meeting.live.broken"/></div>
             <!--加载-->
-            <div class="video-notPlay-load none"><i></i></div>
+            <div class="video-notPlay-load "><i></i></div>
             <!--默认-->
             <div class="video-notPlay ${empty live.hlsUrl ? '' : 'none'}"><i></i><fmt:message key="page.meeting.live.not.start"/></div>
         </div>
@@ -158,12 +158,13 @@
                 CKobject.embed('${ctxStatic}/phone/js/m3u8/ckplayer.swf',id ,'ck-video','100%','100%',false, flashvars ,video, params);
 
                 CKobject.getObjectById('ck-video').addListener("error", function(){
-
                     console.log("加载视频失败");
                     if ($(".video-notPlay").hasClass("none")){
                         $(".video-notPlay-bg").removeClass("none");
                         $(".video-play-live").addClass("video-notPlay-item");
+                        $(".video-notPlay-load").addClass("none");
                     } else {
+                        $(".video-notPlay-load").addClass("none");
                         $(".video-notPlay-bg").addClass("none");
                         $(".video-play-live").addClass("video-notPlay-item");
                     }
@@ -388,10 +389,13 @@
             if (data.code == 0) {
                 $("#passwordView").addClass("none");
                 //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
-                if (isAndroid || activeItemIsVideo.length > 0) {
+                if ((isAndroid || activeItemIsVideo.length > 0) && "${live.liveState < 5}" == "true") {
                     activeItemIsVideo.attr('style', 'margin-top:0px');
                 }
-                if (isAndroid) {
+                if(activeItemIsVideo.length > 0){
+                    activeItemIsVideo.get(0).pause();
+                }
+                if (isAndroid && "${live.liveState < 5}" == "true") {
                     $("#ck-video,#videoWrap").attr('style', 'margin-top:0px');
                 }
             } else {
@@ -425,7 +429,7 @@
 
     $(function () {
         var fullState = true;
-        var ismuted = true;
+        var ismuted = false;
         var CSPMeetingGallery = $('.CSPMeeting-gallery');
         var asAllItem = audiojs.create($("#audioPlayer"));
         var popupPalyer = asAllItem[0];
@@ -485,7 +489,7 @@
 
         $("#audioPlayer")[0].addEventListener("error", function () {
             var isVideo = $('.swiper-slide-active').find('video');
-            clearTimeout(slideTimer);
+            //clearTimeout(slideTimer);
             if(isVideo.length > 0){
                 $(".boxAudio-loading").addClass("none");
                 //$(".boxAudio").addClass("none");
@@ -638,6 +642,8 @@
             }
         });
 
+        var autoPlay = false;
+
         //初始化
         galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 10,
@@ -650,7 +656,7 @@
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
                 if (activeItemIsVideo.length > 0) {
-                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).pause();
                     //判断是否Iphone 的 Safari 浏览器
                     if (browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
@@ -666,23 +672,25 @@
                 }
             },
             onSlideChangeEnd: function (swiper) {
-                //选中的项是否有视频
-                activeItemIsVideo = $('.swiper-slide-active').find('video');
+                if(autoPlay){
+                    //选中的项是否有视频
+                    activeItemIsVideo = $('.swiper-slide-active').find('video');
 
-                nextItemIsVideo = $('.swiper-slide-prev').find('video');
-                //clearTimeout(slideTimer);
-                //触发切换音频
-                swiperChangeAduio(swiper.wrapper.prevObject);
+                    nextItemIsVideo = $('.swiper-slide-prev').find('video');
+                    //clearTimeout(slideTimer);
+                    //触发切换音频
+                    swiperChangeAduio(swiper.wrapper.prevObject);
+                }
 
+                autoPlay = true;
 //                CKobject.getObjectById('ck-video').play();
             },
             onSlideNextEnd: function () {
-
                 prevItemIsVideo = $('.swiper-slide-prev').find('video');
                 //判断前一个是否有视频
                 if (prevItemIsVideo.length > 0) {
                     //重新加载视频
-                    prevItemIsVideo.get(0).load();
+                    prevItemIsVideo.get(0).pause();
                 }
             },
             onSlidePrevEnd: function () {
@@ -690,7 +698,7 @@
                 //判断后一个是否有视频
                 if (nextItemIsVideo.length > 0) {
                     //重新加载视频
-                    nextItemIsVideo.get(0).load();
+                    nextItemIsVideo.get(0).pause();
                 }
             },
             onInit: function (swiper) {
@@ -779,7 +787,6 @@
 
         //点击切换状态
         var changeScreen = function () {
-
             if (!isAndroid) {
                 $('.popup-volume').addClass("popup-min-screen").removeClass('popup-volume');
                 $(this).addClass('popup-volume').removeClass("popup-min-screen");
@@ -801,13 +808,15 @@
                     }
                 }
             }
-
 //            viedoMuted();
-            if (ismuted) {
+            if (!ismuted) {
                 if ($('.popup-volume').find('audio').length > 0) {
                     popupPalyer.element.muted = false;
+                    if(activeItemIsVideo.length > 0){
+                        activeItemIsVideo.get(0).muted = false;
+                    }
                     needSync = false;
-                } else if ($('.popup-volume').find('video').length) {
+                } else if ($('.popup-volume').find('ck-video').length) {
                     CKobject.getObjectById('ck-video').changeVolume(100);
                     $("#ck-video")[0].muted = false;
                     needSync = true;
@@ -823,6 +832,9 @@
         var viedoMuted = function () {
             //音频文件静音
             popupPalyer.element.muted = true;
+            if (activeItemIsVideo.length > 0){
+                activeItemIsVideo.get(0).muted = true;
+            }
             //直播静音
             CKobject.getObjectById('ck-video').changeVolume(0);
             $("#ck-video")[0].muted = true;
@@ -836,29 +848,37 @@
 
         //切换静音状态
         var changeTrack = function () {
-            if (ismuted == true) {
+            if (ismuted == false) {
                 viedoMuted();
                 $('.button-icon-volume-open').addClass('none').siblings().removeClass('none');
                 $('.cspMeeting-black-blueButton').addClass('none');
-                ismuted = false
+                ismuted = true
             } else {
                 if ($('.popup-volume').find('audio').length > 0) {
                     popupPalyer.element.muted = false;
-
-                } else if ($('.popup-volume').find('video').length) {
+                    if(activeItemIsVideo.length > 0){
+                        activeItemIsVideo.get(0).muted = false;
+                    }
+                } else if ($('.popup-volume').find('ck-video').length) {
                     CKobject.getObjectById('ck-video').changeVolume(100);
                     $("#ck-video")[0].muted = false;
-
-
                 }
                 $('.button-icon-volume-close').addClass('none').siblings().removeClass('none');
                 $('.cspMeeting-black-blueButton').removeClass('none');
-                ismuted = true
+                ismuted = false
             }
         }
 
         //绑定状态切换
         $(document).on('click', '.popup-min-screen', changeScreen);
+
+        //阻止事件冒泡 解决iOS切换声音的BUG
+        $(".quit-full-hook").click(function(evt){
+            var oEvent = evt || event;
+            //js阻止事件冒泡
+            oEvent.cancelBubble = true;
+            oEvent.stopPropagation();
+        });
 
         //超出页面下拉
         $(".hidden-box").perfectScrollbar();
@@ -1006,10 +1026,16 @@
                     if (temp == "1") {
                         console.log("video url = " + data.videoUrl + " - imgUrl = " + data.imgUrl);
                         if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != '') {
-                            lastPage.find("video").attr("src", data.videoUrl);
+                            var videoHtml = '<div class="swiper-slide" data-num="' + (totalPages) + '" audio-src=""><video src="' + data.videoUrl + '"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div></div>';
+                            lastPage.html(videoHtml);
                         } else {
+                            if(activeItemIsVideo.length > 0){
+                                $('.swiper-slide-active').remove("video");
+                                activeItemIsVideo = $('.swiper-slide-active').find("video");
+                            }
                             console.log("current img url = " + data.imgUrl);
-                            lastPage.find("div").find(".swiper-picture").css("background-image", "url('" + data.imgUrl + "')");
+                            var audioHtml = '<div class="swiper-slide" data-num="' + (totalPages) + '" audio-src=""><div class="swiper-zoom-container pinch-zoom" style="height:100%;"><div class="swiper-picture" style=" background-image:url(' + data.imgUrl + ')"></div></div></div>';
+                            lastPage.html(audioHtml);
                         }
                         lastPage.attr("istemp", "0");
                     } else {

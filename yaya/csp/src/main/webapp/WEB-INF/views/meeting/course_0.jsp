@@ -396,11 +396,12 @@
             prevButton: '.swiper-button-prev',
             paginationType: 'fraction',
             speed:150,//解决滑动过快的BUG
+
             onSlideChangeStart:function(swiper){
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
 
                 if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).pause();
                     //判断是否Iphone 的 Safari 浏览器
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
@@ -444,7 +445,7 @@
                 //判断前一个是否有视频
                 if(prevItemIsVideo.length > 0){
                     //重新加载视频
-                    prevItemIsVideo.get(0).load();
+                    prevItemIsVideo.get(0).pause();
                 }
 
             },
@@ -453,7 +454,7 @@
                 //判断后一个是否有视频
                 if(nextItemIsVideo.length > 0){
                     //重新加载视频
-                    nextItemIsVideo.get(0).load();
+                    nextItemIsVideo.get(0).pause();
                 }
             },
             onInit: function(swiper){
@@ -464,10 +465,6 @@
                     //判断是否Iphone 的 Safari 浏览器
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
-                        //判断是否已经播放完成
-                        activeItemIsVideo.get(0).addEventListener('canplay',function(){
-                            $('.isIphoneSafari').hide();
-                        }, {once: true});
                     }
                     activeItemIsVideo.get(0).addEventListener('ended', videoToNextAtOnce, {once: true});
 
@@ -645,9 +642,6 @@
 
         var changePlayerStete = function(state){
             if(playerState || state == true){
-                if ($("#bgMusicAudio").length > 0){
-                    $("#bgMusicAudio").get(0).play();
-                }
                 playerState = false;
                 started = true;
                 popupPalyer.play();
@@ -656,7 +650,13 @@
                     //$('.boxAudio').addClass('none');
                     //activeItemIsVideo.get(0).load();
                     activeItemIsVideo.get(0).play();
+                    if($("#bgMusicAudio").length > 0){
+                        $("#bgMusicAudio").get(0).pause();
+                    }
                 } else {
+                    if ($("#bgMusicAudio").length > 0){
+                        $("#bgMusicAudio").get(0).play();
+                    }
                     popupPalyer.play();
                     if (!hasAudioUrl){
                         slideToNext();

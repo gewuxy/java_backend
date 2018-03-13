@@ -311,6 +311,10 @@
         $.get('${ctx}/api/meeting/share/pwd/check', {"courseId":"${course.id}", "password":password}, function (data) {
             if(data.code == 0){
                 $("#passwordView").addClass("none");
+                //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
+                if ((isAndroid || activeItemIsVideo.length > 0) && "${live.liveState < 5}" == "true") {
+                    activeItemIsVideo.attr('style', 'margin-top:0px');
+                }
             } else {
                 $("#passwordError").removeClass("none");
             }
@@ -413,6 +417,10 @@
                         if (data.videoUrl != null && data.videoUrl != undefined && data.videoUrl != ''){
                             $currentPage.html('<video src="'+data.videoUrl+'"  class="video-hook" width="100%" height="100%" x5-playsinline="" playsinline="" webkit-playsinline="" poster="" preload="auto"></video><div class="isIphoneSafari"></div>');
                         } else {
+                            if(activeItemIsVideo.length > 0){
+                                $('.swiper-slide-active').remove("video");
+                                activeItemIsVideo = $('.swiper-slide-active').find("video");
+                            }
                             $currentPage.html('<div class="swiper-zoom-container pinch-zoom" style="height:100%;">' +
                                 '<div class="swiper-picture" style=" background-image:url('+data.imgUrl+')"></div>' +
                                 '</div>');
@@ -598,7 +606,7 @@
 
 
         }
-
+        var autoPlay = false;
         //初始化默认竖屏
         galleryTop = new Swiper('.gallery-top', {
             spaceBetween: 0,
@@ -610,7 +618,7 @@
             onSlideChangeStart:function(swiper){
                 activeItemIsVideo = $('.swiper-slide-active').find('video');
                 if(activeItemIsVideo.length > 0){
-                    activeItemIsVideo.get(0).load();
+                    activeItemIsVideo.get(0).pause();
                     //判断是否Iphone 的 Safari 浏览器
                     if(browser.versions.ios && browser.versions.iphoneSafari) {
                         $('.isIphoneSafari').show();
@@ -627,15 +635,17 @@
                 }
             },
             onSlideChangeEnd:function(swiper){
-                //选中的项是否有视频
-                activeItemIsVideo = $('.swiper-slide-active').find('video');
-                //触发切换音频
-                swiperChangeAduio(swiper.wrapper.prevObject);
-//                if (!dataSrc.length && !activeItemIsVideo.length){
-//                    slideToNext();
-//                }
+                if(autoPlay){
+                    //选中的项是否有视频
+                    activeItemIsVideo = $('.swiper-slide-active').find('video');
+                    //触发切换音频
+                    swiperChangeAduio(swiper.wrapper.prevObject);
+    //                if (!dataSrc.length && !activeItemIsVideo.length){
+    //                    slideToNext();
+    //                }
+                }
                 clearTimeout(slideTimer);
-
+                autoPlay = true;
             },
             onSlideNextEnd:function(){
                 prevItemIsVideo = $('.swiper-slide-prev').find('video');
@@ -643,7 +653,6 @@
                 //判断前一个是否有视频
                 if(prevItemIsVideo.length > 0){
                     //重新加载视频
-                    prevItemIsVideo.get(0).load();
                     prevItemIsVideo.get(0).pause();
                 }
             },
@@ -653,7 +662,6 @@
                 //判断后一个是否有视频
                 if(nextItemIsVideo.length > 0){
                     //重新加载视频
-                    nextItemIsVideo.get(0).load();
                     nextItemIsVideo.get(0).pause();
                 }
             },
@@ -767,7 +775,7 @@
 
         //弹出简介
         function openInfo(){
-            clickOthers = true;
+            clickOthers = false;
             if (browser.isAndroid || activeItemIsVideo.length > 0) {
                 activeItemIsVideo.height(0);
             }
@@ -853,6 +861,8 @@
                     activeItemIsVideo.get(0).load();
                     activeItemIsVideo.get(0).play();
                 } else {
+                    $(".boxAudio-loading").addClass("none");
+                    popupPalyer.load();
                     popupPalyer.play();
                 }
                 playing = true;
@@ -932,6 +942,7 @@
         //举报按钮
         $('.report-popup-button-hook').on('click',function(){
             layer.closeAll();
+            clickOthers = true;
             //如果是安卓机器，而且有视频。打开后将高度设为0。为了解决遮挡的BUG
             if(browser.isAndroid || activeItemIsVideo.length > 0){
                 activeItemIsVideo.attr('style', 'margin-top:9999px');
@@ -980,7 +991,6 @@
 
         //手机端 点击任何一个地方  自动播放音频
         $('.isIphoneSafari').on('touchstart',function(){
-            alert("play started");
             $(this).hide();
             activeItemIsVideo.get(0).load();
             activeItemIsVideo.get(0).play();
